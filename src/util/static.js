@@ -85,6 +85,9 @@ Entry.STATIC = {
         objectRemoveExpansionBlocks: 219,
         objectReorder: 220,
 
+        objectAddAIUtilizeBlocks: 221,
+        objectRemoveAIUtilizeBlocks: 222,
+
         do: 301,
         undo: 302,
         redo: 303,
@@ -114,11 +117,13 @@ Entry.STATIC = {
         separateComment: 1209,
         connectComment: 1210,
         writeComment: 1211,
+
+        dataTableAddSource: 1301,
+        dataTableRemoveSource: 1302,
         //TODO commands development
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
-
         addObjectButtonClick: 210,
 
         toggleRun: 501,
@@ -131,6 +136,8 @@ Entry.STATIC = {
         playgroundClickAddSound: 703,
         playgroundClickAddPictureCancel: 704,
         playgroundClickAddSoundCancel: 705,
+        playgroundClickAddTable: 706,
+        playgroundClickAddTableCancel: 707,
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,
@@ -165,6 +172,9 @@ Entry.STATIC = {
 
         playgroundClickAddExpansionBlock: 1101,
         playgroundClickAddExpansionBlockCancel: 1102,
+
+        playgroundClickAddAIUtilizeBlock: 1103,
+        playgroundClickAddAIUtilizeBlockCancel: 1104,
     },
 
     RECORDABLE: {

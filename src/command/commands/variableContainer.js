@@ -563,22 +563,24 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
     };
 
     c[listChangeLength] = {
-        do(id, value) {
+        async do(id, value) {
             const VC = getVC();
             const list = VC.getList(id);
-            const length = list.array_.length;
-
+            const length = list.getArray().length;
+            let result;
             if (value === 'minus') {
-                value = Math.max(0, length - 1);
+                result = Math.max(0, length - 1);
+                await list.deleteValue(result);
             } else if (value === 'plus') {
-                value = length + 1;
+                result = length + 1;
+                await list.appendValue(0);
             } else if (Entry.Utils.isNumber(value) && value >= 0) {
-                value = value;
+                result = value;
             } else {
-                value = length;
+                result = length;
             }
 
-            VC.setListLength(list, value);
+            VC.setListLength(list, result);
         },
         state(id) {
             return [id, getVC().getList(id).array_.length];
@@ -606,7 +608,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         do(id, idx = 0, data = '0') {
             const VC = getVC();
             const list = VC.getList(id);
-            list.array_[idx] = { data };
+            list.getArray()[idx] = { data };
             VC.updateListSettingView();
             //list.updateView();
         },

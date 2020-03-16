@@ -2,6 +2,7 @@
  *
  */
 'use strict';
+import isFunction from 'lodash/isFunction';
 
 (function(c) {
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -175,6 +176,13 @@
                 blockArgument = block;
             }
             this.editor.board.insert(blockArgument, targetBlock, count);
+            const { params = [] } = block._schema || {};
+            const shouldRerender = params.find(
+                ({ type, menuName }) => type === 'DropdownDynamic' && isFunction(menuName)
+            );
+            if (shouldRerender) {
+                block.view.reDraw();
+            }
         },
         state(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
@@ -367,6 +375,13 @@
                 blockView._toGlobalCoordinate(dragMode);
             }
             block.doSeparate(blockArgument);
+            const { params = [] } = block._schema || {};
+            const shouldRerender = params.find(
+                ({ type, menuName }) => type === 'DropdownDynamic' && isFunction(menuName)
+            );
+            if (shouldRerender) {
+                block.view.reDraw();
+            }
         },
         state(block) {
             block = this.editor.board.findBlock(block);

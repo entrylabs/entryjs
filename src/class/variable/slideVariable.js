@@ -219,10 +219,11 @@ class SlideVariable extends Variable {
     }
 
     getValue() {
+        const value = super.getValue();
         if (this.isNumber()) {
-            return Number(this.value_);
+            return Number(value);
         } else {
-            return this.value_;
+            return value;
         }
     }
 
@@ -235,10 +236,7 @@ class SlideVariable extends Variable {
         } else {
             this.value_ = numValue;
         }
-
-        this._valueWidth = null;
-        this.updateView();
-        Entry.requestUpdateTwice = true;
+        super.setValue(this.value_);
     }
 
     setSlideCommandX(value) {

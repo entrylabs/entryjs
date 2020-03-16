@@ -547,6 +547,7 @@ Entry.Block = class Block {
 
     doDestroy(animate) {
         this.destroy(animate);
+        this.thread && this.thread.updateValueBlock();
         this.getCode().changeEvent.notify();
         return this;
     }
@@ -618,6 +619,10 @@ Entry.Block = class Block {
 
     getNextBlock() {
         return this.thread.getNextBlock(this) || null;
+    }
+
+    getFirstBlock() {
+        return this.thread.getFirstBlock();
     }
 
     getLastBlock() {

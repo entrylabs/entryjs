@@ -16,7 +16,7 @@ Entry.skeleton.basic_boolean_field = {
                 z`;
     },
     color: '#FFF',
-    outerLine: '#6173F5',
+    outerLine: '#1b3ad8',
     fontSize: 10,
     box(blockView) {
         const width = blockView ? blockView.contentWidth : 5;

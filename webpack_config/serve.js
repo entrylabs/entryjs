@@ -1,8 +1,6 @@
 'use strict';
 
 const path = require('path');
-const merge = require('webpack-merge');
-const common = require('./common.js');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isWebGLEnabled = process.argv.some(
@@ -18,7 +16,7 @@ const templateName = (() => {
 const template = path.resolve('example', templateName);
 const devServerPort = 8080;
 
-module.exports = merge(common, {
+module.exports = {
     mode: 'development',
     module: {
         rules: [],
@@ -49,4 +47,4 @@ module.exports = merge(common, {
         },
     },
     devtool: 'source-map',
-});
+};

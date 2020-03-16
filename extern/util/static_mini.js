@@ -678,7 +678,7 @@ EntryStatic.colorSet = {
             START: '#FFFFFF',
             FLOW: '#3A71BC',
             MOVING: '#8641B6',
-            LOOKS: '#D8234E',
+            LOOKS: '#FFFFFF',
             TEXT: '#DC9C32',
             SOUND: '#83A617',
             JUDGE: '#89A1F7',
@@ -686,6 +686,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#CE38CE',
             HARDWARE: '#FFFFFF',
             EXPANSION: '#FF8888',
+            AI_UTILIZE: '#FF8888',
         },
     },
     block: {
@@ -703,6 +704,7 @@ EntryStatic.colorSet = {
             FUNC: '#de5c04',
             HARDWARE: '#00b6b1',
             EXPANSION: '#ef6d6d',
+            AI_UTILIZE: '#8222ff',
         },
         lighten: {
             START: '#3bce3b',
@@ -718,6 +720,7 @@ EntryStatic.colorSet = {
             FUNC: '#ff7b22',
             HARDWARE: '#78d5d3',
             EXPANSION: '#ffaeae',
+            AI_UTILIZE: '#ffaeae',
         },
         darken: {
             START: '#009400',
@@ -732,6 +735,7 @@ EntryStatic.colorSet = {
             VARIABLE: '#b819b3',
             FUNC: '#a14100',
             HARDWARE: '#008380',
+            AI_UTILIZE: '#670bdd',
             EXPANSION: '#c63f3f',
         },
         emphasize: {
