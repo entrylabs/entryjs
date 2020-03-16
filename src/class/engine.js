@@ -328,10 +328,10 @@ Entry.Engine = class Engine {
     toggleLoadingPanel() {
         if (!this.videoLoadingPanel_) {
             this.videoLoadingPanel_ = Entry.createElement('div', 'videoLoadingPanel').addClass(
-                'videoLoadingDotted'
+                'EntryLoading'
             );
-            const dottedImage = Entry.createElement('div', 'dottedLoading').addClass(
-                'dottedLoading'
+            const dottedImage = Entry.createElement('div', 'entrybot-loading').addClass(
+                'entrybot-loading'
             );
 
             this.videoLoadingPanel_.style.zIndex = 1000;
@@ -379,7 +379,7 @@ Entry.Engine = class Engine {
             );
             this.audioShadePanel_.appendChild(audioShadeMainCircle);
             const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
-            micImage.src = `${Entry.mediaFilePath}ic-audio-sensing-mic.svg`
+            micImage.src = `${Entry.mediaFilePath}ic-audio-sensing-mic.svg`;
             audioShadeMainCircle.appendChild(micImage);
 
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(

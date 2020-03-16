@@ -808,7 +808,7 @@
 }
 
 //videoLoadShade
-.videoLoadingDotted {
+.EntryLoading {
     position: absolute;
     top: 0;
     left: 0;
@@ -823,35 +823,29 @@
     align-items: center;
     background-color: rgba(214, 233, 244, 0.95);
 
-    font-family: NanumGothicOTF;
-    font-size: 16px;
-    font-weight: bold;
-    font-style: normal;
-    font-stretch: normal;
-    line-height: normal;
-    color: #ffffff;
-    letter-spacing: -0.1px;
-
-    .dottedLoading {
-        width: 125px;
-        height: 166px;
-        margin: 2% auto;
+    .entrybot-loading {
+        height: 84px;
+        width: 62px;
+        margin: 0 auto 13px;
         background: url('@{image_url}entrybot-loading-spritesheet.png');
         background-size: cover;
-        animation: play 0.8s steps(6) infinite;
+        background-repeat: no-repeat;
+        animation: play 0.8s steps(6) infinite alternate;
     }
     @keyframes play {
         100% {
-            background-position: -752px;
+            background-position: -380px;
         }
     }
     .text {
+        font-family: NanumGothicOTF;
         font-size: 16px;
         font-weight: bold;
         font-style: normal;
         font-stretch: normal;
         line-height: normal;
         color: #ffffff;
+        letter-spacing: -0.1px;
     }
 }
 
