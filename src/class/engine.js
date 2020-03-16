@@ -325,37 +325,6 @@ Entry.Engine = class Engine {
         }
     }
 
-    toggleLoadingPanel() {
-        if (!this.videoLoadingPanel_) {
-            this.videoLoadingPanel_ = Entry.createElement('div', 'videoLoadingPanel').addClass(
-                'EntryLoading'
-            );
-            const dottedImage = Entry.createElement('div', 'entrybot-loading').addClass(
-                'entrybot-loading'
-            );
-
-            this.videoLoadingPanel_.style.zIndex = 1000;
-            const loadingText = Entry.createElement('span', 'videoModelLoadingText').addClass(
-                'text'
-            );
-            loadingText.innerHTML = Lang.Msgs.loading_plz_wait;
-
-            this.videoLoadingPanel_.appendChild(dottedImage);
-            this.videoLoadingPanel_.appendChild(loadingText);
-            this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
-            if (this.view_.classList[0] === 'entryEngine') {
-                this.minimizedView_.insertBefore(
-                    this.videoLoadingPanel_,
-                    Entry.stage.canvas.canvas
-                );
-            } else {
-                document.body.appendChild(this.videoLoadingPanel_);
-            }
-        } else {
-            this.videoLoadingPanel_.remove();
-        }
-    }
-
     toggleAudioShadePanel() {
         if (this.audioShadePanelOn) {
             this.audioShadePanelOn = false;

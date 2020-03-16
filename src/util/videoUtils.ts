@@ -172,24 +172,12 @@ class VideoUtils implements MediaUtilsInterface {
         }
     }
 
-    showLoadingPanel() {
-        if (Entry.type === 'minimize') {
-            Entry.engine.toggleLoadingPanel();
-        }
-        Entry.dispatchEvent('showLoadingScreen');
-    }
-    hideLoadingPanel() {
-        if (Entry.type === 'minimize') {
-            Entry.engine.toggleLoadingPanel();
-        }
-        Entry.dispatchEvent('hideLoadingScreen');
-    }
     videoOnLoadHandler() {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
         this.turnOnWebcam();
-        this.showLoadingPanel();
+        Entry.dispatchEvent('showLoadingScreen');
 
         this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
@@ -200,7 +188,7 @@ class VideoUtils implements MediaUtilsInterface {
                 case 'init':
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     if (message === 'warmup') {
-                        this.hideLoadingPanel();
+                        Entry.dispatchEvent('hideLoadingScreen');
                     }
                     this.modelLoadStatus[name] = true;
                     break;
