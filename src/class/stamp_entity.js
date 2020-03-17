@@ -1,9 +1,12 @@
 /**
  * @fileoverview stamp entity object is class for entry stamp entity canvas view.
  */
+
+
 'use strict';
 
 
+import {GEHelper} from '../graphicEngine/GEHelper';
 
 /**
  * Construct stamp entity class
@@ -20,10 +23,7 @@ Entry.StampEntity = function(object, entity) {
     this.width = entity.getWidth();
     this.height = entity.getHeight();
     if (this.type == 'sprite') {
-        this.object = entity.object.clone();
-        this.object.mouseEnabled = false;
-        this.object.tickEnabled = false;
-        this.object.filters = null;
+        this.object = GEHelper.cloneStamp(entity);
         if (entity.effect) {
             this.effect = _.clone(entity.effect);
             this.applyFilter();

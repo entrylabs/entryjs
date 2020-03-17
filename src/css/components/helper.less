@@ -1,195 +1,113 @@
 /* helper */
-@keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
-}
-
-@-o-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
-}
-
-@-ms-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
-}
-
-@-moz-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
-}
-
-@-webkit-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
-}
-
-@keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
-}
-
-@-o-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
-}
-
-@-ms-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
-}
-
-@-moz-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
-}
-
-@-webkit-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
-}
-
-#entryBlockHelperWorkspace {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #fff;
-    z-index: 1000;
-    /*.animation-name(blockHelperUp);*/
-    /*.animation-duration(0.6s);*/
-}
-
-#entryBlockHelperWorkspace.lecture {
-    .animation-duration(0.0s);
-}
-
-#entryBlockHelperWorkspace.dispose {
-    display: none;
-    /*.animation-name(blockHelperDown);*/
-}
-
-#entryBlockHelperHeaderWorkspace {
-    position: absolute;
-    width: 100%;
-    height: 40px;
-    background-color: #1bafea;
-    font-size: 16px;
-    line-height: 38px;
-    padding-left: 28px;
-    color: #fff;
-}
-
-#entryBlockHelperDisposeWorkspace {
-    float: right;
-    .backgroundImage("block_helper_dispose.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    padding: 15px;
-    margin-top: 4px;
-    margin-right: 5px;
-}
-
-#entryBlockHelperContentWorkspace {
-    position: absolute;
-    width: 100%;
-    top: 40px;
-    bottom: 0px;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-.entryBlockHelperIntro {
-    .backgroundImage("block_help_icon.png");
-    background-repeat: no-repeat;
-    background-position: center top;
-    margin-top: 28px;
-    padding-top: 100px;
-    text-align: center;
-    color: #707070;
-    font-size: 12px;
-}
-
-#entryBlockHelpBtn {
-    position: absolute;
-    .backgroundImage("block_help.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    padding: 15px;
-    margin-top: 3px;
-    margin-left: 6px;
-    z-index: 100;
-}
-
 .entryBlockHelperIntro .renderViewContainer {
     display: none;
 }
 
-#entryBlockHelperBlockWorkspace>.renderViewContainer {
+#entryBlockHelperBlockWorkspace > .renderViewContainer {
     width: 100%;
+
+    .renderView {
+        margin-right: 9px;
+    }
 }
 
-#entryBlockHelperBlockWorkspace>.renderViewContainer > svg {
+#entryBlockHelperBlockWorkspace > .renderViewContainer > svg {
     overflow: visible;
-}
-
-#entryBlockHelperDescriptionWorkspace {
-    line-height: 20px;
-    width: 100%;
-    font-size: 13px;
-    color: #707074;
-    padding: 0 50px;
 }
 
 /* helper */
 @keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-o-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-ms-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-moz-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @-webkit-keyframes blockHelperUp {
-    0%  {top: 100%;}
-    100%{top: 0%;}
+    0% {
+        top: 100%;
+    }
+    100% {
+        top: 0%;
+    }
 }
 
 @keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-o-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-ms-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-moz-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
 }
 
 @-webkit-keyframes blockHelperDown {
-    0%  {top: 0%;}
-    100%{top: 100%;}
+    0% {
+        top: 0%;
+    }
+    100% {
+        top: 100%;
+    }
+}
+#entryBlockHelperWorkspaceWrapper {
+    background-color: #ecf8ff;
+    height: 100%;
 }
 
 #entryBlockHelperWorkspace {
@@ -197,16 +115,17 @@
     bottom: 0;
     width: 100%;
     height: 100%;
-    background-color: #fff;
+    background-color: inherit;
     .animation-name(blockHelperUp);
     .animation-duration(0.6s);
 }
 
 #entryBlockHelperWorkspace.lecture {
-    .animation-duration(0.0s);
+    .animation-duration(0s);
 }
 
 #entryBlockHelperWorkspace.dispose {
+    display: none;
     .animation-name(blockHelperDown);
 }
 
@@ -223,7 +142,7 @@
 
 #entryBlockHelperDisposeWorkspace {
     float: right;
-    .backgroundImage("block_helper_dispose.png");
+    .backgroundImage('block_helper_dispose.png');
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -238,13 +157,15 @@
     bottom: 0px;
     overflow-y: auto;
     overflow-x: hidden;
+    white-space: pre-line;
 }
 
 .entryBlockHelperIntro {
-    .backgroundImage("block_help_icon.png");
+    .backgroundImage('block_help_icon_2.png');
+    background-size: 104px;
     background-repeat: no-repeat;
     background-position: center top;
-    margin-top: 28px;
+    margin-top: 64px;
     padding-top: 100px;
     text-align: center;
     color: #707070;
@@ -253,7 +174,7 @@
 
 #entryBlockHelpBtn {
     position: absolute;
-    .backgroundImage("block_help.png");
+    .backgroundImage('block_help.png');
     background-repeat: no-repeat;
     background-position: center;
     padding: 15px;
@@ -270,23 +191,28 @@
     text-align: center;
 }
 
-#entryBlockHelperBlockWorkspace>svg {
-    position: relative; 
+#entryBlockHelperBlockWorkspace > svg {
+    position: relative;
 }
 
 #entryBlockHelperDescriptionWorkspace {
     line-height: 20px;
     width: 100%;
-    font-size: 13px;
-    color: #707074;
-    padding: 0 50px;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: 18px;
+    letter-spacing: -0.33px;
+    padding: 0 40px;
+    color: #555555;
     text-align: center;
+    margin-top: 24px;
 }
 
 .textModeElem {
     display: none;
 }
-
 
 #entryBlockHelperContentWorkspace.textMode {
     padding: 18px;
@@ -297,7 +223,7 @@
     }
 
     .entryBlockHelperTitle {
-        font-family: NanumGothic;
+        font-family: EntryFont, NanumGothic;
         font-size: 18px;
         font-weight: bold;
         color: #3b3b3b;
@@ -316,8 +242,8 @@
         height: auto;
     }
 
-    #entryBlockHelperBlockWorkspace>div>svg {
-        position: relative; 
+    #entryBlockHelperBlockWorkspace > div > svg {
+        position: relative;
         left: auto;
     }
 
@@ -327,7 +253,7 @@
     }
 
     .entryBlockHelperContent {
-        font-family: NanumGothic;
+        font-family: EntryFont, NanumGothic;
         font-size: 14px;
         color: #3b3b3b;
         margin-top: 8px;
@@ -354,4 +280,3 @@
         margin-top: 8px;
     }
 }
-

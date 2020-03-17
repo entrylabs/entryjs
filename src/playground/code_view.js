@@ -25,6 +25,12 @@ Entry.CodeView = function(code, board) {
     });
     this.svgBlockGroup.board = board;
 
+    this.svgCommentGroup = board.svgGroup.elem('g');
+    this.svgCommentGroup.attr({
+        class: 'svgCommentGroup',
+    });
+    this.svgCommentGroup.board = board;
+
     board.bindCodeView(this);
 
     this.code._data.getAll().forEach(function(thread) {

@@ -18,7 +18,7 @@
     box-shadow: #999 0 0 8px;
     border: 2px solid;
     .border-radius(4px);
-    .transition(opacity .25s ease-in-out);
+    .transition(opacity 0.25s ease-in-out);
     text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
     cursor: pointer;
     opacity: 1;
@@ -51,4 +51,51 @@
     font-size: 9pt;
     margin-top: 4px;
     margin-bottom: 2px;
+}
+
+.entryMobileToastWrapper {
+    position: absolute;
+    margin-top: 24px;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    z-index: 1;
+    .entryMobileToast {
+        &::before {
+            content: '';
+            display: inline-block;
+            .backgroundImage('toast_left.svg');
+            width: 17px;
+            height: 38px;
+            margin-right: -4px;
+        }
+        &::after {
+            content: '';
+            display: inline-block;
+            .backgroundImage('toast_right.svg');
+            width: 20px;
+            height: 38px;
+            margin-left: -4px;
+        }
+        display: inline-block;
+        // width: 90px;
+        height: 38px;
+        font-size: 14px;
+        vertical-align: top;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.5px;
+        text-align: center;
+        color: #4f80ff;
+
+        .content {
+            display: inline-block;
+            height: 38px;
+            padding: 9px 8px;
+            vertical-align: top;
+            .backgroundImage('toast_bg.svg');
+        }
+    }
 }

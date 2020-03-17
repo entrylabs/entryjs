@@ -1,9 +1,12 @@
+const { type } = Lang || {};
+const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
 module.exports = {
     getBlocks() {
         return {
             text_read: {
-                color: '#FFCA36',
-                fontColor: '#FFFFFF',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                fontColor: EntryStatic.colorSet.common.WHITE,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -11,13 +14,9 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'textBoxWithSelf',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_TEXT,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/text.png',
-                        size: 12,
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.TEXT,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
                 events: {},
@@ -61,9 +60,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'textBoxWithSelf',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_TEXT,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.TEXT,
+                                    converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.text_read[0]',
                                 },
                             ],
@@ -72,7 +70,8 @@ module.exports = {
                 },
             },
             text_write: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -82,8 +81,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text.png',
-                        size: 12,
+                        img: `block_icon/${filename}`,
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -120,7 +119,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.write_text(%1)'] },
             },
             text_append: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -130,8 +130,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text.png',
-                        size: 12,
+                        img: `block_icon/${filename}`,
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -162,13 +162,14 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const text = script.getStringValue('VALUE', script);
-                    sprite.setText(`${sprite.getText()  }${  text}`);
+                    sprite.setText(`${sprite.getText()}${text}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
             },
             text_prepend: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -178,8 +179,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text.png',
-                        size: 12,
+                        img: `block_icon/${filename}`,
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -210,20 +211,21 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const text = script.getStringValue('VALUE', script);
-                    sprite.setText(`${text  }${  sprite.getText()}`);
+                    sprite.setText(`${text}${sprite.getText()}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
             },
             text_flush: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/text.png',
-                        size: 12,
+                        img: `block_icon/${filename}`,
+                        size: 11,
                     },
                 ],
                 events: {},

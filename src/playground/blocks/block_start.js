@@ -2,14 +2,15 @@ module.exports = {
     getBlocks() {
         return {
             when_run_button_click: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_play.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_play.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -38,14 +39,15 @@ module.exports = {
                 },
             },
             when_some_key_pressed: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_keyboard.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_keyboard.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -53,7 +55,60 @@ module.exports = {
                     },
                     {
                         type: 'Keyboard',
-                        value: '81',
+                        options: [
+                            [Lang.Blocks.START_press_some_key_up, '38'],
+                            [Lang.Blocks.START_press_some_key_down, '40'],
+                            [Lang.Blocks.START_press_some_key_right, '39'],
+                            [Lang.Blocks.START_press_some_key_left, '37'],
+                            [Lang.Blocks.START_press_some_key_space, '32'],
+                            [Lang.Blocks.START_press_some_key_enter, '13'],
+                            ['ctrl', '17'],
+                            ['shift', '16'],
+                            ['alt', '18'],
+                            ['tab', '9'],
+                            ['esc', '27'],
+                            ['back-space', '8'],
+                            ['0', '48'],
+                            ['1', '49'],
+                            ['2', '50'],
+                            ['3', '51'],
+                            ['4', '52'],
+                            ['5', '53'],
+                            ['6', '54'],
+                            ['7', '55'],
+                            ['8', '56'],
+                            ['9', '57'],
+                            ['a', '65'],
+                            ['b', '66'],
+                            ['c', '67'],
+                            ['d', '68'],
+                            ['e', '69'],
+                            ['f', '70'],
+                            ['g', '71'],
+                            ['h', '72'],
+                            ['i', '73'],
+                            ['j', '74'],
+                            ['k', '75'],
+                            ['l', '76'],
+                            ['m', '77'],
+                            ['n', '78'],
+                            ['o', '79'],
+                            ['p', '80'],
+                            ['q', '81'],
+                            ['r', '82'],
+                            ['s', '83'],
+                            ['t', '84'],
+                            ['u', '85'],
+                            ['v', '86'],
+                            ['w', '87'],
+                            ['x', '88'],
+                            ['y', '89'],
+                            ['z', '90'],
+                        ],
+                        value: 'next',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                 ],
                 events: {},
@@ -84,10 +139,60 @@ module.exports = {
                             textParams: [
                                 undefined,
                                 {
-                                    type: 'Keyboard',
-                                    value: '81',
-                                    converter:
-                                        Entry.block.converters.keyboardCode1,
+                                    type: 'Dropdown',
+                                    value: 'next',
+                                    options: [
+                                        [Lang.Blocks.START_press_some_key_up, '38'],
+                                        [Lang.Blocks.START_press_some_key_down, '40'],
+                                        [Lang.Blocks.START_press_some_key_right, '39'],
+                                        [Lang.Blocks.START_press_some_key_left, '37'],
+                                        [Lang.Blocks.START_press_some_key_space, '32'],
+                                        [Lang.Blocks.START_press_some_key_enter, '13'],
+                                        ['ctrl', '17'],
+                                        ['shift', '16'],
+                                        ['alt', '18'],
+                                        ['tab', '9'],
+                                        ['esc', '27'],
+                                        ['back-space', '8'],
+                                        ['0', '48'],
+                                        ['1', '49'],
+                                        ['2', '50'],
+                                        ['3', '51'],
+                                        ['4', '52'],
+                                        ['5', '53'],
+                                        ['6', '54'],
+                                        ['7', '55'],
+                                        ['8', '56'],
+                                        ['9', '57'],
+                                        ['a', '65'],
+                                        ['b', '66'],
+                                        ['c', '67'],
+                                        ['d', '68'],
+                                        ['e', '69'],
+                                        ['f', '70'],
+                                        ['g', '71'],
+                                        ['h', '72'],
+                                        ['i', '73'],
+                                        ['j', '74'],
+                                        ['k', '75'],
+                                        ['l', '76'],
+                                        ['m', '77'],
+                                        ['n', '78'],
+                                        ['o', '79'],
+                                        ['p', '80'],
+                                        ['q', '81'],
+                                        ['r', '82'],
+                                        ['s', '83'],
+                                        ['t', '84'],
+                                        ['u', '85'],
+                                        ['v', '86'],
+                                        ['w', '87'],
+                                        ['x', '88'],
+                                        ['y', '89'],
+                                        ['z', '90'],
+                                    ],
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.keyboardCode,
                                 },
                             ],
                         },
@@ -95,14 +200,15 @@ module.exports = {
                 },
             },
             mouse_clicked: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -131,14 +237,15 @@ module.exports = {
                 },
             },
             mouse_click_cancled: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -167,14 +274,15 @@ module.exports = {
                 },
             },
             when_object_click: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -203,14 +311,15 @@ module.exports = {
                 },
             },
             when_object_click_canceled: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -239,14 +348,15 @@ module.exports = {
                 },
             },
             when_message_cast: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_signal.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_signal.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -256,8 +366,10 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        fontSize: 10,
+                        textColor: '#FFFFFF',
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                 ],
                 events: {
@@ -311,9 +423,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -321,7 +432,8 @@ module.exports = {
                 },
             },
             message_cast: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -329,13 +441,15 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -379,7 +493,7 @@ module.exports = {
                         throw new Error('value can not be null or undefined');
                     }
 
-                    setTimeout(function() {
+                    setTimeout(() => {
                         Entry.engine.raiseMessage(value);
                     });
                 },
@@ -394,9 +508,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringKey,
                                     paramType: 'signal',
                                 },
                                 undefined,
@@ -406,7 +519,8 @@ module.exports = {
                 },
             },
             message_cast_wait: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -414,13 +528,15 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -474,9 +590,7 @@ module.exports = {
                         const arr = Entry.variableContainer.messages_;
                         const isExist = Entry.isExist(value, 'id', arr);
                         if (value == 'null' || !isExist) {
-                            throw new Error(
-                                'value can not be null or undefined'
-                            );
+                            throw new Error('value can not be null or undefined');
                         }
                         const data = Entry.engine.raiseMessage(value);
                         let runningScript = [];
@@ -502,9 +616,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -512,14 +625,15 @@ module.exports = {
                 },
             },
             when_scene_start: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_scene_1_2.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_scene.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -548,7 +662,8 @@ module.exports = {
                 },
             },
             start_scene: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -556,13 +671,15 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'scenes',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -600,9 +717,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'scenes',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -610,7 +726,8 @@ module.exports = {
                 },
             },
             start_neighbor_scene: {
-                color: '#3BBD70',
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -618,16 +735,18 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.SCENE_start_scene_next, 'next'],
-                            [Lang.Blocks.SCENE_start_scene_pre, 'pre'],
+                            [Lang.Blocks.SCENE_start_scene_pre, 'prev'],
                         ],
                         value: 'next',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -651,9 +770,7 @@ module.exports = {
                     const o = script.getField('OPERATOR', script);
                     if (o == 'next') {
                         if (index + 1 < scenes.length) {
-                            const nextScene = Entry.scene.getSceneById(
-                                scenes[index + 1].id
-                            );
+                            const nextScene = Entry.scene.getSceneById(scenes[index + 1].id);
                             if (nextScene) {
                                 Entry.scene.selectScene(nextScene);
                                 Entry.engine.fireEvent('when_scene_start');
@@ -661,9 +778,7 @@ module.exports = {
                         }
                     } else {
                         if (index > 0) {
-                            const nextScene = Entry.scene.getSceneById(
-                                scenes[index - 1].id
-                            );
+                            const nextScene = Entry.scene.getSceneById(scenes[index - 1].id);
                             if (nextScene) {
                                 Entry.scene.selectScene(nextScene);
                                 Entry.engine.fireEvent('when_scene_start');
@@ -682,23 +797,14 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.SCENE_start_scene_next,
-                                            'next',
-                                        ],
-                                        [
-                                            Lang.Blocks.SCENE_start_scene_pre,
-                                            'pre',
-                                        ],
+                                        [Lang.Blocks.SCENE_start_scene_next, 'next'],
+                                        [Lang.Blocks.SCENE_start_scene_pre, 'prev'],
                                     ],
                                     value: 'next',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.start_neighbor_scene[0]',
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.start_neighbor_scene[0]',
                                 },
                             ],
                         },
@@ -774,11 +880,8 @@ module.exports = {
                     const flow = this.block.params[1];
                     let propertyKey = this.block.params[2];
                     const rightValue = this.getParam(4);
-                    propertyKey =
-                        propertyKey[0].toUpperCase() + propertyKey.substr(1);
-                    const leftValue = obj.entity[`get${  propertyKey}`].call(
-                        obj.entity
-                    );
+                    propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
+                    const leftValue = obj.entity[`get${propertyKey}`].call(obj.entity);
                     let returnVal;
 
                     switch (this.block.params[3]) {
@@ -841,7 +944,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, 0],
+                    params: [null, 0, '1'],
                     type: 'check_block_execution',
                 },
                 paramsKeyMap: {
@@ -862,47 +965,37 @@ module.exports = {
                             return Entry.STATIC.BREAK;
                         }
                     }
-                    const code = Entry.container.getObject(this.block.params[0])
-                        .script;
+                    const code = Entry.container.getObject(this.block.params[0]).script;
                     const accuracy = this.block.params[1];
                     const statements = this.block.statements[0].getBlocks();
                     let lastBlock = null;
                     this.remainCheck = Number(this.block.params[2]);
                     let index = 0;
-                    this.entity.listener[id] = code.watchEvent.attach(
-                        this,
-                        (blocks) => {
-                            //dangerous
-                            blocks = blocks.concat();
-                            let block;
-                            let isFirst = true;
-                            while (blocks.length && index < statements.length) {
-                                block = blocks.shift();
-                                if (isFirst && block === lastBlock) {
-                                    continue;
-                                }
-                                if (
-                                    accuracy === 0 &&
-                                    statements[index].type === block.type
-                                ) {
-                                    index++;
-                                } else if (
-                                    accuracy === 1 &&
-                                    statements[index].isSameParamWith(block)
-                                ) {
-                                    index++;
-                                } else {
-                                    index = 0;
-                                }
-                                isFirst = false;
+                    this.entity.listener[id] = code.watchEvent.attach(this, (blocks) => {
+                        //dangerous
+                        blocks = blocks.concat();
+                        let block;
+                        let isFirst = true;
+                        while (blocks.length && index < statements.length) {
+                            block = blocks.shift();
+                            if (isFirst && block === lastBlock) {
+                                continue;
                             }
-                            lastBlock = block;
-                            if (index === statements.length) {
-                                this.remainCheck = this.remainCheck - 1;
+                            if (accuracy === 0 && statements[index].type === block.type) {
+                                index++;
+                            } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
+                                index++;
+                            } else {
                                 index = 0;
                             }
+                            isFirst = false;
                         }
-                    );
+                        lastBlock = block;
+                        if (index === statements.length) {
+                            this.remainCheck = this.remainCheck - 1;
+                            index = 0;
+                        }
+                    });
                     return Entry.STATIC.BREAK;
                 },
             },
@@ -1023,7 +1116,7 @@ module.exports = {
                 func(sprite, script) {
                     Entry.targetChecker.achieveCheck(
                         this.block.params[1],
-                        `${this.block.params[0]  }`
+                        `${this.block.params[0]}`
                     );
                 },
             },
@@ -1049,10 +1142,8 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const variableName = `${this.block.params[0]  }`;
-                    const variable = Entry.variableContainer.getVariableByName(
-                        variableName
-                    );
+                    const variableName = `${this.block.params[0]}`;
+                    const variable = Entry.variableContainer.getVariableByName(variableName);
                     if (variable) {
                         return variable.getValue();
                     } else {
@@ -1088,9 +1179,7 @@ module.exports = {
                 isNotFor: ['checker'],
                 func(sprite, script) {
                     if (Entry.targetChecker) {
-                        Entry.targetChecker.showStatusMessage(
-                            this.block.params[0]
-                        );
+                        Entry.targetChecker.showStatusMessage(this.block.params[0]);
                     }
                 },
             },
@@ -1116,7 +1205,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const goalName = `${this.block.params[0]  }`;
+                    const goalName = `${this.block.params[0]}`;
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },

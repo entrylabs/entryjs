@@ -3,25 +3,32 @@
  */
 'use strict';
 
+const _cache = new Map();
+let invisibleCanvas = undefined;
+let invisibleContext = undefined;
 /*
  *
  */
-Entry.Field = function() {};
+Entry.Field = class Field {
+    constructor(content, blockView, index) {
+        this.TEXT_LIMIT_LENGTH = 20;
 
-(function(p) {
-    p.TEXT_LIMIT_LENGTH = 20;
+        this._blockView = blockView;
+        this._contents = content;
+        this._index = index;
+    }
 
-    p.destroy = function() {
-        var svgGroup = this.svgGroup;
+    destroy() {
+        const svgGroup = this.svgGroup;
         if (svgGroup) {
             svgGroup._isBinded = false;
             $(svgGroup).off('.fieldBindEvent');
         }
         this.destroyOption(true);
-    };
+    }
 
-    p.command = function(forceCommand) {
-        var startValue = this._startValue;
+    command(forceCommand) {
+        const startValue = this._startValue;
         if (
             !this._blockView.isInBlockMenu &&
             !_.isUndefined(startValue) &&
@@ -37,11 +44,11 @@ Entry.Field = function() {};
             delete this._code;
         }
         delete this._startValue;
-    };
+    }
 
-    p.destroyOption = function(skipCommand, forceCommand) {
-        var _destroyFunc = _.partial(_.result, _, 'destroy');
-        var _removeFunc = _.partial(_.result, _, 'remove');
+    destroyOption(skipCommand, forceCommand) {
+        const _destroyFunc = _.partial(_.result, _, 'destroy');
+        const _removeFunc = _.partial(_.result, _, 'remove');
 
         _destroyFunc(this.documentDownEvent);
         delete this.documentDownEvent;
@@ -54,276 +61,313 @@ Entry.Field = function() {};
 
         delete this._neighborFields;
 
+        _cache.clear();
+        invisibleCanvas = undefined;
+        invisibleContext = undefined;
+
         this.isEditing() && Entry.Utils.blur();
         this._isEditing = false;
 
         skipCommand !== true && this.command(forceCommand);
-    };
+    }
 
-    p._attachDisposeEvent = function(func) {
-        var that = this;
+    _attachDisposeEvent(func) {
+        const defaultFunc = (skipCommand) => {
+            this.destroyOption(skipCommand);
+        };
 
-        func =
-            func ||
-            function(skipCommand) {
-                that.destroyOption(skipCommand);
-            };
-        that.disposeEvent = Entry.disposeEvent.attach(that, func);
-    };
+        func = func || defaultFunc;
+        this.disposeEvent = Entry.disposeEvent.attach(this, func);
+    }
 
-    p.align = function(x, y, animate = true) {
-        var svgGroup = this.svgGroup;
+    align(x, y, animate = true) {
+        const svgGroup = this.svgGroup;
         if (this._position) {
-            if (this._position.x) x = this._position.x;
-            if (this._position.y) y = this._position.y;
+            if (this._position.x) {
+                x = this._position.x;
+            }
+            if (this._position.y) {
+                y = this._position.y;
+            }
         }
 
-        var transform = 'translate(' + x + ',' + y + ')';
+        const transform = `translate(${x},${y})`;
 
-        if (animate)
+        if (animate) {
             svgGroup.animate(
                 {
-                    transform: transform,
+                    transform,
                 },
                 300,
                 mina.easeinout
             );
-        else
+        } else {
             svgGroup.attr({
-                transform: transform,
+                transform,
             });
+        }
 
-        this.box.set({ x: x, y: y });
-    };
+        this.box.set({ x, y });
+    }
 
     //get absolute position of field from parent board
-    p.getAbsolutePosFromBoard = function() {
-        var blockView = this._block.view;
-        var contentPos = blockView.getContentPos();
-        var absPos = blockView.getAbsoluteCoordinate();
+    getAbsolutePosFromBoard() {
+        const blockView = this._block.view;
+        const contentPos = blockView.getContentPos();
+        const absPos = blockView.getAbsoluteCoordinate();
 
         return {
             x: absPos.x + this.box.x + contentPos.x,
             y: absPos.y + this.box.y + contentPos.y,
         };
-    };
+    }
 
     //get absolute position of field from parent document
-    p.getAbsolutePosFromDocument = function() {
-        var blockView = this._block.view;
-        var contentPos = blockView.getContentPos();
-        var absPos = blockView.getAbsoluteCoordinate();
-        var offset = blockView.getBoard().svgDom.offset();
-
+    getAbsolutePosFromDocument() {
+        const blockView = this._block.view;
+        const board = blockView.getBoard();
+        const { scale = 1 } = board || {};
+        const contentPos = blockView.getContentPos();
+        const absPos = blockView.getAbsoluteCoordinate();
+        const offset = blockView.getBoard().svgDom.offset();
         return {
-            x: absPos.x + this.box.x + contentPos.x + offset.left,
-            y:
-                absPos.y +
-                this.box.y +
-                contentPos.y +
-                offset.top -
-                $(window).scrollTop(),
+            x: absPos.x + this.box.x + contentPos.x * scale + offset.left,
+            y: absPos.y + this.box.y + contentPos.y + offset.top - $(window).scrollTop(),
         };
-    };
+    }
 
     //get relative position of field from blockView origin
-    p.getRelativePos = function() {
-        var contentPos = this._block.view.getContentPos();
-        var { x, y } = this.box;
+    getRelativePos() {
+        const contentPos = this._block.view.getContentPos();
+        const { x, y } = this.box;
 
         return {
             x: x + contentPos.x,
             y: y + contentPos.y,
         };
-    };
+    }
 
-    p.truncate = function() {
-        var value = String(this._convert(this.getValue()));
-        var limit = this.TEXT_LIMIT_LENGTH;
-        var ret = value.substring(0, limit);
-        if (value.length > limit) ret += '...';
+    truncate() {
+        const value = String(this._convert(this.getValue()));
+        const limit = this.TEXT_LIMIT_LENGTH;
+        let ret = value.substring(0, limit);
+        if (value.length > limit) {
+            ret += '...';
+        }
         return ret;
-    };
+    }
 
-    p.appendSvgOptionGroup = function() {
+    appendSvgOptionGroup() {
         return this._block.view.getBoard().svgGroup.elem('g');
-    };
+    }
 
-    p.getValue = function() {
-        var data = this._block.params[this._index];
+    getValue() {
+        let data = this._block.params[this._index];
 
-        var contents = this._contents;
+        const contents = this._contents;
 
         if (contents && !_.isEmpty(contents.reference)) {
-            var reference = contents.reference.concat();
-            if (reference[0][0] === '%')
-                data = this._block.params[
-                    parseInt(reference.shift().substr(1)) - 1
-                ];
-            if (!data) return data;
+            const reference = contents.reference.concat();
+            if (reference[0][0] === '%') {
+                data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
+            }
+            if (!data) {
+                return data;
+            }
 
             return data.getDataByPointer(reference);
-        } else return data;
-    };
+        } else {
+            return data;
+        }
+    }
 
-    p.setValue = function(value, reDraw) {
-        if (this.value == value) return;
+    setValue(value, reDraw) {
+        if (this.value === value) {
+            return;
+        }
 
         this.value = value;
 
-        var contents = this._contents;
+        const contents = this._contents;
 
         if (contents && !_.isEmpty(contents.reference)) {
-            var ref = contents.reference.concat();
-            var index = ref.pop();
-            var targetBlock = this._block.params[this._index];
-            if (ref.length && ref[0][0] === '%')
-                targetBlock = this._block.params[
-                    parseInt(ref.shift().substr(1)) - 1
-                ];
-            if (ref.length) targetBlock = targetBlock.getDataByPointer(ref);
+            const ref = contents.reference.concat();
+            const index = ref.pop();
+            let targetBlock = this._block.params[this._index];
+            if (ref.length && ref[0][0] === '%') {
+                targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
+            }
+            if (ref.length) {
+                targetBlock = targetBlock.getDataByPointer(ref);
+            }
             targetBlock.params[index] = value;
-        } else this._block.params[this._index] = value;
+        } else {
+            this._block.params[this._index] = value;
+        }
 
-        if (reDraw) this._blockView.reDraw();
-    };
+        if (reDraw) {
+            this._blockView.reDraw();
+        }
+    }
 
-    p._isEditable = function() {
-        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly)
+    _isEditable() {
+        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) {
             return false;
-        var dragMode = this._block.view.dragMode;
-        if (dragMode == Entry.DRAG_MODE_DRAG) return false;
-        var blockView = this._block.view;
-        var board = blockView.getBoard();
-        if (board.disableMouseEvent === true) return false;
-
-        var selectedBlockView = board.workspace.selectedBlockView;
-
-        if (!selectedBlockView || board != selectedBlockView.getBoard())
+        }
+        const dragMode = this._block.view.dragMode;
+        if (dragMode == Entry.DRAG_MODE_DRAG) {
             return false;
+        }
+        const blockView = this._block.view;
+        const board = blockView.getBoard();
+        if (board.disableMouseEvent === true) {
+            return false;
+        }
 
-        var root = blockView.getSvgRoot();
+        const selectedBlockView = board.workspace.selectedBlockView;
 
-        return (
-            root == selectedBlockView.svgGroup ||
-            $(root).has($(blockView.svgGroup))
-        );
-    };
+        if (!selectedBlockView || board != selectedBlockView.getBoard()) {
+            return false;
+        }
 
-    p._selectBlockView = function() {
-        var blockView = this._block.view;
+        if (selectedBlockView.isVerticalMove) {
+            return false;
+        }
+
+        const root = blockView.getSvgRoot();
+
+        return root == selectedBlockView.svgGroup || $(root).has($(blockView.svgGroup));
+    }
+
+    _selectBlockView() {
+        const blockView = this._block.view;
         blockView.getBoard().setSelectedBlock(blockView);
-    };
+    }
 
-    p._bindRenderOptions = function() {
-        if (this.svgGroup._isBinded) return;
-
-        var that = this;
+    _bindRenderOptions() {
+        if (this.svgGroup._isBinded) {
+            return;
+        }
 
         this.svgGroup._isBinded = true;
-        $(this.svgGroup).on(
-            'mouseup.fieldBindEvent touchend.fieldBindEvent',
-            function(e) {
-                if (that._isEditable()) {
-                    that._code = that.getCode();
-                    that.destroyOption();
-                    that._startValue = that.getValue();
-                    that.renderOptions();
-                    that._isEditing = true;
+        $(this.svgGroup)
+            .off('mouseup.fieldBindEvent touchend.fieldBindEvent')
+            .on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
+                if (this._isEditable()) {
+                    this._code = this.getCode();
+                    this.destroyOption();
+                    this._startValue = this.getValue();
+                    this.renderOptions();
+                    this._isEditing = true;
                 }
-            }
-        );
-    };
+            });
+    }
 
-    p.pointer = function(pointer = []) {
+    pointer(pointer = []) {
         return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
-    };
+    }
 
-    p.getFontSize = function(size) {
-        return size || this._blockView.getSkeleton().fontSize || 12;
-    };
+    getFontSize(size) {
+        return size || this._blockView.getSkeleton().fontSize || 10;
+    }
 
-    p.getContentHeight = function() {
-        return Entry.isMobile() ? 22 : 16;
-    };
+    getContentHeight() {
+        return 20;
+    }
 
-    p._getRenderMode = function() {
-        var mode = this._blockView.renderMode;
+    _getRenderMode() {
+        const mode = this._blockView.renderMode;
         return mode !== undefined ? mode : Entry.BlockView.RENDER_MODE_BLOCK;
-    };
+    }
 
-    p._convert = function(key, value) {
+    _convert(key, value) {
         value = value !== undefined ? value : this.getValue();
-        var reg = /&value/gm;
-        if (reg.test(value)) return value.replace(reg, '');
-        else if (this._contents.converter) {
+        const reg = /&value/gm;
+        if (reg.test(value)) {
+            return value.replace(reg, '');
+        } else if (this._contents.converter) {
             return this._contents.converter(key, value);
-        } else return key;
-    };
+        } else {
+            return key;
+        }
+    }
 
-    p._updateOptions = function() {
-        var block = Entry.block[this._blockView.type];
-        if (!block) return;
+    _updateOptions() {
+        const block = Entry.block[this._blockView.type];
+        if (!block) {
+            return;
+        }
 
-        var syntaxes = block.syntax;
+        const syntaxes = block.syntax;
 
-        for (var key in syntaxes) {
-            var syntax = syntaxes[key];
-            if (!syntax) continue;
-            if (syntax.length === 0) continue;
+        for (const key in syntaxes) {
+            const syntax = syntaxes[key];
+            if (!syntax) {
+                continue;
+            }
+            if (syntax.length === 0) {
+                continue;
+            }
 
-            for(var i in syntax) {
-                var textParams = syntax[i].textParams;
-                if (!textParams) continue;
+            for (const i in syntax) {
+                const textParams = syntax[i].textParams;
+                if (!textParams) {
+                    continue;
+                }
 
                 textParams[this._index].options = this._contents.options;
             }
-
         }
-    };
+    }
 
-    p._shouldReturnValue = function(value) {
-        var obj = this._block.getCode().object;
+    _shouldReturnValue(value) {
+        const obj = this._block.getCode().object;
         return value === '?' || !obj || obj.constructor !== Entry.EntryObject;
-    };
+    }
 
-    p.isEditing = function(value) {
+    isEditing(value) {
         return !!this._isEditing;
-    };
+    }
 
-    p.getDom = function(query) {
+    getDom(query) {
         if (_.isEmpty(query)) {
             return this.svgGroup;
         }
 
         query = [...query];
 
-        var key = query.shift();
+        const key = query.shift();
         if (key === 'option') {
             return this.optionGroup;
         }
 
         //default return value
         return this.svgGroup;
-    };
+    }
 
-    p.optionDomCreated = function() {
+    optionDomCreated() {
         this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
-    };
+    }
 
-    p.fixNextValue = function(value) {
+    fixNextValue(value) {
         this._nextValue = value;
-    };
+    }
 
-    p.getFieldRawType = function() {
-        if (this instanceof Entry.FieldTextInput) return 'textInput';
-        else if (this instanceof Entry.FieldDropdown) return 'dropdown';
-        else if (this instanceof Entry.FieldDropdownDynamic)
+    getFieldRawType() {
+        if (this instanceof Entry.FieldTextInput) {
+            return 'textInput';
+        } else if (this instanceof Entry.FieldDropdown) {
+            return 'dropdown';
+        } else if (this instanceof Entry.FieldDropdownDynamic) {
             return 'dropdownDynamic';
-        else if (this instanceof Entry.FieldKeyboard) return 'keyboard';
-    };
+        } else if (this instanceof Entry.FieldKeyboard) {
+            return 'keyboard';
+        } else if (this instanceof Entry.FieldLed) {
+            return 'led';
+        }
+    }
 
-    p.getTextValueByValue = function(value) {
+    getTextValueByValue(value) {
         switch (this.getFieldRawType()) {
             case 'keyboard':
                 return Entry.getKeyCodeMap()[value];
@@ -336,77 +380,60 @@ Entry.Field = function() {};
             case 'textInput':
                 return value;
         }
-    };
+    }
 
-    p.getBoard = function() {
+    getBoard() {
         return _.result(this._blockView, 'getBoard');
-    };
+    }
 
-    p.getCode = function() {
+    getCode() {
         return _.result(this.getBoard(), 'code');
-    };
+    }
 
-    p.getTextValue = function() {
+    getTextValue() {
         return this.getValue();
-    };
+    }
 
-    p.getIndex = function() {
+    getFontFamily() {
+        return window.loadFontFamily || EntryStatic.fontFamily || 'NanumGothic';
+    }
+
+    getIndex() {
         return this._index;
-    };
+    }
 
-    p.getTextBBox = (function() {
-        var _cache = {};
-        var svg;
-
-        //make invisible svg dom to body
-        //in order to calculate text width
-        function generateDom() {
-            svg = Entry.Dom(
-                $(
-                    '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
-                ),
-                { parent: $('body') }
-            );
+    getTextBBox() {
+        if (!invisibleContext) {
+            invisibleCanvas = Entry.Dom($('<canvas id="invisibleCanvas"></canvas>'))[0];
+            invisibleContext = invisibleCanvas.getContext('2d');
         }
 
-        var clearDoms = Entry.Utils.debounce(function() {
-            if (!svg) return;
-            $(svg).empty();
-        }, 500);
+        const value = this.getTextValue();
 
-        return function() {
-            if (window.fontLoaded && !svg) generateDom();
+        if (!value) {
+            return { width: 0, height: 0 };
+        }
 
-            var value = this.getTextValue();
+        const fontSize = this._font_size || '';
+        const key = `${value}&&${fontSize}`;
+        let bBox = _cache.get(key);
 
-            //empty string check
-            if (!value) return { width: 0, height: 0 };
-
-            var fontSize = this._font_size || '';
-
-            var key = value + '&&' + fontSize;
-            var bBox = _cache[key];
-
-            if (bBox) return bBox;
-
-            var textElement = this.textElement;
-            if (svg) {
-                textElement = textElement.cloneNode(true);
-                svg.append(textElement);
-            }
-
-            bBox = textElement.getBoundingClientRect();
-            clearDoms();
-
-            bBox = {
-                width: Math.round(bBox.width * 100) / 100,
-                height: Math.round(bBox.height * 100) / 100,
-            };
-
-            if (fontSize && window.fontLoaded && bBox.width && bBox.height)
-                _cache[key] = bBox;
+        if (bBox) {
             return bBox;
+        }
+
+        const board = this._blockView.getBoard();
+        const { scale = 1 } = board;
+        invisibleContext.font = `${fontSize}px ${this.getFontFamily()}`;
+        const heightLetter = EntryStatic.heightLetter || 'M';
+        bBox = {
+            width: Math.round(invisibleContext.measureText(value).width * 100) / 100,
+            height: Math.round(invisibleContext.measureText(heightLetter).width * 100) / 100,
         };
-    })();
-})(Entry.Field.prototype);
+
+        if (fontSize && window.fontLoaded && bBox.width && bBox.height) {
+            _cache.set(key, bBox);
+        }
+        return bBox;
+    }
+};

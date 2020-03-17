@@ -1,51 +1,50 @@
 'use strict';
+Entry.FieldTrashcan = class FieldTrashcan {
+    constructor(board) {
+        if (board) {
+            this.setBoard(board);
+        }
+        this.dragBlock = null;
+        this.dragBlockObserver = null;
+        this.isOver = false;
+        if (Entry.windowResized) {
+            Entry.windowResized.attach(this, this.setPosition);
+        }
+    }
 
-Entry.FieldTrashcan = function(board) {
-    if (board) this.setBoard(board);
-
-    this.dragBlock = null;
-    this.dragBlockObserver = null;
-    this.isOver = false;
-
-    if (Entry.windowResized) Entry.windowResized.attach(this, this.setPosition);
-};
-
-(function(p) {
-    p._generateView = function() {
+    _generateView() {
         this.svgGroup = this.board.svg.elem('g');
         this.renderStart();
         this._addControl();
-    };
+    }
 
-    p.renderStart = function() {
-        var path = Entry.mediaFilePath + 'delete_';
-        this.trashcanTop = this.svgGroup.elem('image', {
-            href: path + 'cover.png',
-            width: 60,
-            height: 20,
-        });
-
+    renderStart() {
+        const path = `${Entry.mediaFilePath}delete_`;
         this.svgGroup.elem('image', {
-            href: path + 'body.png',
-            y: 20,
-            width: 60,
-            height: 60,
+            href: `${path}body.svg`,
+            y: 19,
+            width: 61,
+            height: 70,
         });
-    };
+        this.trashcanTop = this.svgGroup.elem('image', {
+            href: `${path}cover.svg`,
+            width: 60,
+            height: 27,
+        });
+    }
 
-    p._addControl = function() {
-        var that = this;
+    _addControl() {
         $(this.svgGroup).bind('mousedown', function(e) {
             if (Entry.Utils.isRightButton(e)) {
                 e.stopPropagation();
                 $('#entryWorkspaceBoard').css('background', 'white');
             }
         });
-    };
+    }
 
-    p.updateDragBlock = function() {
-        var block = this.board.dragBlock;
-        var observer = this.dragBlockObserver;
+    updateDragBlock() {
+        const block = this.board.dragBlock;
+        const observer = this.dragBlockObserver;
 
         if (observer) {
             observer.destroy();
@@ -53,110 +52,119 @@ Entry.FieldTrashcan = function(board) {
         }
 
         if (block) {
-            this.dragBlockObserver = block.observe(this, 'checkBlock', [
-                'x',
-                'y',
-            ]);
+            if (block instanceof Entry.Comment) {
+                this.dragBlockObserver = block.observe(this, 'checkBlock', ['moveX', 'moveY']);
+            } else {
+                this.dragBlockObserver = block.observe(this, 'checkBlock', ['x', 'y']);
+            }
         } else {
             if (this.isOver && this.dragBlock) {
-                var prevBlock = this.dragBlock.block.getPrevBlock();
-                if (!prevBlock) {
-                    Entry.do(
-                        'destroyThread',
-                        this.dragBlock.block.thread,
-                        'trashcan'
-                    ).isPass(true, true);
-                    createjs.Sound.play('entryDelete');
+                if (this.dragBlock instanceof Entry.BlockView) {
+                    const prevBlock = this.dragBlock.block.getPrevBlock();
+                    if (!prevBlock) {
+                        Entry.do('destroyThread', this.dragBlock.block.thread, 'trashcan').isPass(
+                            true,
+                            true
+                        );
+                        Entry.Utils.playSound('entryDelete');
+                    }
+                } else if (this.dragBlock instanceof Entry.Comment) {
+                    Entry.do('removeComment', this.dragBlock).isPass(true, true);
                 }
             }
             this.tAnimation(false);
         }
         this.dragBlock = block;
-    };
+    }
 
-    p.checkBlock = function() {
-        var dragBlock = this.dragBlock;
-        if (!dragBlock || !dragBlock.block.isDeletable()) return;
+    checkBlock() {
+        const dragBlock = this.dragBlock;
+        if (!dragBlock || (dragBlock.block && !dragBlock.block.isDeletable())) {
+            return;
+        }
 
-        var boardOffset = this.board.offset();
-        var position = this.getPosition();
-        var trashcanX = position.x + boardOffset.left;
-        var trashcanY = position.y + boardOffset.top;
+        const boardOffset = this.board.offset();
+        const position = this.getPosition();
+        const trashcanX = position.x + boardOffset.left;
+        const trashcanY = position.y + boardOffset.top;
 
-        var mouseX, mouseY;
-        var instance = dragBlock.dragInstance;
+        let mouseX;
+        let mouseY;
+        const instance = dragBlock.dragInstance;
         if (instance) {
             mouseX = instance.offsetX;
             mouseY = instance.offsetY;
         }
-        var isOver = mouseX >= trashcanX && mouseY >= trashcanY;
+        const isOver = mouseX >= trashcanX && mouseY >= trashcanY;
         this.tAnimation(isOver);
-    };
+    }
 
-    p.align = function() {
-        var position = this.getPosition();
-        var transform = 'translate(' + position.x + ',' + position.y + ')';
+    align() {
+        const position = this.getPosition();
+        const transform = `translate(${position.x},${position.y})`;
 
         this.svgGroup.attr({
-            transform: transform,
+            transform,
         });
-    };
+    }
 
-    p.setPosition = function() {
-        if (!this.board) return;
-        var svgDom = this.board.svgDom;
-        this._x = svgDom.width() - 110;
+    setPosition() {
+        if (!this.board) {
+            return;
+        }
+        const svgDom = this.board.svgDom;
+        this._x = svgDom.width() - 83.5;
         this._y = svgDom.height() - 110;
         this.align();
-    };
+    }
 
-    p.getPosition = function() {
+    getPosition() {
         return {
             x: this._x,
             y: this._y,
         };
-    };
+    }
 
-    p.tAnimation = function(isOver) {
-        if (isOver === this.isOver) return;
+    tAnimation(isOver) {
+        if (isOver === this.isOver) {
+            return;
+        }
 
         isOver = isOver === undefined ? true : isOver;
-        var animation;
-        var trashTop = this.trashcanTop;
-        if (isOver)
-            animation = {
-                translateX: 15,
-                translateY: -25,
-                rotateZ: 30,
-            };
-        else
-            animation = {
-                translateX: 0,
-                translateY: 0,
-                rotateZ: 0,
-            };
+        const trashTop = this.trashcanTop;
+        if (isOver) {
+            $(trashTop).attr('transform', 'translate(20, -25) rotate(30)');
+            // $(trashTop).attr('class', 'trashcanOpen');
+        } else {
+            $(trashTop).attr('transform', 'translate(0, 0) rotate(0)');
+            // $(trashTop).attr('class', 'trashcanClose');
+        }
 
-        $(trashTop).velocity(animation, { duration: 50 });
         this.isOver = isOver;
-    };
+    }
 
-    p.setBoard = function(board) {
-        if (this._dragBlockObserver) this._dragBlockObserver.destroy();
+    setBoard(board) {
+        if (this._dragBlockObserver) {
+            this._dragBlockObserver.destroy();
+        }
         this.board = board;
-        if (!this.svgGroup) this._generateView();
+        if (!this.svgGroup) {
+            this._generateView();
+        }
 
         //control z-index
-        var svg = board.svg;
-        var firstChild = svg.firstChild;
-        if (firstChild) svg.insertBefore(this.svgGroup, firstChild);
-        else svg.appendChild(this.svgGroup);
+        const svg = board.svg;
+        const firstChild = svg.firstChild;
+        if (firstChild) {
+            svg.insertBefore(this.svgGroup, firstChild);
+        } else {
+            svg.appendChild(this.svgGroup);
+        }
 
-        this._dragBlockObserver = board.observe(this, 'updateDragBlock', [
-            'dragBlock',
-        ]);
+        this._dragBlockObserver = board.observe(this, 'updateDragBlock', ['dragBlock']);
         this.svgGroup.attr({
-            filter: 'url(#entryTrashcanFilter_' + board.suffix + ')',
+            filter: `url(#entryTrashcanFilter_${board.suffix})`,
         });
         this.setPosition();
-    };
-})(Entry.FieldTrashcan.prototype);
+    }
+};

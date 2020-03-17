@@ -1,46 +1,36 @@
 'use strict';
 
-const merge = require('webpack-merge');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const common = require('./common.js');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
-module.exports = merge(common, {
+module.exports = {
     entry: {
         'entry.min': './src/entry.js',
     },
     mode: 'production',
     output: {
+        chunkFilename: '[name].[contenthash].js',
         filename: '[name].js',
     },
     module: {
-        rules: [
-            {
-                test: /\.less$/,
-                use: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            loader: 'css-loader',
-                            options: {
-                                url: false,
-                                minimize: true,
-                                sourceMap: false,
-                            },
-                        },
-                        {
-                            loader: 'less-loader',
-                            options: {
-                                sourceMap: false,
-                            },
-                        },
-                    ],
-                }),
-            },
+        rules: [],
+    },
+    plugins: [
+        new MiniCssExtractPlugin({
+            filename: '[name].css',
+            chunkFilename: '[name][contenthash].css',
+        }),
+    ],
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                include: /\.min\.js$/,
+                parallel: true,
+                terserOptions: {
+                    ecma: 5,
+                },
+            }),
         ],
     },
-    plugins: [new UglifyJSPlugin({
-        include: /\.min\.js$/,
-    }), new LodashModuleReplacementPlugin()],
-});
+};

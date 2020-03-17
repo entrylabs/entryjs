@@ -1,46 +1,47 @@
-/*
- */
 'use strict';
 
-/*
- *
- */
-Entry.FieldTextInput = function(content, blockView, index) {
-    this._blockView = blockView;
-    this._block = blockView.block;
+import { Angle, Number } from '@entrylabs/tool';
 
-    this.box = new Entry.BoxModel();
+Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
+    constructor(content, blockView, index) {
+        super(content, blockView, index);
+        const { data = {} } = blockView;
+        const { type = 'text' } = data;
+        this.type = type;
+        this.TEXT_Y_PADDING = 3;
 
-    this.svgGroup = null;
+        this._blockView = blockView;
+        this.board = this._blockView.getBoard();
+        this._block = blockView.block;
 
-    this.position = content.position;
-    this._contents = content;
-    this._isClearBG = content.clearBG || false;
-    this._index = index;
-    this.value = this.getValue() || '';
-    this._CONTENT_HEIGHT = this.getContentHeight();
-    this._font_size = 12;
-    this._neighborFields = null;
+        this.box = new Entry.BoxModel();
 
-    this.renderStart();
-};
+        this.svgGroup = null;
+        this.optionWidget = null;
+        this.optionInput = null;
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
+        this.position = content.position;
+        this._contents = content;
+        this._isClearBG = content.clearBG || false;
+        this._index = index;
+        this._CONTENT_HEIGHT = this.getContentHeight();
+        this._font_size = content.fontSize || 10;
+        this._neighborFields = null;
 
-(function(p) {
-    var X_PADDING = 6,
-        TEXT_Y_PADDING = 4;
+        this.renderStart();
+    }
 
-    p._focusNeighbor = function(direction) {
-        var fields = this.getNeighborFields();
+    // 기본 모드의 keyEvent(tab) 용
+    _focusNeighbor(direction) {
+        const fields = this.getNeighborFields();
 
-        var idx = fields.indexOf(this);
+        let idx = fields.indexOf(this);
         if (direction === 'prev') {
             idx--;
         } else {
             idx++;
         }
-        var field = fields[idx];
+        const field = fields[idx];
 
         //no field to focus
         if (!field) {
@@ -49,10 +50,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         this.destroyOption(undefined, true);
         field.renderOptions(fields);
-    };
+    }
 
-    p.renderStart = function() {
-        var blockView = this._blockView;
+    renderStart() {
+        const blockView = this._blockView;
 
         if (!this.svgGroup) {
             this.svgGroup = blockView.contentSvgGroup.elem('g');
@@ -60,34 +61,35 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
-                x: X_PADDING / 2,
-                y: TEXT_Y_PADDING,
+                x: 0,
+                y: this.TEXT_Y_PADDING,
                 fill: this._contents.color || 'black',
-                'font-size': this._font_size + 'px',
+                'font-size': `${this._font_size}px`,
+                'font-weight': 'bold',
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
             });
         }
 
-        var contents = this._contents;
         this.svgGroup.attr({ class: 'entry-input-field' });
 
-        this._setTextValue();
+        this._setConvertedValue();
 
-        var width = this.getTextWidth();
-
-        var y = this.position && this.position.y ? this.position.y : 0;
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const width = this.getTextWidth();
+        let y = this.position && this.position.y ? this.position.y : 0;
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         y -= CONTENT_HEIGHT / 2;
-        if (!this._header)
+        if (!this._header) {
             this._header = this.svgGroup.elem('rect', {
                 width,
+                x: 0,
                 y,
                 height: CONTENT_HEIGHT,
-                rx: 3,
+                rx: 0,
                 ry: 3,
                 fill: '#fff',
-                'fill-opacity': this._isClearBG ? 0 : 0.4,
+                'fill-opacity': 0,
             });
-        else {
+        } else {
             this._header.setAttribute('width', width);
         }
 
@@ -105,103 +107,247 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             width,
             height: CONTENT_HEIGHT,
         });
-    };
+    }
 
-    p.renderOptions = function(neighborFields) {
+    renderOptions(neighborFields) {
+        const { _block = {} } = this;
+        const { defaultType = 'text' } = _block;
         if (neighborFields) {
             this._neighborFields = neighborFields;
         }
 
-        var that = this;
+        this.optionGroup = Entry.Dom('div', {
+            class: 'entry-widget-parent',
+            parent: $('body'),
+        });
 
-        var blockView = this._blockView;
+        if (Entry.isMobile()) {
+            if (defaultType === 'number') {
+                this.optionWidget = this._getNumberOptionWidget();
+            } else if (defaultType === 'angle') {
+                this.optionWidget = this._getAngleOptionWidget();
+            } else {
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+            }
+        } else {
+            if (defaultType === 'angle') {
+                this.optionInput = this._getInputFieldOption();
+                this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+            } else {
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+            }
+        }
 
-        var func = function(skipCommand, forceCommand) {
-            skipCommand !== true && that.applyValue();
-            that.destroyOption(skipCommand, forceCommand === true);
-        };
+        this._setTextValue();
+        this.optionDomCreated();
+    }
 
-        this._attachDisposeEvent(func);
+    _getNumberOptionWidget() {
+        return new Number({
+            type: 'numberWidget',
+            data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
+                positionDom: this.svgGroup,
+                onOutsideClick: () => {
+                    this.destroyOption(undefined, true);
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('click', (eventName, value) => {
+            let prevValue = String(this.getValue());
+            switch (eventName) {
+                case 'buttonPressed':
+                    if (prevValue === '0' && _.includes(['0', '.'], value) === false) {
+                        prevValue = '';
+                    }
+                    this.applyValue(prevValue + value);
+                    break;
+                case 'backButtonPressed': {
+                    const nextValue = prevValue.substring(0, prevValue.length - 1);
+                    this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
+                    break;
+                }
+            }
+        });
+    }
 
-        this.optionGroup = Entry.Dom('input', {
+    /**
+     *
+     * @param {Array} excludeDom outside 로 판단하지 않을 dom target list
+     * @returns {EntryTool} Angle Widget
+     * @private
+     */
+    _getAngleOptionWidget(...excludeDom) {
+        return new Angle({
+            type: 'angleWidget',
+            data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
+                angle: this.getValue(),
+                outsideExcludeDom: excludeDom,
+                positionDom: this.svgGroup,
+                onOutsideClick: (angle) => {
+                    this.applyValue(FieldTextInput._refineDegree(angle));
+                    this.destroyOption();
+                },
+            },
+            container: this.optionGroup[0],
+        })
+            .on('click', (eventName, value) => {
+                let nextValue = 0;
+                switch (eventName) {
+                    case 'buttonPressed': {
+                        nextValue = this._getNextValue(value);
+                        break;
+                    }
+                    case 'backButtonPressed': {
+                        nextValue = this._getSubstringValue();
+                        break;
+                    }
+                }
+                this.applyValue(nextValue);
+            })
+            .on('change', (value) => {
+                this.applyValue(String(value));
+            });
+    }
+
+    _getInputFieldOption() {
+        const inputField = Entry.Dom('input', {
             class: 'entry-widget-input-field',
             parent: $('body'),
         });
 
-        this.optionGroup.val(this.getValue());
+        inputField.val(this.getValue());
 
-        this.optionGroup.on('mousedown', function(e) {
+        inputField.on('mousedown', (e) => {
             e.stopPropagation();
         });
 
-        var exitKeys = [13, 27];
-        this.optionGroup.on('keyup', function(e) {
-            that.applyValue(e);
-
-            if (_.contains(exitKeys, e.keyCode || e.which))
-                that.destroyOption(undefined, true);
-        });
-
-        this.optionGroup.on('keydown', function(e) {
-            var keyCode = e.keyCode || e.which;
-
-            if (keyCode === 9) {
-                e.preventDefault();
-                that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
+        inputField.on('keyup', (e) => {
+            this.applyValue(inputField[0].value, true);
+            if (_.includes([13, 27], e.keyCode || e.which)) {
+                this.destroyOption(undefined, true);
             }
         });
 
-        var { x, y } = this.getAbsolutePosFromDocument();
-        y -= this.box.height / 2;
-        this.optionGroup.css({
-            height: this._CONTENT_HEIGHT,
-            left: x,
-            top: y,
-            width: that.box.width,
+        inputField.on('keydown', (e) => {
+            const keyCode = e.keyCode || e.which;
+
+            if (keyCode === 9) {
+                e.preventDefault();
+                this._focusNeighbor(e.shiftKey ? 'prev' : 'next');
+            }
         });
 
-        this.optionGroup.focus && this.optionGroup.focus();
-
-        var optionGroup = this.optionGroup[0];
-        optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
-
-        this.optionDomCreated();
-
-        //normally option group is done editing and destroyed
-        //before blur called
-        this.optionGroup.one('blur', () => {
-            this.isEditing() && this.destroyOption(undefined, true);
+        inputField.on('blur', (e) => {
+            const isOptionGroupVisible = !!this.optionGroup.get(0).style.display;
+            if (!isOptionGroupVisible) {
+                this.destroyOption(undefined, true);
+            }
         });
-    };
 
-    p.applyValue = function() {
-        this.setValue(this.optionGroup.val());
+        const { scale = 1 } = this.board;
+        this._font_size = 10 * scale;
+        const { x, y } = this.getAbsolutePosFromDocument();
+        const height = (this._CONTENT_HEIGHT - 4) * scale;
+        inputField.css({
+            height,
+            left: x + 1,
+            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
+            width: this.box.width * scale,
+            'font-size': `${this._font_size}px`,
+            'background-color': EntryStatic.colorSet.block.lighten.CALC,
+        });
+
+        inputField.focus && inputField.focus();
+
+        inputField[0].setSelectionRange(0, inputField[0].value.length, 'backward');
+        return inputField;
+    }
+
+    applyValue(value, isNotUpdate) {
+        let result = value;
+        if (this.optionWidget) {
+            switch (this.optionWidget.type) {
+                case 'angleWidget':
+                    this.optionWidget.data = {
+                        angle: FieldTextInput._refineDegree(value),
+                    };
+                    if (
+                        Entry.Utils.isNumber(value) &&
+                        value.lastIndexOf('.') !== value.length - 1
+                    ) {
+                        result = String(result % 360);
+                    }
+                    break;
+            }
+        }
+        if (this.optionInput && !isNotUpdate) {
+            this.optionInput.val(result);
+        }
+
+        this.setValue(result);
         this._setTextValue();
         this.resize();
-    };
+    }
 
-    p.resize = function() {
-        var obj = { width: this.getTextWidth() };
-
-        this._header.attr(obj);
-        this.optionGroup.css(obj);
-        this.box.set(obj);
+    resize() {
+        const { scale = 1 } = this.board;
+        const size = { width: this.getTextWidth() };
+        const scaleSize = { width: this.getTextWidth() / scale };
+        this._header.attr(scaleSize);
+        this.box.set(scaleSize);
+        this.optionInput && this.optionInput.css(size);
         this._blockView.dAlignContent();
-    };
+    }
 
-    p.getTextWidth = function() {
-        return this.getTextBBox().width + X_PADDING + 2;
-    };
+    destroyOption(skipCommand, forceCommand) {
+        this._setConvertedValue();
 
-    p._setTextValue = function() {
-        var newValue = this._convert(this.getValue(), this.getValue());
-        if (this.textElement.textContent !== newValue)
-            this.textElement.textContent = newValue;
-    };
+        if (this.optionWidget) {
+            this.optionWidget.isShow && this.optionWidget.hide();
+            this.optionWidget.remove();
+            delete this.optionWidget;
+        }
 
-    p.getNeighborFields = function() {
+        if (this.optionInput) {
+            this.optionInput.remove();
+            delete this.optionInput;
+        }
+
+        super.destroyOption(skipCommand, forceCommand);
+    }
+
+    getTextWidth() {
+        return Math.max(this.getTextBBox().width, 7);
+    }
+
+    _setTextValue() {
+        const value = this.getValue();
+        if (this.textElement.textContent !== value) {
+            this.textElement.textContent = value;
+        }
+    }
+
+    _setConvertedValue() {
+        const { _block = {} } = this;
+        const { defaultType = 'text' } = _block;
+        let value = this._convert(this.getValue(), this.getValue());
+
+        if (defaultType === 'angle') {
+            value += '°';
+        }
+
+        if (this.textElement.textContent !== value) {
+            this.textElement.textContent = value;
+        }
+    }
+
+    getNeighborFields() {
         if (!this._neighborFields) {
-            var FIELD_TEXT_INPUT = Entry.FieldTextInput;
+            const FIELD_TEXT_INPUT = Entry.FieldTextInput;
             this._neighborFields = this._block
                 .getRootBlock()
                 .getThread()
@@ -210,5 +356,93 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         }
 
         return this._neighborFields;
-    };
-})(Entry.FieldTextInput.prototype);
+    }
+
+    /**
+     * 기존 값의 뒤에 새 값을 추가한다. 내부에서 모든 숫자는 문자열이다.
+     * 규칙은 아래와 같다.
+     *
+     * - 마이너스 입력은 현재 값이 0 인 경우만 가능
+     * - . 은 값에서 유일하게 하나만 허용한다.
+     * - 현재 값이 0 혹은 -0 인 경우 0은 입력할 수 없다. 다른 숫자는 입력할 수 있다.
+     *
+     * @param value 이번에 입력된 값
+     * @return {string} 규칙에 맞추어 정제된 값
+     * @private
+     */
+    _getNextValue(value) {
+        let returnValue = String(this.getValue());
+        returnValue = returnValue.replace('°', '');
+
+        if (!FieldTextInput._isValidInputValue(value)) {
+            return returnValue;
+        }
+
+        switch (value) {
+            case '-':
+                if (returnValue === '0') {
+                    return '-';
+                }
+                return returnValue;
+            case '.':
+                if (/\./.test(returnValue) || returnValue === '-') {
+                    return returnValue;
+                }
+                break;
+            case '0':
+                if (returnValue.startsWith('0') || returnValue.startsWith('-0')) {
+                    return returnValue;
+                }
+                break;
+            default:
+                if (returnValue === '0') {
+                    return value;
+                }
+                break;
+        }
+
+        returnValue += value;
+        return returnValue;
+    }
+
+    /**
+     * 현재 값 블록에서 마지막 숫자를 삭제한 값을 반환한다.
+     * 0 인 경우는 0 을 반환, - 인 경우는 0 을 반환한다.
+     * @returns {string} 마지막 위치가 삭제된 블록 값
+     * @private
+     */
+    _getSubstringValue() {
+        const returnValue = String(this.getValue());
+        if (returnValue.length === 1) {
+            return '0';
+        } else {
+            return returnValue.slice(0, returnValue.length - 1);
+        }
+    }
+
+    static _refineDegree(value) {
+        const reg = /&value/gm;
+        if (reg.test(value)) {
+            return value;
+        }
+
+        const numberOnlyValue = String(value).match(/[\d|\-|.|\+]+/g);
+        let refinedDegree = (numberOnlyValue && numberOnlyValue[0]) || '0';
+        if (refinedDegree > 360) {
+            refinedDegree %= 360;
+        } else if (refinedDegree < 0) {
+            refinedDegree = refinedDegree % 360;
+        }
+        refinedDegree = String(refinedDegree);
+
+        if (refinedDegree.lastIndexOf('.') === refinedDegree.length - 1) {
+            return refinedDegree.slice(0, refinedDegree.length - 1);
+        }
+
+        return refinedDegree;
+    }
+
+    static _isValidInputValue(value) {
+        return Entry.Utils.isNumber(value) || value === '-' || value === '.';
+    }
+};

@@ -2,38 +2,31 @@
  */
 'use strict';
 
-require('./field');
+import { Angle } from '@entrylabs/tool';
 
-/*
- *
- */
-Entry.FieldAngle = function(content, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
+Entry.FieldAngle = class FieldAngle extends Entry.Field {
+    constructor(content, blockView, index) {
+        super(content, blockView, index);
 
-    this.box = new Entry.BoxModel();
+        this.X_PADDING = 8;
+        this.TEXT_Y_PADDING = 4;
 
-    this.svgGroup = null;
+        this._block = blockView.block;
+        this._blockView = blockView;
+        this.box = new Entry.BoxModel();
+        this.svgGroup = null;
+        this.position = content.position;
+        this._contents = content;
+        this._index = index;
 
-    this.position = content.position;
-    this._contents = content;
-    this._index = index;
-    var value = this.getValue();
-    this.setValue(this.modValue(value !== undefined ? value : 90));
+        const value = this.getValue();
+        this.setValue(FieldAngle._refineDegree(value !== undefined ? value : '90'));
 
-    this._CONTENT_HEIGHT = this.getContentHeight();
-    this.renderStart();
-};
+        this._CONTENT_HEIGHT = this.getContentHeight();
+        this.renderStart();
+    }
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
-
-(function(p) {
-    var X_PADDING = 8,
-        TEXT_Y_PADDING = 4,
-        RADIUS = 47.5,
-        FILL_PATH = 'M 0,0 v -47.5 A 47.5,47.5 0 %LARGE 1 %X,%Y z';
-
-    p.renderStart = function(board, mode) {
+    renderStart() {
         if (this.svgGroup) {
             $(this.svgGroup).remove();
         }
@@ -43,15 +36,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         });
 
         this.textElement = this.svgGroup.elem('text', {
-            x: X_PADDING / 2,
-            y: TEXT_Y_PADDING,
+            x: this.X_PADDING / 2,
+            y: this.TEXT_Y_PADDING,
             'font-size': '11px',
+            'font-family': EntryStatic.fontFamily || 'NanumGothic',
         });
 
         this._setTextValue();
 
-        var width = this.getTextWidth();
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const width = this.getTextWidth();
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
         this._header = this.svgGroup.elem('rect', {
             x: 0,
@@ -74,178 +68,132 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             width: width,
             height: CONTENT_HEIGHT,
         });
-    };
+    }
 
-    p.renderOptions = function() {
-        this._attachDisposeEvent((skipCommand, forceCommand) => {
-            skipCommand !== true && this.applyValue();
-            this.destroyOption(skipCommand, forceCommand === true);
-        });
-
-        //html option
-        this.optionGroup = Entry.Dom('input', {
-            class: 'entry-widget-input-field',
+    renderOptions() {
+        this.optionGroup = Entry.Dom('div', {
+            class: 'entry-widget-angle',
             parent: $('body'),
         });
 
-        this.optionGroup.val(this.value);
-
-        this.optionGroup.on('mousedown touchstart', (e) => e.stopPropagation());
-
-        this.optionGroup.on('keyup', (e) => {
-            this.applyValue(e);
-
-            if (_.contains([13, 27], e.keyCode || e.which))
-                this.destroyOption(undefined, true);
-        });
-
-        var pos = this.getAbsolutePosFromDocument();
-        pos.y -= this.box.height / 2;
-        this.optionGroup.css({
-            height: this._CONTENT_HEIGHT,
-            left: pos.x,
-            top: pos.y,
-            width: this.box.width,
-        });
-
-        //svg option dom
-        this.angleOptionGroup = this.appendSvgOptionGroup();
-        var circle = this.angleOptionGroup.elem('circle', {
-            x: 0,
-            y: 0,
-            r: RADIUS + 2.5,
-            class: 'entry-field-angle-circle',
-        });
-
-        var dividerGroup = this.angleOptionGroup.elem('g');
-
-        _.range(0, 360, 15).forEach((a) => {
-            dividerGroup.elem('line', {
-                x1: RADIUS,
-                y1: 0,
-                x2: RADIUS - (a % 45 === 0 ? 8.3 : 6),
-                y2: 0,
-                transform: 'rotate(' + a + ', ' + 0 + ', ' + 0 + ')',
-                class: 'entry-angle-divider',
+        this.angleWidget = new Angle({
+            data: {
+                angle: this.getValue(),
+                positionDom: this.svgGroup,
+                onOutsideClick: (angle) => {
+                    if (this.angleWidget) {
+                        this._applyValue(FieldAngle._refineDegree(angle));
+                        this._setTextValue();
+                        this.destroyOption();
+                    }
+                },
+            },
+            container: this.optionGroup[0],
+        })
+            .on('click', (eventName, value) => {
+                let nextValue = 0;
+                switch (eventName) {
+                    case 'buttonPressed': {
+                        nextValue = this._getNextValue(value);
+                        break;
+                    }
+                    case 'backButtonPressed': {
+                        nextValue = this._getSubstringValue();
+                        break;
+                    }
+                }
+                this._applyValue(nextValue);
+            })
+            .on('change', (value) => {
+                this._applyValue(String(value));
             });
-        });
 
-        var pos = this.getAbsolutePosFromBoard();
-        pos.x = pos.x + this.box.width / 2;
-        pos.y = pos.y + this.box.height / 2 + RADIUS + 5;
-
-        this.angleOptionGroup.attr({
-            class: 'entry-field-angle',
-            transform: 'translate(' + pos.x + ',' + pos.y + ')',
-        });
-
-        var $angleOptionGroup = $(this.angleOptionGroup);
-
-        $angleOptionGroup.bind('mousedown touchstart', (e) => {
-            e.stopPropagation();
-            $angleOptionGroup.bind(
-                'mousemove.fieldAngle touchmove.fieldAngle',
-                (e) => this._updateByCoord(e)
-            );
-            $angleOptionGroup.bind('mouseup touchend', () =>
-                $angleOptionGroup.unbind('.fieldAngle')
-            );
-        });
-
-        this._fillPath = this.angleOptionGroup.elem('path', {
-            d: FILL_PATH.replace('%X', 0)
-                .replace('%Y', 0)
-                .replace('%LARGE', 1),
-            class: 'entry-angle-fill-area',
-        });
-
-        this.angleOptionGroup.elem('circle', {
-            cx: 0,
-            cy: 0,
-            r: '1.5px',
-            fill: '#333333',
-        });
-
-        this._indicator = this.angleOptionGroup.elem('line', {
-            x1: 0,
-            y1: 0,
-            x2: 0,
-            y2: 0,
-            class: 'entry-angle-indicator',
-        });
-
-        this._indicatorCap = this.angleOptionGroup.elem('circle', {
-            cx: 0,
-            cy: 0,
-            r: '6px',
-            fill: '#397dc6',
-        });
-
-        this.updateGraph();
         this.optionGroup.focus();
         this.optionGroup.select();
         this.optionDomCreated();
-    };
+    }
 
-    p._updateByCoord = function(e) {
-        if (e.originalEvent && e.originalEvent.touches)
-            e = e.originalEvent.touches[0];
+    /**
+     * 기존 값의 뒤에 새 값을 추가한다. 내부에서 모든 숫자는 문자열이다.
+     * 규칙은 아래와 같다.
+     *
+     * - 마이너스 입력은 현재 값이 0 인 경우만 가능
+     * - . 은 값에서 유일하게 하나만 허용한다.
+     * - 현재 값이 0 혹은 -0 인 경우 0은 입력할 수 없다. 다른 숫자는 입력할 수 있다.
+     *
+     * @param value 이번에 입력된 값
+     * @return {string} 규칙에 맞추어 정제된 값
+     * @private
+     */
+    _getNextValue(value) {
+        let returnValue = String(this.getValue());
 
-        var mousePos = [e.clientX, e.clientY];
-        var absolutePos = this.getAbsolutePosFromDocument();
-        var zeroPos = [
-            absolutePos.x + this.box.width / 2,
-            absolutePos.y + this.box.height / 2 + 1,
-        ];
-
-        this.optionGroup.val(this.modValue(compute(zeroPos, mousePos)));
-        function compute(zeroPos, mousePos) {
-            var dx = mousePos[0] - zeroPos[0];
-            var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
-            var angle = Math.atan(-dy / dx);
-            angle = Entry.toDegrees(angle);
-            angle = 90 - angle;
-            if (dx < 0) angle += 180;
-            else if (dy > 0) angle += 360;
-            return Math.round(angle / 15) * 15;
+        if (!FieldAngle._isValidInputValue(value)) {
+            return returnValue;
         }
-        this.applyValue();
-    };
 
-    p.updateGraph = function() {
-        var angleRadians = Entry.toRadian(this.getValue());
-        var sinVal = Math.sin(angleRadians);
-        var cosVal = Math.cos(angleRadians);
-        var x = sinVal * RADIUS;
-        var y = cosVal * -RADIUS;
-        var largeFlag = angleRadians > Math.PI ? 1 : 0;
+        switch (value) {
+            case '-':
+                if (returnValue === '0') {
+                    return '-';
+                }
+                return returnValue;
+            case '.':
+                if (/\./.test(returnValue) || returnValue === '-') {
+                    return returnValue;
+                }
+                break;
+            case '0':
+                if (returnValue.startsWith('0') || returnValue.startsWith('-0')) {
+                    return returnValue;
+                }
+                break;
+            default:
+                if (returnValue === '0') {
+                    return value;
+                }
+                break;
+        }
 
-        this._fillPath.attr({
-            d: FILL_PATH.replace('%X', x)
-                .replace('%Y', y)
-                .replace('%LARGE', largeFlag),
-        });
+        returnValue += value;
+        return returnValue;
+    }
 
-        this._indicator.attr({ x1: 0, y1: 0, x2: x, y2: y });
+    /**
+     * 현재 값 블록에서 마지막 숫자를 삭제한 값을 반환한다.
+     * 0 인 경우는 0 을 반환, - 인 경우는 0 을 반환한다.
+     * @returns {string} 마지막 위치가 삭제된 블록 값
+     * @private
+     */
+    _getSubstringValue() {
+        let returnValue = String(this.getValue());
+        if (returnValue.length === 1) {
+            return '0';
+        } else {
+            return returnValue.slice(0, returnValue.length - 1);
+        }
+    }
 
-        x = sinVal * (RADIUS - 6);
-        y = cosVal * -(RADIUS - 6);
-        this._indicatorCap.attr({ cx: x, cy: y });
-    };
+    _applyValue(value) {
+        let rangedValue = value;
+        if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
+            rangedValue = String(rangedValue % 360);
+        }
 
-    p.applyValue = function() {
-        var value = this.optionGroup.val();
-        if (!Entry.Utils.isNumber(value) || value === '') return;
-        value = this.modValue(value);
-        this.setValue(value);
-        this.updateGraph();
+        this.setValue(rangedValue);
         this.textElement.textContent = this.getValue();
-        if (this.optionGroup) this.optionGroup.val(value);
-        this.resize();
-    };
 
-    p.resize = function() {
-        var obj = { width: this.getTextWidth() };
+        if (this.angleWidget) {
+            this.angleWidget.data = {
+                angle: FieldAngle._refineDegree(value),
+            };
+        }
+
+        this.resize();
+    }
+
+    resize() {
+        const obj = { width: this.getTextWidth() };
 
         this._header.attr(obj);
         if (this.optionGroup) {
@@ -254,47 +202,57 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         this.box.set(obj);
         this._blockView.dAlignContent();
-    };
+    }
 
-    p.getTextWidth = function() {
-        if (!this.textElement) return X_PADDING;
-        return this.getTextBBox().width + X_PADDING;
-    };
+    getTextWidth() {
+        if (!this.textElement) return this.X_PADDING;
+        return this.getTextBBox().width + this.X_PADDING;
+    }
 
-    p.getText = function() {
-        var value = this.getValue();
-        var reg = /&value/gm;
+    getText() {
+        const value = this.getValue();
+        const reg = /&value/gm;
         if (reg.test(value)) return value.replace(reg, '');
         return value + '\u00B0';
-    };
+    }
 
-    p.modValue = function(value) {
-        var reg = /&value/gm;
+    destroyOption() {
+        if (this.angleWidget) {
+            this.angleWidget.isShow && this.angleWidget.hide();
+            this.angleWidget.remove();
+            this.angleWidget = null;
+        }
+        if (this.optionGroup) {
+            this.optionGroup.remove();
+        }
+
+        super.destroyOption();
+    }
+
+    _setTextValue() {
+        this.textElement.textContent = this._convert(this.getText(), this.getValue());
+    }
+
+    static _refineDegree(value) {
+        const reg = /&value/gm;
         if (reg.test(value)) return value;
-        return value % 360;
-    };
 
-    p.destroyOption = function(skipCommand, forceCommand) {
-        var _destroyFunc = _.partial(_.result, _, 'destroy');
-        var _removeFunc = _.partial(_.result, _, 'remove');
+        let refinedDegree = String(value).match(/[\d|\-|.|\+]+/g)[0] || 0;
+        if (refinedDegree > 360) {
+            refinedDegree %= 360;
+        } else if (refinedDegree < 0) {
+            refinedDegree = refinedDegree % 360;
+        }
+        refinedDegree = String(refinedDegree);
 
-        _destroyFunc(this.disposeEvent);
-        delete this.documentDownEvent;
+        if (refinedDegree.lastIndexOf('.') === refinedDegree.length - 1) {
+            return refinedDegree.slice(0, refinedDegree.length - 1);
+        }
 
-        _removeFunc(this.optionGroup);
-        delete this.optionGroup;
+        return refinedDegree;
+    }
 
-        _removeFunc(this.angleOptionGroup);
-        delete this.angleOptionGroup;
-
-        this._setTextValue();
-        skipCommand !== true && this.command(forceCommand);
-    };
-
-    p._setTextValue = function() {
-        this.textElement.textContent = this._convert(
-            this.getText(),
-            this.getValue()
-        );
-    };
-})(Entry.FieldAngle.prototype);
+    static _isValidInputValue(value) {
+        return Entry.Utils.isNumber(value) || value === '-' || value === '.';
+    }
+};

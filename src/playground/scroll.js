@@ -1,292 +1,306 @@
-/*
- *
- */
-'use strict';
+import debounce from 'lodash/debounce';
 
-/*
- *
- * @param {object} board
- */
-Entry.Scroller = function(board, horizontal, vertical) {
-    this._horizontal = horizontal === undefined ? true : horizontal;
-    this._vertical = vertical === undefined ? true : vertical;
+Entry.Scroller = class Scroller {
+    get SCROLL_WIDTH() {
+        return 8;
+    }
+    get RADIUS() {
+        return 2.5;
+    }
+    get MARGIN() {
+        return 40;
+    }
+    constructor(board, horizontal, vertical) {
+        this._horizontal = horizontal === undefined ? true : horizontal;
+        this._vertical = vertical === undefined ? true : vertical;
 
-    this.board = board;
+        this.board = board;
+        this.canRAF = true;
 
-    this.svgGroup = null;
+        this.svgGroup = null;
 
-    this.hWidth = 0;
-    this.hX = 0;
-    this.hRatio = 0;
-    this.vWidth = 0;
-    this.vY = 0;
-    this.vRatio = 0;
-    this._visible = true;
-    this._opacity = -1;
+        this.hWidth = 0;
+        this.hX = 0;
+        this.hRatio = 0;
+        this.vWidth = 0;
+        this.vY = 0;
+        this.vRatio = 0;
+        this._visible = true;
+        this._opacity = -1;
 
-    this.createScrollBar();
-    this.setOpacity(0);
+        this.createScrollBar();
+        this.setOpacity(0);
 
-    this._bindEvent();
+        this._bindEvent();
 
-    this._scrollCommand = Entry.Utils.debounce(Entry.do, 200);
-};
+        this._scrollCommand = debounce(Entry.do, 200);
+    }
 
-Entry.Scroller.RADIUS = 7;
+    onMouseMove = (e) => {
+        console.log('onMouseMove');
+        e.stopPropagation();
+        e.preventDefault();
 
-(function(p) {
-    p.createScrollBar = function() {
-        var r = Entry.Scroller.RADIUS;
-        var scroller = this;
+        if (window.TouchEvent && e instanceof window.TouchEvent) {
+            e = e.changedTouches[0];
+        }
+        const dragInstance = this.dragInstance;
+        if (this.scrollType === 'horizontal') {
+            this.scroll((-e.pageX + dragInstance.offsetX) / this.hRatio, 0);
+        } else {
+            this.scroll(0, (-e.pageY + dragInstance.offsetY) / this.vRatio);
+        }
+        dragInstance.set({
+            offsetX: e.pageX,
+            offsetY: e.pageY,
+        });
+    };
 
-        this.svgGroup = this.board.svg
-            .elem('g')
-            .attr({ class: 'boardScrollbar' });
+    onMouseUp = (e) => {
+        console.log('onMouseUp');
+        this.removeEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove);
+        this.removeEventListener(document, ['mouseup', 'touchend'], this.onMouseUp);
+        delete this.dragInstance;
+        delete this.scrollType;
+    };
+
+    onMouseDown = (e) => {
+        console.log('onMouseDown', e.button, e);
+        if (e.button === 0 || e instanceof window.TouchEvent) {
+            console.log('go into add event');
+            this.scrollType = e.target.type;
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(e);
+            }
+            this.addEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove, {
+                passive: false,
+            });
+            this.addEventListener(document, ['mouseup', 'touchend'], this.onMouseUp);
+            this.dragInstance = new Entry.DragInstance({
+                startX: e.pageX,
+                startY: e.pageY,
+                offsetX: e.pageX,
+                offsetY: e.pageY,
+            });
+        }
+        e.stopPropagation();
+    };
+
+    addEventListener(dom, event = [], func, option) {
+        event.forEach((e) => {
+            dom.addEventListener(e, func, option);
+        });
+    }
+    removeEventListener(dom, event = [], func) {
+        event.forEach((e) => {
+            dom.removeEventListener(e, func);
+        });
+    }
+
+    createScrollBar() {
+        const r = this.RADIUS;
+        const { common = {} } = EntryStatic.colorSet || {};
+        this.svgGroup = this.board.svg.elem('g').attr({ class: 'boardScrollbar' });
 
         if (this._horizontal) {
             this.hScrollbar = this.svgGroup.elem('rect', {
-                height: 2 * r,
+                height: this.SCROLL_WIDTH,
                 rx: r,
                 ry: r,
+                fill: common.SCROLL_BAR || '#aac5d5',
+                class: 'scrollbar horizontal',
             });
-            this.hScrollbar.mousedown = function(e) {
-                if (e.button === 0 || e instanceof Touch) {
-                    if (Entry.documentMousedown)
-                        Entry.documentMousedown.notify(e);
-                    var doc = $(document);
-                    doc.bind('mousemove.scroll', onMouseMove);
-                    doc.bind('mouseup.scroll', onMouseUp);
-                    doc.bind('touchmove.scroll', onMouseMove);
-                    doc.bind('touchend.scroll', onMouseUp);
-                    scroller.dragInstance = new Entry.DragInstance({
-                        startX: e.pageX,
-                        startY: e.pageY,
-                        offsetX: e.pageX,
-                        offsetY: e.pageY,
-                    });
-                }
-
-                function onMouseMove(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    if (e.originalEvent.touches) {
-                        e = e.originalEvent.touches[0];
-                    }
-                    var dragInstance = scroller.dragInstance;
-                    scroller.scroll(
-                        (e.pageX - dragInstance.offsetX) / scroller.hRatio,
-                        0
-                    );
-                    dragInstance.set({
-                        offsetX: e.pageX,
-                        offsetY: e.pageY,
-                    });
-                }
-
-                function onMouseUp(e) {
-                    $(document).unbind('.scroll');
-                    delete scroller.dragInstance;
-                }
-                e.stopPropagation();
-            };
+            this.hScrollbar.type = 'horizontal';
+            this.addEventListener(this.hScrollbar, ['touchstart', 'mousedown'], this.onMouseDown);
         }
 
         if (this._vertical) {
             this.vScrollbar = this.svgGroup.elem('rect', {
-                width: 2 * r,
+                width: this.SCROLL_WIDTH,
                 rx: r,
                 ry: r,
+                fill: common.SCROLL_BAR || '#aac5d5',
+                class: 'scrollbar vertical',
             });
-            this.vScrollbar.mousedown = function(e) {
-                if (e.button === 0 || e instanceof Touch) {
-                    if (Entry.documentMousedown)
-                        Entry.documentMousedown.notify(e);
-                    var doc = $(document);
-                    doc.bind('mousemove.scroll', onMouseMove);
-                    doc.bind('mouseup.scroll', onMouseUp);
-                    doc.bind('touchmove.scroll', onMouseMove);
-                    doc.bind('touchend.scroll', onMouseUp);
-                    scroller.dragInstance = new Entry.DragInstance({
-                        startX: e.pageX,
-                        startY: e.pageY,
-                        offsetX: e.pageX,
-                        offsetY: e.pageY,
-                    });
-                }
-
-                function onMouseMove(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    if (e.originalEvent.touches) {
-                        e = e.originalEvent.touches[0];
-                    }
-                    var dragInstance = scroller.dragInstance;
-                    scroller.scroll(
-                        0,
-                        (e.pageY - dragInstance.offsetY) / scroller.vRatio
-                    );
-                    dragInstance.set({
-                        offsetX: e.pageX,
-                        offsetY: e.pageY,
-                    });
-                }
-
-                function onMouseUp(e) {
-                    $(document).unbind('.scroll');
-                    delete scroller.dragInstance;
-                }
-                e.stopPropagation();
-            };
+            this.vScrollbar.type = 'vertical';
+            this.addEventListener(this.vScrollbar, ['touchstart', 'mousedown'], this.onMouseDown);
         }
-    };
+    }
 
-    p.updateScrollBar = function(dx, dy) {
+    updateScrollBar(dx, dy) {
         if (this._horizontal) {
-            this.hX += dx * this.hRatio;
+            this.hX -= dx * this.hRatio;
             this.hScrollbar.attr({
-                x: this.hX,
+                x: this.hX || 0,
             });
         }
 
         if (this._vertical) {
-            this.vY += dy * this.vRatio;
+            this.vY -= dy * this.vRatio;
             this.vScrollbar.attr({
                 y: this.vY,
             });
         }
-    };
+    }
 
-    p.scroll = function(x, y, skipCommand) {
-        if (!this.board.code) return;
+    scroll(x, y, skipCommand) {
+        if (!this.board.code) {
+            return;
+        }
 
-        var board = this.board;
-        var svgRect = board.getSvgDomRect();
-        var clientRect = board.svgBlockGroup.getBoundingClientRect(),
-            bBox = {
-                x: clientRect.left - this.board.offset().left,
-                y: clientRect.top - this.board.offset().top,
-                width: clientRect.width,
-                height: clientRect.height,
-            };
-        x = Math.max(-bBox.width + Entry.BOARD_PADDING - bBox.x, x);
-        y = Math.max(-bBox.height + Entry.BOARD_PADDING - bBox.y, y);
-        y = Math.min(svgRect.height - Entry.BOARD_PADDING - bBox.y, y);
+        const board = this.board;
+        const svgRect = board.getSvgDomRect();
+        const clientRect = board.svgBlockGroup.getBoundingClientRect();
+        const bBox = {
+            x: clientRect.left - this.board.offset().left,
+            y: clientRect.top - this.board.offset().top,
+            width: clientRect.width,
+            height: clientRect.height,
+        };
+
+        const sWidth = svgRect.width;
+        const sHeight = svgRect.height;
+
+        if (bBox.width && bBox.height) {
+            if (sWidth / 2 > bBox.width) {
+                x = Math.max(-bBox.x + 1, x);
+                x = Math.min(sWidth - bBox.width - bBox.x - 1, x);
+            } else {
+                x = Math.max(sWidth / 2 - bBox.x - bBox.width, x);
+                x = Math.min(sWidth / 2 - bBox.x, x);
+            }
+            if (sHeight / 2 > bBox.height) {
+                y = Math.max(-bBox.y + 1, y);
+                y = Math.min(sHeight - bBox.height - bBox.y - 1, y);
+            } else {
+                y = Math.max(sHeight / 2 - bBox.y - bBox.height, y);
+                y = Math.min(sHeight / 2 - bBox.y, y);
+            }
+        }
 
         this._scroll(x, y);
         if (skipCommand !== true) {
-            if (!this._diffs) this._diffs = [0, 0];
+            if (!this._diffs) {
+                this._diffs = [0, 0];
+            }
 
             this._diffs[0] += x;
             this._diffs[1] += y;
 
-            this._scrollCommand(
-                'scrollBoard',
-                this._diffs[0],
-                this._diffs[1],
-                true
-            );
+            this._scrollCommand('scrollBoard', this._diffs[0], this._diffs[1], true);
         }
-    };
 
-    p._scroll = function(x, y) {
+        this.canRAF = true;
+    }
+
+    _scroll(x, y) {
         this.board.code.moveBy(x, y);
         this.updateScrollBar(x, y);
-    };
+    }
 
-    p.setVisible = function(visible) {
-        if (visible == this.isVisible()) return;
+    setVisible(visible) {
+        if (visible == this.isVisible()) {
+            return;
+        }
         this._visible = visible;
         this.svgGroup.attr({
             display: visible === true ? 'block' : 'none',
         });
-    };
+    }
 
-    p.isVisible = function() {
+    isVisible() {
         return this._visible;
-    };
+    }
 
-    p.setOpacity = function(value) {
-        if (this._opacity == value) return;
+    setOpacity(value) {
+        if (this._opacity == value) {
+            return;
+        }
         this.hScrollbar.attr({ opacity: value });
         this.vScrollbar.attr({ opacity: value });
 
         this._opacity = value;
-    };
+    }
 
-    p.resizeScrollBar = function() {
-        if (!this._visible) return;
+    resizeScrollBar() {
+        if (!this._visible) {
+            return;
+        }
 
-        var board = this.board,
-            offset = board.offset(),
-            svgDom = board.svgDom,
-            svgRect = board.getSvgDomRect();
-
-        var bRect = board.svgBlockGroup.getBoundingClientRect(),
-            bWidth = svgRect.width,
-            bHeight = svgRect.height,
-            bBox = {
-                x: bRect.left - offset.left,
-                y: bRect.top - offset.top,
-                width: bRect.width,
-                height: bRect.height,
-            };
+        const board = this.board;
+        const offset = board.offset();
+        const svgRect = board.getSvgDomRect();
+        const bRect = board.svgBlockGroup.getBoundingClientRect();
+        const width = svgRect.width;
+        const height = svgRect.height;
+        const bBox = {
+            x: bRect.left - offset.left,
+            y: bRect.top - offset.top,
+            width: bRect.width,
+            height: bRect.height,
+        };
 
         // hScroll
         if (this._horizontal) {
-            var hLimitA = -bBox.width + Entry.BOARD_PADDING,
-                hLimitB = bWidth - Entry.BOARD_PADDING;
-
-            var hWidth =
-                (bWidth + 2 * Entry.Scroller.RADIUS) *
-                bBox.width /
-                (hLimitB - hLimitA + bBox.width);
-            if (!Entry.Utils.isNumber(hWidth)) hWidth = 0;
-            this.hX =
-                (bBox.x - hLimitA) /
-                (hLimitB - hLimitA) *
-                (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
+            const sWidth = svgRect.width;
+            const marginSWitdh = svgRect.width - this.MARGIN;
+            let limit = sWidth;
+            let ratio = 0.6;
+            let hWidth = 0;
+            if (sWidth / 2 > bBox.width) {
+                limit = sWidth - bBox.width;
+                ratio = Math.min(limit / marginSWitdh, ratio);
+                hWidth = marginSWitdh * ratio;
+                this.hRatio = (marginSWitdh - hWidth) / limit;
+                this.hX = marginSWitdh + this.MARGIN / 2 - hWidth - bBox.x * this.hRatio;
+            } else {
+                limit = bBox.width;
+                ratio = Math.min(marginSWitdh / limit, ratio);
+                hWidth = marginSWitdh * ratio;
+                this.hRatio = (marginSWitdh - hWidth) / limit;
+                this.hX = (sWidth / 2 - bBox.x) * this.hRatio + this.MARGIN / 2;
+            }
             this.hScrollbar.attr({
                 width: hWidth,
                 x: this.hX,
-                y: bHeight - 2 * Entry.Scroller.RADIUS,
+                y: height - 2 * this.SCROLL_WIDTH,
             });
-
-            this.hRatio =
-                (bWidth - hWidth - 2 * Entry.Scroller.RADIUS) /
-                (hLimitB - hLimitA);
         }
 
         // vScroll
         if (this._vertical) {
-            var vLimitA = -bBox.height + Entry.BOARD_PADDING,
-                vLimitB = bHeight - Entry.BOARD_PADDING;
+            const sHeight = svgRect.height;
+            const marginSHeight = svgRect.height - this.MARGIN;
+            let limit = height;
+            let ratio = 0.6;
+            let vHeight = 0;
+            if (sHeight / 2 > bBox.height) {
+                limit = sHeight - bBox.height;
+                ratio = Math.min(limit / marginSHeight, ratio);
+                vHeight = marginSHeight * ratio;
+                this.vRatio = (marginSHeight - vHeight) / limit;
+                this.vY = marginSHeight + this.MARGIN / 2 - vHeight - bBox.y * this.vRatio;
+            } else {
+                limit = bBox.height;
+                ratio = Math.min(marginSHeight / limit, ratio);
+                vHeight = marginSHeight * ratio;
+                this.vRatio = (marginSHeight - vHeight) / limit;
+                this.vY = (sHeight / 2 - bBox.y) * this.vRatio + this.MARGIN / 2;
+            }
 
-            var vWidth =
-                (bHeight + 2 * Entry.Scroller.RADIUS) *
-                bBox.height /
-                (vLimitB - vLimitA + bBox.height);
-            this.vY =
-                (bBox.y - vLimitA) /
-                (vLimitB - vLimitA) *
-                (bHeight - vWidth - 2 * Entry.Scroller.RADIUS);
             this.vScrollbar.attr({
-                height: vWidth,
+                height: vHeight,
                 y: this.vY,
-                x: bWidth - 2 * Entry.Scroller.RADIUS,
+                x: width - 2 * this.SCROLL_WIDTH,
             });
-
-            this.vRatio =
-                (bHeight - vWidth - 2 * Entry.Scroller.RADIUS) /
-                (vLimitB - vLimitA);
         }
-    };
+    }
 
-    p._bindEvent = function() {
-        var dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 250);
+    _bindEvent() {
+        const dResizeScrollBar = debounce(this.resizeScrollBar, 250);
         this.board.changeEvent.attach(this, dResizeScrollBar);
-        if (Entry.windowResized)
+        if (Entry.windowResized) {
             Entry.windowResized.attach(this, dResizeScrollBar);
-    };
-})(Entry.Scroller.prototype);
+        }
+    }
+};

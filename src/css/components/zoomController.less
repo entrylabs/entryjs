@@ -1,0 +1,44 @@
+@keyframes fadeToast {
+    0% {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate3d(0, 7px, 0);
+    }
+    35% {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+    70% {
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+    }
+    100% {
+        opacity: 0;
+        visibility: hidden;
+        transform: translate3d(0, 7px, 0);
+    }
+}
+
+.fadeToast {
+    animation-duration: 3s;
+    animation-fill-mode: both;
+    animation-name: fadeToast;
+}
+
+.hideToast {
+    visibility: hidden;
+    opacity: 0;
+}
+
+.toastText {
+    font-family: EntryFont, NanumGothic;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.5px;
+    text-align: center;
+}

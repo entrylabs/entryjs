@@ -1,13 +1,44 @@
-@url: "../../img/";
-@image_url: "../../images/";
-@image_url2: "../images/";
+@url: '../../img/';
+@image_url: '../../images/';
+@image_url2: '../images/';
 
-.backgroundImage(@imageName) {
-    background-image: url("@{image_url2}@{imageName}");
+html,
+body {
+    touch-action: none;
+    // position: fixed;
+    overflow: hidden;
 }
 
-.entry {
+#__next {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+}
 
+html,
+body,
+.wrapper,
+.entry {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.wrapper,
+.entry {
+    position: relative;
+    min-width: 1024px;
+}
+.engineContainer {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    float: left;
+    width: 294px;
+    height: 100%;
+    padding: 46px 16px 8px 8px;
+}
+.backgroundImage(@imageName) {
+    background-image: url('@{image_url2}@{imageName}');
 }
 
 .dragNone {
@@ -27,6 +58,10 @@
     display: none !important;
 }
 
+.entryHide {
+    visibility: hidden;
+}
+
 .entryRemoveCategory {
     display: none !important;
 }
@@ -38,7 +73,6 @@
 .entryNoDeco {
     text-decoration: none !important;
 }
-
 
 .entryBtn {
     border: none;
@@ -56,4 +90,13 @@
     position: fixed;
     left: -9999px;
     top: -9999px;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type='number'] {
+    -moz-appearance: textfield;
 }

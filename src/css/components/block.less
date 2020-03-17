@@ -1,6 +1,14 @@
-.block.selected > g > .blockPath {
-    stroke-width: 3px;
-    stroke: #798EB1;
+.block.selected > g > .blockPath,
+.block.selected > g > .blockBackgroundPath {
+    // stroke-width: 3px;
+    // stroke: #798EB1;
+    -webkit-filter: none;
+    filter: none;
+
+    &:not([fill^='url(#blockHoverPattern']) {
+        -webkit-filter: url(#entryBlockSelectFilter_board);
+        filter: url(#entryBlockSelectFilter_board);
+    }
 }
 
 .block.outputHighlight > g > .blockPath {
@@ -12,8 +20,22 @@
     cursor: pointer;
 }
 
-.block.basicButtonView:hover > g > path {
-    fill: #f4f4f4;
+.block.basicButtonView > g > path {
+    fill: #ffffff;
+    stroke: #4f80ff;
+    stroke-width: 1;
+}
+.block.basicButtonDisabledView {
+    cursor: auto;
+}
+.block.basicButtonDisabledView > g > path {
+    fill: #f9f9f9;
+    stroke: #e2e2e2;
+    stroke-width: 1;
+}
+
+.block.clickableText {
+    cursor: pointer;
 }
 
 .block.basicText {
@@ -24,20 +46,26 @@
     fill: none;
 }
 
+.block.basicTextLight {
+    cursor: default;
+}
+
+.block.basicTextLight > g > text > tspan {
+    font-weight: lighter;
+}
+
 .block {
-    cursor: url('/media/handopen.cur'),
-            auto;
+    cursor: url('/media/handopen.cur'), auto;
     -ms-touch-action: none;
 }
 
 .block.dragging {
-    cursor: url('/media/handclosed.cur'),
-            auto;
+    cursor: url('/media/handclosed.cur'), auto;
 }
 
 .block.selected > path {
     stroke-width: 3px;
-    stroke: #798EB1;
+    stroke: #798eb1;
 }
 
 .block.activated > g > path {
@@ -46,23 +74,15 @@
 }
 
 @keyframes activationDash {
-    to {stroke-dashoffset: 0;}
-}
-
-@-o-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
-}
-
-@-ms-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
-}
-
-@-moz-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 @-webkit-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .block g text,
@@ -89,27 +109,51 @@ svg .svgBlockGroup text {
 
 .entry-widget-input-field {
     position: fixed;
-    font-family: ng;
-    font-size: 9pt;
+    font-family: EntryFont, NanumGothic;
+    font-weight: bold;
     border: none;
+    border-radius: 5px;
     outline: none;
     line-height: normal;
-    z-index: 301;
- }
+    z-index: 254;
+    color: #000000;
+}
 
-.entry-widget-input-field::-ms-clear, 
+.entry-widget-input-field::-ms-clear,
 .entry-widget-input-field::-ms-reveal {
     display: none;
 }
 
- .entry-field-angle {
+.entry-widget-textarea {
+    position: absolute;
+    background-color: #ffda85;
+    resize: none;
+    line-height: 1.6em;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.entryWorkspaceBoard.invisibleComment {
+    .svgCommentGroup{
+        visibility: hidden;
+    }
+}
+
+.entry-field-angle {
     cursor: default;
- }
+}
 
 .entry-field-angle-circle {
     stroke: #dbdbdb;
     stroke-width: 1;
-    fill: #FBFBFB;
+    fill: #fbfbfb;
     fill-opacity: 0.8;
 }
 
@@ -139,61 +183,12 @@ svg .svgBlockGroup text {
     position: fixed;
 }
 
-.entry-widget-dropdown {
-    position: fixed;
-    cursor: pointer;
-    list-style: none;
-    background-color: white;
-    border: 1px gray solid;
-    margin: 0;
-    padding: 0;
-    text-align: left;
-    font-size: 9pt;
-    color: #000;
-    z-index: 1001;
-    overflow: auto;
-    left: 0;
-    top: 0;
-
-    .rect {
-        height: 20px;
-        padding: 3px 5px 3px 6px;
-        width: 100%;
-        position: relative;
-        overflow: hidden;
-
-        .left {
-            display: inline-block;
-            width: 13px;
-        }
-
-        .right {
-            display: inline-block;
-        }
-    }
-
-    .rect:hover {
-        background-color: #127cdb;
-        color: white;
-    }
+.entry-comment-resize-arrow {
+    cursor: nwse-resize;
 }
 
-.entry-widget-dropdown.rendered {
-    .rect {
-        .left {
-            position: absolute;
-        }
-
-        .right {
-            position: absolute;
-            left: 20px;
-        }
-    }
-
-    .rect:hover {
-        background-color: #127cdb;
-        color: white;
-    }
+.entry-comment-toggle-arrow {
+    cursor: pointer;
 }
 
 .blockHoverPattern {
@@ -231,33 +226,25 @@ svg .svgBlockGroup text {
         .animation-name(blockPatternAnimation);
         .animation-iteration-count(infinite);
     }
-
 }
 
 //hover block background pattern animation
 @keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
-}
-
-@-o-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
-}
-
-@-ms-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
-}
-
-@-moz-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.2;
+    }
 }
 
 @-webkit-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.2;
+    }
 }
 
 g.entry-field-dropdown {

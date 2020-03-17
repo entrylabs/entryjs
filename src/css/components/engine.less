@@ -13,11 +13,17 @@
 }
 
 .entryEngineWorkspace_w {
-    height: 225px;
-    width: 400px;
+    position: relative;
+    // height: 225px;
+    width: 270px;
     background-color: white;
-    border-top: 1pt solid #ebeff1;
-    position: absolute;
+    border: 1px solid #d6e9f4;
+    border-radius: 6px;
+}
+.entryEngineWorkspace_w:after {
+    display: block;
+    clear: both;
+    content: '';
 }
 
 .entryPopupWindow > .entryEngineWorkspace {
@@ -43,27 +49,27 @@
     display: block;
     width: 111px;
     height: 111px;
-    background-image: url("@{image_url}play_btn.png");
+    background-image: url('@{image_url}play_btn.png');
     background-position: 40px center;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 55px;
     background-repeat: no-repeat;
     right: 5px;
     /*bottom: 5px;*/
     bottom: -10px;
     left: 44%;
-    top : 35%;
+    top: 35%;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryStopButtonWorkspace_w2 {
     display: block;
-    background-image: url("@{image_url}stop_btn.png");
+    background-image: url('@{image_url}stop_btn.png');
     background-repeat: no-repeat;
     left: 20px;
     color: transparent;
     bottom: -10px;
     width: 90px;
-    background-position:left;
+    background-position: left;
     color: @bora;
 }
 
@@ -72,23 +78,112 @@
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
-    background-image : url("@{image_url}grid.png") !important;
-    right: 34px;
-    color : @bora;
+    position: absolute;
+    right: 53px;
+    bottom: 12px;
+    margin: 0;
+    background-image: url('@{image_url}grid.png') !important;
+    background-size: 16px auto;
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w.toggleOn {
+    position: absolute;
+    right: 53px;
+    bottom: 12px;
+    margin: 0;
+    background-image: url('@{image_url}layers_icon_grid_nor_1.png') !important;
+    background-size: 16px auto;
 }
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
-    background-image: url("@{image_url}zoom_out_btn.png");
-    background-repeat: no-repeat;
-    right: 5px;
-}
-
-.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWorkspace_w {
     position: absolute;
-    bottom: 3px;
+    right: 6px;
+    bottom: 12px;
+    background-image: url('@{image_url}zoom_out_btn.png');
+    background-repeat: no-repeat;
+    background-size: 16px auto;
+}
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper {
+    display: block;
+    height: 48px;
+    border-top: 1px solid #d6e9f4;
+    box-sizing: border-box;
 }
 
-.entryPopupWindow > .entryEngineWorkspace_w > .entryAddButtonWorkspace_w {
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryRunButtonWorkspace_w,
+.entryPopupWindow > .entryEngineWorkspace_w > .entryEngineButtonWrapper .entryStopButtonWorkspace_w,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryPauseButtonWorkspace_full,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRestartButtonWorkspace_full {
+    display: inline-block;
+    overflow: hidden;
+    flex: none;
+    width: auto;
+    height: auto;
+    border: 0;
+    margin-left: 24px;
+    border-radius: 0;
+    background: none;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f80ff;
+    line-height: 48px;
+}
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRunButtonWorkspace_w:before,
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryRestartButtonWorkspace_full:before {
+    display: inline-block;
+    width: 14px;
+    height: 18px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('@{image_url}layers_icon_button_play_norx2.png');
+    background-repeat: no-repeat;
+    background-size: 14px auto;
+    content: '';
+}
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryStopButtonWorkspace_w:before {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('@{image_url}layers_icon_button_stop_norx2.png');
+    background-repeat: no-repeat;
+    background-size: 16px auto;
+    content: '';
+}
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    .entryPauseButtonWorkspace_full:before {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    vertical-align: middle;
+    background-image: url('@{image_url}layers_icon_button_pause_norx2.png');
+    background-repeat: no-repeat;
+    background-size: 16px auto;
+    content: '';
+}
+
+.entryPopupWindow
+    > .entryEngineWorkspace_w
+    > .entryEngineButtonWrapper
+    > .entryAddButtonWorkspace_w {
     display: none;
 }
 
@@ -120,14 +215,15 @@
     position: absolute;
     left: 50%;
     top: 50%;
-    width: 111px; height: 111px;
+    width: 111px;
+    height: 111px;
     margin: -55px 0 0 -55px;
     border: none;
     padding: 0;
     background-image: url('@{image_url}play_btn.png');
     background-repeat: no-repeat;
     background-position: 40px center;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     .border-radius(55px);
     z-index: 100;
     cursor: pointer;
@@ -139,7 +235,8 @@
 
 @media screen and (max-width: 500px) {
     .entryRunButtonBigMinimize {
-        width: 80px; height: 80px;
+        width: 80px;
+        height: 80px;
         margin: -40px 0 0 -40px;
         background-position: 32px center;
         background-size: 25px;
@@ -167,7 +264,7 @@
     background-color: transparent;
     font-size: 12pt;
     border-bottom: 2px solid #89c0d5;
-    .backgroundImage("layers_icon_button_play_nor.png");
+    .backgroundImage('layers_icon_button_play_nor.png');
     background-position: 10px 50%;
     background-repeat: no-repeat;
 }
@@ -179,7 +276,7 @@
     background-color: transparent;
     font-size: 12pt;
     border-bottom: 2px solid #89c0d5;
-    .backgroundImage("layers_icon_button_stop_nor.png");
+    .backgroundImage('layers_icon_button_stop_nor.png');
     background-position: 10px 50%;
     background-repeat: no-repeat;
 }
@@ -195,14 +292,14 @@
     border-bottom: 1px solid #ccc;
     width: 100%;
     background-color: #fff;
-    height:34px;
+    height: 34px;
 }
 
 .entryEngineFooterPhone {
     border-top: 1px solid #ccc;
     width: 100%;
     background-color: #fff;
-    height:38px;
+    height: 38px;
 }
 
 .entryMouseViewWorkspace {
@@ -225,12 +322,26 @@
 }
 
 .entryMouseViewWorkspace_w {
-    font-size: 9pt;
+    height: 32px;
+    font-size: 12px;
+    font-weight: bold;
     margin: 0 auto;
-    width: 40%;
-    color: #61abdb;
-    line-height: 24px;
+    padding: 10px 0 8px;
+    color: #4f80ff;
     text-align: center;
+    letter-spacing: -0.4px;
+    line-height: 14px;
+
+    > input {
+        font-size: 12px;
+        line-height: 14px;
+        border: none;
+        font-weight: bold;
+        color: #4f80ff;
+        text-align: center;
+        letter-spacing: -0.4px;
+        user-select: none;
+    }
 }
 
 .entryEngineBlueWorkspace > .entryMouseViewWorkspace {
@@ -240,19 +351,19 @@
 .entryMaximizeButtonWorkspace {
     float: left;
     margin-left: 5px;
-    .backgroundImage("fullscreen_edit.png");
+    .backgroundImage('fullscreen_edit.png');
 }
 
 .entryMaximizeButtonMinimize {
     float: right;
     margin-right: 5px;
-    background-image: url("@{image_url}zoom_in_btn.png");
+    background-image: url('@{image_url}zoom_in_btn.png');
 }
 
 .entryPopupWindow > .entryEngineMinimize > .entryMaximizeButtonMinimize {
     float: right;
     margin-right: 5px;
-    background-image: url("@{image_url}zoom_out_btn.png");
+    background-image: url('@{image_url}zoom_out_btn.png');
 }
 
 .entryMaximizeButtonPhone {
@@ -264,94 +375,109 @@
     background-repeat: no-repeat;
     background-position: center;
     background-color: transparent;
-    .backgroundImage("layers_icon_fullmode01_nor.png");
+    .backgroundImage('layers_icon_fullmode01_nor.png');
 }
 
 .entryMaximizeButtonWorkspace_w {
     float: right;
-    margin-right: 5px;
-    .backgroundImage("layers_icon_fullmode01_nor_1.png");
+    margin: 4px 6px 0 5px;
+    .backgroundImage('layers_icon_fullmode01_nor_1.png');
     background-repeat: no-repeat;
+    background-size: 16px auto;
 }
 
 .entryEngineBlueWorkspace > .entryMaximizeButtonWorkspace {
-    .backgroundImage("fullscreen_play.png");
+    .backgroundImage('fullscreen_play.png');
 }
 
 #entrySpeedPanelWorkspace {
     width: 100%;
     height: 0px;
     background-color: #0e0;
-
 }
 
 .entrySpeedButtonWorkspace {
     float: left;
     background-size: contain;
-    width: 22px;
-    height: 15px;
-    margin-top: 5px;
+    width: 18px;
+    height: 16px;
+    margin-top: 8px;
     margin-left: 10px;
-    .backgroundImage("speed_edit.png");
+    .backgroundImage('speed_edit.png');
+    background-size: 18px auto;
+}
+
+.entrySpeedButtonWorkspace.on {
+    .backgroundImage('speed_edit_on.png');
 }
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
     display: none;
 }
 
-.entryPopupWindow  .entryMouseViewWorkspace_w {
-    font-size: 9pt;
-    margin: 0 auto;
-    width: 40%;
-    margin-left: -20%;
-    left: 50%;
-    color: @bora;
-    line-height: 24px;
-    text-align: center;
-    bottom: 1px;
+.entryPopupWindow .entryMouseViewWorkspace_w {
     position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 40%;
+    height: 48px;
+    margin: 0 auto;
+    padding: 0;
+    margin-left: -20%;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f80ff;
     text-align: center;
+    line-height: 48px;
 }
 
 #entrySpeedProgressWorkspace {
-    position: absolute;
-    display: block;
-    left: 80px;
-    top: 23px;
-    right: 4px;
-    height: 13px;
+    overflow: hidden;
+    width: 100%;
+    height: 30px;
+    margin-top: 4px;
+    border-radius: 4px;
+    table-layout: fixed;
+    box-sizing: border-box;
+    border-spacing: 0;
 }
-
-#entrySpeedProgressWorkspace > tr { width: 100%; }
-
 #entrySpeedProgressWorkspace > tr > td {
-    position: absolute;
-    height: 14px;
+    height: 30px;
     width: 20%;
     cursor: pointer;
 }
+#entrySpeedProgressWorkspace .on {
+    background-size: 20px auto;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    .backgroundImage('ic_graph_chk.png');
+}
 
 #progressCell0 {
-    border-top-left-radius: 6.5px;
-    border-bottom-left-radius: 6.5px;
-    left: 0%; background-color: #bee8f4;
+    background-color: #cad8ff;
 }
-#progressCell1 {left: 20%; background-color: #96cfe7; }
-#progressCell2 {left: 40%; background-color: #83b8e1; }
-#progressCell3 {left: 60%; background-color: #67a9c9; }
+#progressCell1 {
+    background-color: #a7bfff;
+}
+#progressCell2 {
+    background-color: #95b3ff;
+}
+#progressCell3 {
+    background-color: #7299ff;
+}
 #progressCell4 {
-    border-top-right-radius: 6.5px;
-    border-bottom-right-radius: 6.5px;
-    left: 80%; background-color: #5099b5;
+    background-color: #4f80ff;
 }
 
 #entrySpeedLabelWorkspace {
-    clear: both;
-    display: block;
-    font-family: ng;
-    padding-top: 2px;
-    padding-left: 10px;
-    font-size: 11px;
+    position: absolute;
+    left: 10px;
+    top: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #000;
+    letter-spacing: -0.4px;
+    line-height: 11px;
 }
 
 #entrySpeedHandleWorkspace {
@@ -361,34 +487,56 @@
     height: 16px;
     top: 21px;
     z-index: 100;
-    .backgroundImage("speed_handle.png");
+    .backgroundImage('speed_handle.png');
+}
+.entrySpeedBox {
+    position: absolute;
+    box-sizing: border-box;
+    height: 39px;
+    margin: 0px 0 -1px;
+    padding: 0 10px 0 60px;
+    border: 1px solid #e2e2e2;
+    border-width: 1px 0;
+    background-color: #f9f9f9;
+    clear: both;
+    z-index: 10;
 }
 
 .entryCoordinateButtonWorkspace {
     float: right;
-    .backgroundImage("coordinates_edit.png");
+    .backgroundImage('coordinates_edit.png');
 }
 
 .entryCoordinateButtonMinimize {
     float: right;
-    .backgroundImage("grid.png");
+    .backgroundImage('grid.png');
 }
 
 .entryCoordinateButtonWorkspace_w {
     float: right;
-    .backgroundImage("layers_icon_grid_nor.png");
+    margin-top: 4px;
+    .backgroundImage('layers_icon_grid_nor.png');
+    background-size: 16px auto;
 }
 
 .entryCoordinateButtonWorkspace.toggleOn {
-    .backgroundImage("coordinates_edit_on.png");
+    .backgroundImage('coordinates_edit_on.png');
 }
 
 .entryCoordinateButtonWorkspace_w.toggleOn {
-    .backgroundImage("layers_icon_grid_nor_1.png");
+    .backgroundImage('layers_icon_grid_nor_1.png');
 }
 
 .entryEngineBlueWorkspace > .entryCoordinateButtonWorkspace {
-    .backgroundImage("coordinates_play.png");
+    .backgroundImage('coordinates_play.png');
+}
+
+.entryEngineButtonWrapper {
+    display: flex;
+    margin: 0 -1px -1px;
+    // :not([style*='display:none']):not([style*='display: none']):not(:first-child) {
+    //     border-left: 0;
+    // }
 }
 
 .entryRunButtonWorkspace {
@@ -397,92 +545,78 @@
     background-position: 7px 50%;
     padding-right: 10px;
     text-align: right;
-    font-size:9pt;
+    font-size: 9pt;
     color: #61abdb;
-    .backgroundImage("playbutton_edit.png");
+    .backgroundImage('playbutton_edit.png');
 }
 
 .entryRunButtonMinimize {
     display: none;
     float: left;
     width: 65px;
-    font-size:9pt;
+    font-size: 9pt;
     color: @lightBora;
 }
 
 .entryAddButtonWorkspace_w {
-    top: 289px;
-    left: 0px;
-    width: 236px;
-    height: 37px;
-    font-size: 12pt;
-    background-color: #fff;
-    color: #666666;
+    flex: 2;
+    position: relative;
+    // top: 192px;
+    // left: -1px;
+    width: 157px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid @baseblue;
+    border-radius: 0 0 0 5px;
+    background: #fff no-repeat 50% 50%;
+    background-size: 14px auto;
+    font-size: 0;
     text-align: center;
-    position: absolute;
-    border-top: 1px solid #ccc;
-    padding-left: 50px;
-    background-repeat: no-repeat;
-    background-position: 10% 43%;
-    font-weight: 600;
-    .backgroundImage("layers_icon_button_plus_nor.png");
-}
-
-.collapsed>.entryAddButtonWorkspace_w,
-.collapsed>.entryPauseButtonWorkspace_w {
-    color: transparent;
-    background-position: 50% 43%;
-}
-
-.collapsed>.entryAddButtonWorkspace_w,
-.collapsed>.entryRestartButtonWorkspace_w {
-    color: transparent;
-    background-position: 50% 43%;
+    .backgroundImage('layers_icon_button_plus_nor.png');
 }
 
 .entryRunButtonWorkspace_w {
-    top: 289px;
-    left: 272px;
-    width: 156px;
-    height: 37px;
-    font-size: 12pt;
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    background-color: #fff;
-    padding-left: 28px;
-    color: #666666;
+    flex: 1;
+    position: relative;
+    // top: 192px;
+    // left: 155px;
+    width: 114px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid @baseblue;
+    border-left: 0;
+    border-radius: 0 0 5px 0;
+    background: #fff no-repeat 50% 50%;
+    background-size: 10px auto;
+    font-size: 0;
     text-align: center;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-position: 10% 43%;
-    font-family: nanumBarunBold !important;
-    .backgroundImage("layers_icon_button_play_nor_1.png");
+    .backgroundImage('layers_icon_button_play_nor_1.png');
 }
 
-.collapsed>.entryRunButtonWorkspace_w {
+.collapsed > .entryRunButtonWorkspace_w {
     color: transparent;
     background-position: 50% 43%;
 }
 
 .entryRunButtonWorkspace_w2 {
-    display:none;
+    display: none;
 }
 
 .entryEngineBlueWorkspace > .entryRunButtonWorkspace {
-    .backgroundImage("playbutton_play.png");
+    .backgroundImage('playbutton_play.png');
     color: white;
 }
 
 .entryStopButtonWorkspace {
-    float:right;
+    float: right;
     width: 80px;
     background-position: 7px 50%;
     border-top: 1px solid #ccc;
     padding-right: 10px;
     text-align: right;
-    font-size:9pt;
+    font-size: 9pt;
     color: #61abdb;
-    .backgroundImage("stopbutton_pause.png");
+    .backgroundImage('stopbutton_pause.png');
 }
 
 .entryStopButtonMinimize {
@@ -491,35 +625,27 @@
     background-position: 7px 50%;
     padding-right: 10px;
     text-align: right;
-    font-size:9pt;
+    font-size: 9pt;
     color: @lightBora;
-    .backgroundImage("stop_btn.png");
+    .backgroundImage('stop_btn.png');
 }
 
 .entryStopButtonWorkspace_w {
-    top: 289px;
-    left: 272px;
-    width: 156px;
-    height: 37px;
-    font-size: 12pt;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    background-color: #fff;
-    color: #666666;
-    padding-left: 28px;
+    flex: 1;
+    order: 5;
+    width: 114px;
+    height: 32px;
+    font-size: 0;
+    border: 1px solid #4f80ff;
+    border-left: 0;
+    border-radius: 0 0 5px 0;
+    padding: 0;
+    font-size: 0;
     text-align: center;
-    position: absolute;
-    background-repeat: no-repeat;
-    background-position: 10% center;
-    font-weight: 600;
-    .backgroundImage("layers_icon_button_stop_nor_2.png");
+    background: #fff no-repeat 50% 50%;
+    background-size: 12px auto;
+    .backgroundImage('layers_icon_button_stop_nor_2.png');
 }
-
-.collapsed>.entryStopButtonWorkspace_w {
-    color: transparent;
-    background-position: 50% 43%;
-}
-
 .entryStopButtonWorkspace_w2 {
     display: none;
 }
@@ -538,7 +664,7 @@
     margin-top: -55.5px;
     background-repeat: no-repeat;
     background-position: 40px center;
-    background-color: rgba(0,0,0,0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     border-radius: 55px;
 }
 
@@ -551,7 +677,7 @@
 }
 
 .entryEngineBigButtonMinimize_popup.entryEngineBigButtonMinimize_popup_run {
-    .backgroundImage("play_btn.png");
+    .backgroundImage('play_btn.png');
 }
 
 .entryPopupWindow .entryEngineBigButtonMinimize_popup {
@@ -559,14 +685,18 @@
 }
 
 .entryPauseButtonWorkspace_w:extend(.entryAddButtonWorkspace_w) {
-    .backgroundImage("layers_icon_button_pause_nor.png");
+    background-size: 12px auto;
+    .backgroundImage('layers_icon_button_pause_nor.png');
 }
 
 .entryRestartButtonWorkspace_w:extend(.entryAddButtonWorkspace_w) {
-    .backgroundImage("layers_icon_button_play_nor.png");
+    background-size: 10px auto;
+    .backgroundImage('layers_icon_button_play_nor_1.png');
 }
 
 .entryPopupWindow .entryPauseButtonWorkspace_w {
+    flex: 2;
+    order: 2;
     display: none;
 }
 
@@ -580,36 +710,6 @@
 
 .entryRestartButtonWorkspace_full {
     display: none;
-}
-
-.entryPopupWindow .entryPauseButtonWorkspace_full {
-    display: inline-block;
-    background: url("@{image_url}pause_btn.png");
-    background-repeat: no-repeat;
-    color: transparent;
-    padding-left: 20px;
-    left: 103px;
-    color: @bora;
-    background-position: center left;
-    border: none;
-    font-size: 14px;
-    font-family: ng;
-    width: auto;
-}
-
-.entryPopupWindow .entryRestartButtonWorkspace_full {
-    display: inline-block;
-    background: url("@{image_url}play_full_btn.png");
-    background-repeat: no-repeat;
-    color: transparent;
-    padding-left: 20px;
-    left: 103px;
-    color: @bora;
-    background-position: center left;
-    border: none;
-    font-size: 14px;
-    font-family: ng;
-    width: auto;
 }
 
 .nav_right_wrapper {
@@ -628,7 +728,6 @@
     /*background-color: #4accaa;*/
 }
 
-
 .btn-group > .btn {
     background-color: transparent;
     border-color: transparent;
@@ -646,7 +745,7 @@
 
 .entryPauseButtonMinimize {
     float: left;
-    background-image: url("@{image_url}pause_btn.png");
+    background-image: url('@{image_url}pause_btn.png');
     width: auto;
     background-position: left;
     padding-left: 17px;
@@ -659,32 +758,151 @@
         width: 27px;
         height: 19px;
         margin-top: 2px;
-        .backgroundImage("speed_edit_big.png");
+        .backgroundImage('speed_edit_big.png');
+    }
+
+    .entrySpeedButtonWorkspace.on {
+        .backgroundImage('speed_edit_big.png');
     }
 
     .entryCoordinateButtonWorkspace_w {
-        .backgroundImage("layers_icon_grid_nor_big.png");
+        .backgroundImage('layers_icon_grid_nor_big.png');
     }
 
     .entryMaximizeButtonWorkspace_w {
-        .backgroundImage("layers_icon_fullmode01_nor_1_big.png");
+        .backgroundImage('layers_icon_fullmode01_nor_1_big.png');
     }
-
 }
 
 .entryPopupWindow.tablet {
     .entryEngineWorkspace_w > .entryCoordinateButtonWorkspace_w {
         bottom: 5px;
-        background-image : url("@{image_url}grid_big.png") !important;
+        background-image: url('@{image_url}grid_big.png') !important;
     }
 
     .entryEngineWorkspace_w > .entryMaximizeButtonWorkspace_w {
         right: 0;
         bottom: 5px;
-        background-image: url("@{image_url}zoom_out_btn_big.png");
+        background-image: url('@{image_url}zoom_out_btn_big.png');
     }
-
 }
 
+.practical_course_mode {
+    .entryRunButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_play_nor_1_practical_course_mode.png');
+        border-color: @basePurple;
+    }
+    .entryAddButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_plus_nor_practical_course_mode.png');
+        border-color: @basePurple;
+    }
+    .entryPauseButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_pause_nor_practical_course_mode.png');
+        border-color: @basePurple;
+    }
 
+    .entryStopButtonWorkspace_w {
+        .backgroundImage('layers_icon_button_stop_nor_2_practical_course_mode.png');
+        border-color: @basePurple;
+    }
+}
 
+//audioShade
+.audioShadeCirclebox {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.5);
+    text-align: center;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    -moz-flex-direction: column;
+    width: 100%;
+    height: calc(100%-64px);
+}
+.audioShadeCircle {
+    margin: auto;
+    padding: 0;
+    position: relative;
+    display: inline-block;
+    width: 20%;
+    padding-bottom: 20%;
+    border-radius: 50%;
+    background-color: #32d27d;
+    vertical-align: top;
+}
+.audioShadeInner {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 60%;
+    height: 60%;
+    margin: auto;
+    background-color: #32d27d;
+    border-radius: 50%;
+    transform: scale(0.5);
+    transform-origin: center center;
+    animation: ani 3s linear infinite;
+    content: '';
+}
+.audioShadeInner:nth-of-type(2) {
+    animation-delay: 1s;
+}
+.audioShadeInner:nth-of-type(3) {
+    animation-delay: 2s;
+}
+.audioShadeInner:nth-of-type(4) {
+    animation-delay: 3s;
+}
+.audioShadeImg {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 18px;
+    height: 26px;
+    margin: -13px 0 0 -9px;
+    z-index: 10;
+}
+.audioShadeText {
+    width: 100%;
+    height: 20%;
+    font-family: NanumGothicOTF;
+    font-size: 14px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+}
+.audioProgress {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+@keyframes ani {
+    0% {
+        transform: scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.1;
+    }
+    70% {
+        opacity: 0.09;
+    }
+    100% {
+        transform: scale(3);
+        opacity: 0;
+    }
+}

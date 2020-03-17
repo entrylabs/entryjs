@@ -1,169 +1,154 @@
 /*
  */
 'use strict';
-const _cloneDeep = require('lodash/cloneDeep');
+import { Dropdown } from '@entrylabs/tool';
+import _cloneDeep from 'lodash/cloneDeep';
 /*
  *
  */
-Entry.FieldDropdownDynamic = function(content, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
+Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropdown {
+    constructor(content, blockView, index) {
+        super(content, blockView, index, null, null, true);
+        this._block = blockView.block;
+        this._blockView = blockView;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+        const box = new Entry.BoxModel();
+        this.box = box;
 
-    this.svgGroup = null;
+        this.svgGroup = null;
 
-    this._contents = content;
+        this._contents = content;
 
-    if(content.needDeepCopy) {
-        this._contents = _cloneDeep(content);
+        if (content.needDeepCopy) {
+            this._contents = _cloneDeep(content);
+        }
+
+        this._index = index;
+
+        let { bgColor, textColor, arrowColor } = content;
+        if (
+            this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+            this._block.emphasized
+        ) {
+            arrowColor = blockView._fillColor;
+        }
+
+        this._arrowColor = arrowColor;
+        this._textColor = textColor || '#FFFFFF';
+        this._bgColor = bgColor;
+
+        const menuName = this._contents.menuName;
+        if (_.isFunction(menuName)) {
+            this._menuGenerator = menuName;
+        } else {
+            this._menuName = menuName;
+        }
+
+        this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
+        this._font_size = this.getFontSize(content.fontSize);
+
+        this._ROUND = content.roundValue || 3;
+        this.renderStart(blockView);
+        if (
+            blockView &&
+            blockView.getBoard() &&
+            blockView.getBoard().workspace &&
+            blockView.getBoard().workspace.changeEvent
+        ) {
+            blockView.getBoard().workspace.changeEvent.attach(this, () => {
+                this._updateValue(true);
+            });
+        }
     }
 
-    this._index = index;
-
-    var arrowColor = content.arrowColor;
-    if (
-        this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-        this._block.emphasized
-    ) {
-        arrowColor = blockView._fillColor;
+    _isBlockInBoardWhenFunctionEdit() {
+        const view = this._block.getView() || { _board: {} };
+        return view._board.suffix === 'board' && Entry.Func.isEdit;
     }
 
-    this._arrowColor = arrowColor;
+    getTextByValue(value) {
+        if (this._isBlockInBoardWhenFunctionEdit()) {
+            return this.textElement.textContent;
+        }
 
-    var menuName = this._contents.menuName;
-
-    if (_.isFunction(menuName)) this._menuGenerator = menuName;
-    else this._menuName = menuName;
-
-    this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
-
-    this._font_size = this.getFontSize(content.fontSize);
-
-    this._ROUND = content.roundValue || 3;
-    this.renderStart(blockView);
-    if (
-        blockView &&
-        blockView.getBoard() &&
-        blockView.getBoard().workspace &&
-        blockView.getBoard().workspace.changeEvent
-    ) {
-        blockView
-            .getBoard()
-            .workspace.changeEvent.attach(this, this._updateValue);
+        return super.getTextByValue(value);
     }
 
-    this.optionChangeTriggeredEvent();
-};
-
-Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
-
-(function(p) {
-    p.constructor = Entry.FieldDropDownDynamic;
-
-    p._updateValue = function() {
-        var object = this._block.getCode().object;
-        var options = [];
+    _updateValue(reDraw) {
+        const object = this._block.getCode().object;
+        let options = [];
         if (Entry.container) {
-            if (this._menuName)
-                options = Entry.container.getDropdownList(
-                    this._menuName,
-                    object
-                );
-            else options = this._menuGenerator();
+            if (this._menuName) {
+                options = Entry.container.getDropdownList(this._menuName, object);
+            } else {
+                options = this._menuGenerator();
+            }
         }
 
         this._contents.options = options;
-        var value = this.getValue();
-        if (this._blockView.isInBlockMenu || !value || value == 'null')
-            value = options.length !== 0 ? options[0][1] : null;
-
         this._updateOptions();
-        this.setValue(value);
-    };
 
-    p.renderOptions = function() {
-        var that = this;
+        if (reDraw && this._menuName === 'variables' && !this._isBlockInBoardWhenFunctionEdit()) {
+            this.value = undefined;
+        }
+        this.setValue(this.getOptionCheckedValue(), reDraw);
+    }
 
-        this._attachDisposeEvent(() => {
-            that.destroyOption(undefined, true);
-        });
+    getTargetValue(key, useParent = false) {
+        if (!key) {
+            return;
+        }
+        const block = useParent ? this._block.thread._block : this._block;
+        const { _schema, params: values = [] } = block || {};
+        const { params = [] } = _schema || {};
+        const idx = params.findIndex(({ dropdownSync }) => dropdownSync === key);
+        return values[idx || 0];
+    }
 
-        this.optionGroup = Entry.Dom('ul', {
+    getOptionCheckedValue() {
+        const { options, defaultValue } = this._contents;
+        let value = this.getValue();
+
+        if (this._blockView.isInBlockMenu || !value || value == 'null') {
+            value = options.length !== 0 ? options[0][1] : null;
+        }
+        const matched = _.find(options, ([, cValue]) => cValue === value);
+        if (!matched && defaultValue) {
+            if (_.isFunction(defaultValue)) {
+                return defaultValue(value, options);
+            }
+            return defaultValue;
+        }
+        return value;
+    }
+
+    renderOptions() {
+        this.optionGroup = Entry.Dom('div', {
             class: 'entry-widget-dropdown',
             parent: $('body'),
         });
-
-        var options;
-        if (this._menuName)
-            options = Entry.container.getDropdownList(this._contents.menuName);
-        else options = this._menuGenerator();
-
-        this._contents.options = options;
-
-        var OPTION_X_PADDING = 30;
-        var maxWidth = 0;
-
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
-
-        this.optionGroup.bind('mousedown touchstart', (e) =>
-            e.stopPropagation()
-        );
-
-        this.optionGroup.on('mouseup', '.rect', function(e) {
-            e.stopPropagation();
-            that.applyValue(this._value);
-            that.destroyOption(undefined, true);
-            that._selectBlockView();
-        });
-
-        var fragment = document.createDocumentFragment();
-        options.forEach((option) => {
-            var text = (option[0] = this._convert(option[0], option[1]));
-            var value = option[1];
-            var element = Entry.Dom('li', {
-                class: 'rect',
-            });
-            var elem = element[0];
-            elem._value = value;
-
-            var left = Entry.Dom('span', {
-                class: 'left',
-                parent: element,
-            });
-
-            if (this.getValue() == value) left.text('\u2713');
-
-            Entry.Dom('span', {
-                class: 'right',
-                parent: element,
-            }).text(text);
-
-            fragment.appendChild(elem);
-        });
-
-        this.optionGroup[0].appendChild(fragment);
-        this._position();
-
-        this.optionDomCreated();
-    };
-
-    p.optionChangeTriggeredEvent = function() {
-        const that = this;
-        const targetIndex = this._contents.targetIndex;
-
-        if(typeof targetIndex === "undefined") {
-            return ;
-        }
-
-        $(this._blockView.contentSvgGroup).on('optionChanged', function(e, data) {
-            if( that._block == data.block && targetIndex == data.index) {
-                let options = that._menuGenerator(data.value);
-                that._contents.options = options;
-                that.applyValue(options[0][1]);
+        const { options = [] } = this._contents;
+        const convertedOptions = options.map(([key, value]) => [this._convert(key, value), value]);
+        this.dropdownWidget = new Dropdown({
+            data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
+                items: convertedOptions,
+                positionDom: this.svgGroup,
+                onOutsideClick: () => {
+                    this.destroyOption();
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('select', (item) => {
+            this.applyValue(item[1]);
+            this.destroyOption();
+            const { view = {} } = this._block.getThread();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
             }
         });
-
-    };
-})(Entry.FieldDropdownDynamic.prototype);
+        this.optionDomCreated();
+    }
+};

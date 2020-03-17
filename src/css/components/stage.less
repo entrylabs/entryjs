@@ -3,11 +3,13 @@
 }
 
 .entryCanvasWorkspace {
-    width: 480px;
+    position: relative;
+    top: 0px;
+    left: 0;
+    width: 268px;
     background-color: white;
-    display: block;
-    position: absolute;
-    top: 24px;
+    border-top: 1px solid #d6e9f4;
+    vertical-align: top;
 }
 
 .entryCanvasPhone {
@@ -19,22 +21,18 @@
 .entryPopupWindow > .entryCanvasWorkspace {
     width: 100% !important;
     position: relative;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #d6e9f4;
     border-top: 0px;
 }
 
 .entryPopupWindow > .entryEngine_w {
     width: 100% !important;
     height: 100% !important;
+    border: 0;
 }
 
-.entryEngine_w > .entryCanvasWorkspace {
-    border-top: 1px solid #ccc;
-}
-
-.entryPopupWindow> div > .entryCanvasWorkspace {
-    bottom: 24px;
-    border-bottom: 1px solid #ccc;
+.entryPopupWindow > div > .entryCanvasWorkspace {
     width: 100% !important;
     top: 0 !important;
+    vertical-align: top;
 }

@@ -23,7 +23,7 @@ Entry.ConnectionRipple = {};
         ripple.remove();
 
         var pos = blockView.getAbsoluteCoordinate();
-        ripple.attr({ cx: pos.x, cy: pos.y });
+        ripple.attr({ cx: pos.scaleX, cy: pos.scaleY });
 
         svgGroup.appendChild(ripple);
         ripple._startTime = new Date();

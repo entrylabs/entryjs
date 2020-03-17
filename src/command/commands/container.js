@@ -1,27 +1,24 @@
-/*
- *
- */
 'use strict';
 
-var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_util');
+const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_util');
 
 (function(c) {
-    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.containerSelectObject] = {
-        do: function(objectId) {
+        do(objectId) {
             Entry.container.selectObject(objectId);
         },
-        state: function(objectId) {
+        state(objectId) {
             return [Entry.playground.object.id, objectId];
         },
-        log: function(objectId) {
+        log(objectId) {
             return [
                 ['objectId', objectId],
                 ['objectIndex', Entry.container.getObjectIndex(objectId)],
             ];
         },
-        restrict: function(data, domQuery, callback, restrictor) {
+        restrict(data, domQuery, callback) {
             Entry.container.scrollToObject(data.content[1][1]);
 
             return new Entry.Tooltip(
@@ -35,7 +32,7 @@ var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_uti
                 {
                     dimmed: true,
                     restrict: true,
-                    callBack: function() {
+                    callBack() {
                         callback();
                     },
                 }
@@ -47,20 +44,21 @@ var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_uti
     };
 
     c[COMMAND_TYPES.removeObject] = {
-        do: function(objectId) {
-            var { name } = Entry.container.getObject(objectId);
+        do(objectId) {
+            Entry.Utils.forceStopSounds();
+            const { name } = Entry.container.getObject(objectId);
             Entry.container.removeObject(objectId);
 
             Entry.toast.success(
                 Lang.Workspace.remove_object,
-                name + ' ' + Lang.Workspace.remove_object_msg
+                `${name} ${Lang.Workspace.remove_object_msg}`
             );
         },
-        state: function(objectId) {
-            var object = Entry.container.getObject(objectId);
+        state(objectId) {
+            const object = Entry.container.getObject(objectId);
             return [object.toJSON(), object.getIndex()];
         },
-        log: function(objectId) {
+        log(objectId) {
             return [['objectId', objectId]];
         },
         undo: 'addObject',
@@ -69,21 +67,21 @@ var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_uti
     };
 
     c[COMMAND_TYPES.addObject] = {
-        do: function(objectModel, index) {
+        do(objectModel, index) {
             objectModel.id = getExpectedData('objectModel', {}).id || objectModel.id;
             Entry.container.addObjectFunc(objectModel, index);
             Entry.dispatchEvent('dismissModal');
         },
-        state: function(objectModel, index) {
+        state(objectModel, index) {
             objectModel.id = getExpectedData('objectModel', {}).id || objectModel.id;
             return [objectModel.id, index];
         },
-        log: function(objectModel, index) {
+        log(objectModel, index) {
             const { sprite, options = {} } = objectModel;
             const { font } = options;
 
             //$$hashKey can't saved for db
-            var _omitFunc = _.partial(_.omit, _, '$$hashKey');
+            const _omitFunc = _.partial(_.omit, _, '$$hashKey');
 
             objectModel.sprite = _omitFunc(sprite);
             if (_.isObject(font)) {
@@ -92,15 +90,17 @@ var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_uti
             return [['objectModel', objectModel], ['objectIndex', index], ['spriteId', sprite._id]];
         },
         dom: ['.btn_confirm_modal'],
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             Entry.dispatchEvent('dismissModal');
-            var { tooltip: { title, content } } = data;
+            const {
+                tooltip: { title, content },
+            } = data;
 
-            var tooltip = createTooltip(title, content, '.btn_confirm_modal', callback, {
+            const tooltip = createTooltip(title, content, '.btn_confirm_modal', callback, {
                 render: false,
             });
 
-            var event = Entry.getMainWS().widgetUpdateEvent;
+            const event = Entry.getMainWS().widgetUpdateEvent;
 
             if (!data.skip) {
                 Entry.dispatchEvent(
@@ -117,7 +117,7 @@ var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_uti
     };
 
     c[COMMAND_TYPES.addObjectButtonClick] = {
-        do: function() {
+        do() {
             Entry.dispatchEvent('dismissModal');
             Entry.dispatchEvent('openSpriteManager');
         },

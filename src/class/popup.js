@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Constructor of popup
  * @constructor
@@ -14,10 +12,11 @@ Entry.Popup = function(className) {
 
     this.body_ = Entry.createElement('div');
     this.body_.addClass('entryPopup');
-    if (className)
+    if (className) {
         this.body_.addClass(className);
+    }
     this.body_.bindOnClick(function(e) {
-        if (e.target==this){
+        if (e.target == this) {
             this.popup.remove();
         }
     });
@@ -25,12 +24,11 @@ Entry.Popup = function(className) {
     document.body.appendChild(this.body_);
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupWindow');
-    if (Entry.targetChecker)
+    if (Entry.targetChecker && !Entry.targetChecker.statusViewDisabled) {
         this.window_.addClass('targetCheckerPopup');
-    if (Entry.device === 'tablet')
-        this.window_.addClass('tablet');
-    this.window_.bindOnClick(function() {
-    });
+    }
+    // if (Entry.device === 'tablet') this.window_.addClass('tablet');
+    this.window_.bindOnClick(() => {});
     Entry.addEventListener('windowResized', this.resize);
     window.popup = this;
     this.resize();
@@ -42,11 +40,18 @@ Entry.Popup = function(className) {
  */
 Entry.Popup.prototype.remove = function() {
     while (this.window_.hasChildNodes()) {
-        if (Entry.type == 'workspace')
-            Entry.view_.insertBefore(this.window_.firstChild,
-                                     Entry.container.view_);
-        else{
+        if (Entry.type == 'workspace') {
+            Entry.engineContainer.insertBefore(
+                this.window_.firstChild,
+                Entry.engineContainer.firstChild
+            );
+        } else if (Entry.type == 'minimize') {
             Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
+        } else {
+            Entry.engineContainer.insertBefore(
+                this.window_.lastChild,
+                Entry.engineContainer.firstChild
+            );
         }
     }
     $('body').css('overflow', 'auto');
@@ -55,8 +60,13 @@ Entry.Popup.prototype.remove = function() {
     Entry.removeEventListener('windowResized', this.resize);
     Entry.engine.popup = null;
     Entry.windowResized.notify();
-    if (Entry.type === "workspace" && Entry.targetChecker)
+    if (
+        Entry.type === 'workspace' &&
+        Entry.targetChecker &&
+        !Entry.targetChecker.statusViewDisabled
+    ) {
         Entry.targetChecker.getStatusView().remove();
+    }
 };
 
 /**
@@ -64,21 +74,22 @@ Entry.Popup.prototype.remove = function() {
  * @param {event} e
  */
 Entry.Popup.prototype.resize = function(e) {
-    var popup = window.popup;
-    var popupWindow = popup.window_;
-    var bottomOffset = Entry.targetChecker ? 91 + 35 : 35;
-    var maxWidth = window.innerWidth * 0.9;
-    var maxHeight = window.innerHeight * 0.9 - bottomOffset;
+    const popup = window.popup;
+    const popupWindow = popup.window_;
+    const bottomOffset =
+        Entry.targetChecker && !Entry.targetChecker.statusViewDisabled ? 91 + 48 : 48;
+    let maxWidth = window.innerWidth * 0.9;
+    let maxHeight = window.innerHeight * 0.9 - bottomOffset;
     if (maxWidth * 9 <= maxHeight * 16) {
-        maxHeight = maxWidth / 16 * 9;
+        maxHeight = (maxWidth / 16) * 9;
         maxHeight += bottomOffset;
-        popupWindow.style.width = String(maxWidth) + 'px';
-        popupWindow.style.height = String(maxHeight) + 'px';
+        popupWindow.style.width = `${String(maxWidth)}px`;
+        popupWindow.style.height = `${String(maxHeight)}px`;
     } else {
-        maxWidth = maxHeight * 16 / 9;
+        maxWidth = (maxHeight * 16) / 9;
         maxHeight += bottomOffset;
-        popupWindow.style.width = String(maxWidth) + 'px';
-        popupWindow.style.height = String(maxHeight) + 'px';
+        popupWindow.style.width = `${String(maxWidth)}px`;
+        popupWindow.style.height = `${String(maxHeight)}px`;
     }
 
     Entry.stage && Entry.stage.updateBoundRect();

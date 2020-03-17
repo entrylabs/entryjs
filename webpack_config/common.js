@@ -1,7 +1,10 @@
-'use strict';
+/*eslint-env node*/
 
-var path = require('path');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const path = require('path');
+const autoprefixer = require('autoprefixer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 
 module.exports = {
     entry: {
@@ -10,8 +13,10 @@ module.exports = {
     output: {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
-        chunkFilename: '[name].bundle.js',
         filename: '[name].js',
+    },
+    resolve: {
+        extensions: ['.ts', '.tsx', '.js', '.json'],
     },
     module: {
         rules: [
@@ -32,6 +37,7 @@ module.exports = {
                 ],
             },
             {
+                // eslint-disable-next-line max-len
                 test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'url-loader',
                 options: {
@@ -39,11 +45,76 @@ module.exports = {
                     limit: 10000,
                 },
             },
+            {
+                test: /\.tsx?$/,
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+                options: { transpileOnly: process.env.NODE_ENV === 'production' },
+            },
+            {
+                test: /\.(css|less)$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            // you can specify a publ icPath here
+                            // by default it use publicPath in webpackOptions.output
+                            publicPath: '../',
+                        },
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: false,
+                            sourceMap: false,
+                        },
+                    },
+                    {
+                        loader: require.resolve('postcss-loader'),
+                        options: {
+                            ident: 'postcss',
+                            plugins: () => [
+                                require('postcss-flexbugs-fixes'),
+                                require('cssnano')({ preset: 'default' }),
+                                autoprefixer({
+                                    overrideBrowserslist: [
+                                        '>1%',
+                                        'last 4 versions',
+                                        'Firefox ESR',
+                                        'not ie < 9', // React doesn't support IE8 anyway
+                                    ],
+                                    flexbox: 'no-2009',
+                                    remove: false,
+                                }),
+                            ],
+                        },
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            sourceMap: false,
+                        },
+                    },
+                ],
+            },
         ],
     },
+    externals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+        '@entrylabs/tool': 'EntryTool',
+        'entry-paint': 'EntryPaint',
+    },
     plugins: [
-        new ExtractTextPlugin({
-            filename: 'entry.css',
+        new CleanWebpackPlugin(['dist'], {
+            root: path.join(__dirname, '..'),
+        }),
+        new ManifestPlugin(),
+        new MiniCssExtractPlugin({
+            // Options similar to the same options in webpackOptions.output
+            // both options are optional
+            filename: '[name].css',
+            chunkFilename: '[id].css',
         }),
     ],
 };

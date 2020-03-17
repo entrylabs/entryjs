@@ -2,7 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             sound_something_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -12,8 +13,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -39,14 +40,14 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'sound_play', 
+                class: 'sound_play',
                 isNotFor: [],
                 func(sprite, script) {
                     const soundId = script.getStringValue('VALUE', script);
                     const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        Entry.Utils.addSoundInstances(createjs.Sound.play(sound.id));
+                        Entry.Utils.addSoundInstances(Entry.Utils.playSound(sound.id));
                     }
 
                     return script.callReturn();
@@ -62,7 +63,8 @@ module.exports = {
                 },
             },
             sound_something_second_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -73,11 +75,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -123,7 +126,7 @@ module.exports = {
                     const sound = sprite.parent.getSound(soundId);
                     if (sound) {
                         Entry.Utils.addSoundInstances(
-                            createjs.Sound.play(sound.id, {
+                            Entry.Utils.playSound(sound.id, {
                                 startTime: 0,
                                 duration: timeValue * 1000,
                             })
@@ -142,7 +145,8 @@ module.exports = {
                 },
             },
             sound_from_to: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -153,15 +157,17 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -215,11 +221,12 @@ module.exports = {
                         let [start, end] = script.getValues(['START', 'END'], script);
                         start = Number(start) * 1000;
                         end = Number(end) * 1000;
-
-                        createjs.Sound.play(sound.id, { 
+                        const instance = Entry.Utils.playSound(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
+                        Entry.Utils.addSoundInstances(instance);
+
                     }
                     return script.callReturn();
                 },
@@ -234,7 +241,8 @@ module.exports = {
                 },
             },
             sound_something_wait_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -244,8 +252,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -280,7 +288,7 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = createjs.Sound.play(sound.id);
+                            const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance);
                             setTimeout(function() {
                                 script.playState = 0;
@@ -306,7 +314,8 @@ module.exports = {
                 },
             },
             sound_something_second_wait_with_block: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -317,11 +326,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -365,7 +375,8 @@ module.exports = {
                         const sound = sprite.parent.getSound(soundId);
                         if (sound) {
                             script.playState = 1;
-                            const instance = createjs.Sound.play(sound.id);
+                            const instance = Entry.Utils.playSound(sound.id);
+                            Entry.Utils.addSoundInstances(instance);
                             const timeValue = script.getNumberValue('SECOND', script);
                             setTimeout(function() {
                                 instance.stop();
@@ -393,7 +404,8 @@ module.exports = {
                 },
             },
             sound_from_to_and_wait: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -404,15 +416,17 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -472,11 +486,12 @@ module.exports = {
                             const startValue = Math.min(start, end);
                             const endValue = Math.max(start, end);
                             const duration = endValue - startValue;
-
-                            createjs.Sound.play(sound.id, {
+                            const instance = Entry.Utils.playSound(sound.id, {
                                 startTime: startValue,
                                 duration,
                             });
+                            Entry.Utils.addSoundInstances(instance);
+
 
                             setTimeout(function() {
                                 script.playState = 0;
@@ -497,18 +512,20 @@ module.exports = {
                 },
             },
             sound_volume_change: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -539,31 +556,33 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     let value = script.getNumberValue('VALUE', script) / 100;
-                    value = value + createjs.Sound.getVolume();
+                    value = value + Entry.Utils.getVolume();
                     if (value > 1) {
                         value = 1;
                     }
                     if (value < 0) {
                         value = 0;
                     }
-                    createjs.Sound.setVolume(value);
+                    Entry.Utils.setVolume(value);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.add_sound_volume(%1)'] },
             },
             sound_volume_set: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -600,20 +619,21 @@ module.exports = {
                     if (value < 0) {
                         value = 0;
                     }
-                    createjs.Sound.setVolume(value);
+                    Entry.Utils.setVolume(value);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
             sound_silent_all: {
-                color: '#A4D01D',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},

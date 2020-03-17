@@ -15,11 +15,12 @@ Entry.Console = function() {
 
 (function(p) {
     p.createView = function() {
-        this.view = new Entry.Dom('div', {
+        this.view = Entry.Dom('div', {
             id: 'entryConsole',
         });
 
         this.codeMirror = CodeMirror(this.view[0], {
+            readOnly: 'nocursor',
             lineNumbers: false,
             lineWrapping: true,
             value: '',
@@ -73,6 +74,9 @@ Entry.Console = function() {
     p.print = function(message, mode) {
         if (!this.visible) return;
 
+        if (mode !== 'ask') {
+            this._doc.cm.options.readOnly = 'nocursor';
+        }
         this.setEditing(true);
         this.codeMirror.execCommand('goDocEnd');
         var cursor = this._doc.getCursor();
@@ -85,6 +89,7 @@ Entry.Console = function() {
         if (mode === 'speak') this.setEditing(false);
         this.codeMirror.execCommand('goDocEnd');
         if (mode === 'ask') {
+            this._doc.cm.options.readOnly = false;
             this._doc.addLineClass(cursor.line + 1, 'text', 'answer');
             this.codeMirror.focus();
         }

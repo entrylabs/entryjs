@@ -1,9 +1,14 @@
 .entryVariablePanelWorkspace {
     position: absolute;
-    width: 250px;
-    top: 47px;
+    overflow: hidden;
+    overflow-y: auto;
+    width: 254px;
+    top: 0;
     bottom: 0px;
-    padding: 6px 4px 0px 4px;
+    padding: 16px 16px 0 8px;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryVariablePanelPhone {
@@ -15,63 +20,145 @@
 
 .entryVariableSelectorWorkspace {
     width: 100%;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+    table-layout: fixed;
+}
+.entryVariableSelectorWorkspace tr:first-child td:first-child {
+    width: 56px;
 }
 
 .entryVariableSelectButtonWorkspace {
-    font-family: nanumBarunBold !important;
-    width: 25%;
-    border-collapse: collapse;
-    text-align: center;
-    vertical-align: center;
-    background-color: #EDEDED;
-    height: 38px;
-    border: solid 1px #bdbdbd;
-    border-left: none;
-    color: #535353;
-    padding-top: 4px;
+    font-family: EntryFont, NanumGothic !important;
+    width: 88px;
+    padding: 0;
+    margin: 0;
     cursor: pointer;
+    vertical-align: top;
 }
-
-.entryVariableSelectButtonWorkspace.selected {
-    color: #ffffff;
-    background-color: #0e68e3;
+.entryVariableSelectButtonWorkspace div {
+    position: relative;
+    height: 40px;
+    padding-left: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #728997;
+    background-color: #fff;
+    letter-spacing: -0.4px;
+    line-height: 40px;
 }
-
-.entryVariableSelectButtonWorkspace.allButton {
+.entryVariableSelectButtonWorkspace.selected div {
+    color: #4f80ff;
+    z-index: 10;
+}
+.entryVariableSelectButtonWorkspace.allButton div {
+    height: 80px;
+    padding: 0;
     border-radius: 6px 0 0 6px;
-    border-left: solid 1px #bdbdbd;
+    text-align: center;
+    line-height: 80px;
 }
 
-.entryVariableSelectButtonWorkspace.message {
-    border-radius: 0 6px 0px 0;
+.entryVariableSelectButtonWorkspace.message div {
+    border-radius: 0 6px 0 0;
 }
 
-.entryVariableSelectButtonWorkspace.list {
-    border-top: none;
+.entryVariableSelectButtonWorkspace.func div {
+    border-radius: 0 0 6px 0;
 }
 
-.entryVariableSelectButtonWorkspace.func {
-    border-top: none;
-    border-radius: 0 0px 6px 0;
-}
-
-.entryVariableSelectButtonWorkspace.disable {
-    color: #bdbdbd;
+.entryVariableSelectButtonWorkspace.disable div {
     cursor: default;
 }
 
-.entryVariableListWorkspace {
+.entryVariableSelectButtonWorkspace div:after {
     position: absolute;
-    top: 88px; 
-    bottom: 0px;
-    right: 4px;
-    left: 4px;
-    padding: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px solid #d6e9f4;
+    content: '';
+}
+
+.entryVariableSelectButtonWorkspace.selected div:after {
+    border-color: #4f80ff;
+}
+
+.entryVariableSelectButtonWorkspace.allButton div:after {
+    right: -1px;
+    border-radius: 6px 0 0 6px;
+}
+.entryVariableSelectButtonWorkspace.allButton div .text {
     margin: 0;
-    list-style: none;
-    overflow: auto;
+}
+.entryVariableSelectButtonWorkspace.variable div:after {
+    right: -1px;
+}
+.entryVariableSelectButtonWorkspace.message div:after {
+    border-radius: 0 6px 0 0;
+}
+.entryVariableSelectButtonWorkspace.list div:after {
+    right: -1px;
+    top: -1px;
+}
+.entryVariableSelectButtonWorkspace.func div:after {
+    top: -1px;
+    border-radius: 0 0 6px 0;
+}
+
+.entryVariableSelectButtonWorkspace div:before {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    width: 22px;
+    height: 22px;
+    background-size: 22px auto;
+    vertical-align: top;
+    content: '';
+}
+
+.entryVariableSelectButtonWorkspace.allButton div:before {
+    display: none;
+}
+
+.entryVariableSelectButtonWorkspace.variable div:before {
+    .backgroundImage('ic_attr_variable.png');
+}
+.entryVariableSelectButtonWorkspace.message div:before {
+    .backgroundImage('ic_attr_message.png');
+}
+.entryVariableSelectButtonWorkspace.list div:before {
+    margin-right: 6px;
+    .backgroundImage('ic_attr_list.png');
+}
+.entryVariableSelectButtonWorkspace.func div:before {
+    .backgroundImage('ic_attr_func.png');
+}
+
+.entryVariableSelectButtonWorkspace.variable.selected div:before {
+    .backgroundImage('ic_attr_variable_on.png');
+}
+.entryVariableSelectButtonWorkspace.message.selected div:before {
+    .backgroundImage('ic_attr_message_on.png');
+}
+.entryVariableSelectButtonWorkspace.list.selected div:before {
+    margin-right: 6px;
+    .backgroundImage('ic_attr_list_on.png');
+}
+.entryVariableSelectButtonWorkspace.func.selected div:before {
+    .backgroundImage('ic_attr_func_on.png');
+}
+
+.entryVariableSelectButtonWorkspace .text {
+    display: block;
+    overflow: hidden;
+    margin: 0 8px 0 34px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .entryVariableListElementWorkspace {
@@ -83,535 +170,991 @@
     min-height: 50px;
 }
 
-.entryVariableAddWorkspace {
+.entryVariableListWorkspace {
+    overflow: auto;
+    position: absolute;
+    top: 112px;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 0;
-    font-size: 13pt;
-    color: #717171;
-    cursor: pointer;
-    line-height: 49px;
-    position: relative;
-    text-align: center;
-}
-
-.entryVariableAddWorkspace.disable {
-    color: #bdbdbd;
-    cursor: default;
-    pointer-events:none;
-}
-
-.entryVariableAddWorkspace:not(.disable):hover {
-    background-color: #d3d3d3;
-    color: #333;
-}
-
-.entryVariableListElementWorkspace.selected {
-    background-color: #d3d3d3;
-}
-
-.entryVariableListElementNameWorkspace {
-    position: absolute;
-    left: 47px;
-    margin-top: 12px;
-    background-color: #efefef;
-    width: 55%;
-    border: 1px solid transparent;
-    padding-left: 5px;
-    -webkit-text-fill-color: black;
-    -webkit-opacity:1;
-    color: black;
-}
-.selected .entryVariableListElementNameWorkspace {
-    background-color: #d3d3d3;
-}
-
-.entryVariableListElementNameWorkspace:focus {
-    background-color: white;
-    border: 1px solid gray;
-}
-
-.entryVariableFunctionElementNameWorkspace {
-    border: none;
-    position: absolute;
-    left: 55px;
-    margin-top: 12px;
-    background-color: transparent;
-    width: 60%;
-    overflow: hidden;
-    height: 20px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.entryVariableListElementDeleteWorkspace {
-    position: absolute;
-    margin-top: 5px;
-    padding-right: 5px;
-    right: 3px;
-    border: 0;
-    outline: 0;
-    width: 22px;
-    height: 40px;
-    opacity: 0;
-    background-color: transparent;
-    .backgroundImage("layers_icon_close_nor_new_1.png");
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.entryVariableListElementWorkspace.active .entryVariableListElementDeleteWorkspace,
-.entryVariableListElementWorkspace.activeForce .entryVariableListElementDeleteWorkspace ,
-.entryVariableListElementWorkspace.active .entryVariableListElementEditWorkspace,
-.entryVariableListElementWorkspace.activeForce .entryVariableListElementEditWorkspace {
-    opacity: 1;
-}
-
-.entryVariableListElementEditWorkspace {
-    display: inline-block;
-    float: right;
-    border: 0;
-    outline: 0;
-    width: 19px;
-    height: 19px;
-    margin-top: 16px;
-    margin-right: 25px;
-    background-color: transparent;
-    .backgroundImage("layers_icon_edit_nor_new_1.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0;
-}
-
-.entryVariableListCallerListWorkspace {
-    list-style: none;
-    padding: 0;
-}
-
-.entryVariableListCallerWorkspace {
-    border: solid 1px #c8c8c8;
-    border-top: none;
-    height: 50px;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.entryVariableListCallerWorkspace:hover {
-    background-color: #e0e0e0;
-}
-
-.entryVariableListCallerWorkspace:first-child {
-    border-top: none;
-}
-
-.entryVariableListCallerWorkspace>.entryObjectThumbnailWorkspace {
-    position: inherit;
-    display:block;
-    float: left;
-    top: 0; left: 0;
-    margin: 5px 0 0 5px;
-    height: 40px;
-    width: 40px;
-}
-
-.entryVariableListCallerNameWorkspace {
-    position: absolute;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    float: left;
-    height: 49px;
-    line-height: 49px;
-    left: 60px; right: 0;
-    padding-right: 7px;
-}
-
-.entryVariableListCallerNoneWorkspace {
-    color: #C16B6B;
-    cursor: default;
-    line-height: 48px;
-    padding-left: 50px;
-}
-
-.entryVariableLocalElementWorkspace {
-    .backgroundImage("local_question_icon.png");
-}
-
-.entryVariableCloudElementWorkspace {
-    .backgroundImage("cloud_question_icon.png");
-}
-
-.entryVariableGlobalElementWorkspace {
-    .backgroundImage("list_icon_question.png");
-}
-
-.entryMessageElementWorkspace {
-    .backgroundImage("list_icon_signal.png");
-}
-
-.entryListCloudElementWorkspace {
-    .backgroundImage("cloud_list_icon.png");
-}
-
-.entryListGlobalElementWorkspace {
-    .backgroundImage("list_icon_list.png");
-}
-
-.entryListLocalElementWorkspace {
-    .backgroundImage("local_list_icon.png");
-}
-
-.entryFunctionElementWorkspace {
-    .backgroundImage("list_icon_function_v1.png");
-}
-
-.entryVariableAddSpaceWorkspace {
-    padding: 0;
-    padding-left: 16px;
-    padding-right: 16px;
     margin: 0;
-    /*height: 215px;*/
-    height: 200px;
-    background-color: white;
-    border: 1px solid #a8a8a8;
+    border-top: 1px solid #d5d6e9f4;
 }
-
-.entryVariableAddSpaceNameWrapperWorkspace {
-    height: 28px;
+.entryVariableAdd_box .entryVariableAddWorkspace {
+    display: block;
+    overflow: hidden;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto 16px;
     margin-top: 16px;
-    .backgroundImage("list_icon_question_1.png");
-    background-repeat: no-repeat;
-}
-
-.entryVariableAddSpaceNameWrapperWorkspace.entryListAddSpaceNameWrapperWorkspace {
-    .backgroundImage("list_icon_list_1.png");
-}
-
-.entryVariableAddSpaceInputWorkspace {
-    width: 80%;
-    margin-left: 42px;
-    margin-top: 2px;
-}
-
-.entryVariableAddSpaceGlobalWrapperWorkspace {
-    margin-top: 16px;
-    color: #5e5e5e;
-    font-size: 11px;
-    position: relative;
-    cursor: pointer;
-}
-
-.entryVariableAddSpaceCheckWorkspace {
-    display: inline-block;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    margin-top: 2px;
-    position: absolute;
-    right: 17px;
-    border: 1px solid gray;
-}
-
-
-.entryVariableAddSpaceLocalWrapperWorkspace {
-    color: #5e5e5e;
-    font-size: 11px;
-    position: relative;
-    margin-top: 12px;
-    cursor: pointer;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #a8a8a8;
-}
-
-.entryVariableAddSpaceCloudWrapperWorkspace {
-    padding-top: 8px;
-}
-
-.entryVariableAddSpaceCloudWrapperWorkspace {
-    cursor: pointer;
-    color: #5e5e5e;
-    font-size: 11px;
-    position: relative;
-}
-
-.entryVariableAddSpaceUnCheckedWorkspace {
-    color: #afafaf;
-}
-
-.entryVariableAddSpaceCloudCheckWorkspace {
-    margin-top: -12px;
-}
-
-.entryVariableAddSpaceButtonWrapperWorkspace {
-    margin-top: 12px;
-}
-
-.entryVariableAddSpaceButtonWorkspace {
-    font-size: 11px;
-    display: inline-block;
-    width: 48px;
-    height: 24px;
-    border: 2px solid gray;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f80ff;
     text-align: center;
-    line-height: 22px;
-    cursor: pointer;
-    float: right;
+    text-decoration: none;
+    line-height: 42px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
-
-.entryVariableAddSpaceCancelWorkspace {
-    margin-left: 7px;
+.entryVariableAdd_box .entryVariableAddWorkspace.disabled {
+    border: 1px solid #e2e2e2;
+    background-color: #f9f9f9;
+    color: #cbcbcb;
+    cursor: default;
 }
-
-.entryVariableSplitterWorkspace {
-    height: 25px;
-    font-size: 11px;
-    border: 1px solid #a8a8a8;
-    border-top: none;
-    line-height: 25px;
-    padding-left: 9px;
+.entryVariableAdd_box .entryVariableAddSpaceWorkspace {
+    padding: 16px 10px;
+    background-color: #d6e9f4;
 }
-
-/*first element after splitter should not have border-top*/
-.entryVariableSplitterWorkspace + .entryVariableListElementWorkspace {
-    border-top: none;
+.entryVariableAdd_box.entryVariableContainerTextMode .entryVariableAddSpaceWorkspace {
+    display: none;
 }
-
-.entryVariableListCallerListWorkspace + .entryVariableListElementWorkspace {
-    border-top: none;
+.entryVariableAdd_box .message_inpt {
+    padding: 16px 26px 16px 8px;
+    border-top: 1px solid #d6e9f4;
 }
-
-.entryVariableSettingWorkspace {
+.entryVariableAdd_box .message_inpt.off {
+    display: none;
+}
+.entryVariableAdd_box .message_inpt input[type='text'] {
     width: 100%;
-    height: 165px;
-    border-top: 1px solid #a8a8a8;
-    padding-left: 16px;
-    padding-right: 16px;
-    font-size: 11px;
-    background-color: #efefef;
-}
-
-.entryVariableSettingVisibleWrapperWorkspace {
-    padding-top: 22px;
-    cursor: pointer;
-}
-
-.entryVariableSettingCheckWorkspace {
-    display: inline-block;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    left: 90px;
-    margin-top: 2px;
-    border: 1px solid gray;
-    color: #5e5e5e;
-}
-
-.entryVariableAddSpaceCheckWorkspace.entryVariableAddChecked,
-.entryVariableSettingCheckWorkspace.entryVariableSettingChecked {
-    .backgroundImage("check_on.png");
-    background-repeat: no-repeat;
-}
-
-.entryVariableSettingInitValueWrapperWorkspace,
-.entryVariableSettingSlideWrapperWorkspace,
-.entryVariableSettingMinMaxWrapperWorkspace {
-    margin-top: 12px;
-}
-
-.entryVariableSettingSlideWrapperWorkspace {
-    cursor: pointer;
-}
-
-.entryVariableMinMaxDisabledWorkspace.entryVariableSettingMinMaxWrapperWorkspace {
-    color: #a8a8a8;
-}
-
-.entryVariableSettingInitValueInputWorkspace {
-    margin-left: 33px;
-    border: 2px solid #a8a8a8;
-    padding-left: 5px;
-    width: 65%;
-}
-
-.entryVariableSettingSplitterWorkspace {
-    width: 100%;
-    height: 1px;
-    background-color: #a8a8a8;
-    margin-top: 16px;
-}
-
-.entryVariableSettingMinValueInputWorkspace,
-.entryVariableSettingMaxValueInputWorkspace {
-    margin-left: 3px;
-    width: 22%;
-    border: 1px solid #afafaf;
-    padding-left: 5px;
-}
-
-.entryVariableSettingMinValueInputWorkspace:disabled,
-.entryVariableSettingMaxValueInputWorkspace:disabled {
-    background-color: #d3d3d3;
-}
-
-.entryVariableSettingMaxValueSpanWorkspace {
-    margin-left: 5px;
-}
-
-.entryVariableSettingButtonWrapperWorkspace {
-    margin-top: 18px;
-}
-
-.entryVariableListElementWrapperWorkspace {
-    width: 100%;
-    height: 50px;
-}
-
-.entryVariableContainerTextMode {
-    .notForTextMode {
-        display: none;
-    }
-}
-
-.entryListSettingWorkspace {
-    width: 100%;
-    border-top: 1px solid #a8a8a8;
-    font-size: 13px;
-    background-color: #efefef;
-}
-
-.entryListSettingWorkspace > .entryListSettingPaddingWrapper {
-    padding: 24px 10px 5px;
-}
-
-
-.entryListSettingVisibleWrapperWorkspace {
-    cursor: pointer;
-}
-
-.entryListSettingTransferWrapperWorkspace {
-    width: 100%;
-    height: 60px;
-    background-color: #e5e5e5;
-    border-bottom: solid 1px #a8a8a8;
-    text-align: center;
-}
-
-.entryListSettingImportButton, .entryListSettingExportButton {
-    width: 100px;
-    height: 32px;
-    margin: 14px 4px;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
     font-size: 12px;
-    border-radius: 3px;
-    background-color: #eeeeee;
-    border: solid 1px #cccccc;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
 }
-
-.entryListSettingCheckWorkspace {
+.entryVariableAdd_box .message_inpt input[type='text']::-webkit-input-placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt input[type='text']:-ms-input-placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt input[type='text']::-ms-input-placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt input[type='text']::placeholder {
+    color: #979797;
+}
+.entryVariableAdd_box .message_inpt .entryVariableAddSpaceButtonWrapperWorkspace {
+    border: 0;
+    margin: 0;
+}
+.entryVariableAdd_box .entryVariableAddSpaceWorkspace.off {
+    display: none;
+}
+.entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputLabelWorkspace {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    line-height: 14px;
+    vertical-align: top;
+}
+.entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputLabelWorkspace:before {
     display: inline-block;
-    position: absolute;
-    width: 10px;
-    height: 10px;
-    border-radius: 2px;
-    left: 103px;
-    margin-top: 4px;
-    border: 1px solid gray;
-    color: #5e5e5e;
-}
-
-.entryListSettingCheckWorkspace.entryListSettingCheckedWorkspace {
-    .backgroundImage("check_on.png");
-    background-repeat: no-repeat;
-}
-
-.entryListSettingLengthWrapperWorkspace {
-    margin-top: 15px;
     overflow: hidden;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #4f80ff;
+    margin: 3px 10px 0 0;
+    vertical-align: top;
+    content: '';
 }
-
-.entryListSettingLengthControllerWorkspace {
-    margin-left: 5px;
-    height: 23px;
-    display: inline-block;
+.entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace {
+    overflow: hidden;
+    width: 100%;
+    margin-top: 9px;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.entryVariableAddSpaceNameWrapperWorkspace
+    .entryVariableAddSpaceInputWorkspace::-webkit-input-placeholder {
+    color: #979797;
+}
+.entryVariableAddSpaceNameWrapperWorkspace
+    .entryVariableAddSpaceInputWorkspace:-ms-input-placeholder {
+    color: #979797;
+}
+.entryVariableAddSpaceNameWrapperWorkspace
+    .entryVariableAddSpaceInputWorkspace::-ms-input-placeholder {
+    color: #979797;
+}
+.entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace::placeholder {
+    color: #979797;
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace {
     position: relative;
+    margin: 16px 0 0 14px;
+    padding: 0 0 0 26px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    cursor: pointer;
+    line-height: 14px;
 }
-
-.entryListSettingLengthSpanWorkspace {
-    float: left;
+.entryVariableAddSpaceGlobalWrapperWorkspace + .entryVariableAddSpaceGlobalWrapperWorkspace {
+    margin-top: 22px;
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace .Workspace_text {
+    display: inline-block;
+    padding: 4px 0 2px;
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace .entryVariableAddSpaceCheckWorkspace {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-size: 20px auto;
+    .backgroundImage('btn_radio.png');
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace.on .entryVariableAddSpaceCheckWorkspace {
+    .backgroundImage('btn_radio_on.png');
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace .entryVariableAddSpaceCloudWrapperWorkspace {
+    display: none;
+    position: relative;
+    margin: 14px 0 -6px;
+    padding: 11px 0 11px 32px;
+    border: 1px solid #aac5d5;
+    border-width: 1px 0;
+    font-size: 12px;
+    color: #2c313d;
+    cursor: pointer;
+    letter-spacing: -0.5px;
+}
+.entryVariableAddSpaceGlobalWrapperWorkspace
+    .entryVariableAddSpaceCloudWrapperWorkspace
+    .entryVariableAddSpaceCloudSpanWorkspace {
+    display: inline-block;
     margin-top: 2px;
+    white-space: pre;
 }
-
-.entryListSettingMinusWorkspace {
-    width: 23px;
-    height: 23px;
-    float: left;
-    .backgroundImage("list_minus.png");
-    cursor: pointer;
+.entryVariableAddSpaceGlobalWrapperWorkspace
+    .entryVariableAddSpaceCloudWrapperWorkspace
+    .entryVariableAddSpaceCheckWorkspace {
+    position: absolute;
+    left: 8px;
+    top: 11px;
+    width: 16px;
+    height: 16px;
+    background-size: 16px auto;
+    .backgroundImage('btn_checkbox.png');
 }
-
-.entryListSettingLengthInputWorkspace {
-    float: left;
-    height: 23px;
-    margin-left: 5px;
-    margin-right: 5px;
-    padding-left: 5px;
-    border: 2px solid #a8a8a8;
-    width: 60px;
+.entryVariableAddSpaceGlobalWrapperWorkspace
+    .entryVariableAddSpaceCloudWrapperWorkspace.on
+    .entryVariableAddSpaceCheckWorkspace {
+    .backgroundImage('btn_checkbox_on.png');
 }
-
-.entryListSettingLengthInputWorkspace:focus {
-    border: 2px solid #1bafea;
-    outline: none;
+.entryVariableAddSpaceGlobalWrapperWorkspace.on .entryVariableAddSpaceCloudWrapperWorkspace {
+    display: block;
 }
-
-.entryListSettingPlusWorkspace {
-    width: 23px;
-    height: 23px;
-    float: left;
-    .backgroundImage("list_plus.png");
-    cursor: pointer;
+.entryVariableAddSpaceButtonWrapperWorkspace {
+    overflow: hidden;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid #aac5d5;
+    font-size: 0;
+    text-align: center;
 }
-.entryListSettingSeperatorWorkspace {
-    height: 1px;
-    background-color: gray;
-    margin-top: 10px;
-    margin-bottom: 10px;
+.entryVariableAddSpaceButtonWorkspace {
+    display: inline-block;
+    overflow: hidden;
+    width: 64px;
+    height: 32px;
+    margin: 0 8px;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    background-color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4f80ff;
+    text-align: center;
+    text-decoration: none;
+    line-height: 30px;
+    vertical-align: top;
 }
-
-.entryListSettingListValuesWorkspace {
-    padding-left: 15px;
-    color: #a8a8a8;
+.entryVariableAddSpaceConfirmWorkspace {
+    color: #fff;
+    background-color: #4f80ff;
 }
-
-.entryListSettingValueWrapperWorkspace {
-    margin-bottom: 10px;
+.entryVariableSplitterWorkspace {
+    border: 1px solid #d6e9f4;
+    border-width: 1px 0;
+}
+.entryVariableSplitterWorkspace + .entryVariableSplitterWorkspace {
+    border-top: 0;
+}
+.entryVariableSplitterWorkspace .attr_link {
+    position: relative;
+    display: block;
+    padding: 18px 10px 16px 24px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    text-decoration: none;
+    word-break: break-all;
+    cursor: default;
+    line-height: 14px;
+}
+.entryVariableSplitterWorkspace .attr_link:before {
+    overflow: hidden;
+    position: absolute;
+    left: 10px;
+    top: 21px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: #4f80ff;
+    content: '';
+}
+.entryVariableSplitterWorkspace .list {
     overflow: hidden;
 }
-
-.entryListSettingEachInputWorkspace {
-    border: 2px solid #a8a8a8;
-    width: 130px;
-    float: left;
-    padding-left: 5px;
+.entryVariableSplitterWorkspace .list + .list {
+    border-top: 1px solid #d6e9f4;
 }
-
-.entryListSettingEachInputWorkspace:focus {
-    border: 2px solid #1baefa;
-    outline: none;
+.entryVariableSplitterWorkspace .list + .list {
+    border-top: 1px solid #d6e9f4;
 }
-
-.entryListSettingValueNumberSpanWorkspace {
-    width: 20px;
+.entryVariableSplitterWorkspace .list .inpt_box {
+    position: relative;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    padding: 13px 112px 13px 38px;
+    background-color: #d6e9f4;
+}
+.entryVariableSplitterWorkspace .list.default_val + .list,
+.entryVariableSplitterWorkspace .list.global_val + .list,
+.entryVariableSplitterWorkspace .list.local_val + .list,
+.entryVariableSplitterWorkspace .list.default_list + .list,
+.entryVariableSplitterWorkspace .list.global_list + .list,
+.entryVariableSplitterWorkspace .list.local_list + .list {
+    border-top: 1px solid #aac5d5;
+}
+.entryVariableSplitterWorkspace.all .list + .list {
+    border-top: 1px solid #d6e9f4;
+}
+.entryVariableSplitterWorkspace.all {
+    border-top: none;
+}
+.entryVariableSplitterWorkspace.all .list .inpt_box {
+    background-color: #ecf8ff;
+}
+.entryVariableSplitterWorkspace.all .list.unfold .inpt_box {
+    background-color: #fff;
+}
+.entryVariableSplitterWorkspace .list .inpt_box:before {
+    position: absolute;
+    left: 10px;
+    top: 14px;
+    width: 22px;
+    height: 22px;
+    background-size: 22px auto;
+    content: '';
+}
+.entryVariableSplitterWorkspace .list .inpt {
+    position: relative;
+    height: 24px;
+    padding-right: 16px;
+}
+.entryVariableSplitterWorkspace .list .inpt .editBoxInput {
+    border: 1px solid #e2e2e2;
+    background-color: #f9f9f9;
+    color: #cbcbcb;
+}
+.entryVariableSplitterWorkspace .list .inpt:after {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 8px;
+    height: 6px;
+    margin-top: -3px;
+    background-size: 8px auto;
+    content: '';
+}
+.entryVariableSplitterWorkspace .list .inpt input[type='text'] {
+    width: 100%;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.entryVariableSplitterWorkspace .list .inpt span {
+    width: 100%;
+    padding: 6px 8px 5px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: block;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box {
+    display: none;
+    border-top: 1px solid #aac5d5;
+    padding: 12px 26px 10px 26px;
+    background-color: #bfd8e6;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .caution_dsc {
+    padding: 18px 0 5px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .box_sjt {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    vertical-align: top;
+    line-height: 12px;
+    margin-bottom: 9px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .box_sjt:before {
     display: inline-block;
-    float: left;
-    margin-top: 3px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    margin: 3px 8px 0 0;
+    background-color: #4f80ff;
+    vertical-align: top;
+    content: '';
 }
-
-.entryListSettingValueRemoveWorkspace {
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    position: relative;
+    padding: 0 34px 10px 0;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt.hidden {
+    display: none;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt label {
+    -webkit-box-flex: 0;
+    -ms-flex: 0 1 auto;
+    flex: 0 1 auto;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    vertical-align: top;
+    line-height: 27px;
+    white-space: nowrap;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt .val_inptbox {
+    display: block;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    margin-left: 8px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt input[type='text'] {
+    width: 100%;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .chk_box {
+    position: relative;
+    font-size: 0;
+    cursor: pointer;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .chk_text {
+    display: inline-block;
+    margin: 3px 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    vertical-align: top;
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .val_attr
+    .slide_inpt
+    .entryVariableAddSpaceCheckWorkspace {
     display: inline-block;
     width: 16px;
     height: 16px;
+    background-size: 16px auto;
+    .backgroundImage('btn_checkbox.png');
+    vertical-align: top;
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .val_attr
+    .slide_inpt
+    .entryVariableAddSpaceCheckWorkspace {
+    .backgroundImage('btn_checkbox.png');
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .val_attr
+    .slide_inpt
+    .entryVariableAddSpaceCheckWorkspace.on {
+    .backgroundImage('btn_checkbox_on.png');
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .cnt_box {
+    overflow: hidden;
+    margin-top: 12px;
+    font-size: 0;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .cnt_box .dash {
+    padding: 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    line-height: 24px;
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .val_attr
+    .slide_inpt
+    .cnt_box
+    input[type='text'] {
+    width: 64px;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .val_attr
+    .slide_inpt
+    .cnt_box
+    input[type='text']:disabled {
+    border: 1px solid #e2e2e2;
+    background-color: #f9f9f9;
+    color: #cbcbcb;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list {
+    overflow: hidden;
+    margin: 6px 0 -4px 0;
+    padding: 0;
+    list-style: none;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list li {
+    position: relative;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    list-style: none;
+    height: 33px;
+    margin: 0;
+    padding: 4px 4px 4px 42px;
+    border-top: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list li:first-child {
+    border-top: 0;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list .thmb {
+    overflow: hidden;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: 33px;
+    width: 30px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
+    background-size: auto 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list .text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 33px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    word-break: break-all;
+    white-space: nowrap;
+    line-height: 34px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list .text.red {
+    color: #ff4b4b;
+    padding-left: 10px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr {
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr.hidden {
+    display: none;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .btn_box {
+    overflow: hidden;
+    margin-top: 8px;
+    font-size: 0;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .btn_box .btn_list {
+    display: inline-block;
+    overflow: hidden;
+    width: 95px;
+    height: 32px;
+    border-radius: 4px;
+    border: 1px solid #4f80ff;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4f80ff;
+    text-decoration: none;
+    letter-spacing: -0.5px;
+    text-align: center;
+    line-height: 30px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .btn_box .btn_list + .btn_list {
+    margin-left: 7px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .list_cnt {
+    overflow: hidden;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .list_cnt .cnt_sjt {
+    float: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .list_cnt .cnt_inpt {
     float: right;
-    margin-right: 10px;
-    margin-top: 4px;
+    overflow: hidden;
+    position: relative;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    width: 40px;
+    height: 32px;
+    padding: 0 32px;
+    border-radius: 4px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .list_cnt .cnt_inpt .btn_cnt {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    background-color: #f2f2f2;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px 0 0 4px;
+    font-size: 24px;
+    color: #2c313d;
+    text-decoration: none;
+    text-align: center;
+    line-height: 34px;
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .list_attr
+    .list_cnt
+    .cnt_inpt
+    .btn_cnt
+    + .btn_cnt {
+    left: auto;
+    right: 0;
+    border-radius: 0 4px 4px 0;
+}
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .list_attr
+    .list_cnt
+    .cnt_inpt
+    input[type='text'] {
+    width: 40px;
+    height: 32px;
+    padding: 9px 0 7px;
+    border: 1px solid #e2e2e2;
+    outline: 0;
+    background-color: #fff;
+    font-size: 12px;
+    color: #2c313d;
+    font-weight: 600;
+    line-height: 14px;
+    text-align: center;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_group {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .scroll_box {
+    max-height: 160px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .scroll_box.on {
+    padding-right: 20px;
+}
+.scroll_box:not(.on) .simplebar-vertical {
+    display: none;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .scroll_box .simplebar-scrollbar {
+    opacity: 0.8;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list li {
+    position: relative;
+    margin: 8px 0 0 0;
+    padding: 0 34px 0 28px;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list li:first-child {
+    margin-top: 0;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list .cnt {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 28px;
+    padding-right: 8px;
+    margin-top: -6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    line-height: 12px;
+    text-align: right;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list .del {
+    right: 0;
+    top: 0;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list input[type='text'] {
+    width: 100%;
+    padding: 6px 8px 5px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    outline: 0;
+    background-color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.2px;
+    line-height: 11px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .caution_dsc {
+    padding: 7px 10px 2px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ff4b4b;
+    letter-spacing: -0.4px;
+    line-height: 11px;
+}
+.obj_list {
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+.entryVariableSplitterWorkspace .list .use_block {
+    display: none;
+    padding: 4px 26px 4px 32px;
+    background-color: #d6e9f4;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list li {
+    position: relative;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    list-style: none;
+    height: 33px;
+    margin: 0;
+    padding: 4px 4px 4px 42px;
+    border-top: 1px solid #aac5d5;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list li:first-child {
+    border-top: 0;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list .thmb {
+    overflow: hidden;
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    height: 33px;
+    width: 30px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
+    background-size: auto 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.entryVariableSplitterWorkspace .list .use_block .obj_list .text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 33px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
+    word-break: break-all;
+    white-space: nowrap;
+    line-height: 34px;
+}
+.entryVariableSplitterWorkspace .list .watch {
+    position: absolute;
+    right: 60px;
+    top: 13px;
+    width: 24px;
+    height: 24px;
+    font-size: 0;
+    .backgroundImage('layers_icon_unvisible24.png');
+    background-size: 24px auto;
+}
+.entryVariableSplitterWorkspace .list .caution_dsc {
+    display: none;
+    padding: 16px 36px 15px;
+    margin: 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #ff4b4b;
+    letter-spacing: -0.4px;
+    line-height: 11px;
+    background-color: #bfd8e6;
+}
+.entryVariableSplitterWorkspace .list .watch.on {
+    .backgroundImage('layers_icon_visible24.png');
+}
+.entryVariableSplitterWorkspace .list .del {
+    overflow: hidden;
+    position: absolute;
+    right: 26px;
+    top: 13px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background: #fff no-repeat 50% 50%;
+    .backgroundImage('layers_icon_close_nor_new.png');
+    background-size: 10px auto;
+    font-size: 0;
+}
+.entryVariableSplitterWorkspace .list.default_val .inpt_box:before {
+    .backgroundImage('ic_attr_variable_on.png');
+}
+.entryVariableSplitterWorkspace .list.global_val .inpt_box:before {
+    .backgroundImage('ic_attr_variable_global_on.png');
+}
+.entryVariableSplitterWorkspace .list.local_val .inpt_box:before {
+    .backgroundImage('ic_attr_variable_local_on.png');
+}
+.entryVariableSplitterWorkspace .list.default_list .inpt_box:before {
+    .backgroundImage('ic_attr_list_on.png');
+}
+.entryVariableSplitterWorkspace .list.global_list .inpt_box:before {
+    .backgroundImage('ic_attr_list_global_on.png');
+}
+.entryVariableSplitterWorkspace .list.local_list .inpt_box:before {
+    .backgroundImage('ic_attr_list_local_on.png');
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt_box:before {
+    left: 10px;
+    .backgroundImage('ic_attr_func_on.png');
+}
+.entryVariableSplitterWorkspace .list.default_message .inpt_box:before {
+    left: 10px;
+    .backgroundImage('ic_attr_message_on.png');
+}
+.entryVariableSplitterWorkspace.fold .attr_link {
     cursor: pointer;
-    .backgroundImage("list_remove_button.png");
+}
+.entryVariableSplitterWorkspace.unfold .attr_link {
+    background-color: #fff;
+    cursor: pointer;
+}
+.entryVariableSplitterWorkspace.fold .attr_link:before {
+    width: 6px;
+    height: 8px;
+    border-radius: 0;
+    .backgroundImage('layers_arrow_right_nor.png');
+    background-color: inherit;
+    background-size: 6px auto;
+}
+.entryVariableSplitterWorkspace.unfold .attr_link:before {
+    width: 8px;
+    height: 6px;
+    border-radius: 0;
+    .backgroundImage('layers_arrow_up_nor.png');
+    background-color: inherit;
+    background-size: 8px auto;
+}
+.entryVariableSplitterWorkspace .attr_box {
+    display: none;
+}
+.entryVariableSplitterWorkspace.unfold .attr_box {
+    display: block;
+}
+.entryVariableSplitterWorkspace .list.unfold .attr_inner_box {
+    display: block;
+}
+.entryVariableSplitterWorkspace .list.unfold .use_block {
+    display: block;
+}
+.entryVariableSplitterWorkspace .list.unfold .caution_dsc {
+    display: block;
+}
+.entryVariableSplitterWorkspace .list.unfold .inpt:after {
+    .backgroundImage('layers_arrow_up_nor.png');
+}
+.entryVariableSplitterWorkspace .list.fold .inpt:after {
+    .backgroundImage('layers_arrow_down_nor.png');
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt_box,
+.entryVariableSplitterWorkspace .list.default_message .inpt_box {
+    padding: 13px 80px 13px 36px;
+    background-color: #ecf8ff;
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt_box:after,
+.entryVariableSplitterWorkspace .list.default_message .inpt_box:after {
+    .backgroundImage('layers_arrow_down_nor.png');
+    position: absolute;
+    right: 64px;
+    top: 50%;
+    width: 8px;
+    height: 6px;
+    margin-top: -3px;
+    background-size: 8px auto;
+    content: '';
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt,
+.entryVariableSplitterWorkspace .list.default_message .inpt {
+    padding: 2px 0;
+}
+.entryVariableSplitterWorkspace .list.default_func .inpt:after,
+.entryVariableSplitterWorkspace .list.default_message .inpt:after {
+    display: none;
+}
+.entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box,
+.entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box {
+    background-color: #fff;
+    -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+}
+.entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box:after,
+.entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box:after {
+    .backgroundImage('layers_arrow_up_nor.png');
+    position: absolute;
+    right: 64px;
+    top: 50%;
+    width: 8px;
+    height: 6px;
+    margin-top: -3px;
+    background-size: 8px auto;
+    content: '';
+}
+.entryVariableAdd_box .message_inpt input[type='text']:focus,
+.entryVariableAdd_box .message_inpt input[type='text']:active {
+    border-color: #4f80ff;
+}
+.entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace:focus,
+.entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace:active {
+    border-color: #4f80ff;
+}
+.entryVariableSplitterWorkspace .list .inpt input[type='text']:focus,
+.entryVariableSplitterWorkspace .list .inpt input[type='text']:active {
+    border-color: #4f80ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt input[type='text']:focus,
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .val_attr
+    .attr_inpt
+    input[type='text']:active {
+    border-color: #4f80ff;
+}
+.entryVariableSplitterWorkspace .list .attr_inner_box .list_attr .cnt_list input[type='text']:focus,
+.entryVariableSplitterWorkspace
+    .list
+    .attr_inner_box
+    .list_attr
+    .cnt_list
+    input[type='text']:active {
+    border-color: #4f80ff;
+}
+
+.simplebar-scrollbar {
+    right: 4px;
+    width: 8px;
+    &::before {
+        opacity: 1 !important;
+        background-color: #aac5d5;
+        border-radius: 2.5px;
+    }
 }

@@ -3,58 +3,58 @@
  */
 'use strict';
 
-Entry.PyToBlockParser = function(blockSyntax) {
-    this._type = 'PyToBlockParser';
-    this.dic = blockSyntax['#dic'];
-    this.blockSyntax = blockSyntax;
+Entry.PyToBlockParser = class {
+    constructor(blockSyntax) {
+        this._type = 'PyToBlockParser';
+        this.dic = blockSyntax['#dic'];
+        this.blockSyntax = blockSyntax;
 
-    this._funcParamMap = {};
-    this._funcMap = {};
+        this._funcParamMap = {};
+        this._funcMap = {};
 
-    this._isInFuncDef = false;
-};
+        this._isInFuncDef = false;
 
-(function(p) {
-    p.util = Entry.TextCodingUtil;
+        this.util = Entry.TextCodingUtil;
 
-    p.binaryOperator = {
-        '==': 'EQUAL',
-        '>': 'GREATER',
-        '<': 'LESS',
-        '>=': 'GREATER_OR_EQUAL',
-        '<=': 'LESS_OR_EQUAL',
-    };
+        this.binaryOperator = {
+            '==': 'EQUAL',
+            '>': 'GREATER',
+            '<': 'LESS',
+            '>=': 'GREATER_OR_EQUAL',
+            '<=': 'LESS_OR_EQUAL',
+        };
 
-    p.arithmeticOperator = {
-        '+': 'PLUS',
-        '-': 'MINUS',
-        '*': 'MULTI',
-        '/': 'DIVIDE',
-    };
+        this.arithmeticOperator = {
+            '+': 'PLUS',
+            '-': 'MINUS',
+            '*': 'MULTI',
+            '/': 'DIVIDE',
+        };
 
-    p.divideOperator = {
-        '//': 'QUOTIENT',
-        '%': 'MOD',
-    };
+        this.divideOperator = {
+            '//': 'QUOTIENT',
+            '%': 'MOD',
+        };
 
-    p.logicalOperator = {
-        '&&': 'AND',
-        '||': 'OR',
-    };
+        this.logicalOperator = {
+            '&&': 'AND',
+            '||': 'OR',
+        };
+    }
 
-    p.Programs = function(astArr) {
+    Programs(astArr) {
         try {
             return this.processPrograms(astArr);
         } catch (error) {
-            var err = {};
-            err.title = error.title;
-            err.message = error.message;
-            err.line = error.line;
-            throw err;
+            throw error;
         }
-    };
+    }
 
-    p.processPrograms = function(astArr) {
+    raiseError({title = '', message = '', line}) {
+        throw { title, message, line };
+    }
+
+    processPrograms(astArr) {
         this.createFunctionMap();
         this._funcParamMap = {};
         this._isInFuncDef = false;
@@ -84,64 +84,58 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result.filter(function(t) {
             return t.length > 0;
         });
-    };
+    }
 
-    p.Program = function(component) {
-        var thread = component.body.map(function(n) {
-            var result = this.Node(n);
-            this.assert(
-                typeof result === 'object',
-                '',
-                n,
-                'NO_SUPPORT',
-                'GENERAL'
-            );
+    Program(component) {
+        const thread = component.body.map((n) => {
+            const result = this.Node(n);
+            this.assert(typeof result === 'object', '', n, 'NO_SUPPORT', 'GENERAL');
             return result;
         }, this);
-
-        if (thread[0].constructor == Array) return thread[0];
+        if (thread[0].constructor === Array) return thread[0];
         else return thread;
-    };
+    }
 
-    p.ExpressionStatement = function(component) {
-        return this.Node(component.expression);
-    };
+    ExpressionStatement(component) {
+        const expression = component.expression;
+        const result = this.Node(expression);
+        if (expression.comment) {
+            result.comment = expression.comment;
+        }
 
-    p.CallExpression = function(component) {
-        var callee = component.callee;
-        var args = component.arguments;
-        var params = [];
-        var obj = this.Node(callee);
+        return result;
+    }
+
+    CallExpression(component) {
+        const callee = component.callee;
+        const args = component.arguments;
+        let obj = this.Node(callee);
         if (obj.type && component.callee.type === 'Identifier')
-            // Duplicate name with variable
+        // Duplicate name with variable
             obj = callee.name;
 
-        if (
-            typeof obj === 'string' &&
-            callee.type === 'MemberExpression' &&
-            this[obj]
-        )
-            return this[obj](component);
+        if (typeof obj === 'string' && callee.type === 'MemberExpression') {
+            if (this[obj]) {
+                return this[obj](component);
+            } else {
+                this.raiseError({
+                    message: Lang.TextCoding.message_conv_undefined_function,
+                    line: callee.loc,
+                });
+            }
+        }
 
         if (callee.type === 'Identifier') {
             // global function
             if (this._funcMap[obj]) {
-                var funcType = this._funcMap[obj][args.length];
-                obj = {
-                    type: 'func_' + funcType,
-                };
+                const funcType = this._funcMap[obj][args.length];
+                obj = { type: 'func_' + funcType, };
             } else if (this[obj]) {
                 // special block like len
                 return this[obj](component);
             } else {
-                var blockInfo = this.blockSyntax[obj];
-                this.assert(
-                    blockInfo && blockInfo.key,
-                    '',
-                    callee,
-                    'NO_FUNCTION',
-                    'GENERAL'
-                );
+                const blockInfo = this.blockSyntax[obj];
+                this.assert(blockInfo && blockInfo.key, '', callee, 'NO_FUNCTION', 'GENERAL');
                 obj = this.Block({}, blockInfo);
             }
         }
@@ -152,23 +146,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if (component.arguments) {
-            obj.params = this.Arguments(
-                obj.type,
-                component.arguments,
-                obj.params
-            );
+            obj.params = this.Arguments(obj.type, component.arguments, obj.params);
         }
 
-        if (obj.type == 'is_press_some_key') {
+        if (obj.type === 'is_press_some_key') {
+            const value = component.arguments[0].value;
             obj.params = [
-                Entry.KeyboardCode.map[component.arguments[0].value] + '',
+                Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value] + '',
             ];
         }
 
         return obj;
-    };
+    }
 
-    p.Identifier = function(component) {
+    Identifier(component) {
         var name = component.name;
 
         if (this._isInFuncDef && this._funcParamMap[name])
@@ -192,21 +183,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return name;
     };
 
-    p.VariableDeclaration = function(component) {
+    VariableDeclaration(component) {
         var results = component.declarations.map(this.Node, this);
 
         return results;
-    };
+    }
 
-    p.VariableDeclarator = function(component) {
+    VariableDeclarator(component) {
         if (component.init && component.init.arguments) {
             return component.init.arguments.map(this.Node, this);
         } else {
             return [];
         }
-    };
+    }
 
-    p.AssignmentExpression = function(component) {
+    AssignmentExpression(component) {
         var lefts = Array.isArray(component.left)
             ? component.left
             : [component.left];
@@ -225,7 +216,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         leftVar = Entry.variableContainer.getVariableByName(
                             left.property.name,
                             true,
-                            this.object.id
+                            this.object.id,
                         );
                         if (!leftVar) {
                             Entry.variableContainer.addVariable({
@@ -239,27 +230,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             leftVar = Entry.variableContainer.getVariableByName(
                                 left.property.name,
                                 true,
-                                this.object.id
+                                this.object.id,
                             );
                         }
 
                         result.params.push(leftVar.id_);
                     } else {
                         leftVar = Entry.variableContainer.getListByName(
-                            leftName
+                            leftName,
                         );
                         this.assert(
                             leftVar,
                             leftName,
                             left.object,
                             'NO_LIST',
-                            'LIST'
+                            'LIST',
                         );
                         result.params.push(leftVar.id_);
                         result.params.push(
                             this.ListIndex(
-                                this.Node(left.property.arguments[1])
-                            )
+                                this.Node(left.property.arguments[1]),
+                            ),
                         );
                     }
                     break;
@@ -267,7 +258,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.type = 'set_variable';
                     leftVar = Entry.variableContainer.getVariableByName(
                         left.name,
-                        false
+                        false,
                     );
                     if (!leftVar) {
                         Entry.variableContainer.addVariable({
@@ -278,7 +269,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         });
                         leftVar = Entry.variableContainer.getVariableByName(
                             left.name,
-                            false
+                            false,
                         );
                     }
                     result.params.push(leftVar.id_);
@@ -303,7 +294,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 default:
                     var operator = this.arithmeticOperator[
                         component.operator[0]
-                    ];
+                        ];
                     if (operator) {
                         var getBlock;
                         if (result.type === 'set_variable')
@@ -320,8 +311,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                     undefined,
                                     this.ListIndex(
                                         this.Node(
-                                            component.left.property.arguments[1]
-                                        )
+                                            component.left.property.arguments[1],
+                                        ),
                                     ), // do not change this
                                 ],
                             };
@@ -336,9 +327,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return results;
-    };
+    }
 
-    p.Literal = function(component, paramSchema, paramDef) {
+    Literal(component, paramSchema, paramDef) {
         var value = component.value;
         switch (typeof value) {
             case 'boolean':
@@ -364,9 +355,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             default:
                 return this.getValue(component);
         }
-    };
+    }
 
-    p.MemberExpression = function(component) {
+    MemberExpression(component) {
         var obj;
         var result = {};
         if (component.object.name === 'self') {
@@ -374,7 +365,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var localVar = Entry.variableContainer.getVariableByName(
                 component.property.name,
                 true,
-                this.object.id
+                this.object.id,
             );
             if (localVar)
                 return {
@@ -384,7 +375,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             localVar = Entry.variableContainer.getListByName(
                 component.property.name,
                 true,
-                this.object.id
+                this.object.id,
             );
             if (localVar)
                 return {
@@ -424,14 +415,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this.Block(result, blockInfo);
 
         return result;
-    };
+    }
 
-    p.WhileStatement = function(component) {
-        var blocks = component.body.body;
-        var obj = {
+    WhileStatement(component) {
+        const comment = component.body.comment;
+        const blocks = component.body.body;
+        const obj = {
             statements: [this.setParams(blocks)],
         };
-        var test = component.test;
+        const test = component.test;
         if (test.raw === 'True') {
             obj.type = 'repeat_inf';
         } else {
@@ -442,11 +434,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 obj.params = [this.Node(component.test), 'while'];
             }
         }
+        if (comment) {
+            obj.comment = comment;
+        }
 
         return obj;
-    };
+    }
 
-    p.BlockStatement = function(component) {
+    BlockStatement(component) {
         var db = component.body.map(this.Node, this);
 
         if (db.constructor == Array && db[0].length) {
@@ -456,23 +451,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return db;
-    };
+    }
 
-    p.IfStatement = function(component) {
-        var arr = [],
-            alternate,
-            blocks,
-            pararms;
+    IfStatement(component) {
+        let alternate;
+        let blocks;
 
-        var tempAlt = component.alternate;
-        var isForState =
+        const tempAlt = component.alternate;
+        const isForState =
             tempAlt &&
             tempAlt.body &&
             tempAlt.body[0] &&
             'type' in tempAlt.body[0] &&
             tempAlt.body[0].type === 'ForInStatement';
-
-        var consequent = component.consequent;
 
         if (isForState) {
             alternate = component.alternate.body.map(this.Node, this);
@@ -487,54 +478,62 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params: [this.Node(component.test)],
             };
         } else {
-            var consequents = component.consequent
+            const consequent = component.consequent
                 ? component.consequent.body
-                      .map(this.Node, this)
-                      .map(function(b) {
-                          return Array.isArray(b) ? b[0] : b;
-                      })
+                    .map(this.Node, this)
+                    .map(function(b) {
+                        return Array.isArray(b) ? b[0] : b;
+                    })
                 : [];
-            var alternates = component.alternate
+            const alternates = component.alternate
                 ? component.alternate.body
-                      .map(this.Node, this)
-                      .map(function(b) {
-                          return Array.isArray(b) ? b[0] : b;
-                      })
+                    .map(this.Node, this)
+                    .map(function(b) {
+                        return Array.isArray(b) ? b[0] : b;
+                    })
                 : [];
             alternate = {
                 type: 'if_else',
-                statements: [consequents, alternates],
+                statements: [consequent, alternates],
                 params: [this.Node(component.test)],
             };
         }
 
-        return alternate;
-    };
+        if (component.consequent.comment) {
+            alternate.comment = component.consequent.comment;
+        }
 
-    p.ForStatement = function(component) {
+        return alternate;
+    }
+
+    ForStatement(component) {
         var body = component.body.body;
         return this.Node(body[body.length - 1]);
-    };
+    }
 
-    p.ForInStatement = function(component) {
+    ForInStatement(component) {
         // var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
         //                     this.Node(component.body.body[0].expression) : null;
-        var obj = {
+        const result = {
             type: 'repeat_basic',
             params: [],
             statements: [],
         };
 
-        return obj;
-    };
+        if (component.body.comment) {
+            result.comment = component.body.comment;
+        }
 
-    p.BreakStatement = function(component) {
+        return result;
+    }
+
+    BreakStatement(component) {
         return {
             type: this.blockSyntax.break.key,
         };
-    };
+    }
 
-    p.UnaryExpression = function(component) {
+    UnaryExpression(component) {
         switch (component.operator) {
             case '!':
                 return {
@@ -562,12 +561,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             default:
                 throw new Error(
-                    'Unary operator ' + component.operator + ' is not supported'
+                    'Unary operator ' + component.operator + ' is not supported',
                 );
         }
-    };
+    }
 
-    p.LogicalExpression = function(component) {
+    LogicalExpression(component) {
         return {
             type: 'boolean_and_or',
             params: [
@@ -576,9 +575,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 this.Node(component.right),
             ],
         };
-    };
+    }
 
-    p.BinaryExpression = function(component) {
+    BinaryExpression(component) {
         var operator = component.operator,
             blockType;
         if (this.binaryOperator[operator]) {
@@ -605,7 +604,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 component.right.value,
                 component,
                 'DEFAULT',
-                'DEFAULT'
+                'DEFAULT',
             );
             return {
                 type: 'calc_operation',
@@ -627,56 +626,55 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 this.Node(component.right),
             ],
         };
-    };
+    }
 
-    // p.UpdateExpression = function(component) {};
+    // UpdateExpression(component) {};
 
-    p.FunctionDeclaration = function(component) {
-        var funcName = component.id.name;
-        this.assert(
-            !this._isInFuncDef,
-            funcName,
-            component,
-            'NO_ENTRY_EVENT_FUNCTION',
-            'FUNCTION'
-        );
+    FunctionDeclaration(component) {
+        const startBlock = {};
+
+        const funcName = component.id.name;
+        this.assert(!this._isInFuncDef, funcName, component, 'NO_ENTRY_EVENT_FUNCTION', 'FUNCTION');
+
         this._isInFuncDef = true;
-        var startBlock = {};
-        this.assert(
-            component.body.body[0],
-            funcName,
-            component,
-            'NO_OBJECT',
-            'OBJECT'
-        );
-        var blocks = component.body.body[0].argument.callee.object.body.body;
+        this.assert(component.body.body[0], funcName, component, 'NO_OBJECT', 'OBJECT');
 
         if (funcName === 'when_press_key')
             if (!component.arguments || !component.arguments[0]) {
                 startBlock.params = [null, null];
             } else {
-                var name = component.arguments[0].name;
-                startBlock.params = [null, Entry.KeyboardCode.map[name] + ''];
+                startBlock.params = [
+                    null,
+                    String(Entry.KeyboardCode.map[component.arguments[0].name]),
+                ];
             }
 
         if (funcName === 'when_get_signal') {
             if (!component.arguments || !component.arguments[0]) {
                 startBlock.params = [null, null];
             } else {
-                var name = component.arguments[0].name;
-                startBlock.params = [null, this.getMessage(name)];
+                startBlock.params = [
+                    null,
+                    this.getMessage(component.arguments[0].name),
+                ];
             }
         }
 
-        var blockInfo = this.blockSyntax['def ' + funcName];
-        var threadArr;
+        const blockStatement = component.body.body[0].argument.callee.object.body;
+        const comment = blockStatement.comment;
+        const blocks = blockStatement.body;
+        const blockInfo = this.blockSyntax['def ' + funcName];
+
         if (blockInfo) {
             // event block
             startBlock.type = blockInfo.key;
-            var definedBlocks = this.setParams(blocks);
+            if (comment) {
+                startBlock.comment = comment;
+            }
 
-            threadArr = [startBlock];
+            const definedBlocks = this.setParams(blocks);
             definedBlocks.unshift(startBlock);
+
             this._isInFuncDef = false;
             return definedBlocks;
         } else {
@@ -684,29 +682,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._isInFuncDef = false;
             return [];
         }
-    };
+    }
 
-    p.FunctionExpression = function(component) {
-        var a = this.Node(component.body);
-        return a;
-    };
+    FunctionExpression(component) {
+        return this.Node(component.body);
+    }
 
-    p.ReturnStatement = function(component) {
+    ReturnStatement(component) {
         return component.argument.arguments.map(this.Node, this);
-    };
+    }
 
-    // p.ThisExpression = function(component) {};
+    // ThisExpression(component) {};
 
-    p.NewExpression = function(component) {
-        var callee = component.callee;
-        var args = component.arguments;
+    NewExpression(component) {
+        return this.Node(component.callee);
+    }
 
-        return this.Node(callee);
-    };
-
-    p.SubscriptIndex = function(component) {
-        var obj = this.Node(component.object);
-        var blockInfo;
+    SubscriptIndex(component) {
+        const obj = this.Node(component.object);
+        let blockInfo;
 
         if (obj.type === 'get_list') {
             // string
@@ -715,32 +709,39 @@ Entry.PyToBlockParser = function(blockSyntax) {
             // var, list
             blockInfo = this.blockSyntax['%2[%4]#char_at'];
         }
-        var result = this.Block({}, blockInfo);
+        const result = this.Block({}, blockInfo);
         result.params = this.Arguments(
             result.type,
-            component.property.arguments
+            component.property.arguments,
         );
         return result;
-    };
+    }
+
+    Comment(component) {
+        return {
+            type: 'comment',
+            value: component.value,
+        }
+    }
 
     /**
      * util Function
      */
 
-    p.Arguments = function(blockType, args, defaultParams) {
-        var defParams, sortedArgs, blockSchema;
+    Arguments(blockType, args, defaultParams) {
+        let defParams, sortedArgs, blockSchema;
         blockSchema = Entry.block[blockType];
         if ((blockType && blockType.substr(0, 5) === 'func_') || !blockSchema) {
             // function block, etc
             sortedArgs = args;
         } else {
-            var syntax = this.PySyntax(blockSchema, defaultParams);
-            var indexes = syntax.match(/%\d+/g, '');
+            const syntax = this.PySyntax(blockSchema, defaultParams);
+            const indexes = syntax.match(/%\d+/g, '');
             if (!indexes) return defaultParams || [];
-            sortedArgs = defaultParams || new Array();
+            sortedArgs = defaultParams || [];
 
-            for (var i = 0; i < indexes.length; i++) {
-                var idx = parseInt(indexes[i].substring(1)) - 1;
+            for (let i = 0; i < indexes.length; i++) {
+                const idx = parseInt(indexes[i].substring(1)) - 1;
                 sortedArgs[idx] = args[i];
             }
             defParams =
@@ -748,43 +749,40 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     ? blockSchema.def.params
                     : undefined;
         }
-        var results = sortedArgs.map(function(arg, index) {
+        let results = sortedArgs.map((arg, index) => {
             if (arg && arg.type) {
-                var paramSchema = blockSchema
+                let paramSchema = blockSchema
                     ? blockSchema.params[index]
                     : null;
-                var param = this.Node(
+                let param = this.Node(
                     arg,
                     arg.type === 'Literal' ? paramSchema : undefined,
                     arg.type === 'Literal' && defParams
                         ? defParams[index]
-                        : undefined
+                        : undefined,
                 );
                 this.assert(
                     !(typeof param === 'string' && arg.type === 'Identifier'),
                     param,
                     arg,
                     'NO_VARIABLE',
-                    'VARIABLE'
+                    'VARIABLE',
                 );
 
-                if (!paramSchema) param = param;
-                else if (paramSchema.type !== 'Block' && param && param.params)
+                if (paramSchema.type !== 'Block' && param && param.params){
                     // for list and variable dropdown
                     param = param.params[0];
-                else if (
-                    paramSchema.type === 'Block' &&
-                    paramSchema.isListIndex
-                )
+                } else if (paramSchema.type === 'Block' && paramSchema.isListIndex){
                     param = this.ListIndex(param);
+                }
 
                 return param;
             } else return arg; // default params
         }, this);
 
-        var codeMap = this.CodeMap(blockType);
+        const codeMap = this.CodeMap(blockType);
         if (codeMap) {
-            results = results.map(function(arg, index) {
+            results = results.map((arg, index) => {
                 if (codeMap[index] && arg) {
                     return codeMap[index][this.toLowerCase(arg)] || arg;
                 } else {
@@ -794,19 +792,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return results;
-    };
+    }
 
-    p.getValue = function(component) {
-        var value;
+    getValue(component) {
+        let value;
         if (component.type === 'Literal') {
             value = component.raw;
-
             if (value === 'None') {
                 return;
-            } else if (!component.value) {
+            } else if (component.value === undefined) {
                 value = 0;
+            } else if (!component.value) {
+                value = component.value;
             } else if (component.value.constructor === String) {
-                if (component.raw.includes('"') || component.raw.includes("'"))
+                if (component.raw.includes('"') || component.raw.includes('\''))
                     value = component.raw.substr(1, component.raw.length - 2);
                 else value = component.raw;
             } else if (component.value.constructor === Number) {
@@ -818,9 +817,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
             value = this.Node(component);
             return value.params && value.params[0] ? value.params[0] : null;
         }
-    };
+    }
 
-    p.getMessage = function(name) {
+    getMessage(name) {
         if (!name) return;
         name = name.replace(/_space_/gi, ' ');
 
@@ -844,10 +843,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return object;
-    };
+    }
 
-    p.DropdownDynamic = function(value, paramSchema) {
-        if(_.isFunction(paramSchema.menuName)){
+    DropdownDynamic(value, paramSchema) {
+        if (_.isFunction(paramSchema.menuName)) {
             return value;
         }
 
@@ -878,7 +877,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     object = value;
                 } else {
                     var objects = Entry.container.objects_.filter(function(
-                        obj
+                        obj,
                     ) {
                         return obj.name === value;
                     });
@@ -914,17 +913,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 value = value.split('.');
                 var variable;
                 if (value.length > 1)
-                    // self variable
+                // self variable
                     variable = Entry.variableContainer.getVariableByName(
                         value[1],
                         true,
-                        this.object.id
+                        this.object.id,
                     );
                 else
                     variable = Entry.variableContainer.getVariableByName(
                         value[0],
                         false,
-                        this.object.id
+                        this.object.id,
                     );
                 return variable ? variable.id_ : undefined;
             case 'lists':
@@ -932,17 +931,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 value = value.split('.');
                 var list;
                 if (value.length > 1)
-                    // self variable
+                // self variable
                     list = Entry.variableContainer.getListByName(
                         value[1],
                         true,
-                        this.object.id
+                        this.object.id,
                     );
                 else
                     list = Entry.variableContainer.getListByName(
                         value[0],
                         false,
-                        this.object.id
+                        this.object.id,
                     );
                 return list ? list.id_ : undefined;
             case 'scenes':
@@ -963,7 +962,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     object = value;
                 } else {
                     var objects = Entry.container.objects_.filter(function(
-                        obj
+                        obj,
                     ) {
                         return obj.name === value;
                     });
@@ -974,30 +973,32 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return object;
             case 'objectSequence':
         }
-    };
+    }
 
-    p.Node = function(nodeType, node) {
-        var hasType = false;
+    Node(nodeType, node) {
+        let hasType = false;
         if (typeof nodeType === 'string' && nodeType !== node.type)
             this.assert(
                 false,
                 node.name || node.value || node.operator,
                 node,
                 'NO_SUPPORT',
-                'GENERAL'
+                'GENERAL',
             );
-        else if (typeof nodeType === 'string') hasType = true;
+        else if (typeof nodeType === 'string') {
+            hasType = true;
+        }
 
-        var args = Array.prototype.slice.call(arguments);
+        const args = Array.prototype.slice.call(arguments);
         if (hasType) args.shift();
 
         node = args[0];
 
         if (!this[node.type]) throw new Error(node.type + ' is not supported');
         return this[node.type].apply(this, args);
-    };
+    }
 
-    p.PySyntax = function(blockSchema, defaultParams) {
+    PySyntax(blockSchema, defaultParams) {
         if (defaultParams) {
             var syntaxes = blockSchema.syntax.py.filter(function(s) {
                 if (!s.params) return false;
@@ -1011,23 +1012,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         var syntaxObj = blockSchema.syntax.py[0];
         return syntaxObj.syntax || syntaxObj;
-    };
+    }
 
-    p.CodeMap = function(blockType) {
+    CodeMap(blockType) {
         for (var objName in Entry.CodeMap) {
             if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
                 return Entry.CodeMap[objName][blockType];
         }
-    };
+    }
 
-    p.Block = function(result, blockInfo) {
+    Block(result, blockInfo) {
         result.type = blockInfo.key;
 
         if (blockInfo.params) result.params = blockInfo.params.concat();
         return result;
-    };
+    }
 
-    p.ListIndex = function(param) {
+    ListIndex(param) {
         if (this.isParamPrimitive(param)) {
             // literal
             param.params = [Number(param.params[0]) + 1];
@@ -1052,36 +1053,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
             };
         }
         return param;
-    };
+    }
 
-    p.isParamPrimitive = function(param) {
+    isParamPrimitive(param) {
         return param && (param.type === 'number' || param.type === 'text');
-    };
+    }
 
-    p.assert = function(data, keyword, errorNode, message, subject) {
+    assert(data, keyword, errorNode, message, subject) {
         if (data) return;
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError['MESSAGE_CONV_' + (message || 'NO_SUPPORT')],
             keyword,
             errorNode.loc,
-            Entry.TextCodingError['SUBJECT_CONV_' + (subject || 'GENERAL')]
+            Entry.TextCodingError['SUBJECT_CONV_' + (subject || 'GENERAL')],
         );
-    };
+    }
 
-    p.setParams = function(params) {
+    setParams(params) {
         var definedBlocks = params.length
             ? params.map(function(n) {
-                  var result = this.Node(n);
-                  this.assert(
-                      typeof result === 'object',
-                      '',
-                      n,
-                      'NO_SUPPORT',
-                      'GENERAL'
-                  );
-                  return result;
-              }, this)
+                var result = this.Node(n);
+                this.assert(
+                    typeof result === 'object',
+                    '',
+                    n,
+                    'NO_SUPPORT',
+                    'GENERAL',
+                );
+                return result;
+            }, this)
             : [];
 
         var results = [];
@@ -1095,9 +1096,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return results.filter(function(b) {
             return b.constructor === Object;
         });
-    };
+    }
 
-    p.getVariables = function(program) {
+    getVariables(program) {
         var nodes = program.body;
 
         nodes.map(function(n) {
@@ -1182,9 +1183,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }, this);
 
         return [];
-    };
+    }
 
-    p.variableExist = function(name, type) {
+    variableExist(name, type) {
         var variables_ = Entry.variableContainer[type];
         variables_ = variables_.map(function(v) {
             return v.name_;
@@ -1193,13 +1194,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (variables_.indexOf(name) > -1)
             return Entry.variableContainer[type][variables_.indexOf(name)];
         return false;
-    };
+    }
 
     /**
      * Special Blocks
      */
 
-    p.len = function(component) {
+    len(component) {
         var param = this.Node(component.arguments[0]);
         this.assert(
             !(
@@ -1209,7 +1210,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             param,
             component.arguments[0],
             'NO_VARIABLE',
-            'VARIABLE'
+            'VARIABLE',
         );
 
         if (param.type === 'get_list') {
@@ -1225,9 +1226,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params: [undefined, param],
             };
         }
-    };
+    }
 
-    p['Hamster.note'] = function(component) {
+    ['Hamster.note'](component) {
         var blockInfo;
         if (component.arguments.length > 2) {
             blockInfo = this.blockSyntax.Hamster.note;
@@ -1241,48 +1242,48 @@ Entry.PyToBlockParser = function(blockSyntax) {
             obj.params[0] =
                 Entry.CodeMap.Hamster.hamster_play_note_for[0][
                     this.toLowerCase(obj.params[0])
-                ];
+                    ];
         }
         return obj;
-    };
+    }
 
-    p['Hamster.line_tracer_mode'] = function(component) {
+    ['Hamster.line_tracer_mode'](component) {
         return this.Special(component, 'Hamster', 'line_tracer_mode');
-    };
+    }
 
-    p['Hamster.io_mode_a'] = function(component) {
+    ['Hamster.io_mode_a'](component) {
         return this.Special(component, 'Hamster', 'io_mode_a');
-    };
+    }
 
-    p['Hamster.io_mode_b'] = function(component) {
+    ['Hamster.io_mode_b'](component) {
         return this.Special(component, 'Hamster', 'io_mode_b');
-    };
+    }
 
-    p['Hamster.io_modes'] = function(component) {
+    ['Hamster.io_modes'](component) {
         return this.Special(component, 'Hamster', 'io_modes');
-    };
+    }
 
-    p['Hamster.leds'] = function(component) {
+    ['Hamster.leds'](component) {
         return this.Special(component, 'Hamster', 'leds');
-    };
+    }
 
-    p['Hamster.left_led'] = function(component) {
+    ['Hamster.left_led'](component) {
         return this.Special(component, 'Hamster', 'left_led');
-    };
+    }
 
-    p['Hamster.right_led'] = function(component) {
+    ['Hamster.right_led'](component) {
         return this.Special(component, 'Hamster', 'right_led');
-    };
+    }
 
-    p['__pythonRuntime.ops.in'] = function(component) {
+    ['__pythonRuntime.ops.in'](component) {
         // "10 in list"
         return {
             type: 'is_included_in_list',
             params: this.Arguments('is_included_in_list', component.arguments),
         };
-    };
+    }
 
-    p.Special = function(component, name, key) {
+    Special(component, name, key) {
         var result = {};
         var param = this.Node(component.arguments[0]);
         if (this.isParamPrimitive(param)) param = param.params[0];
@@ -1290,9 +1291,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         this.Block(result, blockInfo);
         return result;
-    };
+    }
 
-    p.createFunctionMap = function() {
+    createFunctionMap() {
         this._funcMap = {};
         var functions = Entry.variableContainer.functions_;
         for (var key in functions) {
@@ -1304,17 +1305,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if (!this._funcMap[funcName]) this._funcMap[funcName] = {};
             this._funcMap[funcName][funcSchema.params.length - 1] = key;
         }
-    };
+    }
 
-    p.createFunction = function(component, funcName, blocks) {
-        var params = component.arguments
-            ? component.arguments.map(this.Node, this)
-            : [];
-        var functions = Entry.variableContainer.functions_;
+    createFunction(component, funcName, blocks) {
+        const params = component.arguments ? component.arguments.map(this.Node, this) : [];
+        const functions = Entry.variableContainer.functions_;
 
-        var funcId = Entry.generateHash();
-        for (var key in functions) {
-            var funcSchema = Entry.block['func_' + key];
+        let funcId = Entry.generateHash();
+        for (let key in functions) {
+            const funcSchema = Entry.block['func_' + key];
             if (
                 funcSchema.params.length === params.length + 1 &&
                 funcSchema.template
@@ -1327,30 +1326,37 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        var funcParamPointer = {
+        //함수 선언 블록 내 값블록
+        let funcParamPointer = {
             type: 'function_field_label',
             params: [funcName],
         };
-        var func = {
+        //함수 선언 블록
+        const funcDeclarationContent = {
+            type: 'function_create',
+            params: [funcParamPointer],
+        };
+        const func = {
             id: funcId,
             content: [
-                [
-                    {
-                        type: 'function_create',
-                        params: [funcParamPointer],
-                    },
-                ],
+                [funcDeclarationContent],
             ],
         };
+
+        // 함수 선언 블록에 달린 코멘트 처리
+        const comment = component.body.body[0].argument.callee.object.body.comment;
+        if (comment) {
+            funcDeclarationContent.comment = comment;
+        }
 
         if (!this._funcMap[funcName]) this._funcMap[funcName] = {};
         this._funcMap[funcName][params.length] = func.id;
 
         while (params.length) {
             // generate param
-            var param = params.shift();
-            var paramId = Entry.Func.requestParamBlock('string');
-            var newFuncParam = {
+            const param = params.shift();
+            let paramId = Entry.Func.requestParamBlock('string');
+            const newFuncParam = {
                 type: 'function_field_string',
                 params: [
                     {
@@ -1364,70 +1370,70 @@ Entry.PyToBlockParser = function(blockSyntax) {
             funcParamPointer = newFuncParam;
         }
 
-        var definedBlocks = this.setParams(blocks); // function content
+        const definedBlocks = this.setParams(blocks); // function content
         this._funcParamMap = {};
 
         func.content[0] = func.content[0].concat(definedBlocks);
 
         func.content = JSON.stringify(func.content);
         if (functions[funcId]) {
-            var targetFunc = functions[funcId];
+            const targetFunc = functions[funcId];
             targetFunc.content = new Entry.Code(func.content);
             targetFunc.generateBlock(true);
             Entry.Func.generateWsBlock(targetFunc);
         } else {
             Entry.variableContainer.setFunctions([func]);
         }
-    };
+    }
 
     /**
      * Not Supported
      */
 
-    p.ClassDeclaration = function(component) {
+    ClassDeclaration(component) {
         var funcName = this.Node(component.id);
         this.assert(false, funcName, component, 'NO_OBJECT', 'OBJECT');
-    };
+    }
 
-    // p.RegExp = function(component) {};
+    // RegExp(component) {};
 
-    // p.Function = function(component) {};
+    // Function(component) {};
 
-    // p.EmptyStatement = function(component) {};
+    // EmptyStatement(component) {};
 
-    // p.DebuggerStatement = function(component) {};
+    // DebuggerStatement(component) {};
 
-    // p.WithStatement = function(component) {};
+    // WithStatement(component) {};
 
-    // p.LabeledStatement = function(component) {};
+    // LabeledStatement(component) {};
 
-    // p.ContinueStatement = function(component) {};
+    // ContinueStatement(component) {};
 
-    // p.SwitchStatement = function(component) {};
+    // SwitchStatement(component) {};
 
-    // p.SwitchCase = function(component) {};
+    // SwitchCase(component) {};
 
-    // p.ThrowStatement = function(component) {};
+    // ThrowStatement(component) {};
 
-    // p.TryStatement = function(component) {};
+    // TryStatement(component) {};
 
-    // p.CatchClause = function(component) {};
+    // CatchClause(component) {};
 
-    // p.DoWhileStatement = function(component) {
+    // DoWhileStatement(component) {
     //     return component.body.map(this.Node,  this);
     // };
 
-    // p.ArrayExpression = function(component) {};
+    // ArrayExpression(component) {};
 
-    // p.ObjectExpression = function(component) {};
+    // ObjectExpression(component) {};
 
-    // p.Property = function(component) {};
+    // Property(component) {};
 
-    // p.ConditionalExpression = function(component) {};
+    // ConditionalExpression(component) {};
 
-    // p.SequenceExpression = function(component) {};
+    // SequenceExpression(component) {};
 
-    p.searchSyntax = function(datum) {
+    searchSyntax(datum) {
         //legacy
         var schema;
         var appliedParams;
@@ -1471,10 +1477,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
         return null;
-    };
+    }
 
-    p.toLowerCase = function(data) {
+    toLowerCase(data) {
         if (data && data.toLowerCase) return data.toLowerCase();
         else return data;
-    };
-})(Entry.PyToBlockParser.prototype);
+    }
+
+};

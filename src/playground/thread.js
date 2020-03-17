@@ -1,121 +1,134 @@
-/*
- *
- */
 'use strict';
 
-/*
- *
- */
-Entry.Thread = function(thread, code, parent) {
-    this._data = new Entry.Collection();
-    this._code = code;
-    this.changeEvent = new Entry.Event(this);
-    this.changeEvent.attach(this, this.handleChange);
-    this._event = null;
-    this.parent = parent ? parent : code;
+Entry.Thread = class Thread {
+    constructor(thread, code, parent) {
+        this.id = Entry.generateHash();
+        this._data = new Entry.Collection();
+        this._code = code;
+        this.changeEvent = new Entry.Event(this);
+        this.changeEvent.attach(this, this.handleChange);
+        this._event = null;
+        this.parent = parent ? parent : code;
 
-    this.load(thread);
-};
+        this.load(thread);
+    }
 
-(function(p) {
-    p.load = function(thread, mode) {
-        if (thread === undefined || thread === null) thread = [];
+    getId() {
+        return this.id;
+    }
+
+    load(thread = [], mode) {
         if (!(thread instanceof Array)) {
             return console.error('thread must be array');
         }
 
-        for (var i = 0; i < thread.length; i++) {
-            var block = thread[i];
-            if (block instanceof Entry.Block || block.isDummy) {
+        for (let i = 0; i < thread.length; i++) {
+            const block = thread[i];
+            if (block instanceof Entry.Block || block instanceof Entry.Comment || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else this._data.push(new Entry.Block(block, this));
+            } else if (block.type === 'comment') {
+                const commment = new Entry.Comment(block);
+                commment.setThread(this);
+                this._data.push(commment);
+            } else {
+                this._data.push(new Entry.Block(block, this));
+            }
         }
 
-        var codeView = this._code.view;
-        if (codeView) this.createView(codeView.board, mode);
+        const codeView = this._code.view;
+        if (codeView) {
+            this.createView(codeView.board, mode);
+        }
         return this;
-    };
+    }
 
-    p.registerEvent = function(block, eventType) {
+    registerEvent(block, eventType) {
         this._event = eventType;
         this._code.registerEvent(block, eventType);
-    };
+    }
 
-    p.unregisterEvent = function(block, eventType) {
+    unregisterEvent(block, eventType) {
         this._code.unregisterEvent(block, eventType);
-    };
+    }
 
-    p.createView = function(board, mode) {
+    createView(board, mode) {
         if (!this.view) {
             this.view = new Entry.ThreadView(this, board);
         }
-        this.getBlocks().forEach((b) => b.createView(board, mode));
-    };
+        this.getBlocks().forEach((b) => {
+            let view;
+            if (b.createView) {
+                view = b.createView(board, mode);
+            } else if (b.createComment) {
+                view = b.createComment(board);
+            }
+            return view;
+        });
+    }
 
-    p.destroyView = function() {
+    destroyView() {
         this.view = null;
         this._data.map((b) => b.destroyView());
-    };
+    }
 
-    p.separate = function(block, count, index) {
-        if (!this._data.has(block.id)) return;
+    separate(block, count, index) {
+        if (!this._data.has(block.id)) {
+            return;
+        }
 
-        this._code.createThread(
-            this._data.splice(this._data.indexOf(block), count),
-            index
-        );
+        this._code.createThread(this._data.splice(this._data.indexOf(block), count), index);
         this.changeEvent.notify();
-    };
+    }
 
-    p.cut = function(block) {
-        var splicedData = this._data.splice(this._data.indexOf(block));
+    cut(block) {
+        const splicedData = this._data.splice(this._data.indexOf(block));
         this.changeEvent.notify();
         return splicedData;
-    };
+    }
 
-    p.insertByBlock = function(block, newBlocks) {
-        var index = block ? this._data.indexOf(block) : -1;
-        for (var i = 0; i < newBlocks.length; i++) {
+    insertByBlock(block, newBlocks) {
+        const index = block ? this._data.indexOf(block) : -1;
+        for (let i = 0; i < newBlocks.length; i++) {
             newBlocks[i].setThread(this);
         }
-        this._data.splice.apply(this._data, [index + 1, 0].concat(newBlocks));
+        this._data.splice(...[index + 1, 0].concat(newBlocks));
         this.changeEvent.notify();
-    };
+    }
 
-    p.insertToTop = function(newBlock) {
+    insertToTop(newBlock) {
         newBlock.setThread(this);
         this._data.unshift.apply(this._data, [newBlock]);
         this.changeEvent.notify();
-    };
+    }
 
-    p.clone = function(code, mode) {
-        let newThread = new Entry.Thread([], code || this._code);
+    clone(code, mode) {
+        const newThread = new Entry.Thread([], code || this._code);
         return newThread.load(
-            this.getBlocks().reduce(
-                (acc, block) => [...acc, block.clone(newThread)],
-                []
-            ),
+            this.getBlocks().reduce((acc, block) => [...acc, block.clone(newThread)], []),
             mode
         );
-    };
+    }
 
-    p.toJSON = function(isNew, index = 0, excludeData, option) {
+    toJSON(isNew, index = 0, excludeData, option) {
         if (index instanceof Entry.Block) {
             index = this.indexOf(index);
         }
 
-        var array = [];
-        var data = this._data;
+        const array = [];
+        const data = this._data;
         for (index; index < data.length; index++) {
-            var block = data[index];
-            if (block instanceof Entry.Block)
+            const block = data[index];
+            if (block instanceof Entry.Block) {
                 array.push(block.toJSON(isNew, excludeData, option));
+            } else if (block instanceof Entry.Comment) {
+                array.push(block.toJSON());
+            }
         }
         return array;
-    };
+    }
 
-    p.destroy = function(animate, isNotForce) {
+    destroy(animate, isNotForce) {
         if (this.view) {
             this.view.destroy(animate);
         }
@@ -127,19 +140,21 @@ Entry.Thread = function(thread, code, parent) {
         if (!this._data.length) {
             this._code.destroyThread(this, false);
         }
-    };
+    }
 
-    p.getBlock = function(index) {
+    getBlock(index) {
         return this._data[index];
-    };
+    }
 
-    p.getBlocks = function() {
+    getBlocks() {
         return this._data.map(_.identity);
-    };
+    }
 
-    p.countBlock = function() {
+    countBlock() {
         return this.getBlocks().reduce((count, block) => {
-            if (!block.type) return count;
+            if (!block.type) {
+                return count;
+            }
 
             count++;
 
@@ -148,118 +163,140 @@ Entry.Thread = function(thread, code, parent) {
                 count
             );
         }, 0);
-    };
+    }
 
-    p.handleChange = function() {
-        if (this._data.length === 0) this.destroy();
-    };
+    handleChange() {
+        if (this._data.length === 0) {
+            this.destroy();
+        }
+    }
 
-    p.getCode = function() {
+    getCode() {
         return this._code;
-    };
+    }
 
-    p.setCode = function(code) {
+    setCode(code) {
         this._code = code;
-    };
+    }
 
-    p.spliceBlock = function(block) {
+    spliceBlock(block) {
         this._data.remove(block);
         this.changeEvent.notify();
-    };
+    }
 
-    p.getFirstBlock = function() {
+    getFirstBlock() {
         return this._data[0];
-    };
+    }
 
-    p.getPrevBlock = function(block) {
+    getPrevBlock(block) {
         return this._data.at(this._data.indexOf(block) - 1);
-    };
+    }
 
-    p.getNextBlock = function(block) {
+    getNextBlock(block) {
         return this._data.at(this._data.indexOf(block) + 1);
-    };
+    }
 
-    p.getLastBlock = function() {
+    getLastBlock() {
         return this._data.at(this._data.length - 1);
-    };
+    }
 
-    p.getRootBlock = function() {
+    getRootBlock() {
         return this._data.at(0);
-    };
+    }
 
-    p.hasBlockType = function(type) {
-        for (var i = 0; i < this._data.length; i++)
-            if (inspectBlock(this._data[i])) return true;
+    hasBlockType(type) {
+        for (let i = 0; i < this._data.length; i++) {
+            if (inspectBlock(this._data[i])) {
+                return true;
+            }
+        }
         return false;
 
         function inspectBlock(block) {
-            if (type == block.type) return true;
+            if (type == block.type) {
+                return true;
+            }
 
-            var params = block.params;
-            for (var k = 0; k < params.length; k++) {
-                var param = params[k];
+            const params = block.params;
+            for (let k = 0; k < params.length; k++) {
+                const param = params[k];
                 if (param && param.constructor == Entry.Block) {
-                    if (inspectBlock(param)) return true;
+                    if (inspectBlock(param)) {
+                        return true;
+                    }
                 }
             }
-            var statements = block.statements;
+            const statements = block.statements;
             if (statements) {
-                for (var j = 0; j < statements.length; j++) {
-                    if (statements[j].hasBlockType(type)) return true;
+                for (let j = 0; j < statements.length; j++) {
+                    if (statements[j].hasBlockType(type)) {
+                        return true;
+                    }
                 }
             }
             return false;
         }
-    };
+    }
 
-    p.getCount = function(startBlock) {
-        var result = this._data.length;
-        if (startBlock) result -= this._data.indexOf(startBlock);
+    getCount(startBlock) {
+        let result = this._data.length;
+        if (startBlock) {
+            result -= this._data.indexOf(startBlock);
+        }
         return result;
-    };
+    }
 
-    p.indexOf = function(block) {
+    indexOf(block) {
         return this._data.indexOf(block);
-    };
+    }
 
-    p.pointer = function(pointer = [], block) {
-        if (block) pointer.unshift(this.indexOf(block));
+    pointer(pointer = [], block) {
+        if (block) {
+            pointer.unshift(this.indexOf(block));
+        }
 
-        var parent = this.parent;
+        const parent = this.parent;
 
-        if (parent instanceof Entry.Block)
+        if (parent instanceof Entry.Block) {
             pointer.unshift(parent.indexOfStatements(this));
+        }
 
         if (this._code === parent) {
-            var { x, y } = this._data[0];
+            const { x, y } = this._data[0];
             return [x, y, this._code.indexOf(this), ...pointer];
         }
 
         return parent.pointer(pointer);
-    };
+    }
 
-    p.getBlockList = function(excludePrimitive, type) {
+    getBlockIndex(block) {
+        return this.getBlocks().indexOf(block);
+    }
+
+    getBlockList(excludePrimitive, type, index) {
         return _.chain(this._data)
             .map((block) => {
-                if (block.constructor !== Entry.Block) return;
+                if (block.constructor !== Entry.Block) {
+                    return;
+                }
                 return block.getBlockList(excludePrimitive, type);
             })
             .flatten()
             .compact()
             .value();
-    };
+    }
 
-    p.stringify = function(excludeData) {
-        return JSON.stringify(this.toJSON(undefined, undefined, excludeData));
-    };
+    stringify(excludeData, isNew, index) {
+        return JSON.stringify(this.toJSON(isNew, index, excludeData));
+    }
 
-    p.isInOrigin = function() {
-        var block = this.getFirstBlock();
+    isInOrigin() {
+        const block = this.getFirstBlock();
         return block && block.isInOrigin();
-    };
+    }
 
-    p.getDom = function(query) {
-        var view = this.view;
+    getDom(query) {
+        const view = this.view;
 
         if (_.isEmpty(query)) {
             return view.svgGroup;
@@ -267,17 +304,17 @@ Entry.Thread = function(thread, code, parent) {
 
         query = [...query];
 
-        var key = query.shift();
+        const key = query.shift();
         if (key === 'magnet') {
             return view.getMagnet('next');
         }
-    };
+    }
 
-    p.isParamBlockType = function() {
+    isParamBlockType() {
         return false;
-    };
+    }
 
-    p.isGlobal = function() {
+    isGlobal() {
         return this._code === this.parent;
-    };
-})(Entry.Thread.prototype);
+    }
+};

@@ -1,15 +1,19 @@
 'use strict';
 
-var conf;
+const merge = require('webpack-merge');
+const common = require('./webpack_config/common');
+
+let conf;
 
 switch (process.env.NODE_ENV) {
+    case 'lint':
+        // common config 을 가지지 않는다.
+        return require('./webpack_config/lint');
     case 'production':
         conf = require('./webpack_config/prod');
         break;
-    case 'lint':
-        conf = require('./webpack_config/lint');
-        break;
     case 'serve':
+    case 'serve-mini':
         conf = require('./webpack_config/serve');
         break;
     case 'development':
@@ -18,4 +22,4 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
-module.exports = conf;
+module.exports = merge(common, conf);

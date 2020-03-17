@@ -14,24 +14,24 @@
 }
 
 .entryPlaygroundTextAlignLeft {
-    .backgroundImage("text_align_left_off.png");
+    .backgroundImage('text_align_left_off.png');
 }
 .entryPlaygroundTextAlignLeft.toggle {
-    .backgroundImage("text_align_left_on.png");
+    .backgroundImage('text_align_left_on.png');
 }
 
 .entryPlaygroundTextAlignCenter {
-    .backgroundImage("text_align_center_off.png");
+    .backgroundImage('text_align_center_off.png');
 }
 .entryPlaygroundTextAlignCenter.toggle {
-    .backgroundImage("text_align_center_on.png");
+    .backgroundImage('text_align_center_on.png');
 }
 
 .entryPlaygroundTextAlignRight {
-    .backgroundImage("text_align_right_off.png");
+    .backgroundImage('text_align_right_off.png');
 }
 .entryPlaygroundTextAlignRight.toggle {
-    .backgroundImage("text_align_right_on.png");
+    .backgroundImage('text_align_right_on.png');
 }
 
 .entryPlayground_fgColorDiv {
@@ -62,27 +62,29 @@
 }
 
 .entryPlaygroundFontSizeWrapper {
-    width: 400px;
-    height: 39px;
+    position: absolute;
+    padding-left: 13px;
+    padding-top: 10px;
+    display: inline-block;
+    width: 244px;
+    height: 40px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    right: 0px;
+    top: 0px;
 }
 
 .entryPlaygroundFontSizeLabel {
     display: inline-block;
-    float: right;
-    font-size: 9px;
-    font-family: notoSansMedium;
-    color: #444;
-    line-height: 39px;
-}
-
-.entryPlaygroundFontSizeSlider {
-    display: inline-block;
-    float: right;
-    width: 96px;
-    height: 3px;
-    margin: 18px 0px 18px 4px;
-    background-color: #cfcfcf;
-    border-radius: 1.5px;
+    width: 65px;
+    height: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: -0.3px;
+    color: #2c313d;
 }
 
 #entryTextColourTable {
@@ -90,7 +92,6 @@
     cursor: pointer;
     border-collapse: collapse;
 }
-
 
 .entryTd {
     width: 22px;
@@ -101,60 +102,72 @@
     width: 20px;
     height: 20px;
     background-color: white;
-    background-image: -webkit-linear-gradient(135deg, transparent 11.5px, rgb(255,0,0) 13px, rgba(255,255,255,.5) 14.5px);
+    background-image: -webkit-linear-gradient(
+        135deg,
+        transparent 11.5px,
+        rgb(255, 0, 0) 13px,
+        rgba(255, 255, 255, 0.5) 14.5px
+    );
     border: 1px solid;
 }
 
 .entryPlaygroundSoundLength {
-    float: right;
-    position: relative;
-    top: 20px;
-    right: 10px;
-    font-size: 9pt;
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 11px;
 }
 
 .entryPlaygroundDefaultWorkspace {
     height: 100%;
-    background-color: #363C46;
+    background-color: #363c46;
     color: white;
 }
 
-.entryPlaygroundWorkspace {
-    position: absolute;
-    top: 40px;
-    bottom: 0px;
-    left: 400.5px;
-    right: 0px;
-    background-color: #F5F5F5;
+@introHeight: 66px;
+.entryPlaygroundIntro.active {
+    position: relative;
     overflow: hidden;
+    height: @introHeight;
+    top: 50px;
+    z-index: 1;
+}
+
+.entryPlaygroundWorkspace {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    background-color: #fff;
+}
+
+.entryPlaygroundIntro.active + .entryPlaygroundWorkspace {
+    height: calc(100% - @introHeight);
 }
 
 .entryPlaygroundPhone {
     width: 100%;
     height: 500px;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
 }
 
 .entryPlaygroundResizeWorkspace {
     position: absolute;
-    top: 45%;
-    height: 28px;
-    width: 11px;
-    left: 272px;
+    top: 50%;
+    height: 40px;
+    width: 16px;
+    left: 254px;
+    margin-top: -20px;
     cursor: ew-resize;
-    border: solid 1px #afafaf;
     border-left: none;
-    z-index: 250;
-    .backgroundImage("entry_scroll_02.png");
+    z-index: 1;
+    .backgroundImage('entry_scroll_02.png');
+    background-size: 16px auto;
 }
 
 .entryPlaygroundTabWorkspace {
     position: absolute;
-    /*margin-top: 1px;*/
-    top: 0;
-    height: 43px;
-    width: 100%;
-    background-color: #f1f1f1;
+    left: 0;
+    top: 46px;
+    background-color: #fff;
 }
 
 .entryPlaygroundTabWorkspace.entryRemove {
@@ -168,33 +181,145 @@
     background-color: #f1f1f1;
 }
 
+.entryPlaygroundBackPackView {
+    height: calc(100% - 47px);
+    display: block;
+    right: 0;
+    top: 38px;
+    z-index: 299;
+    position: absolute;
+
+    .widget {
+        height: 100%;
+    }
+
+    .blockBackPackDrop,
+    .objectBackPackDrop {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        z-index: 400;
+        background-color: rgba(248, 241, 204, 0.9);
+        border: 2px dashed #ffc800;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+
+        .blockBackPackIcon {
+            pointer-events: none;
+            width: 32px;
+            height: 32px;
+            margin-bottom: 11px;
+            .backgroundImage('img_backpack_plus.svg');
+        }
+        .objectBackPackDesc,
+        .blockBackPackDesc {
+            pointer-events: none;
+            font-family: EntryFont, NanumGothic;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: -0.1px;
+            white-space: pre;
+            text-align: center;
+            color: #2c313d;
+        }
+    }
+}
+
+.entryPlaygroundButtonTabWorkspace {
+    position: absolute;
+    right: 0;
+    top: 43px;
+    height: auto;
+    background-color: #fff;
+
+    .entryPlaygroundCommentButtonWorkspace {
+        float: left;
+        .backgroundImage('btn-toggle-comment-off.png');
+        background-repeat: no-repeat;
+        background-size: 32px auto;
+        background-position: 50% 50%;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 8px;
+        &.showComment {
+            .backgroundImage('btn-toggle-comment-select.png');
+            background-size: 32px auto;
+            width: 32px;
+            height: 32px;
+            border: 0;
+            background-color: inherit;
+        }
+    }
+
+    .entryPlaygroundBackPackButtonWorkspace {
+        &::before {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            height: 16px;
+            background: #bfd8e6;
+            margin: 8px 0 0 -9px;
+        }
+        float: left;
+        .backgroundImage('back_pack_button.svg');
+        background-repeat: no-repeat;
+        background-size: 32px auto;
+        background-position: 50% 50%;
+        cursor: pointer;
+        width: 32px;
+        height: 32px;
+        margin: 0 9px;
+    }
+
+    &.entryRemove.entryCode {
+        display: block !important;
+    }
+}
+
 .entryTabListWorkspace {
+    overflow: hidden;
     list-style: none;
-    height: 44px;
     padding: 0;
-    margin: 1px 0 0 0;
-    border-bottom: 2px solid #643cd9;
+    margin: 0;
 }
 
 .entryTabListItemWorkspace {
     float: left;
-    min-width: 59px;
-    height: 42px;
-    margin: 0 1px 0 1px;
+    min-width: 58px;
+    margin: 4px 0 0 2px;
+    padding: 7px 0;
     cursor: pointer;
-    display:block;
-    padding: 10px 0 0 0;
+    background-color: #d6e9f4;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8aa3b2;
     text-align: center;
-    font-family: nanumBarunBold !important;
-    color: gray;
-    background-color: #e5e5e5;
-    border-top-right-radius: 7px;
-    border-top-left-radius: 7px;
+    line-height: 14px;
+    vertical-align: bottom;
+}
+.entryTabListItemWorkspace:first-child {
+    margin-left: 0;
 }
 
 .entryTabSelected {
-    color: white;
-    background-color: #6e5ae6;
+    margin-top: 0;
+    padding: 9px 0 8px;
+    color: #fff;
+    background-color: #8274ff;
+    font-size: 14px;
+    line-height: 15px;
 }
 
 .entryTabListItemWorkspace:hover {
@@ -203,7 +328,8 @@
 #entrySoundTab {
     .animation-delay(0.1s);
 }
-#entryPictureTab.hideTab, #entryTextTab.hideTab{
+#entryPictureTab.hideTab,
+#entryTextTab.hideTab {
     .animation-delay(0.2s);
 }
 #entrySoundTab.hideTab {
@@ -213,7 +339,6 @@
     .animation-delay(0.2s);
 }
 
-
 .hideTab {
     .animation-duration(0.7s);
     .animation-name(hideTab);
@@ -221,28 +346,21 @@
 }
 
 @keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
-}
-
-@-o-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
-}
-
-@-ms-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
-}
-
-@-moz-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 @-webkit-keyframes hideTab {
-    from {}
-    to {margin-top: 44px;opacity:0}
+    from {
+    }
+    to {
+        margin-top: 44px;
+        opacity: 0;
+    }
 }
 
 .showTab {
@@ -253,28 +371,23 @@
 }
 
 @keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
-}
-
-@-o-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
-}
-
-@-ms-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
-}
-
-@-moz-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @-webkit-keyframes showTab {
-    from {margin-top: 44px;opacity:0}
-    to {opacity: 1}
+    from {
+        margin-top: 44px;
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 .entryPlaygroundCurtainWorkspace {
@@ -284,19 +397,18 @@
     padding-top: 270px;
     text-align: center;
     font-size: 40px;
-    height: 100%;
-    top: 0;
+    top: 38px;
     left: 0;
     right: 0;
-    bottom: 0;
+    bottom: 8px;
     opacity: 0.5;
-    z-index: 1000;
+    z-index: 255;
     cursor: pointer;
 }
 
 .entryPlaygroundCurtainPhone {
     position: absolute;
-    background-color: rgba(0,0,0,0.8);
+    background-color: rgba(0, 0, 0, 0.8);
     color: white;
     padding-top: 100px;
     text-align: center;
@@ -308,10 +420,79 @@
     cursor: pointer;
 }
 
+.entryPlaygroundPictureCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.6;
+    z-index: 255;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundPictureCurtainWorkspace .entryPlaygroundPictureCurtainWorkspaceText {
+    text-align: center;
+    height: 100%;
+    color: white;
+    font-family: NanumGothicOTF;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: -0.6px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; /* align horizontal */
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; /* align vertical */
+}
+
+.entryPlaygroundTableCurtainWorkspace {
+    position: absolute;
+    background-color: black;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.6;
+    z-index: 255;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableCurtainWorkspace .entryPlaygroundTableCurtainWorkspaceText {
+    text-align: center;
+    height: 100%;
+    color: white;
+    font-family: NanumGothicOTF;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1.33;
+    letter-spacing: -0.6px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center; /* align horizontal */
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center; /* align vertical */
+}
 
 .entryPlaygroundCodeWorkspace {
-    height: 100%;
-    background-color: #F5F5F5;
+    overflow: unset;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 80px;
+    bottom: 8px;
+    background-color: #fff;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundCodeWorkspace.entryRemove {
@@ -322,7 +503,7 @@
 .entryPlaygroundCodePhone {
     position: relative;
     height: 100%;
-    background-color: #F5F5F5;
+    background-color: #f5f5f5;
 }
 
 .entryPlaygroundCodePhone.entryRemove {
@@ -337,22 +518,21 @@
 }
 
 .entryPlaygroundPictureWorkspace {
-   position: absolute;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   background-color: #ececec;
-   top: 47px;
-   margin-left: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #f9f9f9;
+    top: 80px;
+    margin-left: 0;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundAddPicture {
-    position: absolute;
-    width: 240px;
-    height: 60px;
-    background-color: #e5e5e5;
-    cursor: pointer;
-    border-bottom: 1pt solid #ebeff1;
+    width: 254px;
+    padding: 8px 0 7px;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundAddPicturePhone {
@@ -366,23 +546,24 @@
 
 .entryPlaygroundAddPictureInner {
     display: block;
-    width: 141px;
-    height: 30px;
-    background-color: #eeeeee;
-    color: black;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
     text-align: center;
-    font-size: 11px;
-    line-height: 28px;
-    border: 1px solid #cccccc;
-    border-radius: 7px;
-    margin-top: 15px;
-    margin-left: 49.5px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
 }
 
 .entryPlaygroundAddPictureInnerPhone {
     display: block;
     height: 50px;
-    background-color: #CDCFC9;
+    background-color: #cdcfc9;
     color: #656565;
     text-align: center;
     font-size: 10.5pt;
@@ -396,190 +577,551 @@
     position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
-    top: 60px;
-    margin-bottom: 47px;
+    width: 254px;
+    top: 56px;
     bottom: 0px;
-    overflow: auto;
+    overflow-y: hidden;
     list-style: none;
-    background-color: #Cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundPictureListPhone {
-    position: relative;
+    position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
+    width: 254px;
+    top: 56px;
     bottom: 0px;
     overflow: auto;
     list-style: none;
-    background-color: #Cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundPictureElement {
     display: block;
-    background-color: #f4f4f4;
-    border-bottom: 1pt solid #ebeff1;
-    height: 60px;
-    color: #294117;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 64px;
+    height: 61px;
+    color: #2c313d;
     cursor: pointer;
 }
 
-.entryPlaygroundPictureElement:hover {
-    background-color: #C0C0C0;
+.entryPlaygroundPictureElement::selection {
     cursor: move;
+    background-color: #fff;
 }
-
 
 .entryPlaygroundPictureOrder,
 .entryPlaygroundSoundOrder {
-    width: 15px;
-    height: 100%;
-    float: left;
-    line-height: 57px;
+    overflow: hidden;
+    position: absolute;
+    left: 19px;
+    top: 11px;
+    width: 14px;
+    height: 14px;
+    background-color: #4f80ff;
+    border-radius: 50%;
     font-size: 10px;
+    color: #fff;
     text-align: center;
-    background-color: #d8d8d8;
-}
-
-.entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
-.entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {
-    background-color: #634cd9;
-    color: white;
+    line-height: 16px;
+    z-index: 10;
 }
 
 .entryPictureSelected {
-    background-color: #c1c1c1;
+    background-color: #fff;
 }
 
 .entryPlaygroundPictureThumbnail {
-    float: left;
-    position: relative;
-    height: 49px;
-    width: 49px;
-    top: 5px;
-    left: 10px;
-    border: 1px solid #bcc2c8;
-    background-color: #ccc;
+    position: absolute;
+    height: 44px;
+    width: 40px;
+    top: 8px;
+    left: 16px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: 50% 50%;
 }
 
 .entryPlaygroundPictureName {
-    float: left;
-    position: relative;
-    top: 17px;
-    left: 17px;
-    width: 78px;
-    background-color: transparent;
-    font-size: 10pt;
+    width: 100%;
+    height: 24px;
+    margin-top: 10px;
+    padding: 0 4px;
+    background-color: #fff;
+    outline: 0;
+    font-size: 12px;
     text-overflow: ellipsis;
-    color: #294117;
+    color: #2c313d;
+    font-weight: 600;
     cursor: text;
-    border: 1px solid transparent;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
-
-.entryPlaygroundPictureName:focus, .entryPlaygroundSoundName:focus {
-    border: 1px solid gray;
-    background-color: white;
-}
-
-.entryPlaygroundPictureName:hover, .entryPlaygroundSoundName:hover {
-    border: 1px solid gray;
+.entryPlaygroundPictureName:focus,
+.entryPlaygroundPictureName:active {
+    border-color: #4f80ff;
 }
 
 .entryPlaygroundPictureSize {
-    float: right;
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 11px;
+}
+.entryPlayground_del {
+    position: absolute;
+    right: 26px;
+    top: 18px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
+    background-size: 10px;
+    font-size: 0;
+    cursor: pointer;
+    background-size: 10px auto;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    .backgroundImage('layers_icon_close_nor_new.png');
+}
+
+.pop_selectbox {
     position: relative;
-    top: 21px;
-    right: 10px;
-    font-size: 8pt;
+    .select_link {
+        display: block;
+        position: relative;
+        width: 142px;
+        height: 38px;
+        padding: 0 12px;
+        border: 1px solid #e2e2e2;
+        background-color: #fff;
+        border-radius: 4px;
+        font-weight: 600;
+        color: #555;
+        letter-spacing: -0.3px;
+        line-height: 40px;
+        cursor: pointer;
+    }
+    .select_link:after {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        width: 8px;
+        height: 6px;
+        margin-top: -3px;
+        vertical-align: top;
+        content: '';
+    }
+    & + .pop_selectbox {
+        margin-top: 40px;
+    }
+    & + .on {
+        z-index: 10;
+    }
+    & + .pop_inpt_text {
+        margin-top: 40px;
+    }
+    &.error .select_link {
+        border-color: #f00;
+    }
+}
+.pop_selectbox * {
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+}
+.pop_selectbox .tooltip_box {
+    display: none;
+}
+.pop_selectbox.on .tooltip_box {
+    display: block;
+    z-index: 10;
+    top: 52px;
 }
 
 .entryPlaygroundTextWorkspace {
     position: absolute;
-    top: 45px;
-    height: 100%;
-    width: 100%;
-    background-color: #ececec;
-    padding-left: 20px;
-    padding-top: 20px;
+    top: 80px;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #ecf8ff;
+    border-radius: 0 0 0 6px;
 }
-
-.entryTextHead {
-    font-size: 18px;
+// 글상자
+.entryPlaygroundTextWorkspace .write_box {
+    height: 568px;
 }
-
-.entryTextEdit {
-    font-size: 17px;
-    width: 220px;
-    height: 30px;
-    border: 1px solid #808080;
-    border-radius: 3px;
+.entryPlaygroundTextWorkspace .write_box .write_set {
+    position: relative;
+    padding: 8px 18px;
+    background-color: #f9f9f9;
+    border: 1px solid #e2e2e2;
+    z-index: 10;
 }
-
-#entryTextProperty {
-    width: 220px;
-    height: 32px;
-    margin-top: 12px;
+.entryPlaygroundTextWorkspace .write_box .write_set:after {
+    display: block;
+    clear: both;
+    content: '';
 }
-
-.entryTextFontSelect {
-    display: inline-block;
-    height: 32px;
-    border: 1px solid #808080;
-    border-radius: 4px;
-    background-color: white;
+.entryPlaygroundTextWorkspace .write_box .write_set .pop_selectbox {
     float: left;
+    width: 168px;
+}
+.entryPlaygroundTextWorkspace .write_box .write_set .pop_selectbox .tooltip_inner {
+    max-height: 282px;
+    overflow: visible;
+    overflow-y: auto;
 }
 
-.entryTextFontSelecter {
-    margin-top: 5px;
-    margin-left: 2px;
-    width: 120px;
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box {
+    position: relative;
+    float: left;
+    padding-left: 24px;
+    font-size: 0;
 }
 
-.entryFontToggle {
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link {
     display: inline-block;
-    width: 96px;
-    width: 32px;
-    height: 32px;
-    float: right;
+    overflow: hidden;
+    width: 40px;
+    height: 40px;
+    margin-left: 10px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+.entryPlaygroundTextWorkspace .write_box .write_set .font_style_box .style_link.on {
+    border: 1px solid #4f80ff;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box {
+    display: inline-block;
+    border-radius: 4px;
+    width: 207px;
+    height: 40px;
+    font-size: 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a {
+    display: inline-block;
+    position: relative;
+    width: 102px;
+    height: 38px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #979797;
+    background-color: #fff;
+    text-align: center;
+    letter-spacing: -0.3px;
+    line-height: 36px;
+    cursor: pointer;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box a + a {
+    margin-left: -1px;
+    border-radius: 0 4px 4px 0;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .write_type_box .on {
+    color: #4f80ff;
+    border-color: #4f80ff;
+    z-index: 10;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box {
+    margin: 24px 38px 0;
+    max-width: 654px;
+    position: relative;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list {
+    padding: 4px 0px;
+    list-style: none;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list li {
+    color: #555;
+    margin-top: 4px;
+    line-height: 18px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_box .list li:before {
+    display: inline-block;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: #555;
+    margin: 6px 8px 0 0;
+    vertical-align: top;
+    content: '';
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner {
+    position: relative;
+    overflow: hidden;
+    height: 40px;
+    max-width: 654px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    margin-top: 24px;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner .bold {
+    font-weight: bold;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner .italic {
+    font-style: italic;
+}
+
+.entryPlaygroundTextWorkspace .write_box .input_inner input[type='text'] {
+    display: none;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding-left: 15px;
+    border: 0;
+    line-height: 40px;
+    outline: 0;
+    font-size: 14px;
+    letter-spacing: -0.3px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner textarea {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 12px;
+    font-size: 14px;
+    border: 0;
+    line-height: 18px;
+    outline: 0;
+    letter-spacing: -0.3px;
+}
+.entryPlaygroundTextWorkspace .write_box .input_inner label {
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    top: 13px;
+    color: #979797;
+    letter-spacing: -0.3px;
+}
+
+.imbtn_pop_font_bold {
+    .backgroundImage('btn_pop_font_bold.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_bold_on.png');
+    }
+}
+.imbtn_pop_font_underline {
+    .backgroundImage('btn_pop_font_underline.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_underline_on.png');
+    }
+}
+.imbtn_pop_font_italic {
+    .backgroundImage('btn_pop_font_italic.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_italic_on.png');
+    }
+}
+.imbtn_pop_font_through {
+    .backgroundImage('btn_pop_font_through.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_through_on.png');
+    }
+}
+.imbtn_pop_font_color {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
+    .backgroundImage('btn_pop_font_color.png');
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        background-color: #f9f9f9;
+        z-index: -1;
+    }
+    &.on {
+        .backgroundImage('btn_pop_font_color_on.png');
+    }
+}
+.imbtn_pop_font_paint,
+.imbtn_pop_font_backgroundcolor {
+    display: inline-block;
+    position: relative;
+    overflow: hidden;
+    width: 66px;
+    height: 40px;
+    margin-left: 10px;
+    .backgroundImage('btn_pop_font_paint.png');
+    background-size: 66px auto;
+    cursor: pointer;
+    em {
+        position: absolute;
+        left: 5px;
+        right: 5px;
+        top: 5px;
+        bottom: 5px;
+        z-index: -1;
+    }
+    &.on {
+        .backgroundImage('btn_pop_font_paint_on.png');
+        &.clear {
+            .backgroundImage('btn_pop_font_paint_clear_on.png');
+            em {
+                display: none;
+            }
+        }
+    }
+    &.clear {
+        .backgroundImage('btn_pop_font_paint_clear.png');
+        em {
+            display: none;
+        }
+    }
+    &.clear_on {
+        .backgroundImage('btn_pop_font_paint_clear_on.png');
+        em {
+            display: none;
+        }
+    }
+}
+
+.imbtn_pop_font_align_left {
+    .backgroundImage('btn_pop_font_align_left.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_align_left_on.png');
+    }
+}
+
+.imbtn_pop_font_align_middle {
+    .backgroundImage('btn_pop_font_align_middle.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_align_middle_on.png');
+    }
+}
+
+.imbtn_pop_font_align_right {
+    .backgroundImage('btn_pop_font_align_right.png');
+    background-size: 38px auto;
+    &.on {
+        .backgroundImage('btn_pop_font_align_right_on.png');
+    }
+}
+
+.imico_pop_select_arr_down:after {
+    .backgroundImage('ico_pop_select_arr_down.png');
+    background-size: 8px auto;
+}
+.imico_pop_select_arr_up:after {
+    .backgroundImage('ico_pop_select_arr_up.png');
+    background-size: 8px auto;
 }
 
 #entryFontColorToggle {
-    .backgroundImage("text_in_off.png");
+    .backgroundImage('text_in_off.png');
 }
 
 #entryFontColorToggle.selected {
-    .backgroundImage("text_in_on.png");
+    .backgroundImage('text_in_on.png');
 }
 
 #entryFontBGToggle {
     margin-left: 6px;
-    .backgroundImage("text_out_off.png");
+    .backgroundImage('text_out_off.png');
 }
 
 #entryFontBGToggle.selected {
-    .backgroundImage("text_out_on.png");
+    .backgroundImage('text_out_on.png');
 }
 
 .entryPlaygroundSoundWorkspace {
+    overflow: hidden;
     position: absolute;
-    top: 47px;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #f9f9f9;
+    border-radius: 0 0 0 6px;
+    top: 80px;
     margin-left: 0;
-    height: 100%;
-    background-color: #ececec;
+}
+
+.entryPlaygroundSoundEdit {
+    position: absolute;
+    left: 253px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    border-left: 1px solid #e2e2e2;
+    background-color: #f2f2f2;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    .entryPlaygroundSoundEditWrapper {
+        text-align: center;
+    }
+
+    .entryPlaygroundSoundEditImage {
+        .backgroundImage('sound_edit.gif');
+        width: 160px;
+        height: 160px;
+        -o-object-fit: contain;
+        object-fit: contain;
+        margin: 0 auto 24px;
+        background-size: 160px auto;
+    }
+
+    .entryPlaygroundSoundEditText {
+        margin: 0 auto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: center;
+        color: #555555;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
 }
 
 .entryPlaygroundAddSound {
-    position: absolute;
-    height: 60px;
-    width: 240px;
-    background-color: #e5e5e5;
-    cursor: pointer;
-    border-bottom: 1pt solid #ebeff1;
+    width: 254px;
+    padding: 8px 0;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundAddSoundPhone {
@@ -591,23 +1133,24 @@
 
 .entryPlaygroundAddSoundInner {
     display: block;
-    width: 141px;
-    height: 30px;
-    background-color: #eeeeee;
-    color: black;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
     text-align: center;
-    font-size: 11px;
-    line-height: 28px;
-    border: 1px solid #cccccc;
-    border-radius: 7px;
-    margin-top: 15px;
-    margin-left: 49.5px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
 }
 
 .entryPlaygroundAddSoundInnerPhone {
     display: block;
     height: 40px;
-    background-color: #CDCFC9;
+    background-color: #cdcfc9;
     color: #656565;
     text-align: center;
     font-size: 10.5pt;
@@ -619,76 +1162,89 @@
 
 .entryPlaygroundSoundList {
     position: absolute;
-    padding: 0px;
-    margin: 0px;
-    width: 240px;
-    top: 60px;
-    margin-bottom: 47px;
-    bottom: 0px;
-    overflow: auto;
+    padding: 0;
+    margin: 0;
+    width: 254px;
+    top: 57px;
+    bottom: 0;
+    overflow-y: hidden;
     list-style: none;
-    background-color: #cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundSoundListPhone {
-    position: relative;
+    position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
+    width: 254px;
+    top: 57px;
     bottom: 0px;
-    overflow: auto;
+    overflow: hidden;
+    overflow-y: auto;
     list-style: none;
-    background-color: #cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
 }
 
 .entryPlaygroundSoundElement {
     display: block;
-    background-color: #f4f4f4;
-    border-bottom: 1pt solid #ebeff1;
-    height: 60px;
-    color: #294117;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 64px;
+    height: 61px;
+    color: #2c313d;
     cursor: pointer;
-}
 
-.entryPlaygroundSoundElement:hover {
-    background-color: #c1c1c1;
-    cursor: move;
+    &.entrySoundSelected {
+        background-color: #fff;
+    }
 }
 
 .entryPlaygroundSoundThumbnail {
-    float: left;
-    position: relative;
-    height: 49px;
-    width: 49px;
-    top: 5px;
-    left: 10px;
-    border: 1px solid #bcc2c8;
-    background-color: #ccc;
-    background-size: 32px 32px;
+    position: absolute;
+    height: 44px;
+    width: 40px;
+    top: 8px;
+    left: 16px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    background-size: 28px auto;
     background-repeat: no-repeat;
-    background-position: center;
-    cursor: pointer;
-}
+    background-position: 50% 50%;
 
-.entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
-    .backgroundImage("workspace_sound_play.png");
-}
+    &.entryPlaygroundSoundPlay {
+        .backgroundImage('workspace_sound_play.png');
+    }
 
-.entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
-    .backgroundImage("workspace_sound_stop.png");
+    &.entryPlaygroundSoundStop {
+        .backgroundImage('workspace_sound_stop.png');
+    }
 }
 
 .entryPlaygroundSoundName {
-    float: left;
-    position: relative;
-    top: 18px;
-    left: 17px;
-    width: 95px;
-    background-color: transparent;
-    font-size: 10pt;
-    border: 1px solid transparent;
+    width: 100%;
+    height: 24px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    margin-top: 10px;
+    padding: 0 4px;
+    background-color: #fff;
+    outline: 0;
+    font-size: 12px;
     text-overflow: ellipsis;
-    color: #294117;
+    color: #2c313d;
+    font-weight: 600;
+    cursor: text;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+}
+.entryPlaygroundSoundName:focus,
+.entryPlaygroundSoundName:active {
+    border-color: #4f80ff;
 }
 
 .entryPlayground_text_buttons {
@@ -707,24 +1263,24 @@
 }
 
 .entryPlaygroundTextAlignLeft {
-    .backgroundImage("text_align_left_off.png");
+    .backgroundImage('text_align_left_off.png');
 }
 .entryPlaygroundTextAlignLeft.toggle {
-    .backgroundImage("text_align_left_on.png");
+    .backgroundImage('text_align_left_on.png');
 }
 
 .entryPlaygroundTextAlignCenter {
-    .backgroundImage("text_align_center_off.png");
+    .backgroundImage('text_align_center_off.png');
 }
 .entryPlaygroundTextAlignCenter.toggle {
-    .backgroundImage("text_align_center_on.png");
+    .backgroundImage('text_align_center_on.png');
 }
 
 .entryPlaygroundTextAlignRight {
-    .backgroundImage("text_align_right_off.png");
+    .backgroundImage('text_align_right_off.png');
 }
 .entryPlaygroundTextAlignRight.toggle {
-    .backgroundImage("text_align_right_on.png");
+    .backgroundImage('text_align_right_on.png');
 }
 
 .entryPlayground_fgColorDiv {
@@ -742,80 +1298,61 @@
     margin-top: -10px;
     margin-left: 8px;
 }
-.entryPlayground_textBox {
-    margin-top: 5px;
-    height: 33px;
-    width: 426px;
-}
-.entryPlayground_textArea {
-    margin-top: 5px;
-    height: 120px;
-    width: 426px;
-    resize: none;
-}
-
-.entryPlaygroundFontSizeWrapper {
-    width: 400px;
-    height: 39px;
-}
-
-.entryPlaygroundFontSizeLabel {
-    display: inline-block;
-    float: right;
-    font-size: 9px;
-    font-family: notoSansMedium;
-    color: #444;
-    line-height: 39px;
-}
 
 .entryPlaygroundFontSizeSlider {
     display: inline-block;
-    float: right;
-    width: 96px;
-    height: 3px;
-    margin: 18px 0px 18px 4px;
-    background-color: #cfcfcf;
-    border-radius: 1.5px;
+    margin-left: 12px;
+    width: 136px;
+    height: 8px;
+    border-radius: 3px;
+    -webkit-box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
+    box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
+    background-color: #d8d8d8;
 }
 
 .entryPlaygroundFontSizeIndicator {
     height: 100%;
     width: 45%;
+    border-radius: 3px;
     background-color: #643cd9;
 }
 
 .entryPlaygroundFontSizeKnob {
-    width: 16px; height: 16px;
+    width: 19px;
+    height: 30px;
+    -o-object-fit: contain;
+    object-fit: contain;
     position: relative;
-    margin-top: -10px;
-    margin-left: -7px;
-    .backgroundImage("text_size_knob.png");
+    margin-top: -19px;
+    margin-left: -12px;
+    .backgroundImage('text_size_knob.png');
+    background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
 }
 
 .entryPlaygroundTextColoursWrapper {
-    width : 260px;
+    width: 260px;
     height: 226px;
     z-index: 10;
     cursor: pointer;
     padding: 20px 5px;
     position: absolute;
-    .backgroundImage("text_color_bg.png");
+    .backgroundImage('text_color_bg.png');
     background-repeat: no-repeat;
     background-size: 260px 226px;
 }
 .entryPlaygroundTextBackgroundsWrapper {
-    width : 260px;
+    width: 260px;
     height: 226px;
     z-index: 10;
     cursor: pointer;
     padding: 20px 5px;
     position: absolute;
-    .backgroundImage("text_color_bg_1.png");
+    .backgroundImage('text_color_bg_1.png');
     background-repeat: no-repeat;
     background-size: 260px 226px;
 }
-
 
 .entryPlaygroundLinebreakWrapper {
     position: fixed;
@@ -824,7 +1361,7 @@
 
 .entryPlaygroundLinebreakButtons {
     display: inline;
-    font-size:0;
+    font-size: 0;
     img {
         cursor: pointer;
     }
@@ -849,18 +1386,260 @@
     ul {
         padding-left: 20px;
         li {
-            color: #B4B4B5;
+            color: #b4b4b5;
             font-size: 11px;
         }
     }
 }
 
-
 .tablet {
     .entryPlaygroundResizeWorkspace {
-        .backgroundImage("entry_scroll_02_big_2.png");
+        .backgroundImage('entry_scroll_02_big_2.png');
         width: 15px;
         height: 42px;
         border-top: none;
+    }
+}
+
+.entrySceneListWorkspace {
+    .rcs-inner-container {
+        > div > div > div {
+            display: table;
+            table-layout: fixed;
+            .sortableItem {
+                display: table-cell;
+                vertical-align: top;
+                width: 76px;
+            }
+        }
+    }
+}
+
+.sortable {
+    height: 100%;
+
+    .rcs-custom-scrollbar {
+        width: 8px;
+        right: 4px;
+        opacity: 0.8;
+    }
+
+    .rcs-inner-handle {
+        background-color: #aac5d5 !important;
+        border-radius: 2.5px !important;
+        opacity: 0.8;
+    }
+}
+
+.entryPlaygroundTableWorkspace {
+    overflow: hidden;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 8px;
+    background-color: #f9f9f9;
+    border-radius: 0 0 0 6px;
+    top: 80px;
+    margin-left: 0;
+}
+
+.entryPlaygroundTableEdit {
+    position: absolute;
+    left: 253px;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    overflow: hidden;
+    border-left: 1px solid #e2e2e2;
+    background-color: #f2f2f2;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+
+    .entryPlaygroundTableEditWrapper {
+        text-align: center;
+    }
+
+    .entryPlaygroundTableEditImage {
+        .backgroundImage('sound_edit.gif');
+        width: 160px;
+        height: 160px;
+        -o-object-fit: contain;
+        object-fit: contain;
+        margin: 0 auto 24px;
+        background-size: 160px auto;
+    }
+
+    .entryPlaygroundTableEditText {
+        margin: 0 auto;
+        font-size: 14px;
+        font-weight: bold;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: normal;
+        letter-spacing: -0.3px;
+        text-align: center;
+        color: #555555;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}
+
+.entryPlaygroundAddTable {
+    width: 254px;
+    padding: 8px 0;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+}
+
+.entryPlaygroundAddTablePhone {
+    position: relative;
+    height: 50px;
+    cursor: pointer;
+    border-bottom: 1pt solid #ebeff1;
+}
+
+.entryPlaygroundAddTableInner {
+    display: block;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
+}
+
+.entryPlaygroundAddTableInnerPhone {
+    display: block;
+    height: 40px;
+    background-color: #cdcfc9;
+    color: #656565;
+    text-align: center;
+    font-size: 10.5pt;
+    line-height: 36px;
+    margin: 10px;
+    border: 2px dashed #737373;
+    width: 220px;
+}
+
+.entryPlaygroundTableList {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    width: 254px;
+    top: 57px;
+    bottom: 0;
+    overflow-y: hidden;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+}
+
+.entryPlaygroundTableListPhone {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 254px;
+    top: 57px;
+    bottom: 0px;
+    overflow: hidden;
+    overflow-y: auto;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableList {
+    position: absolute;
+    padding: 0px;
+    margin: 0px;
+    width: 254px;
+    top: 56px;
+    bottom: 0px;
+    overflow-y: hidden;
+    list-style: none;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
+    border-radius: 0 0 0 6px;
+}
+
+.entryPlaygroundTableElement {
+    display: block;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 36px;
+    height: 48px;
+    color: #2c313d;
+    cursor: pointer;
+
+    &.entryTableSelected {
+        background-color: #fff;
+    }
+
+    .entryPlaygroundTableThumbnail {
+        position: absolute;
+        height: 22px;
+        width: 22px;
+        top: 13px;
+        left: 8px;
+        .backgroundImage('workspace_table_icon.svg');
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+    }
+
+    .entryPlaygroundTableName {
+        width: 100%;
+        height: 24px;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin-top: 12px;
+        padding: 0 4px;
+        background-color: #fff;
+        outline: 0;
+        font-size: 12px;
+        text-overflow: ellipsis;
+        color: #2c313d;
+        font-weight: 600;
+        cursor: text;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+    }
+    .entryPlaygroundTableName:focus,
+    .entryPlaygroundTableName:active {
+        border-color: #4f80ff;
+    }
+
+    .entryPlaygroundTableRemove {
+        position: absolute;
+        right: 26px;
+        top: 12px;
+        width: 24px;
+        height: 24px;
+        border: 1px solid #e2e2e2;
+        border-radius: 4px;
+        background-color: #fff;
+        background-size: 10px;
+        font-size: 0;
+        cursor: pointer;
+        background-size: 10px auto;
+        background-position: 50% 50%;
+        background-repeat: no-repeat;
+        .backgroundImage('layers_icon_close_nor_new.png');
     }
 }

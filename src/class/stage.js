@@ -3,7 +3,13 @@
  * @fileoverview This manage canvas
  *
  */
+
 'use strict';
+
+import Extension from '../extensions/extension';
+import { GEHelper } from '../graphicEngine/GEHelper';
+import { GEHandle } from '../graphicEngine/GEHandle';
+import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 
 /**
  * class for a canvas
@@ -12,18 +18,21 @@
 Entry.Stage = function() {
     /** @type {Dictionary} */
     this.variables = {};
-    this.background = new createjs.Shape();
-    this.background.graphics
-        .beginFill('#ffffff')
-        .drawRect(-480, -240, 960, 480);
     this.objectContainers = [];
     this.selectedObjectContainer = null;
-    this.variableContainer = new createjs.Container();
-    this.dialogContainer = new createjs.Container();
+
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
     this._entitySelectable = true;
+
+    /** @type {PIXI.Application | CreateJsApplication} */
+    this._app = null;
+
+    this.background = GEHelper.newGraphic();
+    this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
+    this.variableContainer = GEHelper.newContainer('variableContainer');
+    this.dialogContainer = GEHelper.newContainer('dialogContainer');
 };
 
 /**
@@ -31,13 +40,12 @@ Entry.Stage = function() {
  * @param {!Element} canvas for stage
  */
 Entry.Stage.prototype.initStage = function(canvas) {
-    this.canvas = new createjs.Stage(canvas.id);
+    this._app = GEHelper.newApp(canvas);
+    this.canvas = this._app.stage;
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
     this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
-    createjs.Touch.enable(this.canvas);
-    this.canvas.enableMouseOver(10);
-    this.canvas.mouseMoveOutside = true;
+
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
     this.canvas.addChild(this.dialogContainer);
@@ -46,7 +54,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.initHandle();
     this.mouseCoordinate = { x: 0, y: 0 };
 
-    var _addEventListener = Entry.addEventListener.bind(Entry);
+    const _addEventListener = Entry.addEventListener.bind(Entry);
 
     if (Entry.isPhone()) {
         canvas.ontouchstart = function(e) {
@@ -58,7 +66,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
             Entry.dispatchEvent('canvasClickCanceled', e);
         };
     } else {
-        var downFunc = function(e) {
+        const downFunc = function(e) {
             Entry.dispatchEvent('canvasClick', e);
             Entry.stage.isClick = true;
         };
@@ -66,7 +74,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
         canvas.onmousedown = downFunc;
         canvas.ontouchstart = downFunc;
 
-        var upFunc = function(e) {
+        const upFunc = function(e) {
             Entry.stage.isClick = false;
             Entry.dispatchEvent('canvasClickCanceled', e);
         };
@@ -81,9 +89,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     _addEventListener('canvasClick', () => (Entry.stage.isObjectClick = false));
     _addEventListener('loadComplete', this.sortZorder.bind(this));
+
     Entry.windowResized.attach(this, this.updateBoundRect.bind(this));
 
-    var razyScroll = _.debounce(() => {
+    const razyScroll = _.debounce(() => {
         Entry.windowResized.notify();
     }, 200);
 
@@ -91,21 +100,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
         window.requestAnimationFrame(razyScroll);
     });
 
-    var moveFunc = function(e) {
+    const moveFunc = function(e) {
         e.preventDefault();
-        var { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
-        var roundRect = Entry.stage.getBoundRect();
-        var scrollPos = Entry.Utils.getScrollPos();
+        const { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
+        const roundRect = Entry.stage.getBoundRect();
+        const scrollPos = Entry.Utils.getScrollPos();
         this.mouseCoordinate = {
             x: Entry.Utils.toFixed(
-                ((pageX - roundRect.left - scrollPos.left) / roundRect.width -
-                    0.5) *
-                    480
+                ((pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480
             ),
             y: Entry.Utils.toFixed(
-                ((pageY - roundRect.top - scrollPos.top) / roundRect.height -
-                    0.5) *
-                    -270
+                ((pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270
             ),
         };
         Entry.dispatchEvent('stageMouseMove');
@@ -115,21 +120,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
     canvas.ontouchmove = moveFunc;
 
     canvas.onmouseout = () => Entry.dispatchEvent('stageMouseOut');
-    _addEventListener('updateObject', updateObjectFunc);
-    _addEventListener('run', () =>
-        Entry.removeEventListener('updateObject', updateObjectFunc)
-    );
-    _addEventListener('stop', () =>
-        _addEventListener('updateObject', updateObjectFunc)
-    );
-
-    var updateObjectFunc = () => {
-        if (Entry.engine.isState('stop')) Entry.stage.updateObject();
+    const updateObjectFunc = () => {
+        if (Entry.engine.isState('stop')) {
+            Entry.stage.updateObject();
+        }
     };
-
+    _addEventListener('updateObject', updateObjectFunc);
+    _addEventListener('run', () => Entry.removeEventListener('updateObject', updateObjectFunc));
+    _addEventListener('stop', () => _addEventListener('updateObject', updateObjectFunc));
     _addEventListener('canvasInputComplete', () => {
         try {
-            var inputValue = this.inputField.value();
+            const inputValue = this.inputField.value();
             this.hideInputField();
             if (inputValue) {
                 ((c) => {
@@ -142,39 +143,50 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     this.initWall();
     this.render();
+    this.dropper = Extension.getExtension('Dropper');
 };
 
 Entry.Stage.prototype.render = function stageRender() {
-    if (Entry.stage.timer) clearTimeout(Entry.stage.timer);
-    var time = _.now();
+    if (Entry.stage.timer) {
+        clearTimeout(Entry.stage.timer);
+    }
+    let time = _.now();
     Entry.stage.update();
     time = _.now() - time;
-    Entry.stage.timer = setTimeout(
-        stageRender,
-        16 - time % 16 + 16 * Math.floor(time / 16)
-    );
+    Entry.stage.timer = setTimeout(stageRender, 16 - (time % 16) + 16 * Math.floor(time / 16));
 };
 
 /**
  * redraw canvas
  */
 Entry.Stage.prototype.update = function() {
-    if (Entry.type === 'invisible') return;
+    if (Entry.type === 'invisible') {
+        return;
+    }
 
     if (!Entry.requestUpdate) {
         Entry.requestUpdate = false;
         return;
     }
-    this.canvas.update();
+    this._app.render();
 
     if (Entry.engine.isState('stop') && this.objectUpdated) {
         this.objectUpdated = false;
     }
 
-    var inputField = this.inputField;
-    if (inputField && !inputField._isHidden) inputField.render();
-    if (Entry.requestUpdateTwice) Entry.requestUpdateTwice = false;
-    else Entry.requestUpdate = false;
+    const inputField = this.inputField;
+    if (inputField && !inputField._isHidden) {
+        inputField.render();
+    }
+    if (Entry.requestUpdateTwice) {
+        Entry.requestUpdateTwice = false;
+    } else {
+        Entry.requestUpdate = false;
+    }
+};
+
+Entry.Stage.prototype.updateForce = function() {
+    this._app && this._app.render();
 };
 
 /**
@@ -192,9 +204,12 @@ Entry.Stage.prototype.loadObject = function({ entity: { object }, scene }) {
  * @param {Entry.EntityObject} entity
  */
 Entry.Stage.prototype.loadEntity = function({ parent, object }, index) {
-    var objContainer = Entry.stage.getObjectContainerByScene(parent.scene);
-    if (index > -1) objContainer.addChildAt(object, index);
-    else objContainer.addChild(object);
+    const objContainer = Entry.stage.getObjectContainerByScene(parent.scene);
+    if (index > -1) {
+        objContainer.addChildAt(object, index);
+    } else {
+        objContainer.addChild(object);
+    }
     Entry.requestUpdate = true;
 };
 
@@ -243,16 +258,16 @@ Entry.Stage.prototype.unloadDialog = function({ object }) {
 };
 
 Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
-    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    var currentIndex = selectedObjectContainer.getChildIndex(object);
-
-    if (currentIndex === index) {
+    if (index === -1) {
         return;
-    } else if (currentIndex > index) {
-        selectedObjectContainer.setChildIndex(object, index);
-    } else {
-        selectedObjectContainer.setChildIndex(object, index);
     }
+    const selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    const currentIndex = selectedObjectContainer.getChildIndex(object);
+
+    if (currentIndex === -1 || currentIndex === index) {
+        return;
+    }
+    selectedObjectContainer.setChildIndex(object, index);
     Entry.requestUpdate = true;
 };
 
@@ -260,16 +275,20 @@ Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
  * sort Z index of objects
  */
 Entry.Stage.prototype.sortZorder = function() {
-    var objects = Entry.container.getCurrentObjects().slice(),
-        length = objects.length,
-        container = this.selectedObjectContainer,
-        index = 0;
+    const objects = Entry.container.getCurrentObjects().slice();
+    const length = objects.length;
+    const container = this.selectedObjectContainer;
+    let index = 0;
 
-    for (var i = length - 1; i >= 0; i--) {
-        var {
+    for (let i = length - 1; i >= 0; i--) {
+        const {
             entity: { object },
         } = objects[i];
         container.setChildIndex(object, index++);
+    }
+
+    if (container) {
+        container.children.length = length;
     }
 
     Entry.requestUpdate = true;
@@ -286,29 +305,18 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    var coordinator = (this.coordinator = Object.assign(
-        new createjs.Container(),
-        {
-            mouseEnabled: false,
-            tickEnabled: false,
-            tickChildren: false,
-            visible: false,
-        }
-    ));
-    coordinator.addChild(
-        Object.assign(
-            new createjs.Bitmap(
-                Entry.mediaFilePath + 'workspace_coordinate.png'
-            ),
-            {
-                scaleX: 0.5,
-                scaleY: 0.5,
-                x: -240,
-                y: -135,
-            }
-        )
-    );
-    this.canvas.addChild(coordinator);
+    const tex = GEHelper.newSpriteWithCallback(`${Entry.mediaFilePath}workspace_coordinate.png`);
+    this.coordinator = Object.assign(tex, {
+        scaleX: 0.5,
+        scaleY: 0.5,
+        x: -240,
+        y: -135,
+        visible: false,
+    });
+    if (!GEHelper.isWebGL) {
+        this.coordinator.tickEnabled = false;
+    }
+    this.canvas.addChild(this.coordinator);
 };
 
 /**
@@ -325,8 +333,11 @@ Entry.Stage.prototype.toggleCoordinator = function() {
  */
 Entry.Stage.prototype.selectObject = function(object) {
     //todo
-    if (!object) this.selectedObject = null;
-    else this.selectedObject = object;
+    if (!object) {
+        this.selectedObject = null;
+    } else {
+        this.selectedObject = object;
+    }
     this.updateObject();
 };
 
@@ -334,7 +345,7 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new EaselHandle(this.canvas)
+    this.handle = new GEHandle(this.canvas)
         .setChangeListener(this, this.updateHandle)
         .setEditStartListener(this, this.startEdit)
         .setEditEndListener(this, this.endEdit);
@@ -345,20 +356,22 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
-    if (Entry.type === 'invisible') {
+    if (Entry.type === 'invisible' || Entry.type === 'playground') {
         return;
     }
     Entry.requestUpdate = true;
     this.handle.setDraggable(true);
-    if (this.editEntity) return;
-    var object = this.selectedObject;
+    if (this.editEntity) {
+        return;
+    }
+    const object = this.selectedObject;
     if (object) {
         if (object.objectType == 'textBox') {
             this.handle.toggleCenter(false);
         } else {
             this.handle.toggleCenter(true);
         }
-        var rotateMethod = object.getRotateMethod();
+        const rotateMethod = object.getRotateMethod();
         if (rotateMethod == 'free') {
             this.handle.toggleRotation(true);
             this.handle.toggleDirection(true);
@@ -379,27 +392,28 @@ Entry.Stage.prototype.updateObject = function() {
             this.handle.toggleResize(true);
         }
         this.handle.setVisible(true);
-        var entity = object.entity;
+        const entity = object.entity;
         this.handle.setWidth(entity.getScaleX() * entity.getWidth());
         this.handle.setHeight(entity.getScaleY() * entity.getHeight());
-        var regX, regY;
+        let regX;
+        let regY;
         if (entity.type == 'textBox') {
             // maybe 0.
             if (entity.getLineBreak()) {
                 regX = entity.regX * entity.scaleX;
                 regY = -entity.regY * entity.scaleY;
             } else {
-                var fontAlign = entity.getTextAlign();
+                const fontAlign = entity.getTextAlign();
                 regY = -entity.regY * entity.scaleY;
                 switch (fontAlign) {
                     case Entry.TEXT_ALIGN_LEFT:
-                        regX = -entity.getWidth() / 2 * entity.scaleX;
+                        regX = (-entity.getWidth() / 2) * entity.scaleX;
                         break;
                     case Entry.TEXT_ALIGN_CENTER:
                         regX = entity.regX * entity.scaleX;
                         break;
                     case Entry.TEXT_ALIGN_RIGHT:
-                        regX = entity.getWidth() / 2 * entity.scaleX;
+                        regX = (entity.getWidth() / 2) * entity.scaleX;
                         break;
                 }
             }
@@ -408,18 +422,10 @@ Entry.Stage.prototype.updateObject = function() {
             regY = (entity.height / 2 - entity.regY) * entity.scaleY;
         }
 
-        var rotation = entity.getRotation() / 180 * Math.PI;
+        const rotation = (entity.getRotation() / 180) * Math.PI;
 
-        this.handle.setX(
-            entity.getX() -
-                regX * Math.cos(rotation) -
-                regY * Math.sin(rotation)
-        );
-        this.handle.setY(
-            -entity.getY() -
-                regX * Math.sin(rotation) +
-                regY * Math.cos(rotation)
-        );
+        this.handle.setX(entity.getX() - regX * Math.cos(rotation) - regY * Math.sin(rotation));
+        this.handle.setY(-entity.getY() - regX * Math.sin(rotation) + regY * Math.cos(rotation));
         this.handle.setRegX((entity.regX - entity.width / 2) * entity.scaleX);
         this.handle.setRegY((entity.regY - entity.height / 2) * entity.scaleY);
         this.handle.setRotation(entity.getRotation());
@@ -439,23 +445,26 @@ Entry.Stage.prototype.updateObject = function() {
 // handle -> object
 Entry.Stage.prototype.updateHandle = function() {
     this.editEntity = true;
-    var handle = this.handle;
-    var entity = this.selectedObject.entity;
+    const handle = this.handle;
+    const entity = this.selectedObject.entity;
     if (entity.lineBreak) {
         entity.setHeight(handle.height / entity.getScaleY());
         entity.setWidth(handle.width / entity.getScaleX());
     } else {
         if (entity.width !== 0) {
-            var scaleX = Math.abs(handle.width / entity.width);
-            if (entity.flip) scaleX *= -1;
+            let scaleX = Math.abs(handle.width / entity.width);
+            if (entity.flip) {
+                scaleX *= -1;
+            }
 
             entity.setScaleX(scaleX);
         }
 
-        if (entity.height !== 0)
+        if (entity.height !== 0) {
             entity.setScaleY(handle.height / entity.height);
+        }
     }
-    var direction = handle.rotation / 180 * Math.PI;
+    const direction = (handle.rotation / 180) * Math.PI;
     if (entity.type == 'textBox') {
         entity.syncFont();
         var newRegX = handle.regX / entity.scaleX;
@@ -467,40 +476,28 @@ Entry.Stage.prototype.updateHandle = function() {
         } else {
             switch (entity.getTextAlign()) {
                 case Entry.TEXT_ALIGN_LEFT:
-                    entity.setX(
-                        handle.x - handle.width / 2 * Math.cos(direction)
-                    );
-                    entity.setY(
-                        -handle.y + handle.width / 2 * Math.sin(direction)
-                    );
+                    entity.setX(handle.x - (handle.width / 2) * Math.cos(direction));
+                    entity.setY(-handle.y + (handle.width / 2) * Math.sin(direction));
                     break;
                 case Entry.TEXT_ALIGN_CENTER:
                     entity.setX(handle.x);
                     entity.setY(-handle.y);
                     break;
                 case Entry.TEXT_ALIGN_RIGHT:
-                    entity.setX(
-                        handle.x + handle.width / 2 * Math.cos(direction)
-                    );
-                    entity.setY(
-                        -handle.y - handle.width / 2 * Math.sin(direction)
-                    );
+                    entity.setX(handle.x + (handle.width / 2) * Math.cos(direction));
+                    entity.setY(-handle.y - (handle.width / 2) * Math.sin(direction));
                     break;
             }
         }
     } else {
         var newRegX = entity.width / 2 + handle.regX / entity.scaleX;
         entity.setX(
-            handle.x +
-                handle.regX * Math.cos(direction) -
-                handle.regY * Math.sin(direction)
+            handle.x + handle.regX * Math.cos(direction) - handle.regY * Math.sin(direction)
         );
         entity.setRegX(newRegX);
         var newRegY = entity.height / 2 + handle.regY / entity.scaleY;
         entity.setY(
-            -handle.y -
-                handle.regX * Math.sin(direction) -
-                handle.regY * Math.cos(direction)
+            -handle.y - handle.regX * Math.sin(direction) - handle.regY * Math.cos(direction)
         );
         entity.setRegY(newRegY);
     }
@@ -510,48 +507,33 @@ Entry.Stage.prototype.updateHandle = function() {
 };
 
 Entry.Stage.prototype.startEdit = function() {
-    var { entity } = this.selectedObject || {};
+    const { entity } = this.selectedObject || {};
     _.result(entity, 'initCommand');
 };
 
 Entry.Stage.prototype.endEdit = function() {
-    var { entity } = this.selectedObject || {};
+    const { entity } = this.selectedObject || {};
     _.result(entity, 'checkCommand');
 };
 
 Entry.Stage.prototype.initWall = function() {
-    var wall = new createjs.Container();
+    const wall = GEHelper.newContainer('wall');
     wall.mouseEnabled = false;
-    var bound = new Image();
-    bound.src = Entry.mediaFilePath + 'media/bound.png';
+    const tex = GEHelper.newWallTexture(`${Entry.mediaFilePath}media/bound.png`);
+    const newSide = (x, y, sx, sy) => {
+        const sp = GEHelper.newWallSprite(tex);
+        sp.x = x;
+        sp.y = y;
+        sx ? (sp.scaleX = sx) : 0;
+        sy ? (sp.scaleY = sy) : 0;
+        wall.addChild(sp);
+        return sp;
+    };
 
-    wall.up = new createjs.Bitmap();
-    wall.up.scaleX = 480 / 30;
-    wall.up.y = -135 - 30;
-    wall.up.x = -240;
-    wall.up.image = bound;
-    wall.addChild(wall.up);
-
-    wall.down = new createjs.Bitmap();
-    wall.down.scaleX = 480 / 30;
-    wall.down.y = 135;
-    wall.down.x = -240;
-    wall.down.image = bound;
-    wall.addChild(wall.down);
-
-    wall.right = new createjs.Bitmap();
-    wall.right.scaleY = 270 / 30;
-    wall.right.y = -135;
-    wall.right.x = 240;
-    wall.right.image = bound;
-    wall.addChild(wall.right);
-
-    wall.left = new createjs.Bitmap();
-    wall.left.scaleY = 270 / 30;
-    wall.left.y = -135;
-    wall.left.x = -240 - 30;
-    wall.left.image = bound;
-    wall.addChild(wall.left);
+    wall.up = newSide(-240, -135 - 30, 480 / 30, 0);
+    wall.down = newSide(-240, 135, 480 / 30, 0);
+    wall.right = newSide(240, -135, 0, 270 / 30);
+    wall.left = newSide(-240 - 30, -135, 0, 270 / 30);
 
     this.canvas.addChild(wall);
     this.wall = wall;
@@ -561,75 +543,100 @@ Entry.Stage.prototype.initWall = function() {
  * show inputfield from the canvas
  */
 Entry.Stage.prototype.showInputField = function() {
+    const THIS = this;
+    const isWebGL = GEHelper.isWebGL;
+
     if (!this.inputField) {
-        var scale = 1 / 1.5;
-        this.inputField = new CanvasInput({
+        this.inputField = _createInputField();
+        this.inputSubmitButton = _createSubmitButton();
+    }
+
+    this.inputField.value('');
+    if (isWebGL) {
+        this.canvas.addChild(this.inputField.getPixiView());
+    }
+    this.inputField.show();
+    this.canvas.addChild(this.inputSubmitButton);
+
+    Entry.requestUpdateTwice = true;
+
+    function _createInputField() {
+        const posX = 15;
+        const posY = 275;
+        const isWebGL = GEHelper.isWebGL;
+        const classRef = isWebGL ? window.PIXICanvasInput : CanvasInput;
+        const inputField = new classRef({
             canvas: document.getElementById('entryCanvas'),
-            fontSize: 30 * scale,
-            fontFamily: 'NanumGothic',
-            fontColor: '#212121',
-            width: Math.round(556 * scale),
-            height: 26 * scale,
-            padding: 8 * scale,
-            borderWidth: 1 * scale,
-            borderColor: '#000',
-            borderRadius: 3,
+            fontSize: 20,
+            fontFamily: EntryStatic.fontFamily || 'NanumGothic',
+            fontColor: '#2c313d',
+            width: 520,
+            height: 24,
+            padding: 13,
+            borderWidth: 2,
+            borderColor: '#e2e2e2',
+            borderRadius: 10,
             boxShadow: 'none',
-            innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-            x: 202 * scale,
-            y: 450 * scale,
+            innerShadow: 'none',
+            x: posX,
+            y: posY,
             readonly: false,
             topPosition: true,
-            onsubmit: function() {
+            onsubmit() {
                 Entry.dispatchEvent('canvasInputComplete');
             },
         });
-    }
 
-    var inputSubmitButton = new createjs.Container();
-    var buttonImg = new Image();
-    var button = new createjs.Bitmap();
-    buttonImg.onload = function() {
-        button.image = this;
-        Entry.requestUpdate = true;
-    };
-    buttonImg.src = Entry.mediaFilePath + 'confirm_button.png';
-    button.scaleX = 0.23;
-    button.scaleY = 0.23;
-    button.x = 160;
-    button.y = 89;
-    button.cursor = 'pointer';
-    button.image = buttonImg;
-    inputSubmitButton.addChild(button);
-
-    inputSubmitButton.on('mousedown', () => {
-        if(this.inputField._readonly == false) {
-            Entry.dispatchEvent('canvasInputComplete');
+        if (isWebGL) {
+            const canvas = THIS.canvas;
+            const globalScale = canvas.scale.x;
+            const textView = inputField.getPixiView();
+            textView.scale.set(1 / globalScale);
+            textView.position.set(
+                posX / globalScale - canvas.x / globalScale,
+                posY / globalScale - canvas.y / globalScale
+            );
         }
-    });
+        return inputField;
+    } //_createInputField
 
-    if (!this.inputSubmitButton) {
-        this.inputField.value('');
-        this.canvas.addChild(inputSubmitButton);
-        this.inputSubmitButton = inputSubmitButton;
-    }
+    function _createSubmitButton() {
+        const { confirm_button } = EntryStatic.images || {};
+        const path = confirm_button || `${Entry.mediaFilePath}stage/submit.svg`;
+        const inputSubmitButton = GEHelper.newSpriteWithCallback(path, () => {
+            Entry.requestUpdate = true;
+        });
+        inputSubmitButton.mouseEnabled = true;
+        inputSubmitButton.x = 190;
+        inputSubmitButton.y = 71.5;
+        inputSubmitButton.cursor = 'pointer';
 
-    this.inputField.show();
-    Entry.requestUpdateTwice = true;
+        const eventType = isWebGL ? 'pointerdown' : 'mousedown';
+        inputSubmitButton.on(eventType, () => {
+            if (!THIS.inputField._readonly) {
+                Entry.dispatchEvent('canvasInputComplete');
+            }
+        });
+        return inputSubmitButton;
+    } //_createSubmitButton
 };
 
 /**
  * remove inputfield from the canvas
  */
 Entry.Stage.prototype.hideInputField = function() {
-    if (this.inputField && this.inputField.value()) this.inputField.value('');
-
-    if (this.inputSubmitButton) {
-        this.canvas.removeChild(this.inputSubmitButton);
-        this.inputSubmitButton = null;
+    if (!this.inputField) {
+        return;
     }
 
-    if (this.inputField) this.inputField.hide();
+    if (GEHelper.isWebGL) {
+        this.canvas.removeChild(this.inputField.getPixiView());
+    }
+    this.inputField.value('');
+    this.inputField.hide();
+
+    this.canvas.removeChild(this.inputSubmitButton);
+
     Entry.requestUpdate = true;
 };
 
@@ -637,19 +644,20 @@ Entry.Stage.prototype.hideInputField = function() {
  * init object containers
  */
 Entry.Stage.prototype.initObjectContainers = function() {
-    var scenes = Entry.scene.scenes_;
+    const scenes = Entry.scene.scenes_;
     if (!_.isEmpty(scenes)) {
-        for (var i = 0; i < scenes.length; i++) {
+        for (let i = 0; i < scenes.length; i++) {
             this.objectContainers[i] = this.createObjectContainer(scenes[i]);
         }
         this.selectedObjectContainer = this.objectContainers[0];
     } else {
-        var obj = this.createObjectContainer(Entry.scene.selectedScene);
+        const obj = this.createObjectContainer(Entry.scene.selectedScene);
         this.objectContainers.push(obj);
         this.selectedObjectContainer = obj;
     }
-    if (Entry.type !== 'invisible')
+    if (Entry.type !== 'invisible' && Entry.type !== 'playground') {
         this.canvas.addChild(this.selectedObjectContainer);
+    }
     this.selectObjectContainer(Entry.scene.selectedScene);
 };
 
@@ -658,14 +666,14 @@ Entry.Stage.prototype.initObjectContainers = function() {
  * @param {Entry.Scene} scene
  */
 Entry.Stage.prototype.selectObjectContainer = function(scene) {
-    var containers = this.objectContainers;
-    var canvas = this.canvas;
+    const containers = this.objectContainers;
+    const canvas = this.canvas;
 
     if (_.isEmpty(canvas) || _.isEmpty(containers)) {
         return;
     }
-
-    var newContainer = this.getObjectContainerByScene(scene);
+    GEHelper.resManager.activateScene(scene && scene.id);
+    const newContainer = this.getObjectContainerByScene(scene);
 
     containers.forEach(canvas.removeChild.bind(canvas));
 
@@ -677,7 +685,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
  * init object containers
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
-    return Object.assign(new createjs.Container(), { scene });
+    return Object.assign(GEHelper.newContainer('[Stage] SceneContainer'), { scene });
 };
 
 /**
@@ -685,12 +693,13 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
  * @param {scene model} scene
  */
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
-    var containers = this.objectContainers;
-    var objContainer = this.getObjectContainerByScene(scene);
-    var canvas = this.canvas;
+    const containers = this.objectContainers;
+    const objContainer = this.getObjectContainerByScene(scene);
+    const canvas = this.canvas;
     if (canvas) {
         canvas.removeChild(objContainer);
     }
+    GEHelper.resManager.removeScene(scene.id);
     containers.splice(containers.indexOf(objContainer), 1);
 };
 
@@ -703,14 +712,14 @@ Entry.Stage.prototype.getObjectContainerByScene = function({ id }) {
 };
 
 Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
-    var selectedObject = this.selectedObject;
+    const selectedObject = this.selectedObject;
     if (!selectedObject || !Entry.stage.focused || selectedObject.getLock()) {
         return;
     }
 
-    var distance = shiftKey ? 1 : 5;
+    const distance = shiftKey ? 1 : 5;
 
-    var entity = selectedObject.entity;
+    const entity = selectedObject.entity;
     switch (keyCode) {
         case 38: //up
             entity.setY(entity.getY() + distance);
@@ -729,7 +738,9 @@ Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
 };
 
 Entry.Stage.prototype.getBoundRect = function(e) {
-    if (!this._boundRect) return this.updateBoundRect();
+    if (!this._boundRect) {
+        return this.updateBoundRect();
+    }
     return this._boundRect;
 };
 
@@ -738,8 +749,10 @@ Entry.Stage.prototype.updateBoundRect = function(e) {
 };
 
 Entry.Stage.prototype.getDom = function(query) {
-    var key = query.shift();
-    if (key === 'canvas') return this.canvas.canvas;
+    const key = query.shift();
+    if (key === 'canvas') {
+        return this.canvas.canvas;
+    }
 };
 
 Entry.Stage.prototype.setEntitySelectable = function(value) {
@@ -747,5 +760,23 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 };
 
 Entry.Stage.prototype.isEntitySelectable = function() {
-    return Entry.engine.isState('stop') && this._entitySelectable;
+    return Entry.engine.isState('stop') && this._entitySelectable && !this.dropper.isShow;
+};
+
+Entry.Stage.prototype.destroy = function() {
+    let destroyOption;
+    if (GEHelper.isWebGL) {
+        destroyOption = { children: true, texture: false, baseTexture: false };
+        this.objectContainers.forEach((c) => c.destroy(destroyOption));
+        //this.handle.destroy(); // 추상화 아직 안됨.
+        PIXIAtlasManager.clearProject();
+    } else {
+        //do nothing
+    }
+    if (this._app) {
+        this._app.destroy(destroyOption);
+        this._app = null;
+    }
+    this.handle = null;
+    this.objectContainers = null;
 };

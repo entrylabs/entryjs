@@ -18,7 +18,9 @@ Entry.FieldStatement = function(content, blockView, index) {
     this.acceptType = content.accept;
 
     this.svgGroup = null;
+    this.commentGroup = null;
     this.statementSvgGroup = null;
+    this.statementCommentGroup = null;
     this._thread = null;
 
     this._position = content.position;
@@ -46,25 +48,30 @@ Entry.FieldStatement = function(content, blockView, index) {
         this.svgGroup = this._blockView.statementSvgGroup.elem('g');
         this.statementSvgGroup = this.svgGroup.elem('g');
         this._nextGroup = this.statementSvgGroup;
+        if (this._blockView.statementCommentGroup) {
+            this.commentGroup = this._blockView.statementCommentGroup.elem('g');
+            this.statementCommentGroup = this.commentGroup.elem('g');
+            this._nextCommentGroup = this.statementCommentGroup;
+        }
         this._initThread(board);
         this._board = board;
     };
 
     p._initThread = function(board) {
-        var thread = this.getValue();
+        const thread = this.getValue();
         this._thread = thread;
         thread.createView(board);
         thread.view.setParent(this);
-        var firstBlock = thread.getFirstBlock();
+        const firstBlock = thread.getFirstBlock();
         if (firstBlock) {
-            firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
+            firstBlock.view._toLocalCoordinate(this);
             this.firstBlock = firstBlock;
         }
 
-        var event = thread.changeEvent;
+        const event = thread.changeEvent;
 
-        var calcEvent = event.attach(this, this.calcHeight);
-        var checkTopEvent = event.attach(this, this.checkTopBlock);
+        const calcEvent = event.attach(this, this.calcHeight);
+        const checkTopEvent = event.attach(this, this.checkTopBlock);
 
         this._events.push(calcEvent);
         this._events.push(checkTopEvent);
@@ -74,34 +81,58 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
-        var svgGroup = this.svgGroup;
+        const svgGroup = this.svgGroup;
+        const commentGroup = this.commentGroup;
         if (this._position) {
-            if (this._position.x) x = this._position.x;
-            if (this._position.y) y = this._position.y;
+            if (this._position.x) {
+                x = this._position.x;
+            }
+            if (this._position.y) {
+                y = this._position.y;
+            }
         }
 
-        var transform = 'translate(' + x + ',' + y + ')';
+        const transform = `translate(${x},${y})`;
 
-        if (this.x !== x || this.y !== y) this.set({ x: x, y: y });
+        if (this.x !== x || this.y !== y) {
+            this.set({ x, y });
+        }
 
-        if (animate)
+        if (animate) {
             svgGroup.animate(
                 {
-                    transform: transform,
+                    transform,
                 },
                 300,
                 mina.easeinout
             );
-        else
+            if (commentGroup) {
+                commentGroup.animate(
+                    {
+                        transform,
+                    },
+                    300,
+                    mina.easeinout
+                );
+            }
+        } else {
             svgGroup.attr({
-                transform: transform,
+                transform,
             });
+            if (commentGroup) {
+                commentGroup.attr({
+                    transform,
+                });
+            }
+        }
     };
 
     p.calcHeight = function() {
-        var height = this._thread.view.requestPartHeight(null);
-        if (this.height === height) return;
-        this.set({ height: height });
+        const height = this._thread.view.requestPartHeight(null);
+        if (this.height === height) {
+            return;
+        }
+        this.set({ height });
     };
 
     p.getValue = function() {
@@ -109,9 +140,10 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.requestAbsoluteCoordinate = function() {
-        var pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this.x;
-        pos.y += this.y;
+        const { scale = 1 } = this._board || {};
+        const pos = this._blockView.getAbsoluteCoordinate();
+        pos.x += this.x * scale;
+        pos.y += this.y * scale;
         return pos;
     };
 
@@ -120,24 +152,27 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.destroy = function() {
-        while (this._events.length) this._events.pop().destroy();
+        while (this._events.length) {
+            this._events.pop().destroy();
+        }
     };
 
     p._updateBG = function() {
-        var dragBlock = this._board.dragBlock;
-        if (!dragBlock || !dragBlock.dragInstance) return;
+        const dragBlock = this._board.dragBlock;
+        if (!dragBlock || !dragBlock.dragInstance) {
+            return;
+        }
 
-        var blockView = this;
-        var magneting = blockView.magneting;
-        var block = blockView.block;
-        var svgGroup = blockView.svgGroup;
+        const blockView = this;
+        const magneting = blockView.magneting;
+        const { scale = 1 } = this._board || {};
 
         if (magneting) {
-            var shadow = dragBlock.getShadow();
-            var pos = this.requestAbsoluteCoordinate();
-            var transform = 'translate(' + pos.x + ',' + pos.y + ')';
+            const shadow = dragBlock.getShadow();
+            const pos = this.requestAbsoluteCoordinate();
+            const transform = `translate(${pos.x / scale}, ${pos.y / scale})`;
             $(shadow).attr({
-                transform: transform,
+                transform,
                 display: 'block',
             });
             this._clonedShadow = shadow;
@@ -148,10 +183,13 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = dragBlock.getBelowHeight();
+            const height = dragBlock.getBelowHeight();
 
             this.statementSvgGroup.attr({
-                transform: 'translate(0,' + height + ')',
+                transform: `translate(0,${height})`,
+            });
+            this.statementCommentGroup.attr({
+                transform: `translate(0,${height})`,
             });
 
             this.set({ height: this.height + height });
@@ -161,7 +199,7 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete this._clonedShadow;
             }
 
-            var height = blockView.originalHeight;
+            const height = blockView.originalHeight;
             if (height !== undefined) {
                 if (blockView.background) {
                     blockView.background.remove();
@@ -174,18 +212,27 @@ Entry.FieldStatement = function(content, blockView, index) {
             this.statementSvgGroup.attr({
                 transform: 'translate(0,0)',
             });
+            this.statementCommentGroup.attr({
+                transform: 'translate(0,0)',
+            });
             this.calcHeight();
         }
-        var changeEvent = blockView.block.thread.changeEvent;
-        if (changeEvent) changeEvent.notify();
+        const changeEvent = blockView.block.thread.changeEvent;
+        if (changeEvent) {
+            changeEvent.notify();
+        }
     };
 
     p.insertTopBlock = function(newBlock) {
-        if (this._posObserver) this._posObserver.destroy();
+        if (this._posObserver) {
+            this._posObserver.destroy();
+        }
 
-        var block = this.firstBlock;
+        const block = this.firstBlock;
         this.firstBlock = newBlock;
-        if (newBlock) newBlock.doInsert(this._thread);
+        if (newBlock) {
+            newBlock.doInsert(this._thread);
+        }
         return block;
     };
 
@@ -194,7 +241,7 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.checkTopBlock = function() {
-        var firstBlock = this._thread.getFirstBlock();
+        const firstBlock = this._thread.getFirstBlock();
         if (firstBlock && this.firstBlock !== firstBlock) {
             this.firstBlock = firstBlock;
             firstBlock.view.bindPrev(this);

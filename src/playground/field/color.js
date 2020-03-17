@@ -2,50 +2,51 @@
  */
 'use strict';
 
+import { ColorPicker } from '@entrylabs/tool';
+import Extension from '../../extensions/extension';
+
 /*
  *
  */
-Entry.FieldColor = function(content, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
+Entry.FieldColor = class FieldColor extends Entry.Field {
+    constructor(content, blockView, index) {
+        super(content, blockView, index);
+        this._block = blockView.block;
+        this._blockView = blockView;
+        const board = blockView.getBoard();
+        this.box = new Entry.BoxModel();
+        this.svgGroup = null;
+        this._contents = content;
+        this._index = index;
+        this._position = content.position;
+        this._fontSize = content.fontSize || blockView.getSkeleton().fontSize || 10;
+        this._color =
+            content.color ||
+            this._block.getSchema().fontColor ||
+            blockView.getSkeleton().color ||
+            'black';
+        this.key = content.key;
+        this.setValue(this.getValue() || '#FF0000');
+        this._CONTENT_HEIGHT = this.getContentHeight();
+        this._CONTENT_WIDTH = this.getContentWidth();
 
-    this.box = new Entry.BoxModel();
+        this.renderStart();
+        this.dropper = Extension.getExtension('Dropper');
+    }
 
-    this.svgGroup = null;
-
-    this._contents = content;
-    this._index = index;
-    this._position = content.position;
-    this._fontSize = content.fontSize || blockView.getSkeleton().fontSize || 12;
-    this._color =
-        content.color ||
-        this._block.getSchema().fontColor ||
-        blockView.getSkeleton().color ||
-        'black';
-    this.key = content.key;
-    this.setValue(this.getValue() || '#FF0000');
-    this._CONTENT_HEIGHT = this.getContentHeight();
-    this._CONTENT_WIDTH = this.getContentWidth();
-
-    this.renderStart();
-};
-
-Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
-
-(function(p) {
-    p.renderStart = function() {
+    renderStart() {
         if (this.svgGroup) {
             $(this.svgGroup).remove();
         }
-        var { contentSvgGroup, renderMode } = this._blockView;
+        const { contentSvgGroup, renderMode } = this._blockView;
         this.svgGroup = contentSvgGroup.elem('g', {
             class: 'entry-field-color',
         });
 
-        var x, y, WIDTH, HEIGHT;
+        let x, y, WIDTH, HEIGHT;
 
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
-            var rect = this.svgGroup.elem('rect', {
+            const rect = this.svgGroup.elem('rect', {
                 x: 0,
                 rx: 3,
                 ry: 3,
@@ -55,17 +56,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
             this.textElement = this.svgGroup.elem('text').attr({
                 style: 'white-space: pre;',
-                'font-size': this._fontSize + 'px',
-                'font-family': 'nanumBarunRegular',
+                'font-size': `${this._fontSize}px`,
+                'font-family': EntryStatic.fontFamily || 'NanumGothic',
                 class: 'dragNone',
                 fill: this._color,
             });
 
-            this.textElement.textContent = this._convert(
-                this.getValue(),
-                this.getValue()
-            );
-            var bBox = this.textElement.getBoundingClientRect();
+            this.textElement.textContent = this._convert(this.getValue(), this.getValue());
+            const bBox = this.textElement.getBoundingClientRect();
             WIDTH = bBox.width + 12;
             HEIGHT = bBox.height;
             rect.attr({
@@ -80,7 +78,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         } else {
             HEIGHT = this._CONTENT_HEIGHT;
             WIDTH = this._CONTENT_WIDTH;
-            var position = this._position;
+            const position = this._position;
             if (position) {
                 x = position.x || 0;
                 y = position.y || 0;
@@ -90,11 +88,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             }
 
             this._header = this.svgGroup.elem('rect', {
-                x: x,
-                y: y,
-                width: WIDTH,
-                height: HEIGHT,
+                x,
+                y,
+                rx: 2,
+                ry: 2,
+                width: 20, //WIDTH,
+                height: 20, //HEIGHT,
                 fill: this.getValue(),
+                stroke: '#fff',
+                'stroke-width': '1',
             });
         }
 
@@ -106,64 +108,78 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             width: WIDTH,
             height: HEIGHT,
         });
-    };
+    }
 
-    p.renderOptions = function() {
-        var that = this;
+    _attachDisposeEvent(func) {
+        let action = func;
+        if (!action) {
+            action = (skipCommand) => {
+                // this.applyValue(this.colorPicker.getData('color'));
+                this.destroyOption(skipCommand);
+                this._selectBlockView();
+            };
+        }
+        this.disposeEvent = Entry.disposeEvent.attach(this, action);
+    }
 
-        this._attachDisposeEvent();
+    spoidClick = _.debounce(() => {
+        this.isRunSpoid = true;
+        this.colorPicker.data = {
+            activeSpoid: true,
+        };
+        const { canvas } = Entry.stage.canvas || {};
+        this.dropper
+            .show({
+                target: canvas,
+            })
+            .once('pick', (color) => {
+                const data = { activeSpoid: false };
+                if (color) {
+                    this.applyValue(color);
+                    data.color = color;
+                }
+                this.colorPicker.setData(data);
+                delete this.isRunSpoid;
+            });
+    });
 
-        this.optionGroup = Entry.Dom('table', {
-            class: 'entry-widget-color-table',
+    renderOptions() {
+        this.optionGroup = Entry.Dom('div', {
+            class: 'entry-color-picker',
             parent: $('body'),
         });
-
-        this.optionGroup.bind('mousedown touchstart', (e) =>
-            e.stopPropagation()
-        );
-
-        this.optionGroup.on('mouseup', 'td', function(e) {
-            that.applyValue(this.getAttribute('data-color-value'));
-            that.destroyOption();
-            that._selectBlockView();
-        });
-
-        var fragment = document.createDocumentFragment();
-        Entry.FieldColor.getWidgetColorList().forEach((row) => {
-            var tr = Entry.Dom('tr', {
-                class: 'entry-widget-color-row',
-            });
-
-            fragment.appendChild(tr[0]);
-
-            row.forEach((color) => {
-                Entry.Dom('td', {
-                    class: 'entry-widget-color-cell',
-                    parent: tr,
-                })
-                    .css({
-                        'background-color': color,
-                    })
-                    .attr({
-                        'data-color-value': color,
-                    });
-            });
-        });
-
-        this.optionGroup[0].appendChild(fragment);
-
-        var { x, y } = this.getAbsolutePosFromDocument();
-        y += this.box.height / 2 + 1;
-
-        this.optionGroup.css({
-            left: x,
-            top: y,
+        this.colorPicker = new ColorPicker({
+            data: {
+                eventTypes: ['mousedown', 'touchstart', 'wheel'],
+                color: this.getValue(),
+                canTransparent: false,
+                canSpoide: true,
+                positionDom: this.svgGroup,
+                // boundrayDom: this.boundrayDom,
+                onOutsideClick: (color) => {
+                    if (this.isRunSpoid) {
+                        return;
+                    }
+                    if (this.colorPicker) {
+                        this.colorPicker.hide();
+                        color && this.applyValue(color);
+                    }
+                    this._attachDisposeEvent();
+                },
+                onSpoidClick: this.spoidClick,
+            },
+            container: this.optionGroup[0],
+        }).on('change', (color) => {
+            if (color) {
+                this.colorPicker.setData({ color });
+                this.applyValue(color);
+            }
         });
 
         this.optionDomCreated();
-    };
+    }
 
-    p.applyValue = function(value) {
+    applyValue(value) {
         if (this.value == value) {
             return;
         }
@@ -176,104 +192,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             value = this.getValue();
             this.textElement.textContent = this._convert(value, value);
         }
-    };
+    }
 
-    p.getContentWidth = function() {
-        return Entry.isMobile() ? 20 : 14.5;
-    };
-})(Entry.FieldColor.prototype);
+    destroyOption() {
+        if (this.colorPicker) {
+            this.colorPicker.isShow && this.colorPicker.hide();
+            this.colorPicker.remove();
+            this.colorPicker = null;
+        }
+        if (this.optionGroup) {
+            this.optionGroup.remove();
+        }
+        super.destroyOption();
+    }
 
-Entry.FieldColor.getWidgetColorList = function() {
-    return [
-        [
-            '#FFFFFF',
-            '#CCCCCC',
-            '#C0C0C0',
-            '#999999',
-            '#666666',
-            '#333333',
-            '#000000',
-        ],
-        [
-            '#FFCCCC',
-            '#FF6666',
-            '#FF0000',
-            '#CC0000',
-            '#990000',
-            '#660000',
-            '#330000',
-        ],
-        [
-            '#FFCC99',
-            '#FF9966',
-            '#FF9900',
-            '#FF6600',
-            '#CC6600',
-            '#993300',
-            '#663300',
-        ],
-        [
-            '#FFFF99',
-            '#FFFF66',
-            '#FFCC66',
-            '#FFCC33',
-            '#CC9933',
-            '#996633',
-            '#663333',
-        ],
-        [
-            '#FFFFCC',
-            '#FFFF33',
-            '#FFFF00',
-            '#FFCC00',
-            '#999900',
-            '#666600',
-            '#333300',
-        ],
-        [
-            '#99FF99',
-            '#66FF99',
-            '#33FF33',
-            '#33CC00',
-            '#009900',
-            '#006600',
-            '#003300',
-        ],
-        [
-            '#99FFFF',
-            '#33FFFF',
-            '#66CCCC',
-            '#00CCCC',
-            '#339999',
-            '#336666',
-            '#003333',
-        ],
-        [
-            '#CCFFFF',
-            '#66FFFF',
-            '#33CCFF',
-            '#3366FF',
-            '#3333FF',
-            '#000099',
-            '#000066',
-        ],
-        [
-            '#CCCCFF',
-            '#9999FF',
-            '#6666CC',
-            '#6633FF',
-            '#6609CC',
-            '#333399',
-            '#330099',
-        ],
-        [
-            '#FFCCFF',
-            '#FF99FF',
-            '#CC66CC',
-            '#CC33CC',
-            '#993399',
-            '#663366',
-            '#330033',
-        ],
-    ];
+    getContentWidth() {
+        return 22;
+    }
 };

@@ -2,18 +2,20 @@ module.exports = {
     getBlocks() {
         return {
             wait_second: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -79,7 +81,8 @@ module.exports = {
                 },
             },
             repeat_basic: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -90,11 +93,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -156,7 +160,8 @@ module.exports = {
                 },
             },
             repeat_inf: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -166,8 +171,8 @@ module.exports = {
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                     {
                         type: 'Block',
@@ -216,7 +221,8 @@ module.exports = {
                 },
             },
             repeat_while_true: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -235,13 +241,14 @@ module.exports = {
                             [Lang.Blocks.FLOW_repeat_while_true_while, 'while'],
                         ],
                         value: 'until',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -296,14 +303,15 @@ module.exports = {
                 },
             },
             stop_repeat: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -319,7 +327,8 @@ module.exports = {
                 syntax: { js: [], py: ['break'] },
             },
             _if: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -333,8 +342,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -384,7 +393,8 @@ module.exports = {
                 },
             },
             if_else: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_double_loop',
                 statements: [
                     {
@@ -401,8 +411,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                     {
                         type: 'LineBreak',
@@ -471,7 +481,8 @@ module.exports = {
                 },
             },
             wait_until_true: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -481,8 +492,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -521,7 +532,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.wait_until(%1)'] },
             },
             stop_object: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -535,13 +547,14 @@ module.exports = {
                             [Lang.Blocks.FLOW_stop_object_other_objects, 'other_objects'],
                         ],
                         value: 'all',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -627,7 +640,7 @@ module.exports = {
                                     ],
                                     value: 'all',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                                     converter: Entry.block.converters.returnStringValue,
                                     codeMap: 'Entry.CodeMap.Entry.stop_object[0]',
                                 },
@@ -637,14 +650,15 @@ module.exports = {
                 },
             },
             restart_project: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -655,20 +669,22 @@ module.exports = {
                 class: 'terminate',
                 isNotFor: [],
                 func(sprite, script) {
-                    Entry.engine.toggleStop();
-                    Entry.engine.toggleRun();
+                    Entry.engine.toggleStop().then(() => {
+                        Entry.engine.toggleRun();
+                    });
                 },
                 syntax: { js: [], py: ['Entry.start_again()'] },
             },
             when_clone_start: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_clone.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_clone.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -697,7 +713,8 @@ module.exports = {
                 },
             },
             create_clone: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -705,13 +722,15 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'clone',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -750,7 +769,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'clone',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                                     converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.create_clone[0]',
                                 },
@@ -760,14 +779,15 @@ module.exports = {
                 },
             },
             delete_clone: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -787,14 +807,15 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.remove_this_clone()'] },
             },
             remove_all_clones: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
+                outerLine: EntryStatic.colorSet.block.darken.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/flow_03.png',
-                        size: 12,
+                        img: 'block_icon/flow_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},

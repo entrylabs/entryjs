@@ -5,39 +5,22 @@
 }
 
 .entryOverlayBoard {
-    background: rgba(180,180,180,0.6);
+    background: rgba(138, 163, 178, 0.7);
 }
 
 .boardScrollbar {
-    opacity: 0.4;
+    opacity: 1;
     cursor: move;
     -ms-touch-action: none;
+
+    .scrollbar {
+        transition: opacity 0.5s;
+        cursor: pointer;
+    }
 }
 
 .boardScrollbar:hover {
     opacity: 0.6;
-}
-
-.entry-widget-color-table {
-    border: 1px solid #666;
-    border-collapse: collapse;
-    z-index: 1001;
-    position: fixed;
-    .entry-widget-color-row {
-        border-bottom: 2px solid #666;
-    }
-
-    .entry-widget-color-cell {
-        height: 13px;
-        width: 15px;
-        margin: 0;
-        border: 0;
-        text-align: center;
-        vertical-align: middle;
-        border-right: 2px solid #666;
-        font-size: 1px;
-        cursor: pointer;
-    }
 }
 
 .entryBoardWrapper {
@@ -58,94 +41,128 @@
 }
 
 .entryFunctionButton {
-    stroke: #555;
-    stroke-width: 3;
-    fill: transparent;
-    cursor: pointer;
-}
-
-.entryFunctionButton:hover {
-    stroke: #000;
+    font-family: ng !important;
+    font-size: 13 !important;
+    text-anchor: middle;
+    fill: #ffffff;
+    cursor: pointer !important;
 }
 
 .entryFunctionButtonText {
     font-family: ng !important;
     font-size: 13 !important;
     text-anchor: middle;
-    fill: black;
+    fill: #4f80ff;
     cursor: pointer !important;
+}
+
+.entryFunctionButtonBorder {
+    font-family: ng !important;
+    font-size: 13 !important;
+    text-anchor: middle;
+    fill: #ffffff;
+    cursor: pointer !important;
+    stroke: #4f80ff;
+    stroke-width: 1;
 }
 
 .entryWorkspaceBoard {
     position: absolute;
-    left: 250px;
-    top: 8px;
-    bottom: 0px;
+    left: 254px;
+    top: 0;
+    bottom: 0;
     right: 0px;
+    border: 1px solid #d6e9f4;
+    border-width: 1px 0;
     overflow: hidden;
-    border: solid 1px #C4C4B9;
-    border-top-left-radius: 10px;
-    .backgroundImage("entry_bg.png");
+    .backgroundImage('entry_bg.svg');
 }
 
 .entryWorkspaceBoard.folding {
-    z-index: 300;
-    border-left: solid 1px #C4C4B9;
+    z-index: 252;
+    // border-left: solid 1px #c4c4b9;
     .animation-duration(0.7s);
     .animation-name(foldBoard);
     .animation-fill-mode(forwards);
 }
 
 @keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 61px;
+    }
 }
 
 @-ms-keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 61px;
+    }
 }
 
 @-moz-keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 61px;
+    }
 }
 
 @-webkit-keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 61px;
+    }
 }
 
 .entryWorkspaceBoard.foldOut {
-    z-index:300;
+    z-index: 300;
     .animation-duration(0.7s);
     .animation-name(foldOutBoard);
     .animation-fill-mode(forwards);
 }
 
 @keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 64px;
+    }
+    to {
+    }
 }
 
 @-o-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 61px;
+    }
+    to {
+    }
 }
 
 @-ms-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 61px;
+    }
+    to {
+    }
 }
 
 @-moz-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 61px;
+    }
+    to {
+    }
 }
 
 @-webkit-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 61px;
+    }
+    to {
+    }
 }
 
 #invisibleBoard {
