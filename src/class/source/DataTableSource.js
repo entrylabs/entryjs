@@ -1,6 +1,7 @@
 import { dmetTable } from '../../extensions/dmet';
 import CloudVariable from '../../extensions/CloudVariable';
 import _throttle from 'lodash/throttle';
+import _cloneDeep from 'lodash/cloneDeep';
 
 class DataTableSource {
     #id;
@@ -48,7 +49,7 @@ class DataTableSource {
                 const chart = this.#chart.map(({ xIndex, yIndex, categoryIndexes, ...infos }) => ({
                     xIndex: find(xIndex),
                     yIndex: find(yIndex),
-                    categoryIndexes: categoryIndexes.map((x) => find(x)).filter(x => x !== -1),
+                    categoryIndexes: categoryIndexes.map((x) => find(x)).filter((x) => x !== -1),
                     ...infos,
                 }));
                 this.modal.setData({
@@ -218,6 +219,15 @@ class DataTableSource {
             isCloud: this.#isCloud,
             cloudDate: this.#cloudDate,
         };
+    }
+
+    clone() {
+        return {
+            name: this.#name,
+            fields: [...this.fields],
+            data: _cloneDeep(this.#data.origin),
+            chart: [...this.#chart],
+        }
     }
 }
 

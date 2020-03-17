@@ -14,6 +14,7 @@ module.exports = {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
         filename: '[name].js',
+        jsonpFunction: 'entryJsonp',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],

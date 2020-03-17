@@ -5,6 +5,8 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
+// type을 위해서 import
+import * as posenet from '@tensorflow-models/posenet';
 import { clamp } from 'lodash';
 
 type FlipStatus = {
@@ -16,6 +18,7 @@ type ModelStatus = {
     pose: boolean;
     face: boolean;
     object: boolean;
+    warmup: boolean;
 };
 
 type MotionElement = {
@@ -42,14 +45,15 @@ type DetectedObject = {
 type IndicatorType = 'pose' | 'face' | 'object';
 
 class VideoUtils implements MediaUtilsInterface {
-    // canvasVideo SETTING, used in all canvas'
+    // 비디오 캔버스 크기에 쓰이는 공통 밸류
     public CANVAS_WIDTH: number = 480;
     public CANVAS_HEIGHT: number = 270;
-    // webcam input resolution setting
+
+    // 카메라 입력 해상도
     private _VIDEO_WIDTH: number = 640;
     private _VIDEO_HEIGHT: number = 360;
 
-    //MotionDetection Constants
+    // 움직임 감지에 쓰이는 상수
     private _SAMPLE_SIZE: number = 15;
     private _BOUNDARY_OFFSET: number = 4;
     private _SAME_COORDINATE_COMPENSATION: number = 10; // assumption weight that there is no movement within frame
@@ -62,28 +66,53 @@ class VideoUtils implements MediaUtilsInterface {
         horizontal: false,
         vertical: false,
     };
+
     public indicatorStatus: ModelStatus = {
         pose: false,
         face: false,
         object: false,
+        warmup: false,
     };
 
-    // detected parts
+    public modelLoadStatus: ModelStatus = {
+        pose: false,
+        face: false,
+        object: false,
+        warmup: false,
+    };
+
+    // 감지된 요소들
     public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
         Array(this.CANVAS_WIDTH / this._SAMPLE_SIZE)
     );
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
     public objects: DetectedObject[] = [];
     public poses: {
-        predictions: any[];
-        adjacents: any[];
+        predictions: posenet.Pose[];
+        adjacents: posenet.Keypoint[][][];
     };
-    public faces: any[] = [];
+    public faces: any = [];
+    /**
+     * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
+     */
+    // faceapi.WithFaceExpressions<
+    //     faceapi.WithAge<
+    //         faceapi.WithGender<
+    //             faceapi.WithFaceLandmarks<
+    //                 {
+    //                     detection: faceapi.FaceDetection;
+    //                 },
+    //                 faceapi.FaceLandmarks68
+    //             >
+    //         >
+    //     >
+    // >[]
 
+    // 로컬 스코프
     public isInitialized: boolean = false;
     public worker: Worker = new VideoWorker();
     private stream: MediaStream;
-    private imageCapture: any; // capturing class ImageCapture
+    private imageCapture: typeof ImageCapture;
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
@@ -95,7 +124,7 @@ class VideoUtils implements MediaUtilsInterface {
         await this.compatabilityChecker();
         this.isInitialized = true;
 
-        // this canvas is for motion calculation
+        // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
             this.inMemoryCanvas = document.createElement('canvas');
             this.inMemoryCanvas.width = this.CANVAS_WIDTH;
@@ -120,34 +149,48 @@ class VideoUtils implements MediaUtilsInterface {
                 },
             });
 
-            this.stream = stream;
+            this.worker.postMessage({
+                type: 'init',
+                width: this.CANVAS_WIDTH,
+                height: this.CANVAS_HEIGHT,
+            });
+            const [track] = stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+            this.sendImageToWorker();
             const video = document.createElement('video');
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
             video.height = this.CANVAS_HEIGHT;
+            video.onloadedmetadata = this.videoOnLoadHandler;
+
+            this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
-            video.onloadedmetadata = this.videoOnLoadHandler;
         } catch (err) {
             console.log(err);
             this.isInitialized = false;
         }
     }
+
     videoOnLoadHandler() {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
         this.turnOnWebcam();
-        const [track] = this.stream.getVideoTracks();
-        this.imageCapture = new ImageCapture(track);
+        Entry.dispatchEvent('showLoadingScreen');
 
-        this.worker.onmessage = (e: { data: { type: String; message: Array<any> | any } }) => {
+        this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
                 return;
             }
             switch (type) {
                 case 'init':
+                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                    if (message === 'warmup') {
+                        Entry.dispatchEvent('hideLoadingScreen');
+                    }
+                    this.modelLoadStatus[name] = true;
                     break;
                 case 'face':
                     this.faces = message;
@@ -160,13 +203,6 @@ class VideoUtils implements MediaUtilsInterface {
                     break;
             }
         };
-
-        this.worker.postMessage({
-            type: 'init',
-            width: this.CANVAS_WIDTH,
-            height: this.CANVAS_HEIGHT,
-        });
-        this.sendImageToWorker();
         this.motionDetect(null);
     }
     startDrawIndicators() {
@@ -180,7 +216,9 @@ class VideoUtils implements MediaUtilsInterface {
             GEHelper.drawHumanPoints(this.poses.predictions, this.flipStatus);
             GEHelper.drawHumanSkeletons(this.poses.adjacents, this.flipStatus);
         }
-        requestAnimationFrame(this.startDrawIndicators.bind(this));
+        setTimeout(() => {
+            requestAnimationFrame(this.startDrawIndicators.bind(this));
+        }, 50);
     }
     async sendImageToWorker() {
         const captured = await this.imageCapture.grabFrame();
@@ -197,9 +235,7 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        setTimeout(() => {
-            requestAnimationFrame(this.sendImageToWorker.bind(this));
-        }, 50);
+        requestAnimationFrame(this.sendImageToWorker.bind(this));
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
@@ -209,11 +245,12 @@ class VideoUtils implements MediaUtilsInterface {
         if (!this.inMemoryCanvas) {
             return;
         }
+        // 움직임 감지 기본 범위는 전체 캔버스 범위
         let minX = 0;
         let maxX = this.CANVAS_WIDTH;
         let minY = 0;
         let maxY = this.CANVAS_HEIGHT;
-
+        // 만약 오브젝트 위에 가해진 값이 필요하다면. 범위를 재 지정한다.
         if (sprite) {
             const { x, y, width, height, scaleX, scaleY } = sprite;
             minX = this.CANVAS_WIDTH / 2 + x - (width * scaleX) / 2;
@@ -236,11 +273,13 @@ class VideoUtils implements MediaUtilsInterface {
             maxY = Math.floor(maxY / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
         }
 
+        // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         const context = this.inMemoryCanvas.getContext('2d');
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         const data = imageData.data;
+
         let areaMotion = 0;
         let totalMotionDirectionX = 0;
         let totalMotionDirectionY = 0;
@@ -251,9 +290,15 @@ class VideoUtils implements MediaUtilsInterface {
                 const g = data[pos + 1];
                 const b = data[pos + 2];
                 // const a = data[pos + 3];
-                // diffScheme;
+
+                const xLength = this.motions[0].length;
+                const yLength = this.motions.length;
+
                 const yIndex = y / this._SAMPLE_SIZE;
                 const xIndex = x / this._SAMPLE_SIZE;
+                if (yIndex > yLength - 1 || xIndex > xLength - 1 || xIndex < 0 || yIndex < 0) {
+                    continue;
+                }
                 const currentPos = this.motions[yIndex][xIndex] || { r: 0, g: 0, b: 0 };
                 const rDiff = Math.abs(currentPos.r - r);
                 const gDiff = Math.abs(currentPos.g - g);
@@ -261,10 +306,12 @@ class VideoUtils implements MediaUtilsInterface {
                 const areaMotionScore =
                     rDiff + gDiff + bDiff / (this._SAMPLE_SIZE * this._SAMPLE_SIZE);
 
-                const xLength = this.motions[0].length;
-                const yLength = this.motions.length;
                 const mostSimilar = { x: 0, y: 0, diff: 99999999 };
 
+                /**
+                 * 주변 픽셀 검사로 방향 체크, 가장 값이 비슷한 픽셀 위치로 이동했다 가정
+                 * */
+                // clamp를 통해서 out of bounds 검사
                 const minScanY = clamp(yIndex - this._BOUNDARY_OFFSET, 0, yLength - 1);
                 const maxScanY = clamp(yIndex + this._BOUNDARY_OFFSET, 0, yLength - 1);
                 const minScanX = clamp(xIndex - this._BOUNDARY_OFFSET, 0, xLength - 1);
@@ -280,7 +327,7 @@ class VideoUtils implements MediaUtilsInterface {
                         const gDiffScope = Math.abs(valuesNearPos.g - g);
                         const bDiffScope = Math.abs(valuesNearPos.b - b);
                         let diff = rDiffScope + gDiffScope + bDiffScope;
-                        // compensation only if scope is looking for the same coordination in case of reducing noise when no movement has been detected.
+                        // 같은 포지션에 있는 픽셀에 대해서 이동하지 않았다는 전제로 가중치를 추가
                         if (yIndex === scopeY && xIndex === scopeX) {
                             diff = diff - this._SAME_COORDINATE_COMPENSATION;
                         }
@@ -292,13 +339,14 @@ class VideoUtils implements MediaUtilsInterface {
                     }
                 }
 
-                //reduce noise of small motions
+                // 이미지 픽셀값 노이즈로 인한 부분들은 수용하지 않는다.
                 if (mostSimilar.x > 1) {
                     totalMotionDirectionX += mostSimilar.x - xIndex;
                 }
                 if (mostSimilar.y > 1) {
                     totalMotionDirectionY += mostSimilar.y - yIndex;
                 }
+                // 전체 범위를 위한것일경우 저장, 아니면 스킵
                 if (sprite) {
                     continue;
                 }
@@ -313,6 +361,7 @@ class VideoUtils implements MediaUtilsInterface {
                 };
             }
         }
+        // 전체 범위인 경우 저장, 아니면 리턴
         const result = {
             total: areaMotion,
             direction: {
@@ -353,9 +402,6 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         switch (target) {
-            case 'brightness':
-                GEHelper.setVideoBrightness(this.canvasVideo, value);
-                break;
             case 'transparency':
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
@@ -393,6 +439,7 @@ class VideoUtils implements MediaUtilsInterface {
             pose: false,
             face: false,
             object: false,
+            warmup: null,
         };
         this.disableAllModels();
         GEHelper.resetHandlers();
@@ -406,7 +453,6 @@ class VideoUtils implements MediaUtilsInterface {
 
         GEHelper.resetCanvasBrightness(this.canvasVideo);
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
-        GEHelper.tickByEngine();
 
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
@@ -428,8 +474,9 @@ class VideoUtils implements MediaUtilsInterface {
             horizontal: false,
             vertical: false,
         };
-
-        this.poses = null;
+        this.objects = [];
+        this.poses = { predictions: [], adjacents: [] };
+        this.faces = [];
         this.isInitialized = false;
     }
     disableAllModels() {

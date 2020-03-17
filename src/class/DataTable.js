@@ -138,12 +138,13 @@ class DataTable {
             return;
         }
         const source = this.getSource(id);
+        const data = ((this.tempDataAnalytics && this.tempDataAnalytics.table) || table).slice(1);
         if (source) {
             source.modal = null;
             source.setArray({
+                data,
                 chart: charts,
                 fields: table[0],
-                data: table.slice(1),
                 name: title,
             });
             Entry.playground.injectTable();
@@ -210,6 +211,7 @@ class DataTable {
     }
 
     createChart(source) {
+        const { fields, rows, tab, chart } = source;
         const tables = this.#tables.map(({ id, name }) => [name, id]);
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
@@ -218,7 +220,7 @@ class DataTable {
         return new ModalChart({
             data: {
                 tables,
-                source,
+                source: { fields, origin: rows, tab, chart },
                 setTable: (selected) => {
                     const [tableName, tableId] = selected;
                     this.showChart(tableId);

@@ -1,6 +1,7 @@
 import VideoUtils from '../../util/videoUtils';
 import clamp from 'lodash/clamp';
 
+Entry.VideoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
@@ -57,25 +58,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
-        getVideoEffectOptions() {
-            return {
-                type: 'Dropdown',
-                options: [
-                    [Lang.Blocks.video_brightness, 'brightness'],
-                    [Lang.Blocks.video_transparency, 'transparency'],
-                ],
-                value: 'brightness',
-                fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            };
-        },
         getVideoFlipOptions() {
             return {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.video_left_right, 'hflip'],
-                    [Lang.Blocks.video_top_bototm, 'vflip'],
+                    [Lang.Blocks.video_top_bottom, 'vflip'],
                 ],
                 value: 'hflip',
                 fontSize: 11,
@@ -259,13 +247,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-        video_set_camera_option: {
+        video_set_camera_opacity_option: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
             params: [
-                params.getVideoEffectOptions(),
                 {
                     type: 'Block',
                     accept: 'string',
@@ -276,26 +263,22 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             ],
             events: {},
             def: {
-                type: 'video_set_camera_option',
+                type: 'video_set_camera_opacity_option',
             },
             paramsKeyMap: {
-                TARGET: 0,
-                VALUE: 1,
+                VALUE: 0,
             },
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                const target = script.getField('TARGET');
-                const value = clamp(
-                    script.getNumberValue('VALUE'),
-                    target === 'brightness' ? -100 : 0,
-                    100
-                );
+                const value = clamp(script.getNumberValue('VALUE'), 0, 100);
                 try {
                     if (!VideoUtils.isInitialized) {
                         await VideoUtils.initialize();
                     }
-                    VideoUtils.setOptions(target, value);
+                    console.log(value);
+                    VideoUtils.setOptions('transparency', value);
+
                     return script.callReturn();
                 } catch (err) {
                     console.log(err);
@@ -424,7 +407,43 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     case 'pose':
                         return VideoUtils.poses.predictions.length || 0;
                     case 'object':
-                        return VideoUtils.objectDetected.length || 0;
+                        return VideoUtils.objects.length || 0;
+                }
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_is_model_loaded: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            template: '%1 인식이 되었는가?',
+            statements: [],
+            params: [params.getAiModelOptions()],
+            events: {},
+            def: {
+                type: 'video_is_model_loaded',
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const target = script.getField('TARGET');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                    return false;
+                }
+                switch (target) {
+                    case 'face':
+                        return VideoUtils.faces && VideoUtils.faces.length > 0;
+                    case 'pose':
+                        return !!VideoUtils.poses;
+                    case 'object':
+                        return VideoUtils.objects && VideoUtils.objects.length > 0;
                 }
             },
             paramsKeyMap: {

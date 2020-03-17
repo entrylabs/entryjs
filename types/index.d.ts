@@ -185,8 +185,9 @@ declare module Entry {
     /**
      * 최초 엔트리 Init 시 받는 옵션들. 여기저기서 사용된다
      */
+    export var hardwareEnable: boolean;
     export interface EntryOptions {
-        disableHardware?: boolean;
+        hardwareEnable?: boolean;
     }
 
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.

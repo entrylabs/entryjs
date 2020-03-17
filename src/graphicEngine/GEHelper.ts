@@ -5,7 +5,6 @@ import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
-import { connectedPartIndices } from '@tensorflow-models/posenet/dist/keypoints';
 
 declare let $: any;
 declare let createjs: any;
@@ -94,7 +93,9 @@ class _GEHelper extends GEHelperBase {
 
     INIT(isWebGL: boolean) {
         super.INIT(isWebGL);
-        if (this._isInitialized) return;
+        if (this._isInitialized) {
+            return;
+        }
         this._isInitialized = true;
         GEDragHelper.INIT(isWebGL);
         (this.colorFilter = new _ColorFilterHelper()).INIT(isWebGL);
@@ -102,9 +103,7 @@ class _GEHelper extends GEHelperBase {
         (this.brushHelper = new _BrushHelper()).INIT(isWebGL);
         if (this._isWebGL) {
             // this.rndPosition = ()=>{ return Math.random() * 0.8 - 0.4; };
-            this.rndPosition = () => {
-                return 0;
-            };
+            this.rndPosition = () => 0;
             this.rotateRead = 180 / Math.PI;
             this.rotateWrite = Math.PI / 180;
             PIXIGlobal.initOnce();
@@ -114,9 +113,7 @@ class _GEHelper extends GEHelperBase {
                 setFPS: emptyFn,
             };
         } else {
-            this.rndPosition = () => {
-                return 0;
-            };
+            this.rndPosition = () => 0;
             this.resManager = new EaselResManager();
             this.Ticker = {
                 reset: createjs.Ticker.reset,
@@ -255,7 +252,6 @@ class _GEHelper extends GEHelperBase {
             this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
             Entry.stage.canvas.addChild(this.objectIndicatorGraphic);
         }
-
         this.tickByEngine();
     }
 
@@ -265,20 +261,16 @@ class _GEHelper extends GEHelperBase {
         }
         const targetContainer = Entry.stage.canvas.getChildAt(2);
         targetContainer.removeChild(canvasVideo);
-
-        this.tickByEngine();
     }
 
     hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
-        this.tickByEngine();
     }
 
     vFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
-        this.tickByEngine();
     }
 
     resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
@@ -293,19 +285,14 @@ class _GEHelper extends GEHelperBase {
     }
 
     setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
+        const filter = this.colorFilter.brightness(value);
         if (this._isWebGL) {
-            const recalculated = (value + 100) / 200;
-            const colorMatrix = new PIXI.filters.ColorMatrixFilter();
-            canvasVideo.filters = [colorMatrix];
-            colorMatrix.brightness(recalculated);
-            colorMatrix.enabled = true;
+            canvasVideo.filters = [filter];
+            filter.enabled = true;
         } else {
-            const recalculated = ((value + 100) * 255 - 25500) / 200;
-            const colorMatrix = new createjs.ColorMatrix().adjustBrightness(recalculated);
-            const filter = new createjs.ColorMatrixFilter();
-            filter.matrix = colorMatrix;
             canvasVideo.uncache();
             canvasVideo.filters = [filter];
+            canvasVideo.tickEnabled = true;
             canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
         }
         return canvasVideo;
@@ -337,7 +324,6 @@ class _GEHelper extends GEHelperBase {
             this.poseIndicatorGraphic.graphics.clear();
             this.objectIndicatorGraphic.graphics.clear();
         }
-        this.tickByEngine();
     }
 
     drawHumanPoints(poses: Array<any>, flipStatus: any) {
@@ -391,8 +377,6 @@ class _GEHelper extends GEHelperBase {
     drawFaceEdges(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
 
-        const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
-
         if (this._isWebGL) {
             handler.clear();
             handler.lineStyle(2, 0xff0000);
@@ -402,7 +386,8 @@ class _GEHelper extends GEHelperBase {
             handler.setStrokeStyle(2, 'round').beginStroke('red');
         }
         faces.forEach((face: { landmarks: { _positions: any[] } }) => {
-            face.landmarks._positions.forEach((item, i) => {
+            const positions = face.landmarks._positions;
+            positions.forEach((item, i) => {
                 if (
                     i === 0 ||
                     i === 17 ||
@@ -416,31 +401,49 @@ class _GEHelper extends GEHelperBase {
                 }
 
                 const prev = face.landmarks._positions[i - 1];
-
-                let { _x, _y } = item;
-                let prevX = prev._x;
-                let prevY = prev._y;
-                if (flipStatus.horizontal) {
-                    _x = WIDTH - _x;
-                    prevX = WIDTH - prevX;
-                }
-                if (flipStatus.vertical) {
-                    _y = HEIGHT - _y;
-                    prevY = HEIGHT - prevY;
-                }
-
-                handler.moveTo(prevX, prevY).lineTo(_x, _y);
+                this.drawEdge(prev, item, handler, flipStatus);
             });
+            // compensation for missing edges
+            this.drawEdge(positions[42], positions[47], handler, flipStatus);
+            this.drawEdge(positions[41], positions[36], handler, flipStatus);
+            this.drawEdge(positions[60], positions[67], handler, flipStatus);
+            this.drawEdge(positions[0], positions[17], handler, flipStatus);
+            this.drawEdge(positions[16], positions[26], handler, flipStatus);
+            this.drawEdge(positions[27], positions[31], handler, flipStatus);
+            this.drawEdge(positions[27], positions[35], handler, flipStatus);
+            this.drawEdge(positions[30], positions[31], handler, flipStatus);
+            this.drawEdge(positions[30], positions[35], handler, flipStatus);
         });
     }
 
-    drawObjectBox(objects: Array<any>, flipStatus: any) {
-        let objectsList: any = [];
+    drawEdge(
+        pos1: { _x: number; _y: number },
+        pos2: { _x: number; _y: number },
+        handler: PIXI.Graphics | createjs.Graphics,
+        flipStatus: any
+    ) {
+        const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
 
+        let { _x, _y } = pos2;
+        let prevX = pos1._x;
+        let prevY = pos1._y;
+        if (flipStatus.horizontal) {
+            _x = WIDTH - _x;
+            prevX = WIDTH - prevX;
+        }
+        if (flipStatus.vertical) {
+            _y = HEIGHT - _y;
+            prevY = HEIGHT - prevY;
+        }
+
+        handler.moveTo(prevX, prevY).lineTo(_x, _y);
+    }
+
+    drawObjectBox(objects: Array<any>, flipStatus: any) {
+        const objectsList: any = [];
         objects.forEach((object: any) => {
             const bbox = object.bbox;
-            const name = object.class || '';
-
+            const name = object.class ? Lang.video_object_params[object.class] : '';
             let x = bbox[0];
             let y = bbox[1];
             const width = bbox[2];
@@ -468,13 +471,7 @@ class _GEHelper extends GEHelperBase {
             objectsList.forEach((target: any) => {
                 const { textpoint, name, x, y, width, height } = target;
                 if (name) {
-                    const text = PIXIHelper.text(
-                        name.toString(),
-                        '20px Nanum Gothic',
-                        '',
-                        'middle',
-                        'center'
-                    );
+                    const text = PIXIHelper.text(name, '20px Nanum Gothic', '', 'middle', 'center');
                     text.x = textpoint.x;
                     text.y = textpoint.y;
                     handler.addChild(text);
@@ -489,9 +486,12 @@ class _GEHelper extends GEHelperBase {
                 const { textpoint, name, x, y, width, height } = target;
 
                 if (name) {
-                    const ctx = Entry.stage.canvas.canvas.getContext('2d');
-                    ctx.font = '30px Arial';
-                    ctx.fillText(name, textpoint.x, textpoint.y + 10);
+                    handler.append({
+                        exec: (ctx: any) => {
+                            ctx.font = '20px Nanum Gothic';
+                            ctx.fillText(name, textpoint.x - 5, textpoint.y + 5);
+                        },
+                    });
                 }
                 handler
                     .setStrokeStyle(8, 'round')

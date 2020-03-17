@@ -4,13 +4,13 @@ import io from 'socket.io-client';
 const GATEWAY_CONNECT_TIMEOUT = 5000;
 
 const DEFAULT_ADDR = {
-    hostname: window.location.hostname,
+    hostname: window.origin,
     path: '/vc',
 };
 
 export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor') {
     return new Promise((resolve, reject) => {
-        const client = io(`https://${addr.hostname}`, {
+        const client = io(addr.hostname, {
             path: addr.path,
             query: `language=${language}`,
             secure: true,
