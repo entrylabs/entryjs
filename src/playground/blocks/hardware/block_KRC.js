@@ -747,17 +747,16 @@ Entry.krc.getBlocks = function() {
             class: 'krc_LV3',
             isNotFor: ['KRC'],
             func: (sprite, script) => {
-                const port2 = script.getNumberValue('PORT');
-                const DIGITAL = Entry.hw.portData.DIGITAL;
+                const port = script.getNumberValue('PORT');
 
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
                 Entry.hw.sendQueue.GET[Entry.krc.sensorTypes.DIGITAL] = {
-                    port: port2,
+                    port: port,
                     time: new Date().getTime(),
                 };
-                return DIGITAL.port;
+                return Entry.hw.portData.DIGITAL[parseInt(port)];
             },
             syntax: { js: [], py: [] },
         },
@@ -798,7 +797,7 @@ Entry.krc.getBlocks = function() {
                 const BtnIndex = script.getNumberValue('PORT');
                 const ANALOG = Entry.hw.portData.ANALOG;
 
-                return ANALOG.BtnIndex;
+                return ANALOG[parseInt(BtnIndex)];
             },
             syntax: { js: [], py: [] },
         },
@@ -839,7 +838,7 @@ Entry.krc.getBlocks = function() {
             func: (sprite, script) => {
                 const BtnIndex = script.getNumberValue('PORT');
                 const ANALOG = Entry.hw.portData.ANALOG;
-                return (ANALOG.BtnIndex * 4 * 3) / 10;
+                return (ANALOG[parseInt(BtnIndex)] * 4 * 3) / 10;
             },
             syntax: { js: [], py: [] },
         },
