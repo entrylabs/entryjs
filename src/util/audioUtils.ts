@@ -11,10 +11,10 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = {
-    hostname: window.location.hostname,
+const getVoiceServerAddress = () => ({
+    hostname: Entry.baseUrl,
     path: '/vc',
-};
+});
 
 const DESIRED_SAMPLE_RATE = 16000;
 
@@ -22,14 +22,14 @@ class AudioUtils implements MediaUtilsInterface {
     get currentVolume() {
         return this._currentVolume;
     }
-    public isRecording: boolean = false;
-    public startedRecording: boolean = false;
-    public isInitialized: boolean = false; // 유저 인풋 연결 확인
+    public isRecording = false;
+    public startedRecording = false;
+    public isInitialized = false; // 유저 인풋 연결 확인
 
     private _userMediaStream: MediaStream = null;
     private _mediaRecorder: MediaRecorder = null;
-    private _currentVolume: number = -1;
-    private _isAudioSupport: boolean = false;
+    private _currentVolume = -1;
+    private _isAudioSupport = false;
     private _resolveFunc: Function = null;
     private _audioContext: AudioContext = null;
     private _socketClient: SocketIOClient.Socket = null; // socket.io-client instance
@@ -92,7 +92,7 @@ class AudioUtils implements MediaUtilsInterface {
             }
 
             try {
-                this._socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language);
+                this._socketClient = await voiceApiConnect(getVoiceServerAddress(), language);
             } catch (err) {
                 console.log(err);
             }
