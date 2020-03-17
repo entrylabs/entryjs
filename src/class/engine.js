@@ -456,11 +456,6 @@ Entry.Engine = class Engine {
 
             this.audioProgressPanel_.appendChild(audioShadeMainCircle);
 
-            // const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
-            //     'audioShadeText'
-            // );
-            // audioShadeText.innerHTML = '진행중이에요';
-            // this.audioProgressPanel_.appendChild(audioShadeText);
             this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
             if (this.view_.classList[0] === 'entryEngine') {
                 this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
