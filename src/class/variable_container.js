@@ -26,6 +26,7 @@ Entry.VariableContainer = class VariableContainer {
             info: {
                 object: null,
                 isCloud: false,
+                isRealTime: false,
             },
         };
         this.listAddPanel = {
@@ -33,6 +34,7 @@ Entry.VariableContainer = class VariableContainer {
             info: {
                 object: null,
                 isCloud: false,
+                isRealTime: false,
             },
         };
         this.messageAddPanel = {
@@ -50,6 +52,15 @@ Entry.VariableContainer = class VariableContainer {
         this.listView_ = null;
 
         Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
+    }
+
+    #removeChildrenClass({ children }, className) {
+        for (const index in children) {
+            const dom = children[index];
+            if (dom.removeClass) {
+                dom.removeClass(className);
+            }
+        }
     }
 
     createDom(view) {
@@ -1380,7 +1391,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!variable.object_) {
             if (variable.isCloud_) {
-                variableWrapper.addClass('global_val');
+                variableWrapper.addClass('cloud_list');
+            } else if (variable.isRealTime_) {
+                variableWrapper.addClass('real_time_list');
             } else {
                 variableWrapper.addClass('default_val');
             }
@@ -1642,7 +1655,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!list.object_) {
             if (list.isCloud_) {
-                listWrapper.addClass('global_list');
+                listWrapper.addClass('cloud_list');
+            } else if (list.isRealTime_) {
+                listWrapper.addClass('real_time_list');
             } else {
                 listWrapper.addClass('default_list');
             }
@@ -1869,27 +1884,31 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick((e) => {
-                e.stopImmediatePropagation();
-                const { object, isCloud } = this.variableAddPanel.info;
-                !object && Entry.do('variableAddSetCloud', !isCloud);
-                if (isCloud) {
-                    addSpaceCloudWrapper.removeClass('on');
-                } else {
-                    addSpaceCloudWrapper.addClass('on');
-                }
-            })
             .appendTo(addSpaceGlobalWrapper);
         variableAddSpace.cloudWrapper = addSpaceCloudWrapper;
         this.variableAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.Variable_create_cloud;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceCloudWrapper);
+        ['normal', 'cloud', 'real_time'].forEach((type) => {
+            const wrapper = createElement('div')
+                .addClass('entryCloudTypeWrapper')
+                .appendTo(addSpaceCloudWrapper)
+                .bindOnClick((e) => {
+                    e.stopImmediatePropagation();
+                    const { object, isCloud, isRealTime } = this.variableAddPanel.info;
+                    !object && Entry.do('variableAddSetCloud', type);
+                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    wrapper.addClass('on');
+                });
+            if (type === 'normal') {
+                wrapper.addClass('on');
+            }
+            createElement('span')
+                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`variable_create_${type}`];
+            createElement('span')
+                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper);
+        });
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -2053,27 +2072,31 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick((e) => {
-                e.stopImmediatePropagation();
-                const { object, isCloud } = this.listAddPanel.info;
-                !object && Entry.do('listAddSetCloud', !isCloud);
-                if (isCloud) {
-                    addSpaceCloudWrapper.removeClass('on');
-                } else {
-                    addSpaceCloudWrapper.addClass('on');
-                }
-            })
             .appendTo(addSpaceGlobalWrapper);
         listAddSpace.cloudWrapper = addSpaceCloudWrapper;
         this.listAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.List_create_cloud;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceCloudWrapper);
+        ['normal', 'cloud', 'real_time'].forEach((type) => {
+            const wrapper = createElement('div')
+                .addClass('entryCloudTypeWrapper')
+                .appendTo(addSpaceCloudWrapper)
+                .bindOnClick((e) => {
+                    e.stopImmediatePropagation();
+                    const { object } = this.listAddPanel.info;
+                    !object && Entry.do('listAddSetCloud', type);
+                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    wrapper.addClass('on');
+                });
+            if (type === 'normal') {
+                wrapper.addClass('on');
+            }
+            createElement('span')
+                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`list_create_${type}`];
+            createElement('span')
+                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper);
+        });
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -3121,7 +3144,7 @@ Entry.VariableContainer = class VariableContainer {
     _makeVariableData(type = 'variable') {
         const {
             view,
-            info: { isCloud, object },
+            info: { isCloud, object, isRealTime },
         } = this._getAddPanel(type);
 
         let name = view.name.value.trim();
@@ -3139,6 +3162,7 @@ Entry.VariableContainer = class VariableContainer {
         return {
             name,
             isCloud,
+            isRealTime,
             object,
             variableType: type,
         };
