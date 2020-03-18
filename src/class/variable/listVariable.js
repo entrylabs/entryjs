@@ -237,7 +237,7 @@ class ListVariable extends Variable {
                         variableType: this.type,
                         id: this.id_,
                     };
-                    await this.cloudVariable.delete(target, index);
+                    await this.cloudVariable.delete(target, index - 1);
                     const list = this.cloudVariable.get(target);
                     if (list) {
                         this.array_ = list.array;

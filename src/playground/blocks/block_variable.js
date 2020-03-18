@@ -1104,7 +1104,7 @@ module.exports = {
                     } else {
                         return new Promise(async (resolve, reject) => {
                             try {
-                                await list.deleteValue(value - 1);
+                                await list.deleteValue(+value);
                                 resolve();
                             } catch (e) {
                                 reject(e);
