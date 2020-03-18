@@ -208,9 +208,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
                 const result = await VideoUtils.checkUserCamAvailable();
                 return result.toString();
             },

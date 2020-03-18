@@ -490,20 +490,26 @@ class VideoUtils implements MediaUtilsInterface {
             throw new Entry.Utils.IncompatibleError();
         }
         if (!this.stream) {
-            try {
-                await navigator.mediaDevices.getUserMedia({
-                    audio: false,
-                    video: {
-                        facingMode: 'user',
-                        width: this._VIDEO_WIDTH,
-                        height: this._VIDEO_HEIGHT,
-                    },
-                });
-            } catch (err) {
+            if (!this.checkUserCamAvailable()) {
                 throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                     Lang.Workspace.check_webcam_error,
                 ]);
             }
+        }
+    }
+    async checkUserCamAvailable() {
+        try {
+            await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    facingMode: 'user',
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+            return true;
+        } catch (err) {
+            return false;
         }
     }
 }
