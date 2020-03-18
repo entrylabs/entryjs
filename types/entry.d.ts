@@ -11,6 +11,12 @@ declare var Entry: {
     Pdf: new (filename: string) => IEntry.PDF;
     BlockView: any;
     Dom: EntryDomConstructor;
+    Dialog: new (
+        entity: any,
+        message: string | number,
+        mode: 'speak' | 'ask',
+        isStamp: boolean
+    ) => IEntry.Dialog;
     SVG: any;
     moduleManager: any; //TODO
     popupHelper: any; //TODO
@@ -21,6 +27,7 @@ declare var Entry: {
     toast: IEntry.WorkspaceToast;
     playground: IEntry.Playground;
     workspace: UnknownAny;
+    console: any;
     propertyPanel: IEntry.PropertyPanel;
     container: IEntry.Container;
     stage: IEntry.Stage;

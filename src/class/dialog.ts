@@ -2,14 +2,28 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 
-class EntryDialog {
-    /**
-     * Construct dialog
-     * @param {!Entry.EntityObject} entity parent entity
-     * @param {!string} message to show on canvas
-     * @param {!string} mode is 'speak' or 'think'
-     */
-    constructor(entity, message, mode, isStamp) {
+type EntryObjectEntity = any;
+
+type NotchType = 'ne' | 'nw' | 'se' | 'sw';
+
+class EntryDialog implements IEntry.Dialog {
+    private parent: EntryObjectEntity;
+    private padding = 10;
+    private border = 2;
+    private width: number;
+    private height: number;
+    private notch: any;
+    private _isNoContentTried: boolean;
+    private readonly message_: string;
+    private readonly mode_: 'speak' | 'ask';
+    public object: PIXI.Container | any;
+
+    constructor(
+        entity: EntryObjectEntity,
+        message: string | number,
+        mode: 'speak' | 'ask',
+        isStamp: boolean
+    ) {
         if (entity.isEngineStop) {
             return;
         }
@@ -18,17 +32,13 @@ class EntryDialog {
         }
         entity.dialog = this;
         this.parent = entity;
-        this.padding = 10;
-        this.border = 2;
-        if (typeof message == 'number') {
-            message = String(message);
-        }
+
+        let messageString = typeof message == 'number' ? String(message) : message;
         if (Entry.console) {
             Entry.console.print(message, mode);
         }
-        const messageChunks = message.match(/.{1,15}/g);
-        message = messageChunks.join('\n');
-        this.message_ = message;
+        messageString = messageString.match(/.{1,15}/g).join('\n');
+        this.message_ = messageString;
         this.mode_ = mode;
         if (mode === 'speak' || mode === 'ask') {
             this.generateSpeak();
@@ -36,51 +46,6 @@ class EntryDialog {
         if (!isStamp) {
             Entry.stage.loadDialog(this);
         }
-    }
-
-    generateSpeak() {
-        this.object = GEHelper.newContainer('[dialog] container');
-        const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
-        const text = GEHelper.textHelper.newText(
-            this.message_,
-            `15px ${fontFamily}`,
-            '#000000',
-            'top',
-            'left'
-        );
-
-        let bound;
-        if (GEHelper.isWebGL) {
-            bound = text;
-        } else {
-            bound = text.getTransformedBounds();
-        }
-
-        const height = bound.height;
-        const width = bound.width >= 10 ? bound.width : 17;
-        const rect = GEHelper.newGraphic();
-        const colorSet = EntryStatic.colorSet.canvas || {};
-        rect.graphics
-            .f(colorSet.dialogBG || '#ffffff')
-            .ss(2, 'round')
-            .s(colorSet.dialog || '#4f80ff')
-            .rr(
-                -this.padding,
-                -this.padding,
-                width + 2 * this.padding,
-                height + 2 * this.padding,
-                this.padding
-            );
-        this.object.addChild(rect);
-        this.object.regX = width / 2;
-        this.object.regY = height / 2;
-        this.width = width;
-        this.height = height;
-        this.notch = this.createSpeakNotch('ne');
-        this.update();
-        this.object.addChild(this.notch);
-        this.object.addChild(text);
-        Entry.requestUpdate = true;
     }
 
     /**
@@ -127,9 +92,10 @@ class EntryDialog {
             );
             notchType += 'w';
         }
+
         if (this.notch.type != notchType) {
             this.object.removeChild(this.notch);
-            this.notch = this.createSpeakNotch(notchType);
+            this.notch = this.createSpeakNotch(notchType as NotchType);
             this.object.addChild(this.notch);
         }
 
@@ -137,19 +103,20 @@ class EntryDialog {
         Entry.requestUpdate = true;
     }
 
-    /**
-     * Generate speak notch
-     * @param {!string} type can be 'ne', 'nw', 'se', 'sw'
-     * @return {createjs.Shape}
-     */
-    createSpeakNotch(type) {
+    remove() {
+        Entry.stage.unloadDialog(this);
+        this.parent.dialog = null;
+        Entry.requestUpdate = true;
+    }
+
+    private createSpeakNotch(type: NotchType) {
         const notch = GEHelper.newGraphic();
         notch.type = type;
         const colorSet = EntryStatic.colorSet.canvas || {};
         const height = this.height + this.padding;
         const padding = this.padding;
         const width = this.width;
-        if (type == 'ne') {
+        if (type === 'ne') {
             notch.graphics
                 .f('#ffffff')
                 .ss(3, 2)
@@ -161,7 +128,7 @@ class EntryDialog {
                 .mt(2, height)
                 .lt(2, height + 9)
                 .lt(12, height);
-        } else if (type == 'nw') {
+        } else if (type === 'nw') {
             notch.graphics
                 .f('#ffffff')
                 .ss(3, 2)
@@ -173,7 +140,7 @@ class EntryDialog {
                 .mt(width - 2, height)
                 .lt(width - 2, height + 9)
                 .lt(width - 12, height);
-        } else if (type == 'se') {
+        } else if (type === 'se') {
             notch.graphics
                 .f('#ffffff')
                 .ss(3, 2)
@@ -185,7 +152,7 @@ class EntryDialog {
                 .mt(2, -padding)
                 .lt(2, -padding - 9)
                 .lt(12, -padding);
-        } else if (type == 'sw') {
+        } else if (type === 'sw') {
             notch.graphics
                 .f('#ffffff')
                 .ss(3, 2)
@@ -201,9 +168,48 @@ class EntryDialog {
         return notch;
     }
 
-    remove() {
-        Entry.stage.unloadDialog(this);
-        this.parent.dialog = null;
+    private generateSpeak() {
+        this.object = GEHelper.newContainer('[dialog] container');
+        const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
+        const text = GEHelper.textHelper.newText(
+            this.message_,
+            `15px ${fontFamily}`,
+            '#000000',
+            'top',
+            'left'
+        );
+
+        let bound;
+        if (GEHelper.isWebGL) {
+            bound = text;
+        } else {
+            bound = text.getTransformedBounds();
+        }
+
+        const height = bound.height;
+        const width = bound.width >= 10 ? bound.width : 17;
+        const rect = GEHelper.newGraphic();
+        const colorSet = EntryStatic.colorSet.canvas || {};
+        rect.graphics
+            .f(colorSet.dialogBG || '#ffffff')
+            .ss(2, 'round')
+            .s(colorSet.dialog || '#4f80ff')
+            .rr(
+                -this.padding,
+                -this.padding,
+                width + 2 * this.padding,
+                height + 2 * this.padding,
+                this.padding
+            );
+        this.object.addChild(rect);
+        this.object.regX = width / 2;
+        this.object.regY = height / 2;
+        this.width = width;
+        this.height = height;
+        this.notch = this.createSpeakNotch('ne');
+        this.update();
+        this.object.addChild(this.notch);
+        this.object.addChild(text);
         Entry.requestUpdate = true;
     }
 }
