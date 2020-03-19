@@ -2257,14 +2257,14 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const old_word = script
+                    const oldWord = script
                         .getStringValue('OLD_WORD', script)
                         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
                     return script
                         .getStringValue('STRING', script)
                         .replace(
-                            new RegExp(old_word, 'gm'),
+                            new RegExp(oldWord, 'gm'),
                             script.getStringValue('NEW_WORD', script)
                         );
                 },
