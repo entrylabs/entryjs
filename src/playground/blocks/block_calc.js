@@ -152,8 +152,8 @@ module.exports = {
                         }
                     }
                     // below statements assume both arguments are number
-                    leftValue = new BigNumber(parseFloat(leftValue));
-                    rightValue = new BigNumber(parseFloat(rightValue));
+                    leftValue = new BigNumber(leftValue);
+                    rightValue = new BigNumber(rightValue);
 
                     if (operator === 'MINUS') {
                         return leftValue.minus(rightValue).toNumber();
