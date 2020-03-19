@@ -67,6 +67,9 @@ class CloudVariableExtension {
                     resolve();
                 }
             });
+            socket.on('check', (id) => {
+                socket.emit('imAlive', id);
+            });
             socket.on('welcome', ({ variables = [], isOffline }) => {
                 try {
                     this.#data = new dmet(variables);
