@@ -176,9 +176,11 @@ class VideoUtils implements MediaUtilsInterface {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
-        this.turnOnWebcam();
         Entry.dispatchEvent('showLoadingScreen');
-
+        GEHelper.drawDetectedGraphic();
+        if (!this.flipStatus.horizontal) {
+            this.setOptions('hflip', null);
+        }
         this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -443,7 +445,7 @@ class VideoUtils implements MediaUtilsInterface {
         };
         this.disableAllModels();
         GEHelper.resetHandlers();
-        this.turnOnWebcam();
+        this.turnOffWebcam();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
