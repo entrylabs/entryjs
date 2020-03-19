@@ -438,7 +438,7 @@ Entry.Utils.isNumber = function(num) {
     if (typeof num === 'string' && reg.test(num)) {
         return true;
     } else {
-        return false;
+        return isNaN(num);
     }
 };
 

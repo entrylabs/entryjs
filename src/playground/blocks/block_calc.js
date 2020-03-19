@@ -14,7 +14,12 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
+                        options: [
+                            ['+', 'PLUS'],
+                            ['-', 'MINUS'],
+                            ['x', 'MULTI'],
+                            ['/', 'DIVIDE'],
+                        ],
                         value: 'PLUS',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -124,13 +129,20 @@ module.exports = {
                     const operator = script.getField('OPERATOR', script);
                     let leftValue = script.getNumberValue('LEFTHAND', script);
                     let rightValue = script.getNumberValue('RIGHTHAND', script);
+
                     if (operator === 'PLUS') {
                         const leftStringValue = script.getValue('LEFTHAND', script);
                         const rightStringValue = script.getValue('RIGHTHAND', script);
-                        if (!Entry.Utils.isNumber(leftStringValue)) {
+                        if (
+                            !Entry.Utils.isNumber(leftStringValue) ||
+                            Number.isNaN(parseFloat(leftStringValue))
+                        ) {
                             leftValue = leftStringValue;
                         }
-                        if (!Entry.Utils.isNumber(rightStringValue)) {
+                        if (
+                            !Entry.Utils.isNumber(rightStringValue) ||
+                            Number.isNaN(parseFloat(rightStringValue))
+                        ) {
                             rightValue = rightStringValue;
                         }
                         if (typeof leftValue === 'number' && typeof rightValue === 'number') {
@@ -139,7 +151,10 @@ module.exports = {
                             return leftValue + rightValue;
                         }
                     }
-                    leftValue = new BigNumber(leftValue);
+                    // below statements assume both arguments are number
+                    leftValue = new BigNumber(parseFloat(leftValue));
+                    rightValue = new BigNumber(parseFloat(rightValue));
+
                     if (operator === 'MINUS') {
                         return leftValue.minus(rightValue).toNumber();
                     } else if (operator === 'MULTI') {
@@ -325,7 +340,10 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['x', 'x'], ['y', 'y']],
+                        options: [
+                            ['x', 'x'],
+                            ['y', 'y'],
+                        ],
                         value: 'x',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -373,7 +391,10 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [['x', 'x'], ['y', 'y']],
+                                    options: [
+                                        ['x', 'x'],
+                                        ['y', 'y'],
+                                    ],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
@@ -2236,7 +2257,9 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const old_word = script.getStringValue('OLD_WORD', script).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const old_word = script
+                        .getStringValue('OLD_WORD', script)
+                        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
                     return script
                         .getStringValue('STRING', script)
