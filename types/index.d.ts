@@ -102,6 +102,8 @@ declare module IEntry {
     }
 
     export interface Stage {
+        loadDialog(dialog: any): void;
+        unloadDialog(dialog: any): void;
         canvas: PIXI.Container | any;
         _app: PIXI.Application | any;
     }
@@ -195,6 +197,17 @@ declare module IEntry {
         generateView(introView: any): void;
         setView(view: any): void;
         removeView(): void;
+    }
+
+    export interface PDF {
+        getView(): HTMLDivElement;
+        resize(): void;
+        // generateView
+    }
+
+    export interface Dialog {
+        update(): void;
+        remove(): void;
     }
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
