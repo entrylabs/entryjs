@@ -48,7 +48,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
             'pingpong_g1_when_tilted',
             'pingpong_g1_is_tilted',
             'pingpong_g1_get_tilt_value',
-            //'pingpong_g1_is_top_shape',
+            'pingpong_g1_is_top_shape',
             'pingpong_g1_get_sensor_value',
             'pingpong_g1_motor_rotate',
             'pingpong_g1_start_motor_rotate',
@@ -66,7 +66,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
         setTimeout(() => {
             // all cube stop
             this.sendCommand(this.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]));
-            setTimeout(()=> {
+            setTimeout(() => {
                 Entry.hw.sendQueue.COMMAND = {
                     id: -1,
                 };
@@ -74,7 +74,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
 
                 this.send_cmd_id = 0;
             }, this.delayTime);
-        },  this.delayTime);
+        }, this.delayTime);
     }
 
     sendCommand(packet) {
@@ -423,7 +423,47 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     return value;
                 },
             },
-            //pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',
+            pingpong_g1_is_top_shape: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_circle, 'FRONT'],
+                            [Lang.Blocks.pingpong_triangle, 'BACK'],
+                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
+                            [Lang.Blocks.pingpong_star, 'RIGHT'],
+                            [Lang.Blocks.pingpong_heart, 'UP'],
+                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
+                        ],
+                        value: 'FRONT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g1_is_top_shape' },
+                paramsKeyMap: {
+                    TILT_DIR: 0,
+                },
+                class: 'PingpongG1',
+                isNotFor: ['PingpongG1'],
+                func(sprite, script) {
+                    const tiltDir = script.getStringField('TILT_DIR', script);
+                    const pd = Entry.hw.portData;
+					if (tiltDir == 'FRONT' && pd.TILT_Y > 70) return true;
+					if (tiltDir == 'BACK' && pd.TILT_Y < -70) return true;
+					if (tiltDir == 'RIGHT' && pd.TILT_X > 70) return true;
+					if (tiltDir == 'LEFT' && pd.TILT_X < -70) return true;
+					if (tiltDir == 'DOWN' && pd.TILT_Z > 70) return true;
+					if (tiltDir == 'UP' && pd.TILT_Z < -70) return true;
+					return false;
+                },
+            },
             pingpong_g1_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -738,6 +778,8 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_star: '별',
                     pingpong_rectangle: '네모',
                     pingpong_triangle: '세모',
+                    pingpong_heart: '하트',
+                    pingpong_dirnone: '빈칸',
 
                     pingpong_rotate_cw: '시계',
                     pingpong_rotate_ccw: '반시계',
@@ -772,6 +814,8 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_star: 'star',
                     pingpong_rectangle: 'rectangle',
                     pingpong_triangle: 'triangle',
+                    pingpong_heart: 'heart',
+                    pingpong_dirnone: 'none',
 
                     pingpong_rotate_cw: 'clockwise',
                     pingpong_rotate_ccw: 'counter clockwise',

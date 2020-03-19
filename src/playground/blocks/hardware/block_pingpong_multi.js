@@ -56,6 +56,8 @@ class PingpongBase {
                 pingpong_star: '별',
                 pingpong_rectangle: '네모',
                 pingpong_triangle: '세모',
+                pingpong_heart: '하트',
+                pingpong_dirnone: '빈칸',
 
                 pingpong_rotate_cw: '시계',
                 pingpong_rotate_ccw: '반시계',
@@ -72,6 +74,8 @@ class PingpongBase {
                 pingpong_star: 'star',
                 pingpong_rectangle: 'rectangle',
                 pingpong_triangle: 'triangle',
+                pingpong_heart: 'heart',
+                pingpong_dirnone: 'none',
 
                 pingpong_rotate_cw: 'clockwise',
                 pingpong_rotate_ccw: 'counter clockwise',
@@ -88,7 +92,7 @@ class PingpongBase {
         this.sendCommand(this.makePacket(OPCODE.LEDMATRIX, 0xe3, -1, [0x70, 1, 0, ' ']));
         setTimeout(() => {
             this.sendCommand(this.makePacket(OPCODE.CONTINUOUS_STEPS, 0, -1, [2, 0, 0, 1, 0, 0]));
-            setTimeout(()=> {
+            setTimeout(() => {
                 Entry.hw.sendQueue.COMMAND = {
                     id: -1,
                 };
@@ -96,7 +100,7 @@ class PingpongBase {
 
                 this.send_cmd_id = 0;
             }, this.delayTime);
-        },  this.delayTime);
+        }, this.delayTime);
     }
 
     sendCommand(packet) {
@@ -322,6 +326,43 @@ class PingpongBase {
         }
 
         return tiltValue;
+    }
+
+    _isUpperDir(cubeNo, tiltDir) {
+        const pd = Entry.hw.portData;
+        if (cubeNo == 0) {
+            if (tiltDir == 'FRONT' && pd.c0_TILT_Y > 70) return true;
+            if (tiltDir == 'BACK' && pd.c0_TILT_Y < -70) return true;
+            if (tiltDir == 'RIGHT' && pd.c0_TILT_X > 70) return true;
+            if (tiltDir == 'LEFT' && pd.c0_TILT_X < -70) return true;
+            if (tiltDir == 'DOWN' && pd.c0_TILT_Z > 70) return true;
+            if (tiltDir == 'UP' && pd.c0_TILT_Z < -70) return true;
+            return false;
+        } else if (cubeNo == 1) {
+            if (tiltDir == 'FRONT' && pd.c1_TILT_Y > 70) return true;
+            if (tiltDir == 'BACK' && pd.c1_TILT_Y < -70) return true;
+            if (tiltDir == 'RIGHT' && pd.c1_TILT_X > 70) return true;
+            if (tiltDir == 'LEFT' && pd.c1_TILT_X < -70) return true;
+            if (tiltDir == 'DOWN' && pd.c1_TILT_Z > 70) return true;
+            if (tiltDir == 'UP' && pd.c1_TILT_Z < -70) return true;
+            return false;
+        } else if (cubeNo == 2) {
+            if (tiltDir == 'FRONT' && pd.c2_TILT_Y > 70) return true;
+            if (tiltDir == 'BACK' && pd.c2_TILT_Y < -70) return true;
+            if (tiltDir == 'RIGHT' && pd.c2_TILT_X > 70) return true;
+            if (tiltDir == 'LEFT' && pd.c2_TILT_X < -70) return true;
+            if (tiltDir == 'DOWN' && pd.c2_TILT_Z > 70) return true;
+            if (tiltDir == 'UP' && pd.c2_TILT_Z < -70) return true;
+            return false;
+        } else if (cubeNo == 3) {
+            if (tiltDir == 'FRONT' && pd.c3_TILT_Y > 70) return true;
+            if (tiltDir == 'BACK' && pd.c3_TILT_Y < -70) return true;
+            if (tiltDir == 'RIGHT' && pd.c3_TILT_X > 70) return true;
+            if (tiltDir == 'LEFT' && pd.c3_TILT_X < -70) return true;
+            if (tiltDir == 'DOWN' && pd.c3_TILT_Z > 70) return true;
+            if (tiltDir == 'UP' && pd.c3_TILT_Z < -70) return true;
+            return false;
+        }
     }
 
     _getCubeNoFromBlock(script) {
@@ -660,7 +701,47 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     return value;
                 },
             },
-            //pingpong_g2_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
+            pingpong_g2_is_top_shape: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g2_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_circle, 'FRONT'],
+                            [Lang.Blocks.pingpong_triangle, 'BACK'],
+                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
+                            [Lang.Blocks.pingpong_star, 'RIGHT'],
+                            [Lang.Blocks.pingpong_heart, 'UP'],
+                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
+                        ],
+                        value: 'FRONT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g2_is_top_shape' },
+                paramsKeyMap: { CUBEID: 0, TILT_DIR: 1 },
+                class: 'PingpongG2',
+                isNotFor: ['PingpongG2'],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('TILT_DIR', script);
+                    return _isUpperDir(cubeId, tiltDir);
+                },
+            },
             pingpong_g2_multi_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1138,7 +1219,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     pingpong_g2_when_tilted: '%1 %2 큐브가 %3 (으)로 기울였을 때',
                     pingpong_g2_is_button_pressed: '%1 큐브의 단추가 눌렸는가?',
                     pingpong_g2_is_tilted: '%1 큐브가 %2 (으)로 기울여졌는가?',
-                    //pingpong_g2_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
+                    pingpong_g2_is_top_shape: '%1 큐브의 윗면에 %2 모양이 있는가?',
                     pingpong_g2_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g2_get_sensor_value: '%1 큐브의 %2 센서값',
                     pingpong_g2_multi_motor_rotate:
@@ -1167,7 +1248,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     pingpong_g2_when_tilted: '%1 %2 cube tilted to %3',
                     pingpong_g2_is_button_pressed: '%1 cube button pressed?',
                     pingpong_g2_is_tilted: '%1 cube tilted to %2',
-                    //pingpong_g2_is_top_shape: '%1 shown in top view?',
+                    pingpong_g2_is_top_shape: '%1 cube shown %2 in top view?',
                     pingpong_g2_get_tilt_value: '%1 cube tilt angle to %2',
                     pingpong_g2_get_sensor_value: '%1 cube read sensor %2',
                     pingpong_g2_multi_motor_rotate:
@@ -1509,7 +1590,47 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     return value;
                 },
             },
-            //pingpong_g3_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
+            pingpong_g3_is_top_shape: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g3_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_circle, 'FRONT'],
+                            [Lang.Blocks.pingpong_triangle, 'BACK'],
+                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
+                            [Lang.Blocks.pingpong_star, 'RIGHT'],
+                            [Lang.Blocks.pingpong_heart, 'UP'],
+                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
+                        ],
+                        value: 'FRONT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g3_is_top_shape' },
+                paramsKeyMap: { CUBEID: 0, TILT_DIR: 1 },
+                class: 'PingpongG3',
+                isNotFor: ['PingpongG3'],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('TILT_DIR', script);
+                    return _isUpperDir(cubeId, tiltDir);
+                },
+            },
             pingpong_g3_multi_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1994,7 +2115,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     pingpong_g3_when_tilted: '%1 %2 큐브가 %3 (으)로 기울였을 때',
                     pingpong_g3_is_button_pressed: '%1 큐브의 단추가 눌렸는가?',
                     pingpong_g3_is_tilted: '%1 큐브가 %2 (으)로 기울여졌는가?',
-                    //pingpong_g3_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
+                    pingpong_g3_is_top_shape: '%1 큐브의 윗면에 %2 모양이 있는가?',
                     pingpong_g3_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g3_get_sensor_value: '%1 큐브의 %2 센서값',
                     pingpong_g3_multi_motor_rotate:
@@ -2023,7 +2144,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     pingpong_g3_when_tilted: '%1 %2 cube tilted to %3',
                     pingpong_g3_is_button_pressed: '%1 cube button pressed?',
                     pingpong_g3_is_tilted: '%1 cube tilted to %2',
-                    //pingpong_g3_is_top_shape: '%1 shown in top view?',
+                    pingpong_g3_is_top_shape: '%1 cube shown %2 in top view?',
                     pingpong_g3_get_tilt_value: '%1 cube tilt angle to %2',
                     pingpong_g3_get_sensor_value: '%1 cube read sensor %2',
                     pingpong_g3_multi_motor_rotate:
@@ -2372,7 +2493,47 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     return value;
                 },
             },
-            //pingpong_g4_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
+            pingpong_g4_is_top_shape: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g4_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.pingpong_circle, 'FRONT'],
+                            [Lang.Blocks.pingpong_triangle, 'BACK'],
+                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
+                            [Lang.Blocks.pingpong_star, 'RIGHT'],
+                            [Lang.Blocks.pingpong_heart, 'UP'],
+                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
+                        ],
+                        value: 'FRONT',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g4_is_top_shape' },
+                paramsKeyMap: { CUBEID: 0, TILT_DIR: 1 },
+                class: 'PingpongG4',
+                isNotFor: ['PingpongG4'],
+                func(sprite, script) {
+                    const cubeId = script.getNumberField('CUBEID');
+                    const tiltDir = script.getStringField('TILT_DIR', script);
+                    return _isUpperDir(cubeId, tiltDir);
+                },
+            },
             pingpong_g4_multi_motor_rotate: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2914,7 +3075,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     pingpong_g4_when_tilted: '%1 %2 큐브가 %3 (으)로 기울였을 때',
                     pingpong_g4_is_button_pressed: '%1 큐브의 단추가 눌렸는가?',
                     pingpong_g4_is_tilted: '%1 큐브가 %2 (으)로 기울여졌는가?',
-                    //pingpong_g4_is_top_shape: '큐브 %1 의 윗면에 %2 모양이 있는가?',
+                    pingpong_g4_is_top_shape: '%1 큐브의 윗면에 %2 모양이 있는가?',
                     pingpong_g4_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g4_get_sensor_value: '%1 큐브의 %2 센서값',
                     pingpong_g4_multi_motor_rotate:
@@ -2950,7 +3111,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     pingpong_g4_when_tilted: '%1 %2 cube tilted to %3',
                     pingpong_g4_is_button_pressed: '%1 cube button pressed?',
                     pingpong_g4_is_tilted: '%1 cube tilted to %2',
-                    //pingpong_g4_is_top_shape: '%1 shown in top view?',
+                    pingpong_g4_is_top_shape: '%1 cube shown %2 in top view?',
                     pingpong_g4_get_tilt_value: '%1 cube tilt angle to %2',
                     pingpong_g4_get_sensor_value: '%1 cube read sensor %2',
                     pingpong_g4_multi_motor_rotate:
