@@ -24,6 +24,7 @@ declare var Entry: {
     // 엔트리 내 클래스들
     skeleton: { [name: string]: ISkeleton };
     options: IEntry.EntryOptions;
+    engine: any;
     toast: IEntry.WorkspaceToast;
     playground: IEntry.Playground;
     workspace: UnknownAny;
@@ -63,4 +64,4 @@ declare var Entry: {
         type: HTMLElement | K,
         elementId?: string
     ): HTMLElementTagNameMap[K];
-};
+} & IEntry.EntryOptions;

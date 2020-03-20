@@ -130,7 +130,7 @@ declare module IEntry {
      * 최초 엔트리 Init 시 받는 옵션들. 여기저기서 사용된다
      */
     export interface EntryOptions {
-        disableHardware?: boolean;
+        hardwareEnable?: boolean;
     }
 
     export interface ExternalModuleManager {
