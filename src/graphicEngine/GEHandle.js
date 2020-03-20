@@ -192,11 +192,11 @@ export const GEHandle = function(canvas) {
         this.edge = edge;
 
         //rotate knob
-        const rotateKnob = GEHelper.newSpriteWithCallback(`${Entry.mediaFilePath}stage/rotate.svg`);
-        rotateKnob.scaleX = 1.52;
-        rotateKnob.scaleY = 1.52;
-        rotateKnob.regX = 8;
-        rotateKnob.regY = 38;
+        const rotateKnob = GEHelper.newSpriteWithCallback(`${Entry.mediaFilePath}stage/rotate.png`);
+        rotateKnob.scaleX = 0.4;
+        rotateKnob.scaleY = 0.4;
+        rotateKnob.regX = 25;
+        rotateKnob.regY = 125;
         rotateKnob.mouseEnabled = true;
         GEDragHelper.handleDrag(rotateKnob);
         rotateKnob.cursor = 'crosshair';

@@ -42,6 +42,13 @@ declare interface ISkeleton {
     statementPos?: (blockView: any) => Point[];
 }
 
+declare interface MediaUtilsInterface {
+    initialize(): void;
+    reset(): void;
+    destroy(): void;
+    compatabilityChecker(): void; // throws error if failed
+}
+
 declare interface EntryDomOptions {
     id?: string;
     class?: string;
