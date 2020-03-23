@@ -8,7 +8,7 @@ import AIUtilize from '../class/AIUtilize';
 import Extension from '../extensions/extension';
 import CloudVariable from '../extensions/CloudVariable';
 
-require('./utils');
+import './utils';
 
 /**
  * Initialize method with options.
@@ -116,7 +116,7 @@ const setDefaultPathsFromOptions = function(options) {
         defaultDir = '',
         soundDir = '',
         blockInjectDir = '',
-        moduleBaseUrl = location.origin || 'https://playentry.org',
+        baseUrl = location.origin || 'https://playentry.org',
     } = options;
 
     Entry.mediaFilePath = `${libDir}/entry-js/images/`;
@@ -124,7 +124,9 @@ const setDefaultPathsFromOptions = function(options) {
     Entry.defaultPath = defaultDir;
     Entry.soundPath = soundDir;
     Entry.blockInjectPath = blockInjectDir;
-    Entry.moduleBaseUrl = `${moduleBaseUrl}/modules/`;
+
+    Entry.baseUrl = baseUrl;
+    Entry.moduleBaseUrl = `${baseUrl}/modules/`;
 };
 
 const setDefaultTheme = function(options) {
@@ -502,6 +504,16 @@ Entry.parseOptions = function(options) {
     this.variableEnable = options.variableEnable;
     if (this.variableEnable === undefined) {
         this.variableEnable = true;
+    }
+
+    this.dataTableEnable = options.dataTableEnable;
+    if (this.dataTableEnable === undefined) {
+        this.dataTableEnable = false;
+    }
+
+    this.hardwareEnable = options.hardwareEnable;
+    if (this.hardwareEnable === undefined) {
+        this.hardwareEnable = true;
     }
 
     this.listEnable = options.listEnable;

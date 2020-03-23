@@ -14,12 +14,22 @@ module.exports = {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
         filename: '[name].js',
+        jsonpFunction: 'entryJsonp',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
     module: {
         rules: [
+            {
+                test: /\.worker\.ts$/,
+                use: {
+                    loader: 'worker-loader',
+                    options: {
+                        inline: true,
+                    },
+                },
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,

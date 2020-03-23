@@ -42,6 +42,13 @@ declare interface ISkeleton {
     statementPos?: (blockView: any) => Point[];
 }
 
+declare interface MediaUtilsInterface {
+    initialize(): void;
+    reset(): void;
+    destroy(): void;
+    compatabilityChecker(): void; // throws error if failed
+}
+
 declare module Entry {
     // 엔트리 내 클래스들
     export var skeleton: { [name: string]: ISkeleton };
@@ -107,8 +114,9 @@ declare module Entry {
     /**
      * 최초 엔트리 Init 시 받는 옵션들. 여기저기서 사용된다
      */
+    export var hardwareEnable: boolean;
     export interface EntryOptions {
-        disableHardware?: boolean;
+        hardwareEnable?: boolean;
     }
 
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.

@@ -3,6 +3,10 @@ import { GEHelper } from '../../graphicEngine/GEHelper';
 import { GEDragHelper } from '../../graphicEngine/GEDragHelper';
 
 class ListVariable extends Variable {
+    get LIST_MAX_LENGTH() {
+        return 5000;
+    }
+
     constructor(variable) {
         Entry.assert(variable.variableType === 'list', 'Invalid variable type given');
         super(variable);
@@ -154,38 +158,153 @@ class ListVariable extends Variable {
     }
 
     getArray() {
-        return this.array_;
+        if (!this.isRealTime_) {
+            return this.array_;
+        } else {
+            const { array } =
+                this.cloudVariable.get({
+                    variableType: this.type,
+                    id: this.id_,
+                }) || {};
+            return array || this.array_;
+        }
     }
 
     setArray(array) {
-        this.array_ = array;
-        this.updateView();
-        Entry.requestUpdateTwice = true;
+        if (!this.isRealTime_) {
+            this.array_ = array;
+            this.updateView();
+            Entry.requestUpdateTwice = true;
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.setArray(target, array);
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
     }
 
     appendValue(value) {
-        if (!this.array_) {
-            this.array_ = [];
+        if (!this.isRealTime_) {
+            if (!this.array_) {
+                this.array_ = [];
+            }
+            this.array_.push({
+                data: value,
+            });
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.append(target, value);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.push({
+                            data: value,
+                        });
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
         }
-        this.array_.push({
-            data: value,
-        });
-        this.updateView();
     }
 
     deleteValue(index) {
-        this.array_.splice(index - 1, 1);
-        this.updateView();
+        if (!this.isRealTime_) {
+            this.array_.splice(index - 1, 1);
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.delete(target, index - 1);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.splice(index - 1, 1);
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
     }
 
     insertValue(index, data) {
-        this.array_.splice(index - 1, 0, { data });
-        this.updateView();
+        if (!this.isRealTime_) {
+            this.array_.splice(index - 1, 0, { data });
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.insert(target, index - 1, data);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_.splice(index - 1, 0, { data });
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
     }
 
     replaceValue(index, data) {
-        this.array_[index - 1].data = data;
-        this.updateView();
+        if (!this.isRealTime_) {
+            this.array_[index - 1].data = data;
+            this.updateView();
+        } else {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const target = {
+                        variableType: this.type,
+                        id: this.id_,
+                    };
+                    await this.cloudVariable.replace(target, index - 1, data);
+                    const list = this.cloudVariable.get(target);
+                    if (list) {
+                        this.array_ = list.array;
+                    } else {
+                        this.array_[index - 1].data = data;
+                    }
+                    this.updateView();
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        }
     }
 
     updateView() {
@@ -364,7 +483,7 @@ class ListVariable extends Variable {
     }
 
     syncModel_(variableModel) {
-        if (!this.isCloud_) {
+        if (!this.isCloud_ && !this.isRealTime_) {
             this.array_ = variableModel.array;
         }
         this.setWidth(variableModel.width);
