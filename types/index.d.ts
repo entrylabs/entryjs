@@ -49,35 +49,46 @@ declare interface MediaUtilsInterface {
     compatabilityChecker(): void; // throws error if failed
 }
 
-declare module Entry {
-    // 엔트리 내 클래스들
-    export var skeleton: { [name: string]: ISkeleton };
-    export var options: EntryOptions;
-    export var toast: ToastLegacy;
-    export var playground: Playground;
-    export var workspace: UnknownAny;
-    export var propertyPanel: PropertyPanel;
-    export var HW: Hardware; // hw.ts
-    export var container: Container;
-    export var stage: Stage;
-    export var Utils: UnknownAny;
+declare interface EntryDomOptions {
+    id?: string;
+    class?: string;
+    classes?: string[];
+    text?: string;
+    src?: string;
+    href?: string;
+    parent?: EntryDom;
+}
 
-    // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
-    export var HARDWARE_LIST: { [hardwareName: string]: HardwareModule };
-    export var events_: any;
-    export var requestUpdate: boolean;
-    export var mediaFilePath: string;
-    export var TEXT_ALIGNS: string[];
-    export var TEXT_ALIGN_LEFT: number;
-    export var TEXT_ALIGN_CENTER: number;
-    export var TEXT_ALIGN_RIGHT: number;
+declare interface EntryDom extends JQuery {
+    bindOnClick?: (e: any) => this;
+}
 
-    // 엔트리에서 네임스페이스에 할당되어있는 특정 함수들
-    export var addEventListener: (type: string, listener: () => void) => void;
-    export var dispatchEvent: (eventName: string, ...args: any) => void;
-    export var getMainWS: () => UnknownAny | undefined;
+declare type EntryDomConstructor = (
+    tag: string | HTMLElement | JQuery,
+    options?: EntryDomOptions
+) => EntryDom;
+
+interface HardwareMessageData extends HardwareModuleId {
+    [key: string]: any;
+}
+
+interface HardwareModuleId {
+    company: string;
+    model: string;
+}
+
+type WebSocketMessage = {
+    data: string;
+    mode: number;
+    type: 'utf8';
+};
+
+declare module IEntry {
+    export const Dom: EntryDomConstructor;
 
     export interface Container {
+        resizeEvent: any; // Entry.Event
+        splitterEnable?: boolean;
         getAllObjects(): UnknownAny[];
     }
 
@@ -90,12 +101,16 @@ declare module Entry {
      * 오브젝트, 도움말, 하드웨어등의 정보를 가지고있는 좌측하단 패널
      */
     export interface PropertyPanel {
-        removeMode: (mode: string) => void;
-        addMode: (modeKey: string, element: UnknownAny) => void;
+        select(modeName: string): void;
+        resize(canvasSize: number): void;
+        removeMode(mode: string): void;
+        addMode(modeKey: string, element: UnknownAny): void;
         selected: string;
     }
 
     export interface Stage {
+        loadDialog(dialog: any): void;
+        unloadDialog(dialog: any): void;
         canvas: PIXI.Container | any;
         _app: PIXI.Application | any;
     }
@@ -103,21 +118,103 @@ declare module Entry {
     /**
      * 과거 엔트리 토스트
      */
-    type ToastLegacyFunction = (title: string, message: string, isNotAutoDispose?: boolean) => void;
+    type WSToastFunction = (title: string, message: string, isNotAutoDispose?: boolean) => void;
 
-    export interface ToastLegacy {
-        alert: ToastLegacyFunction;
-        warning: ToastLegacyFunction;
-        success: ToastLegacyFunction;
+    export interface WorkspaceToast {
+        alert: WSToastFunction;
+        warning: WSToastFunction;
+        success: WSToastFunction;
     }
 
     /**
      * 최초 엔트리 Init 시 받는 옵션들. 여기저기서 사용된다
      */
-    export var hardwareEnable: boolean;
     export interface EntryOptions {
         hardwareEnable?: boolean;
     }
 
+    export interface ExternalModuleManager {
+        loadExternalModule(moduleName: string): Promise<void>;
+        registerHardwareModule(moduleObject: HardwareModule): void;
+    }
+
+    /**
+     * 외부에 노출될 수 있는 하드웨어 클래스 내 변수 및 함수 정의
+     */
+    export interface Hardware {
+        portData: UnknownAny;
+        sendQueue: UnknownAny;
+        update: () => void;
+        closeConnection: () => void;
+        downloadConnector: () => void;
+        downloadGuide: () => void;
+        downloadSource: () => void;
+        setZero: () => void;
+        checkDevice: (data: HardwareMessageData) => void;
+        openHardwareDownloadPopup: () => void;
+        setExternalModule: (moduleObject: IEntry.HardwareModule) => void;
+        onReceiveData?: (portData: any) => void;
+    }
+
+    /**
+     * 엔트리 워크스페이스에 존재하는 하드웨어 모듈
+     * 블록 및 하드웨어모니터 UI 정보, 통신 로직을 가지고있음
+     */
+    export interface HardwareModule {
+        id: HardwareModuleId;
+        name: string;
+        monitorTemplate?: UnknownAny;
+        communicationType?: string;
+        sendMessage?: (hw: Hardware) => void;
+
+        // 필수 함수 목록
+        setZero: () => void;
+        getBlocks: () => { [blockName: string]: EntryBlock };
+        blockMenuBlocks: string[];
+        setLanguage: () => {
+            [langType: string]: { [type: string]: { [templateName: string]: string } };
+        };
+
+        //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
+        afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
+        afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
+        dataHandler?: (data: HardwareMessageData) => void;
+    }
+
+    export interface EntryBlock {
+        color: string;
+        outerLine?: string;
+        skeleton: string;
+        statements: any[];
+        params: {
+            type: string;
+            img?: string;
+            size: number;
+            value?: number;
+            fontSize?: number;
+            bgColor?: string;
+            arrowColor?: string;
+            position?: { x: number; y: number };
+        };
+    }
+
+    export interface Intro {
+        modes: any;
+        selected: any;
+        generateView(introView: any): void;
+        setView(view: any): void;
+        removeView(): void;
+    }
+
+    export interface PDF {
+        getView(): HTMLDivElement;
+        resize(): void;
+        // generateView
+    }
+
+    export interface Dialog {
+        update(): void;
+        remove(): void;
+    }
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
