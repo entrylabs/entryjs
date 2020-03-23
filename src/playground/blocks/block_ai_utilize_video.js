@@ -195,7 +195,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
         video_check_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             params: [],
             events: {},
@@ -208,8 +208,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                const result = await VideoUtils.checkUserCamAvailable();
-                return result.toString();
+                return await VideoUtils.checkUserCamAvailable();
             },
             syntax: {
                 js: [],
