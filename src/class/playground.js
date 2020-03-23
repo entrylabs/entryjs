@@ -686,6 +686,7 @@ Entry.Playground = class Playground {
                 items: this._getSortablePictureList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortablePictureList() {
@@ -1168,6 +1169,7 @@ Entry.Playground = class Playground {
                 items: this._getSortableSoundList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortableSoundList() {
