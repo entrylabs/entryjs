@@ -666,7 +666,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (!VideoUtils.isInitialized) {
                     await VideoUtils.initialize();
                 }
-                if (!VideoUtils.poses || VideoUtils.poses.predictions) {
+                if (!VideoUtils.poses || !VideoUtils.poses.predictions) {
                     return 0;
                 }
                 try {
