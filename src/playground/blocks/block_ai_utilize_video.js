@@ -195,7 +195,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
         video_check_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             params: [],
             events: {},
@@ -208,11 +208,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
-                const result = await VideoUtils.checkUserCamAvailable();
-                return result.toString();
+                return await VideoUtils.checkUserCamAvailable();
             },
             syntax: {
                 js: [],
@@ -608,36 +604,38 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const index = script.getField('INDEX');
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
-                const faces = VideoUtils.faces;
                 if (!VideoUtils.isInitialized) {
                     await VideoUtils.initialize();
                 }
-                if (faces.length <= index) {
+                if (!VideoUtils.faces) {
                     return 0;
                 }
-
-                // offset since value shown starts from 1;
-                const rawValue = faces[index].landmarks._positions[part][`_${coord}`];
-
-                if (!rawValue) {
+                try {
+                    const faces = VideoUtils.faces;
+                    if (faces.length <= index) {
+                        return 0;
+                    }
+                    // offset since value shown starts from 1;
+                    const rawValue = faces[index].landmarks._positions[part][`_${coord}`];
+                    if (!rawValue) {
+                        return 0;
+                    }
+                    let returningValue = 0;
+                    if (coord === 'x') {
+                        returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                        if (VideoUtils.flipStatus.horizontal) {
+                            returningValue *= -1;
+                        }
+                    } else {
+                        returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
+                        if (VideoUtils.flipStatus.vertical) {
+                            returningValue *= -1;
+                        }
+                    }
+                    return returningValue.toFixed(1);
+                } catch (err) {
                     return 0;
                 }
-                let returningValue = 0;
-                if (coord === 'x') {
-                    returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
-                    if (VideoUtils.flipStatus.horizontal) {
-                        returningValue *= -1;
-                    }
-                } else {
-                    returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
-                    if (VideoUtils.flipStatus.vertical) {
-                        returningValue *= -1;
-                    }
-                }
-
-                return returningValue.toFixed(1);
-
-                // return rawValue.toFixed(1);
             },
             syntax: {
                 js: [],
@@ -665,30 +663,35 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 const index = script.getField('INDEX');
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
-                const poses = VideoUtils.poses.predictions;
                 if (!VideoUtils.isInitialized) {
                     await VideoUtils.initialize();
                 }
-                if (poses.length < index) {
+                if (!VideoUtils.poses || !VideoUtils.poses.predictions) {
                     return 0;
                 }
-                // offset since value shown starts from 1;
-                const rawValue = poses[index].keypoints[part].position[coord];
-
-                if (!rawValue) {
-                    return 0;
-                }
-                let returningValue = 0;
-                if (coord === 'x') {
-                    returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
-                } else {
-                    returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
-                    if (VideoUtils.flipStatus.vertical) {
-                        returningValue *= -1;
+                try {
+                    const poses = VideoUtils.poses.predictions;
+                    if (poses.length < index) {
+                        return 0;
                     }
+                    // offset since value shown starts from 1;
+                    const rawValue = poses[index].keypoints[part].position[coord];
+                    if (!rawValue) {
+                        return 0;
+                    }
+                    let returningValue = 0;
+                    if (coord === 'x') {
+                        returningValue = rawValue - VideoUtils.CANVAS_WIDTH / 2;
+                    } else {
+                        returningValue = VideoUtils.CANVAS_HEIGHT / 2 - rawValue;
+                        if (VideoUtils.flipStatus.vertical) {
+                            returningValue *= -1;
+                        }
+                    }
+                    return returningValue.toFixed(1);
+                } catch (err) {
+                    return 0;
                 }
-
-                return returningValue.toFixed(1);
             },
             syntax: {
                 js: [],

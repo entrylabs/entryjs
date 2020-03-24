@@ -176,9 +176,11 @@ class VideoUtils implements MediaUtilsInterface {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
-        this.turnOnWebcam();
         Entry.dispatchEvent('showLoadingScreen');
-
+        GEHelper.drawDetectedGraphic();
+        if (!this.flipStatus.horizontal) {
+            this.setOptions('hflip', null);
+        }
         this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -443,7 +445,7 @@ class VideoUtils implements MediaUtilsInterface {
         };
         this.disableAllModels();
         GEHelper.resetHandlers();
-        this.turnOnWebcam();
+        this.turnOffWebcam();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -490,20 +492,26 @@ class VideoUtils implements MediaUtilsInterface {
             throw new Entry.Utils.IncompatibleError();
         }
         if (!this.stream) {
-            try {
-                await navigator.mediaDevices.getUserMedia({
-                    audio: false,
-                    video: {
-                        facingMode: 'user',
-                        width: this._VIDEO_WIDTH,
-                        height: this._VIDEO_HEIGHT,
-                    },
-                });
-            } catch (err) {
+            if (!this.checkUserCamAvailable()) {
                 throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                     Lang.Workspace.check_webcam_error,
                 ]);
             }
+        }
+    }
+    async checkUserCamAvailable() {
+        try {
+            await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    facingMode: 'user',
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+            return true;
+        } catch (err) {
+            return false;
         }
     }
 }

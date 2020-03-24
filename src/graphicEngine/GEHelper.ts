@@ -236,18 +236,21 @@ class _GEHelper extends GEHelperBase {
         }
 
         this.videoContainer.addChild(videoElement);
-        // Entry.stage.canvas.addChildAt(videoElement, 2);
+        this.tickByEngine();
+    }
+
+    drawDetectedGraphic() {
         if (!this.poseIndicatorGraphic) {
             this.poseIndicatorGraphic = this.createNewIndicatorGraphic();
-            Entry.stage.canvas.addChild(this.poseIndicatorGraphic);
+            Entry.stage.canvas.addChildAt(this.poseIndicatorGraphic, 4);
         }
         if (!this.faceIndicatorGraphic) {
             this.faceIndicatorGraphic = this.createNewIndicatorGraphic();
-            Entry.stage.canvas.addChild(this.faceIndicatorGraphic);
+            Entry.stage.canvas.addChildAt(this.faceIndicatorGraphic, 4);
         }
         if (!this.objectIndicatorGraphic) {
             this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
-            Entry.stage.canvas.addChild(this.objectIndicatorGraphic);
+            Entry.stage.canvas.addChildAt(this.objectIndicatorGraphic, 4);
         }
         this.tickByEngine();
     }
