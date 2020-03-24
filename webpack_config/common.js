@@ -19,6 +19,9 @@ module.exports = {
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
+    node: {
+        fs: 'empty',
+    },
     module: {
         rules: [
             {
@@ -58,6 +61,7 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
+                exclude: /node_modules/,
                 options: { transpileOnly: true },
             },
             {

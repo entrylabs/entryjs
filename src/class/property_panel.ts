@@ -1,18 +1,13 @@
-/**
- * @fileoverview PropertyPanel shows project's property
- */
-'use strict';
+class PropertyPanel implements IEntry.PropertyPanel {
+    public modes: any = {};
+    public selected: string = undefined;
 
-Entry.PropertyPanel = function() {
-    this.modes = {};
-    this.selected = null;
-};
+    private _view: EntryDom;
+    private _tabView: EntryDom;
+    private _contentView: EntryDom;
+    private _cover: EntryDom & { _isVisible?: boolean };
 
-(function(p) {
-    /**
-     * Generate View
-     */
-    p.generateView = function(parentDom, option) {
+    generateView(parentDom: HTMLElement) {
         const container = $(parentDom);
         this._view = Entry.Dom('div', {
             class: 'propertyPanel',
@@ -38,10 +33,10 @@ Entry.PropertyPanel = function() {
             class: 'entryObjectSelectedImgWorkspace',
             parent: container,
         });
-        this.initializeSplitter(splitter);
-    };
+        this._initializeSplitter(splitter);
+    }
 
-    p.addMode = function(mode, contentObj) {
+    addMode(mode: string, contentObj: any) {
         if (this.modes[mode]) {
             this.removeMode(mode);
         }
@@ -56,23 +51,15 @@ Entry.PropertyPanel = function() {
             classes: ['propertyTabElement', `propertyTab${mode}`],
             parent: this._tabView,
         });
-        const that = this;
         tabDom.bind('click', () => {
-            that.select(mode);
+            this.select(mode);
         });
 
-        if (mode == 'console') {
+        if (mode === 'console') {
             contentObj.codeMirror.refresh();
         }
 
-        if (this.modes[mode]) {
-            this.modes[mode].tabDom.remove();
-            this.modes[mode].contentDom.remove();
-            if (mode == 'hw') {
-                $(this.modes).removeClass('.propertyTabhw');
-                $('.propertyTabhw').unbind('dblclick');
-            }
-        }
+        this._removeDom(mode);
 
         this.modes[mode] = {
             obj: contentObj,
@@ -80,30 +67,23 @@ Entry.PropertyPanel = function() {
             contentDom,
         };
 
-        if (mode == 'hw') {
+        if (mode === 'hw') {
             $('.propertyTabhw').bind('dblclick', () => {
                 Entry.dispatchEvent('hwModeChange');
             });
         }
-    };
+    }
 
-    p.removeMode = function(mode) {
-        if (this.modes[mode]) {
-            this.modes[mode].tabDom.remove();
-            this.modes[mode].contentDom.remove();
-            if (mode == 'hw') {
-                $(this.modes).removeClass('.propertyTabhw');
-                $('.propertyTabhw').unbind('dblclick');
-            }
-        }
+    removeMode(mode: string) {
+        this._removeDom(mode);
 
         const keys = Object.keys(this.modes);
         if (keys && keys.length > 0) {
             this.select(keys[0]);
         }
-    };
+    }
 
-    p.resize = function(canvasSize) {
+    resize(canvasSize: number) {
         const selected = this.selected;
         if (!selected) {
             return;
@@ -122,7 +102,7 @@ Entry.PropertyPanel = function() {
         Entry.dispatchEvent('windowResized');
 
         const obj = this.modes[selected].obj;
-        if (selected == 'hw') {
+        if (selected === 'hw') {
             if (this.modes.hw.obj.listPorts) {
                 obj.resizeList();
             } else {
@@ -131,9 +111,9 @@ Entry.PropertyPanel = function() {
         } else {
             obj.resize && obj.resize();
         }
-    };
+    }
 
-    p.select = function(modeName) {
+    select(modeName: string) {
         for (const key in this.modes) {
             const mode = this.modes[key];
             mode.tabDom.removeClass('selected');
@@ -151,21 +131,20 @@ Entry.PropertyPanel = function() {
         }
         selected.obj.visible = true;
         this.selected = modeName;
-    };
+    }
 
-    p.initializeSplitter = function(splitter) {
-        const that = this;
-        splitter.bind('mousedown touchstart', function(e) {
+    private _initializeSplitter(splitter: EntryDom) {
+        splitter.bind('mousedown touchstart', (e) => {
             e.preventDefault();
             if (Entry.disposeEvent) {
                 Entry.disposeEvent.notify();
             }
             const container = Entry.container;
-            that._cover.removeClass('entryRemove');
-            that._cover._isVisible = true;
+            this._cover.removeClass('entryRemove');
+            this._cover._isVisible = true;
             container.splitterEnable = true;
             if (Entry.documentMousemove) {
-                container.resizeEvent = Entry.documentMousemove.attach(this, (e) => {
+                container.resizeEvent = Entry.documentMousemove.attach(this, (e: any) => {
                     if (container.splitterEnable) {
                         Entry.resizeElement({
                             canvasWidth: e.clientX || e.x,
@@ -173,22 +152,33 @@ Entry.PropertyPanel = function() {
                     }
                 });
             }
-            $(document).bind('mouseup.container:splitter touchend.container:splitter', func);
+            $(document).bind('mouseup.container:splitter touchend.container:splitter', () => {
+                const container = Entry.container;
+                const listener = container.resizeEvent;
+                if (listener) {
+                    container.splitterEnable = false;
+                    listener.destroy();
+                    delete container.resizeEvent;
+                }
+                if (this._cover._isVisible) {
+                    this._cover._isVisible = false;
+                    this._cover.addClass('entryRemove');
+                }
+                $(document).unbind('.container:splitter');
+            });
         });
+    }
 
-        const func = function(e) {
-            const container = Entry.container;
-            const listener = container.resizeEvent;
-            if (listener) {
-                container.splitterEnable = false;
-                listener.destroy();
-                delete container.resizeEvent;
+    private _removeDom(mode: string) {
+        if (this.modes[mode]) {
+            this.modes[mode].tabDom.remove();
+            this.modes[mode].contentDom.remove();
+            if (mode === 'hw') {
+                $(this.modes).removeClass('.propertyTabhw');
+                $('.propertyTabhw').unbind('dblclick');
             }
-            if (that._cover._isVisible) {
-                that._cover._isVisible = false;
-                that._cover.addClass('entryRemove');
-            }
-            $(document).unbind('.container:splitter');
-        };
-    };
-})(Entry.PropertyPanel.prototype);
+        }
+    }
+}
+
+Entry.PropertyPanel = PropertyPanel;

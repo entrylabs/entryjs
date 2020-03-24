@@ -6,9 +6,6 @@ import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
-declare let $: any;
-declare let createjs: any;
-
 const INITIAL_VIDEO_PARAMS = {
     WIDTH: 480,
     HEIGHT: 270,
@@ -233,7 +230,7 @@ class _GEHelper extends GEHelperBase {
         return graphic;
     }
 
-    drawVideoElement(videoElement: HTMLVideoElement): any {
+    drawVideoElement(videoElement: PIXI.Sprite | createjs.Bitmap): any {
         if (!this.videoContainer) {
             this.videoContainer = Entry.stage.canvas.getChildAt(2);
         }
