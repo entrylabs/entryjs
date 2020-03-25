@@ -335,7 +335,7 @@ class _GEHelper extends GEHelperBase {
         }
         handler.clear();
 
-        poses.map((pose: any) => {
+        poses.map((pose: any, index: Number) => {
             pose.keypoints.map((item: any) => {
                 const { x, y } = item.position;
                 const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
@@ -344,6 +344,28 @@ class _GEHelper extends GEHelperBase {
                 handler.drawCircle(x, recalculatedY, R);
                 handler.endFill();
             });
+
+            const { x, y } = pose.keypoints[3].position;
+            if (this._isWebGL) {
+                const text = PIXIHelper.text(
+                    `${Lang.Blocks.video_human}-${index + 1}`,
+                    '20px Nanum Gothic',
+                    '',
+                    'middle',
+                    'center'
+                );
+                text.x = x - 20;
+                text.y = y - 20;
+                handler.addChild(text);
+            } else {
+                handler.append({
+                    exec: (ctx: any) => {
+                        ctx.font = '20px Nanum Gothic';
+                        ctx.color = 'blue';
+                        ctx.fillText(`${Lang.Blocks.video_human}-${index + 1}`, x - 20, y - 20);
+                    },
+                });
+            }
         });
     }
 
@@ -385,7 +407,7 @@ class _GEHelper extends GEHelperBase {
             handler.clear();
             handler.setStrokeStyle(2, 'round').beginStroke('red');
         }
-        faces.forEach((face: { landmarks: { _positions: any[] } }) => {
+        faces.forEach((face: { landmarks: { _positions: any[] } }, index: Number) => {
             const positions = face.landmarks._positions;
             positions.forEach((item, i) => {
                 if (
@@ -413,6 +435,38 @@ class _GEHelper extends GEHelperBase {
             this.drawEdge(positions[27], positions[35], handler, flipStatus);
             this.drawEdge(positions[30], positions[31], handler, flipStatus);
             this.drawEdge(positions[30], positions[35], handler, flipStatus);
+
+            const refPoint = positions[57];
+            let x = refPoint._x;
+            const y = refPoint._y;
+
+            const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
+            if (flipStatus.horizontal) {
+                x = WIDTH - x;
+            }
+            if (flipStatus.vertical) {
+                y = HEIGHT - y;
+            }
+            if (this._isWebGL) {
+                const text = PIXIHelper.text(
+                    `${Lang.Blocks.video_face}-${index + 1}`,
+                    '20px Nanum Gothic',
+                    '',
+                    'middle',
+                    'center'
+                );
+                text.x = x;
+                text.y = y - 10;
+                handler.addChild(text);
+            } else {
+                handler.append({
+                    exec: (ctx: any) => {
+                        ctx.font = '20px Nanum Gothic';
+                        ctx.color = '#0000ff';
+                        ctx.fillText(`${Lang.Blocks.video_face}-${index + 1}`, x, y - 10);
+                    },
+                });
+            }
         });
     }
 
@@ -443,7 +497,9 @@ class _GEHelper extends GEHelperBase {
         const objectsList: any = [];
         objects.forEach((object: any) => {
             const bbox = object.bbox;
-            const name = object.class ? Lang.video_object_params[object.class] : '';
+            const name = object.class
+                ? `${Lang.Blocks.video_object}-${Lang.video_object_params[object.class]}`
+                : '';
             let x = bbox[0];
             let y = bbox[1];
             const width = bbox[2];
@@ -468,10 +524,16 @@ class _GEHelper extends GEHelperBase {
                 handler.removeChild(child);
             }
             handler.lineStyle(5, 0xff0000);
-            objectsList.forEach((target: any) => {
+            objectsList.forEach((target: any, index: Number) => {
                 const { textpoint, name, x, y, width, height } = target;
                 if (name) {
-                    const text = PIXIHelper.text(name, '20px Nanum Gothic', '', 'middle', 'center');
+                    const text = PIXIHelper.text(
+                        `${name}-${index + 1}`,
+                        '20px Nanum Gothic',
+                        '',
+                        'middle',
+                        'center'
+                    );
                     text.x = textpoint.x;
                     text.y = textpoint.y;
                     handler.addChild(text);
@@ -482,14 +544,14 @@ class _GEHelper extends GEHelperBase {
         } else {
             handler = handler.graphics;
             handler.clear();
-            objectsList.forEach((target: any) => {
+            objectsList.forEach((target: any, index: Number) => {
                 const { textpoint, name, x, y, width, height } = target;
 
                 if (name) {
                     handler.append({
                         exec: (ctx: any) => {
                             ctx.font = '20px Nanum Gothic';
-                            ctx.fillText(name, textpoint.x - 5, textpoint.y + 5);
+                            ctx.fillText(`${name}-${index + 1}`, textpoint.x - 5, textpoint.y + 5);
                         },
                     });
                 }

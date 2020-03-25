@@ -393,7 +393,6 @@ EntryStatic.getAllBlocks = function() {
                 'aiUtilizeModelTrainButton',
                 'audio_title',
                 'check_microphone',
-                'speech_to_text',
                 'speech_to_text_convert',
                 'speech_to_text_get_value',
                 'get_microphone_volume',
