@@ -133,16 +133,10 @@ module.exports = {
                     if (operator === 'PLUS') {
                         const leftStringValue = script.getValue('LEFTHAND', script);
                         const rightStringValue = script.getValue('RIGHTHAND', script);
-                        if (
-                            !Entry.Utils.isNumber(leftStringValue) ||
-                            Number.isNaN(parseFloat(leftStringValue))
-                        ) {
+                        if (!Entry.Utils.isNumber(leftStringValue)) {
                             leftValue = leftStringValue;
                         }
-                        if (
-                            !Entry.Utils.isNumber(rightStringValue) ||
-                            Number.isNaN(parseFloat(rightStringValue))
-                        ) {
+                        if (!Entry.Utils.isNumber(rightStringValue)) {
                             rightValue = rightStringValue;
                         }
                         if (typeof leftValue === 'number' && typeof rightValue === 'number') {

@@ -124,7 +124,7 @@ class Scope {
     }
 
     getNumberValue(key, scope) {
-        return Number(parseFloat(this.getValue(key, scope)));
+        return parseFloat(this.getValue(key, scope));
     }
 
     getBooleanValue(key, scope) {
