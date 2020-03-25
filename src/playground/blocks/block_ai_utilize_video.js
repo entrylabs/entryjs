@@ -153,7 +153,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     [Lang.video_body_coord_params.left_ankle, 15],
                     [Lang.video_body_coord_params.right_ankle, 16],
                 ],
-                value: 1,
+                value: 0,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -418,7 +418,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
-            template: '%1 인식이 되었는가?',
             statements: [],
             params: [params.getAiModelOptions()],
             events: {},
@@ -479,7 +478,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 }
                 switch (info) {
                     case 'gender':
-                        return target.gender;
+                        return Lang.video_gender[target.gender];
                     case 'age':
                         return target.age.toFixed(0).toString();
                     case 'emotion':
