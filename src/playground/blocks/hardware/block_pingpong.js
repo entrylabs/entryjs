@@ -57,7 +57,13 @@ Entry.PingpongG1 = new (class PingpongG1 {
             'pingpong_g1_set_dot_pixel',
             'pingpong_g1_set_dot_string',
             'pingpong_g1_set_dot_clear',
+            'pingpong_g1_playNoteForBeats',
+            'pingpong_g1_restForBeats',
+            'pingpong_g1_setTempo',
+            'pingpong_g1_getTempo',
         ];
+
+        this.tempo = 60;
     }
 
     setZero() {
@@ -133,6 +139,21 @@ Entry.PingpongG1 = new (class PingpongG1 {
         }
     }
 
+    _clampBeats(beats) {
+        return Math.min(Math.max(beats, 0), 40);
+        //return MathUtil.clamp(beats, 0, 40);
+    }
+
+    _clampTempo(tempo) {
+        return Math.min(Math.max(tempo, 20), 500);
+        //return MathUtil.clamp(tempo, 20, 500);
+    }
+
+    _beatsToDuration(beats) {
+        let duration = Math.round((60 / this.tempo) * beats * 100);
+        return duration;
+    }
+
     makePacket(opcode, taskid, opt) {
         // make heder - cubeid, cubecnt, op, size, method
         const header = Buffer.from([0xff, 0xff, 0xff, 0xff, 0, 0, opcode, 0, 0]);
@@ -193,13 +214,8 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -222,16 +238,16 @@ Entry.PingpongG1 = new (class PingpongG1 {
 
                     let tiltValue = 0;
                     switch (tiltDir) {
-                        case 'FRONT':
+                        case 'F_CIRCLE':
                             tiltValue = pd.TILT_X * -1;
                             break;
-                        case 'BACK':
+                        case 'B_TRIANGLE':
                             tiltValue = pd.TILT_X;
                             break;
-                        case 'LEFT':
+                        case 'L_RECTANGLE':
                             tiltValue = pd.TILT_Y * -1;
                             break;
-                        case 'RIGHT':
+                        case 'R_STAR':
                             tiltValue = pd.TILT_Y;
                             break;
                         default:
@@ -272,13 +288,8 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -296,16 +307,16 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     const pd = Entry.hw.portData;
                     let tiltValue = 0;
                     switch (tiltDir) {
-                        case 'FRONT':
+                        case 'F_CIRCLE':
                             tiltValue = pd.TILT_X * -1;
                             break;
-                        case 'BACK':
+                        case 'B_TRIANGLE':
                             tiltValue = pd.TILT_X;
                             break;
-                        case 'LEFT':
+                        case 'L_RECTANGLE':
                             tiltValue = pd.TILT_Y * -1;
                             break;
-                        case 'RIGHT':
+                        case 'R_STAR':
                             tiltValue = pd.TILT_Y;
                             break;
                         default:
@@ -321,13 +332,8 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -367,16 +373,16 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     const pd = Entry.hw.portData;
                     let value = 0;
                     switch (dir) {
-                        case 'FRONT':
+                        case 'F_CIRCLE':
                             value = pd.TILT_X * -1;
                             break;
-                        case 'BACK':
+                        case 'B_TRIANGLE':
                             value = pd.TILT_X;
                             break;
-                        case 'LEFT':
+                        case 'L_RECTANGLE':
                             value = pd.TILT_Y * -1;
                             break;
-                        case 'RIGHT':
+                        case 'R_STAR':
                             value = pd.TILT_Y;
                             break;
                         default:
@@ -431,15 +437,8 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                            [Lang.Blocks.pingpong_heart, 'UP'],
-                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_dir6,
+                        value: 'F_RECTANGLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -455,13 +454,13 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 func(sprite, script) {
                     const tiltDir = script.getStringField('TILT_DIR', script);
                     const pd = Entry.hw.portData;
-					if (tiltDir == 'FRONT' && pd.TILT_Y > 70) return true;
-					if (tiltDir == 'BACK' && pd.TILT_Y < -70) return true;
-					if (tiltDir == 'RIGHT' && pd.TILT_X > 70) return true;
-					if (tiltDir == 'LEFT' && pd.TILT_X < -70) return true;
-					if (tiltDir == 'DOWN' && pd.TILT_Z > 70) return true;
-					if (tiltDir == 'UP' && pd.TILT_Z < -70) return true;
-					return false;
+                    if (tiltDir == 'DF_RECTANGLE' && pd.TILT_Y > 70) return true;
+                    if (tiltDir == 'DB_STAR' && pd.TILT_Y < -70) return true;
+                    if (tiltDir == 'DR_CIRCLE' && pd.TILT_X > 70) return true;
+                    if (tiltDir == 'DL_TRIANGLE' && pd.TILT_X < -70) return true;
+                    if (tiltDir == 'DD_NONE' && pd.TILT_Z > 70) return true;
+                    if (tiltDir == 'DU_HEART' && pd.TILT_Z < -70) return true;
+                    return false;
                 },
             },
             pingpong_g1_motor_rotate: {
@@ -749,6 +748,149 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     return Entry.PingpongG1.postCallReturn(script, packet, 400);
                 },
             },
+            pingpong_g1_playNoteForBeats: {
+                //'%1 번 음을 %2 박자로 연주하기 %3',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g1_playNoteForBeats' },
+                paramsKeyMap: { NOTE: 0, BEATS: 1 },
+                class: 'PingpongG1_Music',
+                isNotFor: ['PingpongG1'],
+                func(sprite, script) {
+                    if (!script.is_start) {
+                        script.is_start = true;
+                        script.step_flag = 1;
+
+                        const NOTE = script.getNumberField('NOTE', script);
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG1._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG1._beatsToDuration(cBeats);
+
+                        console.log(' beats=', BEATS, ', duration=', durationSec);
+
+                        const waitTime = durationSec * 10 + 30; //XXX
+                        const opt = [0, 0x00 /*PLAY*/, NOTE - 8, durationSec, 0]; //type 1??
+                        //const opt = [0, 0x00/*PLAY*/, note-8, 0, durationSec];	//type 2
+                        const packet = Entry.PingpongG1.makePacket(0xe8, 0xa1, opt);
+
+                        Entry.PingpongG1.sendCommand(packet);
+
+                        setTimeout(() => {
+                            script.step_flag = 0;
+                        }, waitTime);
+                        return script;
+                    } else if (script.step_flag == 1) {
+                        return script;
+                    } else {
+                        delete script.is_start;
+                        delete script.step_flag;
+
+                        return script.callReturn();
+                    }
+                },
+            },
+            pingpong_g1_restForBeats: {
+                //'%1 박자 쉬기 %2',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g1_restForBeats' },
+                paramsKeyMap: { BEATS: 0 },
+                class: 'PingpongG1_Music',
+                isNotFor: ['PingpongG1'],
+                func(sprite, script) {
+                    if (!script.is_start) {
+                        script.is_start = true;
+                        script.step_flag = 1;
+
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG1._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG1._beatsToDuration(cBeats);
+                        console.log('wait duration ', durationSec);
+
+                        const waitTime = durationSec * 10 + 30;
+
+                        setTimeout(() => {
+                            script.step_flag = 0;
+                        }, waitTime);
+                        return script;
+                    } else if (script.step_flag == 1) {
+                        return script;
+                    } else {
+                        delete script.is_start;
+                        delete script.step_flag;
+
+                        return script.callReturn();
+                    }
+                },
+            },
+            pingpong_g1_setTempo: {
+                //'악보 빠르기를 %1 으로 정하기 %2',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '60' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g1_setTempo' },
+                paramsKeyMap: { TEMPO: 0 },
+                class: 'PingpongG1_Music',
+                isNotFor: ['PingpongG1'],
+                func(sprite, script) {
+                    let tempo = script.getNumberValue('TEMPO', script);
+                    Entry.PingpongG1.tempo = Entry.PingpongG1._clampTempo(tempo);
+                    console.log('SET TEMPO = ', tempo, Entry.PingpongG1.tempo);
+                    return script.callReturn();
+                },
+            },
+            pingpong_g1_getTempo: {
+                //'악보 빠르기',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [],
+                def: { params: [], type: 'pingpong_g1_getTempo' },
+                paramsKeyMap: {},
+                class: 'PingpongG1_Music',
+                isNotFor: ['PingpongG1'],
+                func(sprite, script) {
+                    return Entry.PingpongG1.tempo;
+                },
+            },
         };
     }
 
@@ -770,16 +912,14 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
                     pingpong_g1_set_dot_string: '도트에 문자열 %1  %2초동안 출력 %3',
                     pingpong_g1_set_dot_clear: '도트 화면 지우기 %1',
+                    pingpong_g1_playNoteForBeats: '%1 번 음을 %2 박자로 연주하기 %3',
+                    pingpong_g1_restForBeats: '%1 박자 쉬기 %2',
+                    pingpong_g1_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
+                    pingpong_g1_getTempo: '악보 빠르기',
                 },
                 Blocks: {
                     pingpong_right: '오른쪽',
                     pingpong_left: '왼쪽',
-                    pingpong_circle: '동그라미',
-                    pingpong_star: '별',
-                    pingpong_rectangle: '네모',
-                    pingpong_triangle: '세모',
-                    pingpong_heart: '하트',
-                    pingpong_dirnone: '빈칸',
 
                     pingpong_rotate_cw: '시계',
                     pingpong_rotate_ccw: '반시계',
@@ -788,6 +928,42 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_sensor_ain: '아날로그',
                     pingpong_dot_on: '켜기',
                     pingpong_dot_off: '끄기',
+
+                    pingpong_opts_cube_tiltDir: [
+                        ['동그라미', 'F_CIRCLE'],
+                        ['세모', 'B_TRIANGLE'],
+                        ['네모', 'L_RECTANGLE'],
+                        ['별', 'R_STAR'],
+                    ],
+
+                    pingpong_opts_cube_dir6: [
+                        ['네모', 'DF_RECTANGLE'],
+                        ['별', 'DB_STAR'],
+                        ['세모', 'DL_TRIANGLE'],
+                        ['동그라미', 'DR_CIRCLE'],
+                        ['하트', 'DU_HEART'],
+                        ['빈칸', 'DD_NONE'],
+                    ],
+
+                    pingpong_opts_music_notes: [
+                        ['45: 라(A3)', 45],
+                        ['47: 시(B3)', 47],
+                        ['48: 도(C4)', 48],
+                        ['50: 레(D4)', 50],
+                        ['52: 미(E4)', 52],
+                        ['53: 파(F4)', 53],
+                        ['55: 솔(G4)', 55],
+                        ['57: 라(A4)', 57],
+                        ['59: 시(B4)', 59],
+                        ['60: 도(C5)', 60],
+                        ['62: 레(D5)', 62],
+                        ['64: 미(E5)', 64],
+                        ['65: 파(F5)', 65],
+                        ['67: 솔(G5)', 67],
+                        ['69: 라(A5)', 69],
+                        ['71: 시(B5)', 71],
+                        ['72: 도(C6)', 72],
+                    ],
                 },
             },
             en: {
@@ -806,16 +982,14 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_g1_set_dot_pixel: 'set %3 DOT X:%1 Y:%2 %4',
                     pingpong_g1_set_dot_string: 'print string %1 during %2 seconds to DOT %3',
                     pingpong_g1_set_dot_clear: 'clear DOT %1',
+                    pingpong_g1_playNoteForBeats: 'play note %1 for %2 beats %3',
+                    pingpong_g1_restForBeats: 'rest for %1 beats %2',
+                    pingpong_g1_setTempo: 'set tempo to %1 %2',
+                    pingpong_g1_getTempo: 'tempo',
                 },
                 Blocks: {
                     pingpong_right: 'right',
                     pingpong_left: 'left',
-                    pingpong_circle: 'circle',
-                    pingpong_star: 'star',
-                    pingpong_rectangle: 'rectangle',
-                    pingpong_triangle: 'triangle',
-                    pingpong_heart: 'heart',
-                    pingpong_dirnone: 'none',
 
                     pingpong_rotate_cw: 'clockwise',
                     pingpong_rotate_ccw: 'counter clockwise',
@@ -824,6 +998,41 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_sensor_ain: 'ain',
                     pingpong_dot_on: 'ON',
                     pingpong_dot_off: 'OFF',
+
+                    pingpong_opts_cube_tiltDir: [
+                        ['circle', 'F_CIRCLE'],
+                        ['triangle', 'B_TRIANGLE'],
+                        ['rectangle', 'L_RECTANGLE'],
+                        ['star', 'R_STAR'],
+                    ],
+
+                    pingpong_opts_cube_dir6: [
+                        ['rectangle', 'DF_RECTANGLE'],
+                        ['star', 'DB_STAR'],
+                        ['triangle', 'DL_TRIANGLE'],
+                        ['circle', 'DR_CIRCLE'],
+                        ['heart', 'DU_HEART'],
+                        ['none', 'DD_NONE'],
+                    ],
+                    pingpong_opts_music_notes: [
+                        ['45: La(A3)', 45],
+                        ['47: Ti(B3)', 47],
+                        ['48: Do(C4)', 48],
+                        ['50: Re(D4)', 50],
+                        ['52: Mi(E4)', 52],
+                        ['53: Fa(F4)', 53],
+                        ['55: Sol(G4)', 55],
+                        ['57: La(A4)', 57],
+                        ['59: Ti(B4)', 59],
+                        ['60: Do(C5)', 60],
+                        ['62: Re(D5)', 62],
+                        ['64: Mi(E5)', 64],
+                        ['65: Fa(F5)', 65],
+                        ['67: Sol(G5)', 67],
+                        ['69: La(A5)', 69],
+                        ['71: Ti(B5)', 71],
+                        ['72: Do(C6)', 72],
+                    ],
                 },
             },
         };
