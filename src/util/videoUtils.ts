@@ -176,7 +176,7 @@ class VideoUtils implements MediaUtilsInterface {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
-        Entry.dispatchEvent('showLoadingScreen');
+        Entry.dispatchEvent('showVideoLoadingScreen');
         GEHelper.drawDetectedGraphic();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
