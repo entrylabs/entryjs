@@ -10,6 +10,7 @@ const OPCODE = {
     AGGREGATE_STEPS: 0xcd,
     LEDMATRIX: 0xa2,
     SERVO: 0xe1,
+    MUSIC: 0xe8,
 };
 
 const METHOD = {
@@ -20,6 +21,19 @@ const METHOD = {
     sCHED_POINT: 4,
 };
 
+const PROPERTY = {
+    PERI: 0x01,
+    MULTI: 0x02,
+    PORT: 0x80,
+    ADDRESS: 0x70,
+};
+
+const PROPERTY_MUSIC = {
+    PLAY: 0x00,
+    PAUSE: 0x01,
+    RESUME: 0x02,
+};
+
 class PingpongBase {
     constructor(cubecnt) {
         this.TILT_THRESHOLD = 20;
@@ -28,6 +42,8 @@ class PingpongBase {
         this.delayTime = 100;
         this.send_cmd_id = 0;
         this.cubeCnt = cubecnt || 2;
+
+        this.tempo = 60;
 
         this.communicationType = 'manual';
 
@@ -52,12 +68,6 @@ class PingpongBase {
             ko: {
                 pingpong_right: '오른쪽',
                 pingpong_left: '왼쪽',
-                pingpong_circle: '동그라미',
-                pingpong_star: '별',
-                pingpong_rectangle: '네모',
-                pingpong_triangle: '세모',
-                pingpong_heart: '하트',
-                pingpong_dirnone: '빈칸',
 
                 pingpong_rotate_cw: '시계',
                 pingpong_rotate_ccw: '반시계',
@@ -66,16 +76,44 @@ class PingpongBase {
                 pingpong_sensor_ain: '아날로그',
                 pingpong_dot_on: '켜기',
                 pingpong_dot_off: '끄기',
+
+                pingpong_opts_cube_tiltDir: [
+                    ['동그라미', 'F_CIRCLE'],
+                    ['세모', 'B_TRIANGLE'],
+                    ['네모', 'L_RECTANGLE'],
+                    ['별', 'R_STAR'],
+                ],
+                pingpong_opts_cube_dir6: [
+                    ['네모', 'DF_RECTANGLE'],
+                    ['별', 'DB_STAR'],
+                    ['세모', 'DL_TRIANGLE'],
+                    ['동그라미', 'DR_CIRCLE'],
+                    ['하트', 'DU_HEART'],
+                    ['빈칸', 'DD_NONE'],
+                ],
+                pingpong_opts_music_notes: [
+                    ['45: 라(A3)', 45],
+                    ['47: 시(B3)', 47],
+                    ['48: 도(C4)', 48],
+                    ['50: 레(D4)', 50],
+                    ['52: 미(E4)', 52],
+                    ['53: 파(F4)', 53],
+                    ['55: 솔(G4)', 55],
+                    ['57: 라(A4)', 57],
+                    ['59: 시(B4)', 59],
+                    ['60: 도(C5)', 60],
+                    ['62: 레(D5)', 62],
+                    ['64: 미(E5)', 64],
+                    ['65: 파(F5)', 65],
+                    ['67: 솔(G5)', 67],
+                    ['69: 라(A5)', 69],
+                    ['71: 시(B5)', 71],
+                    ['72: 도(C6)', 72],
+                ],
             },
             en: {
                 pingpong_right: 'right',
                 pingpong_left: 'left',
-                pingpong_circle: 'circle',
-                pingpong_star: 'star',
-                pingpong_rectangle: 'rectangle',
-                pingpong_triangle: 'triangle',
-                pingpong_heart: 'heart',
-                pingpong_dirnone: 'none',
 
                 pingpong_rotate_cw: 'clockwise',
                 pingpong_rotate_ccw: 'counter clockwise',
@@ -84,6 +122,40 @@ class PingpongBase {
                 pingpong_sensor_ain: 'ain',
                 pingpong_dot_on: 'ON',
                 pingpong_dot_off: 'OFF',
+
+                pingpong_opts_cube_tiltDir: [
+                    ['circle', 'F_CIRCLE'],
+                    ['triangle', 'B_TRIANGLE'],
+                    ['rectangle', 'L_RECTANGLE'],
+                    ['star', 'R_STAR'],
+                ],
+                pingpong_opts_cube_dir6: [
+                    ['rectangle', 'DF_RECTANGLE'],
+                    ['star', 'B_STAR'],
+                    ['triangle', 'L_TRIANGLE'],
+                    ['circle', 'R_CIRCLE'],
+                    ['heart', 'U_HEART'],
+                    ['none', 'D_NONE'],
+                ],
+                pingpong_opts_music_notes: [
+                    ['45: La(A3)', 45],
+                    ['47: Ti(B3)', 47],
+                    ['48: Do(C4)', 48],
+                    ['50: Re(D4)', 50],
+                    ['52: Mi(E4)', 52],
+                    ['53: Fa(F4)', 53],
+                    ['55: Sol(G4)', 55],
+                    ['57: La(A4)', 57],
+                    ['59: Ti(B4)', 59],
+                    ['60: Do(C5)', 60],
+                    ['62: Re(D5)', 62],
+                    ['64: Mi(E5)', 64],
+                    ['65: Fa(F5)', 65],
+                    ['67: Sol(G5)', 67],
+                    ['69: La(A5)', 69],
+                    ['71: Ti(B5)', 71],
+                    ['72: Do(C6)', 72],
+                ],
             },
         };
     }
@@ -171,7 +243,7 @@ class PingpongBase {
 
             const [packet, waitTime = this.delayTime] = myfunc();
 
-            if (packet.length > 0) {
+            if (packet && packet.length > 0) {
                 this.sendCommand(packet);
             }
 
@@ -284,43 +356,43 @@ class PingpongBase {
         let tiltValue = 0;
 
         if (cubeNo == 0) {
-            if (tiltDir == 'FRONT') {
+            if (tiltDir == 'F_CIRCLE') {
                 tiltValue = pd.c0_TILT_X * -1;
-            } else if (tiltDir == 'BACK') {
+            } else if (tiltDir == 'B_TRIANGLE') {
                 tiltValue = pd.c0_TILT_X;
-            } else if (tiltDir == 'LEFT') {
+            } else if (tiltDir == 'L_RECTANGLE') {
                 tiltValue = pd.c0_TILT_Y * -1;
-            } else if (tiltDir == 'RIGHT') {
+            } else if (tiltDir == 'R_STAR') {
                 tiltValue = pd.c0_TILT_Y;
             }
         } else if (cubeNo == 1) {
-            if (tiltDir == 'FRONT') {
+            if (tiltDir == 'F_CIRCLE') {
                 tiltValue = pd.c1_TILT_X * -1;
-            } else if (tiltDir == 'BACK') {
+            } else if (tiltDir == 'B_TRIANGLE') {
                 tiltValue = pd.c1_TILT_X;
-            } else if (tiltDir == 'LEFT') {
+            } else if (tiltDir == 'L_RECTANGLE') {
                 tiltValue = pd.c1_TILT_Y * -1;
-            } else if (tiltDir == 'RIGHT') {
+            } else if (tiltDir == 'R_STAR') {
                 tiltValue = pd.c1_TILT_Y;
             }
         } else if (cubeNo == 2) {
-            if (tiltDir == 'FRONT') {
+            if (tiltDir == 'F_CIRCLE') {
                 tiltValue = pd.c2_TILT_X * -1;
-            } else if (tiltDir == 'BACK') {
+            } else if (tiltDir == 'B_TRIANGLE') {
                 tiltValue = pd.c2_TILT_X;
-            } else if (tiltDir == 'LEFT') {
+            } else if (tiltDir == 'L_RECTANGLE') {
                 tiltValue = pd.c2_TILT_Y * -1;
-            } else if (tiltDir == 'RIGHT') {
+            } else if (tiltDir == 'R_STAR') {
                 tiltValue = pd.c2_TILT_Y;
             }
         } else if (cubeNo == 3) {
-            if (tiltDir == 'FRONT') {
+            if (tiltDir == 'F_CIRCLE') {
                 tiltValue = pd.c3_TILT_X * -1;
-            } else if (tiltDir == 'BACK') {
+            } else if (tiltDir == 'B_TRIANGLE') {
                 tiltValue = pd.c3_TILT_X;
-            } else if (tiltDir == 'LEFT') {
+            } else if (tiltDir == 'L_RECTANGLE') {
                 tiltValue = pd.c3_TILT_Y * -1;
-            } else if (tiltDir == 'RIGHT') {
+            } else if (tiltDir == 'R_STAR') {
                 tiltValue = pd.c3_TILT_Y;
             }
         }
@@ -331,36 +403,36 @@ class PingpongBase {
     _isUpperDir(cubeNo, tiltDir) {
         const pd = Entry.hw.portData;
         if (cubeNo == 0) {
-            if (tiltDir == 'FRONT' && pd.c0_TILT_Y > 70) return true;
-            if (tiltDir == 'BACK' && pd.c0_TILT_Y < -70) return true;
-            if (tiltDir == 'RIGHT' && pd.c0_TILT_X > 70) return true;
-            if (tiltDir == 'LEFT' && pd.c0_TILT_X < -70) return true;
-            if (tiltDir == 'DOWN' && pd.c0_TILT_Z > 70) return true;
-            if (tiltDir == 'UP' && pd.c0_TILT_Z < -70) return true;
+            if (tiltDir == 'DF_RECTANGLE' && pd.c0_TILT_Y > 70) return true;
+            if (tiltDir == 'DB_STAR' && pd.c0_TILT_Y < -70) return true;
+            if (tiltDir == 'DR_CIRCLE' && pd.c0_TILT_X > 70) return true;
+            if (tiltDir == 'DL_TRIANGLE' && pd.c0_TILT_X < -70) return true;
+            if (tiltDir == 'DD_NONE' && pd.c0_TILT_Z > 70) return true;
+            if (tiltDir == 'DU_HEART' && pd.c0_TILT_Z < -70) return true;
             return false;
         } else if (cubeNo == 1) {
-            if (tiltDir == 'FRONT' && pd.c1_TILT_Y > 70) return true;
-            if (tiltDir == 'BACK' && pd.c1_TILT_Y < -70) return true;
-            if (tiltDir == 'RIGHT' && pd.c1_TILT_X > 70) return true;
-            if (tiltDir == 'LEFT' && pd.c1_TILT_X < -70) return true;
-            if (tiltDir == 'DOWN' && pd.c1_TILT_Z > 70) return true;
-            if (tiltDir == 'UP' && pd.c1_TILT_Z < -70) return true;
+            if (tiltDir == 'DF_RECTANGLE' && pd.c1_TILT_Y > 70) return true;
+            if (tiltDir == 'DB_STAR' && pd.c1_TILT_Y < -70) return true;
+            if (tiltDir == 'DR_CIRCLE' && pd.c1_TILT_X > 70) return true;
+            if (tiltDir == 'DL_TRIANGLE' && pd.c1_TILT_X < -70) return true;
+            if (tiltDir == 'DD_NONE' && pd.c1_TILT_Z > 70) return true;
+            if (tiltDir == 'DU_HEART' && pd.c1_TILT_Z < -70) return true;
             return false;
         } else if (cubeNo == 2) {
-            if (tiltDir == 'FRONT' && pd.c2_TILT_Y > 70) return true;
-            if (tiltDir == 'BACK' && pd.c2_TILT_Y < -70) return true;
-            if (tiltDir == 'RIGHT' && pd.c2_TILT_X > 70) return true;
-            if (tiltDir == 'LEFT' && pd.c2_TILT_X < -70) return true;
-            if (tiltDir == 'DOWN' && pd.c2_TILT_Z > 70) return true;
-            if (tiltDir == 'UP' && pd.c2_TILT_Z < -70) return true;
+            if (tiltDir == 'DF_RECTANGLE' && pd.c2_TILT_Y > 70) return true;
+            if (tiltDir == 'DB_STAR' && pd.c2_TILT_Y < -70) return true;
+            if (tiltDir == 'DR_CIRCLE' && pd.c2_TILT_X > 70) return true;
+            if (tiltDir == 'DL_TRIANGLE' && pd.c2_TILT_X < -70) return true;
+            if (tiltDir == 'DD_NONE' && pd.c2_TILT_Z > 70) return true;
+            if (tiltDir == 'DU_HEART' && pd.c2_TILT_Z < -70) return true;
             return false;
         } else if (cubeNo == 3) {
-            if (tiltDir == 'FRONT' && pd.c3_TILT_Y > 70) return true;
-            if (tiltDir == 'BACK' && pd.c3_TILT_Y < -70) return true;
-            if (tiltDir == 'RIGHT' && pd.c3_TILT_X > 70) return true;
-            if (tiltDir == 'LEFT' && pd.c3_TILT_X < -70) return true;
-            if (tiltDir == 'DOWN' && pd.c3_TILT_Z > 70) return true;
-            if (tiltDir == 'UP' && pd.c3_TILT_Z < -70) return true;
+            if (tiltDir == 'DF_RECTANGLE' && pd.c3_TILT_Y > 70) return true;
+            if (tiltDir == 'DB_STAR' && pd.c3_TILT_Y < -70) return true;
+            if (tiltDir == 'DR_CIRCLE' && pd.c3_TILT_X > 70) return true;
+            if (tiltDir == 'DL_TRIANGLE' && pd.c3_TILT_X < -70) return true;
+            if (tiltDir == 'DD_NONE' && pd.c3_TILT_Z > 70) return true;
+            if (tiltDir == 'DU_HEART' && pd.c3_TILT_Z < -70) return true;
             return false;
         }
     }
@@ -374,6 +446,19 @@ class PingpongBase {
             cubeNo = this.cubeCnt - 1;
         }
         return cubeNo;
+    }
+
+    _clampBeats(beats) {
+        return Math.min(Math.max(beats, 0), 40);
+    }
+
+    _clampTempo(tempo) {
+        return Math.min(Math.max(tempo, 20), 500);
+    }
+
+    _beatsToDuration(beats) {
+        let duration = Math.round((60 / this.tempo) * beats * 100);
+        return duration;
     }
 
     _calcSpsFromSpeed(speed_) {
@@ -426,6 +511,10 @@ Entry.PingpongG2 = new (class extends PingpongBase {
             'pingpong_g2_set_dot_pixel',
             'pingpong_g2_set_dot_string',
             'pingpong_g2_set_dot_clear',
+            'pingpong_g2_playNoteForBeats',
+            'pingpong_g2_restForBeats',
+            'pingpong_g2_setTempo',
+            'pingpong_g2_getTempo',
         ];
     }
 
@@ -495,13 +584,8 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -578,13 +662,8 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -622,13 +701,8 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -717,15 +791,8 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                            [Lang.Blocks.pingpong_heart, 'UP'],
-                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_dir6,
+                        value: 'DF_RECTANGLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1208,6 +1275,123 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     });
                 },
             },
+            pingpong_g2_playNoteForBeats: {
+                //'%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g2_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g2_playNoteForBeats' },
+                paramsKeyMap: { CUBEID: 0, NOTE: 1, BEATS: 2 },
+                class: 'PingpongG2_Music',
+                isNotFor: ['PingpongG2'],
+                func(sprite, script) {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+                        const NOTE = script.getNumberField('NOTE', script);
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG2._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG2._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30; //XXX
+                        const opt = [0, PROPERTY_MUSIC.PLAY, NOTE - 8, durationSec, 0]; //type 1??
+                        const packet = Entry.PingpongG2.makePacket(OPCODE.MUSIC, 0xa1, cubeId, opt);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_g2_restForBeats: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g2_restForBeats' },
+                paramsKeyMap: { BEATS: 0 },
+                class: 'PingpongG2_Music',
+                isNotFor: ['PingpongG2'],
+                func(sprite, script) {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG2._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG2._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30;
+
+                        //XXX
+                        return [null, waitTime];
+                    });
+                },
+            },
+            pingpong_g2_setTempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '60' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g2_setTempo' },
+                paramsKeyMap: { TEMPO: 0 },
+                class: 'PingpongG2_Music',
+                isNotFor: ['PingpongG2'],
+                func(sprite, script) {
+                    let tempo = script.getNumberValue('TEMPO', script);
+                    Entry.PingpongG2.tempo = Entry.PingpongG2._clampTempo(tempo);
+                    return script.callReturn();
+                },
+            },
+            pingpong_g2_getTempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [],
+                def: { params: [], type: 'pingpong_g2_getTempo' },
+                paramsKeyMap: {},
+                class: 'PingpongG2_Music',
+                isNotFor: ['PingpongG2'],
+                func(sprite, script) {
+                    return Entry.PingpongG2.tempo;
+                },
+            },
         };
     }
 
@@ -1234,12 +1418,23 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                         '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g2_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g2_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
+                    pingpong_g2_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g2_restForBeats: '%1 박자 쉬기 %2',
+                    pingpong_g2_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
+                    pingpong_g2_getTempo: '악보 빠르기',
                 },
                 Blocks: {
                     ...this.lang_defblock.ko,
 
-                    pingpong_g2_cube_id: [['1번', 0], ['2번', 1]],
-                    pingpong_g2_cube_all: [['1번', 0], ['2번', 1], ['모든', -1]],
+                    pingpong_g2_cube_id: [
+                        ['1번', 0],
+                        ['2번', 1],
+                    ],
+                    pingpong_g2_cube_all: [
+                        ['1번', 0],
+                        ['2번', 1],
+                        ['모든', -1],
+                    ],
                 },
             },
             en: {
@@ -1263,12 +1458,23 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     pingpong_g2_set_dot_string:
                         'print %1 cube string %2 during %3 seconds to DOT %4',
                     pingpong_g2_set_dot_clear: '%1 cube clear DOT %2',
+                    pingpong_g2_playNoteForBeats: '%1 cube play note %2 for %3 beats %4',
+                    pingpong_g2_restForBeats: 'rest for %1 beats %2',
+                    pingpong_g2_setTempo: 'set tempo to %1 %2',
+                    pingpong_g2_getTempo: 'tempo',
                 },
                 Blocks: {
                     ...this.lang_defblock.en,
 
-                    pingpong_g2_cube_id: [['1st', 0], ['2nd', 1]],
-                    pingpong_g2_cube_all: [['1st', 0], ['2nd', 1], ['All', -1]],
+                    pingpong_g2_cube_id: [
+                        ['1st', 0],
+                        ['2nd', 1],
+                    ],
+                    pingpong_g2_cube_all: [
+                        ['1st', 0],
+                        ['2nd', 1],
+                        ['All', -1],
+                    ],
                 },
             },
         };
@@ -1303,6 +1509,10 @@ Entry.PingpongG3 = new (class extends PingpongBase {
             'pingpong_g3_set_dot_pixel',
             'pingpong_g3_set_dot_string',
             'pingpong_g3_set_dot_clear',
+            'pingpong_g3_playNoteForBeats',
+            'pingpong_g3_restForBeats',
+            'pingpong_g3_setTempo',
+            'pingpong_g3_getTempo',
         ];
     }
 
@@ -1376,13 +1586,8 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1463,13 +1668,8 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1507,13 +1707,8 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1606,15 +1801,8 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                            [Lang.Blocks.pingpong_heart, 'UP'],
-                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_dir6,
+                        value: 'DF_RECTANGLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2104,6 +2292,123 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     });
                 },
             },
+            pingpong_g3_playNoteForBeats: {
+                //'%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g3_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g3_playNoteForBeats' },
+                paramsKeyMap: { CUBEID: 0, NOTE: 1, BEATS: 2 },
+                class: 'PingpongG3_Music',
+                isNotFor: ['PingpongG3'],
+                func(sprite, script) {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+                        const NOTE = script.getNumberField('NOTE', script);
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG3._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG3._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30; //XXX
+                        const opt = [0, PROPERTY_MUSIC.PLAY, NOTE - 8, durationSec, 0]; //type 1??
+                        const packet = Entry.PingpongG3.makePacket(OPCODE.MUSIC, 0xa1, cubeId, opt);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_g3_restForBeats: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g3_restForBeats' },
+                paramsKeyMap: { BEATS: 0 },
+                class: 'PingpongG3_Music',
+                isNotFor: ['PingpongG3'],
+                func(sprite, script) {
+                    return Entry.PingpongG3.postCallReturn(script, () => {
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG3._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG3._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30;
+
+                        //XXX
+                        return [null, waitTime];
+                    });
+                },
+            },
+            pingpong_g3_setTempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '60' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g3_setTempo' },
+                paramsKeyMap: { TEMPO: 0 },
+                class: 'PingpongG3_Music',
+                isNotFor: ['PingpongG3'],
+                func(sprite, script) {
+                    let tempo = script.getNumberValue('TEMPO', script);
+                    Entry.PingpongG3.tempo = Entry.PingpongG3._clampTempo(tempo);
+                    return script.callReturn();
+                },
+            },
+            pingpong_g3_getTempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [],
+                def: { params: [], type: 'pingpong_g3_getTempo' },
+                paramsKeyMap: {},
+                class: 'PingpongG3_Music',
+                isNotFor: ['PingpongG3'],
+                func(sprite, script) {
+                    return Entry.PingpongG3.tempo;
+                },
+            },
         };
     }
 
@@ -2130,12 +2435,25 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                         '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g3_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g3_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
+                    pingpong_g3_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g3_restForBeats: '%1 박자 쉬기 %2',
+                    pingpong_g3_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
+                    pingpong_g3_getTempo: '악보 빠르기',
                 },
                 Blocks: {
                     ...this.lang_defblock.ko,
 
-                    pingpong_g3_cube_id: [['1번', 0], ['2번', 1], ['3번', 2]],
-                    pingpong_g3_cube_all: [['1번', 0], ['2번', 1], ['3번', 2], ['모든', -1]],
+                    pingpong_g3_cube_id: [
+                        ['1번', 0],
+                        ['2번', 1],
+                        ['3번', 2],
+                    ],
+                    pingpong_g3_cube_all: [
+                        ['1번', 0],
+                        ['2번', 1],
+                        ['3번', 2],
+                        ['모든', -1],
+                    ],
                 },
             },
             en: {
@@ -2160,12 +2478,25 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     pingpong_g3_set_dot_string:
                         'print %1 cube string %2 during %3 seconds to DOT %4',
                     pingpong_g3_set_dot_clear: '%1 cube clear DOT %2',
+                    pingpong_g3_playNoteForBeats: '%1 cube play note %2 for %3 beats %4',
+                    pingpong_g3_restForBeats: 'rest for %1 beats %2',
+                    pingpong_g3_setTempo: 'set tempo to %1 %2',
+                    pingpong_g3_getTempo: 'tempo',
                 },
                 Blocks: {
                     ...this.lang_defblock.en,
 
-                    pingpong_g3_cube_id: [['1st', 0], ['2nd', 1], ['3rd', 2]],
-                    pingpong_g3_cube_all: [['1st', 0], ['2nd', 1], ['3rd', 2], ['All', -1]],
+                    pingpong_g3_cube_id: [
+                        ['1st', 0],
+                        ['2nd', 1],
+                        ['3rd', 2],
+                    ],
+                    pingpong_g3_cube_all: [
+                        ['1st', 0],
+                        ['2nd', 1],
+                        ['3rd', 2],
+                        ['All', -1],
+                    ],
                 },
             },
         };
@@ -2200,6 +2531,10 @@ Entry.PingpongG4 = new (class extends PingpongBase {
             'pingpong_g4_set_dot_pixel',
             'pingpong_g4_set_dot_string',
             'pingpong_g4_set_dot_clear',
+            'pingpong_g4_playNoteForBeats',
+            'pingpong_g4_restForBeats',
+            'pingpong_g4_setTempo',
+            'pingpong_g4_getTempo',
         ];
     }
 
@@ -2274,13 +2609,8 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2362,13 +2692,8 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2406,13 +2731,8 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_tiltDir,
+                        value: 'F_CIRCLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2509,15 +2829,8 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.pingpong_circle, 'FRONT'],
-                            [Lang.Blocks.pingpong_triangle, 'BACK'],
-                            [Lang.Blocks.pingpong_rectangle, 'LEFT'],
-                            [Lang.Blocks.pingpong_star, 'RIGHT'],
-                            [Lang.Blocks.pingpong_heart, 'UP'],
-                            [Lang.Blocks.pingpong_dirnone, 'DOWN'],
-                        ],
-                        value: 'FRONT',
+                        options: Lang.Blocks.pingpong_opts_cube_dir6,
+                        value: 'DF_RECTANGLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3064,6 +3377,123 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     });
                 },
             },
+            pingpong_g4_playNoteForBeats: {
+                //'%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g4_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g4_playNoteForBeats' },
+                paramsKeyMap: { CUBEID: 0, NOTE: 1, BEATS: 2 },
+                class: 'PingpongG4_Music',
+                isNotFor: ['PingpongG4'],
+                func(sprite, script) {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
+                        const cubeId = script.getNumberField('CUBEID');
+                        const NOTE = script.getNumberField('NOTE', script);
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG4._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG4._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30; //XXX
+                        const opt = [0, PROPERTY_MUSIC.PLAY, NOTE - 8, durationSec, 0]; //type 1??
+                        const packet = Entry.PingpongG4.makePacket(OPCODE.MUSIC, 0xa1, cubeId, opt);
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
+            pingpong_g4_restForBeats: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g4_restForBeats' },
+                paramsKeyMap: { BEATS: 0 },
+                class: 'PingpongG4_Music',
+                isNotFor: ['PingpongG4'],
+                func(sprite, script) {
+                    return Entry.PingpongG4.postCallReturn(script, () => {
+                        const BEATS = script.getNumberValue('BEATS', script);
+
+                        const cBeats = Entry.PingpongG4._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG4._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30;
+
+                        //XXX
+                        return [null, waitTime];
+                    });
+                },
+            },
+            pingpong_g4_setTempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                params: [
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '60' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                def: { params: [], type: 'pingpong_g4_setTempo' },
+                paramsKeyMap: { TEMPO: 0 },
+                class: 'PingpongG4_Music',
+                isNotFor: ['PingpongG4'],
+                func(sprite, script) {
+                    let tempo = script.getNumberValue('TEMPO', script);
+                    Entry.PingpongG4.tempo = Entry.PingpongG4._clampTempo(tempo);
+                    return script.callReturn();
+                },
+            },
+            pingpong_g4_getTempo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                params: [],
+                def: { params: [], type: 'pingpong_g4_getTempo' },
+                paramsKeyMap: {},
+                class: 'PingpongG4_Music',
+                isNotFor: ['PingpongG4'],
+                func(sprite, script) {
+                    return Entry.PingpongG4.tempo;
+                },
+            },
         };
     }
 
@@ -3091,11 +3521,20 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                         '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g4_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g4_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
+                    pingpong_g4_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g4_restForBeats: '%1 박자 쉬기 %2',
+                    pingpong_g4_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
+                    pingpong_g4_getTempo: '악보 빠르기',
                 },
                 Blocks: {
                     ...this.lang_defblock.ko,
 
-                    pingpong_g4_cube_id: [['1번', 0], ['2번', 1], ['3번', 2], ['4번', 3]],
+                    pingpong_g4_cube_id: [
+                        ['1번', 0],
+                        ['2번', 1],
+                        ['3번', 2],
+                        ['4번', 3],
+                    ],
                     pingpong_g4_cube_all: [
                         ['1번', 0],
                         ['2번', 1],
@@ -3128,11 +3567,20 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     pingpong_g4_set_dot_string:
                         'print %1 cube string %2 during %3 seconds to DOT %4',
                     pingpong_g4_set_dot_clear: '%1 cube clear DOT %2',
+                    pingpong_g4_playNoteForBeats: '%1 cube play note %2 for %3 beats %4',
+                    pingpong_g4_restForBeats: 'rest for %1 beats %2',
+                    pingpong_g4_setTempo: 'set tempo to %1 %2',
+                    pingpong_g4_getTempo: 'tempo',
                 },
                 Blocks: {
                     ...this.lang_defblock.en,
 
-                    pingpong_g4_cube_id: [['1st', 0], ['2nd', 1], ['3rd', 2], ['4th', 3]],
+                    pingpong_g4_cube_id: [
+                        ['1st', 0],
+                        ['2nd', 1],
+                        ['3rd', 2],
+                        ['4th', 3],
+                    ],
                     pingpong_g4_cube_all: [
                         ['1st', 0],
                         ['2nd', 1],
