@@ -733,8 +733,12 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
         doc.on('keydown', (e) => {
-            const keyCode = e.keyCode;
-
+            let keyCode = e.keyCode;
+            console.log('ORIGINAL,', keyCode);
+            if (keyCode >= 96 && keyCode <= 105) {
+                console.log('TOBE ,', keyCode - 48);
+                keyCode = parseInt(keyCode - 48);
+            }
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -749,7 +753,10 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         doc.on('keyup', (e) => {
-            const keyCode = e.keyCode;
+            let keyCode = e.keyCode;
+            if (keyCode >= 96 && keyCode <= 105) {
+                keyCode = parseInt(keyCode - 48);
+            }
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
