@@ -468,13 +468,7 @@ module.exports = {
                 isNotFor: ['textBox'],
                 func(sprite, script) {
                     sprite.eraseBrush && sprite.eraseBrush();
-
                     sprite.removeStamps();
-
-                    if (sprite.brush && sprite.shapes.length) {
-                        sprite.brush.stop = true;
-                    }
-
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.clear_drawing()'] },

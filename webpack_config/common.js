@@ -14,12 +14,25 @@ module.exports = {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
         filename: '[name].js',
+        jsonpFunction: 'entryJsonp',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
+    node: {
+        fs: 'empty',
+    },
     module: {
         rules: [
+            {
+                test: /\.worker\.ts$/,
+                use: {
+                    loader: 'worker-loader',
+                    options: {
+                        inline: true,
+                    },
+                },
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -49,7 +62,7 @@ module.exports = {
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
                 exclude: /node_modules/,
-                options: { transpileOnly: process.env.NODE_ENV === 'production' },
+                options: { transpileOnly: true },
             },
             {
                 test: /\.(css|less)$/,

@@ -158,7 +158,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 setTimeout(callback, instance.duration);
             }
         } else {
-            const src = `${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
+            const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
                 text: message,
                 ...prop,
             })}`;

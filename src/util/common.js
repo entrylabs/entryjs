@@ -29,10 +29,7 @@ const Common = {
             options.body = JSON.stringify(options.data);
         }
         const queryString = options.params ? `?${Common.toQueryString(options.params)}` : '';
-        const response = await fetch(
-            `${EntryStatic.baseUrl || ''}${options.url}${queryString}`,
-            options
-        );
+        const response = await fetch(`${Entry.baseUrl || ''}${options.url}${queryString}`, options);
         if (response.status >= 400) {
             Common.callApi.cache = new _memoize.Cache();
             throw new Error(response);

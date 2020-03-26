@@ -6,8 +6,15 @@ import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
-declare let $: any;
-declare let createjs: any;
+const INITIAL_VIDEO_PARAMS = {
+    WIDTH: 480,
+    HEIGHT: 270,
+    X: -240,
+    Y: -135,
+    SCALE_X: 0.75,
+    SCALE_Y: 0.75,
+    ALPHA: 0.5,
+};
 
 interface IGraphicsEngineApplication {
     render(): void;
@@ -65,11 +72,21 @@ class _GEHelper extends GEHelperBase {
     public Ticker: ITicker;
     private _isInitialized: boolean;
 
+    /**  pixi Graphics로 비디오 감지 표현하기 위한 PIXI.Graphics */
+    public poseIndicatorGraphic: PIXI.Graphics | createjs.Graphics;
+    public faceIndicatorGraphic: PIXI.Graphics | createjs.Graphics;
+    public objectIndicatorGraphic: PIXI.Graphics | createjs.Graphics;
+
     /**
      * issues/9422#issuecomment-2678582
      * 최종 좌표 결정 단계에서 약간의 오차를 주어 이 현상을 막음.
      */
     public rndPosition: () => number;
+
+    /**
+     * 비디오 블록용 컨테이너, index = 2 , 기존의 오브젝트 컨테이너 = index3;
+     */
+    private videoContainer: PIXI.Container | createjs.Container;
 
     INIT(isWebGL: boolean) {
         super.INIT(isWebGL);
@@ -152,6 +169,397 @@ class _GEHelper extends GEHelperBase {
             const stage = Entry.stage.canvas;
             const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
             return object.hitTest(pt.x, pt.y);
+        }
+    }
+
+    tickByEngine() {
+        if (this._isWebGL) {
+            Entry.stage._app.ticker.start();
+        } else {
+            createjs.Ticker.on('tick', Entry.stage.canvas);
+        }
+    }
+
+    getNewContainer(): any {
+        if (this._isWebGL) {
+            return new PIXI.Container();
+        } else {
+            return new createjs.Container();
+        }
+    }
+
+    // this function returns corresponding VideoElement,
+    getVideoElement(video: HTMLVideoElement): any {
+        console.log('getVideoElement');
+        let videoElement: any = null;
+        const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+
+        if (this._isWebGL) {
+            const videoTexture = PIXI.Texture.fromVideo(video);
+            videoElement = new PIXI.Sprite(videoTexture);
+        } else {
+            videoElement = new createjs.Bitmap(video);
+        }
+        videoElement.width = WIDTH;
+        videoElement.height = HEIGHT;
+        videoElement.x = X;
+        videoElement.y = Y;
+        videoElement.alpha = ALPHA;
+
+        if (this._isWebGL) {
+            videoElement.scale.x = SCALE_X;
+            videoElement.scale.y = SCALE_Y;
+        } else {
+            videoElement.scaleX = SCALE_X;
+            videoElement.scaleY = SCALE_Y;
+            videoElement.on('tick', () => {
+                if (videoElement.cacheCanvas) {
+                    videoElement.updateCache();
+                }
+            });
+        }
+        return videoElement;
+    }
+
+    createNewIndicatorGraphic() {
+        const graphic = this.newGraphic();
+        graphic.width = 640;
+        graphic.height = 360;
+        graphic.x = INITIAL_VIDEO_PARAMS.X;
+        graphic.y = INITIAL_VIDEO_PARAMS.Y;
+        return graphic;
+    }
+
+    drawVideoElement(videoElement: PIXI.Sprite | createjs.Bitmap): any {
+        if (!this.videoContainer) {
+            this.videoContainer = Entry.stage.canvas.getChildAt(2);
+        }
+
+        this.videoContainer.addChild(videoElement);
+        this.tickByEngine();
+    }
+
+    drawDetectedGraphic() {
+        if (!this.poseIndicatorGraphic) {
+            this.poseIndicatorGraphic = this.createNewIndicatorGraphic();
+            Entry.stage.canvas.addChildAt(this.poseIndicatorGraphic, 4);
+        }
+        if (!this.faceIndicatorGraphic) {
+            this.faceIndicatorGraphic = this.createNewIndicatorGraphic();
+            Entry.stage.canvas.addChildAt(this.faceIndicatorGraphic, 4);
+        }
+        if (!this.objectIndicatorGraphic) {
+            this.objectIndicatorGraphic = this.createNewIndicatorGraphic();
+            Entry.stage.canvas.addChildAt(this.objectIndicatorGraphic, 4);
+        }
+        this.tickByEngine();
+    }
+
+    turnOffWebcam(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
+        if (!canvasVideo) {
+            return;
+        }
+        const targetContainer = Entry.stage.canvas.getChildAt(2);
+        targetContainer.removeChild(canvasVideo);
+    }
+
+    hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
+        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+        canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+    }
+
+    vFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
+        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+        canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+    }
+
+    resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
+        if (this._isWebGL) {
+            if (canvasVideo.filters && canvasVideo.filters[0]) {
+                canvasVideo.filters[0].enabled = false;
+                canvasVideo.filters = [];
+            }
+        } else {
+            canvasVideo.uncache();
+        }
+    }
+
+    setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
+        const filter = this.colorFilter.brightness(value);
+        if (this._isWebGL) {
+            canvasVideo.filters = [filter];
+            filter.enabled = true;
+        } else {
+            canvasVideo.uncache();
+            canvasVideo.filters = [filter];
+            canvasVideo.tickEnabled = true;
+            canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
+        }
+        return canvasVideo;
+    }
+
+    setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
+        canvasVideo.alpha = (100 - value) / 100;
+    }
+
+    resetHandlers() {
+        if (
+            !this.faceIndicatorGraphic ||
+            !this.poseIndicatorGraphic ||
+            !this.objectIndicatorGraphic
+        ) {
+            return;
+        }
+        if (this.isWebGL) {
+            this.faceIndicatorGraphic.clear();
+            this.poseIndicatorGraphic.clear();
+            this.objectIndicatorGraphic.clear();
+            const handler = this.objectIndicatorGraphic;
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
+        } else {
+            this.faceIndicatorGraphic.graphics.clear();
+            this.poseIndicatorGraphic.graphics.clear();
+            this.objectIndicatorGraphic.graphics.clear();
+        }
+    }
+
+    drawHumanPoints(poses: Array<any>, flipStatus: any) {
+        const R = 5;
+        let handler = this.poseIndicatorGraphic;
+        if (this._isWebGL) {
+        } else {
+            handler = this.poseIndicatorGraphic.graphics;
+        }
+        handler.clear();
+
+        poses.map((pose: any, index: Number) => {
+            pose.keypoints.map((item: any) => {
+                const { x, y } = item.position;
+                const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
+
+                handler.beginFill(0x0000ff);
+                handler.drawCircle(x, recalculatedY, R);
+                handler.endFill();
+            });
+
+            const { x, y } = pose.keypoints[3].position;
+            if (this._isWebGL) {
+                const text = PIXIHelper.text(
+                    `${Lang.Blocks.video_human}-${index + 1}`,
+                    '20px Nanum Gothic',
+                    '',
+                    'middle',
+                    'center'
+                );
+                text.x = x - 20;
+                text.y = y - 20;
+                handler.addChild(text);
+            } else {
+                handler.append({
+                    exec: (ctx: any) => {
+                        ctx.font = '20px Nanum Gothic';
+                        ctx.color = 'blue';
+                        ctx.fillText(`${Lang.Blocks.video_human}-${index + 1}`, x - 20, y - 20);
+                    },
+                });
+            }
+        });
+    }
+
+    drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
+        const coordList: any = [];
+        let handler = this.poseIndicatorGraphic;
+        adjacents.forEach((adjacentList: any) => {
+            adjacentList.forEach((pair: any) => {
+                const start = pair[0].position;
+                const end = pair[1].position;
+                if (flipStatus.vertical) {
+                    start.y = INITIAL_VIDEO_PARAMS.HEIGHT - start.y;
+                    end.y = INITIAL_VIDEO_PARAMS.HEIGHT - end.y;
+                }
+                coordList.push({ start, end });
+            });
+        });
+
+        if (this._isWebGL) {
+            handler.lineStyle(5, 0x0000ff);
+        } else {
+            handler = handler.graphics;
+            handler.setStrokeStyle(8, 'round').beginStroke('blue');
+        }
+        coordList.forEach((coord: any) => {
+            const { start, end } = coord;
+            handler.moveTo(start.x, start.y).lineTo(end.x, end.y);
+        });
+    }
+
+    drawFaceEdges(faces: any, flipStatus: any) {
+        let handler = this.faceIndicatorGraphic;
+
+        if (this._isWebGL) {
+            handler.clear();
+            handler.lineStyle(2, 0xff0000);
+        } else {
+            handler = handler.graphics;
+            handler.clear();
+            handler.setStrokeStyle(2, 'round').beginStroke('red');
+        }
+        faces.forEach((face: { landmarks: { _positions: any[] } }, index: Number) => {
+            const positions = face.landmarks._positions;
+            positions.forEach((item, i) => {
+                if (
+                    i === 0 ||
+                    i === 17 ||
+                    i === 27 ||
+                    i === 31 ||
+                    i === 36 ||
+                    i === 42 ||
+                    i === 48
+                ) {
+                    return;
+                }
+
+                const prev = face.landmarks._positions[i - 1];
+                this.drawEdge(prev, item, handler, flipStatus);
+            });
+            // compensation for missing edges
+            this.drawEdge(positions[42], positions[47], handler, flipStatus);
+            this.drawEdge(positions[41], positions[36], handler, flipStatus);
+            this.drawEdge(positions[60], positions[67], handler, flipStatus);
+            this.drawEdge(positions[0], positions[17], handler, flipStatus);
+            this.drawEdge(positions[16], positions[26], handler, flipStatus);
+            this.drawEdge(positions[27], positions[31], handler, flipStatus);
+            this.drawEdge(positions[27], positions[35], handler, flipStatus);
+            this.drawEdge(positions[30], positions[31], handler, flipStatus);
+            this.drawEdge(positions[30], positions[35], handler, flipStatus);
+
+            const refPoint = positions[57];
+            let x = refPoint._x;
+            const y = refPoint._y;
+
+            const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
+            if (flipStatus.horizontal) {
+                x = WIDTH - x;
+            }
+            if (flipStatus.vertical) {
+                y = HEIGHT - y;
+            }
+            if (this._isWebGL) {
+                const text = PIXIHelper.text(
+                    `${Lang.Blocks.video_face}-${index + 1}`,
+                    '20px Nanum Gothic',
+                    '',
+                    'middle',
+                    'center'
+                );
+                text.x = x;
+                text.y = y - 10;
+                handler.addChild(text);
+            } else {
+                handler.append({
+                    exec: (ctx: any) => {
+                        ctx.font = '20px Nanum Gothic';
+                        ctx.color = '#0000ff';
+                        ctx.fillText(`${Lang.Blocks.video_face}-${index + 1}`, x, y - 10);
+                    },
+                });
+            }
+        });
+    }
+
+    drawEdge(
+        pos1: { _x: number; _y: number },
+        pos2: { _x: number; _y: number },
+        handler: PIXI.Graphics | createjs.Graphics,
+        flipStatus: any
+    ) {
+        const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
+
+        let { _x, _y } = pos2;
+        let prevX = pos1._x;
+        let prevY = pos1._y;
+        if (flipStatus.horizontal) {
+            _x = WIDTH - _x;
+            prevX = WIDTH - prevX;
+        }
+        if (flipStatus.vertical) {
+            _y = HEIGHT - _y;
+            prevY = HEIGHT - prevY;
+        }
+
+        handler.moveTo(prevX, prevY).lineTo(_x, _y);
+    }
+
+    drawObjectBox(objects: Array<any>, flipStatus: any) {
+        const objectsList: any = [];
+        objects.forEach((object: any) => {
+            const bbox = object.bbox;
+            const name = object.class
+                ? `${Lang.Blocks.video_object}-${Lang.video_object_params[object.class]}`
+                : '';
+            let x = bbox[0];
+            let y = bbox[1];
+            const width = bbox[2];
+            const height = bbox[3];
+
+            if (flipStatus.horizontal) {
+                x = INITIAL_VIDEO_PARAMS.WIDTH - x - width;
+            }
+            if (flipStatus.vertical) {
+                y = INITIAL_VIDEO_PARAMS.HEIGHT - y - height;
+            }
+            const textpoint = { x: x + 20, y: y + 20 };
+            objectsList.push({ textpoint, name, x, y, width, height });
+        });
+
+        let handler = this.objectIndicatorGraphic;
+
+        if (this._isWebGL) {
+            handler.clear();
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
+            handler.lineStyle(5, 0xff0000);
+            objectsList.forEach((target: any, index: Number) => {
+                const { textpoint, name, x, y, width, height } = target;
+                if (name) {
+                    const text = PIXIHelper.text(
+                        `${name}-${index + 1}`,
+                        '20px Nanum Gothic',
+                        '',
+                        'middle',
+                        'center'
+                    );
+                    text.x = textpoint.x;
+                    text.y = textpoint.y;
+                    handler.addChild(text);
+                }
+
+                handler.drawRect(x, y, width, height);
+            });
+        } else {
+            handler = handler.graphics;
+            handler.clear();
+            objectsList.forEach((target: any, index: Number) => {
+                const { textpoint, name, x, y, width, height } = target;
+
+                if (name) {
+                    handler.append({
+                        exec: (ctx: any) => {
+                            ctx.font = '20px Nanum Gothic';
+                            ctx.fillText(`${name}-${index + 1}`, textpoint.x - 5, textpoint.y + 5);
+                        },
+                    });
+                }
+                handler
+                    .setStrokeStyle(8, 'round')
+                    .beginStroke('red')
+                    .drawRect(x, y, width, height);
+            });
         }
     }
 

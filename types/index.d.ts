@@ -42,6 +42,13 @@ declare interface ISkeleton {
     statementPos?: (blockView: any) => Point[];
 }
 
+declare interface MediaUtilsInterface {
+    initialize(): void;
+    reset(): void;
+    destroy(): void;
+    compatabilityChecker(): void; // throws error if failed
+}
+
 declare interface EntryDomOptions {
     id?: string;
     class?: string;
@@ -102,6 +109,8 @@ declare module IEntry {
     }
 
     export interface Stage {
+        loadDialog(dialog: any): void;
+        unloadDialog(dialog: any): void;
         canvas: PIXI.Container | any;
         _app: PIXI.Application | any;
     }
@@ -121,7 +130,7 @@ declare module IEntry {
      * 최초 엔트리 Init 시 받는 옵션들. 여기저기서 사용된다
      */
     export interface EntryOptions {
-        disableHardware?: boolean;
+        hardwareEnable?: boolean;
     }
 
     export interface ExternalModuleManager {
@@ -195,6 +204,17 @@ declare module IEntry {
         generateView(introView: any): void;
         setView(view: any): void;
         removeView(): void;
+    }
+
+    export interface PDF {
+        getView(): HTMLDivElement;
+        resize(): void;
+        // generateView
+    }
+
+    export interface Dialog {
+        update(): void;
+        remove(): void;
     }
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }

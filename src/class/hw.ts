@@ -69,10 +69,9 @@ export default class Hardware implements IEntry.Hardware {
     }
 
     private _initHardwareObject() {
-        const { options } = Entry;
-        const { disableHardware = false } = options;
+        const { hardwareEnable } = Entry;
         this._hwPopupCreate();
-        !disableHardware && this._initSocket();
+        hardwareEnable && this._initSocket();
     }
 
     private _addEntryEventListener() {
