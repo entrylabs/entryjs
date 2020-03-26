@@ -1467,13 +1467,13 @@ Entry.Playground = class Playground {
                 if (result) {
                     this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
                 }
-                delete this.dataTable.tempDataAnalytics;
 
                 if (this.dataTable.selected) {
                     this.dataTable.dataAnalytics.setData({
                         table: { ...this.dataTable.selected.toJSON() },
                     });
                 }
+                delete this.dataTable.tempDataAnalytics;
                 resolve(result);
             });
         });
