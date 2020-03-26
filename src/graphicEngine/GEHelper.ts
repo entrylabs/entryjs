@@ -5,7 +5,6 @@ import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
-import { Graphics } from 'pixi.js';
 
 const INITIAL_VIDEO_PARAMS = {
     WIDTH: 480,
@@ -303,7 +302,7 @@ class _GEHelper extends GEHelperBase {
         canvasVideo.alpha = (100 - value) / 100;
     }
 
-    removeAllChildInHandler(handler: Graphics | createjs.Graphics) {
+    removeAllChildInHandler(handler: PIXI.Graphics | createjs.Graphics) {
         while (handler.children.length > 0) {
             const child = handler.getChildAt(0);
             handler.removeChild(child);
