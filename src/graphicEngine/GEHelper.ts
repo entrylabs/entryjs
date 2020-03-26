@@ -5,6 +5,7 @@ import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
+import { Graphics } from 'pixi.js';
 
 const INITIAL_VIDEO_PARAMS = {
     WIDTH: 480,
@@ -302,6 +303,13 @@ class _GEHelper extends GEHelperBase {
         canvasVideo.alpha = (100 - value) / 100;
     }
 
+    removeAllChildInHandler(handler: Graphics | createjs.Graphics) {
+        while (handler.children.length > 0) {
+            const child = handler.getChildAt(0);
+            handler.removeChild(child);
+        }
+    }
+
     resetHandlers() {
         if (
             !this.faceIndicatorGraphic ||
@@ -314,11 +322,9 @@ class _GEHelper extends GEHelperBase {
             this.faceIndicatorGraphic.clear();
             this.poseIndicatorGraphic.clear();
             this.objectIndicatorGraphic.clear();
-            const handler = this.objectIndicatorGraphic;
-            while (handler.children.length > 0) {
-                const child = handler.getChildAt(0);
-                handler.removeChild(child);
-            }
+            this.removeAllChildInHandler(this.objectIndicatorGraphic);
+            this.removeAllChildInHandler(this.poseIndicatorGraphic);
+            this.removeAllChildInHandler(this.faceIndicatorGraphic);
         } else {
             this.faceIndicatorGraphic.graphics.clear();
             this.poseIndicatorGraphic.graphics.clear();
@@ -330,21 +336,16 @@ class _GEHelper extends GEHelperBase {
         const R = 5;
         let handler = this.poseIndicatorGraphic;
         if (this._isWebGL) {
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
         } else {
             handler = this.poseIndicatorGraphic.graphics;
         }
         handler.clear();
 
         poses.map((pose: any, index: Number) => {
-            pose.keypoints.map((item: any) => {
-                const { x, y } = item.position;
-                const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
-
-                handler.beginFill(0x0000ff);
-                handler.drawCircle(x, recalculatedY, R);
-                handler.endFill();
-            });
-
             const { x, y } = pose.keypoints[3].position;
             if (this._isWebGL) {
                 const text = PIXIHelper.text(
@@ -366,6 +367,14 @@ class _GEHelper extends GEHelperBase {
                     },
                 });
             }
+            pose.keypoints.map((item: any) => {
+                const { x, y } = item.position;
+                const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
+
+                handler.beginFill(0x0000ff);
+                handler.drawCircle(x, recalculatedY, R);
+                handler.endFill();
+            });
         });
     }
 
@@ -401,6 +410,10 @@ class _GEHelper extends GEHelperBase {
 
         if (this._isWebGL) {
             handler.clear();
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
             handler.lineStyle(2, 0xff0000);
         } else {
             handler = handler.graphics;
@@ -438,7 +451,7 @@ class _GEHelper extends GEHelperBase {
 
             const refPoint = positions[57];
             let x = refPoint._x;
-            const y = refPoint._y;
+            let y = refPoint._y;
 
             const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
             if (flipStatus.horizontal) {
