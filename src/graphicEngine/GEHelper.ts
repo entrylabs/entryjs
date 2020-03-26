@@ -273,31 +273,6 @@ class _GEHelper extends GEHelperBase {
         canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
     }
 
-    resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
-        if (this._isWebGL) {
-            if (canvasVideo.filters && canvasVideo.filters[0]) {
-                canvasVideo.filters[0].enabled = false;
-                canvasVideo.filters = [];
-            }
-        } else {
-            canvasVideo.uncache();
-        }
-    }
-
-    setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
-        const filter = this.colorFilter.brightness(value);
-        if (this._isWebGL) {
-            canvasVideo.filters = [filter];
-            filter.enabled = true;
-        } else {
-            canvasVideo.uncache();
-            canvasVideo.filters = [filter];
-            canvasVideo.tickEnabled = true;
-            canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
-        }
-        return canvasVideo;
-    }
-
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
         canvasVideo.alpha = (100 - value) / 100;
     }

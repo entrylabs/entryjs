@@ -455,7 +455,6 @@ class VideoUtils implements MediaUtilsInterface {
             this.setOptions('vflip', null);
         }
 
-        GEHelper.resetCanvasBrightness(this.canvasVideo);
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
 
         this.poses = { predictions: [], adjacents: [] };
