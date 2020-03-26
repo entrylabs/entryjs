@@ -112,29 +112,29 @@ Entry.PingpongG1 = new (class PingpongG1 {
         }
     }
 
-    postCallReturn(script, packet, waitTime = this.delayTime) {
-        if (waitTime <= 0) {
-            this.sendCommand(packet);
+    postCallReturn(script, myfunc) {
+        if (myfunc == undefined) {
             return script.callReturn();
         }
 
-        if (!script.is_start) {
+        if (script.is_start == undefined) {
             script.is_start = true;
-            script.step_flag = 1;
 
-            this.sendCommand(packet);
+            const [packet, waitTime = this.delayTime] = myfunc();
+
+            if (packet && packet.length > 0) {
+                this.sendCommand(packet);
+            }
 
             setTimeout(() => {
-                script.step_flag = 0;
+                script.is_start = false;
             }, waitTime);
             return script;
-        } else if (script.step_flag == 1) {
+        } else if (script.is_start == true) {
             return script;
         } else {
             delete script.is_start;
-            delete script.step_flag;
 
-            //Entry.engine.isContinue = false;
             return script.callReturn();
         }
     }
@@ -502,31 +502,31 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_motor',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    const dir = script.getStringField('DIR');
-                    let degree = script.getNumberValue('DEGREE');
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        const dir = script.getStringField('DIR');
+                        let degree = script.getNumberValue('DEGREE');
 
-                    console.log('motor: ', dir, degree);
-                    let speed = 800;
-                    if (dir == 'LEFT') {
-                        speed *= -1;
-                    }
+                        let speed = 800;
+                        if (dir == 'LEFT') {
+                            speed *= -1;
+                        }
 
-                    degree = Math.min(Math.max(degree, 0), 360);
+                        degree = Math.min(Math.max(degree, 0), 360);
 
-                    let step = Math.round(degree * 5.5);
-                    if (step > 32768) {
-                        step = 32768;
-                    }
+                        let step = Math.round(degree * 5.5);
+                        if (step > 32768) {
+                            step = 32768;
+                        }
 
-                    const opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
-                    const packet = Entry.PingpongG1.makePacket(0xc1, 0x0004, opt); // SETP_MOTOR
+                        const opt = [2, 1, 0, 2, 0, 0, 0, 0, 0, 0];
+                        const packet = Entry.PingpongG1.makePacket(0xc1, 0x0004, opt); // SETP_MOTOR
 
-                    packet.writeInt16BE(speed, 13);
-                    packet.writeUInt16BE(step, 17);
+                        packet.writeInt16BE(speed, 13);
+                        packet.writeUInt16BE(step, 17);
 
-                    const waitTime = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
-
-                    return Entry.PingpongG1.postCallReturn(script, packet, waitTime);
+                        const waitTime = Math.round(((1100 - Math.abs(speed)) / 99) * step) + 400;
+                        return [packet, waitTime];
+                    });
                 },
             },
 
@@ -559,29 +559,32 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_motor',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    let speed = script.getNumberValue('SPEED');
-                    if (speed > 100) {
-                        speed = 100;
-                    }
-                    if (speed < -100) {
-                        speed = -100;
-                    }
-
-                    let sps = 0;
-                    if (speed != 0) {
-                        if (speed < 0) {
-                            sps = speed * 9 - 100;
-                        } else {
-                            sps = speed * 9 + 100;
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        let speed = script.getNumberValue('SPEED');
+                        if (speed > 100) {
+                            speed = 100;
                         }
-                        sps = Math.round(sps);
-                    }
+                        if (speed < -100) {
+                            speed = -100;
+                        }
 
-                    const packet = Entry.PingpongG1.makePacket(0xcc, 0x0004, [2, 0, 0, 2, 0, 0]);
-                    packet.writeInt16BE(sps, 13);
+                        let sps = 0;
+                        if (speed != 0) {
+                            if (speed < 0) {
+                                sps = speed * 9 - 100;
+                            } else {
+                                sps = speed * 9 + 100;
+                            }
+                            sps = Math.round(sps);
+                        }
 
-                    const waitTime = Math.round(((1100 - Math.abs(sps)) / 99) * 10) + 400;
-                    return Entry.PingpongG1.postCallReturn(script, packet, waitTime);
+                        const opt = [2, 0, 0, 2, sps / 256, sps % 256];
+                        const packet = Entry.PingpongG1.makePacket(0xcc, 0x0004, opt);
+                        //packet.writeInt16BE(sps, 13);
+
+                        const waitTime = Math.round(((1100 - Math.abs(sps)) / 99) * 10) + 400;
+                        return [packet, waitTime];
+                    });
                 },
             },
             pingpong_g1_stop_motor_rotate: {
@@ -603,8 +606,11 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_motor',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    const packet = Entry.PingpongG1.makePacket(0xcc, 0x0004, [2, 0, 0, 1, 0, 0]);
-                    return Entry.PingpongG1.postCallReturn(script, packet);
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        const opt = [2, 0, 0, 1, 0, 0];
+                        const packet = Entry.PingpongG1.makePacket(0xcc, 0x0004, opt);
+                        return [packet];
+                    });
                 },
             },
 
@@ -631,12 +637,14 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_motor',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    let angle = script.getNumberValue('DEGREE', script);
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        let angle = script.getNumberValue('DEGREE', script);
 
-                    angle = Math.min(Math.max(angle, 0), 180);
+                        angle = Math.min(Math.max(angle, 0), 180);
 
-                    const packet = Entry.PingpongG1.makePacket(0xe1, 0x00, [2, 0, angle, 1]);
-                    return Entry.PingpongG1.postCallReturn(script, packet, 400);
+                        const packet = Entry.PingpongG1.makePacket(0xe1, 0x00, [2, 0, angle, 1]);
+                        return [packet, 400];
+                    });
                 },
             },
 
@@ -674,20 +682,22 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_peripheral_LED',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    let dotX = script.getNumberValue('X', script);
-                    let dotY = script.getNumberValue('Y', script);
-                    const onoff = script.getNumberField('onoff', script);
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        let dotX = script.getNumberValue('X', script);
+                        let dotY = script.getNumberValue('Y', script);
+                        const onoff = script.getNumberField('onoff', script);
 
-                    dotX = Math.min(Math.max(dotX, 0), 7);
-                    dotY = Math.min(Math.max(dotY, 0), 7);
+                        dotX = Math.min(Math.max(dotX, 0), 7);
+                        dotY = Math.min(Math.max(dotY, 0), 7);
 
-                    const packet = Entry.PingpongG1.makePacket(0xa2, 0xe1, [
-                        0x70,
-                        dotY,
-                        dotX,
-                        onoff,
-                    ]); // turn on
-                    return Entry.PingpongG1.postCallReturn(script, packet);
+                        const packet = Entry.PingpongG1.makePacket(0xa2, 0xe1, [
+                            0x70,
+                            dotY,
+                            dotX,
+                            onoff,
+                        ]); // turn on
+                        return [packet];
+                    });
                 },
             },
             pingpong_g1_set_dot_string: {
@@ -710,20 +720,22 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_peripheral_LED',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    const str = script.getStringValue('STR', script);
-                    const duration = script.getNumberValue('DURATION', script);
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        const str = script.getStringValue('STR', script);
+                        const duration = script.getNumberValue('DURATION', script);
 
-                    let period = Math.round((duration * 100) / (str.length * 8));
-                    period = Math.min(Math.max(period, 1), 200);
+                        let period = Math.round((duration * 100) / (str.length * 8));
+                        period = Math.min(Math.max(period, 1), 200);
 
-                    const opt = Buffer.concat([
-                        Buffer.from([0x70, period, 0]),
-                        Buffer.from(str.substring(0, 20)),
-                    ]);
+                        const opt = Buffer.concat([
+                            Buffer.from([0x70, period, 0]),
+                            Buffer.from(str.substring(0, 20)),
+                        ]);
 
-                    const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, opt);
-                    const waitTime = period * str.length * 8 * 10 + 400; // add wait for 400ms
-                    return Entry.PingpongG1.postCallReturn(script, packet, waitTime);
+                        const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, opt);
+                        const waitTime = period * str.length * 8 * 10 + 400; // add wait for 400ms
+                        return [packet, waitTime];
+                    });
                 },
             },
             pingpong_g1_set_dot_clear: {
@@ -744,8 +756,10 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_peripheral_LED',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
-                    return Entry.PingpongG1.postCallReturn(script, packet, 400);
+                    return Entry.PingpongG1.postCallReturn(script, () => {
+                        const packet = Entry.PingpongG1.makePacket(0xa2, 0xe3, [0x70, 1, 0, ' ']);
+                        return [packet, 400];
+                    });
                 },
             },
             pingpong_g1_playNoteForBeats: {
@@ -776,37 +790,20 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_Music',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    if (!script.is_start) {
-                        script.is_start = true;
-                        script.step_flag = 1;
-
+                    return Entry.PingpongG1.postCallReturn(script, () => {
                         const NOTE = script.getNumberField('NOTE', script);
                         const BEATS = script.getNumberValue('BEATS', script);
 
                         const cBeats = Entry.PingpongG1._clampBeats(BEATS);
                         const durationSec = Entry.PingpongG1._beatsToDuration(cBeats);
 
-                        console.log(' beats=', BEATS, ', duration=', durationSec);
-
                         const waitTime = durationSec * 10 + 30; //XXX
                         const opt = [0, 0x00 /*PLAY*/, NOTE - 8, durationSec, 0]; //type 1??
                         //const opt = [0, 0x00/*PLAY*/, note-8, 0, durationSec];	//type 2
                         const packet = Entry.PingpongG1.makePacket(0xe8, 0xa1, opt);
 
-                        Entry.PingpongG1.sendCommand(packet);
-
-                        setTimeout(() => {
-                            script.step_flag = 0;
-                        }, waitTime);
-                        return script;
-                    } else if (script.step_flag == 1) {
-                        return script;
-                    } else {
-                        delete script.is_start;
-                        delete script.step_flag;
-
-                        return script.callReturn();
-                    }
+                        return [packet, waitTime];
+                    });
                 },
             },
             pingpong_g1_restForBeats: {
@@ -827,30 +824,16 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 class: 'PingpongG1_Music',
                 isNotFor: ['PingpongG1'],
                 func(sprite, script) {
-                    if (!script.is_start) {
-                        script.is_start = true;
-                        script.step_flag = 1;
-
+                    return Entry.PingpongG1.postCallReturn(script, () => {
                         const BEATS = script.getNumberValue('BEATS', script);
 
                         const cBeats = Entry.PingpongG1._clampBeats(BEATS);
                         const durationSec = Entry.PingpongG1._beatsToDuration(cBeats);
-                        console.log('wait duration ', durationSec);
 
                         const waitTime = durationSec * 10 + 30;
 
-                        setTimeout(() => {
-                            script.step_flag = 0;
-                        }, waitTime);
-                        return script;
-                    } else if (script.step_flag == 1) {
-                        return script;
-                    } else {
-                        delete script.is_start;
-                        delete script.step_flag;
-
-                        return script.callReturn();
-                    }
+                        return [null, waitTime];
+                    });
                 },
             },
             pingpong_g1_setTempo: {
@@ -873,7 +856,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                 func(sprite, script) {
                     let tempo = script.getNumberValue('TEMPO', script);
                     Entry.PingpongG1.tempo = Entry.PingpongG1._clampTempo(tempo);
-                    console.log('SET TEMPO = ', tempo, Entry.PingpongG1.tempo);
+                    //console.log('SET TEMPO = ', tempo, Entry.PingpongG1.tempo);
                     return script.callReturn();
                 },
             },
