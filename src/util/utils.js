@@ -2747,14 +2747,20 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 };
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
-    if (!Array.isArray(cloudVariable)) {
+    let items;
+    if(typeof cloudVariable === 'string') {
+        try {
+            items = JSON.parse(cloudVariable);
+        } catch(e) {}
+    }
+    if (!Array.isArray(items)) {
         return variables;
     }
-    return variables.map((item) => {
-        const cloud = cloudVariable.find(({ id }) => id === item.id);
+    return variables.map((variable) => {
+        const cloud = items.find(({ id }) => id === variable.id);
         if (cloud) {
-            return { ...item, ...cloud };
+            return { ...variable, ...cloud };
         }
-        return item;
+        return variable;
     });
 };
