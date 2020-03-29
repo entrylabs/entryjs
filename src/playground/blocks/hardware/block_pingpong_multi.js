@@ -534,6 +534,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
             'pingpong_g2_is_button_pressed',
             'pingpong_g2_is_tilted',
             'pingpong_g2_get_tilt_value',
+            'pingpong_g2_is_top_shape',
             'pingpong_g2_get_sensor_value',
             'pingpong_g2_multi_motor_rotate',
             'pingpong_g2_motor_rotate',
@@ -1407,7 +1408,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     pingpong_g2_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g2_get_sensor_value: '%1 큐브의 %2 센서값',
                     pingpong_g2_multi_motor_rotate:
-                        '모터1을 %1 방향으로 %2 도 회전하고 모터2를 %3 방향으로 %4 도 회전하기 %5',
+                        '모터1을 %1 방향 %2 도, 모터2를 %3 방향 %4 도 회전하기 %5',
                     pingpong_g2_motor_rotate: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
                     pingpong_g2_start_multi_motor_rotate:
                         '모터1 속도를 %1 모터2 속도를 %2 (으)로 정하기 %3',
@@ -1499,6 +1500,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
             'pingpong_g3_is_button_pressed',
             'pingpong_g3_is_tilted',
             'pingpong_g3_get_tilt_value',
+            'pingpong_g3_is_top_shape',
             'pingpong_g3_get_sensor_value',
             'pingpong_g3_multi_motor_rotate',
             'pingpong_g3_motor_rotate',
@@ -2514,7 +2516,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                     pingpong_g3_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g3_get_sensor_value: '%1 큐브의 %2 센서값',
                     pingpong_g3_multi_motor_rotate:
-                        '모터1을 %1 방향으로 %2 도 회전하고 모터2를 %3 방향으로 %4 도 회전하고 모터3을 %5방향으로 %6도 회전하기 %7',
+                        '모터1을 %1 방향 %2 도, 모터2를 %3 방향 %4 도, 모터3을 %5방향 %6도 회전하기 %7',
                     pingpong_g3_motor_rotate: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
                     pingpong_g3_start_multi_motor_rotate:
                         '모터1 속도를 %1 모터2 속도를 %2 모터3 속도를 %3 (으)로 정하기 %4',
@@ -2615,6 +2617,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
             'pingpong_g4_is_button_pressed',
             'pingpong_g4_is_tilted',
             'pingpong_g4_get_tilt_value',
+            'pingpong_g4_is_top_shape',
             'pingpong_g4_get_sensor_value',
             'pingpong_g4_multi_motor_rotate',
             'pingpong_g4_motor_rotate',
@@ -3656,8 +3659,8 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                     pingpong_g4_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g4_get_sensor_value: '%1 큐브의 %2 센서값',
                     pingpong_g4_multi_motor_rotate:
-                        '모터1은 %1 방향으로 %2 도, 모터2는 %3 방향으로 %4 도, ' +
-                        '모터3은 %5방향으로 %6도, 모터4는 %7방향으로 %8도 회전하기 %9',
+                        '모터1은 %1방향 %2도, 모터2는 %3방향 %4도, ' +
+                        '모터3은 %5방향 %6도, 모터4는 %7방향 %8도 회전하기 %9',
                     pingpong_g4_motor_rotate: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
                     pingpong_g4_start_multi_motor_rotate:
                         '모터1 속도를 %1 모터2 속도를 %2 모터3 속도를 %3 모터4 속도를 %4 (으)로 정하기 %5',

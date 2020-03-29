@@ -438,7 +438,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     {
                         type: 'Dropdown',
                         options: Lang.Blocks.pingpong_opts_cube_dir6,
-                        value: 'F_RECTANGLE',
+                        value: 'DF_RECTANGLE',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
