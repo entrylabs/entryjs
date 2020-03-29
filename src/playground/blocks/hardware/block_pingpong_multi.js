@@ -2626,6 +2626,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
             'pingpong_g4_set_dot_string',
             'pingpong_g4_set_dot_clear',
             'pingpong_g4_playNoteForBeats',
+            'pingpong_g4_playChordForBeats',
             'pingpong_g4_restForBeats',
             'pingpong_g4_setTempo',
             'pingpong_g4_getTempo',
