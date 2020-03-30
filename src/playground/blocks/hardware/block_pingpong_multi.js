@@ -568,6 +568,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
             'pingpong_g2_set_dot_string',
             'pingpong_g2_set_dot_clear',
             'pingpong_g2_playNoteForBeats',
+            'pingpong_g2_playChordForBeats',
             'pingpong_g2_restForBeats',
             'pingpong_g2_setTempo',
             'pingpong_g2_getTempo',
@@ -1350,6 +1351,97 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     });
                 },
             },
+            pingpong_g2_playChordForBeats: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g2_cube_id,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_g2_cube_id,
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: Lang.Blocks.pingpong_opts_music_notes,
+                        value: 48,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    { type: 'Block', accept: 'string', defaultType: 'number', value: '1' },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: { params: [], type: 'pingpong_g2_playChordForBeats' },
+                paramsKeyMap: {
+                    CUBEID_1: 0,
+                    NOTE_1: 1,
+                    CUBEID_2: 2,
+                    NOTE_2: 3,
+                    BEATS: 4,
+                },
+                class: 'PingpongG2_Music',
+                isNotFor: ['PingpongG2'],
+                func(sprite, script) {
+                    return Entry.PingpongG2.postCallReturn(script, () => {
+                        const cubeId1 = script.getNumberField('CUBEID_1');
+                        const cubeId2 = script.getNumberField('CUBEID_2');
+                        const NOTE1 = script.getNumberField('NOTE_1', script);
+                        const NOTE2 = script.getNumberField('NOTE_2', script);
+
+                        const BEATS = script.getNumberValue('BEATS', script);
+                        const cBeats = Entry.PingpongG2._clampBeats(BEATS);
+                        const durationSec = Entry.PingpongG2._beatsToDuration(cBeats);
+
+                        const waitTime = durationSec * 10 + 30;
+
+                        const arr1 = Entry.PingpongG2.makeMusicNotePacket(
+                            cubeId1,
+                            NOTE1,
+                            durationSec
+                        );
+                        const arr2 = Entry.PingpongG2.makeMusicNotePacket(
+                            cubeId2,
+                            NOTE2,
+                            durationSec
+                        );
+
+                        const packet = Entry.PingpongG2.makeAggregatePacket(
+                            OPCODE.MUSIC,
+                            0xa2,
+                            [arr1, arr2],
+                            [0, 0]
+                        );
+
+                        return [packet, waitTime];
+                    });
+                },
+            },
             pingpong_g2_restForBeats: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1442,6 +1534,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     pingpong_g2_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g2_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
                     pingpong_g2_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g2_playChordForBeats: '%1 큐브 %2, %3 큐브 %4, %5 박자로 연주하기 %6',
                     pingpong_g2_restForBeats: '%1 박자 쉬기 %2',
                     pingpong_g2_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
                     pingpong_g2_getTempo: '악보 빠르기',
@@ -1482,6 +1575,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                         'print %1 cube string %2 during %3 seconds to DOT %4',
                     pingpong_g2_set_dot_clear: '%1 cube clear DOT %2',
                     pingpong_g2_playNoteForBeats: '%1 cube play note %2 for %3 beats %4',
+                    pingpong_g2_playChordForBeats: '%1 cube %2, %3 cube %4 for %5 beats %6',
                     pingpong_g2_restForBeats: 'rest for %1 beats %2',
                     pingpong_g2_setTempo: 'set tempo to %1 %2',
                     pingpong_g2_getTempo: 'tempo',
