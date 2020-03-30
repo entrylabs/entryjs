@@ -14,7 +14,12 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
+                        options: [
+                            ['+', 'PLUS'],
+                            ['-', 'MINUS'],
+                            ['x', 'MULTI'],
+                            ['/', 'DIVIDE'],
+                        ],
                         value: 'PLUS',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -124,6 +129,7 @@ module.exports = {
                     const operator = script.getField('OPERATOR', script);
                     let leftValue = script.getNumberValue('LEFTHAND', script);
                     let rightValue = script.getNumberValue('RIGHTHAND', script);
+
                     if (operator === 'PLUS') {
                         const leftStringValue = script.getValue('LEFTHAND', script);
                         const rightStringValue = script.getValue('RIGHTHAND', script);
@@ -139,7 +145,10 @@ module.exports = {
                             return leftValue + rightValue;
                         }
                     }
+                    // below statements assume both arguments are number
                     leftValue = new BigNumber(leftValue);
+                    rightValue = new BigNumber(rightValue);
+
                     if (operator === 'MINUS') {
                         return leftValue.minus(rightValue).toNumber();
                     } else if (operator === 'MULTI') {
@@ -325,7 +334,10 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['x', 'x'], ['y', 'y']],
+                        options: [
+                            ['x', 'x'],
+                            ['y', 'y'],
+                        ],
                         value: 'x',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -373,7 +385,10 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [['x', 'x'], ['y', 'y']],
+                                    options: [
+                                        ['x', 'x'],
+                                        ['y', 'y'],
+                                    ],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
@@ -2236,12 +2251,14 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const old_word = script.getStringValue('OLD_WORD', script).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const oldWord = script
+                        .getStringValue('OLD_WORD', script)
+                        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
                     return script
                         .getStringValue('STRING', script)
                         .replace(
-                            new RegExp(old_word, 'gm'),
+                            new RegExp(oldWord, 'gm'),
                             script.getStringValue('NEW_WORD', script)
                         );
                 },
