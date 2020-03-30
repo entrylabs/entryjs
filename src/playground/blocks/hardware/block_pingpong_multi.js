@@ -402,7 +402,7 @@ class PingpongBase {
             Array.prototype.push.apply(options, packets[i]);
         }
 
-        const cmd = this.makePacket(opcode, (this.cubeCnt << 12) | taskid, 0xaa, options);
+        const cmd = this.makePacket(opcode, (packets.length << 12) | taskid, 0xaa, options);
         return cmd;
     }
 
