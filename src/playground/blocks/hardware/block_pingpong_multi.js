@@ -1122,7 +1122,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                     return Entry.PingpongG2.postCallReturn(script, () => {
                         const cubeId = script.getNumberField('CUBEID');
 
-                        const arr = Entry.PingpongG3.makeContStepPacket(cubeId, 0);
+                        const arr = Entry.PingpongG2.makeContStepPacket(cubeId, 0);
                         const packet = Buffer.from(arr);
 
                         return [packet];
@@ -2033,7 +2033,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                         const arr3 = Entry.PingpongG3.makeContStepPacket(2, speed3);
 
                         const opt = [2, 0, 0, 2];
-                        const packet = Entry.PingpongG2.makeAggregatePacket(
+                        const packet = Entry.PingpongG3.makeAggregatePacket(
                             OPCODE.AGGREGATE_STEPS,
                             0,
                             [arr1, arr2, arr3],
@@ -3076,7 +3076,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                         );
 
                         const opt = [MODE.MULTIROLE, 1, 0, 2];
-                        const packet = Entry.PingpongG2.makeAggregatePacket(
+                        const packet = Entry.PingpongG4.makeAggregatePacket(
                             OPCODE.AGGREGATE_STEPS,
                             0,
                             [arr1, arr2, arr3, arr4],
@@ -3176,7 +3176,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                         const arr4 = Entry.PingpongG4.makeContStepPacket(3, speed4);
 
                         const opt = [MODE.MULTIROLE, 0, 0, 2];
-                        const packet = Entry.PingpongG2.makeAggregatePacket(
+                        const packet = Entry.PingpongG4.makeAggregatePacket(
                             OPCODE.AGGREGATE_STEPS,
                             0,
                             [arr1, arr2, arr3, arr4],
