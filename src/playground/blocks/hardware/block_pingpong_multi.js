@@ -840,7 +840,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR', script);
-                    return _isUpperDir(cubeId, tiltDir);
+                    return Entry.PingpongG2._isUpperDir(cubeId, tiltDir);
                 },
             },
             pingpong_g2_multi_motor_rotate: {
@@ -1819,7 +1819,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR', script);
-                    return _isUpperDir(cubeId, tiltDir);
+                    return Entry.PingpongG3._isUpperDir(cubeId, tiltDir);
                 },
             },
             pingpong_g3_multi_motor_rotate: {
@@ -2942,7 +2942,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                 func(sprite, script) {
                     const cubeId = script.getNumberField('CUBEID');
                     const tiltDir = script.getStringField('TILT_DIR', script);
-                    return _isUpperDir(cubeId, tiltDir);
+                    return Entry.PingpongG4._isUpperDir(cubeId, tiltDir);
                 },
             },
             pingpong_g4_multi_motor_rotate: {
