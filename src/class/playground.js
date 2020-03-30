@@ -586,10 +586,10 @@ Entry.Playground = class Playground {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        // this.banExpansionBlock();
         Entry.expansion.banAllExpansionBlock();
         Entry.aiUtilize.banAllAIUtilizeBlock();
         DataTable.banAllBlock();
+        Entry.aiLearning.banBlocks();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
@@ -1598,6 +1598,10 @@ Entry.Playground = class Playground {
 
     removeAIUtilizeBlocks(items) {
         Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
+    setAiLearningBlock(url, labels) {
+        Entry.aiLearning.load(url, labels);
     }
 
     /**
