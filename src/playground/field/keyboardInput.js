@@ -207,7 +207,7 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
     keyboardControl = (event) => {
         event.stopPropagation && event.stopPropagation();
         event.preventDefault && event.preventDefault();
-        const value = event.keyCode;
+        const value = !event.key || event.key === ' ' ? event.code : event.key;
         const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.destroyOption();
