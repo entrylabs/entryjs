@@ -3,6 +3,49 @@ import VideoUtils from '../../util/videoUtils';
 module.exports = {
     getBlocks() {
         return {
+            insert_data_for_test: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.learn_type_image, 'image'],
+                        ],
+                        value: 'image',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        'image',
+                        null,
+                    ],
+                    type: 'insert_data_for_test',
+                },
+                pyHelpDef: {
+                    params: ['A&value'],
+                    type: 'insert_data_for_test',
+                },
+                paramsKeyMap: {
+                    TYPE: 0,
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning'],
+                func(sprite, script) {
+                    console.log('insert_data_for_test');
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             test_result: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
