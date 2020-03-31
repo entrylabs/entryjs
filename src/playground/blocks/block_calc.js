@@ -129,14 +129,13 @@ module.exports = {
                     const operator = script.getField('OPERATOR', script);
                     let leftValue = script.getNumberValue('LEFTHAND', script);
                     let rightValue = script.getNumberValue('RIGHTHAND', script);
-
                     if (operator === 'PLUS') {
                         const leftStringValue = script.getValue('LEFTHAND', script);
                         const rightStringValue = script.getValue('RIGHTHAND', script);
-                        if (!Entry.Utils.isNumber(leftStringValue) && !isNaN(leftStringValue)) {
+                        if (!Entry.Utils.isNumber(leftStringValue)) {
                             leftValue = leftStringValue;
                         }
-                        if (!Entry.Utils.isNumber(rightStringValue) && !isNaN(rightStringValue)) {
+                        if (!Entry.Utils.isNumber(rightStringValue)) {
                             rightValue = rightStringValue;
                         }
                         if (typeof leftValue === 'number' && typeof rightValue === 'number') {
