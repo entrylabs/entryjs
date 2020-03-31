@@ -1193,6 +1193,11 @@ Entry.EntityObject = class EntityObject {
         }
         this.setInitialEffectValue();
         object.alpha = this.effect.alpha;
+        if (object.alpha < 0.001) {
+            object.interactive = false;
+        } else {
+            object.interactive = true;
+        }
         GEHelper.colorFilter.setCache(this, false);
     }
 
