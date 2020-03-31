@@ -396,10 +396,24 @@ class PingpongBase {
     makeAggregatePacket(opcode, taskid, packets, opt = []) {
         let size = 9 + opt.length;
         let options = opt;
+        let usedCubeIds = [];
 
-        for (let i = 0; i < packets.length; i++) {
-            size += packets[i].length;
-            Array.prototype.push.apply(options, packets[i]);
+        packets.forEach((n) => {
+            size += n.length;
+            Array.prototype.push.apply(options, n);
+            usedCubeIds.push(n[3]);
+        });
+
+        // aggregate command must have cubeCount commands. add dummy packet
+        if (packets.length < this.cubeCnt) {
+            for (let i = 0; i < this.cubeCnt; i++) {
+                if (usedCubeIds.includes(i) == false) {
+                    let dummyPacket = packets[0].slice();
+                    dummyPacket[3] = i;
+                    dummyPacket[6] = 0; // set opcode to zero
+                    Array.prototype.push.apply(options, dummyPacket);
+                }
+            }
         }
 
         const cmd = this.makePacket(opcode, (packets.length << 12) | taskid, 0xaa, options);
