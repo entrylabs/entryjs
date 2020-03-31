@@ -65,14 +65,18 @@ export class AtlasImageLoadingInfo {
     }
 
     load() {
-        if (this.loadState != LoadingState.NONE) return;
+        if (this.loadState != LoadingState.NONE) {
+            return;
+        }
         this.loadState = LoadingState.LOADING;
         const img: HTMLImageElement = new Image();
         this._img = img;
 
         img.onload = () => {
             Entry.Loader.removeQueue();
-            if (this.loadState == LoadingState.DESTROYED) return;
+            if (this.loadState == LoadingState.DESTROYED) {
+                return;
+            }
             this.loadState = LoadingState.COMPLETE;
 
             this._canvas = this._resizeIfNotValidSize();
@@ -90,7 +94,9 @@ export class AtlasImageLoadingInfo {
 
         img.onerror = (err) => {
             Entry.Loader.removeQueue();
-            if (this.loadState == LoadingState.DESTROYED) return;
+            if (this.loadState == LoadingState.DESTROYED) {
+                return;
+            }
             if (!this._triedCnt) {
                 if (Entry.type !== 'invisible') {
                     console.log('err=', this._picName, 'load failed');
@@ -99,7 +105,7 @@ export class AtlasImageLoadingInfo {
                 this._loadPath(this._realPath);
             } else if (this._triedCnt < 3) {
                 this._triedCnt++;
-                this._loadPath(Entry.mediaFilePath + '_1x1.png');
+                this._loadPath(`${Entry.mediaFilePath}_1x1.png`);
             } else {
                 //prevent infinite call
                 img.onerror = null;
@@ -109,7 +115,9 @@ export class AtlasImageLoadingInfo {
     }
 
     private _loadPath(path: string) {
-        if (this.loadState == LoadingState.DESTROYED) return;
+        if (this.loadState == LoadingState.DESTROYED) {
+            return;
+        }
         Entry.Loader.addQueue();
         this._img.src = path;
     }
@@ -129,7 +137,10 @@ export class AtlasImageLoadingInfo {
         }
 
         const name = picture.filename;
-        return `${Entry.defaultPath}/uploads/${name.substring(0, 2)}/${name.substring(2, 4)}/image/${name}.png`;
+        return `${Entry.defaultPath}/uploads/${name.substring(0, 2)}/${name.substring(
+            2,
+            4
+        )}/image/${name}.png`;
     }
 
     destroy() {
@@ -143,7 +154,9 @@ export class AtlasImageLoadingInfo {
     }
 
     private _destroyImage() {
-        if (!this._img) return;
+        if (!this._img) {
+            return;
+        }
         this._img.onload = this._img.onerror = null;
         this._img = null;
     }
@@ -159,7 +172,9 @@ export class AtlasImageLoadingInfo {
         const isScale1 = r.scaleFactorX == 1 && r.scaleFactorY == 1;
         const isSameSizeWithData = r.dataWidth == sw && r.dataHeight == sh;
 
-        if (isScale1 && isSameSizeWithData) return null;
+        if (isScale1 && isSameSizeWithData) {
+            return null;
+        }
 
         // if(!isScale1) {
         //     let sfx = r.scaleFactorX.toFixed(3);
@@ -168,7 +183,9 @@ export class AtlasImageLoadingInfo {
         // }
 
         if (!isSameSizeWithData) {
-            cwarn(`Image size not match. data(w=${r.dataWidth},h=${r.dataHeight}), real(w=${sw},h=${sh})`);
+            cwarn(
+                `Image size not match. data(w=${r.dataWidth},h=${r.dataHeight}), real(w=${sw},h=${sh})`
+            );
         }
 
         const canvas = PIXIHelper.getOffScreenCanvas();

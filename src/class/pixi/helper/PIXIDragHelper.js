@@ -10,11 +10,11 @@ export class PIXIDragHelper {
         const C = PIXIDragHelper;
         const CE = this._convertEvent;
 
-        function _onMove(e){
+        function _onMove(e) {
             target.emit(C.MOVE, CE(e));
         }
 
-        function _onUp(e){
+        function _onUp(e) {
             target.emit(C.UP, CE(e));
             target.off('pointermove', _onMove);
         }
@@ -31,7 +31,7 @@ export class PIXIDragHelper {
     }
 
     static _convertEvent(e) {
-        let g = e.data.global;
+        const g = e.data.global;
         return {
             target: e.target,
             currentTarget: e.currentTarget,

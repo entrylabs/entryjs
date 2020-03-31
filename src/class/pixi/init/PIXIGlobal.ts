@@ -20,7 +20,9 @@ class _PIXIGlobal {
     fontLoadChecker: PIXIFontLoadHandler;
 
     initOnce() {
-        if (this._init) return;
+        if (this._init) {
+            return;
+        }
         this._init = true;
         this._isWebGLSupported();
         this.fontLoadChecker = new PIXIFontLoadHandler();
@@ -51,9 +53,11 @@ class _PIXIGlobal {
     }
 
     private _isWebGLSupported() {
-        if (PIXIUtils.isWebGLSupported()) return;
+        if (PIXIUtils.isWebGLSupported()) {
+            return;
+        }
         throw new Error('webgl not supported');
     }
 }
 
-export let PIXIGlobal: _PIXIGlobal = new _PIXIGlobal();
+export const PIXIGlobal: _PIXIGlobal = new _PIXIGlobal();

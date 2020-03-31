@@ -24,17 +24,21 @@ export class SceneTextures implements ISceneTextures {
     ) {}
 
     _internal_imageRemoved(): void {
-        if (this._gcTimer.isRunning) return;
+        if (this._gcTimer.isRunning) {
+            return;
+        }
         this._gcTimer.timeout(500, () => {
             this._gcTexture();
         });
     }
 
     _gcTexture(): void {
-        let usedPathSet: PrimitiveSet = PIXIAtlasHelper.getScenePathSet(this.sceneID);
+        const usedPathSet: PrimitiveSet = PIXIAtlasHelper.getScenePathSet(this.sceneID);
         let deleteCnt = 0;
         this._path_tex_map.each((tex: EntryTexture, path: string) => {
-            if (usedPathSet.hasValue(path)) return;
+            if (usedPathSet.hasValue(path)) {
+                return;
+            }
             tex.destroy(true);
             this._path_tex_map.remove(path);
             deleteCnt++;
@@ -47,7 +51,7 @@ export class SceneTextures implements ISceneTextures {
     activate(): void {
         this._activated = true;
         this._path_tex_map.each((tex: EntryTexture, path: string) => {
-            let info = this._loader.getImageInfo(path);
+            const info = this._loader.getImageInfo(path);
             if (!info || !info.isReady) {
                 return;
             }
@@ -56,16 +60,18 @@ export class SceneTextures implements ISceneTextures {
     }
 
     addPicInfo(pic: IRawPicture): void {
-        let path = PIXIAtlasHelper.getRawPath(pic);
-        let map = this._path_tex_map;
-        if (map.hasValue(path)) return;
+        const path = PIXIAtlasHelper.getRawPath(pic);
+        const map = this._path_tex_map;
+        if (map.hasValue(path)) {
+            return;
+        }
 
-        let info = this._loader.getImageInfo(path);
-        let rect: ImageRect = PIXIAtlasHelper.getNewImageRect(pic, this._option.texMaxRect);
+        const info = this._loader.getImageInfo(path);
+        const rect: ImageRect = PIXIAtlasHelper.getNewImageRect(pic, this._option.texMaxRect);
         if (!info) {
             this._loader.load(pic, rect);
         }
-        let tex = this._newTexture(path, rect);
+        const tex = this._newTexture(path, rect);
         map.add(path, tex);
         if (info && info.isReady) {
             this.putImage(info, false);
@@ -73,11 +79,12 @@ export class SceneTextures implements ISceneTextures {
     }
 
     private _newTexture(path: string, rect: ImageRect): EntryTexture {
-        let baseTex: EntryBaseTexture = new EntryBaseTexture();
-        baseTex.setSize(rect.width, rect.height);
+        const baseTex: EntryBaseTexture = new EntryBaseTexture();
+        baseTex.width = rect.width;
+        baseTex.height = rect.height;
         baseTex.mipmap = this._option.mipmap;
         baseTex.scaleMode = this._option.scaleMode;
-        let tex = new EntryTexture(baseTex, rect);
+        const tex = new EntryTexture(baseTex, rect);
         this._path_tex_map.add(path, tex);
         return tex;
     }
@@ -94,18 +101,23 @@ export class SceneTextures implements ISceneTextures {
     }
 
     putImage(info: AtlasImageLoadingInfo, forceUpdateBaseTexture: boolean): void {
-        let tex: EntryTexture = this._path_tex_map.getValue(info.path);
+        const tex: EntryTexture = this._path_tex_map.getValue(info.path);
         if (!tex) {
             return;
         }
-        let baseTex = tex.getBaseTexture();
+        const baseTex = tex.getBaseTexture();
         const source = info.source();
+
+        // protected 값에대한 직접접근입니다. 타입체크 하지않습니다.
+        // @ts-ignore
         if (tex._frame) {
-            if (tex._frame.height != info.srcHeight) {
-                tex._frame.height = info.srcHeight;
+            // @ts-ignore
+            const textureFrame = tex._frame;
+            if (textureFrame.height != info.srcHeight) {
+                textureFrame.height = info.srcHeight;
             }
-            if (tex._frame.width != info.srcWidth) {
-                tex._frame.width = info.srcWidth;
+            if (textureFrame.width != info.srcWidth) {
+                textureFrame.width = info.srcWidth;
             }
         }
         baseTex.updateSource(source);

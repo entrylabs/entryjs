@@ -9,10 +9,11 @@
         "lib": ["es6", "dom"],
         "allowJs": true,
         "baseUrl": "./",
-        "typeRoots": ["./types", "./node_modules/@types"]
+        "typeRoots": ["./types", "./node_modules/@types"],
+        "allowSyntheticDefaultImports": true
     },
     "include": [
         "src/**/*.ts",
-        "./types"
+        "./types/**/*"
     ]
 }

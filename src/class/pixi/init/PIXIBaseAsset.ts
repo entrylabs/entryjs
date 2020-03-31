@@ -10,13 +10,13 @@ class PIXIBaseAssetSprite extends Sprite {
 }
 
 // var atlasJson = require("./../../../entry_texture/base_asset.json");
-var atlasJson: any;
+let atlasJson: any;
 
 export class PIXIBaseAsset {
     private _sheet: Spritesheet;
 
     constructor() {
-        const path = Entry.mediaFilePath + 'base_asset.png';
+        const path = `${Entry.mediaFilePath}base_asset.png`;
         const base = BaseTexture.from(path);
         base.once('loaded', () => {
             Entry.requestUpdate = true;

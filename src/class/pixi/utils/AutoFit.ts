@@ -23,7 +23,12 @@ export namespace autoFit {
         NONE,
     }
 
-    export function fit(targetArea: IRect, rSource: IRect, scaleMode: ScaleMode, alignMode: AlignMode = AlignMode.CC): IRect {
+    export function fit(
+        targetArea: IRect,
+        rSource: IRect,
+        scaleMode: ScaleMode,
+        alignMode: AlignMode = AlignMode.CC
+    ): IRect {
         switch (scaleMode) {
             case ScaleMode.NONE:
                 align(targetArea, rSource, alignMode);
@@ -45,32 +50,32 @@ export namespace autoFit {
     }
 
     function width_only(targetArea: IRect, rSource: IRect): IRect {
-        let s: number = targetArea.width / rSource.width;
+        const s: number = targetArea.width / rSource.width;
         rSource.width *= s;
         rSource.height *= s;
         return rSource;
     }
 
     function height_only(targetArea: IRect, rSource: IRect): IRect {
-        let s: number = targetArea.height / rSource.height;
+        const s: number = targetArea.height / rSource.height;
         rSource.width *= s;
         rSource.height *= s;
         return rSource;
     }
 
     function proportional_inside(targetArea: IRect, rSource: IRect): IRect {
-        let sx: number = targetArea.width / rSource.width;
-        let sy: number = targetArea.height / rSource.height;
-        let s: number = Math.min(sx, sy);
+        const sx: number = targetArea.width / rSource.width;
+        const sy: number = targetArea.height / rSource.height;
+        const s: number = Math.min(sx, sy);
         rSource.width *= s;
         rSource.height *= s;
         return rSource;
     }
 
     function proportional_outside(targetArea: IRect, rSource: IRect): IRect {
-        let sx: number = targetArea.width / rSource.width;
-        let sy: number = targetArea.height / rSource.height;
-        let s: number = Math.max(sx, sy);
+        const sx: number = targetArea.width / rSource.width;
+        const sy: number = targetArea.height / rSource.height;
+        const s: number = Math.max(sx, sy);
         rSource.width = rSource.width * s;
         rSource.height = rSource.height * s;
         return rSource;
@@ -104,8 +109,13 @@ export namespace autoFit {
         return rSource;
     }
 
-    export function setCenter(targetArea: IRect, rSource: IRect, axisX: Boolean = true, axisY: Boolean = true): void {
-        let r: IRect = targetArea;
+    export function setCenter(
+        targetArea: IRect,
+        rSource: IRect,
+        axisX: Boolean = true,
+        axisY: Boolean = true
+    ): void {
+        const r: IRect = targetArea;
         if (axisX) {
             rSource.x = r.x + r.width / 2 - rSource.width / 2;
         }
@@ -114,4 +124,3 @@ export namespace autoFit {
         }
     }
 }
-

@@ -1,8 +1,3 @@
-'use strict';
-/*
- *
- * @param {object} dom which to inject playground
- */
 import Visible from '@egjs/visible';
 import debounce from 'lodash/debounce';
 
@@ -15,13 +10,12 @@ const BETA_LIST = ['ai_utilize', 'analysis'];
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
-        const { options = {} } = Entry;
-        const { disableHardware = false } = options;
+        const { hardwareEnable, dataTableEnable } = Entry;
 
-        this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+        this.reDraw = debounce(this.reDraw, 100);
         this._dAlign = this.align;
-        this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
-        this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+        this._setDynamic = debounce(this._setDynamic, 150);
+        this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
         this.setAlign(this._align);
@@ -55,15 +49,19 @@ class BlockMenu {
         this._svgId = `blockMenu${_.now()}`;
         this._clearCategory();
 
-        // disableHardware 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
-        this._categoryData = _.remove(
-            categoryData,
-            ({ category }) =>
-                !(
-                    disableHardware &&
-                    (category === HW || practicalCourseCategoryList.indexOf(category) > -1)
-                )
-        );
+        // hardwareEnable 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
+        // dataTableEnable 이 false 인 경우, anlaysis 카테고리를 제외한다.
+        this._categoryData = _.remove(categoryData, ({ category }) => {
+            if (!dataTableEnable && category === 'analysis') {
+                return false;
+            }
+
+            if (!hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1) {
+                return false;
+            }
+
+            return true;
+        });
 
         this._generateView(this._categoryData);
 
@@ -103,7 +101,7 @@ class BlockMenu {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
         if (Entry.windowResized) {
-            Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+            Entry.windowResized.attach(this, debounce(this.updateOffset, 200));
         }
 
         Entry.addEventListener(
@@ -995,9 +993,16 @@ class BlockMenu {
 
         _.result(this._categoryCol, 'remove');
 
-        this.categoryWrapper = Entry.Dom('div', {
-            class: 'entryCategoryListWorkspace',
-        });
+        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
+        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
+        if (!this.categoryWrapper) {
+            this.categoryWrapper = Entry.Dom('div', {
+                class: 'entryCategoryListWorkspace',
+            });
+        } else {
+            this.categoryWrapper.innerHTML = '';
+        }
+
         this._categoryCol = Entry.Dom('ul', {
             class: 'entryCategoryList',
             parent: this.categoryWrapper,

@@ -32,7 +32,9 @@ export class AtlasImageLoader {
         const path = PIXIAtlasHelper.getRawPath(model);
         let info: AtlasImageLoadingInfo = this._path_info_map[path];
 
-        if (info) return;
+        if (info) {
+            return;
+        }
 
         info = new AtlasImageLoadingInfo(model, imgRect, this._onLoadCallback);
         this._path_info_map[path] = info;
@@ -57,7 +59,9 @@ export class AtlasImageLoader {
         let pic: IRawPicture;
         for (let i = 0; i < LEN; i++) {
             pics = arrObj[i].pictures;
-            if (!pics || !(LEN2 = pics.length)) continue;
+            if (!pics || !(LEN2 = pics.length)) {
+                continue;
+            }
             for (let j = 0; j < LEN2; j++) {
                 pic = pics[j];
                 allPathSet.put(pic.filename || pic.fileurl);
@@ -66,7 +70,9 @@ export class AtlasImageLoader {
 
         let deleteCnt = 0;
         each(this._path_info_map, (info: AtlasImageLoadingInfo, path: string) => {
-            if (allPathSet.hasValue(path)) return;
+            if (allPathSet.hasValue(path)) {
+                return;
+            }
             info.destroy();
             deleteCnt++;
             delete this._path_info_map[path];
@@ -90,7 +96,9 @@ export class AtlasImageLoader {
     }
 
     requestSync() {
-        if (this._syncRequested) return;
+        if (this._syncRequested) {
+            return;
+        }
         this._syncRequested = true;
 
         this._timer.timeout(TIME_OUT_DELAY, () => {

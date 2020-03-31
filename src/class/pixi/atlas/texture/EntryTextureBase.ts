@@ -20,6 +20,4 @@ export class EntryTextureBase extends Texture {
             tex.textureScaleFactorY = this.textureScaleFactorY;
         }
     }
-
-
 }

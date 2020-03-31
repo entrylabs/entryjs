@@ -56,8 +56,8 @@ class FilterData {
     }
 }
 
-var EMPTY_SP = new Sprite();
-var MAT:any = new Matrix();
+const EMPTY_SP = new Sprite();
+const MAT: any = new Matrix();
 
 export class PIXISprite extends Sprite {
     private _filterData: FilterData;
@@ -92,8 +92,12 @@ export class PIXISprite extends Sprite {
      * set texture 를 override 하지 못해서...
      */
     refreshFilter() {
-        if (!this._filterData) return;
-        if (!this._filterData.filters) return;
+        if (!this._filterData) {
+            return;
+        }
+        if (!this._filterData.filters) {
+            return;
+        }
         this.setFilterAndCache(this._filterData.filters);
     }
 

@@ -41,13 +41,13 @@ export class PIXIText extends Text {
     setFontScaleX(value) {
         value = value * PIXIText.STAGE_SCALE;
         this._fontScaleX = value;
-        this.scale.x = 1/value;
+        this.scale.x = 1 / value;
         this.dirty = true;
     }
     setFontScaleY(value) {
         value = value * PIXIText.STAGE_SCALE;
         this._fontScaleY = value;
-        this.scale.y = 1/value;
+        this.scale.y = 1 / value;
         this.dirty = true;
     }
 
@@ -105,11 +105,16 @@ export class PIXIText extends Text {
 
         this._font = this._style.toFontString();
         const context = this.context;
-        const measured = TextMetrics.measureText(this._text, this._style, this._style.wordWrap, this.canvas);
-        const width = this._measuredWidth = measured.width;
-        const height = this._measuredHeight = measured.height;
+        const measured = TextMetrics.measureText(
+            this._text,
+            this._style,
+            this._style.wordWrap,
+            this.canvas
+        );
+        const width = (this._measuredWidth = measured.width);
+        const height = (this._measuredHeight = measured.height);
         const lines = measured.lines;
-        const lineHeight = this._measuredLineHeight = measured.lineHeight;
+        const lineHeight = (this._measuredLineHeight = measured.lineHeight);
         const lineWidths = measured.lineWidths;
         const maxLineWidth = measured.maxLineWidth;
         const fontProperties = measured.fontProperties;
@@ -118,8 +123,12 @@ export class PIXIText extends Text {
         const FSX = this._fontScaleX === UN ? 1 : this._fontScaleX;
         const FSY = this._fontScaleY === UN ? 1 : this._fontScaleY;
 
-        this.canvas.width = Math.ceil((Math.max(1, width) + (style.padding * 2)) * this.resolution * FSX);
-        this.canvas.height = Math.ceil((Math.max(1, height) + (style.padding * 2)) * this.resolution * FSY);
+        this.canvas.width = Math.ceil(
+            (Math.max(1, width) + style.padding * 2) * this.resolution * FSX
+        );
+        this.canvas.height = Math.ceil(
+            (Math.max(1, height) + style.padding * 2) * this.resolution * FSY
+        );
 
         context.scale(this.resolution * FSX, this.resolution * FSY);
 
@@ -153,28 +162,27 @@ export class PIXIText extends Text {
 
             for (let i = 0; i < lines.length; i++) {
                 linePositionX = style.strokeThickness / 2;
-                linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + fontProperties.ascent;
+                linePositionY = style.strokeThickness / 2 + i * lineHeight + fontProperties.ascent;
 
-                if (style.align === 'right')
-                {
+                if (style.align === 'right') {
                     linePositionX += maxLineWidth - lineWidths[i];
-                }
-                else if (style.align === 'center')
-                {
+                } else if (style.align === 'center') {
                     linePositionX += (maxLineWidth - lineWidths[i]) / 2;
                 }
 
                 if (style.fill) {
                     this.drawLetterSpacing(
                         lines[i],
-                        linePositionX + xShadowOffset + style.padding, linePositionY + yShadowOffset + style.padding
+                        linePositionX + xShadowOffset + style.padding,
+                        linePositionY + yShadowOffset + style.padding
                     );
 
                     if (style.stroke && style.strokeThickness) {
                         context.strokeStyle = style.dropShadowColor;
                         this.drawLetterSpacing(
                             lines[i],
-                            linePositionX + xShadowOffset + style.padding, linePositionY + yShadowOffset + style.padding,
+                            linePositionX + xShadowOffset + style.padding,
+                            linePositionY + yShadowOffset + style.padding,
                             true
                         );
                         context.strokeStyle = style.stroke;
@@ -196,7 +204,7 @@ export class PIXIText extends Text {
         // draw lines line by line
         for (let i = 0; i < lines.length; i++) {
             linePositionX = style.strokeThickness / 2;
-            linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + H_LH;
+            linePositionY = style.strokeThickness / 2 + i * lineHeight + H_LH;
 
             if (WORD_WRAP && linePositionY > MAX_HEIGHT) {
                 break;
@@ -254,7 +262,6 @@ export class PIXIText extends Text {
     updateTexture() {
         const canvas = this.canvas;
 
-
         // 박봉배- entryjs 에서 trim 기능 사용안함. 그리고 trimCanvas 의 참조를 pixi 라이브러리로부터 못갖고 오겠음.
         /*
         if (this._style.trim)
@@ -289,8 +296,8 @@ export class PIXIText extends Text {
         texture.trim.x = -padding * FSX;
         texture.trim.y = -padding * FSY;
 
-        texture.orig.width = texture._frame.width - (padding * 2) * FSX;
-        texture.orig.height = texture._frame.height - (padding * 2) * FSY;
+        texture.orig.width = texture._frame.width - padding * 2 * FSX;
+        texture.orig.height = texture._frame.height - padding * 2 * FSY;
 
         // call sprite onTextureUpdate to update scale if _width or _height were set
         this._onTextureUpdate();

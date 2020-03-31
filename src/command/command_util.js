@@ -25,13 +25,6 @@ const obj = {
     returnEmptyArr() {
         return [];
     },
-    checkIsSkip(commandType) {
-        const { skipUndoStack } = Entry.Command[commandType];
-        return (
-            skipUndoStack === true ||
-            (!Entry.doCommandAll && _.includes(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
-        );
-    },
     getExpectedData(name, defaultValue) {
         const expected = (Entry.expectedAction || []).concat();
         if (!name || _.isEmpty(expected)) {

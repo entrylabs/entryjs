@@ -118,7 +118,7 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
    - listEnable: 리스트 사용가능 여부 (true)
    - isForLecture: 강의용 프로젝트 여부 (false)
    - textCodingEnable: 엔트리 파이선 사용가능 여부 (true)
-   - disableHardware: 하드웨어 사용가능 여부 (true)
+   - hardwareEnable: 하드웨어 사용가능 여부 (true)
    
  * 웹폰트 정보
     엔트리 글상자와 그림판에서 사용할 폰트들을 하나 이상 배열로 추가할 수 있습니다.

@@ -74,9 +74,7 @@ class Scope {
     }
 
     getValues(keys, scope) {
-        return keys.map((key) => {
-            return this.values[this._getParamIndex(key, scope)];
-        });
+        return keys.map((key) => this.values[this._getParamIndex(key, scope)]);
     }
 
     getValue(key, scope) {
@@ -126,7 +124,7 @@ class Scope {
     }
 
     getNumberValue(key, scope) {
-        return Number(this.getValue(key, scope));
+        return parseFloat(this.getValue(key, scope));
     }
 
     getBooleanValue(key, scope) {
@@ -179,9 +177,7 @@ class Scope {
             return schema.func.call(this, entity, this);
         }
         const values = this.getParams();
-        const isPromise = values.some((value) => {
-            return value instanceof Promise;
-        });
+        const isPromise = values.some((value) => value instanceof Promise);
         // const schema = this.block.getSchema();
         if (!schema.func) {
             return;
@@ -191,8 +187,10 @@ class Scope {
             return schema.func.call(this, entity, this);
         } else {
             return Promise.all(values).then(async (values) => {
-                this.values = values;
-                return await schema.func.call(this, entity, this);
+                if (Entry.engine.state !== 'stop' && this.block) {
+                    this.values = values;
+                    return await schema.func.call(this, entity, this);
+                }
             });
         }
     }

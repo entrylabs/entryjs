@@ -1,7 +1,8 @@
 ﻿'use strict';
 
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
-import '../playground/blocks';
+import HardwareMonitor from './hardware/hardwareMonitor';
+import PopupHelper from './popup_helper';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -14,7 +15,7 @@ enum HardwareStatement {
     hardwareConnected = 'hardwareConnected',
 }
 
-class Hardware implements Entry.Hardware {
+export default class Hardware implements IEntry.Hardware {
     get httpsServerAddress() {
         return 'https://hw.playentry.org:23518';
     } // 하드웨어 프로그램 접속용 주소
@@ -38,11 +39,11 @@ class Hardware implements Entry.Hardware {
     public sendQueue: UnknownAny;
 
     // 현재 연결된 모듈 컨트롤용
-    public hwModule?: Entry.HardwareModule;
+    public hwModule?: IEntry.HardwareModule;
     public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
-    private hwMonitor?: Entry.HardwareMonitor;
+    private hwMonitor?: HardwareMonitor;
 
     // 하드웨어 설치여부 확인용
     private ieLauncher: { set: () => void };
@@ -68,10 +69,9 @@ class Hardware implements Entry.Hardware {
     }
 
     private _initHardwareObject() {
-        const { options } = Entry;
-        const { disableHardware = false } = options;
+        const { hardwareEnable } = Entry;
         this._hwPopupCreate();
-        !disableHardware && this._initSocket();
+        hardwareEnable && this._initSocket();
     }
 
     private _addEntryEventListener() {
@@ -212,28 +212,38 @@ class Hardware implements Entry.Hardware {
             this.socket.io.reconnection(true);
             this.socket.connect();
         } else {
-            connectHttpsWebSocket(this.httpsServerAddress)
-                .catch(() => {
-                    if (this.programConnected || this.socket) {
-                        return;
-                    }
-                    return connectHttpsWebSocket(this.httpsServerAddress2);
-                })
-                .catch(() => {
-                    if (this.programConnected || this.socket) {
-                        return;
+            const connectionTries = [this.httpsServerAddress, this.httpsServerAddress2];
+
+            // http 혹은 파일시스템 프로토콜에서 동작하는 경우, 로컬호스트 를 최우선 연결시도 한다.
+            if (['http:', 'file:'].indexOf(location.protocol) > -1) {
+                connectionTries.unshift(this.httpServerAddress);
+            } else {
+                connectionTries.push(this.httpServerAddress);
+            }
+
+            connectionTries
+                .reduce<Promise<boolean>>(async (prevPromise, address) => {
+                    const prevResult = await prevPromise;
+                    if (prevResult) {
+                        return true;
                     }
 
-                    if (['http:', 'file:'].indexOf(location.protocol) > -1) {
-                        return connectHttpsWebSocket(this.httpServerAddress);
+                    try {
+                        await connectHttpsWebSocket(address);
+                        return true;
+                    } catch (e) {
+                        return !!(this.programConnected || this.socket);
+                    }
+                }, undefined)
+                .then((result) => {
+                    // 하드웨어 소켓 연결 시도 결과 반환 로직
+                    if (!result) {
+                        console.warn('All hardware socket connection failed');
+                        this._setSocketClosed();
                     }
                 })
                 .catch(() => {
-                    if (this.programConnected || this.socket) {
-                        return;
-                    }
-                    console.warn('All hardware socket connection failed');
-                    this._setSocketClosed();
+                    console.error('Error occurred while try to connect hardware socket');
                 });
         }
     }
@@ -260,7 +270,7 @@ class Hardware implements Entry.Hardware {
      * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
      * @param moduleObject
      */
-    setExternalModule(moduleObject: Entry.HardwareModule) {
+    setExternalModule(moduleObject: IEntry.HardwareModule) {
         this.hwModule = moduleObject;
         this.hwModuleType = HardwareModuleType.module;
         this._banClassAllHardware();
@@ -538,7 +548,8 @@ class Hardware implements Entry.Hardware {
         if (data.company === undefined) {
             return;
         }
-        const key = `${Entry.Utils.convertIntToHex(data.company)}.${Entry.Utils.convertIntToHex(
+
+        const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
             data.model
         )}`;
 
@@ -568,9 +579,17 @@ class Hardware implements Entry.Hardware {
         Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
     }
 
+    openHardwareDownloadPopup() {
+        if (Entry.events_.openHardWareDownloadModal) {
+            Entry.dispatchEvent('openHardWareDownloadModal');
+        } else {
+            this.popupHelper.show('hwDownload', true);
+        }
+    }
+
     private _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
-            this.hwMonitor = new Entry.HWMonitor(this.hwModule);
+            this.hwMonitor = new HardwareMonitor(this.hwModule);
         } else {
             this.hwMonitor.setHwModule(this.hwModule);
             this.hwMonitor.initView();
@@ -765,6 +784,7 @@ class Hardware implements Entry.Hardware {
                 window.onblur = null;
             }, 3000);
         }
+
         /**
          * safari 브라우저에서 ${customUrl} 인식하여 페이지 이동 처리되서 분기처리(미설치 안내팝업)
          *
@@ -795,21 +815,13 @@ class Hardware implements Entry.Hardware {
         }
     }
 
-    openHardwareDownloadPopup() {
-        if (Entry.events_.openHardWareDownloadModal) {
-            Entry.dispatchEvent('openHardWareDownloadModal');
-        } else {
-            this.popupHelper.show('hwDownload', true);
-        }
-    }
-
     private _hwPopupCreate() {
         const hw = this;
         if (!this.popupHelper) {
             if (window.popupHelper) {
                 this.popupHelper = window.popupHelper;
             } else {
-                this.popupHelper = new Entry.popupHelper(true);
+                this.popupHelper = new PopupHelper(true);
             }
         }
 
@@ -868,7 +880,14 @@ class Hardware implements Entry.Hardware {
             },
         });
     }
+
+    private _convertHexToString(num: number | string) {
+        if (typeof num === 'string') {
+            return num.toUpperCase();
+        }
+
+        return num.toString(16).toUpperCase();
+    }
 }
 
-// @ts-ignore
 Entry.HW = Hardware;

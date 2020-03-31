@@ -15,7 +15,7 @@ Entry.Console = function() {
 
 (function(p) {
     p.createView = function() {
-        this.view = new Entry.Dom('div', {
+        this.view = Entry.Dom('div', {
             id: 'entryConsole',
         });
 

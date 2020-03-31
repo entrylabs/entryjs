@@ -21,7 +21,7 @@ import { ISceneTextures } from './ISceneTextures';
 // @ts-ignore
 import each from 'lodash/each';
 
-let TIMEOUT_INTERVAL = 250;
+const TIMEOUT_INTERVAL = 250;
 
 /**
  * packing 이 되기전에 texture 객체를 생성하기 위한 BaseTexture
@@ -30,7 +30,9 @@ let EMPTY_BASE_TEX: AtlasBaseTexture;
 
 export class SceneBins implements ISceneTextures {
     private static initEmptyTex(maxSize: number) {
-        if (EMPTY_BASE_TEX) return;
+        if (EMPTY_BASE_TEX) {
+            return;
+        }
         const TEX = new AtlasBaseTexture();
         EMPTY_BASE_TEX = TEX;
         TEX.setRealSize(maxSize, maxSize);
@@ -65,18 +67,24 @@ export class SceneBins implements ISceneTextures {
     }
 
     addPicInfo(pic: IRawPicture): void {
-        let path = PIXIAtlasHelper.getRawPath(pic);
-        if (this._path_tex_map.hasValue(path)) return;
+        const path = PIXIAtlasHelper.getRawPath(pic);
+        if (this._path_tex_map.hasValue(path)) {
+            return;
+        }
 
-        let rect: ImageRect = PIXIAtlasHelper.getNewImageRect(pic, this._option.texMaxRect);
+        const rect: ImageRect = PIXIAtlasHelper.getNewImageRect(pic, this._option.texMaxRect);
         this._loader.load(pic, rect);
-        let tex: AtlasTexture = this._newTexture(path, rect);
-        rect.data = { path: path, tex: tex };
+        const tex: AtlasTexture = this._newTexture(path, rect);
+        rect.data = { path, tex };
         this._notPackedRects.push(rect);
 
-        if (!this._activated) return;
+        if (!this._activated) {
+            return;
+        }
 
-        if (this._timer.isRunning) return;
+        if (this._timer.isRunning) {
+            return;
+        }
 
         console.log('pack scheduled');
         this._timer.timeout(TIMEOUT_INTERVAL, () => {
@@ -91,26 +99,30 @@ export class SceneBins implements ISceneTextures {
     }
 
     private _newTexture(path: string, rect: ImageRect): AtlasTexture {
-        let tex = new AtlasTexture(EMPTY_BASE_TEX, rect);
+        const tex = new AtlasTexture(EMPTY_BASE_TEX, rect);
         this._path_tex_map.add(path, tex);
         return tex;
     }
 
     /** 패킹 하지 않은 Rect를 packing 한다. */
     private _pack() {
-        if (!this._notPackedRects.length) return;
+        if (!this._notPackedRects.length) {
+            return;
+        }
 
-        let len = this._notPackedRects.length;
+        const len = this._notPackedRects.length;
         let time = new Date().getTime();
         this._packer.addArray(this._notPackedRects);
-        let willUpdateBaseTextures: AtlasBaseTexture[] = [];
+        const willUpdateBaseTextures: AtlasBaseTexture[] = [];
 
         this._notPackedRects.forEach((r: ImageRect) => {
-            let base: AtlasBaseTexture = this._getBaseTexture(r.binIndex);
+            const base: AtlasBaseTexture = this._getBaseTexture(r.binIndex);
             r.data.tex.updateBaseAndUVs(base);
 
-            let imgInfo = this._loader.getImageInfo(r.data.path);
-            if (!imgInfo.isReady) return;
+            const imgInfo = this._loader.getImageInfo(r.data.path);
+            if (!imgInfo.isReady) {
+                return;
+            }
 
             this.putImage(imgInfo, false);
             if (willUpdateBaseTextures.indexOf(base) == -1) {
@@ -134,14 +146,14 @@ export class SceneBins implements ISceneTextures {
         this._invalidate();
         const BASE_TEX_MAX_SIZE = this._option.atlasOption.atlasSize;
         each(this._packer.bins, (bin: MaxRectsBin, index: number) => {
-            let base: AtlasBaseTexture = this._arrBaseTexture[index];
+            const base: AtlasBaseTexture = this._arrBaseTexture[index];
             base.activate(BASE_TEX_MAX_SIZE);
             base.update();
         });
 
         const EXTRUDE_SIZE = this._option.atlasOption.extrudeSize;
         this._path_tex_map.each((t: AtlasTexture, path: string) => {
-            let info = this._loader.getImageInfo(path);
+            const info = this._loader.getImageInfo(path);
             if (!info || !info.isReady) {
                 return;
             }
@@ -151,7 +163,9 @@ export class SceneBins implements ISceneTextures {
 
     private _getBaseTexture(index: number): AtlasBaseTexture {
         let base: AtlasBaseTexture = this._arrBaseTexture[index];
-        if (base) return base;
+        if (base) {
+            return base;
+        }
         const OP = this._option;
         base = new AtlasBaseTexture(this._viewer, OP.scaleMode);
         base.setCanvas(PIXIHelper.getOffScreenCanvas());
@@ -181,16 +195,22 @@ export class SceneBins implements ISceneTextures {
      * @param forceUpdateBaseTexture
      */
     putImage(info: AtlasImageLoadingInfo, forceUpdateBaseTexture: boolean = true) {
-        if (!info) return;
-        let t: AtlasTexture = this.getTexture(info.path);
+        if (!info) {
+            return;
+        }
+        const t: AtlasTexture = this.getTexture(info.path);
 
-        if (!t) return;//이 Scene에서 사용안함
-        if (t.isEmptyTexture) return;
+        if (!t) {
+            return;
+        } //이 Scene에서 사용안함
+        if (t.isEmptyTexture) {
+            return;
+        }
 
         // console.log("put imgageData");
-        let atlasOption = this._option.atlasOption;
+        const atlasOption = this._option.atlasOption;
 
-        let base: AtlasBaseTexture = t.getBaseTexture();
+        const base: AtlasBaseTexture = t.getBaseTexture();
         if (!base.activated) {
             base.activate(atlasOption.atlasSize);
         }
@@ -206,13 +226,15 @@ export class SceneBins implements ISceneTextures {
      * @private
      */
     private _invalidate(): void {
-        if (!this._activated) return;
+        if (!this._activated) {
+            return;
+        }
         this._imageRemoved = false;
-        let usedPathSet: PrimitiveSet = PIXIAtlasHelper.getScenePathSet(this.sceneID);
+        const usedPathSet: PrimitiveSet = PIXIAtlasHelper.getScenePathSet(this.sceneID);
         this._notPackedRects.length = 0;
         this._packedRects.length = 0;
 
-        let unusedPath: string[] = [];
+        const unusedPath: string[] = [];
 
         //사용안하는 path를 검색, 패킹을 다시 할 것이기 때문에 사용하는 텍스쳐의 rect 정보를 저장.
         this._path_tex_map.each((tex: AtlasTexture, path: string) => {
@@ -237,7 +259,7 @@ export class SceneBins implements ISceneTextures {
     }
 
     private _cleanCanvas() {
-        let LEN = this._arrBaseTexture.length;
+        const LEN = this._arrBaseTexture.length;
         for (let i = 0; i < LEN; i++) {
             this._arrBaseTexture[i].cleanCanvas();
         }
@@ -248,7 +270,7 @@ export class SceneBins implements ISceneTextures {
     }
 
     private _destroyBaseTextureAfter(startIndex: number) {
-        let LEN = this._arrBaseTexture.length;
+        const LEN = this._arrBaseTexture.length;
         for (let i = startIndex; i < LEN; i++) {
             this._arrBaseTexture[i].destroy();
         }

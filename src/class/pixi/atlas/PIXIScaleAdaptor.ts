@@ -50,7 +50,9 @@ class ScaleFactorSpriteAdaptor extends ScaleFactorNormalAdaptor {
         const tex = sp.texture as AtlasTexture;
         const sfx = tex.textureScaleFactorX;
         const sfy = tex.textureScaleFactorY;
-        if (!sfx || !sfy) return;
+        if (!sfx || !sfy) {
+            return;
+        }
         this.scale.internal_setScaleFactor(sfx, sfy);
         this.pivot.internal_setScaleFactor(1 / sfx, 1 / sfy);
     }
