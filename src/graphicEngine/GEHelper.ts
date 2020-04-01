@@ -1,3 +1,4 @@
+import * as PIXI from 'pixi.js';
 import PIXIHelper from '../class/pixi/helper/PIXIHelper';
 import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
 import { GEDragHelper } from './GEDragHelper';
@@ -15,6 +16,8 @@ const INITIAL_VIDEO_PARAMS = {
     SCALE_Y: 0.75,
     ALPHA: 0.5,
 };
+
+declare let createjs: any;
 
 interface IGraphicsEngineApplication {
     render(): void;
@@ -37,9 +40,11 @@ class CreateJsApplication implements IGraphicsEngineApplication {
         stage.mouseMoveOutside = true;
         this.stage = stage;
     }
+
     render(): void {
         this.stage.update();
     }
+
     destroy(destroyOption: any) {
         this.stage = null;
     }
@@ -47,6 +52,7 @@ class CreateJsApplication implements IGraphicsEngineApplication {
 
 export class GEHelperBase {
     protected _isWebGL: boolean = false;
+
     INIT(isWebGL: boolean) {
         this._isWebGL = isWebGL;
     }
@@ -166,6 +172,9 @@ class _GEHelper extends GEHelperBase {
             const hitObject = im.hitTest(im.mouse.global, object);
             return !!hitObject;
         } else {
+            if (object.alpha < 0.001) {
+                return false;
+            }
             const stage = Entry.stage.canvas;
             const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
             return object.hitTest(pt.x, pt.y);
@@ -580,7 +589,7 @@ class _GEHelper extends GEHelperBase {
      */
     newWallTexture(path: string): PIXI.Texture | HTMLImageElement {
         if (this._isWebGL) {
-            return PIXI.Texture.fromImage(path);
+            return PIXI.Texture.from(path);
         } else {
             const img: HTMLImageElement = new Image();
             img.src = path;
@@ -611,16 +620,16 @@ class _GEHelper extends GEHelperBase {
     newSpriteWithCallback(url: string, callback?: () => void) {
         const img = new Image();
         if (callback) {
-            const $img = $(img);
             const handle = () => {
-                $img.off('load', handle);
+                img.removeEventListener('load', handle);
                 callback();
             };
-            $img.on('load', handle);
+            img.addEventListener('load', handle);
         }
         img.src = url;
         if (this._isWebGL) {
-            return PIXI.Sprite.from(img);
+            const texture = PIXI.Texture.from(img);
+            return PIXI.Sprite.from(texture);
         } else {
             return new createjs.Bitmap(img);
         }
@@ -649,6 +658,7 @@ class _ColorFilterHelper extends GEHelperBase {
     hue(value: number) {
         if (this._isWebGL) {
             const cmHue = new PIXI.filters.ColorMatrixFilter();
+            // @ts-ignore
             return cmHue.hue(value);
         } else {
             const cmHue = new createjs.ColorMatrix();
@@ -700,7 +710,7 @@ class _ColorFilterHelper extends GEHelperBase {
         if (this._isWebGL) {
             matrixValue.length = 20; // pixi matrix 는 5 * 4
             const m = new PIXI.filters.ColorMatrixFilter();
-            m.matrix = matrixValue;
+            m._loadMatrix(matrixValue, false);
             return m;
         } else {
             //createjs matrix 는 5*5
@@ -751,10 +761,10 @@ class _TextHelper extends GEHelperBase {
         if (this._isWebGL) {
             return PIXIHelper.text(str, font, color, textBaseline, textAlign);
         } else {
-            const t = new createjs.Text(str, font, color);
-            textBaseline ? (t.textBaseline = textBaseline) : 0;
-            textAlign ? (t.textAlign = textAlign) : 0;
-            return t;
+            const text = new createjs.Text(str, font, color);
+            textBaseline ? (text.textBaseline = textBaseline) : 0;
+            textAlign ? (text.textAlign = textAlign) : 0;
+            return text;
         }
     }
 }

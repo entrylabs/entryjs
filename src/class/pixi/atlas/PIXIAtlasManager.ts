@@ -1,3 +1,4 @@
+import { Sprite } from 'pixi.js';
 import { SceneBins } from './SceneBins';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoader, ImageLoaderHandler } from './loader/AtlasImageLoader';
@@ -9,16 +10,15 @@ import { ISceneTextures } from './ISceneTextures';
 import { SceneTextures } from './SceneTextures';
 import { clog } from '../utils/logs';
 import { IGEResManager } from '../../../graphicEngine/IGEResManager';
-import { each } from 'lodash';
+// @ts-ignore
+import each from 'lodash/each';
 
 type SceneBinsMap = { [key: string]: ISceneTextures };
 
 export class PIXIAtlasManager implements IGEResManager {
     private _sceneID_sceneBin_map: SceneBinsMap = {};
     private _activatedScene: ISceneTextures;
-
     private _imageLoader: AtlasImageLoader;
-
     private _viewer: AtlasCanvasViewer;
     private _option: EntryTextureOption;
 
@@ -52,7 +52,7 @@ export class PIXIAtlasManager implements IGEResManager {
     }
 
     reqResource(
-        spriteNullable: PIXI.Sprite,
+        spriteNullable: Sprite,
         sceneID: string,
         pic: IRawPicture,
         callback: ImageLoaderHandler

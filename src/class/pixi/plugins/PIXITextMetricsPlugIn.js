@@ -1,17 +1,14 @@
+import { TextMetrics } from 'pixi.js';
 
 export function PIXITextMetricsPlugIn() {
-
-    let TextMetrics = PIXI.TextMetrics;
-
-    let TextMetrics__orgWordWrap = PIXI.TextMetrics.wordWrap;
+    const WordWrap = TextMetrics.wordWrap;
     TextMetrics.__breakAllWordWrap = __breakAllWordWrap;
 
     TextMetrics.wordWrap = function(text, style, canvas = TextMetrics._canvas) {
-        return style.wordBreakAll ? TextMetrics.__breakAllWordWrap(text, style, canvas) : TextMetrics__orgWordWrap(text, style, canvas);
+        return style.wordBreakAll
+            ? TextMetrics.__breakAllWordWrap(text, style, canvas)
+            : WordWrap(text, style, canvas);
     };
-
-
-
 
     /**
      *
@@ -87,8 +84,13 @@ export function PIXITextMetricsPlugIn() {
             if (width + tokenWidth > wordWrapWidth) {
                 const characters = token.split('');
                 for (let j = 0; j < characters.length; j++) {
-                    let char = characters[j];
-                    const characterWidth = TextMetrics.getFromCache(char, letterSpacing, cache, context);
+                    const char = characters[j];
+                    const characterWidth = TextMetrics.getFromCache(
+                        char,
+                        letterSpacing,
+                        cache,
+                        context
+                    );
                     if (width + characterWidth > wordWrapWidth) {
                         //newLine
                         lines += TextMetrics.addLine(line);
@@ -133,8 +135,6 @@ export function PIXITextMetricsPlugIn() {
         return lines;
     }
 
-
-
     //createjs와 동일한 글씨 크기 측정을 위해
     /**
      *
@@ -147,15 +147,14 @@ export function PIXITextMetricsPlugIn() {
         const ctx = TextMetrics._context;
         ctx.save();
         ctx.font = font;
-        var w = ctx.measureText(text).width;
+        const w = ctx.measureText(text).width;
         ctx.restore();
         return w;
     }
 
     //createjs와 동일한 글씨 크기 측정을 위해
-    TextMetrics.measureText = function(text, style, wordWrap, canvas = TextMetrics._canvas)
-    {
-        wordWrap = (wordWrap === undefined || wordWrap === null) ? style.wordWrap : wordWrap;
+    TextMetrics.measureText = function(text, style, wordWrap, canvas = TextMetrics._canvas) {
+        wordWrap = wordWrap === undefined || wordWrap === null ? style.wordWrap : wordWrap;
         const font = style.toFontString();
         // const fontProperties = TextMetrics.measureFont(font); //skip for performance
         const fontProperties = null;
@@ -168,16 +167,16 @@ export function PIXITextMetricsPlugIn() {
         const lineWidths = new Array(lines.length);
         let maxLineWidth = 0;
 
-        for (let i = 0; i < lines.length; i++)
-        {
-            const lineWidth = context.measureText(lines[i]).width + ((lines[i].length - 1) * style.letterSpacing);
+        for (let i = 0; i < lines.length; i++) {
+            const lineWidth =
+                context.measureText(lines[i]).width + (lines[i].length - 1) * style.letterSpacing;
 
             lineWidths[i] = lineWidth;
             maxLineWidth = Math.max(maxLineWidth, lineWidth);
         }
-        let width = maxLineWidth + style.strokeThickness;
-        const lineHeight = style.lineHeight || _getMeasuredWidth(font, "M") * 1.2;
-        let height = lineHeight * lines.length;
+        const width = maxLineWidth + style.strokeThickness;
+        const lineHeight = style.lineHeight || _getMeasuredWidth(font, 'M') * 1.2;
+        const height = lineHeight * lines.length;
 
         return new TextMetrics(
             text,
@@ -191,5 +190,4 @@ export function PIXITextMetricsPlugIn() {
             fontProperties
         );
     };
-
 }

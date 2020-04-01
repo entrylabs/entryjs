@@ -18,7 +18,8 @@ import { TimeoutTimer } from '../utils/TimeoutTimer';
 import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
 import { EntryTextureOption } from './EntryTextureOption';
 import { ISceneTextures } from './ISceneTextures';
-import { each } from 'lodash';
+// @ts-ignore
+import each from 'lodash/each';
 
 const TIMEOUT_INTERVAL = 250;
 
@@ -32,8 +33,10 @@ export class SceneBins implements ISceneTextures {
         if (EMPTY_BASE_TEX) {
             return;
         }
-        const TEX = (EMPTY_BASE_TEX = new AtlasBaseTexture());
-        TEX.width = TEX.height = TEX.realHeight = TEX.realWidth = maxSize;
+        const TEX = new AtlasBaseTexture();
+        EMPTY_BASE_TEX = TEX;
+        TEX.setRealSize(maxSize, maxSize);
+        TEX.setSize(maxSize, maxSize);
 
         const tex: any = TEX;
         const emptyEmit = function() {};
@@ -140,9 +143,7 @@ export class SceneBins implements ISceneTextures {
 
     activate(): void {
         this._activated = true;
-
         this._invalidate();
-
         const BASE_TEX_MAX_SIZE = this._option.atlasOption.atlasSize;
         each(this._packer.bins, (bin: MaxRectsBin, index: number) => {
             const base: AtlasBaseTexture = this._arrBaseTexture[index];
@@ -168,8 +169,9 @@ export class SceneBins implements ISceneTextures {
         const OP = this._option;
         base = new AtlasBaseTexture(this._viewer, OP.scaleMode);
         base.setCanvas(PIXIHelper.getOffScreenCanvas());
-        base.imageType = 'png';
-        base.realWidth = base.realHeight = base.width = base.height = OP.atlasOption.atlasSize;
+        // base.imageType = 'png'; deprecated v5
+        base.setRealSize(OP.atlasOption.atlasSize, OP.atlasOption.atlasSize);
+        base.setSize(OP.atlasOption.atlasSize, OP.atlasOption.atlasSize);
         base.mipmap = OP.mipmap;
         this._arrBaseTexture[index] = base;
         return base;

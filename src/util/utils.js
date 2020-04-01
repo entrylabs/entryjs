@@ -437,9 +437,8 @@ Entry.Utils.isNumber = function(num) {
     const reg = /^-?\d+\.?\d*$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
-    } else {
-        return isNaN(num);
     }
+    return false;
 };
 
 Entry.Utils.generateId = function() {
@@ -2748,10 +2747,10 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
     let items;
-    if(typeof cloudVariable === 'string') {
+    if (typeof cloudVariable === 'string') {
         try {
             items = JSON.parse(cloudVariable);
-        } catch(e) {}
+        } catch (e) {}
     }
     if (!Array.isArray(items)) {
         return variables;
