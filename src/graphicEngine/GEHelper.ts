@@ -172,6 +172,9 @@ class _GEHelper extends GEHelperBase {
             const hitObject = im.hitTest(im.mouse.global, object);
             return !!hitObject;
         } else {
+            if (object.alpha < 0.001) {
+                return false;
+            }
             const stage = Entry.stage.canvas;
             const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
             return object.hitTest(pt.x, pt.y);
