@@ -61,13 +61,17 @@ export class PIXIBrushAdaptor {
     }
 
     moveTo(x: number, y: number) {
-        if (!this._shape || this._shape.destroyed) return;
+        if (!this._shape || this._shape.destroyed) {
+            return;
+        }
         this._shape.moveTo(Number(x), Number(y));
         this.position = { x: Number(x), y: Number(y) };
     }
 
     lineTo(x: number, y: number) {
-        if (!this._shape || this._shape.destroyed) return;
+        if (!this._shape || this._shape.destroyed) {
+            return;
+        }
         this._shape.moveTo(this.position.x, this.position.y);
         this._shape.lineTo(Number(x), Number(y)); // 박봉배: #9374 x,y 좌표가 문자로 넘어와서 생긴 이슈
         this.position = { x: Number(x), y: Number(y) };
@@ -80,7 +84,9 @@ export class PIXIBrushAdaptor {
     }
 
     _setStyle() {
-        if (!this._shape || this._shape.destroyed) return;
+        if (!this._shape || this._shape.destroyed) {
+            return;
+        }
         this._shape.lineStyle(this._thickness, this._color, this._alpha);
     }
 
@@ -106,7 +112,7 @@ export class PIXIBrushAdaptor {
     }
 
     _RGBToNumber(regexResult: any[]) {
-        let [x, r, g, b] = regexResult;
+        const [x, r, g, b] = regexResult;
         return (r << 16) + (g << 8) + Number(b);
     }
 }

@@ -1,44 +1,50 @@
-'use strict';
+const hwMonitorSvgTemplate =
+    '<svg id="hwMonitor" width="100%" height="100%"' +
+    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>';
 
-Entry.HWMonitor = class HardwareMonitor {
-    constructor(hwModule) {
-        this.svgDom = Entry.Dom(
-            $(
-                '<svg id="hwMonitor" width="100%" height="100%"' +
-                    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
-            )
-        );
+export default class HardwareMonitor {
+    private _hwModule: IEntry.HardwareModule;
+    private snap: any;
+    private _svgGroup: any;
+    private _portMap: any;
+    private _portViews: any;
+    private hwView: any;
+    private pathGroup: any;
+    private _template: any;
+    private _svglistGroup: any;
+    private _pathGroup: any;
+    private _portMapList: any;
+    private listsnap: any;
+    private _rect: any;
 
+    private svgDom = Entry.Dom($(hwMonitorSvgTemplate));
+    private changeOffset = 0; // 0 : off 1: on
+    private scale = 0.5;
+    private _listPortViews: any = {};
+
+    constructor(hwModule: IEntry.HardwareModule) {
         this._hwModule = hwModule;
-        const that = this;
+
         Entry.addEventListener('windowResized', () => {
-            const mode = that._hwModule.monitorTemplate.mode;
+            const mode = this._hwModule.monitorTemplate.mode;
             if (mode == 'both') {
-                that.resize();
-                that.resizeList();
+                this.resize();
+                this.resizeList();
             }
 
             if (mode == 'list') {
-                that.resizeList();
+                this.resizeList();
             } else {
-                that.resize();
+                this.resize();
             }
         });
         Entry.addEventListener('hwModeChange', () => {
-            that.changeMode();
+            this.changeMode();
         });
-        this.changeOffset = 0; // 0 : off 1: on
-        this.scale = 0.5;
-        this._listPortViews = {};
     }
 
     initView() {
-        this.svgDom = Entry.Dom(
-            $(
-                '<svg id="hwMonitor" width="100%" height="100%"' +
-                    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
-            )
-        );
+        this.svgDom = Entry.Dom($(hwMonitorSvgTemplate));
     }
 
     generateView() {
@@ -51,10 +57,10 @@ Entry.HWMonitor = class HardwareMonitor {
             w: [],
         };
 
-        let monitorTemplate = this._hwModule.monitorTemplate;
-        if (typeof this._hwModule.monitorTemplate === 'function') {
-            monitorTemplate = this._hwModule.monitorTemplate();
-        }
+        const monitorTemplate =
+            typeof this._hwModule.monitorTemplate === 'function'
+                ? this._hwModule.monitorTemplate()
+                : this._hwModule.monitorTemplate;
 
         const imgObj = {
             href: monitorTemplate.imgPath
@@ -104,7 +110,7 @@ Entry.HWMonitor = class HardwareMonitor {
         this.resize();
     }
 
-    toggleMode(mode) {
+    toggleMode(mode: string) {
         const monitorTemplate = this._hwModule.monitorTemplate;
         if (mode === 'list') {
             monitorTemplate.TempPort = null;
@@ -141,11 +147,11 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    setHwModule(hwModule) {
-        this._hwmodule = hwModule;
+    setHwModule(hwModule: IEntry.HardwareModule) {
+        this._hwModule = hwModule;
     }
 
-    changeMode(e) {
+    changeMode() {
         if (this._hwModule.monitorTemplate.mode === 'both') {
             this.toggleMode('list');
         } else if (this._hwModule.monitorTemplate.mode === 'list') {
@@ -153,7 +159,7 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    addPortEle(listPort, ports) {
+    addPortEle(listPort: any, ports: any) {
         if (typeof ports != 'object') {
             return listPort;
         }
@@ -165,7 +171,7 @@ Entry.HWMonitor = class HardwareMonitor {
         return listPort;
     }
 
-    removePortEle(listPort, ports) {
+    removePortEle(listPort: any, ports: any) {
         if (typeof ports != 'object') {
             return listPort;
         }
@@ -208,7 +214,8 @@ Entry.HWMonitor = class HardwareMonitor {
         this.resizeList();
     }
 
-    generatePortView(port, target) {
+    generatePortView(port: any, target: string) {
+        // @ts-ignore
         const svgGroup = this[target].elem('g');
         svgGroup.addClass('hwComponent');
         let path = null;
@@ -286,7 +293,7 @@ Entry.HWMonitor = class HardwareMonitor {
         return this.svgDom;
     }
 
-    update(portData, sendQueue) {
+    update(portData: any, sendQueue: any) {
         const readablePort = sendQueue.readablePort;
         const mode = this._hwModule.monitorTemplate.mode;
         const objectKeys = this._hwModule.monitorTemplate.keys || [];
@@ -401,8 +408,7 @@ Entry.HWMonitor = class HardwareMonitor {
 
     alignList() {
         const mode = this._hwModule.monitorTemplate.mode;
-        let ports = {};
-        ports = this._hwModule.monitorTemplate.listPorts;
+        let ports = this._hwModule.monitorTemplate.listPorts || {};
         const length = ports.length;
         for (let i = 0; i < ports.length; i++) {
             const port = ports[i];
@@ -416,10 +422,10 @@ Entry.HWMonitor = class HardwareMonitor {
         }
 
         ports = this._portMapList.n.concat();
-        this._alignNSList(ports, (-this._template.width * this.scale) / 2 - 32, -27);
+        this._alignNSList(ports, (-this._template.width * this.scale) / 2 - 32 /*, -27*/);
     }
 
-    _alignNS(ports, yCursor, gap) {
+    _alignNS(ports: any, yCursor: any, gap: any) {
         const length = ports.length;
         const mid = (length - 1) / 2;
         let lP = -this._rect.width / 2;
@@ -468,7 +474,7 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    _alignNSList(ports, yCursor) {
+    _alignNSList(ports: any, yCursor: any) {
         const length = ports.length;
         const width = this._rect.width;
         const height = this._rect.height;
@@ -485,8 +491,8 @@ Entry.HWMonitor = class HardwareMonitor {
         let currentWidth = 0;
         const tempXpos = initX;
         let Yval = 0;
-        let cPort = 0;
-        let nPort = 0;
+        let cPort: any = 0;
+        let nPort: any = 0;
         for (var i = 0; i < ports.length; i++) {
             cPort = ports[i];
 
@@ -511,7 +517,7 @@ Entry.HWMonitor = class HardwareMonitor {
         }
     }
 
-    _movePort(port, x, y, prevPointer) {
+    _movePort(port: any, x: any, y: any, prevPointer: any) {
         let groupX = x;
         let path;
         const portX = port.box.x * this.scale;
@@ -539,4 +545,4 @@ Entry.HWMonitor = class HardwareMonitor {
         port.group.attr({ transform: `translate(${groupX},${y})` });
         port.path.attr({ d: path });
     }
-};
+}

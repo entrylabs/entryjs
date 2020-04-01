@@ -1,12 +1,5 @@
-/*
- *
- */
-'use strict';
+import debounce from 'lodash/debounce';
 
-/*
- *
- * @param {object} board
- */
 Entry.Scroller = class Scroller {
     get SCROLL_WIDTH() {
         return 8;
@@ -40,7 +33,7 @@ Entry.Scroller = class Scroller {
 
         this._bindEvent();
 
-        this._scrollCommand = Entry.Utils.debounce(Entry.do, 200);
+        this._scrollCommand = debounce(Entry.do, 200);
     }
 
     onMouseMove = (e) => {
@@ -304,7 +297,7 @@ Entry.Scroller = class Scroller {
     }
 
     _bindEvent() {
-        const dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 250);
+        const dResizeScrollBar = debounce(this.resizeScrollBar, 250);
         this.board.changeEvent.attach(this, dResizeScrollBar);
         if (Entry.windowResized) {
             Entry.windowResized.attach(this, dResizeScrollBar);

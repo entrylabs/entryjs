@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { dmet, dmetList, dmetVariable } from './dmet';
+import { dmet, dmetList, dmetTable, dmetVariable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {
@@ -28,7 +28,6 @@ class CloudVariableExtension {
         }
         this.#cvSocket.emit('changeMode', 'online', target);
     }
-
 
     async connect(cvServer) {
         if (this.#cvSocket || !this.cvServer) {
@@ -68,27 +67,30 @@ class CloudVariableExtension {
                     resolve();
                 }
             });
-            socket.on('welcome', ({variables = [], isOffline} ) => {
+            socket.on('check', (id) => {
+                socket.emit('imAlive', id);
+            });
+            socket.on('welcome', ({ variables = [], isOffline }) => {
                 try {
                     this.#data = new dmet(variables);
                 } catch (e) {
                     console.warn(e);
                 }
-                if(isOffline) {
+                if (isOffline) {
                     socket.close();
                 }
                 resolve();
             });
             socket.on('disconnect', (reason) => {
                 console.log('disconnect', reason);
-                if(!this.#data) {
+                if (!this.#data) {
                     this.#data = new dmet(this.#defaultData);
                 }
                 resolve();
             });
             socket.on('changeMode', (mode, target) => {
                 const isOffline = mode === 'offline';
-                if(isOffline) {
+                if (isOffline) {
                     socket.close();
                 }
                 resolve();
@@ -113,6 +115,8 @@ class CloudVariableExtension {
             await this.#createVariable(name, id_);
         } else if (type === 'list') {
             await this.#createList(name, id_);
+        } else if (type === 'table') {
+            await this.#createTable(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
     }
@@ -151,6 +155,26 @@ class CloudVariableExtension {
             this.#cvSocket.emit('create', list, (isCreate, list) => {
                 if (isCreate) {
                     this.createDmet(list);
+                }
+                resolve();
+            });
+        });
+    }
+
+    #createTable(name, id) {
+        if (!this.#cvSocket) {
+            return;
+        }
+        const table = new dmetTable(
+            {
+                name,
+            },
+            id
+        );
+        return new Promise((resolve) => {
+            this.#cvSocket.emit('create', table, (isCreate, table) => {
+                if (isCreate) {
+                    this.createDmet(table);
                 }
                 resolve();
             });
@@ -228,7 +252,7 @@ class CloudVariableExtension {
         if (!dmetList) {
             console.error('no target ', target);
         }
-        dmetList.from(array.map(({data}) => data));
+        dmetList.from(array.map(({ data }) => data));
     }
 
     append(target, data) {

@@ -1,20 +1,16 @@
-/*u
- * @fileoverview This manage control state and control bar.
- */
-'use strict';
-
 import { GEHelper } from '../graphicEngine/GEHelper';
 import audioUtils from '../util/audioUtils';
 
-/**
- * Class for a engine.
- * This have view for control running state.
- * @constructor
- */
+const EntryEngineState = {
+    stop: 'stop',
+    pause: 'pause',
+    run: 'run',
+};
+
 Entry.Engine = class Engine {
     constructor() {
         this.execPromises = [];
-        this.state = 'stop';
+        this.state = EntryEngineState.stop;
         this.popup = null;
         this.isUpdating = true;
         this.speeds = [1, 15, 30, 45, 60];
@@ -32,7 +28,7 @@ Entry.Engine = class Engine {
             this.fireEventOnEntity('when_object_click_canceled', entity)
         );
 
-        if (Entry.type !== 'phone') {
+        if (Entry.type !== 'phone' && Entry.type !== 'playground') {
             _addEventListener(
                 'stageMouseMove',
                 _.throttle(this.updateMouseView.bind(this), 100, {
@@ -69,7 +65,7 @@ Entry.Engine = class Engine {
      */
     generateView(controlView, option = 'workspace') {
         this.option = option;
-        if (option == 'workspace') {
+        if (option === 'workspace') {
             /** @type {!Element} */
             this.view_ = controlView;
             this.view_.addClass('entryEngine_w').addClass('entryEngineWorkspace_w');
@@ -352,7 +348,7 @@ Entry.Engine = class Engine {
             );
             this.audioShadePanel_.appendChild(audioShadeMainCircle);
             const micImage = Entry.createElement('img', 'audioShadeImg').addClass('audioShadeImg');
-            micImage.src = '/lib/entry-js/images/ic-audio-sensing-mic.svg';
+            micImage.src = `${Entry.mediaFilePath}ic-audio-sensing-mic.svg`;
             audioShadeMainCircle.appendChild(micImage);
 
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
@@ -526,12 +522,7 @@ Entry.Engine = class Engine {
         Entry.FPS = FPS;
     }
 
-    /**
-     * Start engine
-     * @param {number} FPS
-     */
-    start(FPS) {
-        /** @type {!number} */
+    start() {
         GEHelper.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker) {
@@ -540,9 +531,6 @@ Entry.Engine = class Engine {
         }
     }
 
-    /**
-     * Stop engine
-     */
     stop() {
         GEHelper.Ticker.reset();
         audioUtils.stopRecord();
@@ -551,27 +539,20 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * Update canvas and object.
+     * 매 틱당 실행되며, canvas, object 를 업데이트한다.
+     * 추가로, 하드웨어의 데이터도 업데이트한다.
      */
-    update() {
+    update = () => {
         if (Entry.engine.isState('run')) {
-            Entry.engine.computeObjects();
+            Entry.container.mapObjectOnScene(this.computeFunction);
             if (Entry.hw.communicationType !== 'manual') {
                 Entry.hw.update();
             }
         }
-    }
+    };
 
     /**
-     * compute each object with runningScript on entity.
-     */
-    computeObjects() {
-        Entry.container.mapObjectOnScene(this.computeFunction);
-    }
-
-    /**
-     * Compute function for map.
-     * @param {Entry.EntryObject} object
+     * Compute function for map. (Ntry 에 동일한 명칭의 함수가 있어 그대로 둠)
      */
     computeFunction({ script }) {
         script.tick();
@@ -610,7 +591,7 @@ Entry.Engine = class Engine {
         const container = Entry.container;
         const WS = Entry.getMainWS();
 
-        if (this.state === 'pause') {
+        if (this.state === EntryEngineState.pause) {
             return this.togglePause();
         }
 
@@ -620,7 +601,7 @@ Entry.Engine = class Engine {
 
         Entry.addActivity('run');
 
-        if (this.state == 'stop') {
+        if (this.state === EntryEngineState.stop) {
             container.mapEntity((entity) => {
                 entity.takeSnapshot();
             });
@@ -635,12 +616,12 @@ Entry.Engine = class Engine {
 
             container.takeSequenceSnapshot();
             Entry.scene.takeStartSceneSnapshot();
-            this.state = 'run';
+            this.state = EntryEngineState.run;
             this.fireEvent('start');
             this.achieveEnabled = !(disableAchieve === false);
         }
-        this.state = 'run';
-        if (Entry.type == 'mobile') {
+        this.state = EntryEngineState.run;
+        if (Entry.type === 'mobile') {
             this.view_.addClass('entryEngineBlueWorkspace');
         }
 
@@ -755,7 +736,7 @@ Entry.Engine = class Engine {
             }
         }
 
-        this.state = 'stop';
+        this.state = EntryEngineState.stop;
         this.setEnableInputField(false);
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
@@ -781,7 +762,7 @@ Entry.Engine = class Engine {
      */
     togglePause() {
         const timer = Entry.engine.projectTimer;
-        if (this.state == 'pause') {
+        if (this.state === EntryEngineState.pause) {
             this.setEnableInputField(true);
             timer.pausedTime += new Date().getTime() - timer.pauseStart;
             if (timer.isPaused) {
@@ -789,7 +770,7 @@ Entry.Engine = class Engine {
             } else {
                 delete timer.pauseStart;
             }
-            this.state = 'run';
+            this.state = EntryEngineState.run;
             Entry.Utils.recoverSoundInstances();
             if (this.runButton) {
                 this.setPauseButton(this.option);
@@ -806,7 +787,7 @@ Entry.Engine = class Engine {
                 });
             }
         } else {
-            this.state = 'pause';
+            this.state = EntryEngineState.pause;
             this.setEnableInputField(false);
             if (!timer.isPaused) {
                 timer.pauseStart = new Date().getTime();
@@ -834,8 +815,8 @@ Entry.Engine = class Engine {
         Entry.dispatchEvent('dispatchEventDidTogglePause');
     }
 
-    setPauseButton(option) {
-        if (this.state == 'pause') {
+    setPauseButton() {
+        if (this.state === EntryEngineState.pause) {
             if (this.pauseButton) {
                 this.pauseButton.innerHTML = Lang.Workspace.restart;
                 if (this.option !== 'minimize') {
@@ -877,7 +858,7 @@ Entry.Engine = class Engine {
      * @param {string} eventName
      */
     fireEvent(eventName) {
-        if (this.state !== 'run') {
+        if (this.state !== EntryEngineState.run) {
             return;
         }
         Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
@@ -897,7 +878,7 @@ Entry.Engine = class Engine {
      * @param {Entry.EntityObject} entity
      */
     fireEventOnEntity(eventName, entity) {
-        if (this.state == 'run') {
+        if (this.state === EntryEngineState.run) {
             Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [
                 entity,
                 eventName,
@@ -919,8 +900,8 @@ Entry.Engine = class Engine {
     }
 
     /**
-     * capture keyboard press input
-     * @param {keyboard event} e
+     * @param {KeyboardEvent} e
+     * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
         const keyCode = e.keyCode;
@@ -932,13 +913,13 @@ Entry.Engine = class Engine {
 
         //mouse shortcuts
         if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
-            if (keyCode == 83) {
+            if (keyCode === 83) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace' : 'saveWorkspace');
-            } else if (keyCode == 82) {
+            } else if (keyCode === 82) {
                 e.preventDefault();
                 Entry.engine.run();
-            } else if (keyCode == 90) {
+            } else if (keyCode === 90) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
@@ -957,41 +938,27 @@ Entry.Engine = class Engine {
         }
     }
 
-    /**
-     * this is callback function for map.
-     * @param {Entry.EntryObject} object
-     * @param {Array} param
-     */
     raiseKeyEvent(entity, [eventName, keyCode]) {
         return entity.parent.script.raiseEvent(eventName, entity, String(keyCode));
     }
 
-    /**
-     * Update mouse coordinate
-     */
     updateMouseView() {
         const { x, y } = Entry.stage.mouseCoordinate;
         this.mouseViewInput.value = `X : ${x}, Y : ${y}`;
         this.mouseView.removeClass('entryHide');
     }
 
-    /**
-     * hide mouse coordinate
-     */
     hideMouseView() {
         this.mouseView.addClass('entryHide');
     }
 
-    /**
-     * Toggle full screen of canvas
-     */
     toggleFullScreen(popupClassName) {
         if (!this.popup) {
             this.popup = new Entry.Popup(popupClassName);
             if (Entry.engine.speedPanelOn) {
                 Entry.engine.toggleSpeedPanel();
             }
-            if (Entry.type != 'workspace') {
+            if (Entry.type !== 'workspace') {
                 const $doc = $(document);
                 const body = $(this.popup.body_);
                 body.css('top', $doc.scrollTop());
@@ -1029,7 +996,6 @@ Entry.Engine = class Engine {
         Entry.windowResized.notify();
     }
 
-    //projectTimer to show
     showProjectTimer() {
         const timer = Entry.engine.projectTimer;
         if (!timer) {
@@ -1038,7 +1004,6 @@ Entry.Engine = class Engine {
         this.projectTimer.setVisible(true);
     }
 
-    //decide Entry.engine.projectTimer to show
     hideProjectTimer(removeBlock, notIncludeSelf) {
         const timer = this.projectTimer;
         if (!timer || !timer.isVisible() || this.isState('run')) {
@@ -1202,9 +1167,7 @@ Entry.Engine = class Engine {
     }
 
     trimPromiseExecutor() {
-        return this.execPromises.filter((promise) => {
-            return promise instanceof Promise;
-        });
+        return this.execPromises.filter((promise) => promise instanceof Promise);
     }
 
     addPromiseExecutor(promises) {

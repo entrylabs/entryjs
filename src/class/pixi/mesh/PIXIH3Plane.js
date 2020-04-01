@@ -23,7 +23,7 @@ export class PIXIH3Plane extends Container {
         this._releaseSprite(this._sp1);
         this._releaseSprite(this._sp2);
 
-        var ba = this._baseAsset;
+        const ba = this._baseAsset;
         this._sp0 = this._appendSprite(ba, texturePrefix, 0);
         this._sp1 = this._appendSprite(ba, texturePrefix, 1);
         this._sp2 = this._appendSprite(ba, texturePrefix, 2);

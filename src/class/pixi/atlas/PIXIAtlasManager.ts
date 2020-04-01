@@ -80,7 +80,9 @@ export class PIXIAtlasManager implements IGEResManager {
 
     removeScene(sceneID: string): void {
         const s: ISceneTextures = this._getSceneBin(sceneID, false);
-        if (!s) return;
+        if (!s) {
+            return;
+        }
         if (this._activatedScene == s) {
             this._activatedScene = null;
         }

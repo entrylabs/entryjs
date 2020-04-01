@@ -17,5 +17,3 @@ export interface ISceneTextures {
 
     destroy(): void;
 }
-
-

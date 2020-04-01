@@ -36,16 +36,22 @@ export class PIXIFontLoadHandler {
 
     /** @param {PIXIText} text */
     manage(text: any) {
-        if (this._fontLoaded) return;
+        if (this._fontLoaded) {
+            return;
+        }
         this._items.push(text);
     }
 
     /** @param {PIXIText} text */
     unmanage(text: any) {
-        if (this._fontLoaded) return;
+        if (this._fontLoaded) {
+            return;
+        }
         const arr = this._items;
         const index = arr.indexOf(text);
-        if (index == -1) return;
+        if (index == -1) {
+            return;
+        }
         arr.splice(index, 1);
     }
 }
