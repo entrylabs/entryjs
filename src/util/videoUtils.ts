@@ -348,11 +348,13 @@ class VideoUtils implements MediaUtilsInterface {
                 if (mostSimilar.y > 1) {
                     totalMotionDirectionY += mostSimilar.y - yIndex;
                 }
+                areaMotion += areaMotionScore;
+
                 // 전체 범위를 위한것일경우 저장, 아니면 스킵
                 if (sprite) {
                     continue;
                 }
-                areaMotion += areaMotionScore;
+
                 this.motions[yIndex][xIndex] = {
                     r,
                     g,
