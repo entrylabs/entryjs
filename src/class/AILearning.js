@@ -7,6 +7,14 @@ export default class AILearning {
         this.#playground = playground;
     }
 
+    openManager() {
+        Entry.dispatchEvent('openAIUtilizeTrainManager');
+    }
+
+    openInputPopup() {
+        Entry.dispatchEvent('openAIUtilizeTrainManager');
+    }
+
     get labels() {
         return this.#labels;
     }
