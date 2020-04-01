@@ -204,7 +204,7 @@ class _GEHelper extends GEHelperBase {
         const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
 
         if (this._isWebGL) {
-            const videoTexture = PIXI.Texture.fromVideo(video);
+            const videoTexture = PIXI.Texture.from(video);
             videoElement = new PIXI.Sprite(videoTexture);
         } else {
             videoElement = new createjs.Bitmap(video);
