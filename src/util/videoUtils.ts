@@ -466,10 +466,15 @@ class VideoUtils implements MediaUtilsInterface {
     destroy() {
         this.disableAllModels();
         this.turnOffWebcam();
-        this.stream.getTracks().forEach((track) => {
-            track.stop();
-        });
-        this.worker.terminate();
+        try {
+            this.stream.getTracks().forEach((track) => {
+                track.stop();
+            });
+            this.worker.terminate();
+        } catch (err) {
+            console.log(err);
+        }
+
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
