@@ -101,7 +101,7 @@ export default class AILearning {
 
         this.popupHelper.addPopup(this.#popupKey, {
             type: 'confirm',
-            title: 'title',
+            title: Lang.Blocks.learn_popup_title,
             closeEvent: () => {
                 if(Entry.engine.state == 'pause') {
                     Entry.engine.togglePause();
