@@ -7,6 +7,7 @@ export default class AILearning {
     #labels = [];
     #url;
     #type;
+    isLoaded = false;
     isLoading = false;
     result = [];
 
@@ -34,6 +35,7 @@ export default class AILearning {
         if(this.#playground) {
             this.#playground.reloadPlayground()
         }
+        this.isLoaded = true;
     }
 
     unbanBlocks() {
@@ -72,6 +74,9 @@ export default class AILearning {
     }
 
     toJSON() {
+        if(!this.isLoaded) {
+            return;
+        }
         return {
             labels: this.#labels,
             url: this.#url,
