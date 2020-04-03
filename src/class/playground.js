@@ -1600,8 +1600,8 @@ Entry.Playground = class Playground {
         Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
     }
 
-    setAiLearningBlock(url, labels) {
-        Entry.aiLearning.load(url, labels);
+    setAiLearningBlock(url, info) {
+        Entry.aiLearning.load({url, ...info});
     }
 
     /**

@@ -38,7 +38,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
                 func(sprite, script) {
-                    console.log('insert_data_for_test');
+                    Entry.aiLearning.openInputPopup();
                     return script.callReturn();
                 },
                 syntax: {
@@ -65,9 +65,9 @@ module.exports = {
                 },
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
-                async func(sprite, script) {
-                    const result = await Entry.aiLearning.predict(VideoUtils.inMemoryCanvas);
-                    return result[0].className;
+                func(sprite, script) {
+                    const {result = []} = Entry.aiLearning;
+                    return result.length ? result[0].className : '';
                 },
                 syntax: {
                     js: [],
@@ -83,9 +83,7 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName() {
-                            return Entry.aiLearning.labels.map((label, index) => [label, index]);
-                        },
+                        menuName: () => Entry.aiLearning.labels.map((name, index) => [name, index]),
                         needDeepCopy: true,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -112,10 +110,11 @@ module.exports = {
                 },
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
-                async func(sprite, script) {
-                    const group = script.getNumberValue('GROUP', script)
-                    const result = await Entry.aiLearning.predict(VideoUtils.inMemoryCanvas);
-                    return result.find(({index}) => index === group).probability;
+                func(sprite, script) {
+                    const group = script.getNumberValue('GROUP', script);
+                    const {result = [], labels} = Entry.aiLearning;
+                    const target = result.find(({className}) => className === labels[group]) || {};
+                    return target.probability || 0;
                 },
                 syntax: {
                     js: [],
@@ -131,9 +130,7 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName() {
-                            return Entry.aiLearning.labels.map((label, index) => [label, index]);
-                        },
+                        menuName: () => Entry.aiLearning.labels.map((name, index) => [name, index]),
                         needDeepCopy: true,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -156,10 +153,10 @@ module.exports = {
                 paramsKeyMap: {
                     GROUP: 0,
                 },
-                async func(sprite, script) {
+                func(sprite, script) {
                     const group = script.getNumberValue('GROUP', script)
-                    const result = await Entry.aiLearning.predict(VideoUtils.inMemoryCanvas);
-                    return result[0].index === group;
+                    const {result = [], labels} = Entry.aiLearning;
+                    return result.length && result[0].className === labels[group];
                 },
                 syntax: {
                     js: [],
