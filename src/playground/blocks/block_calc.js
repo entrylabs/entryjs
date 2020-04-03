@@ -129,7 +129,6 @@ module.exports = {
                     const operator = script.getField('OPERATOR', script);
                     let leftValue = script.getNumberValue('LEFTHAND', script);
                     let rightValue = script.getNumberValue('RIGHTHAND', script);
-
                     if (operator === 'PLUS') {
                         const leftStringValue = script.getValue('LEFTHAND', script);
                         const rightStringValue = script.getValue('RIGHTHAND', script);
@@ -1133,14 +1132,14 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function() {
+                        function () {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
                         },
                     ],
                     viewDestroy: [
-                        function(block, notIncludeSelf) {
+                        function (block, notIncludeSelf) {
                             if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block, notIncludeSelf);
                             }
@@ -1202,14 +1201,14 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function() {
+                        function () {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
                         },
                     ],
                     dataDestroy: [
-                        function(block) {
+                        function (block) {
                             if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block);
                             }
@@ -1340,14 +1339,14 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function() {
+                        function () {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
                         },
                     ],
                     viewDestroy: [
-                        function(block, notIncludeSelf) {
+                        function (block, notIncludeSelf) {
                             if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block, notIncludeSelf);
                             }
@@ -1549,13 +1548,13 @@ module.exports = {
                         const mousePos = Entry.stage.mouseCoordinate;
                         return Math.sqrt(
                             Math.pow(sprite.getX() - mousePos.x, 2) +
-                                Math.pow(sprite.getY() - mousePos.y, 2)
+                            Math.pow(sprite.getY() - mousePos.y, 2)
                         );
                     } else {
                         const targetEntity = Entry.container.getEntity(targetId);
                         return Math.sqrt(
                             Math.pow(sprite.getX() - targetEntity.getX(), 2) +
-                                Math.pow(sprite.getY() - targetEntity.getY(), 2)
+                            Math.pow(sprite.getY() - targetEntity.getY(), 2)
                         );
                     }
                 },
@@ -2345,7 +2344,7 @@ module.exports = {
                 func(sprite, script) {
                     return script
                         .getStringValue('STRING', script)
-                        [script.getField('CASE', script)]();
+                    [script.getField('CASE', script)]();
                 },
                 syntax: {
                     js: [],
