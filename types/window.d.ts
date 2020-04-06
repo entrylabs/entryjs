@@ -4,6 +4,7 @@ declare interface Window {
     popupHelper?: any;
     EntryStatic: any;
     ImageCapture: any;
+    webkitAudioContext: typeof AudioContext;
 }
 
 declare var Lang: any;
