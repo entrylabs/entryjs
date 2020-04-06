@@ -122,7 +122,6 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         await this.compatabilityChecker();
-        this.isInitialized = true;
 
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
@@ -154,9 +153,7 @@ class VideoUtils implements MediaUtilsInterface {
                 width: this.CANVAS_WIDTH,
                 height: this.CANVAS_HEIGHT,
             });
-            const [track] = stream.getVideoTracks();
-            this.imageCapture = new ImageCapture(track);
-            this.sendImageToWorker();
+
             const video = document.createElement('video');
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
@@ -166,6 +163,7 @@ class VideoUtils implements MediaUtilsInterface {
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
+            this.isInitialized = true;
         } catch (err) {
             console.log(err);
             this.isInitialized = false;
@@ -174,10 +172,10 @@ class VideoUtils implements MediaUtilsInterface {
 
     videoOnLoadHandler() {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
-        this.video.play();
-        this.startDrawIndicators();
+
         Entry.dispatchEvent('showVideoLoadingScreen');
-        GEHelper.drawDetectedGraphic();
+        console.time('test');
+
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -190,6 +188,15 @@ class VideoUtils implements MediaUtilsInterface {
                 case 'init':
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     if (message === 'warmup') {
+                        console.timeEnd('test');
+                        const [track] = this.stream.getVideoTracks();
+                        this.imageCapture = new ImageCapture(track);
+                        this.sendImageToWorker();
+                        this.video.play();
+
+                        this.startDrawIndicators();
+                        GEHelper.drawDetectedGraphic();
+                        this.motionDetect(null);
                         Entry.dispatchEvent('hideLoadingScreen');
                     }
                     this.modelLoadStatus[name] = true;
@@ -205,7 +212,6 @@ class VideoUtils implements MediaUtilsInterface {
                     break;
             }
         };
-        this.motionDetect(null);
     }
     startDrawIndicators() {
         if (this.objects && this.indicatorStatus.object) {
@@ -223,8 +229,10 @@ class VideoUtils implements MediaUtilsInterface {
         }, 50);
     }
     async sendImageToWorker() {
-        const captured = await this.imageCapture.grabFrame();
-        this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+        if (this.isInitialized) {
+            const captured = await this.imageCapture.grabFrame();
+            this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+        }
 
         // //motion test
         // const tempCtx = this.tempCanvas.getContext('2d');
@@ -237,7 +245,9 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        requestAnimationFrame(this.sendImageToWorker.bind(this));
+        setTimeout(() => {
+            requestAnimationFrame(this.sendImageToWorker.bind(this));
+        }, 20);
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
