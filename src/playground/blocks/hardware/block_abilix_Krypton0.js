@@ -8,20 +8,20 @@ Entry.Krypton0 = {
         '4': undefined,
     },
     deviceTypes: {
-        NONE:            0x01,
-        BUTTON:            0x02,
-        GRAY_INFRARED:    0x03,
-        LIGHT:            0x07,
-        MICROPHONE:        0x08,
-        LED:            0x09,
-        LMOTOR:            0x0A,
-        RMOTOR:            0x0B,
+        NONE: 0x01,
+        BUTTON: 0x02,
+        GRAY_INFRARED: 0x03,
+        LIGHT: 0x07,
+        MICROPHONE: 0x08,
+        LED: 0x09,
+        LMOTOR: 0x0A,
+        RMOTOR: 0x0B,
 
-        Initializing:    0x7d,
-        WrongPort:        0x7f,
-        Unknown:        0xff
+        Initializing: 0x7d,
+        WrongPort: 0x7f,
+        Unknown: 0xff
     },
-    
+
     timeouts: [],
     removeTimeout: function(id) {
         clearTimeout(id);
@@ -39,8 +39,8 @@ Entry.Krypton0 = {
         this.timeouts = [];
     },
     setZero: function() {
-        var sensor_portmap = this.SENSOR_PORT_MAP;
-        
+        const sensor_portmap = this.SENSOR_PORT_MAP;
+
         Object.keys(sensor_portmap).forEach((sensor_port) => {
             Entry.hw.sendQueue[sensor_port] = //sensor_portmap[sensor_port]; //
             {
@@ -54,11 +54,11 @@ Entry.Krypton0 = {
 
         Entry.hw.update();
     },
-    
+
     abilix_controller : {
         MIN_MOTOR_SPEED: -50,
         MAX_MOTOR_SPEED: 50,
-        
+
         check_max_speed: function(speed_value) {
             var adj_speed = speed_value;
             
