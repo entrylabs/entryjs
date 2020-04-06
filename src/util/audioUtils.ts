@@ -157,10 +157,11 @@ class AudioUtils implements MediaUtilsInterface {
                 console.log('proper stop');
             };
         }
-        this._audioContext.suspend();
+        this._audioContext.close();
         this._userMediaStream.getTracks().forEach((track) => {
             track.stop();
         });
+
         clearTimeout(this._properStopCall);
         // this.isRecording = false;
     }
@@ -241,7 +242,10 @@ class AudioUtils implements MediaUtilsInterface {
         throw new Error('Method not implemented.');
     }
     destroy(): void {
-        throw new Error('Method not implemented.');
+        this._audioContext.close();
+        this._userMediaStream.getTracks().forEach((track) => {
+            track.stop();
+        });
     }
     async compatabilityChecker(): Promise<MediaStream> {
         this.incompatBrowserChecker();

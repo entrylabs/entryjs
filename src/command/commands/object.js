@@ -5,6 +5,12 @@
 
 const { returnEmptyArr, createTooltip } = require('../command_util');
 import VideoUtils from '../../util/videoUtils';
+import AudioUtils from '../../util/audioUtils';
+
+const AI_BLOCK_MAPPING = {
+    video: VideoUtils,
+    audio: AudioUtils,
+};
 
 (function(c) {
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -293,8 +299,9 @@ import VideoUtils from '../../util/videoUtils';
             // Entry.expansionBlocks = _.pull(Entry.expansionBlocks, blockName);
             // 사용된 블록 전체에서 검색가능해질때 사용가능.
             blockNames.forEach((blockName) => {
-                if (blockName === 'video') {
-                    VideoUtils.destroy();
+                const targetBlock = AI_BLOCK_MAPPING[blockName];
+                if (targetBlock && targetBlock.destroy) {
+                    targetBlock.destroy();
                 }
                 Entry.playground.blockMenu.banClass(blockName);
             });

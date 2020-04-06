@@ -439,27 +439,29 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     reset() {
-        this.indicatorStatus = {
-            pose: false,
-            face: false,
-            object: false,
-            warmup: null,
-        };
-        this.disableAllModels();
-        GEHelper.resetHandlers();
-        this.turnOffWebcam();
-        if (!this.flipStatus.horizontal) {
-            this.setOptions('hflip', null);
-        }
-        if (this.flipStatus.vertical) {
-            this.setOptions('vflip', null);
-        }
+        if (this.isInitialized) {
+            this.indicatorStatus = {
+                pose: false,
+                face: false,
+                object: false,
+                warmup: null,
+            };
+            this.disableAllModels();
+            GEHelper.resetHandlers();
+            this.turnOffWebcam();
+            if (!this.flipStatus.horizontal) {
+                this.setOptions('hflip', null);
+            }
+            if (this.flipStatus.vertical) {
+                this.setOptions('vflip', null);
+            }
 
-        GEHelper.setVideoAlpha(this.canvasVideo, 50);
+            GEHelper.setVideoAlpha(this.canvasVideo, 50);
 
-        this.poses = { predictions: [], adjacents: [] };
-        this.faces = [];
-        this.objects = [];
+            this.poses = { predictions: [], adjacents: [] };
+            this.faces = [];
+            this.objects = [];
+        }
     }
 
     // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
