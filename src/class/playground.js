@@ -686,6 +686,7 @@ Entry.Playground = class Playground {
                 items: this._getSortablePictureList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortablePictureList() {
@@ -1168,6 +1169,7 @@ Entry.Playground = class Playground {
                 items: this._getSortableSoundList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortableSoundList() {
@@ -1465,13 +1467,13 @@ Entry.Playground = class Playground {
                 if (result) {
                     this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
                 }
-                delete this.dataTable.tempDataAnalytics;
 
                 if (this.dataTable.selected) {
                     this.dataTable.dataAnalytics.setData({
                         table: { ...this.dataTable.selected.toJSON() },
                     });
                 }
+                delete this.dataTable.tempDataAnalytics;
                 resolve(result);
             });
         });

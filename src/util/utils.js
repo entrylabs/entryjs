@@ -732,9 +732,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', (e) => {
-            const keyCode = e.keyCode;
 
+        document.addEventListener('keydown', (e) => {
+            const keyCode = !e.key || e.key === ' ' ? e.code : e.key;
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -748,8 +748,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', (e) => {
-            const keyCode = e.keyCode;
+        document.addEventListener('keyup', (e) => {
+            const keyCode = !e.key || e.key === ' ' ? e.code : e.key;
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
@@ -1145,54 +1145,54 @@ Entry.isPhone = function() {
 
 Entry.getKeyCodeMap = function() {
     return {
-        '65': 'a',
-        '66': 'b',
-        '67': 'c',
-        '68': 'd',
-        '69': 'e',
-        '70': 'f',
-        '71': 'g',
-        '72': 'h',
-        '73': 'i',
-        '74': 'j',
-        '75': 'k',
-        '76': 'l',
-        '77': 'm',
-        '78': 'n',
-        '79': 'o',
-        '80': 'p',
-        '81': 'q',
-        '82': 'r',
-        '83': 's',
-        '84': 't',
-        '85': 'u',
-        '86': 'v',
-        '87': 'w',
-        '88': 'x',
-        '89': 'y',
-        '90': 'z',
-        '32': Lang.Blocks.START_press_some_key_space,
-        '37': Lang.Blocks.START_press_some_key_left,
-        '38': Lang.Blocks.START_press_some_key_up,
-        '39': Lang.Blocks.START_press_some_key_right,
-        '40': Lang.Blocks.START_press_some_key_down,
-        '48': '0',
-        '49': '1',
-        '50': '2',
-        '51': '3',
-        '52': '4',
-        '53': '5',
-        '54': '6',
-        '55': '7',
-        '56': '8',
-        '57': '9',
-        '13': Lang.Blocks.START_press_some_key_enter,
-        '27': 'esc',
-        '17': 'ctrl',
-        '18': 'alt',
-        '9': 'tab',
-        '16': 'shift',
-        '8': 'backspace',
+        a: 'a',
+        b: 'b',
+        c: 'c',
+        d: 'd',
+        e: 'e',
+        f: 'f',
+        g: 'g',
+        h: 'h',
+        i: 'i',
+        j: 'j',
+        k: 'k',
+        l: 'l',
+        m: 'm',
+        n: 'n',
+        o: 'o',
+        p: 'p',
+        q: 'q',
+        r: 'r',
+        s: 's',
+        t: 't',
+        u: 'u',
+        v: 'v',
+        w: 'w',
+        x: 'x',
+        y: 'y',
+        z: 'z',
+        Space: Lang.Blocks.START_press_some_key_space,
+        ArrowLeft: Lang.Blocks.START_press_some_key_left,
+        ArrowUp: Lang.Blocks.START_press_some_key_up,
+        ArrowRight: Lang.Blocks.START_press_some_key_right,
+        ArrowDown: Lang.Blocks.START_press_some_key_down,
+        '0': '0',
+        '1': '1',
+        '2': '2',
+        '3': '3',
+        '4': '4',
+        '5': '5',
+        '6': '6',
+        '7': '7',
+        '8': '8',
+        '9': '9',
+        Entry: Lang.Blocks.START_press_some_key_enter,
+        Escape: 'esc',
+        Control: 'ctrl',
+        Alt: 'alt',
+        Tab: 'tab',
+        Shift: 'shift',
+        Backspace: 'backspace',
     };
 };
 
@@ -2747,14 +2747,20 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 };
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
-    if (!Array.isArray(cloudVariable)) {
+    let items;
+    if(typeof cloudVariable === 'string') {
+        try {
+            items = JSON.parse(cloudVariable);
+        } catch(e) {}
+    }
+    if (!Array.isArray(items)) {
         return variables;
     }
-    return variables.map((item) => {
-        const cloud = cloudVariable.find(({ id }) => id === item.id);
+    return variables.map((variable) => {
+        const cloud = items.find(({ id }) => id === variable.id);
         if (cloud) {
-            return { ...item, ...cloud };
+            return { ...variable, ...cloud };
         }
-        return item;
+        return variable;
     });
 };

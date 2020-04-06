@@ -176,9 +176,11 @@ class VideoUtils implements MediaUtilsInterface {
         Entry.addEventListener('beforeStop', this.reset.bind(this));
         this.video.play();
         this.startDrawIndicators();
-        this.turnOnWebcam();
-        Entry.dispatchEvent('showLoadingScreen');
-
+        Entry.dispatchEvent('showVideoLoadingScreen');
+        GEHelper.drawDetectedGraphic();
+        if (!this.flipStatus.horizontal) {
+            this.setOptions('hflip', null);
+        }
         this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
             const { type, message } = e.data;
             if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -346,11 +348,13 @@ class VideoUtils implements MediaUtilsInterface {
                 if (mostSimilar.y > 1) {
                     totalMotionDirectionY += mostSimilar.y - yIndex;
                 }
+                areaMotion += areaMotionScore;
+
                 // 전체 범위를 위한것일경우 저장, 아니면 스킵
                 if (sprite) {
                     continue;
                 }
-                areaMotion += areaMotionScore;
+
                 this.motions[yIndex][xIndex] = {
                     r,
                     g,
@@ -443,7 +447,7 @@ class VideoUtils implements MediaUtilsInterface {
         };
         this.disableAllModels();
         GEHelper.resetHandlers();
-        this.turnOnWebcam();
+        this.turnOffWebcam();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -451,7 +455,6 @@ class VideoUtils implements MediaUtilsInterface {
             this.setOptions('vflip', null);
         }
 
-        GEHelper.resetCanvasBrightness(this.canvasVideo);
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
 
         this.poses = { predictions: [], adjacents: [] };
@@ -463,10 +466,15 @@ class VideoUtils implements MediaUtilsInterface {
     destroy() {
         this.disableAllModels();
         this.turnOffWebcam();
-        this.stream.getTracks().forEach((track) => {
-            track.stop();
-        });
-        this.worker.terminate();
+        try {
+            this.stream.getTracks().forEach((track) => {
+                track.stop();
+            });
+            this.worker.terminate();
+        } catch (err) {
+            console.log(err);
+        }
+
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
@@ -490,20 +498,26 @@ class VideoUtils implements MediaUtilsInterface {
             throw new Entry.Utils.IncompatibleError();
         }
         if (!this.stream) {
-            try {
-                await navigator.mediaDevices.getUserMedia({
-                    audio: false,
-                    video: {
-                        facingMode: 'user',
-                        width: this._VIDEO_WIDTH,
-                        height: this._VIDEO_HEIGHT,
-                    },
-                });
-            } catch (err) {
+            if (!this.checkUserCamAvailable()) {
                 throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                     Lang.Workspace.check_webcam_error,
                 ]);
             }
+        }
+    }
+    async checkUserCamAvailable() {
+        try {
+            await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    facingMode: 'user',
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+            return true;
+        } catch (err) {
+            return false;
         }
     }
 }
