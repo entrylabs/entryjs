@@ -1,17 +1,11 @@
 'use strict';
 
 Entry.Krypton0 = {
-    PORT_MAP: {
+	SENSOR_PORT_MAP: {
 		'1': undefined,
         '2': undefined,
         '3': undefined,
         '4': undefined,
-    },
-	SENSOR_PORT_MAP: {
-		'A': undefined,
-        'B': undefined,
-        'C': undefined,
-        'D': undefined,
 	},
 	deviceTypes: {
 		NONE:			0x01,
@@ -45,22 +39,19 @@ Entry.Krypton0 = {
         this.timeouts = [];
     },
     setZero: function() {
-        var portMap = this.PORT_MAP;
 		var sensor_portmap = this.SENSOR_PORT_MAP;
-        Object.keys(portMap).forEach(function(port) {
-			//Entry.hw.sendQueue[port] = portMap[port];
-			Entry.hw.sendQueue[port] = {
-                type: Entry.Krypton0.deviceTypes.NONE,
-                port_values: 0,
-            };
-        });
 		
-		Object.keys(sensor_portmap).forEach(function(sensor_port) {
-			Entry.hw.sendQueue[sensor_port] = {
+		Object.keys(sensor_portmap).forEach((sensor_port) => {
+			Entry.hw.sendQueue[sensor_port] = //sensor_portmap[sensor_port]; //
+			{
                 type: Entry.Krypton0.deviceTypes.NONE,
                 port_values: 0,
             };
 		});
+		Entry.hw.sendQueue.LMOTOR = 0;
+		Entry.hw.sendQueue.RMOTOR = 0;
+		Entry.hw.sendQueue.INTERSND = 'none';
+
         Entry.hw.update();
     },
 	
@@ -430,8 +421,8 @@ Entry.Krypton0.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['A', 'LEFT'],
-                        ['B', 'RIGHT'],
+                        ['A', 'A'],
+                        ['B', 'B'],
                         ['양쪽', 'BOTH'],
                     ],
                     value: 'BOTH',
@@ -469,10 +460,10 @@ Entry.Krypton0.getBlocks = function() {
             func: function(sprite, script) {
                 var direction = script.getField('DIRECTION');
                 var value = script.getNumberValue('VALUE'); //Entry.Krypton0.abilix_controller.check_max_speed(script.getNumberValue('VALUE'));
-                if (direction == 'LEFT') {
+                if (direction == 'A') {
                     Entry.hw.sendQueue.LMOTOR = value;
 					Entry.hw.sendQueue.RMOTOR = Entry.hw.sendQueue.RMOTOR != undefined ? Entry.hw.sendQueue.RMOTOR : 0;
-                } else if (direction == 'RIGHT') {
+                } else if (direction == 'B') {
 					Entry.hw.sendQueue.LMOTOR = Entry.hw.sendQueue.LMOTOR != undefined ? Entry.hw.sendQueue.LMOTOR : 0;
                     Entry.hw.sendQueue.RMOTOR = value;
                 } else {
@@ -525,10 +516,29 @@ Entry.Krypton0.getBlocks = function() {
 			class: 'Krypton0_motor_control',
 			isNotFor: ['ABILIX Krypton 0 for School'],
             func: function(sprite, script) {
-                var audio_file = script.getField('SOUND_VALUE');
-				Entry.hw.sendQueue.INTERSND = audio_file;
-                return script.callReturn();
-            },
+				
+				if (!script.isStart) {
+					script.isStart = true;
+					script.timeFlag = 1;
+					var audio_file = script.getField('SOUND_VALUE');
+					Entry.hw.sendQueue.INTERSND = audio_file;
+					var timeValue = 500;
+					var timer = setTimeout(function() {
+						script.timeFlag = 0;
+						Entry.Krypton0.removeTimeout(timer);
+					}, timeValue);
+					Entry.Krypton0.timeouts.push(timer);
+					return script;
+				} else if (script.timeFlag == 1) {
+					return script;
+				} else {
+					delete script.isStart;
+					delete script.timeFlag;
+					Entry.engine.isContinue = false;
+					Entry.hw.sendQueue.INTERSND = 'none';
+					return script.callReturn();
+				}
+			},
         },
 		
 		/*************************************************************************
@@ -593,13 +603,13 @@ Entry.Krypton0.getBlocks = function() {
                 var dev_type;
 				
 				switch (port) {
-					case '1' : port_data = Entry.hw.getDigitalPortValue('A');
+					case '1' : port_data = Entry.hw.getDigitalPortValue('1');
 					break;
-					case '2' : port_data = Entry.hw.getDigitalPortValue('B');
+					case '2' : port_data = Entry.hw.getDigitalPortValue('2');
 					break;
-					case '3' : port_data = Entry.hw.getDigitalPortValue('C');
+					case '3' : port_data = Entry.hw.getDigitalPortValue('3');
 					break;
-					case '4' : port_data = Entry.hw.getDigitalPortValue('D');
+					case '4' : port_data = Entry.hw.getDigitalPortValue('4');
 					break;
 				}
 				
@@ -734,13 +744,13 @@ Entry.Krypton0.getBlocks = function() {
                 var dev_type;
 				
 				switch (port) {
-					case '1' : port_data = Entry.hw.getDigitalPortValue('A');
+					case '1' : port_data = Entry.hw.getDigitalPortValue('1');
 					break;
-					case '2' : port_data = Entry.hw.getDigitalPortValue('B');
+					case '2' : port_data = Entry.hw.getDigitalPortValue('2');
 					break;
-					case '3' : port_data = Entry.hw.getDigitalPortValue('C');
+					case '3' : port_data = Entry.hw.getDigitalPortValue('3');
 					break;
-					case '4' : port_data = Entry.hw.getDigitalPortValue('D');
+					case '4' : port_data = Entry.hw.getDigitalPortValue('4');
 					break;
 				}
 				
@@ -818,7 +828,7 @@ Entry.Krypton0.getBlocks = function() {
 				var led_value = script.getField('LED_VALUE');
 				var port_value;
 				
-				console.log('Krypton0_turnon_led : ' + led_value);
+				console.log('Krypton0_turnon_led : port = ' + port + ' value = ' + led_value);
 				if (led_value == 'ON')
 					port_value = 0;
 				else
