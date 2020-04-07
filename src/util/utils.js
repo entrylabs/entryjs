@@ -734,7 +734,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.keyPressed = new Entry.Event(window);
 
         document.addEventListener('keydown', (e) => {
-            const keyCode = e.key === ' ' ? e.code : e.key;
+            let keyCode = e.key === ' ' ? e.code : e.key;
+            keyCode = Entry.KeyboardCode.korKeyMap[keyCode] || keyCode;
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -749,7 +750,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
-            const keyCode = e.key === ' ' ? e.code : e.key;
+            let keyCode = e.key === ' ' ? e.code : e.key;
+            keyCode = Entry.KeyboardCode.korKeyMap[keyCode] || keyCode;
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
