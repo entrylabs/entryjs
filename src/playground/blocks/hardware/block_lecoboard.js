@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.Lecoboard = {
-    id: '50.1',
+    id: '3C.1',
     name: 'lecoboard',
     url: 'http://www.arduino.cc/',
     imageName: 'lecoboard.png',
