@@ -904,8 +904,8 @@ Entry.Engine = class Engine {
      * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
-        const keyCode =
-            Entry.KeyboardCode.korKeyMap[keyCode] || (!e.key || e.key === ' ' ? e.code : e.key);
+        let keyCode = e.key === ' ' ? e.code : e.key;
+        keyCode = Entry.KeyboardCode.korKeyMap[keyCode] || keyCode;
         const isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce) {

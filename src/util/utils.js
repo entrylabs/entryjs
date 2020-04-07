@@ -734,7 +734,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.keyPressed = new Entry.Event(window);
 
         document.addEventListener('keydown', (e) => {
-            const keyCode = !e.key || e.key === ' ' ? e.code : e.key;
+            const keyCode = e.key === ' ' ? e.code : e.key;
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -749,7 +749,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
-            const keyCode = !e.key || e.key === ' ' ? e.code : e.key;
+            const keyCode = e.key === ' ' ? e.code : e.key;
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
@@ -2748,10 +2748,10 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
     let items;
-    if(typeof cloudVariable === 'string') {
+    if (typeof cloudVariable === 'string') {
         try {
             items = JSON.parse(cloudVariable);
-        } catch(e) {}
+        } catch (e) {}
     }
     if (!Array.isArray(items)) {
         return variables;
