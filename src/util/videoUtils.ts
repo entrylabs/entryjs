@@ -92,6 +92,8 @@ class VideoUtils implements MediaUtilsInterface {
         adjacents: posenet.Keypoint[][][];
     };
     public faces: any = [];
+
+    public isRunning = false;
     /**
      * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
      */
@@ -122,7 +124,6 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         await this.compatabilityChecker();
-        this.isInitialized = true;
 
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
@@ -154,9 +155,7 @@ class VideoUtils implements MediaUtilsInterface {
                 width: this.CANVAS_WIDTH,
                 height: this.CANVAS_HEIGHT,
             });
-            const [track] = stream.getVideoTracks();
-            this.imageCapture = new ImageCapture(track);
-            this.sendImageToWorker();
+
             const video = document.createElement('video');
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
@@ -166,18 +165,16 @@ class VideoUtils implements MediaUtilsInterface {
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
+            this.isInitialized = true;
         } catch (err) {
             console.log(err);
             this.isInitialized = false;
         }
     }
-
     videoOnLoadHandler() {
-        Entry.addEventListener('beforeStop', this.reset.bind(this));
-        this.video.play();
-        this.startDrawIndicators();
         Entry.dispatchEvent('showVideoLoadingScreen');
-        GEHelper.drawDetectedGraphic();
+        console.time('test');
+
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -190,6 +187,14 @@ class VideoUtils implements MediaUtilsInterface {
                 case 'init':
                     const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                     if (message === 'warmup') {
+                        console.timeEnd('test');
+                        Entry.addEventListener('beforeStop', this.reset.bind(this));
+                        Entry.addEventListener('toggleRun', this.initialSetup.bind(this));
+                        const [track] = this.stream.getVideoTracks();
+                        this.imageCapture = new ImageCapture(track);
+                        this.sendImageToWorker();
+                        this.video.play();
+
                         Entry.dispatchEvent('hideLoadingScreen');
                     }
                     this.modelLoadStatus[name] = true;
@@ -205,8 +210,15 @@ class VideoUtils implements MediaUtilsInterface {
                     break;
             }
         };
-        this.motionDetect(null);
     }
+
+    initialSetup() {
+        this.isRunning = true;
+        this.motionDetect(null);
+        this.startDrawIndicators();
+        GEHelper.drawDetectedGraphic();
+    }
+
     startDrawIndicators() {
         if (this.objects && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objects, this.flipStatus);
@@ -237,7 +249,9 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        requestAnimationFrame(this.sendImageToWorker.bind(this));
+        setTimeout(() => {
+            requestAnimationFrame(this.sendImageToWorker.bind(this));
+        }, 20);
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
@@ -378,7 +392,9 @@ class VideoUtils implements MediaUtilsInterface {
         }
 
         this.totalMotions = result;
-        setTimeout(this.motionDetect.bind(this), 200);
+        if (this.isRunning) {
+            setTimeout(this.motionDetect.bind(this), 200);
+        }
     }
 
     cameraSwitch(mode: String) {
@@ -460,6 +476,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
         this.objects = [];
+        this.isRunning = false;
     }
 
     // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used

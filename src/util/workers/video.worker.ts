@@ -66,9 +66,8 @@ async function processImage(repeat: boolean) {
 async function warmup() {
     for (let i = 0; i < 10; i++) {
         await processImage(false);
-        console.log('warmup', (i + 1) * 10, '% done');
+        // console.log('warmup', (i + 1) * 10, '% done');
     }
-    ctx.postMessage({ type: 'init', message: 'warmup' });
 }
 
 async function objectDetect(force: boolean) {
@@ -171,7 +170,7 @@ ctx.onmessage = async function(e: {
                     })
                     .then((mobileNetLoaded: any) => {
                         mobileNet = mobileNetLoaded;
-                        console.log('posenet model loaded');
+                        // console.log('posenet model loaded');
                         this.postMessage({ type: 'init', message: 'pose' });
                     }),
                 cocoSsd
@@ -180,7 +179,7 @@ ctx.onmessage = async function(e: {
                     })
                     .then((cocoLoaded: any) => {
                         coco = cocoLoaded;
-                        console.log('coco model loaded');
+                        // console.log('coco model loaded');
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
                 faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
@@ -191,9 +190,12 @@ ctx.onmessage = async function(e: {
                 faceLoaded = true;
                 this.postMessage({ type: 'init', message: 'face' });
             });
-            await warmup();
-            console.log('video worker loaded');
-            processImage(true);
+            warmup().then(() => {
+                processImage(true);
+            });
+            this.postMessage({ type: 'init', message: 'warmup' });
+
+            // console.log('video worker loaded');
             break;
 
         case 'estimate':
