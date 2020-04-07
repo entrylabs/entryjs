@@ -94,6 +94,7 @@ class VideoUtils implements MediaUtilsInterface {
     public faces: any = [];
 
     public isRunning = false;
+    public isModelInitiated = false;
     /**
      * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
      */
@@ -189,15 +190,10 @@ class VideoUtils implements MediaUtilsInterface {
                     if (message === 'warmup') {
                         console.timeEnd('test');
                         Entry.addEventListener('beforeStop', this.reset.bind(this));
-                        Entry.addEventListener('toggleRun', this.initialSetup.bind(this));
-                        const [track] = this.stream.getVideoTracks();
-                        this.imageCapture = new ImageCapture(track);
-                        this.sendImageToWorker();
-                        this.video.play();
-
+                        Entry.addEventListener('run', this.initialSetup.bind(this));
                         Entry.dispatchEvent('hideLoadingScreen');
+                        this.video.play();
                     }
-                    this.modelLoadStatus[name] = true;
                     break;
                 case 'face':
                     this.faces = message;
@@ -213,6 +209,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     initialSetup() {
+        console.log('initial setup');
         this.isRunning = true;
         this.motionDetect(null);
         this.startDrawIndicators();
@@ -220,6 +217,9 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     startDrawIndicators() {
+        if (!this.isRunning) {
+            return;
+        }
         if (this.objects && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objects, this.flipStatus);
         }
@@ -235,6 +235,9 @@ class VideoUtils implements MediaUtilsInterface {
         }, 50);
     }
     async sendImageToWorker() {
+        if (!this.isModelInitiated) {
+            return;
+        }
         const captured = await this.imageCapture.grabFrame();
         this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
@@ -439,18 +442,37 @@ class VideoUtils implements MediaUtilsInterface {
                 break;
         }
     }
-    manageModel(target: String, mode: String) {
+    manageModel(target: IndicatorType, mode: String) {
+        if (!this.isModelInitiated) {
+            this.isModelInitiated = true;
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+            this.sendImageToWorker();
+        }
         this.worker.postMessage({
             type: 'handle',
             target,
             mode,
         });
+        if (mode == 'off') {
+            this.modelLoadStatus[target] = false;
+            this.isModelInitiated =
+                this.modelLoadStatus.face ||
+                this.modelLoadStatus.object ||
+                this.modelLoadStatus.pose;
+
+            this.removeIndicator(target);
+        } else {
+            this.modelLoadStatus[target] = true;
+        }
     }
     showIndicator(type: IndicatorType) {
         this.indicatorStatus[type] = true;
     }
     removeIndicator(type: IndicatorType) {
-        this.indicatorStatus[type] = false;
+        if (type) {
+            this.indicatorStatus[type] = false;
+        }
         GEHelper.resetHandlers();
     }
 
@@ -477,6 +499,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.faces = [];
         this.objects = [];
         this.isRunning = false;
+        this.isModelInitiated = false;
     }
 
     // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
