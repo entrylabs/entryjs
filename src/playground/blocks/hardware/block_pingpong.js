@@ -881,14 +881,14 @@ Entry.PingpongG1 = new (class PingpongG1 {
         return {
             ko: {
                 template: {
-                    pingpong_g1_when_button_pressed: '%1 큐브 단추를 눌렀을 때',
-                    pingpong_g1_when_tilted: '%1 큐브가 %2 방향으로 기울였을 때',
-                    pingpong_g1_is_button_pressed: '큐브 단추를 눌렀는가?',
-                    pingpong_g1_is_tilted: '큐브가 %1 방향으로 기울여졌는가?',
+                    pingpong_g1_when_button_pressed: '%1 큐브 버튼을 눌렀을 때',
+                    pingpong_g1_when_tilted: '%1 큐브를 %2 방향으로 기울였을 때',
+                    pingpong_g1_is_button_pressed: '큐브 버튼이 눌렸는가?',
+                    pingpong_g1_is_tilted: '큐브가 %1 방향으로 기울어졌는가?',
                     pingpong_g1_get_tilt_value: '%1 방향 큐브 기울기',
                     pingpong_g1_get_sensor_value: '%1 센서값',
                     pingpong_g1_motor_rotate: '모터를 %1 방향으로 %2 도 회전하기 %3',
-                    pingpong_g1_start_motor_rotate: '모터의 속도를 %1 으로 정하기 %2',
+                    pingpong_g1_start_motor_rotate: '모터의 속도를 %1으로 계속 회전하기 %2',
                     pingpong_g1_stop_motor_rotate: '모터 멈추기 %1',
                     pingpong_g1_rotate_servo_mortor: '서보모터를 %1도로 설정하기 %2',
                     pingpong_g1_is_top_shape: '큐브 윗면에 %1 모양이 있는가?',

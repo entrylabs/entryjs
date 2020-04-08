@@ -1528,10 +1528,10 @@ Entry.PingpongG2 = new (class extends PingpongBase {
         return {
             ko: {
                 template: {
-                    pingpong_g2_when_button_pressed: '%1 %2 큐브의 단추를 눌렀을 때',
-                    pingpong_g2_when_tilted: '%1 %2 큐브가 %3 (으)로 기울였을 때',
-                    pingpong_g2_is_button_pressed: '%1 큐브의 단추가 눌렸는가?',
-                    pingpong_g2_is_tilted: '%1 큐브가 %2 (으)로 기울여졌는가?',
+                    pingpong_g2_when_button_pressed: '%1 %2 큐브 버튼을 눌렀을 때',
+                    pingpong_g2_when_tilted: '%1 %2 큐브를 %3로 기울였을 때',
+                    pingpong_g2_is_button_pressed: '%1 큐브 버튼이 눌렸는가?',
+                    pingpong_g2_is_tilted: '%1 큐브가 %2로 기울어졌는가?',
                     pingpong_g2_is_top_shape: '%1 큐브의 윗면에 %2 모양이 있는가?',
                     pingpong_g2_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g2_get_sensor_value: '%1 큐브의 %2 센서값',
@@ -1539,8 +1539,8 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                         '모터1을 %1 방향 %2 도, 모터2를 %3 방향 %4 도 회전하기 %5',
                     pingpong_g2_motor_rotate: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
                     pingpong_g2_start_multi_motor_rotate:
-                        '모터1 속도를 %1 모터2 속도를 %2 (으)로 정하기 %3',
-                    pingpong_g2_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
+                        '모터1 속도를 %1, 모터2 속도를 %2으로 계속 회전하기 %3',
+                    pingpong_g2_start_motor_rotate: '%1 모터의 속도를 %2으로 계속 회전하기 %3',
                     pingpong_g2_stop_motor_rotate: '%1 모터 멈추기 %2',
                     pingpong_g2_set_dot_pixel: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
                     pingpong_g2_set_dot_string:
@@ -2638,10 +2638,10 @@ Entry.PingpongG3 = new (class extends PingpongBase {
         return {
             ko: {
                 template: {
-                    pingpong_g3_when_button_pressed: '%1 %2 큐브의 단추를 눌렀을 때',
-                    pingpong_g3_when_tilted: '%1 %2 큐브가 %3 (으)로 기울였을 때',
-                    pingpong_g3_is_button_pressed: '%1 큐브의 단추가 눌렸는가?',
-                    pingpong_g3_is_tilted: '%1 큐브가 %2 (으)로 기울여졌는가?',
+                    pingpong_g3_when_button_pressed: '%1 %2 큐브 버튼을 눌렀을 때',
+                    pingpong_g3_when_tilted: '%1 %2 큐브를 %3로 기울였을 때',
+                    pingpong_g3_is_button_pressed: '%1 큐브 버튼이 눌렸는가?',
+                    pingpong_g3_is_tilted: '%1 큐브가 %2로 기울어졌는가?',
                     pingpong_g3_is_top_shape: '%1 큐브의 윗면에 %2 모양이 있는가?',
                     pingpong_g3_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g3_get_sensor_value: '%1 큐브의 %2 센서값',
@@ -2649,8 +2649,8 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                         '모터1을 %1 방향 %2 도, 모터2를 %3 방향 %4 도, 모터3을 %5방향 %6도 회전하기 %7',
                     pingpong_g3_motor_rotate: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
                     pingpong_g3_start_multi_motor_rotate:
-                        '모터1 속도를 %1 모터2 속도를 %2 모터3 속도를 %3 (으)로 정하기 %4',
-                    pingpong_g3_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
+                        '모터1 속도를 %1, 모터2 속도를 %2, 모터3 속도를 %3으로 계속 회전하기 %4',
+                    pingpong_g3_start_motor_rotate: '%1 모터의 속도를 %2으로 계속 회전하기 %3',
                     pingpong_g3_stop_motor_rotate: '%1 모터 멈추기 %2',
                     pingpong_g3_set_dot_pixel: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
                     pingpong_g3_set_dot_string:
@@ -3781,10 +3781,10 @@ Entry.PingpongG4 = new (class extends PingpongBase {
         return {
             ko: {
                 template: {
-                    pingpong_g4_when_button_pressed: '%1 %2 큐브의 단추를 눌렀을 때',
-                    pingpong_g4_when_tilted: '%1 %2 큐브가 %3 (으)로 기울였을 때',
-                    pingpong_g4_is_button_pressed: '%1 큐브의 단추가 눌렸는가?',
-                    pingpong_g4_is_tilted: '%1 큐브가 %2 (으)로 기울여졌는가?',
+                    pingpong_g4_when_button_pressed: '%1 %2 큐브 버튼을 눌렀을 때',
+                    pingpong_g4_when_tilted: '%1 %2 큐브를 %3로 기울였을 때',
+                    pingpong_g4_is_button_pressed: '%1 큐브 버튼이 눌렸는가?',
+                    pingpong_g4_is_tilted: '%1 큐브가 %2로 기울어졌는가?',
                     pingpong_g4_is_top_shape: '%1 큐브의 윗면에 %2 모양이 있는가?',
                     pingpong_g4_get_tilt_value: '%1 큐브의 %2 방향 기울기',
                     pingpong_g4_get_sensor_value: '%1 큐브의 %2 센서값',
@@ -3793,8 +3793,8 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                         '모터3은 %5방향 %6도, 모터4는 %7방향 %8도 회전하기 %9',
                     pingpong_g4_motor_rotate: '%1 모터를 %2 방향으로 %3 도 회전하기 %4',
                     pingpong_g4_start_multi_motor_rotate:
-                        '모터1 속도를 %1 모터2 속도를 %2 모터3 속도를 %3 모터4 속도를 %4 (으)로 정하기 %5',
-                    pingpong_g4_start_motor_rotate: '%1 모터의 속도를 %2 으로 정하기 %3',
+                        '모터1 속도를 %1, 모터2 속도를 %2, 모터3 속도를 %3, 모터4 속도를 %4으로 계속 회전하기 %5',
+                    pingpong_g4_start_motor_rotate: '%1 모터의 속도를 %2으로 계속 회전하기 %3',
                     pingpong_g4_stop_motor_rotate: '%1 모터 멈추기 %2',
                     pingpong_g4_set_dot_pixel: '%1 번째 큐브의 도트 X:%2 Y:%3 %4 %5',
                     pingpong_g4_set_dot_string:
