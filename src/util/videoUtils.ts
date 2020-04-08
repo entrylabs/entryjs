@@ -196,19 +196,13 @@ class VideoUtils implements MediaUtilsInterface {
                     }
                     break;
                 case 'face':
-                    if (this.isRunning && this.modelLoadStatus.face) {
-                        this.faces = message;
-                    }
+                    this.faces = message;
                     break;
                 case 'coco':
-                    if (this.isRunning && this.modelLoadStatus.object) {
-                        this.objects = message;
-                    }
+                    this.objects = message;
                     break;
                 case 'pose':
-                    if (this.isRunning && this.modelLoadStatus.pose) {
-                        this.poses = message;
-                    }
+                    this.poses = message;
                     break;
             }
         };
@@ -490,7 +484,6 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     reset() {
-        this.isRunning = false;
         this.indicatorStatus = {
             pose: false,
             face: false,
@@ -512,6 +505,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
         this.objects = [];
+        this.isRunning = false;
         this.isModelInitiated = false;
     }
 
