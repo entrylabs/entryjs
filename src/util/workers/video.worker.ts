@@ -45,6 +45,8 @@ let options: {
     flipStatus: FlipStatus;
 };
 
+let isRunning = false;
+
 const dimension = { width: 0, height: 0 };
 
 async function processImage(repeat: boolean) {
@@ -53,7 +55,12 @@ async function processImage(repeat: boolean) {
             await objectDetect(true), await poseDetect(true), await faceDetect(true);
             return;
         }
-        objectDetect(false), poseDetect(false), faceDetect(false);
+        else if (isRunning) {
+            objectDetect(false), poseDetect(false), faceDetect(false);
+        } else {
+            return;
+        }
+
     } catch (err) {
         console.log('estimation error', err);
     }
@@ -134,7 +141,7 @@ async function poseDetect(force: boolean) {
     }
 }
 
-ctx.onmessage = async function(e: {
+ctx.onmessage = async function (e: {
     data: {
         type: String;
         width: number;
@@ -215,6 +222,15 @@ ctx.onmessage = async function(e: {
             const targetMode = mode === 'on';
             modelStatus[target] = targetMode;
             break;
+
+        case 'pause':
+            isRunning = false;
+            break;
+        case 'run':
+            isRunning = true;
+            processImage(true);
+            break;
+
 
         case 'handleOff':
             modelStatus = {

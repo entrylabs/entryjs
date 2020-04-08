@@ -460,9 +460,16 @@ class VideoUtils implements MediaUtilsInterface {
                 this.modelLoadStatus.face ||
                 this.modelLoadStatus.object ||
                 this.modelLoadStatus.pose;
-
+            if (!this.isModelInitiated) {
+                this.worker.postMessage({
+                    type: 'pause'
+                })
+            }
             this.removeIndicator(target);
         } else {
+            this.worker.postMessage({
+                type: 'run'
+            })
             this.modelLoadStatus[target] = true;
         }
     }
