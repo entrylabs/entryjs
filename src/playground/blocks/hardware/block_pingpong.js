@@ -895,7 +895,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                     pingpong_g1_set_dot_pixel: '도트 X:%1 Y:%2 %3 %4',
                     pingpong_g1_set_dot_string: '도트에 문자열 %1  %2초동안 출력 %3',
                     pingpong_g1_set_dot_clear: '도트 화면 지우기 %1',
-                    pingpong_g1_playNoteForBeats: '%1 번 음을 %2 박자로 연주하기 %3',
+                    pingpong_g1_playNoteForBeats: '%1 음을 %2 박자로 연주하기 %3',
                     pingpong_g1_restForBeats: '%1 박자 쉬기 %2',
                     pingpong_g1_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
                     pingpong_g1_getTempo: '악보 빠르기',

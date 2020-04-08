@@ -1547,7 +1547,7 @@ Entry.PingpongG2 = new (class extends PingpongBase {
                         '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g2_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g2_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
-                    pingpong_g2_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g2_playNoteForBeats: '%1 큐브의 %2 음을 %3 박자로 연주하기 %4',
                     pingpong_g2_playChordForBeats: '%1 큐브 %2, %3 큐브 %4, %5 박자로 연주하기 %6',
                     pingpong_g2_restForBeats: '%1 박자 쉬기 %2',
                     pingpong_g2_setTempo: '악보 빠르기를 %1 으로 정하기 %2',
@@ -2657,7 +2657,7 @@ Entry.PingpongG3 = new (class extends PingpongBase {
                         '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g3_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g3_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
-                    pingpong_g3_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g3_playNoteForBeats: '%1 큐브의 %2 음을 %3 박자로 연주하기 %4',
                     pingpong_g3_playChordForBeats:
                         '%1 큐브 %2, %3 큐브 %4, %5 큐브 %6 %7 박자로 연주하기 %8',
                     pingpong_g3_restForBeats: '%1 박자 쉬기 %2',
@@ -3801,7 +3801,7 @@ Entry.PingpongG4 = new (class extends PingpongBase {
                         '%1 번째 큐브에 도트 문자열 %2 %3초동안 보여주기 %4',
                     pingpong_g4_set_dot_clear: '%1 번째 큐브의 화면 지우기 %2',
                     pingpong_g4_rotate_servo_mortor: '%1 번째 큐브의 서보모터 %2도로 설정하기 %3',
-                    pingpong_g4_playNoteForBeats: '%1 큐브의 %2 번 음을 %3 박자로 연주하기 %4',
+                    pingpong_g4_playNoteForBeats: '%1 큐브의 %2 음을 %3 박자로 연주하기 %4',
                     pingpong_g4_playChordForBeats:
                         '%1 큐브 %2, %3 큐브 %4, %5 큐브 %6 %7 박자로 연주하기 %8',
                     pingpong_g4_restForBeats: '%1 박자 쉬기 %2',
