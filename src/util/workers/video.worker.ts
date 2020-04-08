@@ -238,6 +238,7 @@ ctx.onmessage = async function (e: {
                 object: false,
                 face: false,
             };
+            isRunning = false;
             break;
     }
 };
