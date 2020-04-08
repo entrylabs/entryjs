@@ -283,8 +283,8 @@ class VideoUtils implements MediaUtilsInterface {
             }
             if (this.flipStatus.vertical) {
                 const tempMinY = minY;
-                minY = this.CANVAS_WIDTH - maxY;
-                maxY = this.CANVAS_WIDTH - tempMinY;
+                minY = this.CANVAS_HEIGHT - maxY;
+                maxY = this.CANVAS_HEIGHT - tempMinY;
             }
             minX = Math.floor(minX / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
             maxX = Math.floor(maxX / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
