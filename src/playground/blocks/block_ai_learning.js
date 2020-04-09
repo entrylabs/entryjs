@@ -19,6 +19,11 @@ module.exports = {
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    }
                 ],
                 events: {},
                 def: {
