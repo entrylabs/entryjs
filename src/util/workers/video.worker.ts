@@ -155,7 +155,7 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-
+            
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({

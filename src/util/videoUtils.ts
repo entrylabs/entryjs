@@ -179,11 +179,21 @@ class VideoUtils implements MediaUtilsInterface {
                         break;
                 }
             };
-            this.worker.postMessage({
-                type: 'init',
-                width: this.CANVAS_WIDTH,
-                height: this.CANVAS_HEIGHT,
-            });
+            if (window.OffscreenCanvas) {
+                this.worker.postMessage({
+                    type: 'init',
+                    width: this.CANVAS_WIDTH,
+                    height: this.CANVAS_HEIGHT,
+                });
+                Entry.dispatchEvent('showVideoLoadingScreen');
+            } else {
+                Entry.addEventListener('beforeStop', this.reset.bind(this));
+                Entry.addEventListener('run', () => {
+                    this.isRunning = true;
+                    this.motionDetect(null);
+                    this.video.play();
+                });
+            }
 
             const video = document.createElement('video');
             video.id = 'webCamElement';
@@ -203,7 +213,6 @@ class VideoUtils implements MediaUtilsInterface {
         }
     }
     videoOnLoadHandler() {
-        Entry.dispatchEvent('showVideoLoadingScreen');
         console.time('test');
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
@@ -221,6 +230,9 @@ class VideoUtils implements MediaUtilsInterface {
     startDrawIndicators() {
         if (!this.isRunning) {
             return;
+        }
+        if (!window.OffscreenCanvas) {
+            throw new Entry.Utils.IncompatibleError();
         }
         if (this.objects && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objects, this.flipStatus);
@@ -241,6 +253,7 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         const captured = await this.imageCapture.grabFrame();
+
         this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
         // //motion test
@@ -445,6 +458,9 @@ class VideoUtils implements MediaUtilsInterface {
     }
     manageModel(target: IndicatorType, mode: String) {
         if (!this.isModelInitiated) {
+            if (!window.OffscreenCanvas) {
+                throw new Entry.Utils.IncompatibleError();
+            }
             this.isModelInitiated = true;
             const [track] = this.stream.getVideoTracks();
             this.imageCapture = new ImageCapture(track);
@@ -468,6 +484,9 @@ class VideoUtils implements MediaUtilsInterface {
             }
             this.removeIndicator(target);
         } else {
+            if (!window.OffscreenCanvas) {
+                throw new Entry.Utils.IncompatibleError();
+            }
             this.worker.postMessage({
                 type: 'run',
             });
@@ -475,9 +494,15 @@ class VideoUtils implements MediaUtilsInterface {
         }
     }
     showIndicator(type: IndicatorType) {
+        if (!window.OffscreenCanvas) {
+            throw new Entry.Utils.IncompatibleError();
+        }
         this.indicatorStatus[type] = true;
     }
     removeIndicator(type: IndicatorType) {
+        if (!window.OffscreenCanvas) {
+            throw new Entry.Utils.IncompatibleError();
+        }
         if (type) {
             this.indicatorStatus[type] = false;
         }
@@ -543,7 +568,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async compatabilityChecker() {
-        if (!navigator.mediaDevices.getUserMedia || !window.OffscreenCanvas) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Entry.Utils.IncompatibleError();
         }
         if (!this.stream) {
