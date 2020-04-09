@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="264" height="168" viewBox="0 0 264 168">
+    <defs>
+        <rect id="a" width="106" height="106" rx="22"/>
+        <linearGradient id="b" x1="108.654%" x2="7.059%" y1="36.013%" y2="60.594%">
+            <stop offset="0%" stop-color="#444B56"/>
+            <stop offset="100%" stop-color="#2D3036"/>
+        </linearGradient>
+        <circle id="d" cx="35.333" cy="35.333" r="20.317"/>
+        <linearGradient id="f" x1="98.408%" x2="21.431%" y1="63.729%" y2="29.259%">
+            <stop offset="0%" stop-color="#3F3F4D"/>
+            <stop offset="100%" stop-color="#2F2F36"/>
+        </linearGradient>
+        <circle id="e" cx="35.333" cy="35.333" r="17.667"/>
+        <circle id="h" cx="6.183" cy="6.183" r="6.183"/>
+        <filter id="g" width="213.2%" height="213.2%" x="-40.4%" y="-40.4%" filterUnits="objectBoundingBox">
+            <feOffset dx="2" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur in="shadowOffsetOuter1" result="shadowBlurOuter1" stdDeviation="2"/>
+            <feColorMatrix in="shadowBlurOuter1" values="0 0 0 0 1 0 0 0 0 0.807976097 0 0 0 0 0.628220274 0 0 0 1 0"/>
+        </filter>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <g transform="translate(79 26)">
+            <mask id="c" fill="#fff">
+                <use xlink:href="#a"/>
+            </mask>
+            <use fill="#FFF" xlink:href="#a"/>
+            <path fill="url(#b)" d="M0 53h106v53H0z" mask="url(#c)"/>
+            <g fill="#474756" mask="url(#c)">
+                <path d="M0 53h106v53H0z"/>
+            </g>
+        </g>
+        <g transform="translate(95.894 45.08)">
+            <g transform="translate(.773)">
+                <path fill="#636376" d="M35.333 0c19.514 0 35.334 15.82 35.334 35.333 0 19.514-15.82 35.334-35.334 35.334C15.82 70.667 0 54.847 0 35.333 0 15.82 15.82 0 35.333 0zm0 16.482c-10.411 0-18.851 8.44-18.851 18.851 0 10.412 8.44 18.852 18.851 18.852 10.412 0 18.852-8.44 18.852-18.852 0-10.411-8.44-18.851-18.852-18.851z"/>
+                <circle cx="35.333" cy="35.333" r="22.967" fill="#FFF" opacity=".5"/>
+                <use fill="#262631" xlink:href="#d"/>
+                <use fill="url(#f)" xlink:href="#e"/>
+            </g>
+            <circle cx="36.106" cy="35.333" r="8.833" fill="#262631"/>
+            <circle cx="49.356" cy="35.333" r="2.65" fill="#FFF" opacity=".89"/>
+        </g>
+        <g transform="translate(159.383 39.25)">
+            <use fill="#000" filter="url(#g)" xlink:href="#h"/>
+            <use fill="#FB7210" xlink:href="#h"/>
+        </g>
+    </g>
+</svg>
