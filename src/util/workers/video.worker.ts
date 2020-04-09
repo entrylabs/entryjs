@@ -54,13 +54,11 @@ async function processImage(repeat: boolean) {
         if (!repeat) {
             await objectDetect(true), await poseDetect(true), await faceDetect(true);
             return;
-        }
-        else if (isRunning) {
+        } else if (isRunning) {
             objectDetect(false), poseDetect(false), faceDetect(false);
         } else {
             return;
         }
-
     } catch (err) {
         console.log('estimation error', err);
     }
@@ -141,7 +139,7 @@ async function poseDetect(force: boolean) {
     }
 }
 
-ctx.onmessage = async function (e: {
+ctx.onmessage = async function(e: {
     data: {
         type: String;
         width: number;
@@ -230,7 +228,6 @@ ctx.onmessage = async function (e: {
             isRunning = true;
             processImage(true);
             break;
-
 
         case 'handleOff':
             modelStatus = {

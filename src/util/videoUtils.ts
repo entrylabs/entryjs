@@ -126,6 +126,7 @@ class VideoUtils implements MediaUtilsInterface {
         }
         await this.compatabilityChecker();
 
+        // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
             this.inMemoryCanvas = document.createElement('canvas');
@@ -151,6 +152,33 @@ class VideoUtils implements MediaUtilsInterface {
                 },
             });
 
+            this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
+                const { type, message } = e.data;
+                if (Entry.engine.state !== 'run' && type !== 'init') {
+                    return;
+                }
+                switch (type) {
+                    case 'init':
+                        const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                        if (message === 'warmup') {
+                            console.timeEnd('test');
+                            Entry.addEventListener('beforeStop', this.reset.bind(this));
+                            Entry.addEventListener('run', this.initialSetup.bind(this));
+                            Entry.dispatchEvent('hideLoadingScreen');
+                            this.video.play();
+                        }
+                        break;
+                    case 'face':
+                        this.faces = message;
+                        break;
+                    case 'coco':
+                        this.objects = message;
+                        break;
+                    case 'pose':
+                        this.poses = message;
+                        break;
+                }
+            };
             this.worker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
@@ -158,10 +186,12 @@ class VideoUtils implements MediaUtilsInterface {
             });
 
             const video = document.createElement('video');
+            video.id = 'webCamElement';
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
             video.height = this.CANVAS_HEIGHT;
-            video.onloadedmetadata = this.videoOnLoadHandler;
+            video.autoplay = true;
+            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
 
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
@@ -175,37 +205,9 @@ class VideoUtils implements MediaUtilsInterface {
     videoOnLoadHandler() {
         Entry.dispatchEvent('showVideoLoadingScreen');
         console.time('test');
-
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
-        this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
-            const { type, message } = e.data;
-            if (Entry.engine.state !== 'run' && type !== 'init') {
-                return;
-            }
-            switch (type) {
-                case 'init':
-                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-                    if (message === 'warmup') {
-                        console.timeEnd('test');
-                        Entry.addEventListener('beforeStop', this.reset.bind(this));
-                        Entry.addEventListener('run', this.initialSetup.bind(this));
-                        Entry.dispatchEvent('hideLoadingScreen');
-                        this.video.play();
-                    }
-                    break;
-                case 'face':
-                    this.faces = message;
-                    break;
-                case 'coco':
-                    this.objects = message;
-                    break;
-                case 'pose':
-                    this.poses = message;
-                    break;
-            }
-        };
     }
 
     initialSetup() {
@@ -292,7 +294,6 @@ class VideoUtils implements MediaUtilsInterface {
             maxY = Math.floor(maxY / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
         }
 
-        // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         const context = this.inMemoryCanvas.getContext('2d');
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
@@ -462,14 +463,14 @@ class VideoUtils implements MediaUtilsInterface {
                 this.modelLoadStatus.pose;
             if (!this.isModelInitiated) {
                 this.worker.postMessage({
-                    type: 'pause'
-                })
+                    type: 'pause',
+                });
             }
             this.removeIndicator(target);
         } else {
             this.worker.postMessage({
-                type: 'run'
-            })
+                type: 'run',
+            });
             this.modelLoadStatus[target] = true;
         }
     }
@@ -534,6 +535,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.faces = [];
         this.isInitialized = false;
     }
+
     disableAllModels() {
         this.worker.postMessage({
             type: 'handleOff',
@@ -541,7 +543,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async compatabilityChecker() {
-        if (!navigator.getUserMedia) {
+        if (!navigator.mediaDevices.getUserMedia || !window.OffscreenCanvas) {
             throw new Entry.Utils.IncompatibleError();
         }
         if (!this.stream) {
