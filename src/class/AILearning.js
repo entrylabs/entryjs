@@ -23,6 +23,15 @@ export default class AILearning {
         return this.#labels;
     }
 
+    getResult(index) {
+        const defaultResult = {probability: 0, className: ''};
+        if(index !== undefined && index > -1) {
+            return this.result.find(({className}) => className === this.labels[index]) || defaultResult;
+        }
+        return this.result[0] || defaultResult;
+
+    }
+
     load({url, labels = [], type} = {}) {
         if(!url) {
             return ;
@@ -85,13 +94,6 @@ export default class AILearning {
     }
 
     openInputPopup() {
-        localStorage.setItem(this.#popupKey, JSON.stringify({url: this.#url, labels:this.#labels, type: this.#type}));
-        if(Entry.engine.state == 'run') {
-            Entry.engine.togglePause();
-        }
-
-        this.isLoading = true;
-        this.result = [];
         this.popupHelper.show(this.#popupKey);
     }
 
@@ -107,9 +109,18 @@ export default class AILearning {
         this.popupHelper.addPopup(this.#popupKey, {
             type: 'confirm',
             title: Lang.Blocks.learn_popup_title,
+            onShow: () => {
+                localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type}));
+                this.isLoading = true;
+                this.result = [];
+                if(Entry.engine.state == 'run') {
+                    Entry.engine.togglePause({visible:false});
+                }
+            },
             closeEvent: () => {
+                this.isLoading = false;
                 if(Entry.engine.state == 'pause') {
-                    Entry.engine.togglePause();
+                    Entry.engine.togglePause({visible:false});
                 }
             },
             setPopupLayout: (popup) => {
@@ -125,7 +136,6 @@ export default class AILearning {
                         const { key, data } = eventData;
                         if(key === 'predict') {
                             this.result = data;
-                            this.isLoading = false;
                             this.popupHelper.hide();
                         }
                     }, false);

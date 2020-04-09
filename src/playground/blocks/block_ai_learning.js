@@ -71,8 +71,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
                 func(sprite, script) {
-                    const {result = []} = Entry.aiLearning;
-                    return result.length ? result[0].className : '';
+                    return Entry.aiLearning.getResult().className;
                 },
                 syntax: {
                     js: [],
@@ -117,9 +116,7 @@ module.exports = {
                 isNotFor: ['ai_learning'],
                 func(sprite, script) {
                     const group = script.getNumberValue('GROUP', script);
-                    const {result = [], labels} = Entry.aiLearning;
-                    const target = result.find(({className}) => className === labels[group]) || {};
-                    return target.probability || 0;
+                    return Entry.aiLearning.getResult(group).probability;
                 },
                 syntax: {
                     js: [],
@@ -160,8 +157,9 @@ module.exports = {
                 },
                 func(sprite, script) {
                     const group = script.getNumberValue('GROUP', script)
-                    const {result = [], labels} = Entry.aiLearning;
-                    return result.length && result[0].className === labels[group];
+                    const {labels} = Entry.aiLearning;
+                    const result = Entry.aiLearning.getResult().className;
+                    return result === labels[group];
                 },
                 syntax: {
                     js: [],
