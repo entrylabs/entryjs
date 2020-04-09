@@ -1,9 +1,0 @@
-{
-  "entry.css": "/dist/entry.css",
-  "entry.js": "/dist/entry.js",
-  "entry.min.css": "/dist/entry.min.css",
-  "entry.min.js": "/dist/entry.min.js",
-  "2.3f98f31f17eda7a2a3f1.js": "/dist/2.3f98f31f17eda7a2a3f1.js",
-  "46c00b9b7ac3ac5598da.worker.js": "/dist/46c00b9b7ac3ac5598da.worker.js",
-  "entry.min.js.LICENSE.txt": "/dist/entry.min.js.LICENSE.txt"
-}
