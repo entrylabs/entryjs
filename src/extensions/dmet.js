@@ -657,8 +657,8 @@ class dmetVariable {
 
 class dmetSlideVariable extends dmetVariable {
     constructor(variable, id) {
-        super(variable, id);
         variable.variableType = 'slide';
+        super(variable, id);
     }
 }
 
