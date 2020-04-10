@@ -13,6 +13,7 @@ class DataTableSource {
     #chart = [];
     #cloudVariable = CloudVariable.getInstance();
     #source;
+    summary;
     modal;
     tab = 'summary';
 
@@ -25,6 +26,7 @@ class DataTableSource {
             data,
             tab = 'summary',
             fields = [],
+            summary,
         } = source;
         this.#name = name;
         this.#id = id;
@@ -32,6 +34,7 @@ class DataTableSource {
         this.#source = source;
         this.#data = new dmetTable(source);
         this.#chart = chart || [];
+        this.summary = summary;
         this.tab = tab;
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
@@ -58,6 +61,7 @@ class DataTableSource {
                         fields: this.fields,
                         origin: this.rows,
                         tab: this.tab,
+                        summary: this.summary,
                     },
                 });
             }
@@ -218,6 +222,7 @@ class DataTableSource {
             chart: this.#chart,
             isCloud: this.#isCloud,
             cloudDate: this.#cloudDate,
+            summary: this.summary,
         };
     }
 
@@ -227,7 +232,7 @@ class DataTableSource {
             fields: [...this.fields],
             data: _cloneDeep(this.#data.origin),
             chart: [...this.#chart],
-        }
+        };
     }
 }
 
