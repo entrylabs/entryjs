@@ -5,9 +5,10 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
+import VideoMotionWorker from './workers/motion.worker.ts';
+import { clamp } from 'lodash';
 // type을 위해서 import
 import * as posenet from '@tensorflow-models/posenet';
-import { clamp } from 'lodash';
 
 type FlipStatus = {
     horizontal: boolean;
@@ -54,6 +55,7 @@ class VideoUtils implements MediaUtilsInterface {
     private _VIDEO_HEIGHT: number = 360;
 
     // 움직임 감지에 쓰이는 상수
+
     private _SAMPLE_SIZE: number = 15;
     private _BOUNDARY_OFFSET: number = 4;
     private _SAME_COORDINATE_COMPENSATION: number = 10; // assumption weight that there is no movement within frame
@@ -114,6 +116,7 @@ class VideoUtils implements MediaUtilsInterface {
     // 로컬 스코프
     public isInitialized: boolean = false;
     public worker: Worker = new VideoWorker();
+    public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
 
@@ -151,7 +154,21 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
+            this.motionWorker.onmessage = (e: { data: { type: String; message: any } }) => {
+                const { type, message } = e.data;
+                if (Entry.engine.state !== 'run' && type !== 'init') {
+                    return;
+                }
+                this.totalMotions = {
+                    total: message.total,
+                    direction: message.direction,
+                };
+                this.motions = message.motions;
 
+                if (this.isRunning) {
+                    setTimeout(this.motionDetect.bind(this), 50);
+                }
+            };
             this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
                 const { type, message } = e.data;
                 if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -179,6 +196,11 @@ class VideoUtils implements MediaUtilsInterface {
                         break;
                 }
             };
+            this.motionWorker.postMessage({
+                type: 'init',
+                width: this.CANVAS_WIDTH,
+                height: this.CANVAS_HEIGHT,
+            });
             if (window.OffscreenCanvas) {
                 this.worker.postMessage({
                     type: 'init',
@@ -222,9 +244,9 @@ class VideoUtils implements MediaUtilsInterface {
     initialSetup() {
         console.log('initial setup');
         this.isRunning = true;
+        GEHelper.drawDetectedGraphic();
         this.motionDetect(null);
         this.startDrawIndicators();
-        GEHelper.drawDetectedGraphic();
     }
 
     startDrawIndicators() {
@@ -234,6 +256,7 @@ class VideoUtils implements MediaUtilsInterface {
         if (!window.OffscreenCanvas) {
             throw new Entry.Utils.IncompatibleError();
         }
+
         if (this.objects && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objects, this.flipStatus);
         }
@@ -311,8 +334,20 @@ class VideoUtils implements MediaUtilsInterface {
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+        if (!sprite) {
+            this.motionWorker.postMessage({
+                type: 'motion',
+                range: {
+                    minX,
+                    maxX,
+                    minY,
+                    maxY,
+                },
+                image: imageData,
+            });
+            return;
+        }
         const data = imageData.data;
-
         let areaMotion = 0;
         let totalMotionDirectionX = 0;
         let totalMotionDirectionY = 0;
@@ -380,23 +415,9 @@ class VideoUtils implements MediaUtilsInterface {
                     totalMotionDirectionY += mostSimilar.y - yIndex;
                 }
                 areaMotion += areaMotionScore;
-
-                // 전체 범위를 위한것일경우 저장, 아니면 스킵
-                if (sprite) {
-                    continue;
-                }
-
-                this.motions[yIndex][xIndex] = {
-                    r,
-                    g,
-                    b,
-                    rDiff,
-                    gDiff,
-                    bDiff,
-                };
             }
         }
-        // 전체 범위인 경우 저장, 아니면 리턴
+
         const result = {
             total: areaMotion,
             direction: {
@@ -404,14 +425,10 @@ class VideoUtils implements MediaUtilsInterface {
                 y: totalMotionDirectionY,
             },
         };
-        if (sprite) {
-            return result;
-        }
 
-        this.totalMotions = result;
-        if (this.isRunning) {
-            setTimeout(this.motionDetect.bind(this), 200);
-        }
+        console.log(result.direction);
+
+        return result;
     }
 
     cameraSwitch(mode: String) {
