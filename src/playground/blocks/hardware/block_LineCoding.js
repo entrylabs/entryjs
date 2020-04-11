@@ -174,7 +174,6 @@ Entry.LineCoding.blockMenuBlocks = [
     'LineCodingDigitalOnOff',
     'LineCodingServo',
     'LineCodingMelody',
-//    'LineCodingBlackForwardF',
 //    'LineCodingSline',
 //    'LineCodingLineFind',
 //    'LineCodingLineLost',
@@ -206,6 +205,7 @@ Entry.LineCoding.blockMenuBlocks = [
     'LineCodingGetAnalogMapping',
     'LineCodingRemotRx',
     'LineCodingLineDelay',
+    'LineCodingBlackForwardF',
     'LineCodingBuzzerOnOff',
     'LineCodingLED',
     'LineCodingABSH',
@@ -226,28 +226,19 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingDelay: 'delay(%1); %2',
                 LineCodingLine: 'line(%1, %2, %3); %4',
                 LineCodingTurn: '%1(%2, %3); %4',
-                LineCodingMotor: 'motor(%1, %2, %3);왼,오,시간 %4',
-                LineCodingBmotor: '%1(%2, %3, %4);왼,오,센서 %5',
+                LineCodingMotor: 'motor(%1, %2, %3); %4',
+                LineCodingBmotor: '%1(%2, %3, %4); %5',
                 LineCodingWheel: 'wheel(%1, %2); %3',
-                LineCodingServo: 'sservo(%1, %2, %3%);포트,각도,속도 %4',
+                LineCodingServo: 'sservo(%1, %2, %3); %4',
                 LineCodingDigitalOnOff: '디지털 %1 포트 %2 설정하기 %3',
                 LineCodingMelody: '스피커 %1 옥타브 %2음 %3 초 연주하기 %4',
-                
                 LineCodingMotorStop: 'DC모터 정지하기 %1',
-                LineCodingBlackForwardF: 'blackforwardf(%1,%2,%3,%4);%5',
-
-                
+                LineCodingBlackForwardF: 'blackforwardf(%1,%2,%3,%4,%5); %6',
                 LineCodingGetDgitalValue: '디지털 %1 포트 읽기',
                 LineCodingGetAnalogValue: '아날로그 %1 포트 읽기',
-                LineCodingGetUsonicValue: '아날로그형 (US-016)초음파센서 %1포트 읽기',
-
-                LineCodingSetLcdString: 'lcd 세로%1줄,  가로%2줄 에  %3 표시하기 %4',
-                LineCodingSetLcdBacklight: 'lcd 후광(백라이트) %1 하기 %2',
-                LineCodingSetLcdClear: 'lcd 지우기 %1',
-
                 LineCodingGetAnalogMapping: ' %1 값 %2 ~ %3 에서 %4 ~ %5 으로 변환값',
                 LineCodingRemotRx: ' 조종기버튼 %1,  %2 눌리면 실행하는 코드 %3',
-                LineCodingLineDelay: 'linedelay(%1, %2, %3);주행시간,속도,더직진시간 %4',
+                LineCodingLineDelay: 'linedelay(%1, %2, %3); %4',
                 LineCodingABSH: 'lineabsh(%1, %2, %3, %4, %5, %6); %7',
                 LineCodingBuzzerOnOff: 'buzzer(%1, %2, %3); %4',
                 LineCodingLED: 'led(%1, %2, %3, %4); %5',
@@ -262,6 +253,7 @@ Entry.LineCoding.setLanguage = function() {
                 lineForward: '직진',
                 Left: '좌회전',
                 Right: '우회전',
+                LineBack: '후진',
                 ForwardSpeed: '직진속도',
                 TurnSpeed: '회전속도',
                 ForwardOverTime: '교차로 직진시간',
@@ -276,32 +268,24 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingStop: 'End saving to lint racer %1',
                 LineCodingLineEasy: 'Go %1 %2',
                 LineCodingEasySet: 'To set the %1 %2 %3',
-                LineCodingEasyTimeSet: '교차로에서 %1 초 더 직진하기 %2',
-                LineCodingEasyMotor: '모터 %1 방향으로  %2 초 이동하기 %3',
-                LineCodingRestart: '일시정지 %1회 부저 울리고 출발 %2',
-                LineCodingLine: '%1 교차로까지 %2 의 속도로 이동하고 교차로에서 %3 시간만큼 더 이동하기 %3',
-                LineCodingTurn: '%1 %2 속도로 이동하고 반대방향으로 %3 초 회전하기 %4',
-                LineCodingMotor: '왼쪽모터 %1, 오른쪽모터 %2 속도로 %3 초 이동하기 %4',
-                LineCodingBmotor: '%1 왼쪽모터 %2, 오른쪽모터 %3 속도로 %4 센서 감지까지 이동하기 %5',
-                LineCodingMelody: 'Speakers Beep %1 Playing Second %2',
-                LineCodingWheel: 'Set DC motor left speed %1  right speed %2 %3',
-                LineCodingServo: 'Servo motor %1 port angle %2 movement %3',
+                LineCodingEasyTimeSet: 'Set %1mS to go straight at the intersection %2',
+                LineCodingEasyMotor: 'Moving %2mS in the direction of motor %1 %3',
+                LineCodingRestart: 'restart(%1); %2 %2',
+                LineCodingDelay: 'delay(%1); %2',
+                LineCodingLine: 'line(%1, %2, %3); %4',
+                LineCodingTurn: '%1(%2, %3); %4',
+                LineCodingMotor: 'motor(%1, %2, %3); %4',
+                LineCodingBmotor: '%1(%2, %3, %4); %5',
+                LineCodingWheel: 'wheel(%1, %2); %3',
+                LineCodingServo: 'sservo(%1, %2, %3); %4',
                 LineCodingDigitalOnOff: 'Setting up digital %1 port %2 %3',
+                LineCodingMelody: 'Play speaker %1 octave %2 sound %3 seconds %4',
                 LineCodingMotorStop: 'Stop DC Motor %1',
-
                 LineCodingBlackForwardF: 'blackforwardf(%1,%2,%3,%4);%5',
-
-                
                 LineCodingGetDgitalValue: 'Read digital %1 port',
                 LineCodingGetAnalogValue: 'Analog %1 port read',
-                LineCodingGetUsonicValue: 'Analog type (US-016)High sound sensor %1 port read',
-
-                LineCodingSetLcdString: 'lcd Display %3 on line %1 and line %2 %4',
-                LineCodingSetLcdBacklight: 'Enter lcd backlight %1 %2',
-                LineCodingSetLcdClear: 'Clear lcd %1',
-
                 LineCodingGetAnalogMapping: '%1 value %2 to %3 ; to %4 to %5 conversion value ',
-                LineCodingRemotRx: ' 조종기버튼 %1,  %2 눌리면 실행하는 코드 %3',
+                LineCodingRemotRx: ' Code that runs when controller button %1, %2 is pressed %3',
                 LineCodingLineDelay: 'linedelay(%1, %2, %3); %4',
                 LineCodingABSH: 'lineabsh(%1, %2, %3, %4, %5, %6); %7',
                 LineCodingBuzzerOnOff: 'buzzer(%1, %2, %3); %4',
@@ -317,6 +301,7 @@ Entry.LineCoding.setLanguage = function() {
                 lineForward: 'FORWARD',
                 Left: 'LEFT',
                 Right: 'RIGHT',
+                LineBack: 'BACK',
                 ForwardSpeed: 'driving speed',
                 TurnSpeed: 'rotational speed',
                 ForwardOverTime: 'Intersection Driving Time',
@@ -415,6 +400,39 @@ Entry.LineCoding.getBlocks = function() {
                         [Lang.Blocks.lineForward, '3'],
                         [Lang.Blocks.Left, '4'],
                         [Lang.Blocks.Right, '5'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func(sprite, script) {
+                return script.getField('PORT');
+            },
+        },
+        LineCodingEasyMotorList: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.lineForward, '3'],
+                        [Lang.Blocks.Left, '4'],
+                        [Lang.Blocks.Right, '5'],
+                        [Lang.Blocks.LineBack, '6'],
                     ],
                     value: '3',
                     fontSize: 11,
@@ -739,6 +757,43 @@ Entry.LineCoding.getBlocks = function() {
                         ['S8', '128'],
                     ],
                     value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        LineCodingSensorNumtList: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['S1', '0'],
+                        ['S2', '1'],
+                        ['S3', '2'],
+                        ['S4', '3'],
+                        ['S5', '4'],
+                        ['S6', '5'],
+                        ['S7', '6'],
+                        ['S8', '7'],
+                    ],
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1234,7 +1289,7 @@ Entry.LineCoding.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'LineCodingEasylineList',
+                        type: 'LineCodingEasyMotorList',
                     },
                     {
                         type: 'number',
@@ -2684,6 +2739,107 @@ Entry.LineCoding.getBlocks = function() {
                     Entry.hw.sendQueue.SET[parseInt(LineNum)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_LED,
                         data: {ontime, offtime, count, outport},
+                        time: new Date().getTime(),
+                    };
+                    LineOneFlag = 0;
+                }
+                if ((Entry.hw.portData.DIGITAL[0] == LineInit) && (LineSaveFlag == 0))
+                    return script;
+                else {
+                    LineOneFlag = 1;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+        LineCodingBlackForwardF: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['-8'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['3'],
+                    },
+                    {
+                        type: 'LineCodingSensorNumtList',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'LineCodingSensorNumtList',
+                        params: ['7'],
+                    },
+                    null,
+                ],
+                type: 'LineCodingBlackForwardF',
+            },
+            paramsKeyMap: {
+                SP: 0,
+                BSP: 1,				
+                COUNT: 2,
+                LSEN: 3,
+                RSEN: 4,
+            },
+            class: 'LineCoding_LINE5',
+            isNotFor: ['LineCoding'],
+            func: (sprite, script) => {
+                let fsp = script.getNumberValue('SP');
+                let bsp = script.getNumberValue('BSP');
+                let count = script.getValue('COUNT');
+                let lsen = script.getValue('LSEN');
+                let rsen = script.getValue('RSEN');
+                if (LineSaveFlag == 1)
+                    ++LineNum;
+                if (LineOneFlag == 1) {
+                    LineInit = Entry.hw.portData.DIGITAL[0];
+                
+                    
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+                    
+                    Entry.hw.sendQueue.SET[parseInt(LineNum)] = {
+                        type: Entry.LineCoding.sensorTypes.LINE_BLACKFORWARDF,
+                        data: {fsp, bsp, count, lsen, rsen},
                         time: new Date().getTime(),
                     };
                     LineOneFlag = 0;
