@@ -115,6 +115,7 @@ Entry.LineCoding = {
         LINE_TIMER: 95,
         LINE_COLOR: 96,
         LINE_ABSH: 97,
+        LINE_BLACKFORWARDF: 98,
         LINE_REMOT: 100,
     },
     toneTable: {
@@ -172,8 +173,8 @@ Entry.LineCoding.blockMenuBlocks = [
     'LineCodingGetAnalogValue',
     'LineCodingDigitalOnOff',
     'LineCodingServo',
-    'LineCodingBuzzerOnOff',
-//    'LineCodingLED',
+    'LineCodingMelody',
+//    'LineCodingBlackForwardF',
 //    'LineCodingSline',
 //    'LineCodingLineFind',
 //    'LineCodingLineLost',
@@ -205,6 +206,8 @@ Entry.LineCoding.blockMenuBlocks = [
     'LineCodingGetAnalogMapping',
     'LineCodingRemotRx',
     'LineCodingLineDelay',
+    'LineCodingBuzzerOnOff',
+    'LineCodingLED',
     'LineCodingABSH',
 ];
 
@@ -228,10 +231,10 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingWheel: 'wheel(%1, %2); %3',
                 LineCodingServo: 'sservo(%1, %2, %3%);포트,각도,속도 %4',
                 LineCodingDigitalOnOff: '디지털 %1 포트 %2 설정하기 %3',
-                LineCodingBuzzerOnOff: '스피커 %1 옥타브 %2음 %3 초 연주하기 %4',
+                LineCodingMelody: '스피커 %1 옥타브 %2음 %3 초 연주하기 %4',
                 
                 LineCodingMotorStop: 'DC모터 정지하기 %1',
-                
+                LineCodingBlackForwardF: 'blackforwardf(%1,%2,%3,%4);%5',
 
                 
                 LineCodingGetDgitalValue: '디지털 %1 포트 읽기',
@@ -246,6 +249,8 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingRemotRx: ' 조종기버튼 %1,  %2 눌리면 실행하는 코드 %3',
                 LineCodingLineDelay: 'linedelay(%1, %2, %3);주행시간,속도,더직진시간 %4',
                 LineCodingABSH: 'lineabsh(%1, %2, %3, %4, %5, %6); %7',
+                LineCodingBuzzerOnOff: 'buzzer(%1, %2, %3); %4',
+                LineCodingLED: 'led(%1, %2, %3, %4); %5',
             },
             Blocks: {
                 OnBlock: '켜짐(HIGH, 5V)',
@@ -278,12 +283,13 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingTurn: '%1 %2 속도로 이동하고 반대방향으로 %3 초 회전하기 %4',
                 LineCodingMotor: '왼쪽모터 %1, 오른쪽모터 %2 속도로 %3 초 이동하기 %4',
                 LineCodingBmotor: '%1 왼쪽모터 %2, 오른쪽모터 %3 속도로 %4 센서 감지까지 이동하기 %5',
-                LineCodingBuzzerOnOff: 'Speakers Beep %1 Playing Second %2',
+                LineCodingMelody: 'Speakers Beep %1 Playing Second %2',
                 LineCodingWheel: 'Set DC motor left speed %1  right speed %2 %3',
                 LineCodingServo: 'Servo motor %1 port angle %2 movement %3',
                 LineCodingDigitalOnOff: 'Setting up digital %1 port %2 %3',
                 LineCodingMotorStop: 'Stop DC Motor %1',
-                
+
+                LineCodingBlackForwardF: 'blackforwardf(%1,%2,%3,%4);%5',
 
                 
                 LineCodingGetDgitalValue: 'Read digital %1 port',
@@ -298,6 +304,8 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingRemotRx: ' 조종기버튼 %1,  %2 눌리면 실행하는 코드 %3',
                 LineCodingLineDelay: 'linedelay(%1, %2, %3); %4',
                 LineCodingABSH: 'lineabsh(%1, %2, %3, %4, %5, %6); %7',
+                LineCodingBuzzerOnOff: 'buzzer(%1, %2, %3); %4',
+                LineCodingLED: 'led(%1, %2, %3, %4); %5',
             },
             Blocks: {
                 OnBlock: 'On(HIGH, 5V)',
@@ -1956,7 +1964,7 @@ Entry.LineCoding.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         //  스피커 멜로디
-        LineCodingBuzzerOnOff: {
+        LineCodingMelody: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1996,7 +2004,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'LineCodingBuzzerOnOff',
+                type: 'LineCodingMelody',
             },
             paramsKeyMap: {
                 OCTAVE: 0,				
@@ -2166,248 +2174,7 @@ Entry.LineCoding.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-        // 15. 초음파 센서 값
-        LineCodingGetUsonicValue: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            template: Lang.template.LineCodingGetUsonicValue,
-            statements: [],
-
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'LineCodingAnalogPortList',
-                    },
-                ],
-                type: 'LineCodingGetUsonicValue',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'LineCoding_LV3',
-            isNotFor: ['LineCoding'],
-            func: (sprite, script) => {
-                const BtnIndex = script.getNumberValue('PORT');
-                const ANALOG = Entry.hw.portData.ANALOG;
-                return (ANALOG.BtnIndex * 4 * 3) / 10;
-            },
-            syntax: { js: [], py: [] },
-        },
-
-        // 21. LCD글자출력
-        LineCodingSetLcdString: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['Hello'],
-                    },
-                    null,
-                ],
-                type: 'LineCodingSetLcdString',
-            },
-            paramsKeyMap: {
-                COLUMN: 0,
-                LINE: 1,
-                STRING: 2,
-            },
-            class: 'LineCoding_LV5',
-            isNotFor: ['LineCoding'],
-            func: (sprite, script) => {
-                //var sq = Entry.hw.sendQueue;
-                const line2 = script.getValue('LINE', script);
-                const column2 = script.getValue('COLUMN', script);
-                const string = script.getValue('STRING', script);
-                const text = [];
-                let buf;
-
-                if (!script.isStart) {
-                    if (typeof string === 'string') {
-                        for (let i = 0; i < string.length; i++) {
-                            buf = Entry.memaker.toByte(string[parseInt(i)]);
-                            text[parseInt(i)] = buf;
-                            //text[i] = Entry.memaker.toByte(string[i]);
-                            //text.i = Entry.memaker.toByte(string.i);
-                        }
-                    } else {
-                        text[0] = string;
-                    }
-
-                    if (!Entry.hw.sendQueue.SET) {
-                        Entry.hw.sendQueue.SET = {};
-                    }
-
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    //var fps = Entry.FPS || 60;
-                    // var timeValue = 60 / fps * 50;
-
-                    Entry.hw.sendQueue.SET[3] = {
-                        type: Entry.LineCoding.sensorTypes.LCD_SET,
-                        data: {
-                            line: line2,
-                            column: column2,
-                            text0: text[0],
-                            text1: text[1],
-                            text2: text[2],
-                            text3: text[3],
-                            text4: text[4],
-                            text5: text[5],
-                            text6: text[6],
-                            text7: text[7],
-                            text8: text[8],
-                            text9: text[9],
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(() => {
-                        script.timeFlag = 0;
-                    }, DelayTime);
-                    return script;
-                } else if (script.timeFlag === 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = true;
-                    return script.callReturn();
-                }
-            },
-            syntax: { js: [], py: [] },
-        },
-
-        // . LCD 백라이트
-        LineCodingSetLcdBacklight: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'LineCodingBacklightOnoffList',
-                    },
-                    null,
-                ],
-                type: 'LineCodingSetLcdBacklight',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'LineCoding_LV5',
-            isNotFor: ['LineCoding'],
-            func: (sprite, script) => {
-                const value = script.getNumberValue('VALUE');
-
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[1] = {
-                    type: Entry.LineCoding.sensorTypes.LCD_SET,
-                    data: [value, 1, 1],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-
-        // 23. LCD 지우기
-        LineCodingSetLcdClear: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'LineCodingSetLcdClear',
-            },
-            class: 'LineCoding_LV5',
-            isNotFor: ['LineCoding'],
-            func: (sprite, script) => {
-                //var port = 0;
-
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[4] = {
-                    type: Entry.LineCoding.sensorTypes.LCD_SET,
-                    data: [4, 4, 4],
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
+        
         //  mapping 값
         LineCodingGetAnalogMapping: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2754,6 +2521,179 @@ Entry.LineCoding.getBlocks = function() {
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        //  부저명령
+        LineCodingBuzzerOnOff: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null,
+                ],
+                type: 'LineCodingBuzzerOnOff',
+            },
+            paramsKeyMap: {
+                COUNT: 0,
+                OFFTIME: 1,
+                ONTIME: 2,
+            },
+            class: 'LineCoding_LINE5',
+            isNotFor: ['LineCoding'],
+            func: (sprite, script) => {
+                let linetime = script.getNumberValue('ONTIME');
+                let time = script.getNumberValue('OFFTIME');
+                let speed = script.getValue('COUNT');
+                if (LineSaveFlag == 1)
+                    ++LineNum;
+                if (LineOneFlag == 1) {
+                    LineInit = Entry.hw.portData.DIGITAL[0];
+                
+                    
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+                    
+                    Entry.hw.sendQueue.SET[parseInt(LineNum)] = {
+                        type: Entry.LineCoding.sensorTypes.LINE_BUZZER,
+                        data: {linetime, speed, time,},
+                        time: new Date().getTime(),
+                    };
+                    LineOneFlag = 0;
+                }
+                if ((Entry.hw.portData.DIGITAL[0] == LineInit) && (LineSaveFlag == 0))
+                    return script;
+                else {
+                    LineOneFlag = 1;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+        //  LED명령
+        LineCodingLED: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    {
+                        type: 'LineCodingServoPortList',
+                    },
+                    null,
+                ],
+                type: 'LineCodingLED',
+            },
+            paramsKeyMap: {
+                COUNT: 0,
+                ONTIME: 1,				
+                OFFTIME: 2,
+                PORT: 3,
+            },
+            class: 'LineCoding_LINE5',
+            isNotFor: ['LineCoding'],
+            func: (sprite, script) => {
+                let ontime = script.getNumberValue('ONTIME');
+                let offtime = script.getNumberValue('OFFTIME');
+                let count = script.getValue('COUNT');
+                let outport = script.getValue('PORT');
+                if (LineSaveFlag == 1)
+                    ++LineNum;
+                if (LineOneFlag == 1) {
+                    LineInit = Entry.hw.portData.DIGITAL[0];
+                
+                    
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+                    
+                    Entry.hw.sendQueue.SET[parseInt(LineNum)] = {
+                        type: Entry.LineCoding.sensorTypes.LINE_LED,
+                        data: {ontime, offtime, count, outport},
+                        time: new Date().getTime(),
+                    };
+                    LineOneFlag = 0;
+                }
+                if ((Entry.hw.portData.DIGITAL[0] == LineInit) && (LineSaveFlag == 0))
+                    return script;
+                else {
+                    LineOneFlag = 1;
+                    return script.callReturn();
+                }
             },
             syntax: { js: [], py: [] },
         },
