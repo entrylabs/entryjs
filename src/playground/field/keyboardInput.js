@@ -216,6 +216,8 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
         }
         value = value.replace('Digit', '');
         value = value.replace('Numpad', '');
+        value = Entry.KeyboardCode.codeToKeyCode[value];
+
         const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.destroyOption();

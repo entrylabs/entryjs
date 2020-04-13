@@ -734,13 +734,14 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.keyPressed = new Entry.Event(window);
         document.addEventListener('keydown', (e) => {
             let keyCode = event.code;
+
             if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
                 keyCode = keyCode.replace('Left', '');
                 keyCode = keyCode.replace('Right', '');
             }
             keyCode = keyCode.replace('Digit', '');
             keyCode = keyCode.replace('Numpad', '');
-
+            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -762,6 +763,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             }
             keyCode = keyCode.replace('Digit', '');
             keyCode = keyCode.replace('Numpad', '');
+            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
@@ -1157,54 +1159,54 @@ Entry.isPhone = function() {
 
 Entry.getKeyCodeMap = function() {
     return {
-        KeyA: 'KeyA',
-        KeyB: 'KeyB',
-        KeyC: 'KeyC',
-        KeyD: 'KeyD',
-        KeyE: 'KeyE',
-        KeyF: 'KeyF',
-        KeyG: 'KeyG',
-        KeyH: 'KeyH',
-        KeyI: 'KeyI',
-        KeyJ: 'KeyJ',
-        KeyK: 'KeyK',
-        KeyL: 'KeyL',
-        KeyM: 'KeyM',
-        KeyN: 'KeyN',
-        KeyO: 'KeyO',
-        KeyP: 'KeyP',
-        KeyQ: 'KeyQ',
-        KeyR: 'KeyR',
-        KeyS: 'KeyS',
-        KeyT: 'KeyT',
-        KeyU: 'KeyU',
-        KeyV: 'KeyV',
-        KeyW: 'KeyW',
-        KeyX: 'KeyX',
-        KeyY: 'KeyY',
-        KeyZ: 'KeyZ',
-        Space: Lang.Blocks.START_press_some_key_space,
-        ArrowLeft: Lang.Blocks.START_press_some_key_left,
-        ArrowUp: Lang.Blocks.START_press_some_key_up,
-        ArrowRight: Lang.Blocks.START_press_some_key_right,
-        ArrowDown: Lang.Blocks.START_press_some_key_down,
-        '0': '0',
-        '1': '1',
-        '2': '2',
-        '3': '3',
-        '4': '4',
-        '5': '5',
-        '6': '6',
-        '7': '7',
-        '8': '8',
-        '9': '9',
-        Enter: Lang.Blocks.START_press_some_key_enter,
-        Escape: 'esc',
-        Control: 'Control',
-        Alt: 'alt',
-        Tab: 'tab',
-        Shift: 'shift',
-        Backspace: 'backspace',
+        '65': 'a',
+        '66': 'b',
+        '67': 'c',
+        '68': 'd',
+        '69': 'e',
+        '70': 'f',
+        '71': 'g',
+        '72': 'h',
+        '73': 'i',
+        '74': 'j',
+        '75': 'k',
+        '76': 'l',
+        '77': 'm',
+        '78': 'n',
+        '79': 'o',
+        '80': 'p',
+        '81': 'q',
+        '82': 'r',
+        '83': 's',
+        '84': 't',
+        '85': 'u',
+        '86': 'v',
+        '87': 'w',
+        '88': 'x',
+        '89': 'y',
+        '90': 'z',
+        '32': Lang.Blocks.START_press_some_key_space,
+        '37': Lang.Blocks.START_press_some_key_left,
+        '38': Lang.Blocks.START_press_some_key_up,
+        '39': Lang.Blocks.START_press_some_key_right,
+        '40': Lang.Blocks.START_press_some_key_down,
+        '48': '0',
+        '49': '1',
+        '50': '2',
+        '51': '3',
+        '52': '4',
+        '53': '5',
+        '54': '6',
+        '55': '7',
+        '56': '8',
+        '57': '9',
+        '13': Lang.Blocks.START_press_some_key_enter,
+        '27': 'esc',
+        '17': 'ctrl',
+        '18': 'alt',
+        '9': 'tab',
+        '16': 'shift',
+        '8': 'backspace',
     };
 };
 

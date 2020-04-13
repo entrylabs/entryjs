@@ -911,6 +911,7 @@ Entry.Engine = class Engine {
         }
         keyCode = keyCode.replace('Digit', '');
         keyCode = keyCode.replace('Numpad', '');
+        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
         const isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce) {
@@ -918,14 +919,14 @@ Entry.Engine = class Engine {
         }
 
         //mouse shortcuts
-        if (keyCode !== 'Control' && e.ctrlKey && isWorkspace) {
-            if (keyCode === 'KeyS') {
+        if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
+            if (keyCode === 83) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace' : 'saveWorkspace');
-            } else if (keyCode === 'KeyR') {
+            } else if (keyCode === 82) {
                 e.preventDefault();
                 Entry.engine.run();
-            } else if (keyCode === 'KeyZ') {
+            } else if (keyCode === 90) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
@@ -938,7 +939,7 @@ Entry.Engine = class Engine {
         }
 
         if (Entry.engine.isState('stop')) {
-            if (isWorkspace && keyCode.indexOf('Arrow') > -1) {
+            if (isWorkspace && keyCode >= 37 && keyCode <= 40) {
                 Entry.stage.moveSprite(e);
             }
         }
