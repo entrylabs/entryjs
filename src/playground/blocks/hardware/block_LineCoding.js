@@ -1,15 +1,13 @@
 'use strict';
 
-const DelayTime = 0;
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 let LineNum = 20;
-let LineCount = 20;
 let LineInit = 0;
 let LineSaveFlag = 0;
 let LineOneFlag = 1;
-let ServeAngle = [0, 0, 0, 0, 0, 0, 0, 0];
-let OutPort = [0, 0, 0, 0, 0, 0, 0, 0];
+const ServeAngle = [0, 0, 0, 0, 0, 0, 0, 0];
+const OutPort = [0, 0, 0, 0, 0, 0, 0, 0];
 
 Entry.LineCoding = {
     id: '3D.1',
@@ -52,7 +50,6 @@ Entry.LineCoding = {
         LineInit = 0;
         LineSaveFlag = 0;
         LineOneFlag = 1;
-        LineCount = 20;
         ServeAngle[0] = 0;
         ServeAngle[1] = 0;
         ServeAngle[2] = 0;
@@ -1947,7 +1944,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['1'],
                     },
                     {
                         type: 'number',
@@ -2235,7 +2232,7 @@ Entry.LineCoding.getBlocks = function() {
                     port: port2,
                     time: new Date().getTime(),
                 };
-                return Entry.hw.portData.DIGITAL[parseInt(port, 10)];
+                return Entry.hw.portData.DIGITAL[parseInt(port2, 10)];
             },
             syntax: { js: [], py: [] },
         },
