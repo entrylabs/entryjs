@@ -2805,22 +2805,22 @@ Entry.LineCoding.getBlocks = function() {
             class: 'LineCoding_LINE5',
             isNotFor: ['LineCoding'],
             func: (sprite, script) => {
-                let ontime = script.getNumberValue('ONTIME');
-                let offtime = script.getNumberValue('OFFTIME');
-                let count = script.getValue('COUNT');
-                let outport = script.getValue('PORT');
+                let ontime2 = script.getNumberValue('ONTIME');
+                let offtime2 = script.getNumberValue('OFFTIME');
+                let count2 = script.getValue('COUNT');
+                let outport2 = script.getValue('PORT');
                 if (LineSaveFlag == 1) {
                     ++LineNum;
                 }
                 if (LineOneFlag == 1) {
-                    ontime = Math.min(2550, ontime);
-                    ontime = Math.max(0, ontime);
-                    offtime = Math.min(2550, offtime);
-                    offtime = Math.max(0, offtime);
-                    count = Math.min(255, count);
-                    count = Math.max(0, count);
-                    outport = Math.min(8, outport);
-                    outport = Math.max(1, outport);
+                    ontime2 = Math.min(2550, ontime2);
+                    ontime2 = Math.max(0, ontime2);
+                    offtime2 = Math.min(2550, offtime2);
+                    offtime2 = Math.max(0, offtime2);
+                    count2 = Math.min(255, count2);
+                    count2 = Math.max(0, count2);
+                    outport2 = Math.min(8, outport2);
+                    outport2 = Math.max(1, outport2);
                     LineInit = Entry.hw.portData.DIGITAL[0];
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
@@ -2828,10 +2828,10 @@ Entry.LineCoding.getBlocks = function() {
                     Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_LED,
                         data: {
-                            ontime: ontime,
-                            offtime: offtime,
-                            count: count,
-                            outport: outport,
+                            ontime: ontime2,
+                            offtime: offtime2,
+                            count: count2,
+                            outport: outport2,
                         },
                         time: new Date().getTime(),
                     };
@@ -2916,23 +2916,23 @@ Entry.LineCoding.getBlocks = function() {
             class: 'LineCoding_LINE5',
             isNotFor: ['LineCoding'],
             func: (sprite, script) => {
-                let fsp = script.getNumberValue('SP');
-                let bsp = script.getNumberValue('BSP');
-                let count = script.getValue('COUNT');
-                let lsen = script.getValue('LSEN');
+                let fsp2 = script.getNumberValue('SP');
+                let bsp2 = script.getNumberValue('BSP');
+                let count2 = script.getValue('COUNT');
+                let lsen2 = script.getValue('LSEN');
                 let rsen2 = script.getValue('RSEN');
                 if (LineSaveFlag == 1) {
                     ++LineNum;
                 }
                 if (LineOneFlag == 1) {
-                    fsp = Math.min(20, fsp);
-                    fsp = Math.max(0, fsp);
-                    bsp = Math.min(20, bsp);
-                    bsp = Math.max(-20, bsp);
-                    count = Math.min(10, count);
-                    count = Math.max(0, count);
-                    lsen = Math.min(7, lsen);
-                    lsen = Math.max(0, lsen);
+                    fsp2 = Math.min(20, fsp2);
+                    fsp2 = Math.max(0, fsp2);
+                    bsp2 = Math.min(20, bsp2);
+                    bsp2 = Math.max(-20, bsp2);
+                    count2 = Math.min(10, count2);
+                    count2 = Math.max(0, count2);
+                    lsen2 = Math.min(7, lsen2);
+                    lsen2 = Math.max(0, lsen2);
                     rsen2 = Math.min(7, rsen2);
                     rsen2 = Math.max(0, rsen2);
                     LineInit = Entry.hw.portData.DIGITAL[0];
@@ -2942,10 +2942,10 @@ Entry.LineCoding.getBlocks = function() {
                     Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_BLACKFORWARDF,
                         data: {
-                            fsp: fsp,
-                            bsp: bsp,
-                            count: count,
-                            lsen: lsen,
+                            fsp: fsp2,
+                            bsp: bsp2,
+                            count: count2,
+                            lsen: lsen2,
                             rsen: rsen2,
                         },
                         time: new Date().getTime(),
