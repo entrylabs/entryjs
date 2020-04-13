@@ -407,7 +407,9 @@ Entry.Workspace = class Workspace {
         let checkKeyCodes;
 
         if (ctrlKey) {
-            if (keyCode === 'Meta' > -1) {
+            checkKeyCodes = [219, 221];
+
+            if (checkKeyCodes.indexOf(keyCode) > -1) {
                 if (!checkObjectAndAlert(object)) {
                     return;
                 }

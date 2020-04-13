@@ -732,19 +732,18 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-
         document.addEventListener('keydown', (e) => {
             let keyCode = event.code;
-            if (keyCode.indexOf('Arrow') == -1) {
+            if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
                 keyCode = keyCode.replace('Left', '');
                 keyCode = keyCode.replace('Right', '');
             }
             keyCode = keyCode.replace('Digit', '');
             keyCode = keyCode.replace('Numpad', '');
+
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
-            console.log(Entry.pressedKeys);
             Entry.keyPressed.notify(e);
         });
     }
@@ -757,7 +756,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
             let keyCode = event.code;
-            if (keyCode.indexOf('Arrow') == -1) {
+            if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
                 keyCode = keyCode.replace('Left', '');
                 keyCode = keyCode.replace('Right', '');
             }

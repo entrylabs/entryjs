@@ -920,7 +920,7 @@ class BlockMenu {
 
     _captureKeyEvent(e) {
         let keyCode = e.code;
-        if (keyCode.indexOf('Arrow') == -1) {
+        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
             keyCode = keyCode.replace('Left', '');
             keyCode = keyCode.replace('Right', '');
         }

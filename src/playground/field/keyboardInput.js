@@ -210,7 +210,7 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
         // let value = event.key === ' ' ? event.code : event.key;
         // value = Entry.KeyboardCode.korKeyMap[value] || value;
         let value = event.code;
-        if (value.indexOf('Arrow') == -1) {
+        if (value.indexOf('Arrow') == -1 && value.indexOf('Bracket') == -1) {
             value = value.replace('Left', '');
             value = value.replace('Right', '');
         }

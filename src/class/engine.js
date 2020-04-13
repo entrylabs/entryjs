@@ -905,8 +905,10 @@ Entry.Engine = class Engine {
      */
     captureKeyEvent(e, isForce) {
         let keyCode = e.code;
-        keyCode = keyCode.replace('Left', '');
-        keyCode = keyCode.replace('Right', '');
+        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
+            keyCode = keyCode.replace('Left', '');
+            keyCode = keyCode.replace('Right', '');
+        }
         keyCode = keyCode.replace('Digit', '');
         keyCode = keyCode.replace('Numpad', '');
         const isWorkspace = Entry.type === 'workspace';
