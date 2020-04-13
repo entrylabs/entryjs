@@ -3,7 +3,8 @@
   "entry.js": "/dist/entry.js",
   "entry.min.css": "/dist/entry.min.css",
   "entry.min.js": "/dist/entry.min.js",
-  "2.49804c6bcf72c4471102.js": "/dist/2.49804c6bcf72c4471102.js",
-  "6f9df106e7a6003b3786.worker.js": "/dist/6f9df106e7a6003b3786.worker.js",
+  "2.03cbbe6bf76ec3ff0cf3.js": "/dist/2.03cbbe6bf76ec3ff0cf3.js",
+  "3f6905f72794981b12c0.worker.js": "/dist/3f6905f72794981b12c0.worker.js",
+  "9f1bafdd209f14b7a345.worker.js": "/dist/9f1bafdd209f14b7a345.worker.js",
   "entry.min.js.LICENSE.txt": "/dist/entry.min.js.LICENSE.txt"
 }

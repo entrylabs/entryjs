@@ -550,26 +550,31 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (type === 'total') {
                     return clamp(detected.total / 10, 0, 100000).toString();
                 }
-                let rawX = detected.direction.x;
-                if (!VideoUtils.flipStatus.horizontal) {
-                    rawX *= -1;
-                }
+                try {
+                    let rawX = detected.direction.x;
+                    if (!VideoUtils.flipStatus.horizontal) {
+                        rawX *= -1;
+                    }
 
-                let rawY = detected.direction.y;
-                if (VideoUtils.flipStatus.vertical) {
-                    rawY *= -1;
-                }
-                const absX = Math.abs(rawX);
-                const absY = Math.abs(rawY);
-                if (absX < 20 && absY < 20) {
+                    let rawY = detected.direction.y;
+                    if (VideoUtils.flipStatus.vertical) {
+                        rawY *= -1;
+                    }
+                    const absX = Math.abs(rawX);
+                    const absY = Math.abs(rawY);
+                    if (absX < 20 && absY < 20) {
+                        return 0;
+                    }
+                    if (type === 'x') {
+                        return rawX.toFixed(1).toString();
+                    } else if (type === 'y') {
+                        return rawY.toFixed(1).toString();
+                    }
                     return 0;
+                } catch (err) {
+                    console.log(detected);
+                    debugger;
                 }
-                if (type === 'x') {
-                    return rawX.toFixed(1).toString();
-                } else if (type === 'y') {
-                    return rawY.toFixed(1).toString();
-                }
-                return 0;
             },
             paramsKeyMap: {
                 TARGET: 0,
