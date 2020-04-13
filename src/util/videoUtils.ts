@@ -6,9 +6,10 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
 import VideoMotionWorker from './workers/motion.worker.ts';
-import { clamp } from 'lodash';
 // type을 위해서 import
 import * as posenet from '@tensorflow-models/posenet';
+import clamp from 'lodash/clamp';
+
 
 type FlipStatus = {
     horizontal: boolean;

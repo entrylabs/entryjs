@@ -3,6 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
+import _clamp from 'lodash/clamp'
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 
@@ -2444,7 +2445,7 @@ Entry.Utils.toFixed = function(value, len) {
 };
 
 Entry.Utils.setVolume = function(volume) {
-    this._volume = _.clamp(volume, 0, 1);
+    this._volume = _clamp(volume, 0, 1);
 
     Entry.soundInstances
         .filter(({ soundType }) => !soundType)

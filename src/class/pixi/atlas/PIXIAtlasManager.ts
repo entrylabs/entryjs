@@ -9,7 +9,7 @@ import { ISceneTextures } from './ISceneTextures';
 import { SceneTextures } from './SceneTextures';
 import { clog } from '../utils/logs';
 import { IGEResManager } from '../../../graphicEngine/IGEResManager';
-import { each } from 'lodash';
+import each from 'lodash/each';
 
 type SceneBinsMap = { [key: string]: ISceneTextures };
 

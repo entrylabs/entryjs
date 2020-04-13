@@ -1,4 +1,4 @@
-import { isObject } from 'lodash';
+import isObject from 'lodash/isObject';
 
 /**
  * 엔트리 하드웨어 -> 엔트리 워크스페이스간 통신을 정리한 클래스
