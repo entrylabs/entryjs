@@ -1324,9 +1324,9 @@ Entry.LineCoding.getBlocks = function() {
                     };
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -1384,9 +1384,9 @@ Entry.LineCoding.getBlocks = function() {
                     };
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -1448,9 +1448,9 @@ Entry.LineCoding.getBlocks = function() {
                     };
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -1536,9 +1536,9 @@ Entry.LineCoding.getBlocks = function() {
                     };
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -1627,9 +1627,9 @@ Entry.LineCoding.getBlocks = function() {
                     };
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -1718,9 +1718,9 @@ Entry.LineCoding.getBlocks = function() {
                     };
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -1833,9 +1833,9 @@ Entry.LineCoding.getBlocks = function() {
                     }
                     LineOneFlag = 0;
                 }
-                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0)
+                if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -2525,8 +2525,7 @@ Entry.LineCoding.getBlocks = function() {
                 }
                 if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                }
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -2738,8 +2737,7 @@ Entry.LineCoding.getBlocks = function() {
                 }
                 if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                }
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -2841,8 +2839,7 @@ Entry.LineCoding.getBlocks = function() {
                 }
                 if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                }
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
@@ -2923,7 +2920,7 @@ Entry.LineCoding.getBlocks = function() {
                 let bsp = script.getNumberValue('BSP');
                 let count = script.getValue('COUNT');
                 let lsen = script.getValue('LSEN');
-                let rsen = script.getValue('RSEN');
+                let rsen2 = script.getValue('RSEN');
                 if (LineSaveFlag == 1) {
                     ++LineNum;
                 }
@@ -2936,8 +2933,8 @@ Entry.LineCoding.getBlocks = function() {
                     count = Math.max(0, count);
                     lsen = Math.min(7, lsen);
                     lsen = Math.max(0, lsen);
-                    rsen = Math.min(7, rsen);
-                    rsen = Math.max(0, rsen);
+                    rsen2 = Math.min(7, rsen2);
+                    rsen2 = Math.max(0, rsen2);
                     LineInit = Entry.hw.portData.DIGITAL[0];
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
@@ -2945,11 +2942,11 @@ Entry.LineCoding.getBlocks = function() {
                     Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_BLACKFORWARDF,
                         data: {
-                            fsp :fsp,
-                            bsp :bsp,
-                            count :count,
-                            lsen :lsen,
-                            rsen :rsen,
+                            fsp: fsp,
+                            bsp: bsp,
+                            count: count,
+                            lsen: lsen,
+                            rsen: rsen2,
                         },
                         time: new Date().getTime(),
                     };
@@ -2957,8 +2954,7 @@ Entry.LineCoding.getBlocks = function() {
                 }
                 if (Entry.hw.portData.DIGITAL[0] == LineInit && LineSaveFlag == 0) {
                     return script;
-                }
-                else {
+                } else {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
