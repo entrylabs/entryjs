@@ -45,6 +45,8 @@ let options: {
     flipStatus: FlipStatus;
 };
 
+let isRunning = false;
+
 const dimension = { width: 0, height: 0 };
 
 async function processImage(repeat: boolean) {
@@ -52,8 +54,11 @@ async function processImage(repeat: boolean) {
         if (!repeat) {
             await objectDetect(true), await poseDetect(true), await faceDetect(true);
             return;
+        } else if (isRunning) {
+            objectDetect(false), poseDetect(false), faceDetect(false);
+        } else {
+            return;
         }
-        objectDetect(false), poseDetect(false), faceDetect(false);
     } catch (err) {
         console.log('estimation error', err);
     }
@@ -150,7 +155,7 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-
+            
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({
@@ -216,12 +221,21 @@ ctx.onmessage = async function(e: {
             modelStatus[target] = targetMode;
             break;
 
+        case 'pause':
+            isRunning = false;
+            break;
+        case 'run':
+            isRunning = true;
+            processImage(true);
+            break;
+
         case 'handleOff':
             modelStatus = {
                 pose: false,
                 object: false,
                 face: false,
             };
+            isRunning = false;
             break;
     }
 };
