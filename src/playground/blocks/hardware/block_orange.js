@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.Orange = {
-    id: '1.A',
+    id: '1.E',
     name: 'Orange',
     url: 'https://www.kocoafab.cc/',
     imageName: 'orange.png',
@@ -1477,7 +1477,9 @@ Entry.Orange.getBlocks = function() {
 						[ "온도", '0' ],
 						[ "습도", '1' ],
 					],
-					fontSize: 11
+					fontSize: 11,
+			bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1624,7 +1626,9 @@ Entry.Orange.getBlocks = function() {
 						[ "PM10", '0' ],
 						[ "PM2.5", '1' ],
 					],
-					fontSize: 11
+					fontSize: 11,
+			bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
