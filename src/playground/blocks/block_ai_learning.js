@@ -3,6 +3,24 @@ import VideoUtils from '../../util/videoUtils';
 module.exports = {
     getBlocks() {
         return {
+            learning_title: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.AI_LEARNING,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.learning_title_text,
+                        color: EntryStatic.colorSet.common.AI_LEARNING,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'learning_title',
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning'],
+                events: {},
+            },
             insert_data_for_test: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
