@@ -8,8 +8,8 @@ let LineCount = 20;
 let LineInit = 0;
 let LineSaveFlag = 0;
 let LineOneFlag = 1;
-let ServeAngle = [ 0, 0, 0, 0, 0, 0, 0, 0 ];
-let OutPort = [ 0, 0, 0, 0, 0, 0, 0, 0 ];
+let ServeAngle = [0, 0, 0, 0, 0, 0, 0, 0];
+let OutPort = [0, 0, 0, 0, 0, 0, 0, 0];
 
 Entry.LineCoding = {
     id: '3D.1',
@@ -186,8 +186,6 @@ Entry.LineCoding.blockMenuBlocks = [
     //    'LineCodingStart',
     //    'LineCodingTimer',
     //    'LineCodingLineColor',
-
-
     //    'LineCodingMotorStop',
     // DC모터 정지하기
 
@@ -1806,7 +1804,7 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    if (mode == 1) {
+                    if (mode2 == 1) {
                         Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                             type: Entry.LineCoding.sensorTypes.LINE_BMOTOR,
                             data: {
@@ -1982,7 +1980,7 @@ Entry.LineCoding.getBlocks = function() {
                 speed2 = Math.max(0, speed2);
                 //speed *= speed * 255;
                 //angle += 1;
-                if(ServeAngle[sport2 - 1] != angle2){
+                if (ServeAngle[sport2 - 1] != angle2) {
                     ServeAngle[sport2 - 1] = angle2;
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
@@ -2047,7 +2045,7 @@ Entry.LineCoding.getBlocks = function() {
             func: (sprite, script) => {
                 const dport2 = script.getNumberValue('PORT');
                 const value2 = script.getNumberValue('VALUE');
-                if(OutPort[dport2 - 1] != value2){
+                if (OutPort[dport2 - 1] != value2) {
                     OutPort[dport2 - 1] = value2;
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
