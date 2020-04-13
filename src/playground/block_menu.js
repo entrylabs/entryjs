@@ -919,13 +919,19 @@ class BlockMenu {
     }
 
     _captureKeyEvent(e) {
-        const keyCode = e.keyCode;
+        let keyCode = e.code;
+        if (keyCode.indexOf('Arrow') == -1) {
+            keyCode = keyCode.replace('Left', '');
+            keyCode = keyCode.replace('Right', '');
+        }
+        keyCode = keyCode.replace('Digit', '');
+        keyCode = keyCode.replace('Numpad', '');
 
-        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
+        if (e.ctrlKey && Entry.type === 'workspace' && Number(keyCode) != NaN) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
-                this._dSelectMenu(keyCode - 49, true);
+                this._dSelectMenu(keyCode, true);
             }, 200);
         }
     }

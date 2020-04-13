@@ -734,11 +734,17 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.keyPressed = new Entry.Event(window);
 
         document.addEventListener('keydown', (e) => {
-            let keyCode = e.key === ' ' ? e.code : e.key;
-            keyCode = Entry.KeyboardCode.korKeyMap[keyCode] || keyCode;
+            let keyCode = event.code;
+            if (keyCode.indexOf('Arrow') == -1) {
+                keyCode = keyCode.replace('Left', '');
+                keyCode = keyCode.replace('Right', '');
+            }
+            keyCode = keyCode.replace('Digit', '');
+            keyCode = keyCode.replace('Numpad', '');
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
+            console.log(Entry.pressedKeys);
             Entry.keyPressed.notify(e);
         });
     }
@@ -750,8 +756,13 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
-            let keyCode = e.key === ' ' ? e.code : e.key;
-            keyCode = Entry.KeyboardCode.korKeyMap[keyCode] || keyCode;
+            let keyCode = event.code;
+            if (keyCode.indexOf('Arrow') == -1) {
+                keyCode = keyCode.replace('Left', '');
+                keyCode = keyCode.replace('Right', '');
+            }
+            keyCode = keyCode.replace('Digit', '');
+            keyCode = keyCode.replace('Numpad', '');
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
@@ -1147,32 +1158,32 @@ Entry.isPhone = function() {
 
 Entry.getKeyCodeMap = function() {
     return {
-        a: 'a',
-        b: 'b',
-        c: 'c',
-        d: 'd',
-        e: 'e',
-        f: 'f',
-        g: 'g',
-        h: 'h',
-        i: 'i',
-        j: 'j',
-        k: 'k',
-        l: 'l',
-        m: 'm',
-        n: 'n',
-        o: 'o',
-        p: 'p',
-        q: 'q',
-        r: 'r',
-        s: 's',
-        t: 't',
-        u: 'u',
-        v: 'v',
-        w: 'w',
-        x: 'x',
-        y: 'y',
-        z: 'z',
+        KeyA: 'KeyA',
+        KeyB: 'KeyB',
+        KeyC: 'KeyC',
+        KeyD: 'KeyD',
+        KeyE: 'KeyE',
+        KeyF: 'KeyF',
+        KeyG: 'KeyG',
+        KeyH: 'KeyH',
+        KeyI: 'KeyI',
+        KeyJ: 'KeyJ',
+        KeyK: 'KeyK',
+        KeyL: 'KeyL',
+        KeyM: 'KeyM',
+        KeyN: 'KeyN',
+        KeyO: 'KeyO',
+        KeyP: 'KeyP',
+        KeyQ: 'KeyQ',
+        KeyR: 'KeyR',
+        KeyS: 'KeyS',
+        KeyT: 'KeyT',
+        KeyU: 'KeyU',
+        KeyV: 'KeyV',
+        KeyW: 'KeyW',
+        KeyX: 'KeyX',
+        KeyY: 'KeyY',
+        KeyZ: 'KeyZ',
         Space: Lang.Blocks.START_press_some_key_space,
         ArrowLeft: Lang.Blocks.START_press_some_key_left,
         ArrowUp: Lang.Blocks.START_press_some_key_up,
@@ -1188,9 +1199,9 @@ Entry.getKeyCodeMap = function() {
         '7': '7',
         '8': '8',
         '9': '9',
-        Entry: Lang.Blocks.START_press_some_key_enter,
+        Enter: Lang.Blocks.START_press_some_key_enter,
         Escape: 'esc',
-        Control: 'ctrl',
+        Control: 'Control',
         Alt: 'alt',
         Tab: 'tab',
         Shift: 'shift',
@@ -1250,7 +1261,7 @@ Entry.computeInputWidth = (function() {
 })();
 
 Entry.isArrowOrBackspace = function(keyCode) {
-    return !!~[37, 38, 39, 40, 8].indexOf(keyCode);
+    return !!~['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].indexOf(keyCode);
 };
 
 Entry.hexStringToBin = function(hexString) {

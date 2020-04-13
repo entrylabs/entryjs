@@ -904,8 +904,11 @@ Entry.Engine = class Engine {
      * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
-        let keyCode = e.key === ' ' ? e.code : e.key;
-        keyCode = Entry.KeyboardCode.korKeyMap[keyCode] || keyCode;
+        let keyCode = e.code;
+        keyCode = keyCode.replace('Left', '');
+        keyCode = keyCode.replace('Right', '');
+        keyCode = keyCode.replace('Digit', '');
+        keyCode = keyCode.replace('Numpad', '');
         const isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce) {
@@ -913,14 +916,14 @@ Entry.Engine = class Engine {
         }
 
         //mouse shortcuts
-        if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
-            if (keyCode === 83) {
+        if (keyCode !== 'Control' && e.ctrlKey && isWorkspace) {
+            if (keyCode === 'KeyS') {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace' : 'saveWorkspace');
-            } else if (keyCode === 82) {
+            } else if (keyCode === 'KeyR') {
                 e.preventDefault();
                 Entry.engine.run();
-            } else if (keyCode === 90) {
+            } else if (keyCode === 'KeyZ') {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
@@ -933,7 +936,7 @@ Entry.Engine = class Engine {
         }
 
         if (Entry.engine.isState('stop')) {
-            if (isWorkspace && keyCode >= 37 && keyCode <= 40) {
+            if (isWorkspace && keyCode.indexOf('Arrow') > -1) {
                 Entry.stage.moveSprite(e);
             }
         }
