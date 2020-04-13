@@ -18,7 +18,7 @@ import { TimeoutTimer } from '../utils/TimeoutTimer';
 import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
 import { EntryTextureOption } from './EntryTextureOption';
 import { ISceneTextures } from './ISceneTextures';
-import { each } from 'lodash';
+import each from 'lodash/each';
 
 const TIMEOUT_INTERVAL = 250;
 
