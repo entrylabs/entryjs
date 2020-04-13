@@ -166,7 +166,7 @@ class VideoUtils implements MediaUtilsInterface {
                 this.motions = message.motions;
 
                 if (this.isRunning) {
-                    setTimeout(this.motionDetect.bind(this), 50);
+                    setTimeout(this.motionDetect.bind(this), 20);
                 }
             };
             this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
@@ -425,8 +425,6 @@ class VideoUtils implements MediaUtilsInterface {
                 y: totalMotionDirectionY,
             },
         };
-
-        console.log(result.direction);
 
         return result;
     }
