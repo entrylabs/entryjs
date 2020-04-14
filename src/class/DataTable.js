@@ -210,21 +210,24 @@ class DataTable {
         }
     }
 
-    createChart(source) {
-        const { fields, rows, tab, chart } = source;
-        const tables = this.#tables.map(({ id, name }) => [name, id]);
+    createChart() {
+        const tables = this.#tables.reduce((prev, table) => {
+            const { chart: charts = [], fields, origin } = table;
+            return [
+                ...prev,
+                ...charts.map((chart) => ({
+                    chart,
+                    table: [fields, ...origin],
+                })),
+            ];
+        }, []);
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
             parent: $('body'),
         })[0];
         return new ModalChart({
             data: {
-                tables,
-                source: { fields, origin: rows, tab, chart },
-                setTable: (selected) => {
-                    const [tableName, tableId] = selected;
-                    this.showChart(tableId);
-                },
+                source: { tables },
             },
             container,
         });
