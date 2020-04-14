@@ -5,6 +5,7 @@ Entry.VideoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
+    sponserText: 'Powered by Naver',
     title: {
         ko: '비디오 감지',
         en: 'Video Detection',
@@ -271,6 +272,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     if (!VideoUtils.isInitialized) {
                         await VideoUtils.initialize();
                     }
+                    console.log(value);
                     VideoUtils.setOptions('transparency', value);
 
                     return script.callReturn();
@@ -550,31 +552,26 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (type === 'total') {
                     return clamp(detected.total / 10, 0, 100000).toString();
                 }
-                try {
-                    let rawX = detected.direction.x;
-                    if (!VideoUtils.flipStatus.horizontal) {
-                        rawX *= -1;
-                    }
-
-                    let rawY = detected.direction.y;
-                    if (VideoUtils.flipStatus.vertical) {
-                        rawY *= -1;
-                    }
-                    const absX = Math.abs(rawX);
-                    const absY = Math.abs(rawY);
-                    if (absX < 20 && absY < 20) {
-                        return 0;
-                    }
-                    if (type === 'x') {
-                        return rawX.toFixed(1).toString();
-                    } else if (type === 'y') {
-                        return rawY.toFixed(1).toString();
-                    }
-                    return 0;
-                } catch (err) {
-                    console.log(detected);
-                    debugger;
+                let rawX = detected.direction.x;
+                if (!VideoUtils.flipStatus.horizontal) {
+                    rawX *= -1;
                 }
+
+                let rawY = detected.direction.y;
+                if (VideoUtils.flipStatus.vertical) {
+                    rawY *= -1;
+                }
+                const absX = Math.abs(rawX);
+                const absY = Math.abs(rawY);
+                if (absX < 20 && absY < 20) {
+                    return 0;
+                }
+                if (type === 'x') {
+                    return rawX.toFixed(1).toString();
+                } else if (type === 'y') {
+                    return rawY.toFixed(1).toString();
+                }
+                return 0;
             },
             paramsKeyMap: {
                 TARGET: 0,
