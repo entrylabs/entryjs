@@ -215,10 +215,18 @@ class DataTable {
             const { chart: charts = [], fields, origin } = table;
             return [
                 ...prev,
-                ...charts.map((chart) => ({
-                    chart,
-                    table: [fields, ...origin],
-                })),
+                ...charts.reduce((prevChart, chart) => {
+                    if (chart.categoryIndexes.length === 0) {
+                        return prevChart;
+                    }
+                    return [
+                        ...prevChart,
+                        {
+                            chart,
+                            table: [fields, ...origin],
+                        },
+                    ];
+                }, []),
             ];
         }, []);
         const container = Entry.Dom('div', {
