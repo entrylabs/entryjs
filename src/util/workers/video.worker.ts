@@ -155,7 +155,8 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            
+        
+            console.log();
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({
@@ -187,14 +188,16 @@ ctx.onmessage = async function(e: {
                         // console.log('coco model loaded');
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
-                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-            ]).then(() => {
-                faceLoaded = true;
-                this.postMessage({ type: 'init', message: 'face' });
-            });
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                ]).then(() => {
+                    faceLoaded = true;
+                    this.postMessage({ type: 'init', message: 'face' });
+                }),
+            ]);
             warmup().then(() => {
                 processImage(true);
             });

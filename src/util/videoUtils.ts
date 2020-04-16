@@ -10,7 +10,6 @@ import VideoMotionWorker from './workers/motion.worker.ts';
 import * as posenet from '@tensorflow-models/posenet';
 import clamp from 'lodash/clamp';
 
-
 type FlipStatus = {
     horizontal: boolean;
     vertical: boolean;
@@ -77,12 +76,23 @@ class VideoUtils implements MediaUtilsInterface {
         warmup: false,
     };
 
-    public modelLoadStatus: ModelStatus = {
+    public modelMountStatus: ModelStatus = {
         pose: false,
         face: false,
         object: false,
         warmup: false,
     };
+
+    public modelRunningStatus: ModelStatus = {
+        pose: false,
+        face: false,
+        object: false,
+        warmup: false,
+    };
+
+    // motion test
+    // private tempCanvas: any;
+    // motion test
 
     // 감지된 요소들
     public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
@@ -140,8 +150,8 @@ class VideoUtils implements MediaUtilsInterface {
 
         // //motion test
         // this.tempCanvas = document.createElement('canvas');
-        // this.tempCanvas.width = CANVAS_WIDTH;
-        // this.tempCanvas.height = CANVAS_HEIGHT;
+        // this.tempCanvas.width = this.CANVAS_WIDTH;
+        // this.tempCanvas.height = this.CANVAS_HEIGHT;
         // const tempTarget = document.getElementsByClassName('uploadInput')[0];
         // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
         // //motion test
@@ -155,6 +165,7 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
+
             this.motionWorker.onmessage = (e: { data: { type: String; message: any } }) => {
                 const { type, message } = e.data;
                 if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -182,9 +193,12 @@ class VideoUtils implements MediaUtilsInterface {
                             console.timeEnd('test');
                             Entry.addEventListener('beforeStop', this.reset.bind(this));
                             Entry.addEventListener('run', this.initialSetup.bind(this));
-                            Entry.dispatchEvent('hideLoadingScreen');
+                            // Entry.dispatchEvent('hideLoadingScreen');
                             this.video.play();
+                        } else {
+                            Entry.toast.success('모델 로드', `${name} 로드 완료`, true);
                         }
+                        this.modelRunningStatus[name] = true;
                         break;
                     case 'face':
                         this.faces = message;
@@ -208,8 +222,13 @@ class VideoUtils implements MediaUtilsInterface {
                     width: this.CANVAS_WIDTH,
                     height: this.CANVAS_HEIGHT,
                 });
-                Entry.dispatchEvent('showVideoLoadingScreen');
+                // Entry.dispatchEvent('showVideoLoadingScreen');
             } else {
+                Entry.toast.alert(
+                    Lang.Msgs.warn,
+                    '현재 사용 환경은 비디오 블럭 모델을 지원하지 않습니다',
+                    true
+                );
                 Entry.addEventListener('beforeStop', this.reset.bind(this));
                 Entry.addEventListener('run', () => {
                     this.isRunning = true;
@@ -287,7 +306,12 @@ class VideoUtils implements MediaUtilsInterface {
         //     row.forEach((col, i) => {
         //         const { r, g, b, rDiff, gDiff, bDiff } = col;
         //         tempCtx.fillStyle = `rgb(${rDiff},${gDiff},${bDiff})`;
-        //         tempCtx.fillRect(i * SAMPLE_SIZE, j * SAMPLE_SIZE, SAMPLE_SIZE, SAMPLE_SIZE);
+        //         tempCtx.fillRect(
+        //             i * this._SAMPLE_SIZE,
+        //             j * this._SAMPLE_SIZE,
+        //             this._SAMPLE_SIZE,
+        //             this._SAMPLE_SIZE
+        //         );
         //     });
         // });
         // //motion test
@@ -488,11 +512,11 @@ class VideoUtils implements MediaUtilsInterface {
             mode,
         });
         if (mode == 'off') {
-            this.modelLoadStatus[target] = false;
+            this.modelRunningStatus[target] = false;
             this.isModelInitiated =
-                this.modelLoadStatus.face ||
-                this.modelLoadStatus.object ||
-                this.modelLoadStatus.pose;
+                this.modelRunningStatus.face ||
+                this.modelRunningStatus.object ||
+                this.modelRunningStatus.pose;
             if (!this.isModelInitiated) {
                 this.worker.postMessage({
                     type: 'pause',
@@ -506,7 +530,7 @@ class VideoUtils implements MediaUtilsInterface {
             this.worker.postMessage({
                 type: 'run',
             });
-            this.modelLoadStatus[target] = true;
+            this.modelRunningStatus[target] = true;
         }
     }
     showIndicator(type: IndicatorType) {
