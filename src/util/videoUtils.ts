@@ -190,14 +190,14 @@ class VideoUtils implements MediaUtilsInterface {
                 if (Entry.engine.state !== 'run' && type !== 'init') {
                     return;
                 }
-                console.log(type, message);
+
                 switch (type) {
                     case 'init':
                         const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                         if (message === 'warmup') {
                             console.timeEnd('test');
                         } else {
-                            Entry.toast.success('모델 로드', `${name} 로드 완료`, true);
+                            Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
                         }
                         this.modelRunningStatus[name] = true;
                         break;
@@ -265,7 +265,9 @@ class VideoUtils implements MediaUtilsInterface {
     initialSetup() {
         console.log('initial setup');
         this.isRunning = true;
-        GEHelper.drawDetectedGraphic();
+        if (window.OffscreenCanvas) {
+            GEHelper.drawDetectedGraphic();
+        }
         this.motionDetect(null);
         this.startDrawIndicators();
     }
