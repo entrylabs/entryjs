@@ -362,7 +362,11 @@ Entry.Scene = class {
         if (this.selectedScene && this.selectedScene.id === targetScene.id) {
             return;
         }
-        if (Entry.playground.nameViewFocus && Entry.playground.nameViewBlur()) {
+        if (
+            Entry.playground.getViewMode() === 'picture' &&
+            Entry.playground.nameViewFocus &&
+            Entry.playground.nameViewBlur()
+        ) {
             return;
         }
 
