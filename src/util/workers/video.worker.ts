@@ -155,7 +155,7 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-        
+
             console.log();
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
@@ -198,9 +198,7 @@ ctx.onmessage = async function(e: {
                     this.postMessage({ type: 'init', message: 'face' });
                 }),
             ]);
-            warmup().then(() => {
-                processImage(true);
-            });
+            warmup();
             this.postMessage({ type: 'init', message: 'warmup' });
 
             // console.log('video worker loaded');

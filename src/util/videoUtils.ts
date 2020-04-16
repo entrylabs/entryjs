@@ -181,20 +181,21 @@ class VideoUtils implements MediaUtilsInterface {
                     setTimeout(this.motionDetect.bind(this), 20);
                 }
             };
+
+            Entry.addEventListener('beforeStop', this.reset.bind(this));
+            Entry.addEventListener('run', this.initialSetup.bind(this));
+
             this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
                 const { type, message } = e.data;
                 if (Entry.engine.state !== 'run' && type !== 'init') {
                     return;
                 }
+                console.log(type, message);
                 switch (type) {
                     case 'init':
                         const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                         if (message === 'warmup') {
                             console.timeEnd('test');
-                            Entry.addEventListener('beforeStop', this.reset.bind(this));
-                            Entry.addEventListener('run', this.initialSetup.bind(this));
-                            // Entry.dispatchEvent('hideLoadingScreen');
-                            this.video.play();
                         } else {
                             Entry.toast.success('모델 로드', `${name} 로드 완료`, true);
                         }
