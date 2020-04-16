@@ -190,16 +190,20 @@ class VideoUtils implements MediaUtilsInterface {
                 if (Entry.engine.state !== 'run' && type !== 'init') {
                     return;
                 }
-
                 switch (type) {
                     case 'init':
                         const name: 'pose' | 'face' | 'object' | 'warmup' = message;
                         if (message === 'warmup') {
+                            Entry.toast.success(
+                                '모델 로드 완료',
+                                `이제 모델 인식을 사용할 수 있습니다`,
+                                true
+                            );
                             console.timeEnd('test');
                         } else {
                             Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
                         }
-                        this.modelRunningStatus[name] = true;
+                        this.modelMountStatus[name] = true;
                         break;
                     case 'face':
                         this.faces = message;
@@ -320,7 +324,7 @@ class VideoUtils implements MediaUtilsInterface {
         // //motion test
         setTimeout(() => {
             requestAnimationFrame(this.sendImageToWorker.bind(this));
-        }, 20);
+        }, 100);
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION

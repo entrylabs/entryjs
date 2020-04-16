@@ -306,7 +306,7 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    drawHumanPoints(poses: Array<any>, flipStatus: any) {
+    async drawHumanPoints(poses: Array<any>, flipStatus: any) {
         const R = 5;
         let handler = this.poseIndicatorGraphic;
         if (this._isWebGL) {
@@ -352,7 +352,7 @@ class _GEHelper extends GEHelperBase {
         });
     }
 
-    drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
+    async drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
         const coordList: any = [];
         let handler = this.poseIndicatorGraphic;
         adjacents.forEach((adjacentList: any) => {
@@ -379,7 +379,7 @@ class _GEHelper extends GEHelperBase {
         });
     }
 
-    drawFaceEdges(faces: any, flipStatus: any) {
+    async drawFaceEdges(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
 
         if (this._isWebGL) {
@@ -480,7 +480,7 @@ class _GEHelper extends GEHelperBase {
         handler.moveTo(prevX, prevY).lineTo(_x, _y);
     }
 
-    drawObjectBox(objects: Array<any>, flipStatus: any) {
+    async drawObjectBox(objects: Array<any>, flipStatus: any) {
         const objectsList: any = [];
         objects.forEach((object: any) => {
             const bbox = object.bbox;

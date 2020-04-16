@@ -49,13 +49,23 @@ let isRunning = false;
 
 const dimension = { width: 0, height: 0 };
 
+let myImage: ImageBitmap;
+
 async function processImage(repeat: boolean) {
     try {
         if (!repeat) {
             await objectDetect(true), await poseDetect(true), await faceDetect(true);
             return;
         } else if (isRunning) {
-            objectDetect(false), poseDetect(false), faceDetect(false);
+            if (modelStatus.object) {
+                await objectDetect(false);
+            }
+            if (modelStatus.pose) {
+                await poseDetect(false);
+            }
+            if (modelStatus.face) {
+                await faceDetect(false);
+            }
         } else {
             return;
         }
@@ -64,7 +74,7 @@ async function processImage(repeat: boolean) {
     }
     setTimeout(() => {
         processImage(true);
-    }, 50);
+    }, 10);
 }
 
 //pre run for better performance on loading
@@ -198,7 +208,6 @@ ctx.onmessage = async function(e: {
                     this.postMessage({ type: 'init', message: 'face' });
                 }),
             ]);
-            warmup();
             this.postMessage({ type: 'init', message: 'warmup' });
 
             // console.log('video worker loaded');
@@ -209,6 +218,7 @@ ctx.onmessage = async function(e: {
             const image = e.data.image;
             const ctx = offCanvas.getContext('2d');
             ctx.drawImage(image, 0, 0, dimension.width, dimension.height);
+            myImage = image;
             break;
 
         case 'option':
