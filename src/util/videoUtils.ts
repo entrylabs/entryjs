@@ -8,6 +8,9 @@ import VideoWorker from './workers/video.worker.ts';
 import VideoMotionWorker from './workers/motion.worker.ts';
 // type을 위해서 import
 import * as posenet from '@tensorflow-models/posenet';
+import * as cocoSsd from '@tensorflow-models/coco-ssd';
+import * as faceapi from 'face-api.js';
+
 import clamp from 'lodash/clamp';
 
 type FlipStatus = {
@@ -54,8 +57,9 @@ class VideoUtils implements MediaUtilsInterface {
     private _VIDEO_WIDTH: number = 640;
     private _VIDEO_HEIGHT: number = 360;
 
-    // 움직임 감지에 쓰이는 상수
+    private tinyFaceDetectOption = new faceapi.TinyFaceDetectorOptions({ inputSize: 160 });
 
+    // 움직임 감지에 쓰이는 상수
     private _SAMPLE_SIZE: number = 15;
     private _BOUNDARY_OFFSET: number = 4;
     private _SAME_COORDINATE_COMPENSATION: number = 10; // assumption weight that there is no movement within frame
@@ -108,6 +112,8 @@ class VideoUtils implements MediaUtilsInterface {
 
     public isRunning = false;
     public isModelInitiated = false;
+    public mobileNet: posenet.MobileNet;
+    public coco: any;
     /**
      * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
      */
@@ -126,10 +132,10 @@ class VideoUtils implements MediaUtilsInterface {
 
     // 로컬 스코프
     public isInitialized: boolean = false;
-    public worker: Worker = new VideoWorker();
+    // public worker: Worker = new VideoWorker();
     public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
-    private imageCapture: typeof ImageCapture;
+    // private imageCapture: typeof ImageCapture;
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
@@ -185,62 +191,83 @@ class VideoUtils implements MediaUtilsInterface {
             Entry.addEventListener('beforeStop', this.reset.bind(this));
             Entry.addEventListener('run', this.initialSetup.bind(this));
 
-            this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
-                const { type, message } = e.data;
-                if (Entry.engine.state !== 'run' && type !== 'init') {
-                    return;
-                }
-                switch (type) {
-                    case 'init':
-                        const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-                        if (message === 'warmup') {
-                            Entry.toast.success(
-                                '모델 로드 완료',
-                                `이제 모델 인식을 사용할 수 있습니다`,
-                                true
-                            );
-                            console.timeEnd('test');
-                        } else {
-                            Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
-                        }
-                        this.modelMountStatus[name] = true;
-                        break;
-                    case 'face':
-                        this.faces = message;
-                        break;
-                    case 'coco':
-                        this.objects = message;
-                        break;
-                    case 'pose':
-                        this.poses = message;
-                        break;
-                }
-            };
+            // this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
+            //     const { type, message } = e.data;
+            //     if (Entry.engine.state !== 'run' && type !== 'init') {
+            //         return;
+            //     }
+            //     switch (type) {
+            //         case 'init':
+            //             const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+            //             if (message === 'warmup') {
+            //                 Entry.toast.success(
+            //                     '모델 로드 완료',
+            //                     `이제 모델 인식을 사용할 수 있습니다`,
+            //                     true
+            //                 );
+            //             } else {
+            //                 Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
+            //             }
+            //             this.modelMountStatus[name] = true;
+            //             break;
+            //         case 'face':
+            //             this.faces = message;
+            //             break;
+            //         case 'coco':
+            //             this.objects = message;
+            //             break;
+            //         case 'pose':
+            //             this.poses = message;
+            //             break;
+            //     }
+            // };
             this.motionWorker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
                 height: this.CANVAS_HEIGHT,
             });
-            if (window.OffscreenCanvas) {
-                this.worker.postMessage({
-                    type: 'init',
-                    width: this.CANVAS_WIDTH,
-                    height: this.CANVAS_HEIGHT,
+
+            console.time('test');
+
+            const weightsUrl = `${window.location.origin}/lib/entry-js/weights`;
+            Promise.all([
+                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+            ]).then(() => {
+                Entry.toast.success('모델 로드', `face 로드 완료`, false);
+            });
+
+            cocoSsd
+                .load({
+                    base: 'lite_mobilenet_v2',
+                })
+                .then((cocoLoaded: any) => {
+                    this.coco = cocoLoaded;
+                    // console.log('coco model loaded');
+                    Entry.toast.success('모델 로드', `coco 로드 완료`, false);
+                    // this.postMessage({ type: 'init', message: 'object' });
+                    console.timeEnd('test');
                 });
-                // Entry.dispatchEvent('showVideoLoadingScreen');
-            } else {
-                Entry.toast.alert(
-                    Lang.Msgs.warn,
-                    '현재 사용 환경은 비디오 블럭 모델을 지원하지 않습니다',
-                    true
-                );
-                Entry.addEventListener('beforeStop', this.reset.bind(this));
-                Entry.addEventListener('run', () => {
-                    this.isRunning = true;
-                    this.motionDetect(null);
-                    this.video.play();
+            posenet
+                .load({
+                    architecture: 'MobileNetV1',
+                    outputStride: 16,
+                    inputResolution: { width: this.CANVAS_WIDTH, height: this.CANVAS_HEIGHT },
+                    multiplier: 0.5,
+                })
+                .then((mobileNetLoaded: any) => {
+                    this.mobileNet = mobileNetLoaded;
+                    // console.log('posenet model loaded');
+                    Entry.toast.success('모델 로드', `pose 로드 완료`, false);
                 });
-            }
+            // this.worker.postMessage({
+            //     type: 'init',
+            //     width: this.CANVAS_WIDTH,
+            //     height: this.CANVAS_HEIGHT,
+            // });
+            // Entry.dispatchEvent('showVideoLoadingScreen');
 
             const video = document.createElement('video');
             video.id = 'webCamElement';
@@ -260,7 +287,6 @@ class VideoUtils implements MediaUtilsInterface {
         }
     }
     videoOnLoadHandler() {
-        console.time('test');
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -269,9 +295,8 @@ class VideoUtils implements MediaUtilsInterface {
     initialSetup() {
         console.log('initial setup');
         this.isRunning = true;
-        if (window.OffscreenCanvas) {
-            GEHelper.drawDetectedGraphic();
-        }
+        GEHelper.drawDetectedGraphic();
+
         this.motionDetect(null);
         this.startDrawIndicators();
     }
@@ -279,9 +304,6 @@ class VideoUtils implements MediaUtilsInterface {
     startDrawIndicators() {
         if (!this.isRunning) {
             return;
-        }
-        if (!window.OffscreenCanvas) {
-            throw new Entry.Utils.IncompatibleError();
         }
 
         if (this.objects && this.indicatorStatus.object) {
@@ -298,14 +320,71 @@ class VideoUtils implements MediaUtilsInterface {
             requestAnimationFrame(this.startDrawIndicators.bind(this));
         }, 50);
     }
-    async sendImageToWorker() {
+
+    async faceDetect() {
+        if (!this.modelRunningStatus.face) {
+            return;
+        }
+        const predictions = await faceapi
+            .detectAllFaces(this.inMemoryCanvas, this.tinyFaceDetectOption)
+            .withFaceLandmarks()
+            .withAgeAndGender()
+            .withFaceExpressions();
+        this.faces = predictions;
+    }
+
+    async cocoDetect() {
+        if (!this.modelRunningStatus.object) {
+            return;
+        }
+        const predictions = await this.coco.detect(this.inMemoryCanvas, 4);
+        this.objects = predictions;
+    }
+
+    async poseDetect() {
+        if (!this.modelRunningStatus.pose) {
+            return;
+        }
+        const predictions = await this.mobileNet.estimateMultiplePoses(this.inMemoryCanvas, {
+            flipHorizontal: this.flipStatus.horizontal,
+            maxDetections: 4,
+            scoreThreshold: 0.75,
+            nmsRadius: 10,
+            multiplier: 0.5,
+            quantBytes: 1,
+        });
+        const adjacents: posenet.Keypoint[][][] = [];
+        predictions.forEach((pose: posenet.Pose) => {
+            // 어깨 위치와 코 위치를 기반으로 한 목 위치 계산
+            const leftShoulder = pose.keypoints[5];
+            const rightShoulder = pose.keypoints[6];
+            const nose = pose.keypoints[0];
+            const neckPos = {
+                x: ((leftShoulder.position.x + rightShoulder.position.x) / 2 + nose.position.x) / 2,
+                y:
+                    (((leftShoulder.position.y + rightShoulder.position.y) / 2) * 1.5 +
+                        nose.position.y * 0.5) /
+                    2,
+            };
+            pose.keypoints[21] = { part: 'neck', position: neckPos, score: -1 };
+            //---------------------------------------
+            const adjacentMap = posenet.getAdjacentKeyPoints(pose.keypoints, 0.02);
+            adjacents.push(adjacentMap);
+        });
+        this.poses = { predictions, adjacents };
+    }
+
+    async imageDetection() {
         if (!this.isModelInitiated) {
             return;
         }
-        const captured = await this.imageCapture.grabFrame();
-
-        this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
-
+        const context = this.inMemoryCanvas.getContext('2d');
+        context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
+        context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+        
+        this.cocoDetect();
+        this.faceDetect();
+        this.poseDetect();
         // //motion test
         // const tempCtx = this.tempCanvas.getContext('2d');
         // tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
@@ -323,7 +402,7 @@ class VideoUtils implements MediaUtilsInterface {
         // });
         // //motion test
         setTimeout(() => {
-            requestAnimationFrame(this.sendImageToWorker.bind(this));
+            requestAnimationFrame(this.imageDetection.bind(this));
         }, 100);
     }
     /**
@@ -491,10 +570,10 @@ class VideoUtils implements MediaUtilsInterface {
                 break;
             case 'hflip':
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
-                this.worker.postMessage({
-                    type: 'option',
-                    option: { flipStatus: this.flipStatus },
-                });
+                // this.worker.postMessage({
+                //     type: 'option',
+                //     option: { flipStatus: this.flipStatus },
+                // });
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':
@@ -505,51 +584,39 @@ class VideoUtils implements MediaUtilsInterface {
     }
     manageModel(target: IndicatorType, mode: String) {
         if (!this.isModelInitiated) {
-            if (!window.OffscreenCanvas) {
-                throw new Entry.Utils.IncompatibleError();
-            }
             this.isModelInitiated = true;
-            const [track] = this.stream.getVideoTracks();
-            this.imageCapture = new ImageCapture(track);
-            this.sendImageToWorker();
+            // const [track] = this.stream.getVideoTracks();
+            // this.imageCapture = new ImageCapture(track);
+            this.imageDetection();
         }
-        this.worker.postMessage({
-            type: 'handle',
-            target,
-            mode,
-        });
+        // this.worker.postMessage({
+        //     type: 'handle',
+        //     target,
+        //     mode,
+        // });
         if (mode == 'off') {
             this.modelRunningStatus[target] = false;
-            this.isModelInitiated =
-                this.modelRunningStatus.face ||
-                this.modelRunningStatus.object ||
-                this.modelRunningStatus.pose;
-            if (!this.isModelInitiated) {
-                this.worker.postMessage({
-                    type: 'pause',
-                });
-            }
+            // this.isModelInitiated =
+            //     this.modelRunningStatus.face ||
+            //     this.modelRunningStatus.object ||
+            //     this.modelRunningStatus.pose;
+            // if (!this.isModelInitiated) {
+            //     this.worker.postMessage({
+            //         type: 'pause',
+            //     });
+            // }
             this.removeIndicator(target);
         } else {
-            if (!window.OffscreenCanvas) {
-                throw new Entry.Utils.IncompatibleError();
-            }
-            this.worker.postMessage({
-                type: 'run',
-            });
+            // this.worker.postMessage({
+            //     type: 'run',
+            // });
             this.modelRunningStatus[target] = true;
         }
     }
     showIndicator(type: IndicatorType) {
-        if (!window.OffscreenCanvas) {
-            throw new Entry.Utils.IncompatibleError();
-        }
         this.indicatorStatus[type] = true;
     }
     removeIndicator(type: IndicatorType) {
-        if (!window.OffscreenCanvas) {
-            throw new Entry.Utils.IncompatibleError();
-        }
         if (type) {
             this.indicatorStatus[type] = false;
         }
@@ -590,7 +657,7 @@ class VideoUtils implements MediaUtilsInterface {
             this.stream.getTracks().forEach((track) => {
                 track.stop();
             });
-            this.worker.terminate();
+            // this.worker.terminate();
         } catch (err) {
             console.log(err);
         }
@@ -609,9 +676,15 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     disableAllModels() {
-        this.worker.postMessage({
-            type: 'handleOff',
-        });
+        this.modelRunningStatus = {
+            pose: false,
+            face: false,
+            object: false,
+            warmup: null,
+        };
+        // this.worker.postMessage({
+        //     type: 'handleOff',
+        // });
     }
 
     async compatabilityChecker() {
