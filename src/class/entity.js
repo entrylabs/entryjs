@@ -6,6 +6,7 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
+import { PIXIGraphics } from './pixi/helper/PIXIHelper';
 
 /**
  * Construct entity class
@@ -1334,16 +1335,27 @@ Entry.EntityObject = class EntityObject {
         this.brush = null;
     }
 
-    // 기존 스펙으로 롤백(#11434)
     eraseBrush() {
         const brush = this.brush;
         if (brush) {
-            const stroke = brush._stroke.style;
-            const style = brush._strokeStyle.width;
-            brush
-                .clear()
-                .setStrokeStyle(style)
-                .beginStroke(stroke);
+            // WebGL 인경우 createjs와 같은 코드로 동작하지 않아서 코드 분기생성 (#11626)
+            const isWebGL = GEHelper.isWebGL;
+            if (isWebGL) {
+                const { r, g, b } = brush.rgb;
+                const thickness = brush.thickness;
+                const opacity = 1 - brush.opacity / 100;
+                brush.clear();
+                brush.setStrokeStyle(thickness);
+                brush.beginStrokeFast(Entry.rgb2Number(r, g, b), opacity);
+            } else {
+                // 기존 스펙으로 롤백(#11434)
+                const stroke = brush._stroke.style;
+                const thickness = brush._strokeStyle.width;
+                brush
+                    .clear()
+                    .setStrokeStyle(thickness)
+                    .beginStroke(stroke);
+            }
         }
         Entry.requestUpdate = true;
     }

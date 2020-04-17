@@ -74,7 +74,7 @@
         "@egjs/visible": "^2.1.0",
         "@types/createjs": "^0.0.29",
         "@types/jquery": "^3.3.31",
-        "@types/lodash": "^4.14.136",
+        "@types/lodash": "^4.14.149",
         "@types/node": "^11.9.5",
         "@types/pixi.js": "^4.8.6",
         "@types/socket.io-client": "^1.4.32",

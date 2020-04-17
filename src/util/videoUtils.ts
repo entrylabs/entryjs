@@ -5,9 +5,11 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
+import VideoMotionWorker from './workers/motion.worker.ts';
 // type을 위해서 import
 import * as posenet from '@tensorflow-models/posenet';
-import { clamp } from 'lodash';
+import clamp from 'lodash/clamp';
+
 
 type FlipStatus = {
     horizontal: boolean;
@@ -54,6 +56,7 @@ class VideoUtils implements MediaUtilsInterface {
     private _VIDEO_HEIGHT: number = 360;
 
     // 움직임 감지에 쓰이는 상수
+
     private _SAMPLE_SIZE: number = 15;
     private _BOUNDARY_OFFSET: number = 4;
     private _SAME_COORDINATE_COMPENSATION: number = 10; // assumption weight that there is no movement within frame
@@ -92,6 +95,9 @@ class VideoUtils implements MediaUtilsInterface {
         adjacents: posenet.Keypoint[][][];
     };
     public faces: any = [];
+
+    public isRunning = false;
+    public isModelInitiated = false;
     /**
      * 아래는 faces 의 type, 너무 길고, 라이브러리에서 typed 되어 나오는 값이므로 any로 지정하였음.
      */
@@ -111,6 +117,7 @@ class VideoUtils implements MediaUtilsInterface {
     // 로컬 스코프
     public isInitialized: boolean = false;
     public worker: Worker = new VideoWorker();
+    public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
 
@@ -122,8 +129,8 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         await this.compatabilityChecker();
-        this.isInitialized = true;
 
+        // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
             this.inMemoryCanvas = document.createElement('canvas');
@@ -148,66 +155,109 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
+            this.motionWorker.onmessage = (e: { data: { type: String; message: any } }) => {
+                const { type, message } = e.data;
+                if (Entry.engine.state !== 'run' && type !== 'init') {
+                    return;
+                }
+                this.totalMotions = {
+                    total: message.total,
+                    direction: message.direction,
+                };
+                this.motions = message.motions;
 
-            this.worker.postMessage({
+                if (this.isRunning) {
+                    setTimeout(this.motionDetect.bind(this), 20);
+                }
+            };
+            this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
+                const { type, message } = e.data;
+                if (Entry.engine.state !== 'run' && type !== 'init') {
+                    return;
+                }
+                switch (type) {
+                    case 'init':
+                        const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                        if (message === 'warmup') {
+                            console.timeEnd('test');
+                            Entry.addEventListener('beforeStop', this.reset.bind(this));
+                            Entry.addEventListener('run', this.initialSetup.bind(this));
+                            Entry.dispatchEvent('hideLoadingScreen');
+                            this.video.play();
+                        }
+                        break;
+                    case 'face':
+                        this.faces = message;
+                        break;
+                    case 'coco':
+                        this.objects = message;
+                        break;
+                    case 'pose':
+                        this.poses = message;
+                        break;
+                }
+            };
+            this.motionWorker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
                 height: this.CANVAS_HEIGHT,
             });
-            const [track] = stream.getVideoTracks();
-            this.imageCapture = new ImageCapture(track);
-            this.sendImageToWorker();
+            if (window.OffscreenCanvas) {
+                this.worker.postMessage({
+                    type: 'init',
+                    width: this.CANVAS_WIDTH,
+                    height: this.CANVAS_HEIGHT,
+                });
+                Entry.dispatchEvent('showVideoLoadingScreen');
+            } else {
+                Entry.addEventListener('beforeStop', this.reset.bind(this));
+                Entry.addEventListener('run', () => {
+                    this.isRunning = true;
+                    this.motionDetect(null);
+                    this.video.play();
+                });
+            }
+
             const video = document.createElement('video');
+            video.id = 'webCamElement';
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
             video.height = this.CANVAS_HEIGHT;
-            video.onloadedmetadata = this.videoOnLoadHandler;
+            video.autoplay = true;
+            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
 
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
+            this.isInitialized = true;
         } catch (err) {
             console.log(err);
             this.isInitialized = false;
         }
     }
-
     videoOnLoadHandler() {
-        Entry.addEventListener('beforeStop', this.reset.bind(this));
-        this.video.play();
-        this.startDrawIndicators();
-        Entry.dispatchEvent('showLoadingScreen');
-        GEHelper.drawDetectedGraphic();
+        console.time('test');
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
-        this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
-            const { type, message } = e.data;
-            if (Entry.engine.state !== 'run' && type !== 'init') {
-                return;
-            }
-            switch (type) {
-                case 'init':
-                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-                    if (message === 'warmup') {
-                        Entry.dispatchEvent('hideLoadingScreen');
-                    }
-                    this.modelLoadStatus[name] = true;
-                    break;
-                case 'face':
-                    this.faces = message;
-                    break;
-                case 'coco':
-                    this.objects = message;
-                    break;
-                case 'pose':
-                    this.poses = message;
-                    break;
-            }
-        };
-        this.motionDetect(null);
     }
+
+    initialSetup() {
+        console.log('initial setup');
+        this.isRunning = true;
+        GEHelper.drawDetectedGraphic();
+        this.motionDetect(null);
+        this.startDrawIndicators();
+    }
+
     startDrawIndicators() {
+        if (!this.isRunning) {
+            return;
+        }
+        if (!window.OffscreenCanvas) {
+            throw new Entry.Utils.IncompatibleError();
+        }
+
         if (this.objects && this.indicatorStatus.object) {
             GEHelper.drawObjectBox(this.objects, this.flipStatus);
         }
@@ -223,7 +273,11 @@ class VideoUtils implements MediaUtilsInterface {
         }, 50);
     }
     async sendImageToWorker() {
+        if (!this.isModelInitiated) {
+            return;
+        }
         const captured = await this.imageCapture.grabFrame();
+
         this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
 
         // //motion test
@@ -237,7 +291,9 @@ class VideoUtils implements MediaUtilsInterface {
         //     });
         // });
         // //motion test
-        requestAnimationFrame(this.sendImageToWorker.bind(this));
+        setTimeout(() => {
+            requestAnimationFrame(this.sendImageToWorker.bind(this));
+        }, 20);
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
@@ -266,8 +322,8 @@ class VideoUtils implements MediaUtilsInterface {
             }
             if (this.flipStatus.vertical) {
                 const tempMinY = minY;
-                minY = this.CANVAS_WIDTH - maxY;
-                maxY = this.CANVAS_WIDTH - tempMinY;
+                minY = this.CANVAS_HEIGHT - maxY;
+                maxY = this.CANVAS_HEIGHT - tempMinY;
             }
             minX = Math.floor(minX / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
             maxX = Math.floor(maxX / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
@@ -275,13 +331,24 @@ class VideoUtils implements MediaUtilsInterface {
             maxY = Math.floor(maxY / this._SAMPLE_SIZE) * this._SAMPLE_SIZE;
         }
 
-        // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         const context = this.inMemoryCanvas.getContext('2d');
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
         const imageData = context.getImageData(0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+        if (!sprite) {
+            this.motionWorker.postMessage({
+                type: 'motion',
+                range: {
+                    minX,
+                    maxX,
+                    minY,
+                    maxY,
+                },
+                image: imageData,
+            });
+            return;
+        }
         const data = imageData.data;
-
         let areaMotion = 0;
         let totalMotionDirectionX = 0;
         let totalMotionDirectionY = 0;
@@ -348,22 +415,10 @@ class VideoUtils implements MediaUtilsInterface {
                 if (mostSimilar.y > 1) {
                     totalMotionDirectionY += mostSimilar.y - yIndex;
                 }
-                // 전체 범위를 위한것일경우 저장, 아니면 스킵
-                if (sprite) {
-                    continue;
-                }
                 areaMotion += areaMotionScore;
-                this.motions[yIndex][xIndex] = {
-                    r,
-                    g,
-                    b,
-                    rDiff,
-                    gDiff,
-                    bDiff,
-                };
             }
         }
-        // 전체 범위인 경우 저장, 아니면 리턴
+
         const result = {
             total: areaMotion,
             direction: {
@@ -371,12 +426,8 @@ class VideoUtils implements MediaUtilsInterface {
                 y: totalMotionDirectionY,
             },
         };
-        if (sprite) {
-            return result;
-        }
 
-        this.totalMotions = result;
-        setTimeout(this.motionDetect.bind(this), 200);
+        return result;
     }
 
     cameraSwitch(mode: String) {
@@ -421,18 +472,56 @@ class VideoUtils implements MediaUtilsInterface {
                 break;
         }
     }
-    manageModel(target: String, mode: String) {
+    manageModel(target: IndicatorType, mode: String) {
+        if (!this.isModelInitiated) {
+            if (!window.OffscreenCanvas) {
+                throw new Entry.Utils.IncompatibleError();
+            }
+            this.isModelInitiated = true;
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+            this.sendImageToWorker();
+        }
         this.worker.postMessage({
             type: 'handle',
             target,
             mode,
         });
+        if (mode == 'off') {
+            this.modelLoadStatus[target] = false;
+            this.isModelInitiated =
+                this.modelLoadStatus.face ||
+                this.modelLoadStatus.object ||
+                this.modelLoadStatus.pose;
+            if (!this.isModelInitiated) {
+                this.worker.postMessage({
+                    type: 'pause',
+                });
+            }
+            this.removeIndicator(target);
+        } else {
+            if (!window.OffscreenCanvas) {
+                throw new Entry.Utils.IncompatibleError();
+            }
+            this.worker.postMessage({
+                type: 'run',
+            });
+            this.modelLoadStatus[target] = true;
+        }
     }
     showIndicator(type: IndicatorType) {
+        if (!window.OffscreenCanvas) {
+            throw new Entry.Utils.IncompatibleError();
+        }
         this.indicatorStatus[type] = true;
     }
     removeIndicator(type: IndicatorType) {
-        this.indicatorStatus[type] = false;
+        if (!window.OffscreenCanvas) {
+            throw new Entry.Utils.IncompatibleError();
+        }
+        if (type) {
+            this.indicatorStatus[type] = false;
+        }
         GEHelper.resetHandlers();
     }
 
@@ -453,22 +542,28 @@ class VideoUtils implements MediaUtilsInterface {
             this.setOptions('vflip', null);
         }
 
-        GEHelper.resetCanvasBrightness(this.canvasVideo);
         GEHelper.setVideoAlpha(this.canvasVideo, 50);
 
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
         this.objects = [];
+        this.isRunning = false;
+        this.isModelInitiated = false;
     }
 
     // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
     destroy() {
         this.disableAllModels();
         this.turnOffWebcam();
-        this.stream.getTracks().forEach((track) => {
-            track.stop();
-        });
-        this.worker.terminate();
+        try {
+            this.stream.getTracks().forEach((track) => {
+                track.stop();
+            });
+            this.worker.terminate();
+        } catch (err) {
+            console.log(err);
+        }
+
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
@@ -481,6 +576,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.faces = [];
         this.isInitialized = false;
     }
+
     disableAllModels() {
         this.worker.postMessage({
             type: 'handleOff',
@@ -488,7 +584,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async compatabilityChecker() {
-        if (!navigator.getUserMedia) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Entry.Utils.IncompatibleError();
         }
         if (!this.stream) {

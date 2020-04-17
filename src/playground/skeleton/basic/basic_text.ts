@@ -1,4 +1,4 @@
-import { get as _get } from 'lodash';
+import _get from 'lodash/get';
 
 Entry.skeleton.basic_text = {
     path(blockView) {

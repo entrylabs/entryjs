@@ -3,6 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
+import _clamp from 'lodash/clamp'
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 
@@ -2444,7 +2445,7 @@ Entry.Utils.toFixed = function(value, len) {
 };
 
 Entry.Utils.setVolume = function(volume) {
-    this._volume = _.clamp(volume, 0, 1);
+    this._volume = _clamp(volume, 0, 1);
 
     Entry.soundInstances
         .filter(({ soundType }) => !soundType)
@@ -2747,14 +2748,20 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 };
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
-    if (!Array.isArray(cloudVariable)) {
+    let items;
+    if(typeof cloudVariable === 'string') {
+        try {
+            items = JSON.parse(cloudVariable);
+        } catch(e) {}
+    }
+    if (!Array.isArray(items)) {
         return variables;
     }
-    return variables.map((item) => {
-        const cloud = cloudVariable.find(({ id }) => id === item.id);
+    return variables.map((variable) => {
+        const cloud = items.find(({ id }) => id === variable.id);
         if (cloud) {
-            return { ...item, ...cloud };
+            return { ...variable, ...cloud };
         }
-        return item;
+        return variable;
     });
 };

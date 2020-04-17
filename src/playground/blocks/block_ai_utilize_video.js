@@ -5,7 +5,6 @@ Entry.VideoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
-    sponserText: 'Powered by Naver',
     title: {
         ko: '비디오 감지',
         en: 'Video Detection',
@@ -153,7 +152,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     [Lang.video_body_coord_params.left_ankle, 15],
                     [Lang.video_body_coord_params.right_ankle, 16],
                 ],
-                value: 1,
+                value: 0,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -272,7 +271,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     if (!VideoUtils.isInitialized) {
                         await VideoUtils.initialize();
                     }
-                    console.log(value);
                     VideoUtils.setOptions('transparency', value);
 
                     return script.callReturn();
@@ -418,7 +416,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
-            template: '%1 인식이 되었는가?',
             statements: [],
             params: [params.getAiModelOptions()],
             events: {},
@@ -479,7 +476,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 }
                 switch (info) {
                     case 'gender':
-                        return target.gender;
+                        return Lang.video_gender[target.gender];
                     case 'age':
                         return target.age.toFixed(0).toString();
                     case 'emotion':
@@ -553,26 +550,31 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 if (type === 'total') {
                     return clamp(detected.total / 10, 0, 100000).toString();
                 }
-                let rawX = detected.direction.x;
-                if (!VideoUtils.flipStatus.horizontal) {
-                    rawX *= -1;
-                }
+                try {
+                    let rawX = detected.direction.x;
+                    if (!VideoUtils.flipStatus.horizontal) {
+                        rawX *= -1;
+                    }
 
-                let rawY = detected.direction.y;
-                if (VideoUtils.flipStatus.vertical) {
-                    rawY *= -1;
-                }
-                const absX = Math.abs(rawX);
-                const absY = Math.abs(rawY);
-                if (absX < 20 && absY < 20) {
+                    let rawY = detected.direction.y;
+                    if (VideoUtils.flipStatus.vertical) {
+                        rawY *= -1;
+                    }
+                    const absX = Math.abs(rawX);
+                    const absY = Math.abs(rawY);
+                    if (absX < 20 && absY < 20) {
+                        return 0;
+                    }
+                    if (type === 'x') {
+                        return rawX.toFixed(1).toString();
+                    } else if (type === 'y') {
+                        return rawY.toFixed(1).toString();
+                    }
                     return 0;
+                } catch (err) {
+                    console.log(detected);
+                    debugger;
                 }
-                if (type === 'x') {
-                    return rawX.toFixed(1).toString();
-                } else if (type === 'y') {
-                    return rawY.toFixed(1).toString();
-                }
-                return 0;
             },
             paramsKeyMap: {
                 TARGET: 0,
