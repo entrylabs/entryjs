@@ -16,6 +16,8 @@ const INITIAL_VIDEO_PARAMS = {
     ALPHA: 0.5,
 };
 
+const isFirefox = typeof InstallTrigger !== 'undefined';
+
 interface IGraphicsEngineApplication {
     render(): void;
     stage: PIXI.Container | any;
@@ -192,7 +194,8 @@ class _GEHelper extends GEHelperBase {
     getVideoElement(video: HTMLVideoElement): any {
         console.log('getVideoElement');
         let videoElement: any = null;
-        const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+        const { WIDTH, HEIGHT, X, Y, SCALE_X, ALPHA } = INITIAL_VIDEO_PARAMS;
+        let SCALE_Y = INITIAL_VIDEO_PARAMS.SCALE_Y;
 
         if (this._isWebGL) {
             const videoTexture = PIXI.Texture.fromVideo(video);
@@ -204,6 +207,10 @@ class _GEHelper extends GEHelperBase {
         videoElement.height = HEIGHT;
         videoElement.x = X;
         videoElement.y = Y;
+        if (isFirefox) {
+            SCALE_Y = 0.58;
+            INITIAL_VIDEO_PARAMS.SCALE_Y = SCALE_Y;
+        }
         videoElement.alpha = ALPHA;
 
         if (this._isWebGL) {
