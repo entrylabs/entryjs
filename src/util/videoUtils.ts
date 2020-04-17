@@ -287,6 +287,7 @@ class VideoUtils implements MediaUtilsInterface {
         }
     }
     videoOnLoadHandler() {
+        this.video.play();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -381,7 +382,7 @@ class VideoUtils implements MediaUtilsInterface {
         const context = this.inMemoryCanvas.getContext('2d');
         context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
         context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
-        
+
         this.cocoDetect();
         this.faceDetect();
         this.poseDetect();
