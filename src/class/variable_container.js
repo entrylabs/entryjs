@@ -196,15 +196,19 @@ Entry.VariableContainer = class VariableContainer {
 
     updateVariableAddView(type = 'variable') {
         const {
-            info: { isCloud, object },
+            info: { isCloud, object, isRealTime },
             view,
         } = this._getAddPanel(type);
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
+        this.#removeChildrenClass(cloudCheck, 'on');
+        const [normal, cloud, realtime] = cloudCheck.children;
         if (isCloud) {
-            cloudCheck.addClass('on');
+            cloud.removeClass('on');
+        } else if (isRealTime) {
+            realtime.removeClass('on');
         } else {
-            cloudCheck.removeClass('on');
+            normal.addClass('on');
         }
 
         if (object) {
@@ -1804,6 +1808,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         const info = panel.info;
         info.isCloud = false;
+        info.isRealTime = false;
         info.object = null;
         panel.view.name.value = '';
         panel.isOpen = false;
