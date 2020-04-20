@@ -226,6 +226,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     [Lang.video_object_params.sandwich, 'sandwich'],
                     [Lang.video_object_params.orange, 'orange'],
                     [Lang.video_object_params.broccoli, 'broccoli'],
+                    [Lang.video_object_params.carrot, 'carrot'],
                     [Lang.video_object_params['hot dog'], 'hot dog'],
                     [Lang.video_object_params.pizza, 'pizza'],
                     [Lang.video_object_params.donut, 'donut'],
