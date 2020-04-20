@@ -705,7 +705,7 @@ export default class Hardware implements IEntry.Hardware {
             ''
         );
 
-        const entryHardwareUrl = `entryhw://${customSchemaArgsString}`;
+        const entryHardwareUrl = `entryhw://?${customSchemaArgsString}`;
         console.log('request Hardware using url custom schema.. : ', entryHardwareUrl);
         if (navigator.userAgent.indexOf('MSIE') > 0 || navigator.userAgent.indexOf('Trident') > 0) {
             if (navigator.msLaunchUri !== undefined) {
