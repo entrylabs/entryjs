@@ -132,10 +132,11 @@ class VideoUtils implements MediaUtilsInterface {
 
     // 로컬 스코프
     public isInitialized: boolean = false;
-    // public worker: Worker = new VideoWorker();
+    public worker: Worker;
+    public isChrome = window.OffscreenCanvas || false;
     public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
-    // private imageCapture: typeof ImageCapture;
+    private imageCapture: typeof ImageCapture;
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
@@ -190,84 +191,86 @@ class VideoUtils implements MediaUtilsInterface {
 
             Entry.addEventListener('beforeStop', this.reset.bind(this));
             Entry.addEventListener('run', this.initialSetup.bind(this));
-
-            // this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
-            //     const { type, message } = e.data;
-            //     if (Entry.engine.state !== 'run' && type !== 'init') {
-            //         return;
-            //     }
-            //     switch (type) {
-            //         case 'init':
-            //             const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-            //             if (message === 'warmup') {
-            //                 Entry.toast.success(
-            //                     '모델 로드 완료',
-            //                     `이제 모델 인식을 사용할 수 있습니다`,
-            //                     true
-            //                 );
-            //             } else {
-            //                 Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
-            //             }
-            //             this.modelMountStatus[name] = true;
-            //             break;
-            //         case 'face':
-            //             this.faces = message;
-            //             break;
-            //         case 'coco':
-            //             this.objects = message;
-            //             break;
-            //         case 'pose':
-            //             this.poses = message;
-            //             break;
-            //     }
-            // };
             this.motionWorker.postMessage({
                 type: 'init',
                 width: this.CANVAS_WIDTH,
                 height: this.CANVAS_HEIGHT,
             });
-
             console.time('test');
-
-            const weightsUrl = `${window.location.origin}/lib/entry-js/weights`;
-            Promise.all([
-                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-            ]).then(() => {
-                Entry.toast.success('모델 로드', `face 로드 완료`, false);
-            });
-
-            cocoSsd
-                .load({
-                    base: 'lite_mobilenet_v2',
-                })
-                .then((cocoLoaded: any) => {
-                    this.coco = cocoLoaded;
-                    // console.log('coco model loaded');
-                    Entry.toast.success('모델 로드', `coco 로드 완료`, false);
-                    // this.postMessage({ type: 'init', message: 'object' });
-                    console.timeEnd('test');
+            if (this.isChrome) {
+                this.worker = new VideoWorker();
+                this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
+                    const { type, message } = e.data;
+                    if (Entry.engine.state !== 'run' && type !== 'init') {
+                        return;
+                    }
+                    switch (type) {
+                        case 'init':
+                            const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                            if (message === 'warmup') {
+                                Entry.toast.success(
+                                    '모델 로드 완료',
+                                    `이제 모델 인식을 사용할 수 있습니다`,
+                                    true
+                                );
+                                Entry.dispatchEvent('hideLoadingScreen');
+                                console.timeEnd('test');
+                            } else {
+                                Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
+                            }
+                            this.modelMountStatus[name] = true;
+                            break;
+                        case 'face':
+                            this.faces = message;
+                            break;
+                        case 'coco':
+                            this.objects = message;
+                            break;
+                        case 'pose':
+                            this.poses = message;
+                            break;
+                    }
+                };
+                this.worker.postMessage({
+                    type: 'init',
+                    width: this.CANVAS_WIDTH,
+                    height: this.CANVAS_HEIGHT,
                 });
-            posenet
-                .load({
-                    architecture: 'MobileNetV1',
-                    outputStride: 16,
-                    inputResolution: { width: this.CANVAS_WIDTH, height: this.CANVAS_HEIGHT },
-                    multiplier: 0.5,
-                })
-                .then((mobileNetLoaded: any) => {
-                    this.mobileNet = mobileNetLoaded;
-                    // console.log('posenet model loaded');
-                    Entry.toast.success('모델 로드', `pose 로드 완료`, false);
+                Entry.dispatchEvent('showVideoLoadingScreen');
+            } else {
+                const weightsUrl = `${window.location.origin}/lib/entry-js/weights`;
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                ]).then(() => {
+                    Entry.toast.success('모델 로드', `face 로드 완료`, false);
                 });
-            // this.worker.postMessage({
-            //     type: 'init',
-            //     width: this.CANVAS_WIDTH,
-            //     height: this.CANVAS_HEIGHT,
-            // });
-            // Entry.dispatchEvent('showVideoLoadingScreen');
+                cocoSsd
+                    .load({
+                        base: 'lite_mobilenet_v2',
+                    })
+                    .then((cocoLoaded: any) => {
+                        this.coco = cocoLoaded;
+                        // console.log('coco model loaded');
+                        Entry.toast.success('모델 로드', `coco 로드 완료`, false);
+                        // this.postMessage({ type: 'init', message: 'object' });
+                        console.timeEnd('test');
+                    });
+                posenet
+                    .load({
+                        architecture: 'MobileNetV1',
+                        outputStride: 16,
+                        inputResolution: { width: this.CANVAS_WIDTH, height: this.CANVAS_HEIGHT },
+                        multiplier: 0.5,
+                    })
+                    .then((mobileNetLoaded: any) => {
+                        this.mobileNet = mobileNetLoaded;
+                        // console.log('posenet model loaded');
+                        Entry.toast.success('모델 로드', `pose 로드 완료`, false);
+                    });
+            }
 
             const video = document.createElement('video');
             video.id = 'webCamElement';
@@ -379,13 +382,19 @@ class VideoUtils implements MediaUtilsInterface {
         if (!this.isModelInitiated) {
             return;
         }
-        const context = this.inMemoryCanvas.getContext('2d');
-        context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
-        context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+        if (this.isChrome) {
+            const captured = await this.imageCapture.grabFrame();
+            this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+        } else {
+            const context = this.inMemoryCanvas.getContext('2d');
+            context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
+            context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
 
-        this.cocoDetect();
-        this.faceDetect();
-        this.poseDetect();
+            this.cocoDetect();
+            this.faceDetect();
+            this.poseDetect();
+        }
+
         // //motion test
         // const tempCtx = this.tempCanvas.getContext('2d');
         // tempCtx.clearRect(0, 0, this.tempCanvas.width, this.tempCanvas.height);
@@ -571,10 +580,12 @@ class VideoUtils implements MediaUtilsInterface {
                 break;
             case 'hflip':
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
-                // this.worker.postMessage({
-                //     type: 'option',
-                //     option: { flipStatus: this.flipStatus },
-                // });
+                if (this.isChrome) {
+                    this.worker.postMessage({
+                        type: 'option',
+                        option: { flipStatus: this.flipStatus },
+                    });
+                }
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':
@@ -584,35 +595,45 @@ class VideoUtils implements MediaUtilsInterface {
         }
     }
     manageModel(target: IndicatorType, mode: String) {
-        if (!this.isModelInitiated) {
-            this.isModelInitiated = true;
-            // const [track] = this.stream.getVideoTracks();
-            // this.imageCapture = new ImageCapture(track);
-            this.imageDetection();
-        }
-        // this.worker.postMessage({
-        //     type: 'handle',
-        //     target,
-        //     mode,
-        // });
         if (mode == 'off') {
             this.modelRunningStatus[target] = false;
-            // this.isModelInitiated =
-            //     this.modelRunningStatus.face ||
-            //     this.modelRunningStatus.object ||
-            //     this.modelRunningStatus.pose;
-            // if (!this.isModelInitiated) {
-            //     this.worker.postMessage({
-            //         type: 'pause',
-            //     });
-            // }
+            if (this.isChrome) {
+                this.isModelInitiated =
+                    this.modelRunningStatus.face ||
+                    this.modelRunningStatus.object ||
+                    this.modelRunningStatus.pose;
+                if (!this.isModelInitiated) {
+                    this.worker.postMessage({
+                        type: 'pause',
+                    });
+                }
+            }
             this.removeIndicator(target);
-        } else {
-            // this.worker.postMessage({
-            //     type: 'run',
-            // });
-            this.modelRunningStatus[target] = true;
+            return;
         }
+        // if turning on;
+        if (this.isChrome) {
+            if (!this.imageCapture) {
+                const [track] = this.stream.getVideoTracks();
+                this.imageCapture = new ImageCapture(track);
+            }
+            this.worker.postMessage({
+                type: 'handle',
+                target,
+                mode,
+            });
+        }
+        if (!this.isModelInitiated) {
+            if (this.isChrome) {
+                this.worker.postMessage({
+                    type: 'run',
+                });
+            }
+
+            this.isModelInitiated = true;
+            this.imageDetection();
+        }
+        this.modelRunningStatus[target] = true;
     }
     showIndicator(type: IndicatorType) {
         this.indicatorStatus[type] = true;
@@ -683,9 +704,11 @@ class VideoUtils implements MediaUtilsInterface {
             object: false,
             warmup: null,
         };
-        // this.worker.postMessage({
-        //     type: 'handleOff',
-        // });
+        if (this.isChrome) {
+            this.worker.postMessage({
+                type: 'handleOff',
+            });
+        }
     }
 
     async compatabilityChecker() {

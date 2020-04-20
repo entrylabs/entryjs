@@ -49,8 +49,6 @@ let isRunning = false;
 
 const dimension = { width: 0, height: 0 };
 
-let myImage: ImageBitmap;
-
 async function processImage(repeat: boolean) {
     try {
         if (!repeat) {
@@ -74,7 +72,7 @@ async function processImage(repeat: boolean) {
     }
     setTimeout(() => {
         processImage(true);
-    }, 10);
+    }, 50);
 }
 
 //pre run for better performance on loading
@@ -166,7 +164,6 @@ ctx.onmessage = async function(e: {
             dimension.width = e.data.width;
             dimension.height = e.data.height;
 
-            console.log();
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({
@@ -218,7 +215,6 @@ ctx.onmessage = async function(e: {
             const image = e.data.image;
             const ctx = offCanvas.getContext('2d');
             ctx.drawImage(image, 0, 0, dimension.width, dimension.height);
-            myImage = image;
             break;
 
         case 'option':
@@ -235,6 +231,7 @@ ctx.onmessage = async function(e: {
         case 'pause':
             isRunning = false;
             break;
+
         case 'run':
             isRunning = true;
             processImage(true);
