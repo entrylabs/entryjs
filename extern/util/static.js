@@ -411,6 +411,7 @@ EntryStatic.getAllBlocks = function() {
                 'video_motion_value',
                 'video_toggle_model',
                 'video_is_model_loaded',
+                'video_object_detected',
                 'video_number_detect',
                 'video_toggle_ind',
                 'video_body_part_coord',
