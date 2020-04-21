@@ -506,7 +506,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
         video_object_detected: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            template: '사물 %1 이 감지되었는가?',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getObjectList()],
