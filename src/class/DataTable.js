@@ -219,6 +219,8 @@ class DataTable {
         return new ModalChart({
             data: {
                 source: { fields, origin: rows, chart },
+                togglePause: () => Entry.engine.togglePause(),
+                stop: () => Entry.engine.toggleStop()
             },
             container,
         });
