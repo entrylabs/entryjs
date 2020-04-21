@@ -1772,6 +1772,7 @@ Entry.Utils.addNewBlock = function(item) {
         functions,
         messages,
         variables,
+        learning = {},
         tables = [],
         expansionBlocks = [],
         aiUtilizeBlocks = [],
@@ -1797,6 +1798,7 @@ Entry.Utils.addNewBlock = function(item) {
         }
     });
     DataTable.setTables(tables);
+    Entry.aiLearning.load(learning);
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);
