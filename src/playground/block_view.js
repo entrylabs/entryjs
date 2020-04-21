@@ -1,5 +1,4 @@
-'use strict';
-
+import debounce from 'lodash/debounce';
 import _get from 'lodash/get';
 import Hammer from 'hammerjs';
 
@@ -28,7 +27,7 @@ Entry.BlockView = class BlockView {
         const that = this;
         Entry.Model(this, false);
         this.block = block;
-        this._lazyUpdatePos = Entry.Utils.debounce(block._updatePos.bind(block), 200);
+        this._lazyUpdatePos = debounce(block._updatePos.bind(block), 200);
         this.mouseUpEvent = new Entry.Event(this);
         this.disableMouseEvent = false;
 
@@ -493,6 +492,9 @@ Entry.BlockView = class BlockView {
             e.preventDefault();
         }
 
+        if (e.button == 1) {
+            return;
+        }
         if (Entry.disposeEvent) {
             Entry.disposeEvent.notify();
         }
@@ -554,7 +556,7 @@ Entry.BlockView = class BlockView {
                 this.longPressTimer = setTimeout(() => {
                     if (this.longPressTimer) {
                         this.longPressTimer = null;
-                        this.onMouseUp();
+                        this.onMouseUp(e);
                         this._rightClick(e, 'longPress');
                     }
                 }, 700);
@@ -682,6 +684,9 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
+        if (e.button == 1) {
+            return;
+        }
         if (this.longPressTimer) {
             clearTimeout(this.longPressTimer);
             this.longPressTimer = null;
@@ -1324,13 +1329,13 @@ Entry.BlockView = class BlockView {
             style.textContent = `
                 @font-face {
                     font-family: EntryNG;
-                    src: local(NanumGothic), 
-                        local(나눔고딕), 
-                        local(나눔고딕 Regular), 
-                        local(Noto Sans JP Regular), 
-                        local(Noto Sans JP); 
-                    font-weight: normal; 
-                    font-style: normal; 
+                    src: local(NanumGothic),
+                        local(나눔고딕),
+                        local(나눔고딕 Regular),
+                        local(Noto Sans JP Regular),
+                        local(Noto Sans JP);
+                    font-weight: normal;
+                    font-style: normal;
                 }`;
 
             defs.append(style);

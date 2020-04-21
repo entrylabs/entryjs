@@ -69,6 +69,15 @@ class SlideVariable extends Variable {
             .s('#d8d8d8')
             .ss(1)
             .rr(10, 10, this.maxWidth, 15, 4);
+        this.slideBar_.mouseEnabled = true;
+        GEDragHelper.handleDrag(this.slideBar_);
+        this.slideBar_.on(GEDragHelper.types.DOWN, (evt) => {
+            if (!Entry.engine.isState('run')) {
+                return;
+            }
+            const value = evt.stageX * 0.75 - (this.getX() + 240 + 5) + 5;
+            slide.setSlideCommandX(value);
+        });
         this.view_.addChild(this.slideBar_);
 
         const position = this.getSlidePosition(this.maxWidth);
@@ -210,10 +219,11 @@ class SlideVariable extends Variable {
     }
 
     getValue() {
+        const value = super.getValue();
         if (this.isNumber()) {
-            return Number(this.value_);
+            return Number(value);
         } else {
-            return this.value_;
+            return value;
         }
     }
 
@@ -226,10 +236,7 @@ class SlideVariable extends Variable {
         } else {
             this.value_ = numValue;
         }
-
-        this._valueWidth = null;
-        this.updateView();
-        Entry.requestUpdateTwice = true;
+        super.setValue(this.value_);
     }
 
     setSlideCommandX(value) {

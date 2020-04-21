@@ -59,14 +59,19 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
                 this._updateValue(true);
             });
         }
-        this.optionChangeTriggeredEvent();
     }
 
-    getIndexValue() {
-        if (this._contents.targetIndex >= 0) {
-            return this._block.data.params[this._contents.targetIndex];
+    _isBlockInBoardWhenFunctionEdit() {
+        const view = this._block.getView() || { _board: {} };
+        return view._board.suffix === 'board' && Entry.Func.isEdit;
+    }
+
+    getTextByValue(value) {
+        if (this._isBlockInBoardWhenFunctionEdit()) {
+            return this.textElement.textContent;
         }
-        return null;
+
+        return super.getTextByValue(value);
     }
 
     _updateValue(reDraw) {
@@ -76,16 +81,28 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
             if (this._menuName) {
                 options = Entry.container.getDropdownList(this._menuName, object);
             } else {
-                options = this._menuGenerator(this.getIndexValue());
+                options = this._menuGenerator();
             }
         }
 
         this._contents.options = options;
         this._updateOptions();
-        if (reDraw && this._menuName === 'variables') {
+
+        if (reDraw && this._menuName === 'variables' && !this._isBlockInBoardWhenFunctionEdit()) {
             this.value = undefined;
         }
         this.setValue(this.getOptionCheckedValue(), reDraw);
+    }
+
+    getTargetValue(key, useParent = false) {
+        if (!key) {
+            return;
+        }
+        const block = useParent ? this._block.thread._block : this._block;
+        const { _schema, params: values = [] } = block || {};
+        const { params = [] } = _schema || {};
+        const idx = params.findIndex(({ dropdownSync }) => dropdownSync === key);
+        return values[idx || 0];
     }
 
     getOptionCheckedValue() {
@@ -125,31 +142,13 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         }).on('select', (item) => {
             this.applyValue(item[1]);
             this.destroyOption();
-            $(this._blockView.contentSvgGroup).trigger('optionChanged', {
-                block: this._block,
-                value: this.getValue(),
-                index: this._index,
-            });
-        });
-        this.optionDomCreated();
-    }
-
-    optionChangeTriggeredEvent() {
-        const targetIndex = this._contents.targetIndex;
-
-        if (typeof targetIndex === 'undefined') {
-            return;
-        }
-
-        $(this._blockView.contentSvgGroup).on('optionChanged', (e, data) => {
-            if (this._block == data.block && targetIndex == data.index) {
-                const options = this._menuGenerator(data.value);
-                this._contents.options = options;
-                const value = this.getValue();
-                this.applyValue(
-                    !options.find((x) => x[1] && x[1] === value) ? options[0][1] : value
-                );
+            const { view = {} } = this._block.getThread();
+            if (view.reDraw) {
+                view.reDraw();
+            } else {
+                this._block.view.reDraw();
             }
         });
+        this.optionDomCreated();
     }
 };

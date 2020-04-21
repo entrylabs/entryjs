@@ -1,8 +1,3 @@
-'use strict';
-/*
- *
- * @param {object} dom which to inject playground
- */
 import Visible from '@egjs/visible';
 import debounce from 'lodash/debounce';
 
@@ -10,17 +5,17 @@ const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = EntryStatic.splitterHPadding || 20;
+const BETA_LIST = ['ai_utilize', 'analysis'];
 
 class BlockMenu {
     constructor(dom, align, categoryData, scroll, readOnly) {
         Entry.Model(this, false);
-        const { options = {} } = Entry;
-        const { disableHardware = false } = options;
+        const { hardwareEnable, dataTableEnable } = Entry;
 
-        this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+        this.reDraw = debounce(this.reDraw, 100);
         this._dAlign = this.align;
-        this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
-        this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+        this._setDynamic = debounce(this._setDynamic, 150);
+        this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
         this.setAlign(this._align);
@@ -54,15 +49,19 @@ class BlockMenu {
         this._svgId = `blockMenu${_.now()}`;
         this._clearCategory();
 
-        // disableHardware 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
-        this._categoryData = _.remove(
-            categoryData,
-            ({ category }) =>
-                !(
-                    disableHardware &&
-                    (category === HW || practicalCourseCategoryList.indexOf(category) > -1)
-                )
-        );
+        // hardwareEnable 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
+        // dataTableEnable 이 false 인 경우, anlaysis 카테고리를 제외한다.
+        this._categoryData = _.remove(categoryData, ({ category }) => {
+            if (!dataTableEnable && category === 'analysis') {
+                return false;
+            }
+
+            if (!hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1) {
+                return false;
+            }
+
+            return true;
+        });
 
         this._generateView(this._categoryData);
 
@@ -102,7 +101,7 @@ class BlockMenu {
             Entry.keyPressed.attach(this, this._captureKeyEvent);
         }
         if (Entry.windowResized) {
-            Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+            Entry.windowResized.attach(this, debounce(this.updateOffset, 200));
         }
 
         Entry.addEventListener(
@@ -155,13 +154,10 @@ class BlockMenu {
 
         this.svgDom = Entry.Dom(
             $(
-                `<svg id="${
-                    this._svgId
-                }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuWrapper }
         );
-
         this.svgDom.mouseenter(function() {
             that._scroller && that._scroller.setOpacity(0.8);
 
@@ -346,8 +342,8 @@ class BlockMenu {
         const dy = e.pageY - y;
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
             if (!board.code) {
-                if (Entry.toast) {
-                    Entry.toast.alert(
+                if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
+                    this.objectAlert = Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
                         Lang.Workspace.add_object_alert_msg
                     );
@@ -530,7 +526,6 @@ class BlockMenu {
         }
 
         const sorted = [[], []];
-
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
                 const funcThreads = this.code
@@ -538,7 +533,6 @@ class BlockMenu {
                     .map((t) => t.getFirstBlock().type);
                 threads = funcThreads.length ? funcThreads : threads;
             }
-
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
@@ -811,7 +805,9 @@ class BlockMenu {
      * @param blockName {string}
      */
     addCategoryData(categoryName, blockName) {
-        const selectedCategory = this._categoryData.find((element) => element.category === categoryName);
+        const selectedCategory = this._categoryData.find(
+            (element) => element.category === categoryName
+        );
         if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
         }
@@ -853,12 +849,14 @@ class BlockMenu {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp = () => {
+    onMouseUp = (e) => {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
-        $(document).unbind('.blockMenu');
-        delete this.dragInstance;
+        if (e.button != 1) {
+            $(document).unbind('.blockMenu');
+            delete this.dragInstance;
+        }
     };
 
     onMouseDown(e) {
@@ -995,9 +993,16 @@ class BlockMenu {
 
         _.result(this._categoryCol, 'remove');
 
-        this.categoryWrapper = Entry.Dom('div', {
-            class: 'entryCategoryListWorkspace',
-        });
+        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
+        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
+        if (!this.categoryWrapper) {
+            this.categoryWrapper = Entry.Dom('div', {
+                class: 'entryCategoryListWorkspace',
+            });
+        } else {
+            this.categoryWrapper.innerHTML = '';
+        }
+
         this._categoryCol = Entry.Dom('ul', {
             class: 'entryCategoryList',
             parent: this.categoryWrapper,
@@ -1076,7 +1081,7 @@ class BlockMenu {
     }
 
     _generateCategoryElement(name, visible) {
-        return (this._categoryElems[name] = Entry.Dom('li', {
+        this._categoryElems[name] = Entry.Dom('li', {
             id: `entryCategory${name}`,
             classes: [
                 'entryCategoryElementWorkspace',
@@ -1090,7 +1095,17 @@ class BlockMenu {
                     this.align();
                 });
             })
-            .text(Lang.Blocks[name.toUpperCase()]));
+            .text(Lang.Blocks[name.toUpperCase()]);
+        if (BETA_LIST.includes(name)) {
+            this._categoryElems[name][0].appendChild(
+                Entry.Dom('div', {
+                    id: `entryCategory${name}BetaTag`,
+                    classes: ['entryCategoryBetaTag'],
+                })[0]
+            );
+        }
+
+        return this._categoryElems[name];
     }
 
     updateOffset() {
@@ -1123,15 +1138,16 @@ class BlockMenu {
             return;
         }
 
-        this._buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
-            (t) => {
-                if (shouldHide) {
-                    t[0].x = -99999;
-                }
-                this._createThread(t);
-                delete t[0].x;
+        this._buildCategoryCodes(
+            blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
+            HW
+        ).forEach((t) => {
+            if (shouldHide) {
+                t[0].x = -99999;
             }
-        );
+            this._createThread(t);
+            delete t[0].x;
+        });
 
         this.hwCodeOutdated = false;
         Entry.dispatchEvent('hwCodeGenerated');

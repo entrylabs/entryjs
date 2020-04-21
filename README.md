@@ -1,6 +1,6 @@
 # entryjs
 entryjs는 엔트리에서 개발한 HTML5 기반의 블록코딩 라이브러리 입니다.
-[엔트리](http://play-entry.org) 사이트에 접속하시면 entryjs를 사용한 블록코딩 환경을 확인해 볼 수 있습니다.
+[엔트리](https://playentry.org) 사이트에 접속하시면 entryjs를 사용한 블록코딩 환경을 확인해 볼 수 있습니다.
 
 ## 시작하기
 entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇가지 오픈소스 라이브러리들을 사용합니다.
@@ -14,33 +14,55 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
    * EaselJS - 0.8.0
    * PreloadJS - 0.6.0
    * SoundJS - 0.6.0
- * [Web Font Loader](https://github.com/typekit/webfontloader) - [1.5.2](https://github.com/components/webfontloader/releases)
-
+ * [Lodash](https://lodash.com/docs/4.17.15) - 4.17.10
+ * [Velocity](https://github.com/julianshapiro/velocity) - ~1.2.3
+ * [CodeMirror](https://codemirror.net) - 5.12.0
+ * [Fuzzy](https://github.com/mattyork/fuzzy) - ~0.1.1
+ * [Literallycanvas](https://github.com/entrylabs/literallycanvas) - entry version
+ * [EntryTool](https://github.com/entrylabs/entry-tool) - entry version
  위 라이브러리들은 모두 오픈소스로 배포되며, 직접 다운로드 받거나 [npm](http://npmjs.org), [bower](http://bower.io)등을 이용해 설치할 수 있습니다.
 
 ### 자바스크립트 라이브러리
  
 ```html
 <!-- 써드파티 라이브러리들 -->
-<script type='text/javascript' src='${LIBDIR}/jquery.js'>
-<script type='text/javascript' src='${LIBDIR}/underscore.js'>
-<script type='text/javascript' src='${LIBDIR}/PreloadJS/lib/preloadjs-0.6.0.min.js'>
-<script type='text/javascript' src='${LIBDIR}/EaselJS/lib/easeljs-0.8.0.min.js'>
-<script type='text/javascript' src='${LIBDIR}/SoundJS/lib/soundjs-0.6.0.min.js'>
-<script type='text/javascript' src='${LIBDIR}/SoundJS/lib/flashaudioplugin-0.6.0.min.js'>
-<script type='text/javascript' src="${LIBDIR}/webfont/1.5.18/webfont.js"></script>
+<script type="text/javascript" src="${LIBDIR}/PreloadJS/lib/preloadjs-0.6.0.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/EaselJS/lib/easeljs-0.8.0.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/SoundJS/lib/soundjs-0.6.0.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/SoundJS/lib/flashaudioplugin-0.6.0.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/lodash/dist/lodash.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/velocity/velocity.min.js"></script>
+<script type="text/javascript" src="${LIBDIR}/codemirror/lib/codemirror.js"></script>
+<script type="text/javascript" src="${LIBDIR}/codemirror/addon/hint/show-hint.js"></script>
+<script type="text/javascript" src="${LIBDIR}/codemirror/addon/lint/lint.js"></script>
+<script type="text/javascript" src="${LIBDIR}/codemirror/addon/selection/active-line.js"></script>
+<script type="text/javascript" src="${LIBDIR}/codemirror/mode/javascript/javascript.js"></script>
+<script type="text/javascript" src="${LIBDIR}/codemirror/addon/hint/javascript-hint.js"></script>
+<script type="text/javascript" src="${LIBDIR}/fuzzy/lib/fuzzy.js"></script>
+<script type="text/javascript" src="${LIBDIR}/socket.io-client/socket.io.js"></script>
+<script type="text/javascript" src="${LIBDIR}/react/react.js"></script>
+<script type="text/javascript" src="${LIBDIR}/react/react-dom.js"></script>
+<script type="text/javascript" src="${LIBDIR}/entry-lms/dist/assets/app.js"></script>
+<script type="text/javascript" src="${LIBDIR}/literallycanvas-mobile/lib/js/literallycanvas.js"></script>
+<script type="text/javascript" src="${LIBDIR}/entry-tool/dist/entry-tool.js"></script>
+
+<!-- playentry 서버에 포함된 코드 -->
+<script type="text/javascript" src="https://playentry.org/js/jshint.js"></script>
+<script type="text/javascript" src="https://playentry.org/js/textmode/python/python.js"></script>
 
 <!-- entryjs 및 entryjs 에 포함된 라이브러리들 -->
-<script type='text/javascript' src='${LIBDIR}/entryjs/extern/blockly/blockly_compressed.js'>
-<script type='text/javascript' src='${LIBDIR}/entryjs/util/static.js'>
-<script type='text/javascript' src='${LIBDIR}/entryjs/util/context.js'>
-<script type='text/javascript' src='${LIBDIR}/entryjs/util/CanvasInput.js'>
-<script type='text/javascript' src='${LIBDIR}/entryjs/util/handle.js'>
-<script type='text/javascript' src='${LIBDIR}/entryjs/util/ndgmr.Collision.js'>
-<script type='text/javascript' src='${LIBDIR}/entryjs/util/ko.js'>
+<script type="text/javascript" src="${LIBDIR}/entryjs/extern/util/filbert.js"></script>
+<script type="text/javascript" src="${LIBDIR}/entryjs/extern/util/CanvasInput.js"></script>
+<script type="text/javascript" src="${LIBDIR}/entryjs/extern/util/ndgmr.Collision.js"></script>
+<script type="text/javascript" src="${LIBDIR}/entryjs/extern/util/handle.js"></script>
+<script type="text/javascript" src="${LIBDIR}/entryjs/extern/util/bignumber.min.js"></script>
 
-<!-- entryjs core -->
-<script type='text/javascript' src='${LIBDIR}/entryjs/dist/entry.min.js'>
+<!-- entryjs core / 언어 및 글로벌 설정이 포함되어있습니다. -->
+<script type='text/javascript' src='${LIBDIR}/entryjs/extern/lang/ko.js'></script>
+<script type='text/javascript' src='${LIBDIR}/entryjs/extern/util/static.js'></script>
+<script type='text/javascript' src='${LIBDIR}/entryjs/dist/entry.min.js'></script>
 ```
 
 ### entryjs 스타일시트
@@ -95,6 +117,8 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
    - variableEnable: 변수 사용가능 여부 (true)
    - listEnable: 리스트 사용가능 여부 (true)
    - isForLecture: 강의용 프로젝트 여부 (false)
+   - textCodingEnable: 엔트리 파이선 사용가능 여부 (true)
+   - hardwareEnable: 하드웨어 사용가능 여부 (true)
    
  * 웹폰트 정보
     엔트리 글상자와 그림판에서 사용할 폰트들을 하나 이상 배열로 추가할 수 있습니다.
@@ -123,10 +147,7 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 
 ### Entry.playground.setBlockMenu();
  블록메뉴 초기화
-  
-### Entry.enableArduino();
- 아두이노 초기화, Web socket connection 오픈
-  
+    
 ### Entry.loadProject(project);
  프로젝트 불러오기. project 인자를 생략할 경우 기본 프로젝트를 리턴합니다.
 
@@ -170,39 +191,12 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
 
 ### 블록 모양 정의와 실행 스크립트.
 ```
-${entryjs}/src/blocks.js
+${entryjs}/src/blocks/**/*
 ```
 
 ### 블록 모양 정의
-```javascript
-Blockly.Blocks.move_x = {
-  init: function() {
-    this.setColour("#A751E3");
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.MOVING_move_x_1);
-    this.appendValueInput("VALUE")
-        .setCheck(["Number", "String"]);
-    this.appendDummyInput()
-        .appendField(Lang.Blocks.MOVING_move_x_2)
-        .appendField(new Blockly.FieldIcon('/img/assets/block_icon/moving_03.png', '*'));
-    this.setInputsInline(true);
-    this.setPreviousStatement(true);
-    this.setNextStatement(true);
-  }
-};
-```
 
-### x좌표를 () 만큼 움직이기
-````javascript
-Entry.block.move_x = function (sprite, script) {
-    var value = script.getNumberValue("VALUE", script);
-    sprite.setX(sprite.getX() + value);
-    if (sprite.brush && !sprite.brush.stop) {
-        sprite.brush.lineTo(sprite.getX(), sprite.getY()*-1);
-    }
-    return script.callReturn();
-};
-```
+[EntryDocs - 블록 명세 작성](https://entrylabs.github.io/docs/guide/entryjs/2016-05-22-add_new_blocks.html) 을 참고해주세요.
 
 ### 프로젝트 (Project Schema)
 

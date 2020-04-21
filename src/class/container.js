@@ -6,6 +6,7 @@
 
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
+import DataTable from './DataTable';
 
 /**
  * Class for a container.
@@ -33,7 +34,7 @@ Entry.Container = class Container {
          * @type {String}
          */
         this.inputValue = {};
-
+        this.sttValue = {};
         /**
          * object model store copied object by context menu
          * @type {object model}
@@ -63,7 +64,6 @@ Entry.Container = class Container {
     /**
      * Control bar view generator.
      * @param {!Element} containerView containerView from Entry.
-     * @param {?string} option for choose type of view.
      */
     generateView(containerView) {
         this._view = containerView;
@@ -275,20 +275,18 @@ Entry.Container = class Container {
         return true;
     }
 
-    /**
-     * Set objects
-     * @param {!Array.<object model>} objectModels
-     */
     setObjects(objectModels) {
-        for (const i in objectModels) {
-            const object = new Entry.EntryObject(objectModels[i]);
-            this.objects_.push(object);
-        }
+        objectModels.forEach((model) => {
+            if (model) {
+                const object = new Entry.EntryObject(model);
+                this.objects_.push(object);
+            }
+        });
         this.updateObjectsOrder();
         this.updateListView();
         Entry.variableContainer.updateViews();
         const type = Entry.type;
-        if (type === 'workspace' || type === 'phone') {
+        if (type === 'workspace' || type === 'phone' || type === 'playground') {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }
@@ -334,6 +332,9 @@ Entry.Container = class Container {
             object.selectedPicture = picture_;
             object.entity.setImage(picture_);
             object.updateThumbnailView();
+            this.sortableListViewWidget.setData({
+                items: this._getSortableObjectList(),
+            });
             return object.id;
         }
         throw new Error('No picture found');
@@ -642,9 +643,11 @@ Entry.Container = class Container {
 
     /**
      * generate list for dropdown dynamic
+     * obj param for renderview.changeCode
      * @param {string} menuName
+     * @param {string} obj
      */
-    getDropdownList(menuName) {
+    getDropdownList(menuName, obj) {
         let result = [];
         switch (menuName) {
             case 'sprites':
@@ -688,7 +691,7 @@ Entry.Container = class Container {
                 ];
                 break;
             case 'pictures': {
-                const object = Entry.playground.object || object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
@@ -699,14 +702,14 @@ Entry.Container = class Container {
                 result = Entry.variableContainer.messages_.map(({ name, id }) => [name, id]);
                 break;
             case 'variables': {
-                const object = Entry.playground.object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
                 Entry.variableContainer.variables_.forEach((variable) => {
                     if (
                         variable.object_ &&
-                        Entry.playground.object &&
+                        object &&
                         (variable.object_ != Entry.playground.object.id || Entry.Func.isEdit)
                     ) {
                         return;
@@ -720,7 +723,7 @@ Entry.Container = class Container {
                 break;
             }
             case 'lists': {
-                const object = Entry.playground.object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
@@ -741,11 +744,18 @@ Entry.Container = class Container {
                 }
                 break;
             }
+            case 'tables': {
+                const { tables } = DataTable;
+                if (tables) {
+                    result = tables.map((table) => [table.name, table.id]);
+                }
+                break;
+            }
             case 'scenes':
                 result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
                 break;
             case 'sounds': {
-                const object = Entry.playground.object;
+                const object = Entry.playground.object || obj;
                 if (!object) {
                     break;
                 }
@@ -959,6 +969,10 @@ Entry.Container = class Container {
         return this.inputValue.getValue();
     }
 
+    getSttValue() {
+        return this.sttValue.getValue();
+    }
+
     /**
      * set canvas inputValue
      * @param {String} inputValue from canvas
@@ -978,6 +992,24 @@ Entry.Container = class Container {
             Entry.console.stopInput(inputValue);
         }
         this.inputValue.complete = true;
+    }
+
+    setSttValue(inputValue) {
+        if (this.sttValue.complete) {
+            return;
+        }
+        if (!inputValue) {
+            this.sttValue.setValue('');
+        } else {
+            this.sttValue.setValue(inputValue);
+        }
+        Entry.dispatchEvent('sttSubmitted');
+
+        this.sttValue.complete = true;
+    }
+
+    enableSttValue() {
+        this.sttValue.complete = false;
     }
 
     resetSceneDuringRun() {
@@ -1022,6 +1054,11 @@ Entry.Container = class Container {
      */
     setCurrentObjects() {
         this.currentObjects_ = this.getSceneObjects();
+        if (this.currentObjects_.length) {
+            Entry.playground.hidePictureCurtain();
+        } else {
+            Entry.playground.showPictureCurtain();
+        }
     }
 
     /**
@@ -1062,9 +1099,45 @@ Entry.Container = class Container {
         }
         answer.setVisible(true);
     }
+    showSttAnswer() {
+        const answer = this.sttValue;
+        if (!answer) {
+            return;
+        }
+        answer.setVisible(true);
+    }
 
     hideProjectAnswer(removeBlock, notIncludeSelf) {
         const answer = this.inputValue;
+        if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
+            return;
+        }
+
+        const objects = this.getAllObjects();
+        const answerTypes = ['ask_and_wait', 'get_canvas_input_value', 'set_visible_answer'];
+
+        for (let i = 0, len = objects.length; i < len; i++) {
+            const code = objects[i].script;
+            for (let j = 0; j < answerTypes.length; j++) {
+                const blocks = code.getBlockList(false, answerTypes[j]);
+                if (notIncludeSelf) {
+                    const index = blocks.indexOf(removeBlock);
+                    if (~index) {
+                        blocks.splice(index, 1);
+                    }
+                }
+                if (blocks.length) {
+                    return;
+                }
+            }
+        }
+
+        //answer related blocks not found
+        //hide canvas answer view
+        answer.setVisible(false);
+    }
+    hideSttAnswer(removeBlock, notIncludeSelf) {
+        const answer = this.sttValue;
         if (!answer || !answer.isVisible() || Entry.engine.isState('run')) {
             return;
         }

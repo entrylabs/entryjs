@@ -1,6 +1,5 @@
 {
     "plugins": ["prettier"],
-    "parser": "babel-eslint",
     "extends": ["plugin:prettier/recommended"],
     "overrides": [
         {
@@ -61,7 +60,6 @@
         "prefer-spread": "warn",
         "arrow-spacing": "warn",
         "arrow-body-style": ["warn", "as-needed"],
-        "no-confusing-arrow": ["warn", { "allowParens": true }],
         "no-useless-constructor": "warn",
         "no-dupe-class-members": "warn",
         "no-duplicate-imports": "warn",
@@ -86,7 +84,6 @@
         "object-curly-spacing": ["warn", "always"],
         "max-len": ["warn", { "code": 100 }],
         "comma-style": ["warn", "last"],
-        "comma-dangle": ["warn", "always-multiline"],
         "semi": ["warn"],
         "radix": "warn",
         "camelcase": ["warn", { "properties": "never" }],

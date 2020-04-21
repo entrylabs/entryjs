@@ -1,6 +1,6 @@
 'use strict';
 
-import { Number, Angle } from '@entrylabs/tool';
+import { Angle, Number } from '@entrylabs/tool';
 
 Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     constructor(content, blockView, index) {

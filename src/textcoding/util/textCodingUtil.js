@@ -176,6 +176,7 @@ class TextCodingUtil {
 
         return result;
     }
+
     isEventBlock(block) {
         const blockType = block.data.type;
         return (
@@ -520,14 +521,36 @@ class TextCodingUtil {
             return;
         }
         return (
-            this.validateNameList(vc.variables_ || [], 'v') ||
-            this.validateNameList(vc.lists_ || [], 'l')
+            this.validateVariable(vc.variables_ || [], 'v') ||
+            this.validateList(vc.lists_ || [], 'l')
         );
     }
 
-    validateNameList(targets, errorSuffix) {
+    validateVariable(variables, errorSuffix) {
+        for (let i = 0; i < variables.length; i++) {
+            const errorMessage = this.validateName(variables[i].name_, errorSuffix);
+            if (errorMessage) {
+                return errorMessage;
+            }
+        }
+    }
+
+    validateList(targets, errorSuffix) {
+        let errorMessage = undefined;
+
         for (let i = 0; i < targets.length; i++) {
-            const errorMessage = this.validateName(targets[i].name_, errorSuffix);
+            const list = targets[i];
+
+            errorMessage = this.validateName(list.name_, errorSuffix);
+            // 객체별 내부값 검사 후 문제가 없으면 리스트명에 대한 검사
+            for (let j = 0; j < list.getArray().length; j++) {
+                if (errorMessage) {
+                    break;
+                }
+                const elem = list.getArray()[j];
+                errorMessage = this.validateTargetNotExceedMaxNumber(elem.data);
+            }
+
             if (errorMessage) {
                 return errorMessage;
             }
@@ -685,6 +708,33 @@ class TextCodingUtil {
 
         if (errorObject) {
             return errorObject;
+        }
+    }
+
+    /**
+     * target 값의 길이가 15가 넘어갔는지 검사한다.
+     * target 이 문자인 경우는 true 를 반환한다. #10921
+     * @param target {string | number}
+     * @return {Object|undefined}
+     */
+    validateTargetNotExceedMaxNumber(target) {
+        const convertedNumber = Number(target);
+        let isValid;
+
+        if (typeof target === 'string') {
+            // 검사를 넘어가는 경우는,
+            // 숫자 변환 불가능한 문자거나, 앞이 0으로 시작되는 문자거나, 숫자변환 가능하고 0으로 시작되지 않고 길이 15 이하
+            isValid = isNaN(convertedNumber) || target[0] === '0' || target.length <= 15;
+        } else {
+            // number 라고 가정한 경우 15자리 수 이하여야 한다.
+            isValid = Math.ceil(Math.log10(target + 1)) <= 15;
+        }
+
+        if (!isValid) {
+            return this._generateErrorObject(
+                Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_CONTAINS_EXCEED_LENGTH_VALUE],
+                'error'
+            );
         }
     }
 
@@ -880,6 +930,7 @@ class TextCodingUtil {
 
         return result;
     }
+
     generateForStmtIndex(index, str) {
         str = str || '';
         const ref = ['i', 'j', 'k'];

@@ -348,28 +348,41 @@
     .entryVariableAddSpaceCloudWrapperWorkspace
     .entryVariableAddSpaceCloudSpanWorkspace {
     display: inline-block;
-    margin-top: 2px;
+    line-height: 1.33;
+    letter-spacing: -0.48px;
     white-space: pre;
 }
 .entryVariableAddSpaceGlobalWrapperWorkspace
     .entryVariableAddSpaceCloudWrapperWorkspace
+    .entryCloudTypeWrapper
     .entryVariableAddSpaceCheckWorkspace {
     position: absolute;
-    left: 8px;
-    top: 11px;
-    width: 16px;
-    height: 16px;
-    background-size: 16px auto;
-    .backgroundImage('btn_checkbox.png');
+    left: -28px;
+    width: 20px;
+    height: 20px;
+    background-size: 20px auto;
+    .backgroundImage('btn_radio.png');
 }
 .entryVariableAddSpaceGlobalWrapperWorkspace
-    .entryVariableAddSpaceCloudWrapperWorkspace.on
+    .entryVariableAddSpaceCloudWrapperWorkspace
+    .entryCloudTypeWrapper.on
     .entryVariableAddSpaceCheckWorkspace {
-    .backgroundImage('btn_checkbox_on.png');
+    .backgroundImage('btn_radio_on.png');
 }
 .entryVariableAddSpaceGlobalWrapperWorkspace.on .entryVariableAddSpaceCloudWrapperWorkspace {
     display: block;
 }
+
+.entryVariableAddSpaceCloudWrapperWorkspace {
+    .entryCloudTypeWrapper {
+        position: relative;
+        margin-bottom: 12px;
+        &:last-child {
+            margin-bottom: 0px;
+        }
+    }
+}
+
 .entryVariableAddSpaceButtonWrapperWorkspace {
     overflow: hidden;
     margin-top: 16px;
@@ -1008,8 +1021,11 @@
 .entryVariableSplitterWorkspace .list.default_val .inpt_box:before {
     .backgroundImage('ic_attr_variable_on.png');
 }
-.entryVariableSplitterWorkspace .list.global_val .inpt_box:before {
-    .backgroundImage('ic_attr_variable_global_on.png');
+.entryVariableSplitterWorkspace .list.cloud_val .inpt_box:before {
+    .backgroundImage('ic_attr_variable_cloud_on.png');
+}
+.entryVariableSplitterWorkspace .list.cloud_val .inpt_box:before {
+    .backgroundImage('ic_attr_variable_real_time_on.png');
 }
 .entryVariableSplitterWorkspace .list.local_val .inpt_box:before {
     .backgroundImage('ic_attr_variable_local_on.png');
@@ -1017,8 +1033,11 @@
 .entryVariableSplitterWorkspace .list.default_list .inpt_box:before {
     .backgroundImage('ic_attr_list_on.png');
 }
-.entryVariableSplitterWorkspace .list.global_list .inpt_box:before {
-    .backgroundImage('ic_attr_list_global_on.png');
+.entryVariableSplitterWorkspace .list.cloud_list .inpt_box:before {
+    .backgroundImage('ic_attr_list_cloud_on.png');
+}
+.entryVariableSplitterWorkspace .list.real_time_list .inpt_box:before {
+    .backgroundImage('ic_attr_list_real_time_on.png');
 }
 .entryVariableSplitterWorkspace .list.local_list .inpt_box:before {
     .backgroundImage('ic_attr_list_local_on.png');

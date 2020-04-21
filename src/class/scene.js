@@ -14,7 +14,7 @@ Entry.Scene = class {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;
-        this.maxCount = 20;
+        this.maxCount = this.getMaxSceneCount() || 20;
         $(window).on('resize', this.resize.bind(this));
 
         this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
@@ -33,7 +33,7 @@ Entry.Scene = class {
     generateView(sceneView, option) {
         this.view_ = sceneView;
         this.view_.addClass('entryScene');
-        if (!option || option == 'workspace') {
+        if (!option || option === 'workspace' || option === 'playground') {
             this.view_.addClass('entrySceneWorkspace');
 
             $(this.view_).on('mousedown touchstart', (e) => {
@@ -170,6 +170,15 @@ Entry.Scene = class {
             .addClass('entrySceneRemoveButtonWorkspace')
             .bindOnClick((e) => {
                 if (Entry.engine.isState('run')) {
+                    return;
+                }
+                const isDeletable = Entry.scene.getScenes().length > 1;
+                if (!isDeletable) {
+                    Entry.toast.alert(
+                        Lang.Msgs.runtime_error,
+                        Lang.Workspace.Scene_delete_error,
+                        false
+                    );
                     return;
                 }
                 Entry.do('sceneRemove', scene.id);
@@ -331,7 +340,7 @@ Entry.Scene = class {
             Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
             return;
         }
-
+        Entry.Utils.forceStopSounds();
         scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
         this.getScenes().splice(this.getScenes().indexOf(scene), 1);
@@ -344,20 +353,20 @@ Entry.Scene = class {
         this.updateView();
     }
 
-    /**
-     * select scene
-     * @param {scene model} scene
-     */
     selectScene(scene) {
-        scene = scene || this.getScenes()[0];
+        const targetScene = scene || this.getScenes()[0];
         const container = Entry.container;
 
         container.resetSceneDuringRun();
 
-        if (this.selectedScene && this.selectedScene.id == scene.id) {
+        if (this.selectedScene && this.selectedScene.id === targetScene.id) {
             return;
         }
-        if (Entry.playground.nameViewFocus && Entry.playground.nameViewBlur()) {
+        if (
+            Entry.playground.getViewMode() === 'picture' &&
+            Entry.playground.nameViewFocus &&
+            Entry.playground.nameViewBlur()
+        ) {
             return;
         }
 
@@ -369,15 +378,15 @@ Entry.Scene = class {
             elem === prevSelectedView.nameField && elem.blur();
         }
 
-        this.selectedScene = scene;
-        scene.view.addClass('selectedScene');
+        this.selectedScene = targetScene;
+        targetScene.view.addClass('selectedScene');
 
         const stage = Entry.stage;
         const playground = Entry.playground;
 
         container.setCurrentObjects();
 
-        stage.selectObjectContainer(scene);
+        stage.selectObjectContainer(targetScene);
 
         const targetObject = container.getCurrentObjects()[0];
 
@@ -393,7 +402,7 @@ Entry.Scene = class {
                     const sScene = vimBoard._currentScene;
                     const parser = vimBoard._parser;
                     try {
-                        if (scene.id != sScene.id) {
+                        if (targetScene.id != sScene.id) {
                             workspace._syncTextCode();
                         }
                     } catch (e) {}
@@ -408,6 +417,7 @@ Entry.Scene = class {
 
             stage.selectObject(null);
             playground.flushPlayground();
+            Entry.variableContainer.selected = null;
             Entry.variableContainer.updateList();
         }
         !container.listView_ && stage.sortZorder();
@@ -610,8 +620,12 @@ Entry.Scene = class {
         return scenes[scenes.indexOf(this.selectedScene) + 1];
     }
 
+    getMaxSceneCount() {
+        return 20;
+    }
+
     isMax() {
-        return this.scenes_.length >= this.maxCount;
+        return this.scenes_.length >= this.getMaxSceneCount();
     }
 
     clear() {

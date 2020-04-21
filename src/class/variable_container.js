@@ -4,8 +4,9 @@
 'use strict';
 
 import SimpleBar from 'simplebar';
-import fetch from 'isomorphic-fetch';
 import xssFilters from 'xss-filters';
+import CloudVariable from '../extensions/CloudVariable';
+
 /**
  * Block variable constructor
  * @param {variable model} variable
@@ -13,6 +14,7 @@ import xssFilters from 'xss-filters';
  */
 Entry.VariableContainer = class VariableContainer {
     constructor() {
+        this.cloudVariable = CloudVariable.getInstance();
         this.variables_ = [];
         this.messages_ = [];
         this.lists_ = [];
@@ -24,6 +26,7 @@ Entry.VariableContainer = class VariableContainer {
             info: {
                 object: null,
                 isCloud: false,
+                isRealTime: false,
             },
         };
         this.listAddPanel = {
@@ -31,6 +34,7 @@ Entry.VariableContainer = class VariableContainer {
             info: {
                 object: null,
                 isCloud: false,
+                isRealTime: false,
             },
         };
         this.messageAddPanel = {
@@ -48,6 +52,15 @@ Entry.VariableContainer = class VariableContainer {
         this.listView_ = null;
 
         Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
+    }
+
+    #removeChildrenClass({ children }, className) {
+        for (const index in children) {
+            const dom = children[index];
+            if (dom.removeClass) {
+                dom.removeClass(className);
+            }
+        }
     }
 
     createDom(view) {
@@ -599,9 +612,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
+            object_ ? 'localV' : 'globalV'
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -681,9 +694,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
+            object_ ? 'localV' : 'globalV'
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -708,7 +721,7 @@ Entry.VariableContainer = class VariableContainer {
         } else {
             this.functionAddButton_
                 .unBindOnClick()
-                .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()))
+                .bindOnClick(() => Entry.do('funcEditStart', Entry.generateHash()))
                 .removeClass('disabled');
         }
         listView.appendChild(this.functionAddButton_);
@@ -783,6 +796,9 @@ Entry.VariableContainer = class VariableContainer {
                 case 'answer':
                     this.generateAnswer(variable);
                     break;
+                case 'stt':
+                    this.generateStt(variable);
+                    break;
             }
         });
 
@@ -791,6 +807,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (_.isEmpty(Entry.container.inputValue)) {
             this.generateAnswer();
+        }
+        if (_.isEmpty(Entry.container.sttValue)) {
+            this.generateStt();
         }
 
         Entry.playground.reloadPlayground();
@@ -833,6 +852,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (Entry.isEmpty(Entry.container.inputValue)) {
             Entry.variableContainer.generateAnswer();
+        }
+        if (Entry.isEmpty(Entry.container.sttValue)) {
+            Entry.variableContainer.generateStt();
         }
         Entry.playground.reloadPlayground();
     }
@@ -981,6 +1003,44 @@ Entry.VariableContainer = class VariableContainer {
         Entry.Func.edit(new Entry.Func(data));
     }
 
+    removeBlocksInFunctionByType(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            Entry.do('funcEditStart', func.id).isPass(true);
+            func.content.getBlockList(false, blockType).forEach((b, index) => {
+                Entry.do('destroyBlock', b).isPass(true);
+            });
+            Entry.do('funcEditEnd', 'save').isPass(true);
+        });
+    }
+
+    removeBlocksInFunctionByType2(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            func.content.getBlockList(false, blockType).forEach((block, index) => {
+                block.destroy();
+            });
+        });
+    }
+
+    async removeBlocksInFunctionByTypeAsync(blockType) {
+        await Promise.all(
+            Object.values(this.functions_).map(async (func) => {
+                await Promise.all(
+                    func.content.getBlockList(false, blockType).map(
+                        Entry.Utils.runAsyncCurry((block) => {
+                            block.destroy();
+                        })
+                    )
+                );
+            })
+        );
+    }
+
+    isUsedBlockTypeInFunction(blockType) {
+        return Object.values(this.functions_).some(
+            (func) => func.content.getBlockList(false, blockType).length
+        );
+    }
+
     /**
      * Remove variable
      * @param {Entry.Variable} variable
@@ -1107,7 +1167,7 @@ Entry.VariableContainer = class VariableContainer {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 if (!Entry.isTextMode) {
-                    Entry.Func.edit(func);
+                    Entry.do('funcEditStart', func.id);
                 }
                 return this.select(func);
             })
@@ -1126,7 +1186,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
                 entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
                     if (result === true) {
-                        this.removeFunction(func);
+                        this.destroyFunction(func);
                         this.selected = null;
                     }
                 });
@@ -1135,6 +1195,18 @@ Entry.VariableContainer = class VariableContainer {
         delButton.href = '#';
         view.nameField = editBoxInput;
         func.listElement = view;
+    }
+
+    async destroyFunction(func) {
+        if (Entry.Func.targetFunc) {
+            Entry.do('funcEditEnd', 'cancel');
+        }
+        const currentObjectId = Entry.playground.object.id;
+        Entry.do('selectObject', currentObjectId);
+        const functionType = `func_${func.id}`;
+        await Entry.Utils.removeBlockByTypeAsync(functionType);
+        Entry.do('funcRemove', func).isPass(true);
+        Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
     /**
@@ -1319,7 +1391,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!variable.object_) {
             if (variable.isCloud_) {
-                variableWrapper.addClass('global_val');
+                variableWrapper.addClass('cloud_list');
+            } else if (variable.isRealTime_) {
+                variableWrapper.addClass('real_time_list');
             } else {
                 variableWrapper.addClass('default_val');
             }
@@ -1581,7 +1655,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!list.object_) {
             if (list.isCloud_) {
-                listWrapper.addClass('global_list');
+                listWrapper.addClass('cloud_list');
+            } else if (list.isRealTime_) {
+                listWrapper.addClass('real_time_list');
             } else {
                 listWrapper.addClass('default_list');
             }
@@ -1808,27 +1884,31 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick((e) => {
-                e.stopImmediatePropagation();
-                const { object, isCloud } = this.variableAddPanel.info;
-                !object && Entry.do('variableAddSetCloud', !isCloud);
-                if (isCloud) {
-                    addSpaceCloudWrapper.removeClass('on');
-                } else {
-                    addSpaceCloudWrapper.addClass('on');
-                }
-            })
             .appendTo(addSpaceGlobalWrapper);
         variableAddSpace.cloudWrapper = addSpaceCloudWrapper;
         this.variableAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.Variable_create_cloud;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceCloudWrapper);
+        ['normal', 'cloud', 'real_time'].forEach((type) => {
+            const wrapper = createElement('div')
+                .addClass('entryCloudTypeWrapper')
+                .appendTo(addSpaceCloudWrapper)
+                .bindOnClick((e) => {
+                    e.stopImmediatePropagation();
+                    const { object, isCloud, isRealTime } = this.variableAddPanel.info;
+                    !object && Entry.do('variableAddSetCloud', type);
+                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    wrapper.addClass('on');
+                });
+            if (type === 'normal') {
+                wrapper.addClass('on');
+            }
+            createElement('span')
+                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`variable_create_${type}`];
+            createElement('span')
+                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper);
+        });
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -1992,27 +2072,31 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick((e) => {
-                e.stopImmediatePropagation();
-                const { object, isCloud } = this.listAddPanel.info;
-                !object && Entry.do('listAddSetCloud', !isCloud);
-                if (isCloud) {
-                    addSpaceCloudWrapper.removeClass('on');
-                } else {
-                    addSpaceCloudWrapper.addClass('on');
-                }
-            })
             .appendTo(addSpaceGlobalWrapper);
         listAddSpace.cloudWrapper = addSpaceCloudWrapper;
         this.listAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.List_create_cloud;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceCloudWrapper);
+        ['normal', 'cloud', 'real_time'].forEach((type) => {
+            const wrapper = createElement('div')
+                .addClass('entryCloudTypeWrapper')
+                .appendTo(addSpaceCloudWrapper)
+                .bindOnClick((e) => {
+                    e.stopImmediatePropagation();
+                    const { object } = this.listAddPanel.info;
+                    !object && Entry.do('listAddSetCloud', type);
+                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    wrapper.addClass('on');
+                });
+            if (type === 'normal') {
+                wrapper.addClass('on');
+            }
+            createElement('span')
+                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`list_create_${type}`];
+            createElement('span')
+                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper);
+        });
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -2246,6 +2330,23 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
 
+    generateStt(answer) {
+        answer =
+            answer ||
+            Entry.Variable.create({
+                id: Entry.generateHash(),
+                name: 'stt',
+                value: 0,
+                variableType: 'stt',
+                visible: false,
+                x: 150,
+                y: -100,
+            });
+        answer.generateView();
+        Entry.container.sttValue = answer;
+        Entry.container.sttValue.setName('STT');
+    }
+
     generateVariableSettingView(variable) {
         const that = this;
         const createElement = Entry.createElement;
@@ -2292,6 +2393,10 @@ Entry.VariableContainer = class VariableContainer {
         attrInput.onfocus = _setFocused;
         attrInput.onblur = _setBlurredTimer(function() {
             const v = that.selected;
+            if (!v) {
+                console.error('error: not selected');
+                return;
+            }
             Entry.do('variableSetDefaultValue', v.id_, this.value);
         });
         element.initValueInput = attrInput;
@@ -2449,8 +2554,8 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('btn_list')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                const { array_, name_ } = that.selected;
-
+                const { name_ } = that.selected;
+                const array_ = that.selected.getArray();
                 if (array_.length === 0) {
                     entrylms.alert(Lang.Menus.nothing_to_export);
                 } else {
@@ -2473,7 +2578,7 @@ Entry.VariableContainer = class VariableContainer {
     generateListCountView(element) {
         const that = this;
         const createElement = Entry.createElement;
-        
+
         const listCount = createElement('div')
             .addClass('list_cnt')
             .appendTo(element);
@@ -2503,12 +2608,13 @@ Entry.VariableContainer = class VariableContainer {
         //List limit setting. [default value:5000, length: 4]
         let limitValue = 5000;
         let maxlength = 4;
-        
-        if(that.selected.array_ && that.selected.array_.length > 0 ){
-            const currentLeng = that.selected.array_.length.toString().length;
+
+        const array_ = that.selected.getArray();
+        if (array_ && array_.length > 0) {
+            const currentLeng = array_.length.toString().length;
             // 리스트 카운트가 5000 일떄만 설정
             maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue = that.selected.array_.length > limitValue ? that.selected.array_.length : limitValue ;
+            limitValue = array_.length > limitValue ? array_.length : limitValue;
         }
 
         const buttonPlus = createElement('a')
@@ -2518,12 +2624,13 @@ Entry.VariableContainer = class VariableContainer {
                     selected: { id_ },
                 } = that;
 
-                const selectedLength = Entry.variableContainer.selected.array_.length;
-                
-                if( selectedLength >= limitValue ) {
-                    Entry.do('listChangeLength', id_, ''); 
-                }else{
-                    Entry.do('listChangeLength', id_, 'plus'); 
+                const array_ = Entry.variableContainer.selected.getArray();
+                const selectedLength = array_.length;
+
+                if (selectedLength >= limitValue) {
+                    Entry.do('listChangeLength', id_, '');
+                } else {
+                    Entry.do('listChangeLength', id_, 'plus');
                 }
             })
             .appendTo(countInputBox);
@@ -2534,14 +2641,15 @@ Entry.VariableContainer = class VariableContainer {
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
-        
+
         countInput.onblur = function() {
             const v = that.selected;
             let value = this.value;
-            value = Entry.Utils.isNumber(value) ? value : v.array_.length;
+            const array_ = v.getArray();
+            value = Entry.Utils.isNumber(value) ? value : array_.length;
 
-            if(value >= limitValue) { 
-               value = limitValue; 
+            if (value >= limitValue) {
+                value = limitValue;
             }
 
             Entry.do('listChangeLength', v.id_, Number(value));
@@ -2574,6 +2682,17 @@ Entry.VariableContainer = class VariableContainer {
         );
     }
 
+    createListValueElement(index, value, startIndex = 0) {
+        return `
+        <li>
+            <span class='cnt'>${+index + startIndex}</span>
+            <input value='${xssFilters.inSingleQuotedAttr(
+                value
+            )}' type='text' data-index='${index}'/>
+            <a class='del' data-index='${index}'></a>
+        </li>`.trim();
+    }
+
     updateListSettingView(list) {
         const view = this.listSettingView;
         const that = this;
@@ -2582,7 +2701,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         list = list || this.selected;
         const { infinityScroll, listValues, lengthInput, simpleBar, scrollBox } = view;
-        const arr = list.array_ || [];
+        const arr = list.getArray() || [];
         lengthInput.value = arr.length;
         if (arr.length > 4) {
             scrollBox.addClass('on');
@@ -2602,22 +2721,21 @@ Entry.VariableContainer = class VariableContainer {
                 .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
             listValues.appendChild(fragment);
         } else {
-            const data = arr.map(({ data: value }, i) =>
-                /* html */ `
-                    <li>
-                        <span class='cnt'>${i + startIndex}</span>
-                        <input value='${xssFilters.inSingleQuotedAttr(value)}' type='text' data-index='${i}'/>
-                        <a class='del' data-index='${i}'></a>
-                    </li>`.trim()
-            );
+            const data = arr.map((data, i) => {
+                const value = String(data.data).replace(/\$/g, '&#36;');
+                return this.createListValueElement(i, value, startIndex);
+            });
             infinityScroll.assignData(data);
             infinityScroll.show();
             $listValues.on(
-                'blur',
+                'keyup',
                 'input',
-                Entry.Utils.setBlurredTimer(function() {
-                    const index = this.getAttribute('data-index');
-                    Entry.do('listSetDefaultValue', list.id_, index, this.value);
+                _.debounce((e) => {
+                    const { target } = e;
+                    const index = target.getAttribute('data-index');
+                    data[index] = this.createListValueElement(index, target.value, startIndex);
+                    list.getArray()[index] = { data: target.value };
+                    list.updateView();
                 })
             );
             $listValues.on('focus', 'input', Entry.Utils.setFocused);
@@ -2634,11 +2752,11 @@ Entry.VariableContainer = class VariableContainer {
 
     setListLength(list, value) {
         value = Number(value);
-        const arr = this.selected.array_;
+        const arr = this.selected.getArray();
         const times = value - arr.length;
         if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
-                _.times(times, () => arr.push({ data: 0 }));
+                _.times(times, () => this.selected.appendValue(0));
             } else {
                 arr.length = value;
             }
@@ -2690,54 +2808,6 @@ Entry.VariableContainer = class VariableContainer {
             if (v.object_ == objectId) {
                 this.removeVariable(v);
             }
-        });
-    }
-
-    updateCloudVariables() {
-        const projectId = Entry.projectId;
-        if (!Entry.cloudSavable || !projectId) {
-            return;
-        }
-
-        const _filterFunc = _.partial(_.result, _, 'isCloud_');
-
-        const { variables_, lists_ } = Entry.variableContainer;
-
-        const variables = variables_.reduce((acc, v) => {
-            if (_filterFunc(v)) {
-                return [...acc, v.toJSON()];
-            }
-            return acc;
-        }, []);
-
-        const lists = lists_.reduce((acc, v) => {
-            if (_filterFunc(v)) {
-                return [...acc, v.toJSON()];
-            }
-            return acc;
-        }, []);
-
-        //no variable or list to save
-        if (!variables.length && !lists.length) {
-            return;
-        }
-
-        let csrfToken = '';
-        try {
-            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-        } catch (e) {}
-
-        fetch(`/api/project/variable/${projectId}`, {
-            method: 'PUT',
-            headers: {
-                'csrf-token': csrfToken,
-                Accept: 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                variables,
-                lists,
-            }),
         });
     }
 
@@ -2945,6 +3015,7 @@ Entry.VariableContainer = class VariableContainer {
     _maxNameLength = 10;
 
     clear() {
+        this.select(null);
         const _removeFunc = _.partial(_.result, _, 'remove');
         const { engine = {}, container = {}, playground } = Entry;
 
@@ -2959,6 +3030,11 @@ Entry.VariableContainer = class VariableContainer {
         this.messages_ = [];
         this.functions_ = {};
 
+        this._variableRefs = [];
+        this._messageRefs = [];
+        this._functionRefs = [];
+
+        Entry.Func.reset();
         playground.reloadPlayground();
         this.updateList();
     }
@@ -3068,7 +3144,7 @@ Entry.VariableContainer = class VariableContainer {
     _makeVariableData(type = 'variable') {
         const {
             view,
-            info: { isCloud, object },
+            info: { isCloud, object, isRealTime },
         } = this._getAddPanel(type);
 
         let name = view.name.value.trim();
@@ -3086,6 +3162,7 @@ Entry.VariableContainer = class VariableContainer {
         return {
             name,
             isCloud,
+            isRealTime,
             object,
             variableType: type,
         };
@@ -3115,29 +3192,20 @@ Entry.VariableContainer = class VariableContainer {
         if (v.getType() === type) {
             return;
         }
-
-        let newVariable;
-
         const variables = this.variables_;
         const variableJSON = v.toJSON();
-
+        variableJSON.variableType = type;
+        const newVariable = Entry.Variable.create(variableJSON);
+        variables.splice(variables.indexOf(v), 0, newVariable);
+        if (value !== undefined) {
+            variableJSON.value = value;
+        }
         if (type === 'slide') {
-            variableJSON.variableType = type;
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
-
             if (newVariable.getValue() < 0) {
                 newVariable.setValue(0);
             } else if (newVariable.getValue() > 100) {
                 newVariable.setValue(100);
             }
-        } else if (type === 'variable') {
-            variableJSON.variableType = type;
-            if (value !== undefined) {
-                variableJSON.value = value;
-            }
-            newVariable = Entry.Variable.create(variableJSON);
-            variables.splice(variables.indexOf(v), 0, newVariable);
         }
         this.createVariableView(newVariable);
         this.removeVariable(v);

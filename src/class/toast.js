@@ -102,7 +102,15 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     toast.appendChild(toastTitle);
     const toastMessage = Entry.createElement('p', 'entryToast');
     toastMessage.addClass('entryToastMessage');
-    toastMessage.textContent = message;
+
+    if (Array.isArray(message)) {
+        toastMessage.innerHTML = message.reduce((total, current) => {
+            return total + '<br/>' + current;
+        }, '');
+    } else {
+        toastMessage.textContent = message;
+    }
+
     toast.appendChild(toastMessage);
     this.toasts_.push(toast);
     this.body_.appendChild(toast);
@@ -123,4 +131,13 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     if (!isNotAutoDispose) {
         window.setTimeout(f, 5000);
     }
+    return toast;
+};
+
+Entry.Toast.prototype.isOpen = function(target) {
+    const activated = this.toasts_.filter((toast) => toast.style.display !== 'none');
+    if (target) {
+        return activated.includes(target);
+    }
+    return activated.length > 0;
 };
