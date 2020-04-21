@@ -207,16 +207,22 @@ class VideoUtils implements MediaUtilsInterface {
                     switch (type) {
                         case 'init':
                             const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                            const modelLang = Lang.Blocks[`video_${name}_model`];
+
                             if (message === 'warmup') {
                                 Entry.toast.success(
-                                    '모델 로드 완료',
-                                    `이제 모델 인식을 사용할 수 있습니다`,
+                                    Lang.Msgs.video_model_load_success,
+                                    Lang.Msgs.video_model_load_completed,
                                     true
                                 );
                                 Entry.dispatchEvent('hideLoadingScreen');
                                 console.timeEnd('test');
                             } else {
-                                Entry.toast.success('모델 로드', `${name} 로드 완료`, false);
+                                Entry.toast.success(
+                                    Lang.Msgs.video_model_load_success,
+                                    `${modelLang} ${Lang.Msgs.video_model_load_success_suffix}`,
+                                    false
+                                );
                             }
                             this.modelMountStatus[name] = true;
                             break;
@@ -239,37 +245,62 @@ class VideoUtils implements MediaUtilsInterface {
                 Entry.dispatchEvent('showVideoLoadingScreen');
             } else {
                 const weightsUrl = `${window.location.origin}/lib/entry-js/weights`;
+                Entry.dispatchEvent('showVideoLoadingScreen');
                 Promise.all([
-                    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                    Promise.all([
+                        faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                        faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                        faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                        faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                    ]).then(() => {
+                        Entry.toast.success(
+                            Lang.Msgs.video_model_load_success,
+                            `${Lang.Blocks.video_face} ${Lang.Msgs.video_model_load_success_suffix}`,
+                            false
+                        );
+                    }),
+                    cocoSsd
+                        .load({
+                            base: 'lite_mobilenet_v2',
+                        })
+                        .then((cocoLoaded: any) => {
+                            this.coco = cocoLoaded;
+                            // console.log('coco model loaded');
+                            Entry.toast.success(
+                                Lang.Msgs.video_model_load_success,
+                                `${Lang.Blocks.video_object} ${Lang.Msgs.video_model_load_success_suffix}`,
+                                false
+                            );
+                            // this.postMessage({ type: 'init', message: 'object' });
+                            console.timeEnd('test');
+                        }),
+                    posenet
+                        .load({
+                            architecture: 'MobileNetV1',
+                            outputStride: 16,
+                            inputResolution: {
+                                width: this.CANVAS_WIDTH,
+                                height: this.CANVAS_HEIGHT,
+                            },
+                            multiplier: 0.5,
+                        })
+                        .then((mobileNetLoaded: any) => {
+                            this.mobileNet = mobileNetLoaded;
+                            // console.log('posenet model loaded');
+                            Entry.toast.success(
+                                Lang.Msgs.video_model_load_success,
+                                `${Lang.Blocks.video_human} ${Lang.Msgs.video_model_load_success_suffix}`,
+                                false
+                            );
+                        }),
                 ]).then(() => {
-                    Entry.toast.success('모델 로드', `face 로드 완료`, false);
+                    Entry.toast.success(
+                        Lang.Msgs.video_model_load_success,
+                        Lang.Msgs.video_model_load_completed,
+                        true
+                    );
+                    Entry.dispatchEvent('hideLoadingScreen');
                 });
-                cocoSsd
-                    .load({
-                        base: 'lite_mobilenet_v2',
-                    })
-                    .then((cocoLoaded: any) => {
-                        this.coco = cocoLoaded;
-                        // console.log('coco model loaded');
-                        Entry.toast.success('모델 로드', `coco 로드 완료`, false);
-                        // this.postMessage({ type: 'init', message: 'object' });
-                        console.timeEnd('test');
-                    });
-                posenet
-                    .load({
-                        architecture: 'MobileNetV1',
-                        outputStride: 16,
-                        inputResolution: { width: this.CANVAS_WIDTH, height: this.CANVAS_HEIGHT },
-                        multiplier: 0.5,
-                    })
-                    .then((mobileNetLoaded: any) => {
-                        this.mobileNet = mobileNetLoaded;
-                        // console.log('posenet model loaded');
-                        Entry.toast.success('모델 로드', `pose 로드 완료`, false);
-                    });
             }
 
             const video = document.createElement('video');
