@@ -55,7 +55,15 @@ async function processImage(repeat: boolean) {
             await objectDetect(true), await poseDetect(true), await faceDetect(true);
             return;
         } else if (isRunning) {
-            objectDetect(false), poseDetect(false), faceDetect(false);
+            if (modelStatus.object) {
+                await objectDetect(false);
+            }
+            if (modelStatus.pose) {
+                await poseDetect(false);
+            }
+            if (modelStatus.face) {
+                await faceDetect(false);
+            }
         } else {
             return;
         }
@@ -155,7 +163,7 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            
+
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({
@@ -187,17 +195,16 @@ ctx.onmessage = async function(e: {
                         // console.log('coco model loaded');
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
-                faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
-                faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
-                faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
-                faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-            ]).then(() => {
-                faceLoaded = true;
-                this.postMessage({ type: 'init', message: 'face' });
-            });
-            warmup().then(() => {
-                processImage(true);
-            });
+                Promise.all([
+                    faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
+                    faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
+                    faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
+                    faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
+                ]).then(() => {
+                    faceLoaded = true;
+                    this.postMessage({ type: 'init', message: 'face' });
+                }),
+            ]);
             this.postMessage({ type: 'init', message: 'warmup' });
 
             // console.log('video worker loaded');
@@ -224,6 +231,7 @@ ctx.onmessage = async function(e: {
         case 'pause':
             isRunning = false;
             break;
+
         case 'run':
             isRunning = true;
             processImage(true);
