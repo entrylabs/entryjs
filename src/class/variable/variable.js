@@ -432,8 +432,8 @@ class Variable {
 
     getRealWidth() {
         return Math.ceil(
-            this.textView_._getMeasuredWidth(this.name_) +
-                this.textView_._getMeasuredWidth(this.getValue()) +
+            this.textView_.getMeasuredWidth(this.name_) +
+                this.textView_.getMeasuredWidth(this.getValue()) +
                 40
         );
     }
