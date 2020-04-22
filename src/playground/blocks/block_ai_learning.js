@@ -61,8 +61,16 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
                 func(sprite, script) {
-                    Entry.aiLearning.openInputPopup();
-                    return script.callReturn();
+                    if (!script.isStart) {
+                        script.isStart = true;
+                        Entry.aiLearning.openInputPopup();
+                        return script;
+                    }
+                    if (!Entry.aiLearning.isLoading) {
+                        delete script.isStart;
+                        return script.callReturn();
+                    }
+                    return script;
                 },
                 syntax: {
                     js: [],
