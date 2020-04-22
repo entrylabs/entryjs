@@ -21,7 +21,7 @@ class dmetTable {
     #fields = [];
     #originFields = [];
     #info = {};
-    #maxRow = 100;
+    #maxRow = 3000;
     #maxCol = 100;
     #variableType = 'table';
     #keyDelimter = '_';
