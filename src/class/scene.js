@@ -75,6 +75,9 @@ Entry.Scene = class {
 
                 this.prevButton_ = scenePrevButton;
                 this.nextButton_ = sceneNextButton;
+
+                this.sceneListwidth = Entry.scene.listView_.offsetWidth;
+                this.updateView();
             }
         }
     }
@@ -105,7 +108,7 @@ Entry.Scene = class {
         prevButton.bindOnClick((e) => {
             this.selectScene(Entry.scene.getPrevScene());
         });
- 
+
         prevButton.appendChild(prevBtn);
 
         return prevButton;
@@ -331,7 +334,6 @@ Entry.Scene = class {
             const sceneListWidth = this.sceneListwidth + addBtnwidth;
             const browerWidth = Entry.view_.offsetWidth;
             const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
-            
             if (this.addButton_) {
                 if (maxSceneCount >= STATIC_SCENES_COUNT) {
                     this.addButton_.addClass('entryRemove');
