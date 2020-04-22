@@ -47,7 +47,7 @@ module.exports = {
                 class: 'brush_control',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
-                    if (sprite.brush && sprite.brush.stop) {
+                    if (sprite.brush) {
                         sprite.brush.stop = false;
                     } else {
                         Entry.setBasicBrush(sprite);
@@ -79,7 +79,7 @@ module.exports = {
                 class: 'brush_control',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
-                    if (sprite.brush && sprite.shapes.length) {
+                    if (sprite.brush) {
                         sprite.brush.stop = true;
                     }
 
