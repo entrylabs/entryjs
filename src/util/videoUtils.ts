@@ -220,7 +220,7 @@ class VideoUtils implements MediaUtilsInterface {
                             } else {
                                 Entry.toast.success(
                                     Lang.Msgs.video_model_load_success,
-                                    `${modelLang} ${Lang.Msgs.video_model_load_success_suffix}`,
+                                    `${modelLang} ${Lang.Msgs.video_model_load_success}`,
                                     false
                                 );
                             }
@@ -255,7 +255,7 @@ class VideoUtils implements MediaUtilsInterface {
                     ]).then(() => {
                         Entry.toast.success(
                             Lang.Msgs.video_model_load_success,
-                            `${Lang.Blocks.video_face} ${Lang.Msgs.video_model_load_success_suffix}`,
+                            `${Lang.Blocks.video_face_model} ${Lang.Msgs.video_model_load_success}`,
                             false
                         );
                     }),
@@ -268,7 +268,7 @@ class VideoUtils implements MediaUtilsInterface {
                             // console.log('coco model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
-                                `${Lang.Blocks.video_object} ${Lang.Msgs.video_model_load_success_suffix}`,
+                                `${Lang.Blocks.video_object_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
                             // this.postMessage({ type: 'init', message: 'object' });
@@ -289,7 +289,7 @@ class VideoUtils implements MediaUtilsInterface {
                             // console.log('posenet model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
-                                `${Lang.Blocks.video_human} ${Lang.Msgs.video_model_load_success_suffix}`,
+                                `${Lang.Blocks.video_pose_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
                         }),
