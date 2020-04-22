@@ -21,7 +21,7 @@ class dmetTable {
     #fields = [];
     #originFields = [];
     #info = {};
-    #maxRow = 100;
+    #maxRow = 3000;
     #maxCol = 100;
     #variableType = 'table';
     #keyDelimter = '_';
@@ -272,6 +272,9 @@ class dmetTable {
     }
 
     #appendRow({ key = CommonUtils.generateId(), data = this.#getDefaultData()} = {}) {
+        if (this.#array.length + 1 > this.#maxRow) {
+            throw { message: `append error - max row count error` };
+        }
         const index = this.#array.length + 1;
         if (Array.isArray(data)) {
             this.#object[key] = data;
@@ -283,6 +286,9 @@ class dmetTable {
     }
 
     #insertRow({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
+        if (this.#array.length + 1 > this.#maxRow) {
+            throw { message: `insert error - max row count error` };
+        }
         let value = toNumber(data);
         if (Array.isArray(data) || index > this.#array.length + 1 || index < 0) {
             this.#object[key] = Array.isArray(data) ? data : [value];
