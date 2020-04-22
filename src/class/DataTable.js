@@ -161,6 +161,7 @@ class DataTable {
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
             .on('submit', this.saveTable)
+            .on('alert', entrylms.alert)
             .on('toast', (message) => {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
