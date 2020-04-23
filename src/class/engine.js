@@ -760,7 +760,7 @@ Entry.Engine = class Engine {
     /**
      * toggle this engine state pause
      */
-    togglePause() {
+    togglePause({visible=true}) {
         const timer = Entry.engine.projectTimer;
         if (this.state === EntryEngineState.pause) {
             this.setEnableInputField(true);
@@ -772,7 +772,7 @@ Entry.Engine = class Engine {
             }
             this.state = EntryEngineState.run;
             Entry.Utils.recoverSoundInstances();
-            if (this.runButton) {
+            if (visible && this.runButton) {
                 this.setPauseButton(this.option);
                 if (this.runButton2) {
                     this.runButton2.addClass('entryRemove');
@@ -796,7 +796,7 @@ Entry.Engine = class Engine {
                 timer.pauseStart = new Date().getTime();
             }
             Entry.Utils.pauseSoundInstances();
-            if (this.runButton) {
+            if (visible && this.runButton) {
                 this.setPauseButton(this.option);
                 this.stopButton.removeClass('entryRemove');
                 if (this.runButton2) {
