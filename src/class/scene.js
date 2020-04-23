@@ -330,8 +330,8 @@ Entry.Scene = class {
         if (!Entry.type || Entry.type === 'workspace') {
             // var parent = this.listView_;
             // this.getScenes().forEach(({ view }) => parent.appendChild(view));
-            const addBtnwidth = 44;
-            const sceneListWidth = this.sceneListwidth + addBtnwidth;
+            const addBtnWidth = 44;
+            const sceneListWidth = this.sceneListwidth + addBtnWidth;
             const browserWidth = Entry.view_.offsetWidth;
             const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
