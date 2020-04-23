@@ -332,7 +332,7 @@ Entry.Scene = class {
             // this.getScenes().forEach(({ view }) => parent.appendChild(view));
             const addBtnwidth = 44;
             const sceneListWidth = this.sceneListwidth + addBtnwidth;
-            const browerWidth = Entry.view_.offsetWidth;
+            const browserWidth = Entry.view_.offsetWidth;
             const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
                 if (maxSceneCount >= STATIC_SCENES_COUNT) {
@@ -343,7 +343,7 @@ Entry.Scene = class {
                     this.prevButton_.removeClass('entryRemove');
                     this.nextButton_.removeClass('entryRemove');
 
-                    if (sceneListWidth > browerWidth) {
+                    if (sceneListWidth > browserWidth) {
                         this.addButton_.addClass('entryRemove');
                         this.nextAddButton_.removeClass('entryRemove');
                     } else {
