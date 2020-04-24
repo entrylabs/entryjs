@@ -240,15 +240,14 @@ const blocks = require('./blocks');
 function getBlocks() {
     return {
         aiUtilizeModelTrainButton: {
-            skeleton: 'basic_button_disabled',
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND_DISABLED,
-            outerLine: EntryStatic.colorSet.common.BUTTON_DISABLED,
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['functionInit'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.load_ai_utilize_train_block,
-                    color: EntryStatic.colorSet.common.BUTTON_DISABLED,
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -258,7 +257,7 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        console.log('NOT IMPLEMENTED');
+                        Entry.dispatchEvent('openAIUtilizeTrainManager');
                     },
                 ],
             },

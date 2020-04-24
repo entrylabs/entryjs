@@ -16,6 +16,8 @@ const INITIAL_VIDEO_PARAMS = {
     ALPHA: 0.5,
 };
 
+const isFirefox = typeof InstallTrigger !== 'undefined';
+
 interface IGraphicsEngineApplication {
     render(): void;
     stage: PIXI.Container | any;
@@ -192,7 +194,8 @@ class _GEHelper extends GEHelperBase {
     getVideoElement(video: HTMLVideoElement): any {
         console.log('getVideoElement');
         let videoElement: any = null;
-        const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+        const { WIDTH, HEIGHT, X, Y, SCALE_X, ALPHA } = INITIAL_VIDEO_PARAMS;
+        let SCALE_Y = INITIAL_VIDEO_PARAMS.SCALE_Y;
 
         if (this._isWebGL) {
             const videoTexture = PIXI.Texture.fromVideo(video);
@@ -204,6 +207,10 @@ class _GEHelper extends GEHelperBase {
         videoElement.height = HEIGHT;
         videoElement.x = X;
         videoElement.y = Y;
+        if (isFirefox) {
+            SCALE_Y = 0.58;
+            INITIAL_VIDEO_PARAMS.SCALE_Y = SCALE_Y;
+        }
         videoElement.alpha = ALPHA;
 
         if (this._isWebGL) {
@@ -306,7 +313,7 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    drawHumanPoints(poses: Array<any>, flipStatus: any) {
+    async drawHumanPoints(poses: Array<any>, flipStatus: any) {
         const R = 5;
         let handler = this.poseIndicatorGraphic;
         if (this._isWebGL) {
@@ -352,7 +359,7 @@ class _GEHelper extends GEHelperBase {
         });
     }
 
-    drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
+    async drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
         const coordList: any = [];
         let handler = this.poseIndicatorGraphic;
         adjacents.forEach((adjacentList: any) => {
@@ -379,7 +386,7 @@ class _GEHelper extends GEHelperBase {
         });
     }
 
-    drawFaceEdges(faces: any, flipStatus: any) {
+    async drawFaceEdges(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
 
         if (this._isWebGL) {
@@ -480,7 +487,7 @@ class _GEHelper extends GEHelperBase {
         handler.moveTo(prevX, prevY).lineTo(_x, _y);
     }
 
-    drawObjectBox(objects: Array<any>, flipStatus: any) {
+    async drawObjectBox(objects: Array<any>, flipStatus: any) {
         const objectsList: any = [];
         objects.forEach((object: any) => {
             const bbox = object.bbox;

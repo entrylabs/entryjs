@@ -92,9 +92,8 @@ export default class PopupHelper {
         titleButton_.bindOnClick(() => {
             if (popupObject.closeEvent) {
                 popupObject.closeEvent(this);
-            } else {
-                this.hide();
             }
+            this.hide();
         });
 
         const popupWrapper_ = Entry.Dom('div', {

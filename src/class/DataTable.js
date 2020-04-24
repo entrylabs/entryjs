@@ -161,6 +161,7 @@ class DataTable {
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
             .on('submit', this.saveTable)
+            .on('alert', (({ message, title = Lang.DataAnalytics.max_row_count_error_title }) => entrylms.alert(message, title)))
             .on('toast', (message) => {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
@@ -211,26 +212,16 @@ class DataTable {
     }
 
     createChart(source) {
-        const { chart: charts = [], fields, origin } = source;
-        const tables = charts.reduce((prevChart, chart) => {
-            if (chart.categoryIndexes.length === 0) {
-                return prevChart;
-            }
-            return [
-                ...prevChart,
-                {
-                    chart,
-                    table: [fields, ...origin],
-                },
-            ];
-        }, []);
+        const { chart = [], fields, rows } = source;
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
             parent: $('body'),
         })[0];
         return new ModalChart({
             data: {
-                source: { tables },
+                source: { fields, origin: rows, chart },
+                togglePause: () => Entry.engine.togglePause(),
+                stop: () => Entry.engine.toggleStop()
             },
             container,
         });
