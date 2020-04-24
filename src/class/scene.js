@@ -76,7 +76,7 @@ Entry.Scene = class {
                 this.prevButton_ = scenePrevButton;
                 this.nextButton_ = sceneNextButton;
 
-                this.sceneListwidth = Entry.scene.listView_.offsetWidth;
+                this.sceneListWidth = Entry.scene.listView_.offsetWidth;
                 this.updateView();
             }
         }
@@ -331,7 +331,7 @@ Entry.Scene = class {
             // var parent = this.listView_;
             // this.getScenes().forEach(({ view }) => parent.appendChild(view));
             const addBtnWidth = 44;
-            const sceneListWidth = this.sceneListwidth + addBtnWidth;
+            const sceneListWidth = this.sceneListWidth + addBtnWidth;
             const browserWidth = Entry.view_.offsetWidth;
             const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
@@ -499,7 +499,9 @@ Entry.Scene = class {
         !container.listView_ && stage.sortZorder();
 
         container.updateListView();
-        this.sceneListwidth = Entry.scene.listView_.offsetWidth;
+        if (Entry.type && Entry.type !== 'minimize' && Entry.scene.listView_) {
+            this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+        }
         this.updateView();
         Entry.requestUpdate = true;
     }
