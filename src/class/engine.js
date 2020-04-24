@@ -760,7 +760,7 @@ Entry.Engine = class Engine {
     /**
      * toggle this engine state pause
      */
-    togglePause({visible=true}) {
+    togglePause({ visible = true } = {}) {
         const timer = Entry.engine.projectTimer;
         if (this.state === EntryEngineState.pause) {
             this.setEnableInputField(true);
