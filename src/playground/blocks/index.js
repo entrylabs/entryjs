@@ -18,6 +18,7 @@ const basicBlockList = [
     require('./block_func'),
     require('./block_ai'),
     require('./block_analysis'),
+    require('./block_ai_learning'),
 ];
 
 Entry.AI_UTILIZE_BLOCK = {};
