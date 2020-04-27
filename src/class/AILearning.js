@@ -105,11 +105,12 @@ export default class AILearning {
                 this.popupHelper = new PopupHelper(true);
             }
         }
-
+        let isPauseClicked = false;
         this.popupHelper.addPopup(this.#popupKey, {
             type: 'confirm',
             title: Lang.Blocks.learn_popup_title,
             onShow: () => {
+                isPauseClicked = false;
                 localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type}));
                 this.isLoading = true;
                 this.result = [];
@@ -119,7 +120,7 @@ export default class AILearning {
             },
             closeEvent: () => {
                 this.isLoading = false;
-                if(Entry.engine.state == 'pause') {
+                if(Entry.engine.state == 'pause' && !isPauseClicked) {
                     Entry.engine.togglePause({visible:false});
                 }
             },
@@ -137,6 +138,17 @@ export default class AILearning {
                         if(key === 'predict') {
                             this.result = data;
                             this.popupHelper.hide();
+                        }
+                        if(key === 'stop') {
+                            this.popupHelper.hide();
+                            Entry.engine.toggleStop()
+                        }
+                        if(key === 'pause') {
+                            if(!isPauseClicked) {
+                                isPauseClicked = true;
+                                Entry.engine.togglePause({visible:false});
+                            }
+                            Entry.engine.togglePause();
                         }
                     }, false);
                 });
