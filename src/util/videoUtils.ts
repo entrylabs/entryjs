@@ -744,7 +744,9 @@ class VideoUtils implements MediaUtilsInterface {
 
     async compatabilityChecker() {
         if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Entry.Utils.IncompatibleError();
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_browser_error_video,
+            ]);
         }
         if (!this.stream) {
             if (!this.checkUserCamAvailable()) {
