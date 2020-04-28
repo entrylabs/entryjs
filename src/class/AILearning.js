@@ -110,6 +110,7 @@ export default class AILearning {
             type: 'confirm',
             title: Lang.Blocks.learn_popup_title,
             onShow: () => {
+                this.popupHelper.addClass('learning_popup');
                 isPauseClicked = false;
                 localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type}));
                 this.isLoading = true;
