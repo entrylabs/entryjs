@@ -441,7 +441,6 @@ module.exports = {
                     }
 
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    const { isRealTime_ } = variable;
                     let variableValue = variable.getValue();
                     let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
@@ -455,19 +454,8 @@ module.exports = {
                     } else {
                         sumValue = `${variableValue}${value}`;
                     }
-                    if (!isRealTime_) {
-                        variable.setValue(sumValue);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await variable.setValue(sumValue);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
+                    variable.setValue(sumValue);
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -584,21 +572,9 @@ module.exports = {
                     const variableId = script.getField('VARIABLE', script);
                     const value = script.getValue('VALUE', script);
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    const { isRealTime_ } = variable;
 
-                    if (!isRealTime_) {
-                        variable.setValue(value);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await variable.setValue(value);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
+                    variable.setValue(value);
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -978,19 +954,8 @@ module.exports = {
                     const value = script.getValue('VALUE', script);
                     const list = Entry.variableContainer.getList(listId, sprite);
 
-                    if (!list.isCloud_) {
-                        list.appendValue(value);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.appendValue(value);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
+                    list.appendValue(value);
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -1097,20 +1062,8 @@ module.exports = {
                         throw new Error('can not remove value from array');
                     }
 
-                    const { isRealTime_ } = list;
-                    if (!isRealTime_) {
-                        list.deleteValue(+value);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.deleteValue(+value);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
+                    list.deleteValue(+value);
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -1235,21 +1188,8 @@ module.exports = {
                     ) {
                         throw new Error('can not insert value to array');
                     }
-
-                    const { isRealTime_ } = list;
-                    if (!isRealTime_) {
-                        list.insertValue(index, data);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.insertValue(index, data);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
+                    list.insertValue(index, data);
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -1374,20 +1314,8 @@ module.exports = {
                         throw new Error('can not insert value to array');
                     }
 
-                    const { isRealTime_ } = list;
-                    if (!isRealTime_) {
-                        list.replaceValue(index, data);
-                        return script.callReturn();
-                    } else {
-                        return new Promise(async (resolve, reject) => {
-                            try {
-                                await list.replaceValue(index, data);
-                                resolve();
-                            } catch (e) {
-                                reject(e);
-                            }
-                        });
-                    }
+                    list.replaceValue(index, data);
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],

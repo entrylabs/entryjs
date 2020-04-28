@@ -18,19 +18,16 @@ const basicBlockList = [
     require('./block_func'),
     require('./block_ai'),
     require('./block_analysis'),
-    require('./block_ai_learning'),
 ];
 
 Entry.AI_UTILIZE_BLOCK = {};
 require('./block_ai_utilize_audio');
 require('./block_ai_utilize_tts');
 require('./block_ai_utilize_translate');
-require('./block_ai_utilize_video');
 Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
     translate: Entry.AI_UTILIZE_BLOCK.translate,
-    video: Entry.AI_UTILIZE_BLOCK.video,
 };
 
 Entry.EXPANSION_BLOCK = {};

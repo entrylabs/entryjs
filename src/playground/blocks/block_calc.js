@@ -14,12 +14,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['+', 'PLUS'],
-                            ['-', 'MINUS'],
-                            ['x', 'MULTI'],
-                            ['/', 'DIVIDE'],
-                        ],
+                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
                         value: 'PLUS',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -144,10 +139,7 @@ module.exports = {
                             return leftValue + rightValue;
                         }
                     }
-                    // below statements assume both arguments are number
                     leftValue = new BigNumber(leftValue);
-                    rightValue = new BigNumber(rightValue);
-
                     if (operator === 'MINUS') {
                         return leftValue.minus(rightValue).toNumber();
                     } else if (operator === 'MULTI') {
@@ -333,10 +325,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['x', 'x'],
-                            ['y', 'y'],
-                        ],
+                        options: [['x', 'x'], ['y', 'y']],
                         value: 'x',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.CALC,
@@ -384,10 +373,7 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [
-                                        ['x', 'x'],
-                                        ['y', 'y'],
-                                    ],
+                                    options: [['x', 'x'], ['y', 'y']],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
@@ -1132,14 +1118,14 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function () {
+                        function() {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
                         },
                     ],
                     viewDestroy: [
-                        function (block, notIncludeSelf) {
+                        function(block, notIncludeSelf) {
                             if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block, notIncludeSelf);
                             }
@@ -1201,14 +1187,14 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function () {
+                        function() {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
                         },
                     ],
                     dataDestroy: [
-                        function (block) {
+                        function(block) {
                             if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block);
                             }
@@ -1339,14 +1325,14 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function () {
+                        function() {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
                         },
                     ],
                     viewDestroy: [
-                        function (block, notIncludeSelf) {
+                        function(block, notIncludeSelf) {
                             if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block, notIncludeSelf);
                             }
@@ -1548,13 +1534,13 @@ module.exports = {
                         const mousePos = Entry.stage.mouseCoordinate;
                         return Math.sqrt(
                             Math.pow(sprite.getX() - mousePos.x, 2) +
-                            Math.pow(sprite.getY() - mousePos.y, 2)
+                                Math.pow(sprite.getY() - mousePos.y, 2)
                         );
                     } else {
                         const targetEntity = Entry.container.getEntity(targetId);
                         return Math.sqrt(
                             Math.pow(sprite.getX() - targetEntity.getX(), 2) +
-                            Math.pow(sprite.getY() - targetEntity.getY(), 2)
+                                Math.pow(sprite.getY() - targetEntity.getY(), 2)
                         );
                     }
                 },
@@ -2250,14 +2236,12 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const oldWord = script
-                        .getStringValue('OLD_WORD', script)
-                        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                    const old_word = script.getStringValue('OLD_WORD', script).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
                     return script
                         .getStringValue('STRING', script)
                         .replace(
-                            new RegExp(oldWord, 'gm'),
+                            new RegExp(old_word, 'gm'),
                             script.getStringValue('NEW_WORD', script)
                         );
                 },
@@ -2344,7 +2328,7 @@ module.exports = {
                 func(sprite, script) {
                     return script
                         .getStringValue('STRING', script)
-                    [script.getField('CASE', script)]();
+                        [script.getField('CASE', script)]();
                 },
                 syntax: {
                     js: [],

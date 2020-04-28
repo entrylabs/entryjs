@@ -88,14 +88,14 @@ module.exports = {
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        await table.appendRow();
+                        table.appendRow();
                     } else {
-                        await table.appendCol();
+                        table.appendCol();
                     }
                     return script.callReturn();
                 },
@@ -179,15 +179,15 @@ module.exports = {
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const number = script.getNumberValue('NUMBER', script);
                     const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        await table.insertRow(number);
+                        table.insertRow(number);
                     } else {
-                        await table.insertCol(number);
+                        table.insertCol(number);
                     }
                     return script.callReturn();
                 },
