@@ -46,8 +46,8 @@ class DataTableSource {
             });
         });
 
-        const apply = () => {
-            if (this.modal && this.modal.isShow) {
+        const apply = (force = false) => {
+            if (this.modal && (force || this.modal.isShow)) {
                 const find = (x) => this.fields.findIndex((y) => y === this.#data.originFields[x]);
                 const chart = this.#chart.map(({ xIndex, yIndex, categoryIndexes, ...infos }) => ({
                     xIndex: find(xIndex),
@@ -66,6 +66,7 @@ class DataTableSource {
                 });
             }
         };
+        this.forceApply = () => apply(true);
         this.applyChart = _throttle(apply, 1000);
     }
 

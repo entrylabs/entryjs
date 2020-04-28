@@ -201,6 +201,7 @@ class DataTable {
         if (!source.modal) {
             source.modal = this.createChart(source);
         }
+        source.forceApply();
         source.modal.show();
         this.modal = source.modal;
     }
