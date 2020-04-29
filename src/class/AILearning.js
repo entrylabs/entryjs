@@ -145,7 +145,7 @@ export default class AILearning {
                 });
                 $(iframe).on('load', ({target}) => {
                     target.contentWindow.addEventListener("message", ({data:eventData = {}}) => {
-                        const { key, data } = eventData;
+                        const { key, data } = JSON.parse(eventData);
                         if(key === 'predict') {
                             this.result = data;
                             this.popupHelper.hide();
