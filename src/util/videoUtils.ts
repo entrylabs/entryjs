@@ -134,6 +134,7 @@ class VideoUtils implements MediaUtilsInterface {
     public isInitialized: boolean = false;
     public worker: Worker;
     public isChrome = window.OffscreenCanvas || false;
+    public isFirefox = typeof InstallTrigger !== 'undefined';
     public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
@@ -164,6 +165,15 @@ class VideoUtils implements MediaUtilsInterface {
         // //motion test
 
         try {
+            /*
+                NT11576  #11683
+                파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
+                이로인해 다른 브라우저에 비해서 잘려보임
+            */
+            if (this.isFirefox) {
+                this._VIDEO_HEIGHT = 480;
+                this.CANVAS_HEIGHT = 360;
+            }
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
