@@ -54,6 +54,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.initHandle();
     this.mouseCoordinate = { x: 0, y: 0 };
 
+    // nt11576 컬러 피커를 위한 확대 기본 구현
+    const tempTarget = document.querySelector('.entryEngineButtonWrapper');
+    this.magnifier = document.createElement('canvas');
+    this.magnifier.width = 100;
+    this.magnifier.height = 100;
+    this.magnifier.style.position = 'absolute';
+    this.magnifier.style.top = 0;
+    this.magnifier.style.left = 0;
+    this.magnifier.style.zIndex = 9999;
+    tempTarget.parentNode.insertBefore(this.magnifier, tempTarget);
+
     const _addEventListener = Entry.addEventListener.bind(Entry);
 
     if (Entry.isPhone()) {
@@ -103,6 +114,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     const moveFunc = function(e) {
         e.preventDefault();
         const { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
+        magnifierOperation(e);
         const roundRect = Entry.stage.getBoundRect();
         const scrollPos = Entry.Utils.getScrollPos();
         this.mouseCoordinate = {
@@ -115,6 +127,67 @@ Entry.Stage.prototype.initStage = function(canvas) {
         };
         Entry.dispatchEvent('stageMouseMove');
     }.bind(this);
+
+    /**
+     * nt11576 이재원
+     * magnifierOperation
+     * 컬러 피커를 위한 확대 기본 구현
+     * drawing current position with certain range with zoom-in -ed manner
+     * @param {MouseEvent} e
+     */
+    const magnifierOperation = (e) => {
+        const zoomCtx = this.magnifier.getContext('2d');
+        zoomCtx.fillStyle = 'red';
+        zoomCtx.fillRect = (0, 0, this.magnifier.width, this.magnifier.height);
+
+        const { width, height } = canvas.getBoundingClientRect();
+
+        const TARGET_AREA_LENGTH = 30;
+        const MAGNIFIED_LENGTH = 100;
+        const SPOTTED_AREA_LENGTH = 3;
+
+        const foundX = (this._app.stage.canvas.width * e.x) / width - 25;
+        const foundY = (this._app.stage.canvas.height * (e.y - 120)) / height - 18;
+
+        const { x, y } = Entry.stage.mouseCoordinate;
+        const canvasX = parseInt((x * 4) / 3) + 320;
+        const canvasY = 180 - parseInt((y * 4) / 3);
+
+        const color = document
+            .getElementById('entryCanvas')
+            .getContext('2d')
+            .getImageData(canvasX, canvasY, 1, 1).data;
+        console.log(
+            'current color at ',
+            canvasX,
+            canvasY,
+            ' = ',
+            Entry.rgb2hex(color[0], color[1], color[2])
+        );
+        // numbers in draw image are magic offset numbers;
+        zoomCtx.drawImage(
+            this._app.stage.canvas,
+            foundX, //+ 10 + 30, //+ 25 + 5,
+            foundY, //- 75 - 30, //- 100 - 10,
+            TARGET_AREA_LENGTH,
+            TARGET_AREA_LENGTH,
+            0,
+            0,
+            MAGNIFIED_LENGTH,
+            MAGNIFIED_LENGTH
+        );
+        zoomCtx.lineWidth = '1';
+        zoomCtx.rect(
+            MAGNIFIED_LENGTH / 2 - SPOTTED_AREA_LENGTH / 2,
+            MAGNIFIED_LENGTH / 2 - SPOTTED_AREA_LENGTH / 2,
+            SPOTTED_AREA_LENGTH,
+            SPOTTED_AREA_LENGTH
+        );
+        zoomCtx.stroke();
+
+        this.magnifier.style.top = `${e.pageY - 200}px`;
+        this.magnifier.style.left = `${e.pageX - 50}px`;
+    };
 
     canvas.onmousemove = moveFunc;
     canvas.ontouchmove = moveFunc;
