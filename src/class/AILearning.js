@@ -7,6 +7,8 @@ export default class AILearning {
     #labels = [];
     #url;
     #type;
+    #oid;
+    #modelId;
     isLoaded = false;
     isLoading = false;
     result = [];
@@ -32,19 +34,25 @@ export default class AILearning {
 
     }
 
-    load({url, labels = [], type} = {}) {
+    load({url, labels, type, classes = [], model, id, _id } = {}) {
         if(!url) {
             return ;
         }
-        this.#labels = labels;
+        this.#labels = labels || classes.map(({name}) => name);
         this.#type = type;
         this.#url = url;
+        this.#oid = _id;
+        this.#modelId = model || id;
         this.unbanBlocks();
-        this.generatePopupView({url, labels, type});
+        this.generatePopupView({url, labels: this.#labels, type});
         if(this.#playground) {
             this.#playground.reloadPlayground()
         }
         this.isLoaded = true;
+    }
+
+    getId() {
+        return this.#modelId;
     }
 
     unbanBlocks() {
@@ -89,7 +97,9 @@ export default class AILearning {
         return {
             labels: this.#labels,
             url: this.#url,
-            type: this.#type
+            type: this.#type,
+            id: this.#modelId,
+            _id: this.#oid,
         }
     }
 
