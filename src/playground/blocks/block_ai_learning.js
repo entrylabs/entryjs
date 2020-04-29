@@ -122,7 +122,7 @@ module.exports = {
                             if(options[0] && options[0][1]){
                                 return options[0][1];
                             }
-                            return 0;
+                            return value || 0;
                         }
                     }
                 ],
@@ -167,7 +167,7 @@ module.exports = {
                             if(options[0] && options[0][1]){
                                 return options[0][1];
                             }
-                            return 0;
+                            return value || 0;
                         }
                     }
                 ],
