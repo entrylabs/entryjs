@@ -29,6 +29,8 @@ Entry.Stage = function() {
     /** @type {PIXI.Application | CreateJsApplication} */
     this._app = null;
 
+    this.magnifyCanvas = true;
+
     this.background = GEHelper.newGraphic();
     this.background.graphics.beginFill('#ffffff').drawRect(-480, -240, 960, 480);
     this.variableContainer = GEHelper.newContainer('variableContainer');
@@ -63,6 +65,9 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.magnifier.style.top = 0;
     this.magnifier.style.left = 0;
     this.magnifier.style.zIndex = 9999;
+    this.magnifier.style.border = 'thick solid black';
+    this.magnifier.style.borderRadius = '50%';
+    this.magnifier.style.display = 'none';
     tempTarget.parentNode.insertBefore(this.magnifier, tempTarget);
 
     const _addEventListener = Entry.addEventListener.bind(Entry);
@@ -114,7 +119,9 @@ Entry.Stage.prototype.initStage = function(canvas) {
     const moveFunc = function(e) {
         e.preventDefault();
         const { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
-        magnifierOperation(e);
+        if (this.magnifyCanvas) {
+            magnifierOperation(e);
+        }
         const roundRect = Entry.stage.getBoundRect();
         const scrollPos = Entry.Utils.getScrollPos();
         this.mouseCoordinate = {
@@ -140,14 +147,9 @@ Entry.Stage.prototype.initStage = function(canvas) {
         zoomCtx.fillStyle = 'red';
         zoomCtx.fillRect = (0, 0, this.magnifier.width, this.magnifier.height);
 
-        const { width, height } = canvas.getBoundingClientRect();
-
         const TARGET_AREA_LENGTH = 30;
         const MAGNIFIED_LENGTH = 100;
         const SPOTTED_AREA_LENGTH = 3;
-
-        const foundX = (this._app.stage.canvas.width * e.x) / width - 25;
-        const foundY = (this._app.stage.canvas.height * (e.y - 120)) / height - 18;
 
         const { x, y } = Entry.stage.mouseCoordinate;
         const canvasX = parseInt((x * 4) / 3) + 320;
@@ -167,8 +169,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
         // numbers in draw image are magic offset numbers;
         zoomCtx.drawImage(
             this._app.stage.canvas,
-            foundX, //+ 10 + 30, //+ 25 + 5,
-            foundY, //- 75 - 30, //- 100 - 10,
+            canvasX - 15, //+ 10 + 30, //+ 25 + 5,
+            canvasY - 15, //- 75 - 30, //- 100 - 10,
             TARGET_AREA_LENGTH,
             TARGET_AREA_LENGTH,
             0,
@@ -187,12 +189,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
         this.magnifier.style.top = `${e.pageY - 200}px`;
         this.magnifier.style.left = `${e.pageX - 50}px`;
+        this.magnifier.style.display = 'block';
+        this.magnifier.style.borderColor = Entry.rgb2hex(color[0], color[1], color[2]);
     };
 
     canvas.onmousemove = moveFunc;
     canvas.ontouchmove = moveFunc;
 
-    canvas.onmouseout = () => Entry.dispatchEvent('stageMouseOut');
+    canvas.onmouseout = () => {
+        this.magnifier.style.display = 'none';
+        Entry.dispatchEvent('stageMouseOut');
+    };
     const updateObjectFunc = () => {
         if (Entry.engine.isState('stop')) {
             Entry.stage.updateObject();
