@@ -18,7 +18,7 @@
 
 Entry.byrobot_drone_3_10 =
 {
-    id: 'F.C',
+    id: 'F.D',
     name: 'byrobot_drone_3_10',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_drone_3_10.png',
