@@ -2052,6 +2052,9 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -2120,6 +2123,9 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -2196,6 +2202,9 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
