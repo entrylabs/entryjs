@@ -142,6 +142,8 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 common_pitch                : 'Pitch',
                 common_yaw                  : 'Yaw',
                 common_throttle             : 'Throttle',
+                common_drone                  : '드론',
+                common_controller             : '조종기',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -246,13 +248,13 @@ Entry.byrobot_drone_8.setLanguage = function() {
             },
 
             template: {
-                byrobot_drone_8_controller_buzzer_hz            : '%1Hz 소리를 연주 %2',
-                byrobot_drone_8_controller_buzzer_hz_delay      : '%1Hz 소리를 %2초 연주 %3',
-                byrobot_drone_8_controller_buzzer_hz_reserve    : '%1Hz 소리를 %2초 예약 %3',
-                byrobot_drone_8_controller_buzzer_off           : '버저 끄기 %1',
-                byrobot_drone_8_controller_buzzer_scale         : '%1 옥타브 %2을(를) 연주 %3',
-                byrobot_drone_8_controller_buzzer_scale_delay   : '%1 옥타브 %2을(를) %3초 연주 %4',
-                byrobot_drone_8_controller_buzzer_scale_reserve : '%1 옥타브 %2을(를) %3초 예약 %4',
+                byrobot_drone_8_controller_buzzer_hz            : '%1 %2Hz 소리를 연주 %3',
+                byrobot_drone_8_controller_buzzer_hz_delay      : '%1 %2Hz 소리를 %3초 연주 %4',
+                byrobot_drone_8_controller_buzzer_hz_reserve    : '%1 %2Hz 소리를 %3초 예약 %4',
+                byrobot_drone_8_controller_buzzer_off           : '%1 버저 끄기 %2',
+                byrobot_drone_8_controller_buzzer_scale         : '%1 %2 옥타브 %3을(를) 연주 %4',
+                byrobot_drone_8_controller_buzzer_scale_delay   : '%1 %2 옥타브 %3을(를) %4초 연주 %5',
+                byrobot_drone_8_controller_buzzer_scale_reserve : '%1 %2 옥타브 %3을(를) %4초 예약 %5',
                 byrobot_drone_8_controller_display_clear        : '지우기 x %1, y %2, 너비 %3, 높이 %4 %5 %6',
                 byrobot_drone_8_controller_display_clear_all    : '화면 전체 지우기%1 %2',
                 byrobot_drone_8_controller_display_draw_circle  : '원 x %1, y %2, 반지름 %3 %4 %5 %6',
@@ -494,13 +496,13 @@ Entry.byrobot_drone_8.setLanguage = function() {
             },
 
             template: {
-                byrobot_drone_8_controller_buzzer_hz: 'play Buzzer %1 Hz sound %2',
-                byrobot_drone_8_controller_buzzer_hz_delay: 'play Buzzer %1 Hz sound for %2 second %3',
-                byrobot_drone_8_controller_buzzer_hz_reserve: 'reserve to play Buzzer %1 Hz for %2 second %3',
-                byrobot_drone_8_controller_buzzer_off: 'turn off the buzzer %1',
-                byrobot_drone_8_controller_buzzer_scale: 'play %1 octave %2 %3',
-                byrobot_drone_8_controller_buzzer_scale_delay: 'play %1 octave %2 for %3 second %4',
-                byrobot_drone_8_controller_buzzer_scale_reserve: 'reserve to play %1 octave %2 for %3 second %4',
+                byrobot_drone_8_controller_buzzer_hz: '%1 play Buzzer %2 Hz sound %2',
+                byrobot_drone_8_controller_buzzer_hz_delay: '%1 play Buzzer %2 Hz sound for %3 second %4',
+                byrobot_drone_8_controller_buzzer_hz_reserve: '%1 reserve to play Buzzer %2 Hz for %3 second %4',
+                byrobot_drone_8_controller_buzzer_off: '%1 turn off the buzzer %2',
+                byrobot_drone_8_controller_buzzer_scale: '%1 play %2 octave %3 %4',
+                byrobot_drone_8_controller_buzzer_scale_delay: '%1 play %2 octave %3 for %4 second %5',
+                byrobot_drone_8_controller_buzzer_scale_reserve: '%1 reserve to play %2 octave %3 for %4 second %5',
                 byrobot_drone_8_controller_display_clear: 'clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6',
                 byrobot_drone_8_controller_display_clear_all: 'clear controller display with %1 color %2',
                 byrobot_drone_8_controller_display_draw_circle: 'draw a circle x:%1, y:%2, radius:%3, %4, %5, %6',
@@ -2028,18 +2030,34 @@ Entry.byrobot_drone_8.getBlocks = function()
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{ type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }
+            ],
             events: {},
             def: {
-                params: [null],
+                params: [null, null],
                 type: 'byrobot_drone_8_controller_buzzer_off',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+                TARGET: 0
+            },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setBuzzerStop(script, 0x20);
+                const target = script.getNumberValue('TARGET');
+                return Entry.byrobot_base.setBuzzerStop(script, target);
             },
         },
 
@@ -2049,6 +2067,17 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 {
                     type: 'Dropdown',
                     options: [
@@ -2092,24 +2121,26 @@ Entry.byrobot_drone_8.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, null, null],
+                params: [null, null, null, null],
                 type: 'byrobot_drone_8_controller_buzzer_scale',
             },
             paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE: 1,
+                TARGET: 0,
+                OCTAVE: 1,
+                SCALE: 2,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = script.getNumberValue('TARGET');
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, 60000, false, true);
+                    return Entry.byrobot_base.setBuzzerMute(script, target, 60000, false, true);
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, 60000, false, true);
+                    return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, 60000, false, true);
                 }
             },
         },
@@ -2123,6 +2154,17 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
                         ['1', '0'],
                         ['2', '1'],
                         ['3', '2'],
@@ -2167,28 +2209,31 @@ Entry.byrobot_drone_8.getBlocks = function()
                 params: [
                     null,
                     null,
+                    null,
                     { type: 'text', params: ['1'] },
                     null,
                 ],
                 type: 'byrobot_drone_8_controller_buzzer_scale_delay',
             },
             paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE: 1,
-                TIME: 2,
+                TARGET: 0,
+                OCTAVE: 1,
+                SCALE: 2,
+                TIME: 3,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = script.getNumberValue('TARGET');
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
                 const time = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, true, true);
+                    return Entry.byrobot_base.setBuzzerMute(script, target, time, true, true);
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, true, true);
+                    return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, time, true, true);
                 }
             },
         },
@@ -2202,6 +2247,17 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
                         ['1', '0'],
                         ['2', '1'],
                         ['3', '2'],
@@ -2246,28 +2302,31 @@ Entry.byrobot_drone_8.getBlocks = function()
                 params: [
                     null,
                     null,
+                    null,
                     { type: 'text', params: ['1'] },
                     null,
                 ],
                 type: 'byrobot_drone_8_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE: 1,
-                TIME: 2,
+                TARGET: 0,
+                OCTAVE: 1,
+                SCALE: 2,
+                TIME: 3,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = script.getNumberValue('TARGET');
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale  = parseInt(script.getField('SCALE'), 10);
                 const time   = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, false, false);
+                    return Entry.byrobot_base.setBuzzerMute(script, target, time, false, false);
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, false, false);
+                    return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, time, false, false);
                 }
             },
         },
@@ -2278,23 +2337,36 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1000'] }, null],
+                params: [null, { type: 'text', params: ['1000'] }, null],
                 type: 'byrobot_drone_8_controller_buzzer_hz',
             },
             paramsKeyMap: {
-                HZ: 0,
+                TARGET: 0,
+                HZ: 1,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = script.getNumberValue('TARGET');
                 const hz = script.getNumberValue('HZ');
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, 60000, false, true);
+                return Entry.byrobot_base.setBuzzerHz(script, target, hz, 60000, false, true);
             },
         },
 
@@ -2304,26 +2376,39 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
+                params: [null, { type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
                 type: 'byrobot_drone_8_controller_buzzer_hz_delay',
             },
             paramsKeyMap: {
-                HZ: 0,
-                TIME: 1,
+                TARGET: 0,
+                HZ: 1,
+                TIME: 2,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = script.getNumberValue('TARGET');
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, true, true);
+                return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, true, true);
             },
         },
 
@@ -2333,6 +2418,17 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
@@ -2340,6 +2436,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
+                    null,
                     { type: 'text', params: ['1000'] },
                     { type: 'text', params: ['1'] },
                     null,
@@ -2347,16 +2444,18 @@ Entry.byrobot_drone_8.getBlocks = function()
                 type: 'byrobot_drone_8_controller_buzzer_hz_reserve',
             },
             paramsKeyMap: {
-                HZ: 0,
-                TIME: 1,
+                TARGET: 0,
+                HZ: 1,
+                TIME: 2,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = script.getNumberValue('TARGET');
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
+                return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, false, false);
             },
         },
 
