@@ -326,6 +326,109 @@ module.exports = {
                     ],
                 },
             },
+
+            reach_color: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                template: '%1 색에 닿았는가?',
+                params: [
+                    {
+                        type: 'Color',
+                    },
+                ],
+                events: {},
+                def: {
+                    type: 'reach_color',
+                },
+                pyHelpDef: {
+                    type: 'reach_color',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'boolean_collision_color',
+                isNotFor: [],
+                func(sprite, script) {
+                    const colour = script.getField('VALUE', script);
+                    const { r, g, b } = Entry.hex2rgb(colour);
+                    const ath = 0.2;
+                    const collision = ndgmr.checkPixelCollision;
+                    const object = sprite.object;
+                    const allObjects = Entry.container.getCurrentObjects();
+                    const allObjectsId = allObjects.map((current) => current.id);
+
+                    let result = false;
+                    for (const index in allObjectsId) {
+                        if (sprite.parent.id === allObjectsId[index]) {
+                            continue;
+                        }
+
+                        const targetSprite = Entry.container.getEntity(allObjectsId[index]);
+                        if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
+                        } else {
+                            if (
+                                targetSprite.getVisible() &&
+                                collision(object, targetSprite.object, ath, false)
+                            ) {
+                                // sprite.setVisible(false);
+                                const collisionData = collision(
+                                    object,
+                                    targetSprite.object,
+                                    ath,
+                                    true
+                                );
+
+                                const minX = parseInt(collisionData.x);
+                                const minY = parseInt(collisionData.y);
+
+                                const imageData = document
+                                    .getElementById('entryCanvas')
+                                    .getContext('2d')
+                                    .getImageData(
+                                        minX,
+                                        minY,
+                                        collisionData.width,
+                                        collisionData.height
+                                    ).data;
+                                // sprite.setVisible(true);
+                                for (let i = 0; i < imageData.length; i += 4) {
+                                    if (
+                                        imageData[i + 0] == r &&
+                                        imageData[i + 1] == g &&
+                                        imageData[i + 2] == b
+                                    ) {
+                                        result = true;
+                                        break;
+                                    }
+                                }
+                                if (result) {
+                                    break;
+                                }
+                            }
+                            const clonedEntities = targetSprite.parent.clonedEntities;
+                            for (let i = 0, len = clonedEntities.length; i < len; i++) {
+                                const entity = clonedEntities[i];
+                                if (entity.isStamp || !entity.getVisible()) {
+                                    continue;
+                                }
+                                if (collision(object, entity.object, ath, false)) {
+                                    result = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    return result;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+
             boolean_basic_operator: {
                 color: EntryStatic.colorSet.block.default.JUDGE,
                 outerLine: EntryStatic.colorSet.block.darken.JUDGE,
