@@ -358,13 +358,12 @@ module.exports = {
                     const object = sprite.object;
                     const allObjects = Entry.container.getCurrentObjects();
                     const allObjectsId = allObjects.map((current) => current.id);
-
                     let result = false;
+
                     for (const index in allObjectsId) {
                         if (sprite.parent.id === allObjectsId[index]) {
                             continue;
                         }
-
                         const targetSprite = Entry.container.getEntity(allObjectsId[index]);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
                         } else {
@@ -372,19 +371,19 @@ module.exports = {
                                 targetSprite.getVisible() &&
                                 collision(object, targetSprite.object, ath, false)
                             ) {
-                                // sprite.setVisible(false);
                                 const collisionData = collision(
                                     object,
                                     targetSprite.object,
                                     ath,
                                     true
                                 );
-
                                 const minX = parseInt(collisionData.x);
                                 const minY = parseInt(collisionData.y);
 
                                 let imageData = null;
                                 if (!GEHelper._isWebGL) {
+                                    sprite.setVisible(false);
+                                    Entry.stage._app.render();
                                     imageData = document
                                         .getElementById('entryCanvas')
                                         .getContext('2d')
@@ -403,6 +402,8 @@ module.exports = {
                                         .getContext('experimental-webgl', {
                                             preserveDrawingBuffer: true,
                                         });
+                                    sprite.setVisible(false);
+                                    Entry.stage._app.render();
                                     gl.readPixels(
                                         minX,
                                         minY,
@@ -413,13 +414,13 @@ module.exports = {
                                         imageData
                                     );
                                 }
-
-                                // sprite.setVisible(true);
+                                sprite.setVisible(true);
+                                Entry.stage._app.render();
                                 for (let i = 0; i < imageData.length; i += 4) {
                                     if (
-                                        Math.abs(imageData[i + 0] - r) < 4 &&
-                                        Math.abs(imageData[i + 1] - g) < 4 &&
-                                        Math.abs(imageData[i + 2] - b) < 4
+                                        Math.abs(imageData[i + 0] - r) < 3 &&
+                                        Math.abs(imageData[i + 1] - g) < 3 &&
+                                        Math.abs(imageData[i + 2] - b) < 3
                                     ) {
                                         result = true;
                                         break;
@@ -436,13 +437,13 @@ module.exports = {
                                     continue;
                                 }
                                 if (collision(object, entity.object, ath, false)) {
+                                    console.log('is it here?');
                                     result = true;
                                     break;
                                 }
                             }
                         }
                     }
-
                     return result;
                 },
                 syntax: {
