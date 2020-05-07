@@ -38,8 +38,9 @@ Entry.byrobot_drone_8 =
         for (let i = 0; i < 1; i++)
         {
             Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
-            Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
+            Entry.byrobot_base.transferbuzzer(0x10, 0, 0, 0);
             Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightModeColor(0x10, 0x22, 200, 255, 0, 0); // LED 초기화(드론)
@@ -74,6 +75,8 @@ Entry.byrobot_drone_8 =
             motion_angleRoll:                           { name: 'Roll',                     type: 'input', pos: { x: 0, y: 0 } },
             motion_anglePitch:                          { name: 'Pitch',                    type: 'input', pos: { x: 0, y: 0 } },
             motion_angleYaw:                            { name: 'Yaw',                      type: 'input', pos: { x: 0, y: 0 } },
+            range_front:                                { name: 'Range Front',              type: 'input', pos: { x: 0, y: 0 } },
+            range_bottom:                               { name: 'Range Bottom',             type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_positionX:     { name: 'Position X',               type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_positionY:     { name: 'Position Y',               type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_positionZ:     { name: 'Position Z',               type: 'input', pos: { x: 0, y: 0 } },
@@ -235,7 +238,8 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_motor_rotation_clockwise      : '시계 방향',
                 drone_motor_rotation_counterclockwise: '반시계 방향',
                 drone_altitude                  : '해발고도',
-                drone_range_height              : '바닥까지 거리',
+                drone_range_height              : '바닥과의 거리',
+                drone_range_front               : '정면과의 거리',
                 drone_state_mode_system         : '시스템 모드',
                 drone_state_mode_flight         : '비행 동작 상태',
                 drone_state_mode_control_flight : '비행 제어 모드',
@@ -488,6 +492,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_motor_rotation_counterclockwise: 'Counterclockwise',
                 drone_altitude: 'Altitude',
                 drone_range_height: 'Height',
+                drone_range_front: 'Distance from front obstacle',
                 drone_state_mode_system: 'System Mode',
                 drone_state_mode_flight: 'Flight Mode',
                 drone_state_headless: 'Headless',
@@ -769,8 +774,9 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.drone_positionZ,       'informationAssembledForEntry_positionZ'],
                         [Lang.Blocks.drone_altitude,        'informationAssembledForEntry_altitude'],
                         [Lang.Blocks.drone_range_height,    'informationAssembledForEntry_rangeHeight'],
+                        [Lang.Blocks.drone_range_front,     'range_front'],
                     ],
-                    value: 'informationAssembledForEntry_rangeHeight', // 초기 선택항목 지정
+                    value: 'range_front', // 초기 선택항목 지정
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
