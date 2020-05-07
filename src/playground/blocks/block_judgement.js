@@ -383,21 +383,43 @@ module.exports = {
                                 const minX = parseInt(collisionData.x);
                                 const minY = parseInt(collisionData.y);
 
-                                const imageData = document
-                                    .getElementById('entryCanvas')
-                                    .getContext('2d')
-                                    .getImageData(
+                                let imageData = null;
+                                if (!GEHelper._isWebGL) {
+                                    imageData = document
+                                        .getElementById('entryCanvas')
+                                        .getContext('2d')
+                                        .getImageData(
+                                            minX,
+                                            minY,
+                                            collisionData.width,
+                                            collisionData.height
+                                        ).data;
+                                } else {
+                                    imageData = new Uint8Array(
+                                        collisionData.width * collisionData.height * 4
+                                    );
+                                    const gl = document
+                                        .getElementById('entryCanvas')
+                                        .getContext('experimental-webgl', {
+                                            preserveDrawingBuffer: true,
+                                        });
+                                    gl.readPixels(
                                         minX,
                                         minY,
                                         collisionData.width,
-                                        collisionData.height
-                                    ).data;
+                                        collisionData.height,
+                                        gl.RGBA,
+                                        gl.UNSIGNED_BYTE,
+                                        imageData
+                                    );
+                                }
+
                                 // sprite.setVisible(true);
                                 for (let i = 0; i < imageData.length; i += 4) {
                                     if (
-                                        imageData[i + 0] == r &&
-                                        imageData[i + 1] == g &&
-                                        imageData[i + 2] == b
+                                        Math.abs(imageData[i + 0] - r) < 4 &&
+                                        Math.abs(imageData[i + 1] - g) < 4 &&
+                                        Math.abs(imageData[i + 2] - b) < 4
                                     ) {
                                         result = true;
                                         break;
