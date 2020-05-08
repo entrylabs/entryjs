@@ -251,10 +251,17 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_altitude                  : '해발고도',
                 drone_range_height              : '바닥과의 거리',
                 drone_range_front               : '정면과의 거리',
-                drone_cardcolor_fronthue        : 'Front Hue',
-                drone_cardcolor_fronthue        : 'Front Hue',
-                drone_cardcolor_fronthue        : 'Front Hue',
-                drone_cardcolor_fronthue        : 'Front Hue',
+                drone_cardcolor_front_hue           : '앞 색상',
+                drone_cardcolor_front_saturation    : '앞 채도',
+                drone_cardcolor_front_value         : '앞 명도',
+                drone_cardcolor_front_lightness     : '앞 밝기',
+                drone_cardcolor_rear_hue            : '뒤 색상',
+                drone_cardcolor_rear_saturation     : '뒤 채도',
+                drone_cardcolor_rear_value          : '뒤 명도',
+                drone_cardcolor_rear_lightness      : '뒤 밝기',
+                drone_cardcolor_front_color         : '앞 카드 색',
+                drone_cardcolor_rear_color          : '뒤 카드 색',
+                drone_cardcolor_card                : '카드',
                 drone_state_mode_system         : '시스템 모드',
                 drone_state_mode_flight         : '비행 동작 상태',
                 drone_state_mode_control_flight : '비행 제어 모드',
@@ -321,6 +328,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_value_attitude    : '%1',
                 byrobot_drone_8_drone_value_motion      : '%1',
                 byrobot_drone_8_drone_value_sensor      : '%1',
+                byrobot_drone_8_drone_value_card        : '%1',
                 byrobot_drone_8_drone_value_etc         : '%1',
             },
 
@@ -377,9 +385,10 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_motorsingle_input         : "<br>지정한 모터(1, 2, 3, 4)를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_8_drone_motorsingle_rotation      : "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 1번 모터와 2번 모터는 역방향도 회전 가능하기 때문에 방향도 선택할 수 있습니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#자동차</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_8_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
-                byrobot_drone_8_drone_value_etc                 : "<br>페트론V2 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
-                byrobot_drone_8_drone_value_motion              : "<br>페트론V2 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                byrobot_drone_8_drone_value_sensor              : "<br>페트론V2 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 Petrone V2는 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_8_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
+                byrobot_drone_8_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
+                byrobot_drone_8_drone_value_sensor              : "<br>드론 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_8_drone_value_card                : "<br>드론 카드 센서와 관련된 값들을 반환합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#카드</font>",
             },
         },
 
@@ -508,6 +517,17 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_altitude: 'Altitude',
                 drone_range_height: 'Height',
                 drone_range_front: 'Distance from front obstacle',
+                drone_cardcolor_front_hue           : 'Front Hue',
+                drone_cardcolor_front_saturation    : 'Front Saturation',
+                drone_cardcolor_front_value         : 'Front Value',
+                drone_cardcolor_front_lightness     : 'Front Lightness',
+                drone_cardcolor_rear_hue            : 'Rear Hue',
+                drone_cardcolor_rear_saturation     : 'Rear Saturation',
+                drone_cardcolor_rear_value          : 'Rear Value',
+                drone_cardcolor_rear_lightness      : 'Rear Lightness',
+                drone_cardcolor_front_color         : 'Front Card Color',
+                drone_cardcolor_rear_color          : 'Rear Card Color',
+                drone_cardcolor_card                : 'Card',
                 drone_state_mode_system: 'System Mode',
                 drone_state_mode_flight: 'Flight Mode',
                 drone_state_headless: 'Headless',
@@ -570,6 +590,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_value_attitude: '%1',
                 byrobot_drone_8_drone_value_motion: '%1',
                 byrobot_drone_8_drone_value_sensor: '%1',
+                byrobot_drone_8_drone_value_card: '%1',
                 byrobot_drone_8_drone_value_etc: '%1',
             },
 
@@ -629,6 +650,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_value_etc: '',
                 byrobot_drone_8_drone_value_motion: '',
                 byrobot_drone_8_drone_value_sensor: '',
+                byrobot_drone_8_drone_value_card: '',
             },
         },
     };
@@ -641,6 +663,7 @@ Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_drone_value_attitude',
     'byrobot_drone_8_drone_value_motion',
     'byrobot_drone_8_drone_value_sensor',
+    'byrobot_drone_8_drone_value_card',
     'byrobot_drone_8_drone_value_etc',
     'byrobot_drone_8_controller_value_button',
     'byrobot_drone_8_controller_value_joystick',
@@ -724,7 +747,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_attitude', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_attitude',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -762,7 +785,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_motion', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_motion',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -800,7 +823,50 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_sensor', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_sensor',
+            },
+            paramsKeyMap: {
+                DEVICE: 0,
+            },
+            class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                return Entry.hw.portData[script.getField('DEVICE')];
+            },
+        },
+
+        byrobot_drone_8_drone_value_card: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_cardcolor_front_hue,              'cardColor_frontHue'],
+                        [Lang.Blocks.drone_cardcolor_front_saturation,       'cardColor_frontSaturation'],
+                        [Lang.Blocks.drone_cardcolor_front_value,            'cardColor_frontValue'],
+                        [Lang.Blocks.drone_cardcolor_front_lightness,        'cardColor_frontLightness'],
+                        [Lang.Blocks.drone_cardcolor_rear_hue,               'cardColor_rearHue'],
+                        [Lang.Blocks.drone_cardcolor_rear_saturation,        'cardColor_rearSaturation'],
+                        [Lang.Blocks.drone_cardcolor_rear_value,             'cardColor_rearValue'],
+                        [Lang.Blocks.drone_cardcolor_rear_lightness,         'cardColor_rearLightness'],
+                        [Lang.Blocks.drone_cardcolor_front_color,            'cardColor_frontColor'],
+                        [Lang.Blocks.drone_cardcolor_rear_color,             'cardColor_rearColor'],
+                        [Lang.Blocks.drone_cardcolor_card,                   'cardColor_card'],
+                    ],
+                    value: 'cardColor_frontColor', // 초기 선택항목 지정
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'byrobot_drone_8_drone_value_card',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -839,7 +905,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_etc', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_etc',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -873,7 +939,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_controller_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_controller_value_button',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -913,7 +979,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_controller_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_controller_value_joystick',
             },
             paramsKeyMap: {
                 DEVICE: 0,
