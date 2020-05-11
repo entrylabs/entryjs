@@ -75,6 +75,18 @@ Entry.byrobot_base =
      ***************************************************************************************/
 
     // 데이터 전송
+    transferIrMessage(target, irmessage)
+    {
+        // 전송
+        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.battle_ir_message = irmessage;
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.battle_ir_message;
+    },
+
     transferLightManual(target, flags, brightness)
     {
         Entry.hw.sendQueue.target = target;
@@ -461,6 +473,28 @@ Entry.byrobot_base =
     /***************************************************************************************
      *  블럭 연동 함수
      ***************************************************************************************/
+
+    // IR 데이터 송신
+    setIrMessage(script, target, irmessage)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferIrMessage(target, irmessage);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
 
     // LED 수동 설정
     setLightManual(script, target, flags, brightness)

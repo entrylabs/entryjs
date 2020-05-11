@@ -74,9 +74,7 @@ Entry.byrobot_drone_3_10 =
             motion_angleRoll:                           { name: 'Roll',                     type: 'input', pos: { x: 0, y: 0 } },
             motion_anglePitch:                          { name: 'Pitch',                    type: 'input', pos: { x: 0, y: 0 } },
             motion_angleYaw:                            { name: 'Yaw',                      type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionX:     { name: 'Position X',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionY:     { name: 'Position Y',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionZ:     { name: 'Position Z',               type: 'input', pos: { x: 0, y: 0 } },
+            battle_ir_message:                          { name: 'IR Message',               type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_altitude:      { name: 'Altitude',                 type: 'input', pos: { x: 0, y: 0 } },
             joystick_left_x:                            { name: 'Left Joystick X',          type: 'input', pos: { x: 0, y: 0 } },
             joystick_left_y:                            { name: 'Left Joystick Y',          type: 'input', pos: { x: 0, y: 0 } },
@@ -230,6 +228,7 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 drone_motor_rotation_counterclockwise: '반시계 방향',
                 drone_altitude                  : '해발고도',
                 drone_range_height              : '바닥까지 거리',
+                drone_battle_ir_message         : '적외선 데이터',
                 drone_state_mode_system         : '시스템 모드',
                 drone_state_mode_flight         : '비행 동작 상태',
                 drone_state_mode_control_flight : '비행 제어 모드',
@@ -286,13 +285,15 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_light_color_preset        : '드론 LED %1 %2 %3',
                 byrobot_drone_3_10_drone_light_manual_single_input : '드론 LED %1 밝기 %2 %3',
                 byrobot_drone_3_10_drone_light_manual_single_off   : '드론 LED 끄기 %1',
-                byrobot_drone_3_10_drone_motor_stop                : '모터 정지 %1',
-                byrobot_drone_3_10_drone_motorsingle               : '%1번 모터를 %2(으)로 회전 %3',
-                byrobot_drone_3_10_drone_motorsingle_input         : '%1번 모터를 %2(으)로 회전 %3',
-                byrobot_drone_3_10_drone_motorsingle_rotation      : '%1번 모터를 %2으로 %3(으)로 회전 %4',
+                byrobot_drone_3_10_drone_motor_stop                : '드론 모터 정지 %1',
+                byrobot_drone_3_10_drone_motorsingle               : '드론 %1번 모터를 %2(으)로 회전 %3',
+                byrobot_drone_3_10_drone_motorsingle_input         : '드론 %1번 모터를 %2(으)로 회전 %3',
+                byrobot_drone_3_10_drone_motorsingle_rotation      : '드론 %1번 모터를 %2으로 %3(으)로 회전 %4',
+                byrobot_drone_3_10_drone_battle_ir_message         : '드론 적외선 데이터 %1 전송 %2',
                 byrobot_drone_3_10_drone_value_attitude    : '%1',
                 byrobot_drone_3_10_drone_value_motion      : '%1',
                 byrobot_drone_3_10_drone_value_sensor      : '%1',
+                byrobot_drone_3_10_drone_value_ir          : '%1',
                 byrobot_drone_3_10_drone_value_etc         : '%1',
             },
 
@@ -345,10 +346,12 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_motorsingle               : "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_3_10_drone_motorsingle_input         : "<br>지정한 모터(1, 2, 3, 4)를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_3_10_drone_motorsingle_rotation      : "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 1번 모터와 2번 모터는 역방향도 회전 가능하기 때문에 방향도 선택할 수 있습니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#자동차</font> <font color='dodgerblue'>#모터제어</font>",
+                byrobot_drone_3_10_drone_battle_ir_message         : "<br>드론 적외선 데이터 송신 장치로 지정한 값을 전송합니다. 값의 범위는 0 ~ 0xFFFFFFFF 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#적외선_데이터_송신</font>",
                 byrobot_drone_3_10_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
-                byrobot_drone_3_10_drone_value_etc                 : "<br>페트론V2 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
-                byrobot_drone_3_10_drone_value_motion              : "<br>페트론V2 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                byrobot_drone_3_10_drone_value_sensor              : "<br>페트론V2 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 Petrone V2는 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_3_10_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
+                byrobot_drone_3_10_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
+                byrobot_drone_3_10_drone_value_sensor              : "<br>드론 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_3_10_drone_value_ir                  : "<br>드론 적외선 데이터 수신 장치에서 받은 데이터를 반환합니다<br><br><font color='dodgerblue'>#드론</font> <font color='forestgreen'>#적외선_데이터_수신</font>",
             },
         },
 
@@ -473,6 +476,7 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 drone_motor_rotation_counterclockwise: 'Counterclockwise',
                 drone_altitude: 'Altitude',
                 drone_range_height: 'Height',
+                drone_battle_ir_message: 'IR Data',
                 drone_state_mode_system: 'System Mode',
                 drone_state_mode_flight: 'Flight Mode',
                 drone_state_headless: 'Headless',
@@ -529,9 +533,11 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_motorsingle: 'No. %1 Motor rotate for %2 %3',
                 byrobot_drone_3_10_drone_motorsingle_input: 'No. %1 Motor rotate for %2 %3',
                 byrobot_drone_3_10_drone_motorsingle_rotation: 'No. %1 Motor rotate for %2 %3 %4',
+                byrobot_drone_3_10_drone_battle_ir_message: 'transfer %1 to IR transmitter %2',
                 byrobot_drone_3_10_drone_value_attitude: '%1',
                 byrobot_drone_3_10_drone_value_motion: '%1',
                 byrobot_drone_3_10_drone_value_sensor: '%1',
+                byrobot_drone_3_10_drone_value_ir: '%1',
                 byrobot_drone_3_10_drone_value_etc: '%1',
             },
 
@@ -584,9 +590,11 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_motorsingle: '',
                 byrobot_drone_3_10_drone_motorsingle_input: '',
                 byrobot_drone_3_10_drone_motorsingle_rotation: '',
+                byrobot_drone_3_10_drone_battle_ir_message: '',
                 byrobot_drone_3_10_drone_value_attitude: '',
                 byrobot_drone_3_10_drone_value_etc: '',
                 byrobot_drone_3_10_drone_value_motion: '',
+                byrobot_drone_3_10_drone_value_ir: '',
                 byrobot_drone_3_10_drone_value_sensor: '',
             },
         },
@@ -600,6 +608,7 @@ Entry.byrobot_drone_3_10.blockMenuBlocks = [
     'byrobot_drone_3_10_drone_value_attitude',
     'byrobot_drone_3_10_drone_value_motion',
     'byrobot_drone_3_10_drone_value_sensor',
+    'byrobot_drone_3_10_drone_value_ir',
     'byrobot_drone_3_10_drone_value_etc',
     'byrobot_drone_3_10_controller_value_button',
     'byrobot_drone_3_10_controller_value_joystick',
@@ -618,6 +627,7 @@ Entry.byrobot_drone_3_10.blockMenuBlocks = [
     'byrobot_drone_3_10_drone_motorsingle',
     'byrobot_drone_3_10_drone_motorsingle_input',
     'byrobot_drone_3_10_drone_motorsingle_rotation',
+    'byrobot_drone_3_10_drone_battle_ir_message',
     'byrobot_drone_3_10_drone_light_manual_single_off',
     'byrobot_drone_3_10_drone_light_manual_single_input',
     'byrobot_drone_3_10_drone_light_color_preset',
@@ -741,6 +751,39 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             def: {
                 params: [null],
                 type: 'byrobot_drone_3_10_drone_value_sensor', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+            },
+            paramsKeyMap: {
+                DEVICE: 0,
+            },
+            class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
+            isNotFor: ['byrobot_drone_3_10'],
+            func(sprite, script)
+            {
+                return Entry.hw.portData[script.getField('DEVICE')];
+            },
+        },
+
+        byrobot_drone_3_10_drone_value_ir: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_battle_ir_message,       'battle_ir_message'],
+                    ],
+                    value: 'battle_ir_message', // 초기 선택항목 지정
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'byrobot_drone_3_10_drone_value_ir', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1941,6 +1984,33 @@ Entry.byrobot_drone_3_10.getBlocks = function()
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
                 return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
+            },
+        },
+
+        byrobot_drone_3_10_drone_battle_ir_message: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [{ type: 'text', params: ['12345'] }, null],
+                type: 'byrobot_drone_3_10_drone_battle_ir_message',
+            },
+            paramsKeyMap: {
+                IRMESSAGE: 0,
+            },
+            class: 'ir',
+            isNotFor: ['byrobot_drone_3_10'],
+            func(sprite, script)
+            {
+                const irmessage = script.getNumberValue('IRMESSAGE');
+
+                return Entry.byrobot_base.setIrMessage(script, 0x10, irmessage);
             },
         },
 
