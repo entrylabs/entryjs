@@ -1,5 +1,5 @@
 import { GEHelper } from '../../graphicEngine/GEHelper';
-
+import { collisionCheckColor } from '../../util/collisionUtil';
 module.exports = {
     getBlocks() {
         return {
@@ -351,100 +351,74 @@ module.exports = {
                 class: 'boolean_collision_color',
                 isNotFor: [],
                 func(sprite, script) {
-                    const colour = script.getField('VALUE', script);
-                    const { r, g, b } = Entry.hex2rgb(colour);
-                    const ath = 0.2;
-                    const collision = ndgmr.checkPixelCollision;
-                    const object = sprite.object;
+                    const color = script.getField('VALUE', script);
                     const allObjects = Entry.container.getCurrentObjects();
                     const allObjectsId = allObjects.map((current) => current.id);
-                    let result = false;
-
                     for (const index in allObjectsId) {
                         if (sprite.parent.id === allObjectsId[index]) {
                             continue;
                         }
                         const targetSprite = Entry.container.getEntity(allObjectsId[index]);
-                        if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
-                        } else {
-                            if (
-                                targetSprite.getVisible() &&
-                                collision(object, targetSprite.object, ath, false)
-                            ) {
-                                const collisionData = collision(
-                                    object,
-                                    targetSprite.object,
-                                    ath,
-                                    true
-                                );
-                                const minX = parseInt(collisionData.x);
-                                const minY = parseInt(collisionData.y);
-
-                                let imageData = null;
-                                if (!GEHelper._isWebGL) {
-                                    sprite.setVisible(false);
-                                    Entry.stage._app.render();
-                                    imageData = document
-                                        .getElementById('entryCanvas')
-                                        .getContext('2d')
-                                        .getImageData(
-                                            minX,
-                                            minY,
-                                            collisionData.width,
-                                            collisionData.height
-                                        ).data;
-                                } else {
-                                    imageData = new Uint8Array(
-                                        collisionData.width * collisionData.height * 4
-                                    );
-                                    const gl = document
-                                        .getElementById('entryCanvas')
-                                        .getContext('experimental-webgl', {
-                                            preserveDrawingBuffer: true,
-                                        });
-                                    sprite.setVisible(false);
-                                    Entry.stage._app.render();
-                                    gl.readPixels(
-                                        minX,
-                                        minY,
-                                        collisionData.width,
-                                        collisionData.height,
-                                        gl.RGBA,
-                                        gl.UNSIGNED_BYTE,
-                                        imageData
-                                    );
-                                }
-                                sprite.setVisible(true);
-                                Entry.stage._app.render();
-                                for (let i = 0; i < imageData.length; i += 4) {
-                                    if (
-                                        Math.abs(imageData[i + 0] - r) < 3 &&
-                                        Math.abs(imageData[i + 1] - g) < 3 &&
-                                        Math.abs(imageData[i + 2] - b) < 3
-                                    ) {
-                                        result = true;
-                                        break;
-                                    }
-                                }
-                                if (result) {
-                                    break;
-                                }
-                            }
-                            const clonedEntities = targetSprite.parent.clonedEntities;
-                            for (let i = 0, len = clonedEntities.length; i < len; i++) {
-                                const entity = clonedEntities[i];
-                                if (entity.isStamp || !entity.getVisible()) {
-                                    continue;
-                                }
-                                if (collision(object, entity.object, ath, false)) {
-                                    console.log('is it here?');
-                                    result = true;
-                                    break;
-                                }
-                            }
+                        if (collisionCheckColor(sprite, targetSprite, Entry.hex2rgb(color), null)) {
+                            return true;
                         }
                     }
-                    return result;
+                    return false;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            reach_color_to_color: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                template: '%1 색이 %2 색에 닿았는가?',
+                params: [
+                    {
+                        type: 'Color',
+                    },
+                    {
+                        type: 'Color',
+                    },
+                ],
+                events: {},
+                def: {
+                    type: 'reach_color_to_color',
+                },
+                pyHelpDef: {
+                    type: 'reach_color_to_color',
+                },
+                paramsKeyMap: {
+                    FIRST: 0,
+                    SECOND: 1,
+                },
+                class: 'boolean_collision_color_to_color',
+                isNotFor: [],
+                func(sprite, script) {
+                    const color1 = script.getField('FIRST', script);
+                    const color2 = script.getField('SECOND', script);
+                    const allObjects = Entry.container.getCurrentObjects();
+                    const allObjectsId = allObjects.map((current) => current.id);
+                    for (const index in allObjectsId) {
+                        if (sprite.parent.id === allObjectsId[index]) {
+                            continue;
+                        }
+                        const targetSprite = Entry.container.getEntity(allObjectsId[index]);
+                        if (
+                            collisionCheckColor(
+                                sprite,
+                                targetSprite,
+                                Entry.hex2rgb(color1),
+                                Entry.hex2rgb(color2)
+                            )
+                        ) {
+                            return true;
+                        }
+                    }
+                    return false;
                 },
                 syntax: {
                     js: [],

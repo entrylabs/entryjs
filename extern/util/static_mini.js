@@ -219,6 +219,7 @@ EntryStatic.getAllBlocks = function() {
                 'is_press_some_key',
                 'reach_something',
                 'reach_color',
+                'reach_color_to_color',
                 'boolean_basic_operator',
                 'boolean_and_or',
                 'boolean_not',

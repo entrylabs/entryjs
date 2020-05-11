@@ -3,7 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
-import _clamp from 'lodash/clamp'
+import _clamp from 'lodash/clamp';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 
@@ -1947,6 +1947,7 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     }
 
     if (error) {
+        console.log(error);
         error.message = `${message}: ${error.message}`;
         throw error;
     }
@@ -2752,10 +2753,10 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
     let items;
-    if(typeof cloudVariable === 'string') {
+    if (typeof cloudVariable === 'string') {
         try {
             items = JSON.parse(cloudVariable);
-        } catch(e) {}
+        } catch (e) {}
     }
     if (!Array.isArray(items)) {
         return variables;
