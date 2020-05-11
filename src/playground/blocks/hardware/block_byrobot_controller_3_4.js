@@ -129,6 +129,8 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 controller_button_center        : '중앙 버튼(전원)',
                 controller_button_center_right  : '중앙 오른쪽 버튼',
                 controller_button_center_down   : '중앙 아래쪽 버튼',
+                controller_button_bottom_left   : '하단 왼쪽 버튼',
+                controller_button_bottom_right  : '하단 오른쪽 버튼',
                 controller_buzzer       : '버저',
                 controller_buzzer_a     : '라',
                 controller_buzzer_as    : '라#',
@@ -143,19 +145,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 controller_buzzer_g     : '솔',
                 controller_buzzer_gs    : '솔#',
                 controller_buzzer_mute  : '쉼',
-                controller_display_align_center  : '가운데',
-                controller_display_align_left    : '왼쪽',
-                controller_display_align_right   : '오른쪽',
-                controller_display_flagfill_off  : '채우지 않음',
-                controller_display_flagfill_on   : '채움',
-                controller_display_font_10x16    : '큼',
-                controller_display_font_5x8      : '작음',
-                controller_display_line_dashed   : '파선',
-                controller_display_line_dotted   : '점선',
-                controller_display_line_solid    : '실선',
-                controller_display_pixel_black   : '검은색',
-                controller_display_pixel_white   : '흰색',
-                controller_display_pixel_inverse : '반전',
                 controller_joystick_direction_left_up    : '왼쪽 위',
                 controller_joystick_direction_up         : '위',
                 controller_joystick_direction_right_up   : '오른쪽 위',
@@ -184,15 +173,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale         : '%1 옥타브 %2 을(를) 연주 %3',
                 byrobot_controller_3_4_controller_buzzer_scale_delay   : '%1 옥타브 %2 을(를) %3 초 연주 %4',
                 byrobot_controller_3_4_controller_buzzer_scale_reserve : '%1 옥타브 %2 을(를) %3 초 예약 %4',
-                byrobot_controller_3_4_controller_display_clear        : '지우기 x %1, y %2, 너비 %3, 높이 %4 %5 %6',
-                byrobot_controller_3_4_controller_display_clear_all    : '조종기 화면 전체 지우기%1 %2',
-                byrobot_controller_3_4_controller_display_draw_circle  : '원 x %1, y %2, 반지름 %3 %4 %5 %6',
-                byrobot_controller_3_4_controller_display_draw_line    : '선 x1 %1, y1 %2, x2 %3, y2 %4 %5 %6 %7',
-                byrobot_controller_3_4_controller_display_draw_point   : '점 그리기 x %1, y %2 %3 %4',
-                byrobot_controller_3_4_controller_display_draw_rect    : '사각형 x %1, y %2, 너비 %3, 높이 %4 %5 %6 %7 %8',
-                byrobot_controller_3_4_controller_display_draw_string  : '문자열 x %1, y %2 %3 %4 입력 %5 %6',
-                byrobot_controller_3_4_controller_display_draw_string_align: '문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8',
-                byrobot_controller_3_4_controller_display_invert       : '색반전 x %1, y %2, 너비 %3, 높이 %4 %5',
                 byrobot_controller_3_4_controller_if_button_press      : '조종기 %1 눌렀을 때',
                 byrobot_controller_3_4_controller_if_joystick_direction: '조종기 %1 조이스틱 %2 움직였을 때',
                 byrobot_controller_3_4_controller_light_color_input    : '조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6',
@@ -217,15 +197,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale         : "<br>지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font>",
                 byrobot_controller_3_4_controller_buzzer_scale_delay   : "<br>지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
                 byrobot_controller_3_4_controller_buzzer_scale_reserve : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#예약</font>",
-                byrobot_controller_3_4_controller_display_clear        : "<br>조종기 OLED 화면의 선택한 영역을 지웁니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_clear_all    : "<br>조종기 OLED 화면 전체를 지웁니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_draw_circle  : "<br>조종기 OLED 화면에서 지정한 위치에 원을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 반지름을 지정합니다. 원의 중심 = (x, y),<br>반지름은 원의 크기를 결정합니다.<br><br>★☆사용 가능한 값의 범위는 x값은 (-50~178), y값은 (-50~114), 반지름은 (1~200)입니다.☆★<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_draw_line    : "<br>조종기 OLED 화면에서 지정한 위치에 선을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>시작점 = (x1, y1), 끝나는점 = (x2, y2)<br>선 그리기는 시작점과 끝나는점을 이어주는 기능입니다.<br>사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_draw_point   : "<br>조종기 OLED 화면에서 지정한 위치에 점을 찍습니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다. x, y 좌표값으로 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_draw_rect    : "<br>조종기 OLED 화면에서 지정한 위치에 사각형을 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>x, y 좌표값과 너비, 높이를 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_draw_string  : "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 씁니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 글자 크기, 색을 지정합니다. 시작점 = (x, y), 사용 가능한 값의 범위는 x값은 (0~120), y값과 높이는 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_draw_string_align    : "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 정렬하여 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 정렬 방향, 글자 크기, 색을 지정합니다. 시작점 = (x1, y), 끝나는점 = (x2, y), 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
-                byrobot_controller_3_4_controller_display_invert       : "<br>조종기 OLED 화면에서 선택한 영역의 색을 반전시킵니다. x, y 좌표값과 너비, 높이를 지정합니다. 좌표(x, y) = (가로, 세로) 화면상의 위치입니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 byrobot_controller_3_4_controller_if_button_press      : "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 byrobot_controller_3_4_controller_if_joystick_direction: "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 byrobot_controller_3_4_controller_light_color_input    : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
@@ -277,8 +248,8 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 common_throttle: 'Throttle',
                 controller_button               : 'button',
                 controller_button_event         : 'button event',
-                controller_button_front_left    : 'Fromt left top button',
-                controller_button_front_right   : 'Fromt right top button',
+                controller_button_front_left    : 'Front left button',
+                controller_button_front_right   : 'Front right button',
                 controller_button_top_left      : 'Top left button',
                 controller_button_top_right     : 'Top right button',
                 controller_button_center_up     : 'Trim up button',
@@ -286,6 +257,8 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 controller_button_center        : 'Center button(Power)',
                 controller_button_center_right  : 'Trim right button',
                 controller_button_center_down   : 'Trim down button',
+                controller_button_bottom_left   : 'Bottom left button',
+                controller_button_bottom_right  : 'Bottom right button',
                 controller_buzzer: 'buzzer',
                 controller_buzzer_a: 'A',
                 controller_buzzer_as: 'A#',
@@ -300,19 +273,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 controller_buzzer_g: 'G',
                 controller_buzzer_gs: 'G#',
                 controller_buzzer_mute: 'mute',
-                controller_display_align_center: 'center',
-                controller_display_align_left: 'left',
-                controller_display_align_right: 'right',
-                controller_display_flagfill_off: 'not fill',
-                controller_display_flagfill_on: 'fill',
-                controller_display_font_10x16: 'big',
-                controller_display_font_5x8: 'small',
-                controller_display_line_dashed: 'dashed',
-                controller_display_line_dotted: 'dotted',
-                controller_display_line_solid: 'solid',
-                controller_display_pixel_black: 'black',
-                controller_display_pixel_white: 'white',
-                controller_display_pixel_inverse: 'inverse',
                 controller_joystick_direction_left_up: 'Left top',
                 controller_joystick_direction_up: 'Top',
                 controller_joystick_direction_right_up: 'Right top',
@@ -341,15 +301,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale: 'play %1 octave %2 %3',
                 byrobot_controller_3_4_controller_buzzer_scale_delay: 'play %1 octave %2 for %3 second %4',
                 byrobot_controller_3_4_controller_buzzer_scale_reserve: 'reserve to play %1 octave %2 for %3 second %4',
-                byrobot_controller_3_4_controller_display_clear: 'clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6',
-                byrobot_controller_3_4_controller_display_clear_all: 'clear controller display with %1 color %2',
-                byrobot_controller_3_4_controller_display_draw_circle: 'draw a circle x:%1, y:%2, radius:%3, %4, %5, %6',
-                byrobot_controller_3_4_controller_display_draw_line: 'draw a line x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7',
-                byrobot_controller_3_4_controller_display_draw_point: 'draw a point in controller display  x:%1, y:%2, color:%3 %4',
-                byrobot_controller_3_4_controller_display_draw_rect: 'draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
-                byrobot_controller_3_4_controller_display_draw_string: 'draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6',
-                byrobot_controller_3_4_controller_display_draw_string_align: 'draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
-                byrobot_controller_3_4_controller_display_invert: 'invert controller display x:%1, y:%2, width:%3, height:%4 %5',
                 byrobot_controller_3_4_controller_if_button_press: 'when press %1',
                 byrobot_controller_3_4_controller_if_joystick_direction: 'when %1 stick move to %2',
                 byrobot_controller_3_4_controller_light_color_input: 'Controller LED R %1, G %2, B %3 %4 %5 %6',
@@ -374,15 +325,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale: '',
                 byrobot_controller_3_4_controller_buzzer_scale_delay: '',
                 byrobot_controller_3_4_controller_buzzer_scale_reserve: '',
-                byrobot_controller_3_4_controller_display_clear: '',
-                byrobot_controller_3_4_controller_display_clear_all: '',
-                byrobot_controller_3_4_controller_display_draw_circle: '',
-                byrobot_controller_3_4_controller_display_draw_line: '',
-                byrobot_controller_3_4_controller_display_draw_point: '',
-                byrobot_controller_3_4_controller_display_draw_rect: '',
-                byrobot_controller_3_4_controller_display_draw_string: '',
-                byrobot_controller_3_4_controller_display_draw_string_align: '',
-                byrobot_controller_3_4_controller_display_invert: '',
                 byrobot_controller_3_4_controller_if_button_press: '',
                 byrobot_controller_3_4_controller_if_joystick_direction: '',
                 byrobot_controller_3_4_controller_light_color_input: '',
@@ -422,6 +364,11 @@ Entry.byrobot_controller_3_4.blockMenuBlocks = [
     'byrobot_controller_3_4_controller_buzzer_hz',
     'byrobot_controller_3_4_controller_buzzer_hz_delay',
     'byrobot_controller_3_4_controller_buzzer_hz_reserve',
+    'byrobot_controller_3_4_controller_vibrator_off',
+    'byrobot_controller_3_4_controller_vibrator_on_delay',
+    'byrobot_controller_3_4_controller_vibrator_on_reserve',
+    'byrobot_controller_3_4_controller_vibrator_delay',
+    'byrobot_controller_3_4_controller_vibrator_reserve',
 ];
 
 
@@ -524,6 +471,8 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                         [Lang.Blocks.controller_button_center,       '64'],
                         [Lang.Blocks.controller_button_center_right, '128'],
                         [Lang.Blocks.controller_button_center_down,  '256'],
+                        [Lang.Blocks.controller_button_bottom_left,  '512'],
+                        [Lang.Blocks.controller_button_bottom_right,  '1024'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1193,6 +1142,152 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
+            },
+        },
+
+        byrobot_controller_3_4_controller_vibrator_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [{ type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }],
+            events: {},
+            def: {
+                params: [null],
+                type: 'byrobot_controller_3_4_controller_vibrator_off',
+            },
+            paramsKeyMap: {},
+            class: 'vibrator',
+            isNotFor: ['byrobot_controller_3_4'],
+            func(sprite, script)
+            {
+                return Entry.byrobot_base.setVibratorStop(script, 0x20);
+            },
+        },
+
+        byrobot_controller_3_4_controller_vibrator_on_delay: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [{ type: 'text', params: ['1'] }, null],
+                type: 'byrobot_controller_3_4_controller_vibrator_on_delay',
+            },
+            paramsKeyMap: {
+                TIMEON: 0,
+            },
+            class: 'vibrator',
+            isNotFor: ['byrobot_controller_3_4'],
+            func(sprite, script)
+            {
+                const timeOn = script.getNumberValue('TIMEON') * 1000;
+                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, 0, timeOn, true, true);
+            },
+        },
+
+        byrobot_controller_3_4_controller_vibrator_on_reserve: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [{ type: 'text', params: ['1'] }, null],
+                type: 'byrobot_controller_3_4_controller_vibrator_on_reserve',
+            },
+            paramsKeyMap: {
+                TIMEON: 0,
+            },
+            class: 'vibrator',
+            isNotFor: ['byrobot_controller_3_4'],
+            func(sprite, script)
+            {
+                const timeOn = script.getNumberValue('TIMEON') * 1000;
+                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, 0, timeOn, false, false);
+            },
+        },
+
+        byrobot_controller_3_4_controller_vibrator_delay: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [
+                    { type: 'text', params: ['0.3'] },
+                    { type: 'text', params: ['0.3'] },
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
+                type: 'byrobot_controller_3_4_controller_vibrator_delay',
+            },
+            paramsKeyMap: {
+                TIMEON: 0,
+                TIMEOFF: 1,
+                TIMERUN: 2,
+            },
+            class: 'vibrator',
+            isNotFor: ['byrobot_controller_3_4'],
+            func(sprite, script)
+            {
+                const timeOn  = script.getNumberValue('TIMEON') * 1000;
+                const timeOff = script.getNumberValue('TIMEOFF') * 1000;
+                const timeRun = script.getNumberValue('TIMERUN') * 1000;
+                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, timeOff, timeRun, true, true);
+            },
+        },
+
+        byrobot_controller_3_4_controller_vibrator_reserve: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [
+                    { type: 'text', params: ['0.3'] },
+                    { type: 'text', params: ['0.3'] },
+                    { type: 'text', params: ['1'] },
+                    null,
+                ],
+                type: 'byrobot_controller_3_4_controller_vibrator_reserve',
+            },
+            paramsKeyMap: {
+                TIMEON: 0,
+                TIMEOFF: 1,
+                TIMERUN: 2,
+            },
+            class: 'vibrator',
+            isNotFor: ['byrobot_controller_3_4'],
+            func(sprite, script)
+            {
+                const timeOn  = script.getNumberValue('TIMEON') * 1000;
+                const timeOff = script.getNumberValue('TIMEOFF') * 1000;
+                const timeRun = script.getNumberValue('TIMERUN') * 1000;
+                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, timeOff, timeRun, false, false);
             },
         },
 
