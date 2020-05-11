@@ -142,6 +142,8 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 common_pitch                : 'Pitch',
                 common_yaw                  : 'Yaw',
                 common_throttle             : 'Throttle',
+                common_drone                  : '드론',
+                common_controller             : '조종기',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -233,7 +235,7 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 drone_motor_rotation_clockwise      : '시계 방향',
                 drone_motor_rotation_counterclockwise: '반시계 방향',
                 drone_altitude                  : '해발고도',
-                drone_range_height              : '바닥까지 거리',
+                drone_range_height              : '바닥과의 거리',
                 drone_state_mode_system         : '시스템 모드',
                 drone_state_mode_flight         : '비행 동작 상태',
                 drone_state_mode_control_flight : '비행 제어 모드',
@@ -356,9 +358,9 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_drone_motorsingle_input         : "<br>지정한 모터(1, 2, 3, 4)를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_4_drone_motorsingle_rotation      : "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 1번 모터와 2번 모터는 역방향도 회전 가능하기 때문에 방향도 선택할 수 있습니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#자동차</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_4_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
-                byrobot_drone_4_drone_value_etc                 : "<br>페트론V2 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
-                byrobot_drone_4_drone_value_motion              : "<br>페트론V2 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                byrobot_drone_4_drone_value_sensor              : "<br>페트론V2 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 Petrone V2는 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_4_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
+                byrobot_drone_4_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
+                byrobot_drone_4_drone_value_sensor              : "<br>드론 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
             },
         },
 
@@ -404,7 +406,7 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 controller_button_top_right: 'Top right button',
                 controller_button_center_up: 'Trim up button',
                 controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim rightbutton',
+                controller_button_center_right: 'Trim right button',
                 controller_button_center_down: 'Trim down button',
                 controller_button_bottom_left: 'Bottom left button',
                 controller_button_bottom_right: 'Bottom right button',
@@ -488,15 +490,19 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 drone_range_height: 'Height',
                 drone_state_mode_system: 'System Mode',
                 drone_state_mode_flight: 'Flight Mode',
+                drone_state_mode_control_flight : 'Flight Control Mode',
+                drone_state_mode_movement       : 'mode movement',
                 drone_state_headless: 'Headless',
+                drone_state_control_speed       : 'Speed',
+                drone_state_sensor_orientation  : 'Sensor direction',
                 drone_state_battery: 'Battery',
                 entryhw_count_transfer_reserved: 'Reserved data for transfer',
             },
 
             template: {
-                byrobot_drone_4_controller_buzzer_hz: 'play Buzzer %1 Hz sound %2',
-                byrobot_drone_4_controller_buzzer_hz_delay: 'play Buzzer %1 Hz sound for %2 second %3',
-                byrobot_drone_4_controller_buzzer_hz_reserve: 'reserve to play Buzzer %1 Hz for %2 second %3',
+                byrobot_drone_4_controller_buzzer_hz: 'play %1 Hz sound %2',
+                byrobot_drone_4_controller_buzzer_hz_delay: 'play %1 Hz sound for %2 second %3',
+                byrobot_drone_4_controller_buzzer_hz_reserve: 'reserve to play %1 Hz for %2 second %3',
                 byrobot_drone_4_controller_buzzer_off: 'turn off the buzzer %1',
                 byrobot_drone_4_controller_buzzer_scale: 'play %1 octave %2 %3',
                 byrobot_drone_4_controller_buzzer_scale_delay: 'play %1 octave %2 for %3 second %4',
@@ -505,10 +511,10 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_controller_display_clear_all: 'clear controller display with %1 color %2',
                 byrobot_drone_4_controller_display_draw_circle: 'draw a circle x:%1, y:%2, radius:%3, %4, %5, %6',
                 byrobot_drone_4_controller_display_draw_line: 'draw a line x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7',
-                byrobot_drone_4_controller_display_draw_point: 'draw a point in controller display  x:%1, y:%2, color:%3 %4',
-                byrobot_drone_4_controller_display_draw_rect: 'draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
-                byrobot_drone_4_controller_display_draw_string: 'draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6',
-                byrobot_drone_4_controller_display_draw_string_align: 'draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
+                byrobot_drone_4_controller_display_draw_point: 'draw a point x:%1, y:%2, color:%3 %4',
+                byrobot_drone_4_controller_display_draw_rect: 'draw a rectangle x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
+                byrobot_drone_4_controller_display_draw_string: 'draw a string x:%1, y:%2, font size:%3, %4, input:%5, %6',
+                byrobot_drone_4_controller_display_draw_string_align: 'draw aligned string x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
                 byrobot_drone_4_controller_if_button_press: 'when press %1',
                 byrobot_drone_4_controller_if_joystick_direction: 'when %1 stick move to %2',
                 byrobot_drone_4_controller_light_color_input: 'Controller LED R %1, G %2, B %3 %4 %5 %6',
@@ -702,7 +708,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_4_drone_value_attitude', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_4_drone_value_attitude',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -740,7 +746,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_4_drone_value_motion', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_4_drone_value_motion',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -777,7 +783,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_4_drone_value_sensor', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_4_drone_value_sensor',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -816,7 +822,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_4_drone_value_etc', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_4_drone_value_etc',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -850,7 +856,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_4_controller_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_4_controller_value_button',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -890,7 +896,7 @@ Entry.byrobot_drone_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_4_controller_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_4_controller_value_joystick',
             },
             paramsKeyMap: {
                 DEVICE: 0,

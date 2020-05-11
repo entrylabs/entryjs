@@ -118,6 +118,8 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 common_pitch                : 'Pitch',
                 common_yaw                  : 'Yaw',
                 common_throttle             : 'Throttle',
+                common_drone                  : '드론',
+                common_controller             : '조종기',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -286,7 +288,7 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 controller_button_top_right: 'Top right button',
                 controller_button_center_up: 'Trim up button',
                 controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim rightbutton',
+                controller_button_center_right: 'Trim right button',
                 controller_button_center_down: 'Trim down button',
                 controller_button_bottom_left: 'Bottom left button',
                 controller_button_bottom_right: 'Bottom right button',
@@ -347,12 +349,12 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 "byrobot_controller_4_buzzer_scale_reserve": "reserve to play %1 octave %2 for %3 second %4",
                 "byrobot_controller_4_display_clear": "clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6",
                 "byrobot_controller_4_display_clear_all": "clear controller display with %1 color %2",
-                "byrobot_controller_4_display_draw_circle": "draw a circle in controller display x:%1, y:%2, radius:%3, %4, %5, %6",
-                "byrobot_controller_4_display_draw_line": "draw a line in controller display x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
-                "byrobot_controller_4_display_draw_point": "draw a point in controller display  x:%1, y:%2, color:%3 %4",
-                "byrobot_controller_4_display_draw_rect": "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
-                "byrobot_controller_4_display_draw_string": "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
-                "byrobot_controller_4_display_draw_string_align": "draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
+                "byrobot_controller_4_display_draw_circle": "draw a circle x:%1, y:%2, radius:%3, %4, %5, %6",
+                "byrobot_controller_4_display_draw_line": "draw a line x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
+                "byrobot_controller_4_display_draw_point": "draw a point x:%1, y:%2, color:%3 %4",
+                "byrobot_controller_4_display_draw_rect": "draw a rectangle x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
+                "byrobot_controller_4_display_draw_string": "draw a string x:%1, y:%2, font size:%3, %4, input:%5, %6",
+                "byrobot_controller_4_display_draw_string_align": "draw aligned string x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
                 "byrobot_controller_4_if_button_press": "when press %1",
                 "byrobot_controller_4_if_joystick_direction": "when %1 stick move to %2",
                 "byrobot_controller_4_light_controller_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
@@ -440,7 +442,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_4_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_controller_4_value_button',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -481,7 +483,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_4_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_controller_4_value_joystick',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -532,7 +534,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             paramsKeyMap: {
                 BUTTON: 0,
             },
-            class: 'byrobot_controller_4_boolean_input',
+            class: 'boolean_input',
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
@@ -1411,6 +1413,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -1480,6 +1485,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -1557,6 +1565,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
