@@ -37,10 +37,10 @@ Entry.byrobot_controller_3_4 =
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++)
         {
-            Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
-            Entry.byrobot_base.transferLightModeColor(0x20, 0x21, 200, 255, 0, 0); // LED 초기화(조종기)
+            Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
 
@@ -173,8 +173,8 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale         : '%1 옥타브 %2 을(를) 연주 %3',
                 byrobot_controller_3_4_controller_buzzer_scale_delay   : '%1 옥타브 %2 을(를) %3 초 연주 %4',
                 byrobot_controller_3_4_controller_buzzer_scale_reserve : '%1 옥타브 %2 을(를) %3 초 예약 %4',
-                byrobot_controller_3_4_controller_if_button_press      : '조종기 %1 눌렀을 때',
-                byrobot_controller_3_4_controller_if_joystick_direction: '조종기 %1 조이스틱 %2 움직였을 때',
+                byrobot_controller_3_4_controller_if_button_press      : '조종기 %1을 눌렀을 때',
+                byrobot_controller_3_4_controller_if_joystick_direction: '조종기 %1 조이스틱을 %2(으)로 움직였을 때',
                 byrobot_controller_3_4_controller_light_color_input    : '조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6',
                 byrobot_controller_3_4_controller_light_color_select   : '조종기 LED의 RGB 조합 예시 %1 %2 %3 %4',
                 byrobot_controller_3_4_controller_light_color_preset   : '조종기 LED %1 %2 %3',
@@ -399,7 +399,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_3_4_controller_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_controller_3_4_controller_value_button',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -439,7 +439,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_3_4_controller_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_controller_3_4_controller_value_joystick',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -472,7 +472,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                         [Lang.Blocks.controller_button_center_right, '128'],
                         [Lang.Blocks.controller_button_center_down,  '256'],
                         [Lang.Blocks.controller_button_bottom_left,  '512'],
-                        [Lang.Blocks.controller_button_bottom_right,  '1024'],
+                        [Lang.Blocks.controller_button_bottom_right, '1024'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -647,7 +647,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
             isNotFor: ['byrobot_controller_3_4'],
             func(sprite, script)
             {
-                const mode        = 0x21;
+                const mode        = 0x22;
                 const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
@@ -846,6 +846,9 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -914,6 +917,9 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -990,6 +996,9 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
