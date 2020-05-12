@@ -595,18 +595,7 @@ export default class Hardware implements IEntry.Hardware {
             this.hwMonitor.initView();
         }
         Entry.propertyPanel.addMode('hw', this.hwMonitor);
-        const mt = this.hwModule.monitorTemplate;
-        if (mt.mode === 'both') {
-            mt.mode = 'list';
-            this.hwMonitor.generateListView();
-            mt.mode = 'general';
-            this.hwMonitor.generateView();
-            mt.mode = 'both';
-        } else if (mt.mode === 'list') {
-            this.hwMonitor.generateListView();
-        } else {
-            this.hwMonitor.generateView();
-        }
+        this.hwMonitor.generateViewByMode();
     }
 
     /**
