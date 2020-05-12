@@ -40,7 +40,7 @@ Entry.loadProject = function(project) {
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
-
+    Entry.aiLearning.load(project.learning);
     Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
     if (Entry.aiUtilizeBlocks.length > 0) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
@@ -155,6 +155,7 @@ Entry.exportProject = function(project) {
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
     project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
+    project.learning = Entry.aiLearning.toJSON();
     project.externalModules = Entry.EXTERNAL_MODULE_LIST;
 
     if (!objects || !objects.length) {
@@ -1771,6 +1772,7 @@ Entry.Utils.addNewBlock = function(item) {
         functions,
         messages,
         variables,
+        learning = {},
         tables = [],
         expansionBlocks = [],
         aiUtilizeBlocks = [],
@@ -1796,6 +1798,7 @@ Entry.Utils.addNewBlock = function(item) {
         }
     });
     DataTable.setTables(tables);
+    Entry.aiLearning.load(learning);
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);

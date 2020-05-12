@@ -10,11 +10,13 @@ import { Sortable } from '@entrylabs/tool';
  * This have view for scenes.
  * @constructor
  */
+const STATIC_SCENES_COUNT = 30;
+
 Entry.Scene = class {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;
-        this.maxCount = this.getMaxSceneCount() || 20;
+        this.maxCount = this.getMaxSceneCount() || 30;
         $(window).on('resize', this.resize.bind(this));
 
         this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
@@ -62,6 +64,20 @@ Entry.Scene = class {
                 const addButton = this.createAddButton();
                 this.view_.appendChild(addButton);
                 this.addButton_ = addButton;
+
+                const scenePrevButton = this.scenePrevButton();
+                const sceneNextButton = this.sceneNextButton();
+                this.view_.appendChild(scenePrevButton);
+                this.view_.appendChild(sceneNextButton);
+
+                this.scenePrevButton = scenePrevButton;
+                this.sceneNextButton = sceneNextButton;
+
+                this.prevButton_ = scenePrevButton;
+                this.nextButton_ = sceneNextButton;
+
+                this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+                this.updateView();
             }
         }
     }
@@ -79,6 +95,52 @@ Entry.Scene = class {
         });
 
         return addButton;
+    }
+    /**
+     * prev scene button
+     */
+    scenePrevButton() {
+        const prevButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entryScenePrevButtonWorkspace'
+        );
+
+        const prevBtn = document.createElement('span').addClass('prevBtn');
+        prevButton.bindOnClick((e) => {
+            this.selectScene(Entry.scene.getPrevScene());
+        });
+
+        prevButton.appendChild(prevBtn);
+
+        return prevButton;
+    }
+    /**
+     * next scene, add scene button
+     */
+    sceneNextButton() {
+        const nextButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entrySceneNextButtonWorkspace'
+        );
+
+        const nextBtn = document.createElement('span').addClass('nextBtn');
+        nextBtn.bindOnClick((e) => {
+            this.selectScene(Entry.scene.getNextScene());
+        });
+
+        const addButton = document.createElement('span').addClass('addButton');
+        addButton.bindOnClick((e) => {
+            if (Entry.engine.isState('run')) {
+                return;
+            }
+            this.sceneListwidth = Entry.scene.listView_.offsetWidth;
+
+            Entry.do('sceneAdd', Entry.generateHash());
+        });
+
+        this.nextAddButton_ = addButton;
+        nextButton.appendChild(nextBtn);
+        nextButton.appendChild(addButton);
+
+        return nextButton;
     }
 
     createListView() {
@@ -268,12 +330,26 @@ Entry.Scene = class {
         if (!Entry.type || Entry.type === 'workspace') {
             // var parent = this.listView_;
             // this.getScenes().forEach(({ view }) => parent.appendChild(view));
-
+            const addBtnWidth = 44;
+            const sceneListWidth = this.sceneListWidth + addBtnWidth;
+            const browserWidth = Entry.view_.offsetWidth;
+            const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
-                if (!this.isMax()) {
-                    this.addButton_.removeClass('entryRemove');
-                } else {
+                if (maxSceneCount >= STATIC_SCENES_COUNT) {
                     this.addButton_.addClass('entryRemove');
+                    this.nextAddButton_.addClass('entryRemove');
+                } else {
+                    this.addButton_.removeClass('entryRemove');
+                    this.prevButton_.removeClass('entryRemove');
+                    this.nextButton_.removeClass('entryRemove');
+
+                    if (sceneListWidth > browserWidth) {
+                        this.addButton_.addClass('entryRemove');
+                        this.nextAddButton_.removeClass('entryRemove');
+                    } else {
+                        this.nextButton_.addClass('entryRemove');
+                        this.prevButton_.addClass('entryRemove');
+                    }
                 }
             }
         }
@@ -423,6 +499,9 @@ Entry.Scene = class {
         !container.listView_ && stage.sortZorder();
 
         container.updateListView();
+        if (Entry.type && Entry.type !== 'minimize' && Entry.scene.listView_) {
+            this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+        }
         this.updateView();
         Entry.requestUpdate = true;
     }
@@ -615,17 +694,22 @@ Entry.Scene = class {
         }
     }
 
+    getPrevScene() {
+        const scenes = this.getScenes();
+        return scenes[scenes.indexOf(this.selectedScene) - 1];
+    }
+
     getNextScene() {
         const scenes = this.getScenes();
         return scenes[scenes.indexOf(this.selectedScene) + 1];
     }
 
     getMaxSceneCount() {
-        return 20;
+        return STATIC_SCENES_COUNT;
     }
 
     isMax() {
-        return this.scenes_.length >= this.getMaxSceneCount();
+        return Entry.scene.scenes_.length >= STATIC_SCENES_COUNT;
     }
 
     clear() {

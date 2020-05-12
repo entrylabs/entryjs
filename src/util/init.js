@@ -5,6 +5,7 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
 import EntryBlockHelper from '../class/helper';
 import AIUtilize from '../class/AIUtilize';
+import AILearning from '../class/AILearning';
 import Extension from '../extensions/extension';
 import CloudVariable from '../extensions/CloudVariable';
 
@@ -212,6 +213,9 @@ Entry.initialize_ = function() {
 
     this.aiUtilize = new AIUtilize(this.playground);
     this._destroyer.add(this.aiUtilize);
+
+    this.aiLearning = new AILearning(this.playground);
+    this._destroyer.add(this.aiLearning);
 
     this.intro = new Entry.Intro();
 
