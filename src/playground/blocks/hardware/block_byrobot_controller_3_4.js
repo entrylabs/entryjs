@@ -468,7 +468,6 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                         [Lang.Blocks.controller_button_top_right,    '8'],
                         [Lang.Blocks.controller_button_center_up,    '16'],
                         [Lang.Blocks.controller_button_center_left,  '32'],
-                        [Lang.Blocks.controller_button_center,       '64'],
                         [Lang.Blocks.controller_button_center_right, '128'],
                         [Lang.Blocks.controller_button_center_down,  '256'],
                         [Lang.Blocks.controller_button_bottom_left,  '512'],
