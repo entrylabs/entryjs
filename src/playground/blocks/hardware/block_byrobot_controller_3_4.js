@@ -175,8 +175,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale_reserve : '%1 옥타브 %2 을(를) %3 초 예약 %4',
                 byrobot_controller_3_4_controller_if_button_press      : '조종기 %1을 눌렀을 때',
                 byrobot_controller_3_4_controller_if_joystick_direction: '조종기 %1 조이스틱을 %2(으)로 움직였을 때',
-                byrobot_controller_3_4_controller_light_color_input    : '조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6',
-                byrobot_controller_3_4_controller_light_color_select   : '조종기 LED의 RGB 조합 예시 %1 %2 %3 %4',
                 byrobot_controller_3_4_controller_light_color_preset   : '조종기 LED %1 %2 %3',
                 byrobot_controller_3_4_controller_light_manual_single_input: '조종기 LED %1 밝기 %2 %3',
                 byrobot_controller_3_4_controller_light_manual_single_off  : '조종기 LED 끄기 %1',
@@ -199,10 +197,8 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale_reserve : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#예약</font>",
                 byrobot_controller_3_4_controller_if_button_press      : "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 byrobot_controller_3_4_controller_if_joystick_direction: "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
-                byrobot_controller_3_4_controller_light_color_input    : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                byrobot_controller_3_4_controller_light_color_select   : "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_controller_3_4_controller_light_color_preset   : "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                byrobot_controller_3_4_controller_light_manual_single_input    : "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                byrobot_controller_3_4_controller_light_manual_single_input    : "<br>조종기 LED를 조작하는데 사용합니다.<br>LED를 선택하는데는 10진수(0 ~ 255) 또는 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_controller_3_4_controller_light_manual_single_off      : "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 byrobot_controller_3_4_controller_value_button         : "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 byrobot_controller_3_4_controller_value_joystick       : "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
@@ -303,8 +299,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_buzzer_scale_reserve: 'reserve to play %1 octave %2 for %3 second %4',
                 byrobot_controller_3_4_controller_if_button_press: 'when press %1',
                 byrobot_controller_3_4_controller_if_joystick_direction: 'when %1 stick move to %2',
-                byrobot_controller_3_4_controller_light_color_input: 'Controller LED R %1, G %2, B %3 %4 %5 %6',
-                byrobot_controller_3_4_controller_light_color_select: 'Controller LED Preset %1 %2 %3 %4',
                 byrobot_controller_3_4_controller_light_color_preset: 'Controller LED %1 %2 %3',
                 byrobot_controller_3_4_controller_light_manual_single_input: 'Controller LED %1 Lightness %2 %3',
                 byrobot_controller_3_4_controller_light_manual_single_off: 'Controller LED Off %1',
@@ -328,7 +322,6 @@ Entry.byrobot_controller_3_4.setLanguage = function() {
                 byrobot_controller_3_4_controller_if_button_press: '',
                 byrobot_controller_3_4_controller_if_joystick_direction: '',
                 byrobot_controller_3_4_controller_light_color_input: '',
-                byrobot_controller_3_4_controller_light_color_select: '',
                 byrobot_controller_3_4_controller_light_color_preset: '',
                 byrobot_controller_3_4_controller_light_manual_single_input: '',
                 byrobot_controller_3_4_controller_light_manual_single_off: '',
@@ -355,8 +348,6 @@ Entry.byrobot_controller_3_4.blockMenuBlocks = [
     'byrobot_controller_3_4_controller_light_manual_single_off',
     'byrobot_controller_3_4_controller_light_manual_single_input',
     'byrobot_controller_3_4_controller_light_color_preset',
-    'byrobot_controller_3_4_controller_light_color_input',
-    'byrobot_controller_3_4_controller_light_color_select',
     'byrobot_controller_3_4_controller_buzzer_off',
     'byrobot_controller_3_4_controller_buzzer_scale',
     'byrobot_controller_3_4_controller_buzzer_scale_delay',
@@ -598,18 +589,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.common_light_color_red,            'red'],
-                        [Lang.Blocks.common_light_color_green,          'green'],
                         [Lang.Blocks.common_light_color_blue,           'blue'],
-                        [Lang.Blocks.common_light_color_yellow,         'yellow'],
-                        [Lang.Blocks.common_light_color_magenta,        'magenta'],
-                        [Lang.Blocks.common_light_color_cyan,           'cyan'],
-                        [Lang.Blocks.common_light_color_white,          'white'],
-                        [Lang.Blocks.common_light_color_sunset,         'sunset'],
-                        [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
-                        [Lang.Blocks.common_light_color_muscat,         'muscat'],
-                        [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
-                        [Lang.Blocks.common_light_color_emerald,        'emerald'],
-                        [Lang.Blocks.common_light_color_lavender,       'lavender'],
                     ],
                     value: 'red',
                     fontSize: 11,
@@ -646,7 +626,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
             isNotFor: ['byrobot_controller_3_4'],
             func(sprite, script)
             {
-                const mode        = 0x22;
+                const mode        = 0x12;
                 const interval    = parseInt(script.getField('BRIGHTNESS'), 10);
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
@@ -666,7 +646,7 @@ Entry.byrobot_controller_3_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0b00000111'] },
+                    { type: 'text', params: ['0xFC'] },
                     { type: 'text', params: ['255'] },
                     null,
                 ],
@@ -680,141 +660,12 @@ Entry.byrobot_controller_3_4.getBlocks = function()
             isNotFor: ['byrobot_controller_3_4'],
             func(sprite, script)
             {
-                const flags      = script.getNumberValue('FLAGS');
+                const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_base.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
-        byrobot_controller_3_4_controller_light_color_input: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def: {
-                params: [
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
-                    null,
-                    { type: 'text', params: ['250'] },
-                    null,
-                ],
-                type: 'byrobot_controller_3_4_controller_light_color_input',
-            },
-            paramsKeyMap: {
-                RED: 0,
-                GREEN: 1,
-                BLUE: 2,
-                MODE: 3,
-                INTERVAL: 4,
-            },
-            class: 'controller_light',
-            isNotFor: ['byrobot_controller_3_4'],
-            func(sprite, script)
-            {
-                const mode      = 0x20 + parseInt(script.getField('MODE'), 10);
-                const interval  = script.getNumberValue('INTERVAL');
-                const red       = script.getNumberValue('RED');
-                const green     = script.getNumberValue('GREEN');
-                const blue      = script.getNumberValue('BLUE');
-                return Entry.byrobot_base.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
-            },
-        },
-
-        byrobot_controller_3_4_controller_light_color_select: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.common_light_color_red,            'red'],
-                        [Lang.Blocks.common_light_color_green,          'green'],
-                        [Lang.Blocks.common_light_color_blue,           'blue'],
-                        [Lang.Blocks.common_light_color_yellow,         'yellow'],
-                        [Lang.Blocks.common_light_color_magenta,        'magenta'],
-                        [Lang.Blocks.common_light_color_cyan,           'cyan'],
-                        [Lang.Blocks.common_light_color_white,          'white'],
-                        [Lang.Blocks.common_light_color_sunset,         'sunset'],
-                        [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
-                        [Lang.Blocks.common_light_color_muscat,         'muscat'],
-                        [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
-                        [Lang.Blocks.common_light_color_emerald,        'emerald'],
-                        [Lang.Blocks.common_light_color_lavender,       'lavender'],
-                    ],
-                    value: 'red',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def: {
-                params: [null, null, { type: 'text', params: ['250'] }, null],
-                type: 'byrobot_controller_3_4_controller_light_color_select',
-            },
-            paramsKeyMap: {
-                COLOR: 0,
-                MODE: 1,
-                INTERVAL: 2,
-            },
-            class: 'controller_light',
-            isNotFor: ['byrobot_controller_3_4'],
-            func(sprite, script)
-            {
-                const mode        = 0x20 + parseInt(script.getField('MODE'), 10);
-                const interval    = script.getNumberValue('INTERVAL');
-                const colorString = script.getField('COLOR');
-                return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
-            },
-        },
 
         byrobot_controller_3_4_controller_buzzer_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,

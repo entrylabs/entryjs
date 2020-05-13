@@ -617,7 +617,7 @@ Entry.byrobot_dronefighter_controller.setLanguage = function ()
                 "byrobot_dronefighter_controller_controller_if_joystick_direction": "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 "byrobot_dronefighter_controller_controller_light_manual_single_off": "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_dronefighter_controller_controller_light_manual_single": "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_dronefighter_controller_controller_light_manual_single_input": "<br>조종기 LED 여러 개의 밝기를 동시에 변경할 때 사용합니다. 2진수(0b00000000 ~ 0b11111111), 10진수(0 ~ 255), 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다. 2진수로 표현한 값에서 각각의 비트는 개별 LED를 선택하는 스위치 역할을 합니다. 밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_dronefighter_controller_controller_light_manual_single_input": "<br>조종기 LED 여러 개의 밝기를 동시에 변경할 때 사용합니다.<br>10진수(0 ~ 255), 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>2진수로 표현한 값에서 각각의 비트는 개별 LED를 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 "byrobot_dronefighter_controller_controller_buzzer_off": "<br>버저 작동을 중단합니다. 예약된 소리가 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저끄기</font>",
                 "byrobot_dronefighter_controller_controller_buzzer_scale": "<br>지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font>",
                 "byrobot_dronefighter_controller_controller_buzzer_scale_delay": "<br>지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
@@ -1199,7 +1199,7 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['0b11111111'],
+                        params: ['0xFF'],
                     },
                     {
                         type: 'text',
@@ -1216,14 +1216,9 @@ Entry.byrobot_dronefighter_controller.getBlocks = function() {
             class: 'byrobot_dronefighter_controller_controller_light',
             isNotFor: ['byrobot_dronefighter_controller'],
             func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_dronefighter_controller.setLightManual(
-                    script,
-                    0x11,
-                    flags,
-                    brightness
-                );
+                const flags      = parseInt(script.getStringValue('FLAGS'));
+                const brightness = script.getNumberValue('BRIGHTNESS');
+                return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, flags, brightness);
             },
         },
         byrobot_dronefighter_controller_controller_buzzer_off: {
