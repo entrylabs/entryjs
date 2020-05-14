@@ -335,7 +335,7 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_string_align_string;
     },
 
-    transferbuzzer(target, mode, value, time)
+    transferBuzzer(target, mode, value, time)
     {
         Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.buzzer_mode = mode;
@@ -866,7 +866,7 @@ Entry.byrobot_base =
         {
             case 'Start':
                 {
-                    this.transferbuzzer(target, 0, 0, 0);
+                    this.transferBuzzer(target, 0, 0, 0);
                 }
                 return script;
 
@@ -900,7 +900,7 @@ Entry.byrobot_base =
                         mode = 1;
                     } // 묵음 즉시
 
-                    this.transferbuzzer(target, mode, 0xee, time);
+                    this.transferBuzzer(target, mode, 0xee, time);
                 }
                 return script;
 
@@ -935,7 +935,7 @@ Entry.byrobot_base =
 
                     const scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(target, mode, scalecalc, time);
+                    this.transferBuzzer(target, mode, scalecalc, time);
                 }
                 return script;
 
@@ -967,7 +967,7 @@ Entry.byrobot_base =
                     {
                         mode = 5;
                     } // Hz 즉시
-                    this.transferbuzzer(target, mode, hz, time);
+                    this.transferBuzzer(target, mode, hz, time);
                 }
                 return script;
 

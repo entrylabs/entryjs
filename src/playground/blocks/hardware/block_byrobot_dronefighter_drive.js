@@ -32,7 +32,7 @@ Entry.byrobot_dronefighter_drive = {
         for (var i = 0; i < 1; i++) {
             this.transferCommand(0x10, 0x24, 0);
             this.transferVibrator(0, 0, 0, 0);
-            this.transferbuzzer(0, 0, 0);
+            this.transferBuzzer(0, 0, 0);
             this.transferLightManual(0x10, 0xff, 0);
             this.transferLightManual(0x11, 0xff, 0);
         }
@@ -134,7 +134,7 @@ Entry.byrobot_dronefighter_drive = {
         delete Entry.hw.sendQueue['light_manual_brightness'];
     },
 
-    transferbuzzer: function(mode, value, time) {
+    transferBuzzer: function(mode, value, time) {
         // 전송
         Entry.hw.setDigitalPortValue('target', 0x11);
         Entry.hw.setDigitalPortValue('buzzer_mode', mode);
@@ -308,7 +308,7 @@ Entry.byrobot_dronefighter_drive = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferbuzzer(0, 0, 0);
+                    this.transferBuzzer(0, 0, 0);
                 }
                 return script;
 
@@ -337,7 +337,7 @@ Entry.byrobot_dronefighter_drive = {
                     var mode = 2; // 묵음 연속
                     if (flagInstantly) mode = 1; // 묵음 즉시
 
-                    this.transferbuzzer(mode, 0xee, time);
+                    this.transferBuzzer(mode, 0xee, time);
                 }
                 return script;
 
@@ -367,7 +367,7 @@ Entry.byrobot_dronefighter_drive = {
 
                     var scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(mode, scalecalc, time);
+                    this.transferBuzzer(mode, scalecalc, time);
                 }
                 return script;
 
@@ -399,7 +399,7 @@ Entry.byrobot_dronefighter_drive = {
                     hz = Math.max(hz, 1);
                     hz = Math.min(hz, 63999);
 
-                    this.transferbuzzer(mode, hz, time);
+                    this.transferBuzzer(mode, hz, time);
                 }
                 return script;
 

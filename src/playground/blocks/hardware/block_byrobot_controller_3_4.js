@@ -37,7 +37,7 @@ Entry.byrobot_controller_3_4 =
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++)
         {
-            Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)

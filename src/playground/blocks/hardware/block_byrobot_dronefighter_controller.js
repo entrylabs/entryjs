@@ -31,7 +31,7 @@ Entry.byrobot_dronefighter_controller = {
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (var i = 0; i < 1; i++) {
             this.transferVibrator(0, 0, 0, 0);
-            this.transferbuzzer(0, 0, 0);
+            this.transferBuzzer(0, 0, 0);
             this.transferLightManual(0x11, 0xff, 0);
             this.transferCommand(0x11, 0x81, 0);
         }
@@ -130,7 +130,7 @@ Entry.byrobot_dronefighter_controller = {
         delete Entry.hw.sendQueue['light_manual_brightness'];
     },
 
-    transferbuzzer: function(mode, value, time) {
+    transferBuzzer: function(mode, value, time) {
         // 전송
         Entry.hw.setDigitalPortValue('target', 0x11);
         Entry.hw.setDigitalPortValue('buzzer_mode', mode);
@@ -237,7 +237,7 @@ Entry.byrobot_dronefighter_controller = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferbuzzer(0, 0, 0);
+                    this.transferBuzzer(0, 0, 0);
                 }
                 return script;
 
@@ -266,7 +266,7 @@ Entry.byrobot_dronefighter_controller = {
                     var mode = 2; // 묵음 연속
                     if (flagInstantly) mode = 1; // 묵음 즉시
 
-                    this.transferbuzzer(mode, 0xee, time);
+                    this.transferBuzzer(mode, 0xee, time);
                 }
                 return script;
 
@@ -296,7 +296,7 @@ Entry.byrobot_dronefighter_controller = {
 
                     var scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(mode, scalecalc, time);
+                    this.transferBuzzer(mode, scalecalc, time);
                 }
                 return script;
 
@@ -328,7 +328,7 @@ Entry.byrobot_dronefighter_controller = {
                     hz = Math.max(hz, 1);
                     hz = Math.min(hz, 63999);
 
-                    this.transferbuzzer(mode, hz, time);
+                    this.transferBuzzer(mode, hz, time);
                 }
                 return script;
 

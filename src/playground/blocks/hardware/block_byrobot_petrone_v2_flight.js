@@ -39,7 +39,7 @@ Entry.byrobot_petrone_v2_flight =
         {
             this.transferCommand(0x30, 0x24, 0);       // 드론, command = 0x24 (Stop)
             this.transferVibrator(0, 0, 0, 0);
-            this.transferbuzzer(0, 0, 0);
+            this.transferBuzzer(0, 0, 0);
             this.transferLightManual(0x30, 0xff, 0);   // LED 초기화(모두 꺼짐)
             this.transferLightManual(0x31, 0xff, 0);   // LED 초기화(모두 꺼짐)
             this.transferLightModeColor(0x30, 0x12, 200, 255, 0, 0); // LED 초기화(눈 빨강)
@@ -497,7 +497,7 @@ Entry.byrobot_petrone_v2_flight =
     },
 
 
-    transferbuzzer: function(mode, value, time)
+    transferBuzzer: function(mode, value, time)
     {
         // 전송
         Entry.hw.setDigitalPortValue('target', 0x31);
@@ -893,7 +893,7 @@ Entry.byrobot_petrone_v2_flight =
         {
             case 'Start':
                 {
-                    this.transferbuzzer(0, 0, 0);
+                    this.transferBuzzer(0, 0, 0);
                 }
                 return script;
 
@@ -924,7 +924,7 @@ Entry.byrobot_petrone_v2_flight =
                     var mode = 2; // 묵음 연속
                     if (flagInstantly) mode = 1; // 묵음 즉시
 
-                    this.transferbuzzer(mode, 0xee, time);
+                    this.transferBuzzer(mode, 0xee, time);
                 }
                 return script;
 
@@ -956,7 +956,7 @@ Entry.byrobot_petrone_v2_flight =
 
                     var scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(mode, scalecalc, time);
+                    this.transferBuzzer(mode, scalecalc, time);
                 }
                 return script;
 
@@ -989,7 +989,7 @@ Entry.byrobot_petrone_v2_flight =
                     // 범위 조정
                     hz = this.fit(1, hz, 63999);
 
-                    this.transferbuzzer(mode, hz, time);
+                    this.transferBuzzer(mode, hz, time);
                 }
                 return script;
 

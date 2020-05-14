@@ -38,7 +38,7 @@ Entry.byrobot_petrone_v2_controller =
         for (var i = 0; i < 1; i++)
         {
             this.transferVibrator(0, 0, 0, 0);
-            this.transferbuzzer(0, 0, 0);
+            this.transferBuzzer(0, 0, 0);
             this.transferLightManual(0x31, 0xff, 0); // 조종기, flags = 0xFF (전체선택)
             this.transferCommand(0x31, 0x80, 0);     // 조종기, command = 0x80 (DataStorageWrite)
         }
@@ -430,7 +430,7 @@ Entry.byrobot_petrone_v2_controller =
     },
 
 
-    transferbuzzer: function(mode, value, time)
+    transferBuzzer: function(mode, value, time)
     {
         // 전송
         Entry.hw.setDigitalPortValue('target', 0x31);
@@ -744,7 +744,7 @@ Entry.byrobot_petrone_v2_controller =
         {
             case 'Start':
                 {
-                    this.transferbuzzer(0, 0, 0);
+                    this.transferBuzzer(0, 0, 0);
                 }
                 return script;
 
@@ -775,7 +775,7 @@ Entry.byrobot_petrone_v2_controller =
                     var mode = 2; // 묵음 연속
                     if (flagInstantly) mode = 1; // 묵음 즉시
 
-                    this.transferbuzzer(mode, 0xee, time);
+                    this.transferBuzzer(mode, 0xee, time);
                 }
                 return script;
 
@@ -807,7 +807,7 @@ Entry.byrobot_petrone_v2_controller =
 
                     var scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(mode, scalecalc, time);
+                    this.transferBuzzer(mode, scalecalc, time);
                 }
                 return script;
 
@@ -840,7 +840,7 @@ Entry.byrobot_petrone_v2_controller =
                     // 범위 조정
                     hz = this.fit(1, hz, 63999);
 
-                    this.transferbuzzer(mode, hz, time);
+                    this.transferBuzzer(mode, hz, time);
                 }
                 return script;
 

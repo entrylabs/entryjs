@@ -38,8 +38,8 @@ Entry.byrobot_drone_8 =
         for (let i = 0; i < 1; i++)
         {
             Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
-            Entry.byrobot_base.transferbuzzer(0x10, 0, 0, 0);
-            Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferBuzzer(0x10, 0, 0, 0);
+            Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
@@ -2147,7 +2147,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 return Entry.byrobot_base.setBuzzerStop(script, target);
             },
         },
@@ -2224,7 +2224,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
 
@@ -2316,7 +2316,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
                 const time = script.getNumberValue('TIME') * 1000;
@@ -2409,7 +2409,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale  = parseInt(script.getField('SCALE'), 10);
                 const time   = script.getNumberValue('TIME') * 1000;
@@ -2455,7 +2455,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 const hz = script.getNumberValue('HZ');
                 return Entry.byrobot_base.setBuzzerHz(script, target, hz, 60000, false, true);
             },
@@ -2496,7 +2496,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, true, true);
@@ -2543,7 +2543,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const target = script.getNumberValue('TARGET');
+                const target = parseInt(script.getStringValue('TARGET'));
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, false, false);

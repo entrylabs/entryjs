@@ -39,7 +39,7 @@ Entry.byrobot_drone_4 =
         {
             Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
-            Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightModeColor(0x10, 0x22, 200, 255, 0, 0); // LED 초기화(드론)
