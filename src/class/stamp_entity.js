@@ -12,7 +12,7 @@ import { GEHelper } from '../graphicEngine/GEHelper';
  * @param {!Entry.EntityObject} entity
  * @constructor
  */
-Entry.StampEntity = class StampEntity {
+Entry.StampEntity = class StampEntity extends Entry.EntityObject {
     constructor(object, entity) {
         /** @type {!string} */
         this.parent = object;
@@ -33,11 +33,3 @@ Entry.StampEntity = class StampEntity {
         this.object.entity = entity;
     }
 };
-
-(function(p, origin) {
-    ['applyFilter', 'getWidth', 'getHeight', 'getInitialEffectValue', 'destroy', 'cache'].forEach(
-        (key) => {
-            p[key] = origin[key];
-        }
-    );
-})(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
