@@ -23,39 +23,39 @@ Entry.TimeWaitManager = {
     },
 };
 
-Entry.TimeWait = class TimeWait {
-    constructor(id, cb, ms) {
-        this.id = id;
-        this.cb = cb;
-        this.ms = ms;
-        this.startTime = performance.now();
-        this.timer = setTimeout(this.callback.bind(this), ms);
-    }
+Entry.TimeWait = function(id, cb, ms) {
+    this.id = id;
+    this.cb = cb;
+    this.ms = ms;
+    this.startTime = performance.now();
+    this.timer = setTimeout(this.callback.bind(this), ms);
+};
 
-    callback() {
+(function(p) {
+    p.callback = function() {
         if (this.cb) {
             this.cb();
             this.destroy();
         }
-    }
+    };
 
-    pause() {
+    p.pause = function() {
         if (this.timer) {
             this.ms = this.ms - (performance.now() - this.startTime);
             clearTimeout(this.timer);
         }
-    }
+    };
 
-    resume() {
+    p.resume = function() {
         this.timer = setTimeout(this.callback.bind(this), this.ms);
         this.startTime = performance.now();
-    }
+    };
 
-    destroy() {
+    p.destroy = function() {
         delete this.timer;
         delete this.cb;
         delete this.ms;
         delete this.startTime;
         Entry.TimeWaitManager.remove(this.id);
-    }
-};
+    };
+})(Entry.TimeWait.prototype);
