@@ -25,16 +25,6 @@ export default class AIUtilize {
 
     getAIUtilizes(blockList) {
         return ExtraBlockUtils.getExtras(blockList, 'category_ai_utilize');
-        // let aiUtilizeList = [];
-        // blockList.forEach((block) => {
-        //     const { _schema = {} } = block || {};
-        //     const { isFor, isNotFor = [] } = _schema;
-        //     const [aiUtilizeKey] = isNotFor;
-        //     if (aiUtilizeKey && isFor && isFor.indexOf('category_ai_utilize') >= 0) {
-        //         aiUtilizeList = _.union(aiUtilizeList, [aiUtilizeKey]);
-        //     }
-        // });
-        // return aiUtilizeList;
     }
 
     destroy() {
