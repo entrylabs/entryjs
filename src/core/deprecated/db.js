@@ -1,11 +1,12 @@
 'use strict';
 
-Entry.db = class DB {
-    constructor() {
-        this.data = {};
-        this.typeMap = {};
-    }
-    add(datum) {
+Entry.db = {
+    data: {},
+    typeMap: {},
+};
+
+(function(db) {
+    db.add = function(datum) {
         this.data[datum.id] = datum;
 
         const type = datum.type;
@@ -13,13 +14,13 @@ Entry.db = class DB {
             this.typeMap[type] = {};
         }
         this.typeMap[type][datum.id] = datum;
-    }
+    };
 
-    has(id) {
+    db.has = function(id) {
         return this.data.hasOwnProperty(id);
-    }
+    };
 
-    remove(id) {
+    db.remove = function(id) {
         if (!this.has(id)) {
             return;
         }
@@ -27,16 +28,16 @@ Entry.db = class DB {
         const datum = this.data[id];
         delete this.typeMap[datum.type][id];
         delete this.data[id];
-    }
+    };
 
-    get(id) {
+    db.get = function(id) {
         return this.data[id];
-    }
+    };
 
-    find() {}
+    db.find = function() {};
 
-    clear() {
+    db.clear = function() {
         this.data = {};
         this.typeMap = {};
-    }
-};
+    };
+})(Entry.db);
