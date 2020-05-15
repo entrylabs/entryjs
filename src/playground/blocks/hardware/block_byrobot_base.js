@@ -368,7 +368,7 @@ Entry.byrobot_base =
     },
 
 
-    transferMotorSingle(target, motorIndex, motorRotation, motorSpeed)
+    transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed)
     {
         Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.motorsingle_target = motorIndex;
@@ -380,6 +380,19 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.target;
         delete Entry.hw.sendQueue.motorsingle_target;
         delete Entry.hw.sendQueue.motorsingle_rotation;
+        delete Entry.hw.sendQueue.motorsingle_value;
+    },
+
+    transferMotorSingleV(target, motorIndex, motorSpeed)
+    {
+        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.motorsingle_target = motorIndex;
+        Entry.hw.sendQueue.motorsingle_value = motorSpeed;
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.motorsingle_target;
         delete Entry.hw.sendQueue.motorsingle_value;
     },
 
@@ -1068,13 +1081,34 @@ Entry.byrobot_base =
         }
     },
 
-    setMotorSingle(script, target, motorIndex, motorRotation, motorSpeed)
+    setMotorSingleRV(script, target, motorIndex, motorRotation, motorSpeed)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferMotorSingle(target, motorIndex, motorRotation, motorSpeed);
+                    this.transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+    setMotorSingleV(script, target, motorIndex, motorSpeed)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferMotorSingleV(target, motorIndex, motorSpeed);
                 }
                 return script;
 

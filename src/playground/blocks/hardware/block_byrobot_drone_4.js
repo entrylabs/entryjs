@@ -296,8 +296,8 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_drone_light_manual_single_input : '드론 LED %1 밝기 %2 %3',
                 byrobot_drone_4_drone_light_manual_single_off   : '드론 LED 끄기 %1',
                 byrobot_drone_4_drone_motor_stop                : '드론 모터 정지 %1',
-                byrobot_drone_4_drone_motorsingle               : '드론 %1번 모터를 %2(으)로 %3(으)로 회전 %4',
-                byrobot_drone_4_drone_motorsingle_input         : '드론 %1번 모터를 %2(으)로 %3(으)로 회전 %4',
+                byrobot_drone_4_drone_motorsingle               : '드론 %1번 모터를 %2(으)로 회전 %3',
+                byrobot_drone_4_drone_motorsingle_input         : '드론 %1번 모터를 %2(으)로 회전 %3',
                 byrobot_drone_4_drone_value_attitude    : '%1',
                 byrobot_drone_4_drone_value_motion      : '%1',
                 byrobot_drone_4_drone_value_sensor      : '%1',
@@ -353,8 +353,8 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_drone_light_manual_single_input : "<br>드론 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255) 또는 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>각각의 비트는 LED를 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_4_drone_light_manual_single_off   : "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
                 byrobot_drone_4_drone_motor_stop                : "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
-                byrobot_drone_4_drone_motorsingle               : "<br>지정한 모터를 원하는 방향과 빠르기를 지정해서 작동할 때 사용합니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
-                byrobot_drone_4_drone_motorsingle_input         : "<br>지정한 모터를 원하는 방향과 빠르기를 지정해서 작동할 때 사용합니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
+                byrobot_drone_4_drone_motorsingle               : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
+                byrobot_drone_4_drone_motorsingle_input         : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_4_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
                 byrobot_drone_4_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
                 byrobot_drone_4_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
@@ -546,8 +546,8 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_drone_light_color_select: 'Drone %1 LED Preset %2 %3 %4 %5',
                 byrobot_drone_4_drone_light_color_preset: 'Drone LED %1 %2 %3',
                 byrobot_drone_4_drone_motor_stop: 'Motor stop %1',
-                byrobot_drone_4_drone_motorsingle: 'No. %1 Motor rotate for %2 %3 %4',
-                byrobot_drone_4_drone_motorsingle_input: 'No. %1 Motor rotate for %2 %3 %4',
+                byrobot_drone_4_drone_motorsingle: 'No. %1 Motor rotate for %2 %3',
+                byrobot_drone_4_drone_motorsingle_input: 'No. %1 Motor rotate for %2 %3',
                 byrobot_drone_4_drone_value_attitude: '%1',
                 byrobot_drone_4_drone_value_motion: '%1',
                 byrobot_drone_4_drone_value_sensor: '%1',
@@ -2541,39 +2541,26 @@ Entry.byrobot_drone_4.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_motor_rotation_clockwise, '1'],
-                        [Lang.Blocks.drone_motor_rotation_counterclockwise, '2'],
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
-                params: [null, null, { type: 'text', params: ['120'] }, null],
+                params: [null, { type: 'text', params: ['120'] }, null],
                 type: 'byrobot_drone_4_drone_motorsingle',
             },
             paramsKeyMap: {
                 MOTORINDEX: 0,
-                MOTORROTATION: 1,
-                MOTORSPEED: 2,
+                MOTORSPEED: 1,
             },
             class: 'motor',
             isNotFor: ['byrobot_drone_4'],
             func(sprite, script)
             {
                 const motorIndex    = parseInt(script.getField('MOTORINDEX'), 10);
-                const motorRotation = parseInt(script.getField('MOTORROTATION'), 10);
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
         },
 
@@ -2584,39 +2571,26 @@ Entry.byrobot_drone_4.getBlocks = function()
             statements: [],
             params: [
                 { type: 'Block', accept: 'string' },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_motor_rotation_clockwise, '1'],
-                        [Lang.Blocks.drone_motor_rotation_counterclockwise, '2'],
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1'] }, null, { type: 'text', params: ['120'] }, null],
+                params: [{ type: 'text', params: ['1'] }, { type: 'text', params: ['120'] }, null],
                 type: 'byrobot_drone_4_drone_motorsingle_input',
             },
             paramsKeyMap: {
                 MOTORINDEX: 0,
-                MOTORROTATION: 1,
-                MOTORSPEED: 2,
+                MOTORSPEED: 1,
             },
             class: 'motor',
             isNotFor: ['byrobot_drone_4'],
             func(sprite, script)
             {
                 const motorIndex    = script.getNumberValue('MOTORINDEX') - 1;
-                const motorRotation = parseInt(script.getField('MOTORROTATION'), 10);
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
         },
 
