@@ -4,27 +4,27 @@
  * Entry Collection object constructor.
  */
 
-Entry.Collection = class Collection {
-    function(data) {
-        this.length = 0;
+Entry.Collection = function(data) {
+    this.length = 0;
 
-        /*
-         * object for hashing data with id
-         * @private
-         */
-        this._hashMap = {};
+    /*
+     * object for hashing data with id
+     * @private
+     */
+    this._hashMap = {};
 
-        /*
-         * observers
-         */
-        this._observers = [];
-        this.set(data);
-    }
+    /*
+     * observers
+     */
+    this._observers = [];
+    this.set(data);
+};
 
+(function(p, ap) {
     /* setters */
-    set(data) {
+    p.set = function(data) {
         while (this.length) {
-            Array.prototype.pop.call(this);
+            ap.pop.call(this);
         }
 
         const hashMap = this._hashMap;
@@ -36,60 +36,57 @@ Entry.Collection = class Collection {
             for (let i = 0, len = data.length; i < len; i++) {
                 const datum = data[i];
                 hashMap[datum.id] = datum;
-                Array.prototype.push.call(this, datum);
+                ap.push.call(this, datum);
             }
         }
-    }
+    };
 
-    push(elem) {
-        if (!this._hashMap) {
-            this._hashMap = {};
-        }
+    p.push = function(elem) {
         this._hashMap[elem.id] = elem;
-        Array.prototype.push.call(this, elem);
-    }
+        ap.push.call(this, elem);
+    };
 
-    unshift() {
+    p.unshift = function() {
         const args = Array.prototype.slice.call(arguments, 0);
         const hashMap = this._hashMap;
         for (let i = args.length - 1; i >= 0; i--) {
             const datum = args[i];
-            Array.prototype.unshift.call(this, datum);
+            ap.unshift.call(this, datum);
             hashMap[datum.id] = datum;
         }
-    }
+    };
 
-    insert(datum, index) {
-        Array.prototype.splice.call(this, index, 0, datum);
+    p.insert = function(datum, index) {
+        ap.splice.call(this, index, 0, datum);
         this._hashMap[datum.id] = datum;
-    }
+    };
 
-    has(id) {
+    p.has = function(id) {
         return !!this._hashMap[id];
-    }
+    };
 
-    get(id) {
+    p.get = function(id) {
         return this._hashMap[id];
-    }
+    };
 
-    at(index) {
+    p.at = function(index) {
         return this[index];
-    }
+    };
 
-    getAll() {
+    p.getAll = function() {
         const len = this.length;
         const ret = [];
         for (let i = 0; i < len; i++) {
             ret.push(this[i]);
         }
         return ret;
-    }
+    };
 
-    indexOf(obj) {
-        return Array.prototype.indexOf.call(this, obj);
-    }
+    p.indexOf = function(obj) {
+        return ap.indexOf.call(this, obj);
+    };
 
-    find(cond) {
+    p.find = function(cond) {
         const ret = [];
         let flag;
 
@@ -107,30 +104,30 @@ Entry.Collection = class Collection {
             }
         }
         return ret;
-    }
+    };
 
-    pop() {
-        const datum = Array.prototype.pop.call(this);
+    p.pop = function() {
+        const datum = ap.pop.call(this);
         delete this._hashMap[datum.id];
         return datum;
-    }
+    };
 
-    shift() {
-        const datum = Array.prototype.shift.call(this);
+    p.shift = function() {
+        const datum = ap.shift.call(this);
         delete this._hashMap[datum.id];
         return datum;
-    }
+    };
 
-    slice(index, amount) {
-        const data = Array.prototype.slice.call(this, index, amount);
+    p.slice = function(index, amount) {
+        const data = ap.slice.call(this, index, amount);
         const hashMap = this._hashMap;
         for (const i in data) {
             delete hashMap[data[i].id];
         }
         return data;
-    }
+    };
 
-    remove = function(datum) {
+    p.remove = function(datum) {
         const index = this.indexOf(datum);
         if (index > -1) {
             delete this._hashMap[datum.id];
@@ -138,12 +135,12 @@ Entry.Collection = class Collection {
         }
     };
 
-    splice(index, amount) {
-        const args = Array.prototype.slice.call(arguments, 2);
+    p.splice = function(index, amount) {
+        const args = ap.slice.call(arguments, 2);
         const hashMap = this._hashMap;
         amount = amount === undefined ? this.length - index : amount;
 
-        const splicedData = Array.prototype.splice.call(this, index, amount);
+        const splicedData = ap.splice.call(this, index, amount);
 
         for (let i = 0, len = splicedData.length; i < len; i++) {
             delete hashMap[splicedData[i].id];
@@ -151,56 +148,56 @@ Entry.Collection = class Collection {
 
         for (let i = 0, len = args.length; i < len; i++) {
             const datum = args[i];
-            Array.prototype.splice.call(this, index++, 0, datum);
+            ap.splice.call(this, index++, 0, datum);
             this._hashMap[datum.id] = datum;
         }
 
         return splicedData;
-    }
+    };
 
-    clear() {
+    p.clear = function() {
         while (this.length) {
-            Array.prototype.pop.call(this);
+            ap.pop.call(this);
         }
         this._hashMap = {};
-    }
+    };
 
-    map(fn, param) {
+    p.map = function(fn, param) {
         const array = [];
         for (let i = 0, len = this.length; i < len; i++) {
             array.push(fn(this[i], param));
         }
         return array;
-    }
+    };
 
-    moveFromTo(from, to) {
+    p.moveFromTo = function(from, to) {
         const max = this.length - 1;
         if (from < 0 || to < 0 || from > max || to > max) {
             return;
         }
-        Array.prototype.splice.call(this, to, 0, Array.prototype.splice.call(this, from, 1)[0]);
-    }
+        ap.splice.call(this, to, 0, ap.splice.call(this, from, 1)[0]);
+    };
 
-    sort() {}
+    p.sort = function() {};
 
     /* import & export */
-    fromJSON() {}
+    p.fromJSON = function() {};
 
-    toJSON() {
+    p.toJSON = function() {
         const json = [];
         for (let i = 0, len = this.length; i < len; i++) {
             json.push(this[i].toJSON());
         }
         return json;
-    }
+    };
 
     /* observe methods */
-    observe() {}
+    p.observe = function() {};
 
-    unobserve() {}
+    p.unobserve = function() {};
 
-    notify() {}
+    p.notify = function() {};
 
     /* end function */
-    destroy() {}
-};
+    p.destroy = function() {};
+})(Entry.Collection.prototype, Array.prototype);
