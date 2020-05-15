@@ -5,7 +5,7 @@
  */
 
 Entry.Collection = class Collection {
-    function(data) {
+    constructor(data) {
         this.length = 0;
 
         /*
@@ -42,9 +42,6 @@ Entry.Collection = class Collection {
     }
 
     push(elem) {
-        if (!this._hashMap) {
-            this._hashMap = {};
-        }
         this._hashMap[elem.id] = elem;
         Array.prototype.push.call(this, elem);
     }
