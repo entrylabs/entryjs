@@ -13,7 +13,6 @@ Entry.Youtube = class Youtube {
         movieContainer.addClass('entryRemove');
 
         this.movieContainer = movieContainer;
-        const view = this.movieContainer;
 
         const url = 'https://www.youtube.com/embed/';
         const iframe = Entry.createElement('iframe');

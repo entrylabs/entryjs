@@ -1,7 +1,9 @@
 'use strict';
 
-Entry.BlockDriver = class BlockDriver {
-    convert() {
+Entry.BlockDriver = function() {};
+
+(function(p) {
+    p.convert = function() {
         const time = new Date();
         for (const blockType in Entry.block) {
             if (typeof Entry.block[blockType] === 'function') {
@@ -9,9 +11,9 @@ Entry.BlockDriver = class BlockDriver {
             }
         }
         console.log(new Date().getTime() - time.getTime());
-    }
+    };
 
-    _convertBlock(blockType) {
+    p._convertBlock = function(blockType) {
         const blocklyInfo = Blockly.Blocks[blockType];
         const blockInfo = EntryStatic.blockInfo[blockType];
         let className;
@@ -91,33 +93,33 @@ Entry.BlockDriver = class BlockDriver {
             }
             return def;
         }
-    }
+    };
+})(Entry.BlockDriver.prototype);
+
+Entry.BlockMockup = function(blocklyInfo, def, blockType) {
+    this.templates = [];
+    this.params = [];
+    this.statements = [];
+    this.color = '';
+    this.isPrev = false;
+    this.isNext = false;
+    this.output = false;
+    this.fieldCount = 0;
+    this.events = {};
+    this.def = def || {};
+    this.paramsKeyMap = {};
+    this.statementsKeyMap = {};
+    this.definition = {
+        params: [],
+        type: this.def.type,
+    };
+
+    this.simulate(blocklyInfo);
+    this.def = this.definition;
 };
 
-Entry.BlockMockup = class BlockMockup {
-    constructor(blocklyInfo, def, blockType) {
-        this.templates = [];
-        this.params = [];
-        this.statements = [];
-        this.color = '';
-        this.isPrev = false;
-        this.isNext = false;
-        this.output = false;
-        this.fieldCount = 0;
-        this.events = {};
-        this.def = def || {};
-        this.paramsKeyMap = {};
-        this.statementsKeyMap = {};
-        this.definition = {
-            params: [],
-            type: this.def.type,
-        };
-
-        this.simulate(blocklyInfo);
-        this.def = this.definition;
-    }
-
-    simulate(blocklyInfo) {
+(function(p) {
+    p.simulate = function(blocklyInfo) {
         if (blocklyInfo.sensorList) {
             this.sensorList = blocklyInfo.sensorList;
         }
@@ -138,9 +140,9 @@ Entry.BlockMockup = class BlockMockup {
             }
             this.events.blockViewDestroy.push(blocklyInfo.whenRemove);
         }
-    }
+    };
 
-    toJSON() {
+    p.toJSON = function() {
         let skeleton = '';
         if (this.output) {
             if (this.output === 'Boolean') {
@@ -205,13 +207,13 @@ Entry.BlockMockup = class BlockMockup {
             paramsKeyMap: this.paramsKeyMap,
             statementsKeyMap: this.statementsKeyMap,
         };
-    }
+    };
 
-    appendDummyInput() {
+    p.appendDummyInput = function() {
         return this;
-    }
+    };
 
-    appendValueInput(key) {
+    p.appendValueInput = function(key) {
         // field block
         if (this.def && this.def.index) {
             if (this.def.index[key] !== undefined) {
@@ -228,25 +230,25 @@ Entry.BlockMockup = class BlockMockup {
         this._addToParamsKeyMap(key);
         this.templates.push(this.getFieldCount());
         return this;
-    }
+    };
 
-    appendStatementInput(key) {
+    p.appendStatementInput = function(key) {
         const statement = {
             accept: 'basic',
         };
         this._addToStatementsKeyMap(key);
         this.statements.push(statement);
-    }
+    };
 
-    setCheck(accept) {
+    p.setCheck = function(accept) {
         //add value
         const params = this.params;
         if (accept === 'Boolean') {
             params[params.length - 1].accept = 'boolean';
         }
-    }
+    };
 
-    appendField(field, opt) {
+    p.appendField = function(field, opt) {
         if (!field) {
             return this;
         }
@@ -363,47 +365,47 @@ Entry.BlockMockup = class BlockMockup {
             }
         }
         return this;
-    }
+    };
 
-    setColour(color) {
+    p.setColour = function(color) {
         this.color = color;
-    }
+    };
 
-    setInputsInline() {}
+    p.setInputsInline = function() {};
 
-    setOutput(bool, type) {
+    p.setOutput = function(bool, type) {
         if (!bool) {
             return;
         }
         this.output = type;
-    }
+    };
 
-    setPreviousStatement(bool) {
+    p.setPreviousStatement = function(bool) {
         this.isPrev = bool;
-    }
+    };
 
-    setNextStatement(bool) {
+    p.setNextStatement = function(bool) {
         this.isNext = bool;
-    }
+    };
 
-    setEditable(bool) {
+    p.setEditable = function(bool) {
         // Not implemented
-    }
+    };
 
-    getFieldCount() {
+    p.getFieldCount = function() {
         this.fieldCount++;
         return `%${this.fieldCount}`;
-    }
+    };
 
-    _addToParamsKeyMap(key) {
+    p._addToParamsKeyMap = function(key) {
         key = key ? key : `dummy_${Entry.Utils.generateId()}`;
         const map = this.paramsKeyMap;
         map[key] = Object.keys(map).length;
-    }
+    };
 
-    _addToStatementsKeyMap(key) {
+    p._addToStatementsKeyMap = function(key) {
         key = key ? key : `dummy_${Entry.Utils.generateId()}`;
         const map = this.statementsKeyMap;
         map[key] = Object.keys(map).length;
-    }
-};
+    };
+})(Entry.BlockMockup.prototype);
