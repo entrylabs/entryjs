@@ -7,13 +7,10 @@ Entry.TvCast = class TvCast {
     }
 
     generateView(tvCastHash) {
-        var movieContainer = Entry.createElement('div');
+        const movieContainer = Entry.createElement('div');
         movieContainer.addClass('entryContainerMovieWorkspace');
         movieContainer.addClass('entryRemove');
 
-        this.movieContainer = movieContainer;
-
-        var movieContainer = this.movieContainer;
         const iframe = Entry.createElement('iframe');
         iframe.setAttribute('id', 'tvCastIframe');
         iframe.setAttribute('allowfullscreen', '');
@@ -21,7 +18,8 @@ Entry.TvCast = class TvCast {
         iframe.setAttribute('src', tvCastHash);
         this.movieFrame = iframe;
 
-        this.movieContainer.appendChild(this.movieFrame);
+        movieContainer.appendChild(this.movieFrame);
+        this.movieContainer = movieContainer;
     }
 
     getView() {
