@@ -236,9 +236,9 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_controller_buzzer_scale_reserve : '%1 옥타브 %2 을(를) %3 초 예약 %4',
                 byrobot_drone_3_10_controller_if_button_press      : '조종기 %1을 눌렀을 때',
                 byrobot_drone_3_10_controller_if_joystick_direction: '조종기 %1 조이스틱을 %2(으)로 움직였을 때',
-                byrobot_drone_3_10_controller_light_color_preset   : '조종기 LED %1 %2 %3',
-                byrobot_drone_3_10_controller_light_manual_single_input: '조종기 LED %1 밝기 %2 %3',
-                byrobot_drone_3_10_controller_light_manual_single_off  : '조종기 LED 끄기 %1',
+                byrobot_drone_3_10_controller_light_color_preset        : '조종기 LED %1 %2 %3',
+                byrobot_drone_3_10_controller_light_manual_single_input : '조종기 LED %1 밝기 %2 %3',
+                byrobot_drone_3_10_controller_light_manual_single_off   : '조종기 LED 끄기 %1',
                 byrobot_drone_3_10_controller_value_button         : '%1',
                 byrobot_drone_3_10_controller_value_joystick       : '%1',
                 byrobot_drone_3_10_controller_vibrator_delay       : '진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4',
@@ -255,8 +255,8 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_control_quad_delay        : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5초 실행 %6',
                 byrobot_drone_3_10_drone_control_quad_one          : '드론 %1 %2% 정하기 %3',
                 byrobot_drone_3_10_drone_control_quad_one_delay    : '드론 %1 %2% %3 초 실행 %4',
-                byrobot_drone_3_10_drone_light_color_input         : '드론 %1 LED 색지정 R %2, G %3, B %4 %5 %6',
-                byrobot_drone_3_10_drone_light_color_select        : '드론 %1 LED의 RGB 조합 예시 %2 %3 %4',
+                byrobot_drone_3_10_drone_light_color_input         : '드론 LED R %1, G %2, B %3 %4 %5 %6',
+                byrobot_drone_3_10_drone_light_color_select        : '드론 LED %1 %2 %3 %4',
                 byrobot_drone_3_10_drone_light_color_preset        : '드론 LED %1 %2 %3',
                 byrobot_drone_3_10_drone_light_manual_single_input : '드론 LED %1 밝기 %2 %3',
                 byrobot_drone_3_10_drone_light_manual_single_off   : '드론 LED 끄기 %1',
@@ -466,8 +466,8 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_control_quad_one_delay: 'Set %1 %2% %3 sec %4',
                 byrobot_drone_3_10_drone_light_manual_single_off: 'Drone LED Off %1',
                 byrobot_drone_3_10_drone_light_manual_single_input: 'Drone LED %1 lightness %2 %3',
-                byrobot_drone_3_10_drone_light_color_input: 'Drone %1 LED R %2, G %3, B %4 %5 %6 %7',
-                byrobot_drone_3_10_drone_light_color_select: 'Drone %1 LED Preset %2 %3 %4 %5',
+                byrobot_drone_3_10_drone_light_color_input:  'Drone LED R %1, G %2, B %3 %4 %5 %6',
+                byrobot_drone_3_10_drone_light_color_select: 'Drone LED %1 %2 %3 %4',
                 byrobot_drone_3_10_drone_light_color_preset: 'Drone LED %1 %2 %3',
                 byrobot_drone_3_10_drone_motor_stop: 'Motor stop %1',
                 byrobot_drone_3_10_drone_motorsingle: 'No. %1 Motor rotate for %2 %3',
@@ -1181,6 +1181,9 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
                 {
                     type: 'Dropdown',
                     options: [
@@ -1199,28 +1202,25 @@ Entry.byrobot_drone_3_10.getBlocks = function()
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
                 params: [
+                    { type: 'text', params: ['255'] },
+                    { type: 'text', params: ['255'] },
+                    { type: 'text', params: ['255'] },
                     null,
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
                     { type: 'text', params: ['250'] },
                     null,
                 ],
                 type: 'byrobot_drone_3_10_drone_light_color_input',
             },
             paramsKeyMap: {
-                MODE: 0,
-                RED: 1,
-                GREEN: 2,
-                BLUE: 3,
+                RED: 0,
+                GREEN: 1,
+                BLUE: 2,
+                MODE: 3,
                 INTERVAL: 4,
             },
             class: 'drone_light',
@@ -1245,23 +1245,6 @@ Entry.byrobot_drone_3_10.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
                         [Lang.Blocks.common_light_color_red,            'red'],
                         [Lang.Blocks.common_light_color_green,          'green'],
                         [Lang.Blocks.common_light_color_blue,           'blue'],
@@ -1281,6 +1264,23 @@ Entry.byrobot_drone_3_10.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
+                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
+                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
+                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
+                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
+                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
+                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
+                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
@@ -1290,8 +1290,8 @@ Entry.byrobot_drone_3_10.getBlocks = function()
                 type: 'byrobot_drone_3_10_drone_light_color_select',
             },
             paramsKeyMap: {
-                MODE: 0,
-                COLOR: 1,
+                COLOR: 0,
+                MODE: 1,
                 INTERVAL: 2,
             },
             class: 'drone_light',
