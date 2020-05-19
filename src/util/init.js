@@ -126,8 +126,8 @@ const setDefaultPathsFromOptions = function(options) {
     Entry.soundPath = soundDir;
     Entry.blockInjectPath = blockInjectDir;
 
-    Entry.baseUrl = baseUrl;
-    Entry.moduleBaseUrl = `${baseUrl}/modules/`;
+    Entry.baseUrl = baseUrl.replace(/\/$/, '');
+    Entry.moduleBaseUrl = `${Entry.baseUrl}/modules/`;
 };
 
 const setDefaultTheme = function(options) {
