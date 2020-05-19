@@ -326,6 +326,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_motorsingle_input         : '드론 %1번 모터를 %2(으)로 회전 %3',
                 byrobot_drone_8_drone_value_attitude    : '%1',
                 byrobot_drone_8_drone_value_motion      : '%1',
+                byrobot_drone_8_drone_value_position    : '%1',
                 byrobot_drone_8_drone_value_sensor      : '%1',
                 byrobot_drone_8_drone_value_card        : '%1',
                 byrobot_drone_8_drone_value_etc         : '%1',
@@ -385,7 +386,8 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
                 byrobot_drone_8_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
                 byrobot_drone_8_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                byrobot_drone_8_drone_value_sensor              : "<br>드론 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_8_drone_value_position            : "<br>드론 위치와 관련된 값들을 반환합니다.(단위:m)<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#위치</font>",
+                byrobot_drone_8_drone_value_sensor              : "<br>드론 거리 및 고도 센서와 관련된 값들을 반환합니다(단위:m)<br>거리 센서의 유효 측정 거리는 2m입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#거리센서</font> <font color='dodgerblue'>#대기압</font>",
                 byrobot_drone_8_drone_value_card                : "<br>드론 카드 센서와 관련된 값들을 반환합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#카드</font>",
             },
         },
@@ -590,6 +592,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_motorsingle_input: 'No. %1 Motor rotate for %2 %3',
                 byrobot_drone_8_drone_value_attitude: '%1',
                 byrobot_drone_8_drone_value_motion: '%1',
+                byrobot_drone_8_drone_value_position: '%1',
                 byrobot_drone_8_drone_value_sensor: '%1',
                 byrobot_drone_8_drone_value_card: '%1',
                 byrobot_drone_8_drone_value_etc: '%1',
@@ -649,6 +652,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_value_attitude: '',
                 byrobot_drone_8_drone_value_etc: '',
                 byrobot_drone_8_drone_value_motion: '',
+                byrobot_drone_8_drone_value_position: '',
                 byrobot_drone_8_drone_value_sensor: '',
                 byrobot_drone_8_drone_value_card: '',
             },
@@ -662,6 +666,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
 Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_drone_value_attitude',
     'byrobot_drone_8_drone_value_motion',
+    'byrobot_drone_8_drone_value_position',
     'byrobot_drone_8_drone_value_sensor',
     'byrobot_drone_8_drone_value_card',
     'byrobot_drone_8_drone_value_etc',
@@ -797,7 +802,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             },
         },
 
-        byrobot_drone_8_drone_value_sensor: {
+        byrobot_drone_8_drone_value_position: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -809,9 +814,41 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.drone_positionX,       'informationAssembledForEntry_positionX'],
                         [Lang.Blocks.drone_positionY,       'informationAssembledForEntry_positionY'],
                         [Lang.Blocks.drone_positionZ,       'informationAssembledForEntry_positionZ'],
-                        [Lang.Blocks.drone_altitude,        'informationAssembledForEntry_altitude'],
-                        [Lang.Blocks.drone_range_height,    'informationAssembledForEntry_rangeHeight'],
+                    ],
+                    value: 'informationAssembledForEntry_positionX', // 초기 선택항목 지정
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'byrobot_drone_8_drone_value_position',
+            },
+            paramsKeyMap: {
+                DEVICE: 0,
+            },
+            class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                return Entry.hw.portData[script.getField('DEVICE')];
+            },
+        },
+
+        byrobot_drone_8_drone_value_sensor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
                         [Lang.Blocks.drone_range_front,     'range_front'],
+                        [Lang.Blocks.drone_range_height,    'informationAssembledForEntry_rangeHeight'],
+                        [Lang.Blocks.drone_altitude,        'informationAssembledForEntry_altitude'],
                     ],
                     value: 'range_front', // 초기 선택항목 지정
                     fontSize: 11,
@@ -844,6 +881,9 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.drone_cardcolor_front_color,            'cardColor_frontColor'],
+                        [Lang.Blocks.drone_cardcolor_rear_color,             'cardColor_rearColor'],
+                        [Lang.Blocks.drone_cardcolor_card,                   'cardColor_card'],
                         [Lang.Blocks.drone_cardcolor_front_hue,              'cardColor_frontHue'],
                         [Lang.Blocks.drone_cardcolor_front_saturation,       'cardColor_frontSaturation'],
                         [Lang.Blocks.drone_cardcolor_front_value,            'cardColor_frontValue'],
@@ -852,9 +892,6 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.drone_cardcolor_rear_saturation,        'cardColor_rearSaturation'],
                         [Lang.Blocks.drone_cardcolor_rear_value,             'cardColor_rearValue'],
                         [Lang.Blocks.drone_cardcolor_rear_lightness,         'cardColor_rearLightness'],
-                        [Lang.Blocks.drone_cardcolor_front_color,            'cardColor_frontColor'],
-                        [Lang.Blocks.drone_cardcolor_rear_color,             'cardColor_rearColor'],
-                        [Lang.Blocks.drone_cardcolor_card,                   'cardColor_card'],
                     ],
                     value: 'cardColor_frontColor', // 초기 선택항목 지정
                     fontSize: 11,
