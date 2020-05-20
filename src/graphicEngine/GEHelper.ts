@@ -16,6 +16,8 @@ const INITIAL_VIDEO_PARAMS = {
     ALPHA: 0.5,
 };
 
+const isFirefox = typeof InstallTrigger !== 'undefined';
+
 interface IGraphicsEngineApplication {
     render(): void;
     stage: PIXI.Container | any;
@@ -192,11 +194,15 @@ class _GEHelper extends GEHelperBase {
     getVideoElement(video: HTMLVideoElement): any {
         console.log('getVideoElement');
         let videoElement: any = null;
-        const { WIDTH, HEIGHT, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+        const { WIDTH, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+        let HEIGHT = INITIAL_VIDEO_PARAMS.HEIGHT;
 
         if (this._isWebGL) {
             const videoTexture = PIXI.Texture.fromVideo(video);
             videoElement = new PIXI.Sprite(videoTexture);
+            if (isFirefox) {
+                HEIGHT *= 1.33;
+            }
         } else {
             videoElement = new createjs.Bitmap(video);
         }
@@ -273,33 +279,15 @@ class _GEHelper extends GEHelperBase {
         canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
     }
 
-    resetCanvasBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap) {
-        if (this._isWebGL) {
-            if (canvasVideo.filters && canvasVideo.filters[0]) {
-                canvasVideo.filters[0].enabled = false;
-                canvasVideo.filters = [];
-            }
-        } else {
-            canvasVideo.uncache();
-        }
-    }
-
-    setVideoBrightness(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
-        const filter = this.colorFilter.brightness(value);
-        if (this._isWebGL) {
-            canvasVideo.filters = [filter];
-            filter.enabled = true;
-        } else {
-            canvasVideo.uncache();
-            canvasVideo.filters = [filter];
-            canvasVideo.tickEnabled = true;
-            canvasVideo.cache(0, 0, canvasVideo.image.videoWidth, canvasVideo.image.videoHeight);
-        }
-        return canvasVideo;
-    }
-
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
         canvasVideo.alpha = (100 - value) / 100;
+    }
+
+    removeAllChildInHandler(handler: PIXI.Graphics | createjs.Graphics) {
+        while (handler.children.length > 0) {
+            const child = handler.getChildAt(0);
+            handler.removeChild(child);
+        }
     }
 
     resetHandlers() {
@@ -314,11 +302,9 @@ class _GEHelper extends GEHelperBase {
             this.faceIndicatorGraphic.clear();
             this.poseIndicatorGraphic.clear();
             this.objectIndicatorGraphic.clear();
-            const handler = this.objectIndicatorGraphic;
-            while (handler.children.length > 0) {
-                const child = handler.getChildAt(0);
-                handler.removeChild(child);
-            }
+            this.removeAllChildInHandler(this.objectIndicatorGraphic);
+            this.removeAllChildInHandler(this.poseIndicatorGraphic);
+            this.removeAllChildInHandler(this.faceIndicatorGraphic);
         } else {
             this.faceIndicatorGraphic.graphics.clear();
             this.poseIndicatorGraphic.graphics.clear();
@@ -326,25 +312,20 @@ class _GEHelper extends GEHelperBase {
         }
     }
 
-    drawHumanPoints(poses: Array<any>, flipStatus: any) {
+    async drawHumanPoints(poses: Array<any>, flipStatus: any) {
         const R = 5;
         let handler = this.poseIndicatorGraphic;
         if (this._isWebGL) {
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
         } else {
             handler = this.poseIndicatorGraphic.graphics;
         }
         handler.clear();
 
         poses.map((pose: any, index: Number) => {
-            pose.keypoints.map((item: any) => {
-                const { x, y } = item.position;
-                const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
-
-                handler.beginFill(0x0000ff);
-                handler.drawCircle(x, recalculatedY, R);
-                handler.endFill();
-            });
-
             const { x, y } = pose.keypoints[3].position;
             if (this._isWebGL) {
                 const text = PIXIHelper.text(
@@ -366,10 +347,18 @@ class _GEHelper extends GEHelperBase {
                     },
                 });
             }
+            pose.keypoints.map((item: any) => {
+                const { x, y } = item.position;
+                const recalculatedY = flipStatus.vertical ? INITIAL_VIDEO_PARAMS.HEIGHT - y : y;
+
+                handler.beginFill(0x0000ff);
+                handler.drawCircle(x, recalculatedY, R);
+                handler.endFill();
+            });
         });
     }
 
-    drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
+    async drawHumanSkeletons(adjacents: Array<any>, flipStatus: any) {
         const coordList: any = [];
         let handler = this.poseIndicatorGraphic;
         adjacents.forEach((adjacentList: any) => {
@@ -396,11 +385,15 @@ class _GEHelper extends GEHelperBase {
         });
     }
 
-    drawFaceEdges(faces: any, flipStatus: any) {
+    async drawFaceEdges(faces: any, flipStatus: any) {
         let handler = this.faceIndicatorGraphic;
 
         if (this._isWebGL) {
             handler.clear();
+            while (handler.children.length > 0) {
+                const child = handler.getChildAt(0);
+                handler.removeChild(child);
+            }
             handler.lineStyle(2, 0xff0000);
         } else {
             handler = handler.graphics;
@@ -438,7 +431,7 @@ class _GEHelper extends GEHelperBase {
 
             const refPoint = positions[57];
             let x = refPoint._x;
-            const y = refPoint._y;
+            let y = refPoint._y;
 
             const { WIDTH, HEIGHT } = INITIAL_VIDEO_PARAMS;
             if (flipStatus.horizontal) {
@@ -493,7 +486,7 @@ class _GEHelper extends GEHelperBase {
         handler.moveTo(prevX, prevY).lineTo(_x, _y);
     }
 
-    drawObjectBox(objects: Array<any>, flipStatus: any) {
+    async drawObjectBox(objects: Array<any>, flipStatus: any) {
         const objectsList: any = [];
         objects.forEach((object: any) => {
             const bbox = object.bbox;

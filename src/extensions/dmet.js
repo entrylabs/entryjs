@@ -21,7 +21,7 @@ class dmetTable {
     #fields = [];
     #originFields = [];
     #info = {};
-    #maxRow = 100;
+    #maxRow = 3000;
     #maxCol = 100;
     #variableType = 'table';
     #keyDelimter = '_';
@@ -657,8 +657,8 @@ class dmetVariable {
 
 class dmetSlideVariable extends dmetVariable {
     constructor(variable, id) {
+        variable.variableType = 'slide';
         super(variable, id);
-        this.variableType = 'slide';
     }
 }
 

@@ -38,8 +38,9 @@ Entry.byrobot_drone_8 =
         for (let i = 0; i < 1; i++)
         {
             Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
+            Entry.byrobot_base.transferBuzzer(0x10, 0, 0, 0);
+            Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
-            Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightModeColor(0x10, 0x22, 200, 255, 0, 0); // LED 초기화(드론)
@@ -74,6 +75,19 @@ Entry.byrobot_drone_8 =
             motion_angleRoll:                           { name: 'Roll',                     type: 'input', pos: { x: 0, y: 0 } },
             motion_anglePitch:                          { name: 'Pitch',                    type: 'input', pos: { x: 0, y: 0 } },
             motion_angleYaw:                            { name: 'Yaw',                      type: 'input', pos: { x: 0, y: 0 } },
+            range_front:                                { name: 'Range Front',              type: 'input', pos: { x: 0, y: 0 } },
+            range_bottom:                               { name: 'Range Bottom',             type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontHue:                         { name: 'Front Hue',                type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontSaturation:                  { name: 'Front Saturation',         type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontValue:                       { name: 'Front Value',              type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontLightness:                   { name: 'Front Lightness',          type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearHue:                          { name: 'Rear Hue',                 type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearSaturation:                   { name: 'Rear Saturation',          type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearValue:                        { name: 'Rear Value',               type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearLightness:                    { name: 'Rear Lightness',           type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontColor:                       { name: 'Front Color',              type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearColor:                        { name: 'Rear Color',               type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_card:                             { name: 'Card',                     type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_positionX:     { name: 'Position X',               type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_positionY:     { name: 'Position Y',               type: 'input', pos: { x: 0, y: 0 } },
             informationAssembledForEntry_positionZ:     { name: 'Position Z',               type: 'input', pos: { x: 0, y: 0 } },
@@ -142,6 +156,8 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 common_pitch                : 'Pitch',
                 common_yaw                  : 'Yaw',
                 common_throttle             : 'Throttle',
+                common_drone                  : '드론',
+                common_controller             : '조종기',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -212,18 +228,18 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_positionX      : '위치 X',
                 drone_positionY      : '위치 Y',
                 drone_positionZ      : '위치 Z',
-                drone_control_quad_pitch            : 'Pitch',
-                drone_control_quad_pitch_backward   : '뒤로',
-                drone_control_quad_pitch_forward    : '앞으로',
                 drone_control_quad_roll             : 'Roll',
+                drone_control_quad_pitch            : 'Pitch',
+                drone_control_quad_throttle         : 'Throttle',
+                drone_control_quad_yaw              : 'Yaw',
                 drone_control_quad_roll_left        : '왼쪽',
                 drone_control_quad_roll_right       : '오른쪽',
-                drone_control_quad_throttle         : 'Throttle',
+                drone_control_quad_pitch_backward   : '뒤',
+                drone_control_quad_pitch_forward    : '앞',
                 drone_control_quad_throttle_down    : '아래',
                 drone_control_quad_throttle_up      : '위',
-                drone_control_quad_yaw              : 'Yaw',
-                drone_control_quad_yaw_turn_left    : '왼쪽 회전',
-                drone_control_quad_yaw_turn_right   : '오른쪽 회전',
+                drone_control_quad_yaw_ccw          : '반시계 방향',
+                drone_control_quad_yaw_cw           : '시계 방향',
                 drone_headless_normal               : 'off (숙련자용)',
                 drone_headless_headless             : 'on (초보자용)',
                 drone_light_color_body              : '몸체',
@@ -233,7 +249,19 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_motor_rotation_clockwise      : '시계 방향',
                 drone_motor_rotation_counterclockwise: '반시계 방향',
                 drone_altitude                  : '해발고도',
-                drone_range_height              : '바닥까지 거리',
+                drone_range_height              : '바닥과의 거리',
+                drone_range_front               : '정면과의 거리',
+                drone_cardcolor_front_hue           : '앞 색상',
+                drone_cardcolor_front_saturation    : '앞 채도',
+                drone_cardcolor_front_value         : '앞 명도',
+                drone_cardcolor_front_lightness     : '앞 밝기',
+                drone_cardcolor_rear_hue            : '뒤 색상',
+                drone_cardcolor_rear_saturation     : '뒤 채도',
+                drone_cardcolor_rear_value          : '뒤 명도',
+                drone_cardcolor_rear_lightness      : '뒤 밝기',
+                drone_cardcolor_front_color         : '앞 카드 색',
+                drone_cardcolor_rear_color          : '뒤 카드 색',
+                drone_cardcolor_card                : '카드',
                 drone_state_mode_system         : '시스템 모드',
                 drone_state_mode_flight         : '비행 동작 상태',
                 drone_state_mode_control_flight : '비행 제어 모드',
@@ -246,15 +274,15 @@ Entry.byrobot_drone_8.setLanguage = function() {
             },
 
             template: {
-                byrobot_drone_8_controller_buzzer_hz            : '%1 Hz 소리를 연주 %2',
-                byrobot_drone_8_controller_buzzer_hz_delay      : '%1 Hz 소리를 %2 초 연주 %3',
-                byrobot_drone_8_controller_buzzer_hz_reserve    : '%1 Hz 소리를 %2 초 예약 %3',
-                byrobot_drone_8_controller_buzzer_off           : '버저 끄기 %1',
-                byrobot_drone_8_controller_buzzer_scale         : '%1 옥타브 %2 을(를) 연주 %3',
-                byrobot_drone_8_controller_buzzer_scale_delay   : '%1 옥타브 %2 을(를) %3 초 연주 %4',
-                byrobot_drone_8_controller_buzzer_scale_reserve : '%1 옥타브 %2 을(를) %3 초 예약 %4',
+                byrobot_drone_8_controller_buzzer_hz            : '%1 %2Hz 소리를 연주 %3',
+                byrobot_drone_8_controller_buzzer_hz_delay      : '%1 %2Hz 소리를 %3초 연주 %4',
+                byrobot_drone_8_controller_buzzer_hz_reserve    : '%1 %2Hz 소리를 %3초 예약 %4',
+                byrobot_drone_8_controller_buzzer_off           : '%1 버저 끄기 %2',
+                byrobot_drone_8_controller_buzzer_scale         : '%1 %2 옥타브 %3을(를) 연주 %4',
+                byrobot_drone_8_controller_buzzer_scale_delay   : '%1 %2 옥타브 %3을(를) %4초 연주 %5',
+                byrobot_drone_8_controller_buzzer_scale_reserve : '%1 %2 옥타브 %3을(를) %4초 예약 %5',
                 byrobot_drone_8_controller_display_clear        : '지우기 x %1, y %2, 너비 %3, 높이 %4 %5 %6',
-                byrobot_drone_8_controller_display_clear_all    : '조종기 화면 전체 지우기%1 %2',
+                byrobot_drone_8_controller_display_clear_all    : '화면 전체 지우기%1 %2',
                 byrobot_drone_8_controller_display_draw_circle  : '원 x %1, y %2, 반지름 %3 %4 %5 %6',
                 byrobot_drone_8_controller_display_draw_line    : '선 x1 %1, y1 %2, x2 %3, y2 %4 %5 %6 %7',
                 byrobot_drone_8_controller_display_draw_point   : '점 그리기 x %1, y %2 %3 %4',
@@ -262,40 +290,45 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_draw_string  : '문자열 x %1, y %2 %3 %4 입력 %5 %6',
                 byrobot_drone_8_controller_display_draw_string_align: '문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8',
                 byrobot_drone_8_controller_if_button_press      : '조종기 %1 눌렀을 때',
-                byrobot_drone_8_controller_if_joystick_direction: '조종기 %1 조이스틱 %2 움직였을 때',
-                byrobot_drone_8_controller_light_color_input    : '조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6',
-                byrobot_drone_8_controller_light_color_select   : '조종기 LED의 RGB 조합 예시 %1 %2 %3 %4',
-                byrobot_drone_8_controller_light_color_preset   : '조종기 LED %1 %2 %3',
+                byrobot_drone_8_controller_if_joystick_direction: '조종기 %1 조이스틱 %2 (으)로 움직였을 때',
+                byrobot_drone_8_controller_light_color_input        : '조종기 LED R %1, G %2, B %3 %4 %5 %6',
+                byrobot_drone_8_controller_light_color_select       : '조종기 LED %1 %2 %3 %4',
+                byrobot_drone_8_controller_light_color_preset       : '조종기 LED %1 %2 %3',
                 byrobot_drone_8_controller_light_manual_single_input: '조종기 LED %1 밝기 %2 %3',
                 byrobot_drone_8_controller_light_manual_single_off  : '조종기 LED 끄기 %1',
                 byrobot_drone_8_controller_value_button         : '%1',
                 byrobot_drone_8_controller_value_joystick       : '%1',
-                byrobot_drone_8_controller_vibrator_delay       : '진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4',
+                byrobot_drone_8_controller_vibrator_delay       : '진동 %1초 켜기, %2초 끄기를 %3초 실행 %4',
                 byrobot_drone_8_controller_vibrator_off         : '진동 끄기 %1',
-                byrobot_drone_8_controller_vibrator_on_delay    : '진동 %1 초 켜기 %2',
-                byrobot_drone_8_controller_vibrator_on_reserve  : '진동 %1 초 예약 %2',
-                byrobot_drone_8_controller_vibrator_reserve     : '진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4',
+                byrobot_drone_8_controller_vibrator_on_delay    : '진동 %1초 켜기 %2',
+                byrobot_drone_8_controller_vibrator_on_reserve  : '진동 %1초 예약 %2',
+                byrobot_drone_8_controller_vibrator_reserve     : '진동 %1초 켜기, %2초 끄기를 %3초 예약 %4',
                 byrobot_drone_8_drone_control_headless          : 'Headless mode %1 %2',
                 byrobot_drone_8_drone_control_drone_landing     : '드론 착륙 %1',
                 byrobot_drone_8_drone_control_drone_reset_heading: '드론 방향 초기화 %1',
                 byrobot_drone_8_drone_control_drone_stop        : '드론 정지 %1',
                 byrobot_drone_8_drone_control_drone_takeoff     : '드론 이륙 %1',
-                byrobot_drone_8_drone_control_quad              : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% 정하기 %5',
-                byrobot_drone_8_drone_control_quad_delay        : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5초 실행 %6',
                 byrobot_drone_8_drone_control_quad_one          : '드론 %1 %2% 정하기 %3',
                 byrobot_drone_8_drone_control_quad_one_delay    : '드론 %1 %2% %3 초 실행 %4',
-                byrobot_drone_8_drone_light_color_input         : '드론 %1 LED 색지정 R %2, G %3, B %4 %5 %6',
-                byrobot_drone_8_drone_light_color_select        : '드론 %1 LED의 RGB 조합 예시 %2 %3 %4',
+                byrobot_drone_8_drone_control_quad              : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% 정하기 %5',
+                byrobot_drone_8_drone_control_quad_delay        : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5초 실행 %6',
+                byrobot_drone_8_drone_control_position_one      : '드론 %1(으)로 %2m를 %3m/s로 이동 %4',
+                byrobot_drone_8_drone_control_position_turn     : '드론 %1(으)로 %2도를 %3deg/s로 회전 %4',
+                byrobot_drone_8_drone_control_position_location         : '드론 %1 %2m, %3 %4m, %5 %6m를 %7m/s로 이동 %8',
+                byrobot_drone_8_drone_control_position_location_turn    : '드론 %1 %2m, %3 %4m, %5 %6m를 %7m/s로 이동, %8 %9도를 %10deg/s로 회전 %11',
+                byrobot_drone_8_drone_light_color_input         : '드론 LED R %1, G %2, B %3 %4 %5 %6',
+                byrobot_drone_8_drone_light_color_select        : '드론 LED %1 %2 %3 %4',
                 byrobot_drone_8_drone_light_color_preset        : '드론 LED %1 %2 %3',
                 byrobot_drone_8_drone_light_manual_single_input : '드론 LED %1 밝기 %2 %3',
                 byrobot_drone_8_drone_light_manual_single_off   : '드론 LED 끄기 %1',
-                byrobot_drone_8_drone_motor_stop                : '모터 정지 %1',
-                byrobot_drone_8_drone_motorsingle               : '%1번 모터를 %2(으)로 회전 %3',
-                byrobot_drone_8_drone_motorsingle_input         : '%1번 모터를 %2(으)로 회전 %3',
-                byrobot_drone_8_drone_motorsingle_rotation      : '%1번 모터를 %2으로 %3(으)로 회전 %4',
+                byrobot_drone_8_drone_motor_stop                : '드론 모터 정지 %1',
+                byrobot_drone_8_drone_motorsingle               : '드론 %1번 모터를 %2(으)로 회전 %3',
+                byrobot_drone_8_drone_motorsingle_input         : '드론 %1번 모터를 %2(으)로 회전 %3',
                 byrobot_drone_8_drone_value_attitude    : '%1',
                 byrobot_drone_8_drone_value_motion      : '%1',
+                byrobot_drone_8_drone_value_position    : '%1',
                 byrobot_drone_8_drone_value_sensor      : '%1',
+                byrobot_drone_8_drone_value_card        : '%1',
                 byrobot_drone_8_drone_value_etc         : '%1',
             },
 
@@ -320,7 +353,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_light_color_input    : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_8_controller_light_color_select   : "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_8_controller_light_color_preset   : "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                byrobot_drone_8_controller_light_manual_single_input    : "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                byrobot_drone_8_controller_light_manual_single_input    : "<br>조종기 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255) 또는 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_8_controller_light_manual_single_off      : "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 byrobot_drone_8_controller_value_button         : "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 byrobot_drone_8_controller_value_joystick       : "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
@@ -338,19 +371,24 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_control_quad_delay        : "<br>드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다. 정지 상태에서 Throttle 값을 50이상으로 지정하면 드론이 이륙합니다. 지정한 시간이 지나면 해당 조종 값을 0으로 변경합니다. 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#조종</font> <font color='forestgreen'>#시간지연</font>",
                 byrobot_drone_8_drone_control_quad_one          : "<br>드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다. 정지 상태에서 Throttle 값을 50이상으로 지정하면 드론이 이륙합니다. 명령 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#조종</font>",
                 byrobot_drone_8_drone_control_quad_one_delay    : "<br>드론 조종 값을 지정합니다. 입력 가능한 값의 범위는 -100 ~ 100입니다. 정지 상태에서 Throttle 값을 50이상으로 지정하면 드론이 이륙합니다. 지정한 시간이 지나면 해당 조종 값을 0으로 변경합니다. 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#조종</font> <font color='forestgreen'>#시간지연</font>",
+                byrobot_drone_8_drone_control_position_one      : "<br>드론의 방향과 거리, 이동 속도를 지정하여 지정한 위치로 이동합니다. 거리를 속도로 나누어 얻은 시간에 1.2를 곱한 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#이동</font> <font color='forestgreen'>#시간지연</font>",
+                byrobot_drone_8_drone_control_position_turn     : "<br>드론의 회전 방향과 각도, 회전 속도를 지정하여 지정한 각도로 회전합니다. 목표 각도를 회전 속도로 나누어 얻은 시간에 1.2를 곱한 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#회전</font> <font color='forestgreen'>#시간지연</font>",
+                byrobot_drone_8_drone_control_position_location         : "<br>드론의 X, Y, Z 축의 방향과 거리, 이동 속도를 설정하여 지정한 위치로 이동합니다. 거리를 속도로 나누어 얻은 시간에 1.2를 곱한 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#이동</font> <font color='forestgreen'>#시간지연</font>",
+                byrobot_drone_8_drone_control_position_location_turn    : "<br>드론의 X, Y, Z 축의 방향과 거리, 이동 속도, 회전 방향과 목표 각도, 회전 속도를 설정하여 지정한 위치로의 이동과 회전을 실행합니다. 거리를 속도로 나누어 얻은 시간에 1.2를 곱한 시간 또는 목표 각도를 회전 속도로 나누어 얻은 시간에 1.2를 곱한 시간 중에 긴 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#이동</font> <font color='forestgreen'>#시간지연</font>",
                 byrobot_drone_8_drone_light_color_input         : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 드론의 눈 또는 팔 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_8_drone_light_color_select        : "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 드론 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_8_drone_light_color_preset        : "<br>드론의 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
-                byrobot_drone_8_drone_light_manual_single_input : "<br>드론 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00111111), 10진수(4 ~ 252), 16진수(0x04 ~ 0xFC) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 눈과 팔 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
+                byrobot_drone_8_drone_light_manual_single_input : "<br>드론 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255), 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>2진수로 표현한 값에서 각각의 비트는 LED를 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 byrobot_drone_8_drone_light_manual_single_off   : "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
                 byrobot_drone_8_drone_motor_stop                : "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
-                byrobot_drone_8_drone_motorsingle               : "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
-                byrobot_drone_8_drone_motorsingle_input         : "<br>지정한 모터(1, 2, 3, 4)를 원하는 빠르기로 회전할 때 사용합니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
-                byrobot_drone_8_drone_motorsingle_rotation      : "<br>지정한 모터를 원하는 빠르기로 회전할 때 사용합니다. 1번 모터와 2번 모터는 역방향도 회전 가능하기 때문에 방향도 선택할 수 있습니다. 사용 가능한 값의 범위는 0 ~ 4000입니다. 모터의 순서는 '왼쪽 앞', '오른쪽 앞', '오른쪽 뒤', '왼쪽 뒤' 입니다.<br><br><font color='crimson'>#자동차</font> <font color='dodgerblue'>#모터제어</font>",
+                byrobot_drone_8_drone_motorsingle               : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
+                byrobot_drone_8_drone_motorsingle_input         : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_8_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
-                byrobot_drone_8_drone_value_etc                 : "<br>페트론V2 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
-                byrobot_drone_8_drone_value_motion              : "<br>페트론V2 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                byrobot_drone_8_drone_value_sensor              : "<br>페트론V2 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 Petrone V2는 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
+                byrobot_drone_8_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
+                byrobot_drone_8_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
+                byrobot_drone_8_drone_value_position            : "<br>드론 위치와 관련된 값들을 반환합니다.(단위:m)<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#위치</font>",
+                byrobot_drone_8_drone_value_sensor              : "<br>드론 거리 및 고도 센서와 관련된 값들을 반환합니다(단위:m)<br>거리 센서의 유효 측정 거리는 2m입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#거리센서</font> <font color='dodgerblue'>#대기압</font>",
+                byrobot_drone_8_drone_value_card                : "<br>드론 카드 센서와 관련된 값들을 반환합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#카드</font>",
             },
         },
 
@@ -396,7 +434,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 controller_button_top_right: 'Top right button',
                 controller_button_center_up: 'Trim up button',
                 controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim rightbutton',
+                controller_button_center_right: 'Trim right button',
                 controller_button_center_down: 'Trim down button',
                 controller_button_bottom_left: 'Bottom left button',
                 controller_button_bottom_right: 'Bottom right button',
@@ -466,8 +504,8 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_control_quad_throttle_down: 'Down',
                 drone_control_quad_throttle_up: 'Up',
                 drone_control_quad_yaw: 'Yaw',
-                drone_control_quad_yaw_turn_left: 'Turn Left',
-                drone_control_quad_yaw_turn_right: 'Turn Right',
+                drone_control_quad_yaw_ccw: 'Counterclockwise',
+                drone_control_quad_yaw_cw: 'clockwise',
                 drone_headless_normal: 'Normal',
                 drone_headless_headless: 'Headless',
                 drone_light_color_body: 'Body',
@@ -478,21 +516,37 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_motor_rotation_counterclockwise: 'Counterclockwise',
                 drone_altitude: 'Altitude',
                 drone_range_height: 'Height',
+                drone_range_front: 'Distance from front obstacle',
+                drone_cardcolor_front_hue           : 'Front Hue',
+                drone_cardcolor_front_saturation    : 'Front Saturation',
+                drone_cardcolor_front_value         : 'Front Value',
+                drone_cardcolor_front_lightness     : 'Front Lightness',
+                drone_cardcolor_rear_hue            : 'Rear Hue',
+                drone_cardcolor_rear_saturation     : 'Rear Saturation',
+                drone_cardcolor_rear_value          : 'Rear Value',
+                drone_cardcolor_rear_lightness      : 'Rear Lightness',
+                drone_cardcolor_front_color         : 'Front Card Color',
+                drone_cardcolor_rear_color          : 'Rear Card Color',
+                drone_cardcolor_card                : 'Card',
                 drone_state_mode_system: 'System Mode',
                 drone_state_mode_flight: 'Flight Mode',
+                drone_state_mode_control_flight : 'Flight Control Mode',
+                drone_state_mode_movement       : 'mode movement',
                 drone_state_headless: 'Headless',
+                drone_state_control_speed       : 'Speed',
+                drone_state_sensor_orientation  : 'Sensor direction',
                 drone_state_battery: 'Battery',
                 entryhw_count_transfer_reserved: 'Reserved data for transfer',
             },
 
             template: {
-                byrobot_drone_8_controller_buzzer_hz: 'play Buzzer %1 Hz sound %2',
-                byrobot_drone_8_controller_buzzer_hz_delay: 'play Buzzer %1 Hz sound for %2 second %3',
-                byrobot_drone_8_controller_buzzer_hz_reserve: 'reserve to play Buzzer %1 Hz for %2 second %3',
-                byrobot_drone_8_controller_buzzer_off: 'turn off the buzzer %1',
-                byrobot_drone_8_controller_buzzer_scale: 'play %1 octave %2 %3',
-                byrobot_drone_8_controller_buzzer_scale_delay: 'play %1 octave %2 for %3 second %4',
-                byrobot_drone_8_controller_buzzer_scale_reserve: 'reserve to play %1 octave %2 for %3 second %4',
+                byrobot_drone_8_controller_buzzer_hz: '%1 play Buzzer %2 Hz sound %2',
+                byrobot_drone_8_controller_buzzer_hz_delay: '%1 play Buzzer %2 Hz sound for %3 second %4',
+                byrobot_drone_8_controller_buzzer_hz_reserve: '%1 reserve to play Buzzer %2 Hz for %3 second %4',
+                byrobot_drone_8_controller_buzzer_off: '%1 turn off the buzzer %2',
+                byrobot_drone_8_controller_buzzer_scale: '%1 play %2 octave %3 %4',
+                byrobot_drone_8_controller_buzzer_scale_delay: '%1 play %2 octave %3 for %4 second %5',
+                byrobot_drone_8_controller_buzzer_scale_reserve: '%1 reserve to play %2 octave %3 for %4 second %5',
                 byrobot_drone_8_controller_display_clear: 'clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6',
                 byrobot_drone_8_controller_display_clear_all: 'clear controller display with %1 color %2',
                 byrobot_drone_8_controller_display_draw_circle: 'draw a circle x:%1, y:%2, radius:%3, %4, %5, %6',
@@ -503,7 +557,7 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_draw_string_align: 'draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
                 byrobot_drone_8_controller_if_button_press: 'when press %1',
                 byrobot_drone_8_controller_if_joystick_direction: 'when %1 stick move to %2',
-                byrobot_drone_8_controller_light_color_input: 'Controller LED R %1, G %2, B %3 %4 %5 %6',
+                byrobot_drone_8_controller_light_color_input:  'Controller LED R %1, G %2, B %3 %4 %5 %6',
                 byrobot_drone_8_controller_light_color_select: 'Controller LED Preset %1 %2 %3 %4',
                 byrobot_drone_8_controller_light_color_preset: 'Controller LED %1 %2 %3',
                 byrobot_drone_8_controller_light_manual_single_input: 'Controller LED %1 Lightness %2 %3',
@@ -524,18 +578,23 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_control_quad_delay: 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% for %5sec %6',
                 byrobot_drone_8_drone_control_quad_one: 'Set %1 %2% %3',
                 byrobot_drone_8_drone_control_quad_one_delay: 'Set %1 %2% %3 sec %4',
+                byrobot_drone_8_drone_control_position_one      : 'Move %2 meter(s) %1 to %3 m/s %4',
+                byrobot_drone_8_drone_control_position_turn     : 'Rotate %2 degree(s) %1 to %3 deg/s %4',
+                byrobot_drone_8_drone_control_position_location         : 'Move %2 meter(s) %1, %4 meter(s) $3, %6 meter(s) %5 to %7 m/s %8',
+                byrobot_drone_8_drone_control_position_location_turn    : 'Move %2 meter(s) %1, %4 meter(s) $3, %6 meter(s) %5 to %7 m/s, Rotate %9 degree(s) %8 to %10 deg/s %11',
                 byrobot_drone_8_drone_light_manual_single_off: 'Drone LED Off %1',
                 byrobot_drone_8_drone_light_manual_single_input: 'Drone LED %1 lightness %2 %3',
-                byrobot_drone_8_drone_light_color_input: 'Drone %1 LED R %2, G %3, B %4 %5 %6 %7',
-                byrobot_drone_8_drone_light_color_select: 'Drone %1 LED Preset %2 %3 %4 %5',
+                byrobot_drone_8_drone_light_color_input:  'Drone LED R %1, G %2, B %3 %4 %5 %6',
+                byrobot_drone_8_drone_light_color_select: 'Drone LED Preset %1 %2 %3 %4',
                 byrobot_drone_8_drone_light_color_preset: 'Drone LED %1 %2 %3',
                 byrobot_drone_8_drone_motor_stop: 'Motor stop %1',
                 byrobot_drone_8_drone_motorsingle: 'No. %1 Motor rotate for %2 %3',
                 byrobot_drone_8_drone_motorsingle_input: 'No. %1 Motor rotate for %2 %3',
-                byrobot_drone_8_drone_motorsingle_rotation: 'No. %1 Motor rotate for %2 %3 %4',
                 byrobot_drone_8_drone_value_attitude: '%1',
                 byrobot_drone_8_drone_value_motion: '%1',
+                byrobot_drone_8_drone_value_position: '%1',
                 byrobot_drone_8_drone_value_sensor: '%1',
+                byrobot_drone_8_drone_value_card: '%1',
                 byrobot_drone_8_drone_value_etc: '%1',
             },
 
@@ -578,6 +637,10 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_control_quad_delay: '',
                 byrobot_drone_8_drone_control_quad_one: '',
                 byrobot_drone_8_drone_control_quad_one_delay: '',
+                byrobot_drone_8_drone_control_position_one      : '',
+                byrobot_drone_8_drone_control_position_turn     : '',
+                byrobot_drone_8_drone_control_position_location         : '',
+                byrobot_drone_8_drone_control_position_location_turn    : '',
                 byrobot_drone_8_drone_light_color_input: '',
                 byrobot_drone_8_drone_light_color_select: '',
                 byrobot_drone_8_drone_light_color_preset: '',
@@ -586,11 +649,12 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_motor_stop: '',
                 byrobot_drone_8_drone_motorsingle: '',
                 byrobot_drone_8_drone_motorsingle_input: '',
-                byrobot_drone_8_drone_motorsingle_rotation: '',
                 byrobot_drone_8_drone_value_attitude: '',
                 byrobot_drone_8_drone_value_etc: '',
                 byrobot_drone_8_drone_value_motion: '',
+                byrobot_drone_8_drone_value_position: '',
                 byrobot_drone_8_drone_value_sensor: '',
+                byrobot_drone_8_drone_value_card: '',
             },
         },
     };
@@ -602,7 +666,9 @@ Entry.byrobot_drone_8.setLanguage = function() {
 Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_drone_value_attitude',
     'byrobot_drone_8_drone_value_motion',
+    'byrobot_drone_8_drone_value_position',
     'byrobot_drone_8_drone_value_sensor',
+    'byrobot_drone_8_drone_value_card',
     'byrobot_drone_8_drone_value_etc',
     'byrobot_drone_8_controller_value_button',
     'byrobot_drone_8_controller_value_joystick',
@@ -617,10 +683,13 @@ Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_drone_control_quad_one_delay',
     'byrobot_drone_8_drone_control_quad',
     'byrobot_drone_8_drone_control_quad_delay',
+    'byrobot_drone_8_drone_control_position_one',
+    'byrobot_drone_8_drone_control_position_turn',
+    'byrobot_drone_8_drone_control_position_location',
+    'byrobot_drone_8_drone_control_position_location_turn',
     'byrobot_drone_8_drone_motor_stop',
     'byrobot_drone_8_drone_motorsingle',
     'byrobot_drone_8_drone_motorsingle_input',
-    'byrobot_drone_8_drone_motorsingle_rotation',
     'byrobot_drone_8_drone_light_manual_single_off',
     'byrobot_drone_8_drone_light_manual_single_input',
     'byrobot_drone_8_drone_light_color_preset',
@@ -682,7 +751,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_attitude', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_attitude',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -720,7 +789,42 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_motion', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_motion',
+            },
+            paramsKeyMap: {
+                DEVICE: 0,
+            },
+            class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                return Entry.hw.portData[script.getField('DEVICE')];
+            },
+        },
+
+        byrobot_drone_8_drone_value_position: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_positionX,       'informationAssembledForEntry_positionX'],
+                        [Lang.Blocks.drone_positionY,       'informationAssembledForEntry_positionY'],
+                        [Lang.Blocks.drone_positionZ,       'informationAssembledForEntry_positionZ'],
+                    ],
+                    value: 'informationAssembledForEntry_positionX', // 초기 선택항목 지정
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'byrobot_drone_8_drone_value_position',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -742,13 +846,11 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_positionX,       'informationAssembledForEntry_positionX'],
-                        [Lang.Blocks.drone_positionY,       'informationAssembledForEntry_positionY'],
-                        [Lang.Blocks.drone_positionZ,       'informationAssembledForEntry_positionZ'],
-                        [Lang.Blocks.drone_altitude,        'informationAssembledForEntry_altitude'],
+                        [Lang.Blocks.drone_range_front,     'range_front'],
                         [Lang.Blocks.drone_range_height,    'informationAssembledForEntry_rangeHeight'],
+                        [Lang.Blocks.drone_altitude,        'informationAssembledForEntry_altitude'],
                     ],
-                    value: 'informationAssembledForEntry_rangeHeight', // 초기 선택항목 지정
+                    value: 'range_front', // 초기 선택항목 지정
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -757,7 +859,50 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_sensor', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_sensor',
+            },
+            paramsKeyMap: {
+                DEVICE: 0,
+            },
+            class: 'monitor', // 같은 이름인 객체들이 그룹으로 형성됨
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                return Entry.hw.portData[script.getField('DEVICE')];
+            },
+        },
+
+        byrobot_drone_8_drone_value_card: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_cardcolor_front_color,            'cardColor_frontColor'],
+                        [Lang.Blocks.drone_cardcolor_rear_color,             'cardColor_rearColor'],
+                        [Lang.Blocks.drone_cardcolor_card,                   'cardColor_card'],
+                        [Lang.Blocks.drone_cardcolor_front_hue,              'cardColor_frontHue'],
+                        [Lang.Blocks.drone_cardcolor_front_saturation,       'cardColor_frontSaturation'],
+                        [Lang.Blocks.drone_cardcolor_front_value,            'cardColor_frontValue'],
+                        [Lang.Blocks.drone_cardcolor_front_lightness,        'cardColor_frontLightness'],
+                        [Lang.Blocks.drone_cardcolor_rear_hue,               'cardColor_rearHue'],
+                        [Lang.Blocks.drone_cardcolor_rear_saturation,        'cardColor_rearSaturation'],
+                        [Lang.Blocks.drone_cardcolor_rear_value,             'cardColor_rearValue'],
+                        [Lang.Blocks.drone_cardcolor_rear_lightness,         'cardColor_rearLightness'],
+                    ],
+                    value: 'cardColor_frontColor', // 초기 선택항목 지정
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'byrobot_drone_8_drone_value_card',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -796,7 +941,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_drone_value_etc', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_drone_value_etc',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -830,7 +975,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_controller_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_controller_value_button',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -870,7 +1015,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_drone_8_controller_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_drone_8_controller_value_joystick',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1099,7 +1244,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0b00000111'] },
+                    { type: 'text', params: ['0x07'] },
                     { type: 'text', params: ['255'] },
                     null,
                 ],
@@ -1113,7 +1258,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const flags      = script.getNumberValue('FLAGS');
+                const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_base.setLightManual(script, 0x20, flags, brightness);
             },
@@ -1347,7 +1492,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0b00111111'] },
+                    { type: 'text', params: ['0x3F'] },
                     { type: 'text', params: ['255'] },
                     null,
                 ],
@@ -1361,7 +1506,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const flags = script.getNumberValue('FLAGS');
+                const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_base.setLightManual(script, 0x10, flags, brightness);
             },
@@ -1373,6 +1518,9 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
                 {
                     type: 'Dropdown',
                     options: [
@@ -1391,28 +1539,25 @@ Entry.byrobot_drone_8.getBlocks = function()
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
                 params: [
+                    { type: 'text', params: ['255'] },
+                    { type: 'text', params: ['255'] },
+                    { type: 'text', params: ['255'] },
                     null,
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
-                    { type: 'text', params: ['255'] },
                     { type: 'text', params: ['250'] },
                     null,
                 ],
                 type: 'byrobot_drone_8_drone_light_color_input',
             },
             paramsKeyMap: {
-                MODE: 0,
-                RED: 1,
-                GREEN: 2,
-                BLUE: 3,
+                RED: 0,
+                GREEN: 1,
+                BLUE: 2,
+                MODE: 3,
                 INTERVAL: 4,
             },
             class: 'drone_light',
@@ -1437,23 +1582,6 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
                         [Lang.Blocks.common_light_color_red,            'red'],
                         [Lang.Blocks.common_light_color_green,          'green'],
                         [Lang.Blocks.common_light_color_blue,           'blue'],
@@ -1473,6 +1601,23 @@ Entry.byrobot_drone_8.getBlocks = function()
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
+                        [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
+                        [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
+                        [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
+                        [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
+                        [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
+                        [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
+                        [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
@@ -1482,8 +1627,8 @@ Entry.byrobot_drone_8.getBlocks = function()
                 type: 'byrobot_drone_8_drone_light_color_select',
             },
             paramsKeyMap: {
-                MODE: 0,
-                COLOR: 1,
+                COLOR: 0,
+                MODE: 1,
                 INTERVAL: 2,
             },
             class: 'drone_light',
@@ -2008,18 +2153,34 @@ Entry.byrobot_drone_8.getBlocks = function()
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [{ type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }
+            ],
             events: {},
             def: {
-                params: [null],
+                params: [null, null],
                 type: 'byrobot_drone_8_controller_buzzer_off',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+                TARGET: 0
+            },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setBuzzerStop(script, 0x20);
+                const target = parseInt(script.getStringValue('TARGET'));
+                return Entry.byrobot_base.setBuzzerStop(script, target);
             },
         },
 
@@ -2032,6 +2193,20 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -2069,24 +2244,26 @@ Entry.byrobot_drone_8.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, null, null],
+                params: [null, null, null, null],
                 type: 'byrobot_drone_8_controller_buzzer_scale',
             },
             paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE: 1,
+                TARGET: 0,
+                OCTAVE: 1,
+                SCALE: 2,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = parseInt(script.getStringValue('TARGET'));
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, 60000, false, true);
+                    return Entry.byrobot_base.setBuzzerMute(script, target, 60000, false, true);
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, 60000, false, true);
+                    return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, 60000, false, true);
                 }
             },
         },
@@ -2100,6 +2277,20 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -2141,28 +2332,31 @@ Entry.byrobot_drone_8.getBlocks = function()
                 params: [
                     null,
                     null,
+                    null,
                     { type: 'text', params: ['1'] },
                     null,
                 ],
                 type: 'byrobot_drone_8_controller_buzzer_scale_delay',
             },
             paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE: 1,
-                TIME: 2,
+                TARGET: 0,
+                OCTAVE: 1,
+                SCALE: 2,
+                TIME: 3,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = parseInt(script.getStringValue('TARGET'));
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale = parseInt(script.getField('SCALE'), 10);
                 const time = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, true, true);
+                    return Entry.byrobot_base.setBuzzerMute(script, target, time, true, true);
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, true, true);
+                    return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, time, true, true);
                 }
             },
         },
@@ -2176,6 +2370,20 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -2217,28 +2425,31 @@ Entry.byrobot_drone_8.getBlocks = function()
                 params: [
                     null,
                     null,
+                    null,
                     { type: 'text', params: ['1'] },
                     null,
                 ],
                 type: 'byrobot_drone_8_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE: 1,
-                TIME: 2,
+                TARGET: 0,
+                OCTAVE: 1,
+                SCALE: 2,
+                TIME: 3,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = parseInt(script.getStringValue('TARGET'));
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale  = parseInt(script.getField('SCALE'), 10);
                 const time   = script.getNumberValue('TIME') * 1000;
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, false, false);
+                    return Entry.byrobot_base.setBuzzerMute(script, target, time, false, false);
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, false, false);
+                    return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, time, false, false);
                 }
             },
         },
@@ -2249,23 +2460,36 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1000'] }, null],
+                params: [null, { type: 'text', params: ['1000'] }, null],
                 type: 'byrobot_drone_8_controller_buzzer_hz',
             },
             paramsKeyMap: {
-                HZ: 0,
+                TARGET: 0,
+                HZ: 1,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = parseInt(script.getStringValue('TARGET'));
                 const hz = script.getNumberValue('HZ');
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, 60000, false, true);
+                return Entry.byrobot_base.setBuzzerHz(script, target, hz, 60000, false, true);
             },
         },
 
@@ -2275,26 +2499,39 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
+                params: [null, { type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
                 type: 'byrobot_drone_8_controller_buzzer_hz_delay',
             },
             paramsKeyMap: {
-                HZ: 0,
-                TIME: 1,
+                TARGET: 0,
+                HZ: 1,
+                TIME: 2,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = parseInt(script.getStringValue('TARGET'));
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, true, true);
+                return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, true, true);
             },
         },
 
@@ -2304,6 +2541,17 @@ Entry.byrobot_drone_8.getBlocks = function()
             skeleton: 'basic',
             statements: [],
             params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_drone, '0x10'],
+                        [Lang.Blocks.common_controller, '0x20'],
+                    ],
+                    value: '0x20',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
@@ -2311,6 +2559,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             events: {},
             def: {
                 params: [
+                    null,
                     { type: 'text', params: ['1000'] },
                     { type: 'text', params: ['1'] },
                     null,
@@ -2318,16 +2567,18 @@ Entry.byrobot_drone_8.getBlocks = function()
                 type: 'byrobot_drone_8_controller_buzzer_hz_reserve',
             },
             paramsKeyMap: {
-                HZ: 0,
-                TIME: 1,
+                TARGET: 0,
+                HZ: 1,
+                TIME: 2,
             },
             class: 'buzzer',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
+                const target = parseInt(script.getStringValue('TARGET'));
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
+                return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, false, false);
             },
         },
 
@@ -2505,7 +2756,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '0'], ['2', '1'], ['3', '2'], ['4', '3']],
+                    options: [['1(FR)', '0'], ['2(RR)', '1'], ['3(RL)', '2'], ['4(FL)', '3']],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2516,7 +2767,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, { type: 'text', params: ['3000'] }, null],
+                params: [null, { type: 'text', params: ['120'] }, null],
                 type: 'byrobot_drone_8_drone_motorsingle',
             },
             paramsKeyMap: {
@@ -2528,10 +2779,9 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 const motorIndex    = parseInt(script.getField('MOTORINDEX'), 10);
-                const motorRotation = (motorIndex % 2) + 1;
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
         },
 
@@ -2547,7 +2797,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['1'] }, { type: 'text', params: ['3000'] }, null],
+                params: [{ type: 'text', params: ['1'] }, { type: 'text', params: ['120'] }, null],
                 type: 'byrobot_drone_8_drone_motorsingle_input',
             },
             paramsKeyMap: {
@@ -2559,60 +2809,9 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 const motorIndex    = script.getNumberValue('MOTORINDEX') - 1;
-                const motorRotation = (motorIndex % 2) + 1;
                 const motorSpeed    = script.getNumberValue('MOTORSPEED');
 
-                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
-            },
-        },
-
-        byrobot_drone_8_drone_motorsingle_rotation: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['1', '0'], ['2', '1']],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_motor_rotation_clockwise, '1'],
-                        [Lang.Blocks.drone_motor_rotation_counterclockwise, '2'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def: {
-                params: [null, null, { type: 'text', params: ['3000'] }, null],
-                type: 'byrobot_drone_8_drone_motorsingle_rotation',
-            },
-            paramsKeyMap: {
-                MOTORINDEX: 0,
-                MOTORROTATION: 1,
-                MOTORSPEED: 2,
-            },
-            class: 'motor',
-            isNotFor: ['byrobot_drone_8'],
-            func(sprite, script)
-            {
-                const motorIndex    = parseInt(script.getField('MOTORINDEX'), 10);
-                const motorRotation = parseInt(script.getField('MOTORROTATION'), 10);
-                const motorSpeed    = script.getNumberValue('MOTORSPEED');
-
-                return Entry.byrobot_base.setMotorSingle(script, 0x10, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
         },
 
@@ -2746,7 +2945,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
                         [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
                     ],
-                    value: 'control_throttle',
+                    value: 'control_quad8_pitch',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2763,7 +2962,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 CONTROLTARGET: 0,
                 VALUE: 1,
             },
-            class: 'control_flight',
+            class: 'control_quad',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
@@ -2788,7 +2987,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                         [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
                         [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
                     ],
-                    value: 'control_quad8_throttle',
+                    value: 'control_quad8_pitch',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2812,7 +3011,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 VALUE: 1,
                 TIME: 2,
             },
-            class: 'control_flight',
+            class: 'control_quad',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
@@ -2853,7 +3052,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 YAW:      2,
                 THROTTLE: 3,
             },
-            class: 'control_flight',
+            class: 'control_quad',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
@@ -2898,7 +3097,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 THROTTLE: 3,
                 TIME    : 4,
             },
-            class: 'control_flight',
+            class: 'control_quad',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
@@ -2912,6 +3111,309 @@ Entry.byrobot_drone_8.getBlocks = function()
             },
         },
 
+        byrobot_drone_8_drone_control_position_one: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_pitch_forward,  'pitch_forward'],
+                        [Lang.Blocks.drone_control_quad_pitch_backward, 'pitch_backward'],
+                        [Lang.Blocks.drone_control_quad_roll_left,      'roll_left'],
+                        [Lang.Blocks.drone_control_quad_roll_right,     'roll_right'],
+                        [Lang.Blocks.drone_control_quad_throttle_up,    'throttle_up'],
+                        [Lang.Blocks.drone_control_quad_throttle_down,  'throttle_down'],
+                    ],
+                    value: 'pitch_forward',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [null, { type: 'number', params: ['1'] }, { type: 'number', params: ['1'] }, null],
+                type: 'byrobot_drone_8_drone_control_position_one',
+            },
+            paramsKeyMap: {
+                CONTROLDIRECTION: 0,
+                DISTANCE: 1,
+                SPEED: 2,
+            },
+            class: 'control_position',
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                const controlDirection = script.getField('CONTROLDIRECTION');
+                const distance = script.getNumberValue('DISTANCE');
+                const speed = script.getNumberValue('SPEED');
+                const time = (distance / speed) * 1.2;
+
+                switch( controlDirection )
+                {
+                    case 'pitch_forward':   return Entry.byrobot_base.sendControlPosition(script, 0x10, distance, 0, 0, speed, 0, 0, time, true);
+                    case 'pitch_backward':  return Entry.byrobot_base.sendControlPosition(script, 0x10, -distance, 0, 0, speed, 0, 0, time, true);
+                    case 'roll_left':       return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, distance, 0, speed, 0, 0, time, true);
+                    case 'roll_right':      return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, -distance, 0, speed, 0, 0, time, true);
+                    case 'throttle_up':     return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, distance, speed, 0, 0, time, true);
+                    default:                return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, -distance, speed, 0, 0, time, true); // throttle_down
+                }
+            },
+        },
+
+        byrobot_drone_8_drone_control_position_turn: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_yaw_cw,  'yaw_cw'],
+                        [Lang.Blocks.drone_control_quad_yaw_ccw, 'yaw_ccw'],
+                    ],
+                    value: 'yaw_cw',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [null, { type: 'number', params: ['90'] }, { type: 'number', params: ['45'] }, null],
+                type: 'byrobot_drone_8_drone_control_position_turn',
+            },
+            paramsKeyMap: {
+                CONTROLROTATION: 0,
+                DEGREE: 1,
+                SPEED: 2,
+            },
+            class: 'control_position',
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                const controlRotation = script.getField('CONTROLROTATION');
+                const degree = script.getNumberValue('DEGREE');
+                const speed = script.getNumberValue('SPEED');
+                const time = (degree / speed) * 1.2;
+
+                switch( controlRotation )
+                {
+                    case 'yaw_ccw':     return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, degree, speed, time, true);
+                    default:            return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, -degree, speed, time, true); // yaw_cw
+                }
+            },
+        },
+
+        byrobot_drone_8_drone_control_position_location: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_pitch_forward,  '+1'],
+                        [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
+                    ],
+                    value: '+1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_roll_left,      '+1'],
+                        [Lang.Blocks.drone_control_quad_roll_right,     '-1'],
+                    ],
+                    value: '+1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_throttle_up,    '+1'],
+                        [Lang.Blocks.drone_control_quad_throttle_down,  '-1'],
+                    ],
+                    value: '+1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    { type: 'number', params: ['1'] },
+                    null,
+                    { type: 'number', params: ['0'] },
+                    null,
+                    { type: 'number', params: ['0'] },
+                    { type: 'number', params: ['1'] },
+                    null],
+                type: 'byrobot_drone_8_drone_control_position_location',
+            },
+            paramsKeyMap: {
+                DIRECTION_PITCH: 0,
+                DISTANCE_PITCH: 1,
+                DIRECTION_ROLL: 2,
+                DISTANCE_ROLL: 3,
+                DIRECTION_THROTTLE: 4,
+                DISTANCE_THROTTLE: 5,
+                SPEED: 6
+            },
+            class: 'control_position',
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                const directionPitch    = script.getNumberValue('DIRECTION_PITCH');
+                const directionRoll     = script.getNumberValue('DIRECTION_ROLL');
+                const directionThrottle = script.getNumberValue('DIRECTION_THROTTLE');
+                
+                const x = directionPitch     + script.getNumberValue('DISTANCE_PITCH');
+                const y = directionRoll      + script.getNumberValue('DISTANCE_ROLL');
+                const z = directionThrottle  + script.getNumberValue('DISTANCE_THROTTLE');
+
+                const distance = Math.sqrt((x * x) + (y * y) + (z * z));
+
+                const speed = script.getNumberValue('SPEED');
+                const time = (distance / speed) * 1.2;
+
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
+            },
+        },
+
+        byrobot_drone_8_drone_control_position_location_turn: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_pitch_forward,  'pitch_forward'],
+                        [Lang.Blocks.drone_control_quad_pitch_backward, 'pitch_backward'],
+                    ],
+                    value: 'pitch_forward',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_roll_left,      'roll_left'],
+                        [Lang.Blocks.drone_control_quad_roll_right,     'roll_right'],
+                    ],
+                    value: 'roll_left',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_throttle_up,    'throttle_up'],
+                        [Lang.Blocks.drone_control_quad_throttle_down,  'throttle_down'],
+                    ],
+                    value: 'throttle_up',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.drone_control_quad_yaw_cw,  'yaw_cw'],
+                        [Lang.Blocks.drone_control_quad_yaw_ccw, 'yaw_ccw'],
+                    ],
+                    value: 'yaw_cw',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    { type: 'number', params: ['1'] },
+                    null,
+                    { type: 'number', params: ['0'] },
+                    null,
+                    { type: 'number', params: ['0'] },
+                    { type: 'number', params: ['1'] },
+                    null,
+                    { type: 'number', params: ['90'] },
+                    { type: 'number', params: ['45'] },
+                    null],
+                type: 'byrobot_drone_8_drone_control_position_location_turn',
+            },
+            paramsKeyMap: {
+                DIRECTION_PITCH: 0,
+                DISTANCE_PITCH: 1,
+                DIRECTION_ROLL: 2,
+                DISTANCE_ROLL: 3,
+                DIRECTION_THROTTLE: 4,
+                DISTANCE_THROTTLE: 5,
+                SPEED: 6,
+                DIRECTION_YAW: 7,
+                DEGREE_YAW: 8,
+                SPEED_YAW: 9,
+            },
+            class: 'control_position',
+            isNotFor: ['byrobot_drone_8'],
+            func(sprite, script)
+            {
+                const directionPitch    = script.getNumberValue('DIRECTION_PITCH');
+                const directionRoll     = script.getNumberValue('DIRECTION_ROLL');
+                const directionThrottle = script.getNumberValue('DIRECTION_THROTTLE');
+                
+                const x = directionPitch     * script.getNumberValue('DISTANCE_PITCH');
+                const y = directionRoll      * script.getNumberValue('DISTANCE_ROLL');
+                const z = directionThrottle  * script.getNumberValue('DISTANCE_THROTTLE');
+
+                const distance  = Math.sqrt((x * x) + (y * y) + (z * z));
+                const speed     = script.getNumberValue('SPEED');
+
+                const directionYaw  = script.getNumberValue('DIRECTION_YAW');
+                const degree        = script.getNumberValue('DEGREE_YAW');
+                const yaw           = directionYaw * degree;
+                const speedYaw = script.getNumberValue('SPEED_YAW');
+
+                const time =  Math.max(Math.abs((distance / speed)), Math.abs((degree / speedYaw))) * 1.2;
+
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
+            },
+        },
     };
 };
 

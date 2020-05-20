@@ -47,6 +47,24 @@ export default class HardwareMonitor {
         this.svgDom = Entry.Dom($(hwMonitorSvgTemplate));
     }
 
+    generateViewByMode() {
+        this._template =
+            typeof this._hwModule.monitorTemplate === 'function'
+                ? this._hwModule.monitorTemplate()
+                : this._hwModule.monitorTemplate;
+
+        const monitorTemplate = this._template;
+
+        if (monitorTemplate.mode === 'both') {
+            this.generateListView();
+            this.generateView();
+        } else if (monitorTemplate.mode === 'list') {
+            this.generateListView();
+        } else {
+            this.generateView();
+        }
+    }
+
     generateView() {
         this.snap = Entry.SVG('hwMonitor');
         this._svgGroup = this.snap.elem('g');
@@ -56,11 +74,7 @@ export default class HardwareMonitor {
             s: [],
             w: [],
         };
-
-        const monitorTemplate =
-            typeof this._hwModule.monitorTemplate === 'function'
-                ? this._hwModule.monitorTemplate()
-                : this._hwModule.monitorTemplate;
+        const monitorTemplate = this._template;
 
         const imgObj = {
             href: monitorTemplate.imgPath
@@ -78,7 +92,6 @@ export default class HardwareMonitor {
             this.hwView = this._svgGroup.elem('image');
             this.hwView = this.hwView.attr(imgObj);
         }
-        this._template = monitorTemplate;
         const ports = monitorTemplate.ports;
         this.pathGroup = null;
         this.pathGroup = this._svgGroup.elem('g');
@@ -190,8 +203,7 @@ export default class HardwareMonitor {
 
         this.listsnap = Entry.SVG('hwMonitor');
         this._svglistGroup = this.listsnap.elem('g');
-        const monitorTemplate = this._hwModule.monitorTemplate;
-        this._template = monitorTemplate;
+        const monitorTemplate = this._template;
         const ports = monitorTemplate.listPorts;
 
         this.pathGroup = this._svglistGroup.elem('g');
@@ -285,7 +297,6 @@ export default class HardwareMonitor {
             width,
         };
 
-        const mode = this._hwModule.monitorTemplate.mode;
         return returnObj;
     }
 
@@ -294,29 +305,25 @@ export default class HardwareMonitor {
     }
 
     update(portData: any, sendQueue: any) {
-        const readablePort = sendQueue.readablePort;
-        const mode = this._hwModule.monitorTemplate.mode;
-        const objectKeys = this._hwModule.monitorTemplate.keys || [];
+        const mode = this._template.mode;
+        const objectKeys = this._template.keys || [];
         let portView = [];
 
         if (mode == 'list') {
             portView = this._listPortViews;
-        } else if (mode == 'both') {
+        } else if (mode == 'both' && this._portViews) {
             portView = this._listPortViews;
-
-            if (this._portViews) {
-                for (var item in this._portViews) {
-                    portView[item] = this._portViews[item];
-                }
+            for (const elem in this._portViews) {
+                portView[elem] = this._portViews[elem];
             }
         } else {
             portView = this._portViews;
         }
 
         if (sendQueue) {
-            for (var item in sendQueue) {
-                if (sendQueue[item] != 0 && portView[item]) {
-                    portView[item].type = 'output';
+            for (const elem in sendQueue) {
+                if (sendQueue[elem] != 0 && portView[elem]) {
+                    portView[elem].type = 'output';
                 }
             }
         }
@@ -325,7 +332,7 @@ export default class HardwareMonitor {
             const port = portView[key];
 
             if (port.type == 'input') {
-                var value = portData[key];
+                let value = portData[key];
                 if (objectKeys.length > 0) {
                     $.each(objectKeys, (idx, valueKey) => {
                         if ($.isPlainObject(value)) {
@@ -341,7 +348,7 @@ export default class HardwareMonitor {
                     port.group.getElementsByTagName('rect')[1].attr({ fill: '#00CFCA' });
                 }
             } else {
-                var value = sendQueue[key];
+                let value = sendQueue[key];
                 if (objectKeys.length > 0) {
                     $.each(objectKeys, (idx, valueKey) => {
                         if ($.isPlainObject(value)) {
@@ -361,11 +368,11 @@ export default class HardwareMonitor {
     }
 
     resize() {
-        if (this.svgDom) {
-            var bRect = this.svgDom.get(0).getBoundingClientRect();
+        if (!this.svgDom) {
+            return;
         }
 
-        const mode = this._hwModule.monitorTemplate.mode;
+        const bRect = this.svgDom.get(0).getBoundingClientRect();
 
         this._svgGroup.attr({
             transform: `translate(${bRect.width / 2},${bRect.height / 1.8})`,
@@ -407,7 +414,6 @@ export default class HardwareMonitor {
     }
 
     alignList() {
-        const mode = this._hwModule.monitorTemplate.mode;
         let ports = this._hwModule.monitorTemplate.listPorts || {};
         const length = ports.length;
         for (let i = 0; i < ports.length; i++) {
@@ -531,7 +537,7 @@ export default class HardwareMonitor {
             } else {
                 path = `M${(x + prevPointer) / 2},${y}l0,${
                     portY > y ? 28 : -3
-                }H${portX}L${portX},${portY}`;
+                    }H${portX}L${portX},${portY}`;
             }
         } else if (x < portX && portX < prevPointer) {
             // right side
@@ -539,7 +545,7 @@ export default class HardwareMonitor {
         } else {
             path = `m${(prevPointer + x) / 2},${y}l0,${
                 portY > y ? 28 : -3
-            }H${portX}L${portX},${portY}`;
+                }H${portX}L${portX},${portY}`;
         }
 
         port.group.attr({ transform: `translate(${groupX},${y})` });

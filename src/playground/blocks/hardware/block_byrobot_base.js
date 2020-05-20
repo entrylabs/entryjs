@@ -75,6 +75,18 @@ Entry.byrobot_base =
      ***************************************************************************************/
 
     // 데이터 전송
+    transferIrMessage(target, irmessage)
+    {
+        // 전송
+        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.battle_ir_message = irmessage;
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.battle_ir_message;
+    },
+
     transferLightManual(target, flags, brightness)
     {
         Entry.hw.sendQueue.target = target;
@@ -323,7 +335,7 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_string_align_string;
     },
 
-    transferbuzzer(target, mode, value, time)
+    transferBuzzer(target, mode, value, time)
     {
         Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.buzzer_mode = mode;
@@ -356,7 +368,7 @@ Entry.byrobot_base =
     },
 
 
-    transferMotorSingle(target, motorIndex, motorRotation, motorSpeed)
+    transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed)
     {
         Entry.hw.sendQueue.target = target;
         Entry.hw.sendQueue.motorsingle_target = motorIndex;
@@ -368,6 +380,19 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.target;
         delete Entry.hw.sendQueue.motorsingle_target;
         delete Entry.hw.sendQueue.motorsingle_rotation;
+        delete Entry.hw.sendQueue.motorsingle_value;
+    },
+
+    transferMotorSingleV(target, motorIndex, motorSpeed)
+    {
+        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.motorsingle_target = motorIndex;
+        Entry.hw.sendQueue.motorsingle_value = motorSpeed;
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.motorsingle_target;
         delete Entry.hw.sendQueue.motorsingle_value;
     },
 
@@ -461,6 +486,28 @@ Entry.byrobot_base =
     /***************************************************************************************
      *  블럭 연동 함수
      ***************************************************************************************/
+
+    // IR 데이터 송신
+    setIrMessage(script, target, irmessage)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferIrMessage(target, irmessage);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
 
     // LED 수동 설정
     setLightManual(script, target, flags, brightness)
@@ -832,7 +879,7 @@ Entry.byrobot_base =
         {
             case 'Start':
                 {
-                    this.transferbuzzer(target, 0, 0, 0);
+                    this.transferBuzzer(target, 0, 0, 0);
                 }
                 return script;
 
@@ -866,7 +913,7 @@ Entry.byrobot_base =
                         mode = 1;
                     } // 묵음 즉시
 
-                    this.transferbuzzer(target, mode, 0xee, time);
+                    this.transferBuzzer(target, mode, 0xee, time);
                 }
                 return script;
 
@@ -901,7 +948,7 @@ Entry.byrobot_base =
 
                     const scalecalc = octave * 12 + scale;
 
-                    this.transferbuzzer(target, mode, scalecalc, time);
+                    this.transferBuzzer(target, mode, scalecalc, time);
                 }
                 return script;
 
@@ -933,7 +980,7 @@ Entry.byrobot_base =
                     {
                         mode = 5;
                     } // Hz 즉시
-                    this.transferbuzzer(target, mode, hz, time);
+                    this.transferBuzzer(target, mode, hz, time);
                 }
                 return script;
 
@@ -1034,13 +1081,34 @@ Entry.byrobot_base =
         }
     },
 
-    setMotorSingle(script, target, motorIndex, motorRotation, motorSpeed)
+    setMotorSingleRV(script, target, motorIndex, motorRotation, motorSpeed)
     {
         switch (this.checkFinish(script, 40))
         {
             case 'Start':
                 {
-                    this.transferMotorSingle(target, motorIndex, motorRotation, motorSpeed);
+                    this.transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+    setMotorSingleV(script, target, motorIndex, motorSpeed)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferMotorSingleV(target, motorIndex, motorSpeed);
                 }
                 return script;
 

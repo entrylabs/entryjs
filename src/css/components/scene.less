@@ -24,7 +24,7 @@ body {
     overflow: hidden;
     float: left;
     margin: 0;
-    padding: 0 0 0 7px;
+    padding: 0 0 0 26px;
     max-width: calc(100% - 43px);
 
     .rcs-custom-scroll .rcs-outer-container {
@@ -55,12 +55,69 @@ body {
 .entrySceneAddButtonWorkspace{
     float: left;
     position: relative;
-    margin: 9px 0 0 -2px;
+    margin: 3px 0px 0px -2px;
     width: 44px;
-    height: 30px;
+    height: 34px;
     cursor: pointer;
-    .backgroundImage("top_icon_add_b_nor.png");
-    background-size: 44px auto;
+    .backgroundImage("btn_scene_add.png");
+    background-size: 44px 34px;
+}
+
+.entryScenePrevButtonWorkspace {
+    position: absolute;
+    width: 25px;
+    height: 39px;
+    left: 0px;
+    z-index: 299;
+    margin: 0px;
+
+    .prevBtn {
+        position: absolute;
+        width: 25px;
+        height: 37px;
+        content: '';
+        .backgroundImage("btn_scene_left.png");
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        cursor: pointer;
+        z-index: 299;
+    }
+}
+
+.entrySceneNextButtonWorkspace {
+    position: absolute;
+    background-color: #4f80ff;
+    width: 72px;
+    height: 37px;
+    right: 0px;
+    opacity: .8;
+    z-index: 299;
+    margin: 0px;
+    
+    .nextBtn {
+        position: absolute;
+        width: 28px;
+        height: 37px;
+        content: '';
+        .backgroundImage("btn_scene_right.png");
+        background-position: 50%;
+        background-repeat: no-repeat;
+        background-color: transparent;
+        cursor: pointer;
+        z-index: 299;
+    }
+    .addButton {
+        float: left;
+        position: relative;
+        right: 0px;
+        margin: 3px 0px 0px 28px;
+        width: 44px;
+        height: 34px;
+        cursor: pointer;
+        .backgroundImage("btn_scene_add.png");
+        background-size: 44px 34px;
+    }
 }
 
 .selectedScene {
