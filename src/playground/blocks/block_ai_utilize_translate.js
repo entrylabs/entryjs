@@ -262,7 +262,12 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-                defaultValue: (value, options) => options[0][1],
+                defaultValue: (value, options) => {
+                    if(options.length) {
+                        return options[0][1]
+                    }
+                    return null;
+                },
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
