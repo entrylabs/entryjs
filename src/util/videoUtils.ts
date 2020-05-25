@@ -700,24 +700,23 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     reset() {
-        if (this.isInitialized) {
-            this.indicatorStatus = {
-                pose: false,
-                face: false,
-                object: false,
-                warmup: null,
-            };
-            this.disableAllModels();
-            GEHelper.resetHandlers();
-            this.turnOffWebcam();
-            if (!this.flipStatus.horizontal) {
-                this.setOptions('hflip', null);
-            }
-            if (this.flipStatus.vertical) {
-                this.setOptions('vflip', null);
-            }
+        this.indicatorStatus = {
+            pose: false,
+            face: false,
+            object: false,
+            warmup: null,
+        };
+        this.disableAllModels();
+        GEHelper.resetHandlers();
+        this.turnOffWebcam();
+        if (!this.flipStatus.horizontal) {
+            this.setOptions('hflip', null);
+        }
+        if (this.flipStatus.vertical) {
+            this.setOptions('vflip', null);
+        }
 
-            GEHelper.setVideoAlpha(this.canvasVideo, 50);
+        GEHelper.setVideoAlpha(this.canvasVideo, 50);
 
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
