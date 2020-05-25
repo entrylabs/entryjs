@@ -391,6 +391,11 @@ EntryStatic.getAllBlocks = function() {
             blocks: [
                 'aiUtilizeBlockAddButton',
                 'aiUtilizeModelTrainButton',
+                'learning_title',
+                'insert_data_for_test',
+                'test_result',
+                'accuracy_of_result',
+                'is_group',
                 'audio_title',
                 'check_microphone',
                 'speech_to_text_convert',
@@ -411,6 +416,7 @@ EntryStatic.getAllBlocks = function() {
                 'video_motion_value',
                 'video_toggle_model',
                 'video_is_model_loaded',
+                'video_object_detected',
                 'video_number_detect',
                 'video_toggle_ind',
                 'video_body_part_coord',
@@ -843,6 +849,7 @@ EntryStatic.colorSet = {
             EXPANSION: '#ef6d6d',
             AI_UTILIZE: '#8222ff',
             HIDDEN: '#8aa3b2',
+            AI_LEARNING: '#8222ff',
         },
         lighten: {
             START: '#3bce3b',
@@ -861,6 +868,7 @@ EntryStatic.colorSet = {
             EXPANSION: '#ffaeae',
             AI_UTILIZE: '#ffaeae',
             HIDDEN: '#ffaeae',
+            AI_LEARNING: '#8222ff',
         },
         darken: {
             START: '#009400',
@@ -879,6 +887,7 @@ EntryStatic.colorSet = {
             EXPANSION: '#c63f3f',
             AI_UTILIZE: '#670bdd',
             HIDDEN: '#728997',
+            AI_LEARNING: '#670bdd',
         },
         emphasize: {
             '#00b400': '#5BC982', //START

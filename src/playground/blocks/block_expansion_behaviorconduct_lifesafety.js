@@ -126,7 +126,12 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-                defaultValue: (value, options) => options[0][1],
+                defaultValue: (value, options) => {
+                    if (options.length) {
+                        return options[0][1];
+                    }
+                    return null;
+                },
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -140,16 +145,14 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
         return new PromiseManager()
             .Promise((resolve) => {
                 callApi(key, {
-                    url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${
-                        params.category
-                        }/${params.subCategory}`,
+                    url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${params.category}/${params.subCategory}`,
                 })
                     .then((result) => {
                         if (result) {
                             const items = result.data.response.body.items.item.filter(
                                 (i) =>
                                     i.hasOwnProperty('actRmks') &&
-                                    i.safetyCate3 == params.subCategory2,
+                                    i.safetyCate3 == params.subCategory2
                             );
                             if (index) {
                                 return resolve(items[index - 1].actRmks);

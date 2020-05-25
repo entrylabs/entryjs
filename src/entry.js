@@ -126,6 +126,7 @@ require('./playground/field/color');
 require('./playground/field/led');
 require('./playground/field/dropdown');
 require('./playground/field/dropdownDynamic');
+require('./playground/field/dropdownExtra');
 require('./playground/field/image');
 require('./playground/field/indicator');
 require('./playground/field/keyboardInput');

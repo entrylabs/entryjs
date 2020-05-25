@@ -252,9 +252,9 @@ export default class Hardware implements IEntry.Hardware {
         this._initSocket();
     }
 
-    openHardwareProgram() {
+    openHardwareProgram(args?: { [key: string]: string }) {
         this._alertUnderVersionUsed().then(() => {
-            this._executeHardware();
+            this._executeHardware(args);
 
             if (!this.socket || !this.socket.connected) {
                 setTimeout(() => {
@@ -595,18 +595,7 @@ export default class Hardware implements IEntry.Hardware {
             this.hwMonitor.initView();
         }
         Entry.propertyPanel.addMode('hw', this.hwMonitor);
-        const mt = this.hwModule.monitorTemplate;
-        if (mt.mode === 'both') {
-            mt.mode = 'list';
-            this.hwMonitor.generateListView();
-            mt.mode = 'general';
-            this.hwMonitor.generateView();
-            mt.mode = 'both';
-        } else if (mt.mode === 'list') {
-            this.hwMonitor.generateListView();
-        } else {
-            this.hwMonitor.generateView();
-        }
+        this.hwMonitor.generateViewByMode();
     }
 
     /**
@@ -639,7 +628,7 @@ export default class Hardware implements IEntry.Hardware {
         });
     }
 
-    private _executeHardware() {
+    private _executeHardware(args?: { [key: string]: string }) {
         const hw = this;
         const executeIeCustomLauncher = {
             _bNotInstalled: false,
@@ -696,7 +685,17 @@ export default class Hardware implements IEntry.Hardware {
 
         this.ieLauncher = executeIeCustomLauncher;
 
-        const entryHardwareUrl = `entryhw://-roomId:${this.sessionRoomId}`;
+        const customSchemaArgsString = Object.entries({
+            roomId: this.sessionRoomId,
+            ...args,
+        }).reduce(
+            (result, [key, value]) =>
+                result === '' ? `${key}:${value}` : `${result}&${key}:${value}`,
+            ''
+        );
+
+        const entryHardwareUrl = `entryhw://?${customSchemaArgsString}`;
+        console.log('request Hardware using url custom schema.. : ', entryHardwareUrl);
         if (navigator.userAgent.indexOf('MSIE') > 0 || navigator.userAgent.indexOf('Trident') > 0) {
             if (navigator.msLaunchUri !== undefined) {
                 executeIe(entryHardwareUrl);

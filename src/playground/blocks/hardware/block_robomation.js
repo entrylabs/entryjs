@@ -2517,7 +2517,7 @@ HamsterSRobot.prototype.handleSensory = function() {
     }
     if (sensory.readSerialId != self.readSerialId) {
         if (sensory.readSerial && self.readSerialId >= 0) {
-            self.readQueue.push(sensory.readSerial);
+            self.readQueue.push(sensory.readSerial, 0);
         }
         self.readSerialId = sensory.readSerialId;
     }
@@ -5542,10 +5542,9 @@ TurtleRobot.prototype.changeTempo = function(script) {
     return script.callReturn();
 };
 
-/**BrownRobot**/
-function BrownRobot(index, module) {
+/**LineRobot**/
+function LineRobot(index, module) {
     this.sensory = {
-        map: 0,
         signalStrength: 0,
         colorRed: 0,
         colorGreen: 0,
@@ -5563,7 +5562,7 @@ function BrownRobot(index, module) {
         batteryState: 2,
     };
     this.motoring = {
-        group: 'brown',
+        group: 'line',
         module: module,
         index,
     };
@@ -5572,11 +5571,18 @@ function BrownRobot(index, module) {
     this.soundId = 0;
     this.lineTracerModeId = 0;
     this.motionId = 0;
+    this.clickedId = -1;
+    this.doubleClickedId = -1;
+    this.longPressedId = -1;
+    this.colorPatternId = -1;
+    this.wheelStateId = -1;
+    this.soundStateId = -1;
+    this.lineTracerStateId = -1;
+    this.freeFallId = -1;
+    this.tapId = -1;
     this.blockId = 0;
     this.motionCallback = undefined;
     this.lineTracerCallback = undefined;
-    this.currentSound = 0;
-    this.soundRepeat = 1;
     this.soundCallback = undefined;
     this.noteBlockId = 0;
     this.noteTimer1 = undefined;
@@ -5591,8 +5597,8 @@ function BrownRobot(index, module) {
     this.timeouts = [];
 }
 
-BrownRobot.prototype.__PORT_MAP = {
-    group: 'brown',
+LineRobot.prototype.__PORT_MAP = {
+    group: 'line',
     leftWheel: 0,
     rightWheel: 0,
     ledRed: 0,
@@ -5616,7 +5622,7 @@ BrownRobot.prototype.__PORT_MAP = {
     motionRadius: 0,
 };
 
-BrownRobot.prototype.setZero = function() {
+LineRobot.prototype.setZero = function() {
     const portMap = this.__PORT_MAP;
     const motoring = this.motoring;
     for (const port in portMap) {
@@ -5627,11 +5633,18 @@ BrownRobot.prototype.setZero = function() {
     this.soundId = 0;
     this.lineTracerModeId = 0;
     this.motionId = 0;
+    this.clickedId = -1;
+    this.doubleClickedId = -1;
+    this.longPressedId = -1;
+    this.colorPatternId = -1;
+    this.wheelStateId = -1;
+    this.soundStateId = -1;
+    this.lineTracerStateId = -1;
+    this.freeFallId = -1;
+    this.tapId = -1;
     this.blockId = 0;
     this.motionCallback = undefined;
     this.lineTracerCallback = undefined;
-    this.currentSound = 0;
-    this.soundRepeat = 1;
     this.soundCallback = undefined;
     this.noteBlockId = 0;
     this.noteTimer1 = undefined;
@@ -5646,12 +5659,12 @@ BrownRobot.prototype.setZero = function() {
     this.__removeAllTimeouts();
 };
 
-BrownRobot.prototype.afterReceive = function(pd) {
+LineRobot.prototype.afterReceive = function(pd) {
     this.sensory = pd;
     this.handleSensory();
 };
 
-BrownRobot.prototype.afterSend = function(sq) {
+LineRobot.prototype.afterSend = function(sq) {
     this.clicked = false;
     this.doubleClicked = false;
     this.longPressed = false;
@@ -5660,16 +5673,16 @@ BrownRobot.prototype.afterSend = function(sq) {
     this.tap = false;
 };
 
-BrownRobot.prototype.setMotoring = function(motoring) {
+LineRobot.prototype.setMotoring = function(motoring) {
     this.motoring = motoring;
 };
 
-BrownRobot.prototype.__setModule = function() {
-    this.motoring.group = 'brown';
+LineRobot.prototype.__setModule = function() {
+    this.motoring.group = 'line';
     this.motoring.module = this.module;
 };
 
-BrownRobot.prototype.__removeTimeout = function(id) {
+LineRobot.prototype.__removeTimeout = function(id) {
     clearTimeout(id);
     const idx = this.timeouts.indexOf(id);
     if (idx >= 0) {
@@ -5677,7 +5690,7 @@ BrownRobot.prototype.__removeTimeout = function(id) {
     }
 };
 
-BrownRobot.prototype.__removeAllTimeouts = function() {
+LineRobot.prototype.__removeAllTimeouts = function() {
     const timeouts = this.timeouts;
     for (const i in timeouts) {
         clearTimeout(timeouts[i]);
@@ -5685,23 +5698,23 @@ BrownRobot.prototype.__removeAllTimeouts = function() {
     this.timeouts = [];
 };
 
-BrownRobot.prototype.__setPulse = function(pulse) {
+LineRobot.prototype.__setPulse = function(pulse) {
     this.pulseId = (this.pulseId % 255) + 1;
     this.motoring.pulse = pulse;
     this.motoring.pulseId = this.pulseId;
 };
 
-BrownRobot.prototype.__setLineTracerMode = function(mode) {
+LineRobot.prototype.__setLineTracerMode = function(mode) {
     this.lineTracerModeId = (this.lineTracerModeId % 255) + 1;
     this.motoring.lineTracerMode = mode;
     this.motoring.lineTracerModeId = this.lineTracerModeId;
 };
 
-BrownRobot.prototype.__cancelLineTracer = function() {
+LineRobot.prototype.__cancelLineTracer = function() {
     this.lineTracerCallback = undefined;
 };
 
-BrownRobot.prototype.__setMotion = function(type, unit, speed, value, radius) {
+LineRobot.prototype.__setMotion = function(type, unit, speed, value, radius) {
     this.motionId = (this.motionId % 255) + 1;
     const motoring = this.motoring;
     motoring.motionType = type;
@@ -5712,16 +5725,32 @@ BrownRobot.prototype.__setMotion = function(type, unit, speed, value, radius) {
     motoring.motionId = this.motionId;
 };
 
-BrownRobot.prototype.__cancelMotion = function() {
+LineRobot.prototype.__cancelMotion = function() {
     this.motionCallback = undefined;
 };
 
-BrownRobot.prototype.__issueNoteBlockId = function() {
+LineRobot.prototype.__runSound = function(sound, count) {
+    if(typeof count != 'number') count = 1;
+    if(count < 0) count = -1;
+    if(count) {
+        this.soundId = (this.soundId % 255) + 1;
+        const motoring = this.motoring;
+        motoring.sound = sound;
+        motoring.soundRepeat = count;
+        motoring.soundId = this.soundId;
+    }
+};
+
+LineRobot.prototype.__cancelSound = function() {
+    this.soundCallback = undefined;
+};
+
+LineRobot.prototype.__issueNoteBlockId = function() {
     this.noteBlockId = this.blockId = (this.blockId % 65535) + 1;
     return this.noteBlockId;
 };
 
-BrownRobot.prototype.__cancelNote = function() {
+LineRobot.prototype.__cancelNote = function() {
     this.noteBlockId = 0;
     if (this.noteTimer1 !== undefined) {
         this.__removeTimeout(this.noteTimer1);
@@ -5733,75 +5762,53 @@ BrownRobot.prototype.__cancelNote = function() {
     this.noteTimer2 = undefined;
 };
 
-BrownRobot.prototype.__setSound = function(sound) {
-    this.soundId = (this.soundId % 255) + 1;
-    this.motoring.sound = sound;
-    this.motoring.soundId = this.soundId;
-};
-
-BrownRobot.prototype.__runSound = function(sound, count) {
-    if(typeof count != 'number') count = 1;
-    if(count < 0) count = -1;
-    if(count) {
-        this.currentSound = sound;
-        this.soundRepeat = count;
-        this.__setSound(sound);
-    }
-};
-
-BrownRobot.prototype.__cancelSound = function() {
-    this.soundCallback = undefined;
-};
-
-BrownRobot.prototype.handleSensory = function() {
+LineRobot.prototype.handleSensory = function() {
     const self = this;
     const sensory = self.sensory;
     
-    if(sensory.map & 0x00004000) self.clicked = true;
-    if(sensory.map & 0x00002000) self.doubleClicked = true;
-    if(sensory.map & 0x00001000) self.longPressed = true;
-    if(sensory.map & 0x00000400) self.colorPattern = sensory.colorPattern;
-    if(sensory.map & 0x00000008) self.freeFall = true;
-    if(sensory.map & 0x00000004) self.tap = true;
+    self.clicked = sensory.clicked == 1;
+    self.doubleClicked = sensory.doubleClicked == 1;
+    self.longPressed = sensory.longPressed == 1;
+    self.colorPattern = sensory.colorPattern;
+    self.freeFall = sensory.freeFall == 1;
+    self.tap = sensory.tap == 1;
 
-    if(self.lineTracerCallback && (sensory.map & 0x00000040) != 0) {
-        self.__setLineTracerMode(0);
-        const callback = self.lineTracerCallback;
-        self.__cancelLineTracer();
-        if(callback) callback();
+    if(self.lineTracerCallback) {
+        if(sensory.lineTracerStateId != self.lineTracerStateId) {
+            self.lineTracerStateId = sensory.lineTracerStateId;
+            if(sensory.lineTracerState == 0x02) {
+                self.__setLineTracerMode(0);
+                var callback = self.lineTracerCallback;
+                self.__cancelLineTracer();
+                if(callback) callback();
+            }
+        }
     }
-    if(self.motionCallback && (sensory.map & 0x00000100) != 0) {
-        self.motoring.leftWheel = 0;
-        self.motoring.rightWheel = 0;
-        const callback = self.motionCallback;
-        self.__cancelMotion();
-        if(callback) callback();
+    if(self.motionCallback) {
+        if(sensory.wheelStateId != self.wheelStateId) {
+            self.wheelStateId = sensory.wheelStateId;
+            if(sensory.wheelState == 0) {
+                self.motoring.leftWheel = 0;
+                self.motoring.rightWheel = 0;
+                var callback = self.motionCallback;
+                self.__cancelMotion();
+                if(callback) callback();
+            }
+        }
     }
-    if((sensory.map & 0x00000080) != 0) {
-        if(self.currentSound > 0) {
-            if(self.soundRepeat < 0) {
-                self.__runSound(self.currentSound, -1);
-            } else if(self.soundRepeat > 1) {
-                self.soundRepeat --;
-                self.__runSound(self.currentSound, self.soundRepeat);
-            } else {
-                self.currentSound = 0;
-                self.soundRepeat = 1;
-                const callback = self.soundCallback;
+    if(self.soundCallback) {
+        if(sensory.soundStateId != self.soundStateId) {
+            self.soundStateId = sensory.soundStateId;
+            if(sensory.soundState == 0) {
+                var callback = self.soundCallback;
                 self.__cancelSound();
                 if(callback) callback();
             }
-        } else {
-            self.currentSound = 0;
-            self.soundRepeat = 1;
-            const callback = self.soundCallback;
-            self.__cancelSound();
-            if(callback) callback();
         }
     }
 };
 
-BrownRobot.prototype.__SENSORS = {
+LineRobot.prototype.__SENSORS = {
     SIGNAL_STRENGTH: 'signalStrength',
     COLOR_R: 'colorRed',
     COLOR_G: 'colorGreen',
@@ -5815,7 +5822,7 @@ BrownRobot.prototype.__SENSORS = {
     COLOR_NUMBER: 'colorNumber',
 };
 
-BrownRobot.prototype.getValue = function(script) {
+LineRobot.prototype.getValue = function(script) {
     this.__setModule();
     const dev = script.getField('DEVICE');
     
@@ -5827,7 +5834,7 @@ BrownRobot.prototype.getValue = function(script) {
     }
 };
 
-BrownRobot.prototype.checkBoolean = function(script) {
+LineRobot.prototype.checkBoolean = function(script) {
     this.__setModule();
     const dev = script.getField('DEVICE');
     
@@ -5839,16 +5846,16 @@ BrownRobot.prototype.checkBoolean = function(script) {
         case 'TILT_RIGHT': return sensory.tilt == -2;
         case 'TILT_FLIP': return sensory.tilt == 3;
         case 'TILT_NOT': return sensory.tilt == -3;
+        case 'FREE_FALL': return this.freeFall;
+        case 'TAP': return this.tap;
         case 'BATTERY_NORMAL': return sensory.batteryState === 2;
         case 'BATTERY_LOW': return sensory.batteryState === 1;
         case 'BATTERY_EMPTY': return sensory.batteryState === 0;
-        case 'FREE_FALL': return this.freeFall;
-        case 'TAP': return this.tap;
     }
     return false;
 };
 
-BrownRobot.prototype.__TOUCHING_COLORS = {
+LineRobot.prototype.__TOUCHING_COLORS = {
     RED: 1,
     ORANGE: 7,
     YELLOW: 2,
@@ -5860,7 +5867,7 @@ BrownRobot.prototype.__TOUCHING_COLORS = {
     WHITE: 8,
 };
 
-BrownRobot.prototype.checkTouchingColor = function(script) {
+LineRobot.prototype.checkTouchingColor = function(script) {
     this.__setModule();
     const color = this.__TOUCHING_COLORS[script.getField('COLOR')];
 
@@ -5870,7 +5877,7 @@ BrownRobot.prototype.checkTouchingColor = function(script) {
     return false;
 };
 
-BrownRobot.prototype.__PATTERN_COLORS = {
+LineRobot.prototype.__PATTERN_COLORS = {
 	BLACK: 0,
 	RED: 1,
 	YELLOW: 2,
@@ -5880,7 +5887,7 @@ BrownRobot.prototype.__PATTERN_COLORS = {
 	PURPLE: 6
 };
 
-BrownRobot.prototype.checkColorPattern = function(script) {
+LineRobot.prototype.checkColorPattern = function(script) {
     this.__setModule();
     const color1 = this.__TOUCHING_COLORS[script.getField('COLOR1')];
     const color2 = this.__TOUCHING_COLORS[script.getField('COLOR2')];
@@ -5891,7 +5898,7 @@ BrownRobot.prototype.checkColorPattern = function(script) {
     return false;
 };
 
-BrownRobot.prototype.checkButtonState = function(script) {
+LineRobot.prototype.checkButtonState = function(script) {
     this.__setModule();
     const state = script.getField('STATE');
     
@@ -5903,7 +5910,7 @@ BrownRobot.prototype.checkButtonState = function(script) {
     return false;
 };
 
-BrownRobot.prototype.__motionUnit = function(type, unit, value, callback) {
+LineRobot.prototype.__motionUnit = function(type, unit, value, callback) {
     const motoring = this.motoring;
     this.__cancelLineTracer();
     this.__cancelMotion();
@@ -5923,7 +5930,7 @@ BrownRobot.prototype.__motionUnit = function(type, unit, value, callback) {
     }
 };
 
-BrownRobot.prototype.__motionUnitRadius = function(type, unit, value, radius, callback) {
+LineRobot.prototype.__motionUnitRadius = function(type, unit, value, radius, callback) {
     const motoring = this.motoring;
     this.__cancelLineTracer();
     this.__cancelMotion();
@@ -5944,14 +5951,14 @@ BrownRobot.prototype.__motionUnitRadius = function(type, unit, value, radius, ca
     }
 };
 
-BrownRobot.prototype.__UNITS = {
+LineRobot.prototype.__UNITS = {
     CM: 1,
     DEG: 1,
     SEC: 2,
     PULSE: 3,
 };
 
-BrownRobot.prototype.moveForwardUnit = function(script) {
+LineRobot.prototype.moveForwardUnit = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -5980,7 +5987,7 @@ BrownRobot.prototype.moveForwardUnit = function(script) {
     }
 };
 
-BrownRobot.prototype.moveBackwardUnit = function(script) {
+LineRobot.prototype.moveBackwardUnit = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -6009,7 +6016,7 @@ BrownRobot.prototype.moveBackwardUnit = function(script) {
     }
 };
 
-BrownRobot.prototype.turnUnit = function(script) {
+LineRobot.prototype.turnUnit = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -6051,7 +6058,7 @@ BrownRobot.prototype.turnUnit = function(script) {
     }
 };
 
-BrownRobot.prototype.pivotUnit = function(script) {
+LineRobot.prototype.pivotUnit = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -6119,7 +6126,7 @@ BrownRobot.prototype.pivotUnit = function(script) {
     }
 };
 
-BrownRobot.prototype.swingUnit = function(script) {
+LineRobot.prototype.circleUnit = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -6188,7 +6195,7 @@ BrownRobot.prototype.swingUnit = function(script) {
     }
 };
 
-BrownRobot.prototype.setWheels = function(script) {
+LineRobot.prototype.setWheels = function(script) {
     const motoring = this.motoring;
     this.__setModule();
     this.__cancelLineTracer();
@@ -6211,7 +6218,7 @@ BrownRobot.prototype.setWheels = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.changeWheels = function(script) {
+LineRobot.prototype.changeWheels = function(script) {
     const motoring = this.motoring;
     this.__setModule();
     this.__cancelLineTracer();
@@ -6236,7 +6243,7 @@ BrownRobot.prototype.changeWheels = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.setWheel = function(script) {
+LineRobot.prototype.setWheel = function(script) {
     const motoring = this.motoring;
     this.__setModule();
     this.__cancelLineTracer();
@@ -6262,7 +6269,7 @@ BrownRobot.prototype.setWheel = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.changeWheel = function(script) {
+LineRobot.prototype.changeWheel = function(script) {
     const motoring = this.motoring;
     this.__setModule();
     this.__cancelLineTracer();
@@ -6292,7 +6299,7 @@ BrownRobot.prototype.changeWheel = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.followLine = function(script) {
+LineRobot.prototype.followLine = function(script) {
     this.__setModule();
     this.__cancelLineTracer();
     this.__cancelMotion();
@@ -6302,18 +6309,18 @@ BrownRobot.prototype.followLine = function(script) {
     motoring.rightWheel = 0;
     this.__setPulse(0);
     this.__setMotion(0, 0, 0, 0, 0);
-    this.__setLineTracerMode(1);
+    this.__setLineTracerMode(1); // LINE_TRACER_MODE_FOLLOW
     return script.callReturn();
 };
 
-BrownRobot.prototype.followLineUntil = function(script) {
+LineRobot.prototype.followLineUntil = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
         script.isMoving = true;
         this.__cancelMotion();
 
-        let mode = 2;
+        let mode = 2; // LINE_TRACER_MODE_UNTIL_ANY
         switch(script.getField('COLOR')) {
             case 'RED': mode = 10; break;
             case 'YELLOW': mode = 11; break;
@@ -6342,7 +6349,7 @@ BrownRobot.prototype.followLineUntil = function(script) {
     }
 };
 
-BrownRobot.prototype.crossIntersection = function(script) {
+LineRobot.prototype.crossIntersection = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -6354,7 +6361,7 @@ BrownRobot.prototype.crossIntersection = function(script) {
         motoring.rightWheel = 0;
         this.__setPulse(0);
         this.__setMotion(0, 0, 0, 0, 0);
-        this.__setLineTracerMode(3);
+        this.__setLineTracerMode(3); // LINE_TRACER_MODE_MOVE_FORWARD
         this.lineTracerCallback = function() {
             script.isMoving = false;
         };
@@ -6369,14 +6376,14 @@ BrownRobot.prototype.crossIntersection = function(script) {
     }
 };
 
-BrownRobot.prototype.turnAtIntersection = function(script) {
+LineRobot.prototype.turnAtIntersection = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
         script.isMoving = true;
         this.__cancelMotion();
 
-        let mode = 4;
+        let mode = 4; // LINE_TRACER_MODE_TURN_LEFT
         switch(script.getField('DIRECTION')) {
             case 'RIGHT': mode = 5; break;
             case 'BACK': mode = 6; break;
@@ -6402,14 +6409,14 @@ BrownRobot.prototype.turnAtIntersection = function(script) {
     }
 };
 
-BrownRobot.prototype.jumpLine = function(script) {
+LineRobot.prototype.jumpLine = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
         script.isMoving = true;
         this.__cancelMotion();
 
-        let mode = 7;
+        let mode = 7; // LINE_TRACER_MODE_JUMP_LEFT
         if(script.getField('DIRECTION') == 'RIGHT') mode = 8;
 
         const motoring = this.motoring;
@@ -6432,7 +6439,7 @@ BrownRobot.prototype.jumpLine = function(script) {
     }
 };
 
-BrownRobot.prototype.setLineTracerSpeed = function(script) {
+LineRobot.prototype.setLineTracerSpeed = function(script) {
     this.__setModule();
     let speed = Number(script.getField('SPEED'));
 
@@ -6443,7 +6450,7 @@ BrownRobot.prototype.setLineTracerSpeed = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.stop = function(script) {
+LineRobot.prototype.stop = function(script) {
     this.__setModule();
     this.__cancelLineTracer();
     this.__cancelMotion();
@@ -6457,7 +6464,7 @@ BrownRobot.prototype.stop = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.__RGB_COLORS = {
+LineRobot.prototype.__RGB_COLORS = {
     RED: [255, 0, 0],
     ORANGE: [255, 63, 0],
     YELLOW: [255, 255, 0],
@@ -6469,7 +6476,7 @@ BrownRobot.prototype.__RGB_COLORS = {
     WHITE: [255, 255, 255],
 };
 
-BrownRobot.prototype.setLedColor = function(script) {
+LineRobot.prototype.setLedColor = function(script) {
     this.__setModule();
     const color = script.getField('COLOR');
 
@@ -6483,7 +6490,7 @@ BrownRobot.prototype.setLedColor = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.pickLedColor = function(script) {
+LineRobot.prototype.pickLedColor = function(script) {
     this.__setModule();
     const color = script.getField('COLOR');
 
@@ -6494,7 +6501,7 @@ BrownRobot.prototype.pickLedColor = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.setLedRgb = function(script) {
+LineRobot.prototype.setLedRgb = function(script) {
     this.__setModule();
     let red = script.getNumberValue('RED');
     let green = script.getNumberValue('GREEN');
@@ -6516,7 +6523,7 @@ BrownRobot.prototype.setLedRgb = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.changeLedRgb = function(script) {
+LineRobot.prototype.changeLedRgb = function(script) {
     this.__setModule();
     let red = script.getNumberValue('RED');
     let green = script.getNumberValue('GREEN');
@@ -6538,7 +6545,7 @@ BrownRobot.prototype.changeLedRgb = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.clearLed = function(script) {
+LineRobot.prototype.clearLed = function(script) {
     this.__setModule();
     const motoring = this.motoring;
     motoring.ledRed = 0;
@@ -6547,7 +6554,7 @@ BrownRobot.prototype.clearLed = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.__SOUNDS = {
+LineRobot.prototype.__SOUNDS = {
     BEEP: 1,
     RANDOM_BEEP: 2,
     NOISE: 10,
@@ -6565,7 +6572,7 @@ BrownRobot.prototype.__SOUNDS = {
     BIRTHDAY: 7,
 };
 
-BrownRobot.prototype.playSound = function(script) {
+LineRobot.prototype.playSound = function(script) {
     this.__setModule();
     this.__cancelNote();
     this.__cancelSound();
@@ -6585,7 +6592,7 @@ BrownRobot.prototype.playSound = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.playSoundUntil = function(script) {
+LineRobot.prototype.playSoundUntil = function(script) {
     this.__setModule();
     if (!script.isStart) {
         script.isStart = true;
@@ -6620,7 +6627,7 @@ BrownRobot.prototype.playSoundUntil = function(script) {
     }
 };
 
-BrownRobot.prototype.setBuzzer = function(script) {
+LineRobot.prototype.setBuzzer = function(script) {
     this.__setModule();
     this.__cancelNote();
     this.__cancelSound();
@@ -6635,7 +6642,7 @@ BrownRobot.prototype.setBuzzer = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.changeBuzzer = function(script) {
+LineRobot.prototype.changeBuzzer = function(script) {
     this.__setModule();
     this.__cancelNote();
     this.__cancelSound();
@@ -6651,7 +6658,7 @@ BrownRobot.prototype.changeBuzzer = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.clearSound = function(script) {
+LineRobot.prototype.clearSound = function(script) {
     this.__setModule();
     this.__cancelNote();
     this.__cancelSound();
@@ -6662,7 +6669,7 @@ BrownRobot.prototype.clearSound = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.__NOTES = {
+LineRobot.prototype.__NOTES = {
     C: 4,
     'C#': 5,
     Db: 5,
@@ -6694,7 +6701,7 @@ BrownRobot.prototype.__NOTES = {
     '15': 15,
 };
 
-BrownRobot.prototype.playNote = function(script) {
+LineRobot.prototype.playNote = function(script) {
     this.__setModule();
     this.__cancelNote();
     this.__cancelSound();
@@ -6715,7 +6722,7 @@ BrownRobot.prototype.playNote = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.playNoteBeat = function(script) {
+LineRobot.prototype.playNoteBeat = function(script) {
     const self = this;
     self.__setModule();
     if (!script.isStart) {
@@ -6776,7 +6783,7 @@ BrownRobot.prototype.playNoteBeat = function(script) {
     }
 };
 
-BrownRobot.prototype.restBeat = function(script) {
+LineRobot.prototype.restBeat = function(script) {
     const self = this;
     self.__setModule();
     if (!script.isStart) {
@@ -6815,7 +6822,7 @@ BrownRobot.prototype.restBeat = function(script) {
     }
 };
 
-BrownRobot.prototype.setTempo = function(script) {
+LineRobot.prototype.setTempo = function(script) {
     this.__setModule();
     let bpm = script.getNumberValue('BPM');
 
@@ -6829,7 +6836,7 @@ BrownRobot.prototype.setTempo = function(script) {
     return script.callReturn();
 };
 
-BrownRobot.prototype.changeTempo = function(script) {
+LineRobot.prototype.changeTempo = function(script) {
     this.__setModule();
     let bpm = script.getNumberValue('BPM');
 
@@ -7657,7 +7664,7 @@ ZeroneRobot.prototype.setBuzzer = function(script) {
     return script.callReturn();
 };
 
-ZeroneRobot.prototype.clearSound = function(script, motoring) {
+ZeroneRobot.prototype.clearSound = function(script) {
     this.__setModule();
     this.__cancelNote();
     this.__cancelSound();
@@ -7877,11 +7884,11 @@ Entry.Robomation = {
                 module = 'zerone';
                 break;
             case 0x10:
-                group = 'brown';
+                group = 'line';
                 module = 'brown';
                 break;
             case 0x11:
-                group = 'brown';
+                group = 'line';
                 module = 'sally';
                 break;
             case 0xff:
@@ -7902,9 +7909,9 @@ Entry.Robomation = {
                 } else if (module == 'zerone') {
                     robot = new ZeroneRobot(index);
                 } else if (module == 'brown') {
-                    robot = new BrownRobot(index, module);
+                    robot = new LineRobot(index, module);
                 } else if (module == 'sally') {
-                    robot = new BrownRobot(index, module);
+                    robot = new LineRobot(index, module);
                 }
                 if (robot) {
                     this.robots[key] = robot;

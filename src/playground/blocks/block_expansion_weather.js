@@ -69,7 +69,12 @@ Entry.Expansion_Weather.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-                defaultValue: (value, options) => options[0][1],
+                defaultValue: (value, options) => {
+                    if (options.length) {
+                        return options[0][1];
+                    }
+                    return null;
+                },
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -247,12 +252,12 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'week',
                     location,
-                    script.getField('DATE', script),
+                    script.getField('DATE', script)
                 );
 
                 return Entry.EXPANSION_BLOCK.weather.checkWeather(
                     apiResult.sky_code,
-                    script.getField('WEATHER', script),
+                    script.getField('WEATHER', script)
                 );
             },
             syntax: {
@@ -368,11 +373,11 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'now',
                     location,
-                    null,
+                    null
                 );
                 return Entry.EXPANSION_BLOCK.weather.checkFineDust(
                     apiResult.pm10,
-                    script.getField('FINEDUST', script),
+                    script.getField('FINEDUST', script)
                 );
             },
             syntax: {
@@ -462,7 +467,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'week',
                     location,
-                    script.getField('DATE', script),
+                    script.getField('DATE', script)
                 );
 
                 const type =
@@ -572,9 +577,9 @@ Entry.Expansion_Weather.getBlocks = function() {
                     Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
 
                 return new Promise((resolve) => {
-                    Entry.EXPANSION_BLOCK.weather.getData('now', location, null).then((data) => {
-                        return resolve(data[type]);
-                    });
+                    Entry.EXPANSION_BLOCK.weather
+                        .getData('now', location, null)
+                        .then((data) => resolve(data[type]));
                 });
             },
             syntax: {
@@ -642,7 +647,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'hour',
                     location,
-                    date + pad2(time - time % 3),
+                    date + pad2(time - (time % 3))
                 );
 
                 return apiResult.temp;
@@ -690,11 +695,11 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'week',
                     script.getField('LOCATION', script),
-                    script.getField('DATE', script),
+                    script.getField('DATE', script)
                 );
                 return Entry.EXPANSION_BLOCK.weather.checkWeather(
                     apiResult.sky_code,
-                    script.getField('WEATHER', script),
+                    script.getField('WEATHER', script)
                 );
             },
             syntax: {
@@ -798,11 +803,11 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'now',
                     script.getField('LOCATION', script),
-                    null,
+                    null
                 );
                 return Entry.EXPANSION_BLOCK.weather.checkFineDust(
                     apiResult.pm10,
-                    script.getField('FINEDUST', script),
+                    script.getField('FINEDUST', script)
                 );
             },
             syntax: {
@@ -865,7 +870,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'week',
                     script.getField('LOCATION', script),
-                    script.getField('DATE', script),
+                    script.getField('DATE', script)
                 );
                 const type =
                     Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
@@ -962,7 +967,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'now',
                     script.getField('LOCATION', script),
-                    null,
+                    null
                 );
                 const type =
                     Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
@@ -1021,7 +1026,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'hour',
                     script.getField('LOCATION', script),
-                    date + pad2(time - time % 3),
+                    date + pad2(time - (time % 3))
                 );
 
                 return apiResult.temp;

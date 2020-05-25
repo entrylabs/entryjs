@@ -1,4 +1,4 @@
-import { get as _get } from 'lodash';
+import _get from 'lodash/get';
 
 /**
  * line entry 의 hardware font-light-weight noti 를 위해 만든 스켈레톤

@@ -540,7 +540,6 @@ Entry.mechatro.getBlocks = function() {
             isNotFor: ['mechatro'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
-                const ANALOG = Entry.hw.portData.ANALOG;
                 let value2 = script.getNumberValue('VALUE2', script);
                 let value3 = script.getNumberValue('VALUE3', script);
                 let value4 = script.getNumberValue('VALUE4', script);
@@ -556,21 +555,11 @@ Entry.mechatro.getBlocks = function() {
                     isFloat = true;
                 }
 
-                if (value2 > value3) {
-                    var swap = value2;
-                    value2 = value3;
-                    value3 = swap;
-                }
-                if (value4 > value5) {
-                    var swap = value4;
-                    value4 = value5;
-                    value5 = swap;
-                }
                 result -= value2;
                 result = result * ((value5 - value4) / (value3 - value2));
                 result += value4;
-                result = Math.min(value5, result);
-                result = Math.max(value4, result);
+                //result = Math.min(value5, result);
+                //result = Math.max(value4, result);
 
                 if (isFloat) {
                     result = Math.round(result * 100) / 100;
@@ -584,7 +573,7 @@ Entry.mechatro.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'Arduino.map(%1, %2, %3, %4, %5)',
+                        syntax: 'mechatro.map(%1, %2, %3, %4, %5)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -678,7 +667,7 @@ Entry.mechatro.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
+                        syntax: 'mechatro.ultrasonicRead(%1, %2)',
                         blockType: 'param',
                         textParams: [
                             {
@@ -808,7 +797,7 @@ Entry.mechatro.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['mechatro.mechatro_set_pwm(%1, %2)'] },
+            syntax: { js: [], py: ['mechatro.set_pwm(%1, %2)'] },
         },
         mechatro_set_tone_time: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1186,7 +1175,7 @@ Entry.mechatro.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['mechatro.mechatro_get_dc_motor_current(%1)'],
+                py: ['mechatro.get_dc_motor_current(%1)'],
             },
         },
         mechatro_set_servo_position: {
@@ -1248,7 +1237,7 @@ Entry.mechatro.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['mechatro.mechatro_set_servo_position(%1, %2)'],
+                py: ['mechatro.set_servo_position(%1, %2)'],
             },
         },
         mechatro_set_servo_speed: {
@@ -1310,7 +1299,7 @@ Entry.mechatro.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['mechatro.mechatro_set_servo_speed(%1, %2)'],
+                py: ['mechatro.set_servo_speed(%1, %2)'],
             },
         },
         mechatro_set_blue_pw: {
@@ -1389,7 +1378,7 @@ Entry.mechatro.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['mechatro.mechatro_set_pwm(%1, %2)'] },
+            syntax: { js: [], py: ['mechatro.set_pwm(%1, %2)'] },
         },
         //endregion mechatro
     };

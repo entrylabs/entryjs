@@ -104,9 +104,7 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     toastMessage.addClass('entryToastMessage');
 
     if (Array.isArray(message)) {
-        toastMessage.innerHTML = message.reduce((total, current) => {
-            return total + '<br/>' + current;
-        }, '');
+        toastMessage.innerHTML = message.reduce((total, current) => `${total}<br/>${current}`, '');
     } else {
         toastMessage.textContent = message;
     }
