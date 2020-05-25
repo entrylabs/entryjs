@@ -3,7 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
-import _clamp from 'lodash/clamp'
+import _clamp from 'lodash/clamp';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 
@@ -734,9 +734,16 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', (e) => {
-            const keyCode = e.keyCode;
+        document.addEventListener('keydown', (e) => {
+            let keyCode = event.code;
 
+            if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
+                keyCode = keyCode.replace('Left', '');
+                keyCode = keyCode.replace('Right', '');
+            }
+            keyCode = keyCode.replace('Digit', '');
+            keyCode = keyCode.replace('Numpad', '');
+            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -750,8 +757,15 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', (e) => {
-            const keyCode = e.keyCode;
+        document.addEventListener('keyup', (e) => {
+            let keyCode = event.code;
+            if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
+                keyCode = keyCode.replace('Left', '');
+                keyCode = keyCode.replace('Right', '');
+            }
+            keyCode = keyCode.replace('Digit', '');
+            keyCode = keyCode.replace('Numpad', '');
+            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
@@ -1250,7 +1264,7 @@ Entry.computeInputWidth = (function() {
 })();
 
 Entry.isArrowOrBackspace = function(keyCode) {
-    return !!~[37, 38, 39, 40, 8].indexOf(keyCode);
+    return !!~['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].indexOf(keyCode);
 };
 
 Entry.hexStringToBin = function(hexString) {
@@ -2752,10 +2766,10 @@ Entry.Utils.isUsedBlockType = function(blockType) {
 
 Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
     let items;
-    if(typeof cloudVariable === 'string') {
+    if (typeof cloudVariable === 'string') {
         try {
             items = JSON.parse(cloudVariable);
-        } catch(e) {}
+        } catch (e) {}
     }
     if (!Array.isArray(items)) {
         return variables;

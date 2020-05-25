@@ -407,7 +407,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
             //if (Entry.type !== 'invisible' && (availables && (availables.indexOf(type) < 0)))
             //continue;
 
-            if (mode === Entry.Vim.MAZE_MODE && (availables && availables.indexOf(type) < 0)) {
+            if (mode === Entry.Vim.MAZE_MODE && availables && availables.indexOf(type) < 0) {
                 continue;
             }
 
@@ -449,7 +449,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
 
                 pySyntax.map((s, i) => {
-                    let result, tokens;
+                    let result;
+                    let tokens;
 
                     if (typeof s === 'string') {
                         result = {};
@@ -471,7 +472,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if (i === 0) {
                         result.isDefault = true;
                     }
-
+                    if (!tokens) {
+                        return;
+                    }
                     tokens = tokens.split('(');
 
                     if (/%/.test(tokens[1])) {

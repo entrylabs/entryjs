@@ -6,7 +6,6 @@
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
-import { PIXIGraphics } from './pixi/helper/PIXIHelper';
 
 /**
  * Construct entity class
