@@ -100,7 +100,7 @@ Entry.moduleManager = new ModuleManager();
  * @param {*} project 엔트리 프로젝트
  * @return Promise
  */
-Entry.loadExternalModules = async (project) => {
+Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
     await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
 };
