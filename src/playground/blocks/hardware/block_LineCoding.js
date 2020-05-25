@@ -193,9 +193,9 @@ Entry.LineCoding.blockMenuBlocks = [
     // 아날로그 입력
     //    'LineCodingGetUsonicValue',
     //초음파센서 읽기
-    //    'LineCodingSetLcdString',
+    'LineCodingSetLcdString',
     //    'LineCodingSetLcdBacklight',
-    //    'LineCodingSetLcdClear',
+    'LineCodingSetLcdClear',
     'LineCodingGetAnalogMapping',
     'LineCodingRemotRx',
     'LineCodingLineDelay',
@@ -236,6 +236,8 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingABSH: 'lineabsh(%1, %2, %3, %4, %5, %6); %7',
                 LineCodingBuzzerOnOff: 'buzzer(%1, %2, %3); %4',
                 LineCodingLED: 'led(%1, %2, %3, %4); %5',
+                LineCodingSetLcdString: 'lcd 세로%1줄,  가로%2줄 에  %3 표시하기 %4',
+                LineCodingSetLcdClear: 'lcd 지우기 %1',
             },
             Blocks: {
                 OnBlock: '켜짐(HIGH, 5V)',
@@ -284,6 +286,8 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingABSH: 'lineabsh(%1, %2, %3, %4, %5, %6); %7',
                 LineCodingBuzzerOnOff: 'buzzer(%1, %2, %3); %4',
                 LineCodingLED: 'led(%1, %2, %3, %4); %5',
+                LineCodingSetLcdString: 'lcd Display %3 on line %1 and line %2 %4',
+                LineCodingSetLcdClear: 'Clear lcd %1',
             },
             Blocks: {
                 OnBlock: 'On(HIGH, 5V)',
@@ -2277,7 +2281,170 @@ Entry.LineCoding.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
+        // LCD글자출력
+        LineCodingSetLcdString: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },	
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },	
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },							
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text', 
+                        params: ['Hello, Linecoding'],
+                    },
+                    null,
+                ],
+                type: 'LineCodingSetLcdString',
+            },
+            paramsKeyMap: {
+                COLUMN: 0,
+                LINE: 1,
+                STRING: 2,
+            },
+            class: 'LineCoding_LINE3',
+            isNotFor: ['LineCoding'],
+            func: (sprite, script) => {
+                // var sq = Entry.hw.sendQueue;
+                const line2 = script.getValue('LINE', script);
+                const column2 = script.getValue('COLUMN', script);
+                const string = script.getValue('STRING', script);
+                let text = [];
+                let buf;
 
+                if (!script.isStart) {
+                    if (typeof string === 'string') {
+                        for (var i = 0; i < string.length; i++) {
+                            buf = Entry.memaker.toByte(string[parseInt(i, 10)]);
+                            text[parseInt(i, 10)] = buf;
+                        }
+                    } else {
+                        text[0] = string;
+                    }
+
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    //var fps = Entry.FPS || 60;
+                   // var timeValue = 60 / fps * 50;
+
+                    Entry.hw.sendQueue.SET[3] = {
+                        type: Entry.LineCoding.sensorTypes.LCD_SET,
+                        data: {
+                            line: line2,
+                            column: column2,
+                            text0: text[0],
+                            text1: text[1],
+                            text2: text[2],
+                            text3: text[3],
+                            text4: text[4],
+                            text5: text[5],
+                            text6: text[6],
+                            text7: text[7],
+                            text8: text[8],
+                            text9: text[9],
+                            text10: text[10],
+                            text11: text[11],
+                            text12: text[12],
+                            text13: text[13],
+                            text14: text[14],
+                            text15: text[15],
+                            text15: text[16],
+                            text15: text[17],
+                            text15: text[18],
+                            text15: text[19],
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, 0);
+                    return script;
+                } else if (script.timeFlag === 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = true;
+                    return script.callReturn();
+                }
+                 
+            },
+            syntax: { js: [], py: [] },
+        },
+
+        // LCD 지우기
+        LineCodingSetLcdClear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'LineCodingSetLcdClear',
+            },
+            paramsKeyMap: {
+
+            },
+            class: 'LineCoding_LINE3',
+            isNotFor: ['LineCoding'],
+            func: (sprite, script) => {
+                //var port = 0;
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[4] = {
+                    type: Entry.LineCoding.sensorTypes.LCD_SET,
+                    data: [4, 4, 4,],
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
         //  mapping 값
         LineCodingGetAnalogMapping: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2603,45 +2770,59 @@ Entry.LineCoding.getBlocks = function() {
             },
             class: 'LineCoding_LINE5',
             isNotFor: ['LineCoding'],
-            func(sprite, script) {
+            func: (sprite, script) => {
                 let absh1 = script.getNumberValue('ABSH1', script);
                 let absh2 = script.getNumberValue('ABSH2', script);
                 let absh3 = script.getNumberValue('ABSH3', script);
                 let absh4 = script.getNumberValue('ABSH4', script);
                 let absh5 = script.getNumberValue('ABSH5', script);
                 let absh6 = script.getNumberValue('ABSH6', script);
-                if (LineSaveFlag == 1) {
-                    ++LineNum;
-                }
-                absh1 = Math.min(10, absh1);
-                absh1 = Math.max(0, absh1);
-                absh2 = Math.min(20, absh2);
-                absh2 = Math.max(0, absh2);
-                absh3 = Math.min(20, absh3);
-                absh3 = Math.max(0, absh3);
-                absh4 = Math.min(20, absh4);
-                absh4 = Math.max(0, absh4);
-                absh5 = Math.min(20, absh5);
-                absh5 = Math.max(0, absh5);
-                absh6 = Math.min(20, absh6);
-                absh6 = Math.max(0, absh6);
+                if (!script.isStart) {
+                    if (LineSaveFlag == 1) {
+                      ++LineNum;
+                    }
+                    absh1 = Math.min(20, absh1);
+                    absh1 = Math.max(0, absh1);
+                    absh2 = Math.min(20, absh2);
+                    absh2 = Math.max(0, absh2);
+                    absh3 = Math.min(20, absh3);
+                    absh3 = Math.max(0, absh3);
+                    absh4 = Math.min(20, absh4);
+                    absh4 = Math.max(0, absh4);
+                    absh5 = Math.min(20, absh5);
+                    absh5 = Math.max(0, absh5);
+                    absh6 = Math.min(20, absh6);
+                    absh6 = Math.max(0, absh6);
 
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                        type: Entry.LineCoding.sensorTypes.LINE_ABSH,
+                        data: {
+                            absh1,
+                            absh2,
+                            absh3,
+                            absh4,
+                            absh5,
+                            absh6,
+                        },
+                        time: new Date().getTime(),
+                    };
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, 0.1);
+                    return script;
+                } else if (script.timeFlag === 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-                Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
-                    type: Entry.LineCoding.sensorTypes.LINE_ABSH,
-                    data: {
-                        absh1,
-                        absh2,
-                        absh3,
-                        absh4,
-                        absh5,
-                        absh6,
-                    },
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },

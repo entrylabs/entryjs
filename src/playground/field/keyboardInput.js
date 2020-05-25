@@ -207,7 +207,17 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
     keyboardControl = (event) => {
         event.stopPropagation && event.stopPropagation();
         event.preventDefault && event.preventDefault();
-        const value = event.keyCode;
+        // let value = event.key === ' ' ? event.code : event.key;
+        // value = Entry.KeyboardCode.korKeyMap[value] || value;
+        let value = event.code;
+        if (value.indexOf('Arrow') == -1 && value.indexOf('Bracket') == -1) {
+            value = value.replace('Left', '');
+            value = value.replace('Right', '');
+        }
+        value = value.replace('Digit', '');
+        value = value.replace('Numpad', '');
+        value = Entry.KeyboardCode.codeToKeyCode[value];
+
         const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.destroyOption();

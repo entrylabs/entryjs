@@ -571,7 +571,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                         let sps = 0;
                         if (speed != 0) {
                             if (speed < 0) {
-                                sps = speed * 9 - 100;
+                                sps = 65536 + (speed * 9 - 100);
                             } else {
                                 sps = speed * 9 + 100;
                             }

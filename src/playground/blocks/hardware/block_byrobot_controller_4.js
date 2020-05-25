@@ -38,7 +38,7 @@ Entry.byrobot_controller_4 =
         for (let i = 0; i < 1; i++)
         {
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
-            Entry.byrobot_base.transferbuzzer(0x20, 0, 0, 0);
+            Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
@@ -118,6 +118,8 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 common_pitch                : 'Pitch',
                 common_yaw                  : 'Yaw',
                 common_throttle             : 'Throttle',
+                common_drone                  : '드론',
+                common_controller             : '조종기',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -197,11 +199,11 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 "byrobot_controller_4_display_draw_string_align":   "문자열 정렬 x1 %1, x2 %2, y %3 %4 %5 %6 입력 %7 %8",
                 "byrobot_controller_4_if_button_press":             "조종기 %1 눌렀을 때",
                 "byrobot_controller_4_if_joystick_direction":       "조종기 %1 조이스틱 %2 움직였을 때",
-                "byrobot_controller_4_light_controller_color_input":           "조종기 LED 색지정 R %1, G %2, B %3 %4 %5 %6",
-                "byrobot_controller_4_light_controller_color_select":          "조종기 LED의 RGB 조합 예시 %1 %2 %3 %4",
-                "byrobot_controller_4_light_controller_color_preset":          "조종기 LED %1 %2 %3",
-                "byrobot_controller_4_light_controller_manual_single_input":   "조종기 LED %1 밝기 %2 %3",
-                "byrobot_controller_4_light_controller_manual_single_off":     "조종기 LED 끄기 %1",
+                "byrobot_controller_4_controller_light_color_input":           "조종기 LED R %1, G %2, B %3 %4 %5 %6",
+                "byrobot_controller_4_controller_light_color_select":          "조종기 LED %1 %2 %3 %4",
+                "byrobot_controller_4_controller_light_color_preset":          "조종기 LED %1 %2 %3",
+                "byrobot_controller_4_controller_light_manual_single_input":   "조종기 LED %1 밝기 %2 %3",
+                "byrobot_controller_4_controller_light_manual_single_off":     "조종기 LED 끄기 %1",
                 "byrobot_controller_4_value_button":                "%1",
                 "byrobot_controller_4_value_joystick":              "%1",
                 "byrobot_controller_4_vibrator_delay":              "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",
@@ -229,11 +231,11 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 "byrobot_controller_4_display_draw_string_align":   "<br>조종기 OLED 화면에서 지정한 위치에 문자열을 정렬하여 그립니다.<br><br>☆★ (x, y)좌표에 관한 설명은 [조종기 화면 점 찍기]블럭을 참조해주세요. ★☆<br><br>글자 입력은 영문자 알파벳 대문자, 소문자와 숫자, 공백(space), 특수문자만 가능합니다.(한글은 아직 지원되지 않습니다.)<br>x, y 좌표값과 정렬 방향, 글자 크기, 색을 지정합니다. 시작점 = (x1, y), 끝나는점 = (x2, y), 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~60)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
                 "byrobot_controller_4_if_button_press":             "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_controller_4_if_joystick_direction":       "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
-                "byrobot_controller_4_light_controller_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_controller_4_light_controller_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_controller_4_light_controller_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_controller_4_light_controller_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>2진수(0b00000001 ~ 0b00000111), 10진수(32 ~ 224), 16진수(0x20 ~ 0xE0) 값을 사용할 수 있습니다.  2진수로 표현한 값에서 각각의 비트는 LED의 Red, Green, Blue 색을 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
-                "byrobot_controller_4_light_controller_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
+                "byrobot_controller_4_controller_light_color_input":           "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 조종기 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_controller_4_controller_light_color_select":          "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 조종기 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_controller_4_controller_light_color_preset":         "<br>조종기 LED를 조작하는데 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_controller_4_controller_light_manual_single_input":   "<br>조종기 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255), 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다. 각각의 비트는 LED를 선택하는 스위치 역할을 합니다.  밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다. 값이 커질수록 더 밝아집니다. <br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED제어</font>",
+                "byrobot_controller_4_controller_light_manual_single_off":     "<br>조종기의 모든 LED를 끕니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#LED끄기</font>",
                 "byrobot_controller_4_value_button":                "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 "byrobot_controller_4_value_joystick":              "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 "byrobot_controller_4_vibrator_delay":              "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
@@ -286,7 +288,7 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 controller_button_top_right: 'Top right button',
                 controller_button_center_up: 'Trim up button',
                 controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim rightbutton',
+                controller_button_center_right: 'Trim right button',
                 controller_button_center_down: 'Trim down button',
                 controller_button_bottom_left: 'Bottom left button',
                 controller_button_bottom_right: 'Bottom right button',
@@ -347,19 +349,19 @@ Entry.byrobot_controller_4.setLanguage = function() {
                 "byrobot_controller_4_buzzer_scale_reserve": "reserve to play %1 octave %2 for %3 second %4",
                 "byrobot_controller_4_display_clear": "clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6",
                 "byrobot_controller_4_display_clear_all": "clear controller display with %1 color %2",
-                "byrobot_controller_4_display_draw_circle": "draw a circle in controller display x:%1, y:%2, radius:%3, %4, %5, %6",
-                "byrobot_controller_4_display_draw_line": "draw a line in controller display x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
-                "byrobot_controller_4_display_draw_point": "draw a point in controller display  x:%1, y:%2, color:%3 %4",
-                "byrobot_controller_4_display_draw_rect": "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
-                "byrobot_controller_4_display_draw_string": "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
-                "byrobot_controller_4_display_draw_string_align": "draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
+                "byrobot_controller_4_display_draw_circle": "draw a circle x:%1, y:%2, radius:%3, %4, %5, %6",
+                "byrobot_controller_4_display_draw_line": "draw a line x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7",
+                "byrobot_controller_4_display_draw_point": "draw a point x:%1, y:%2, color:%3 %4",
+                "byrobot_controller_4_display_draw_rect": "draw a rectangle x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8",
+                "byrobot_controller_4_display_draw_string": "draw a string x:%1, y:%2, font size:%3, %4, input:%5, %6",
+                "byrobot_controller_4_display_draw_string_align": "draw aligned string x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8",
                 "byrobot_controller_4_if_button_press": "when press %1",
                 "byrobot_controller_4_if_joystick_direction": "when %1 stick move to %2",
-                "byrobot_controller_4_light_controller_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
-                "byrobot_controller_4_light_controller_color_select": "RGB combination examples of controller LED %1 %2 %3",
-                "byrobot_controller_4_light_controller_color_preset": "change the state of %1 controller LED to %2 %3",
-                "byrobot_controller_4_light_controller_manual_single_input": "change the brightness of %1 controller LED to %2 %3",
-                "byrobot_controller_4_light_controller_manual_single_off": "turn off all controller LEDs %1",
+                "byrobot_controller_4_controller_light_color_input": "decide the color values of controller LED R %1, G %2, B %3 %4 %5",
+                "byrobot_controller_4_controller_light_color_select": "RGB combination examples of controller LED %1 %2 %3",
+                "byrobot_controller_4_controller_light_color_preset": "change the state of %1 controller LED to %2 %3",
+                "byrobot_controller_4_controller_light_manual_single_input": "change the brightness of %1 controller LED to %2 %3",
+                "byrobot_controller_4_controller_light_manual_single_off": "turn off all controller LEDs %1",
                 "byrobot_controller_4_value_button": "%1",
                 "byrobot_controller_4_value_joystick": "%1",
                 "byrobot_controller_4_vibrator_delay": "vibration %1 second on, %2 second off for %3 seconds %4",
@@ -384,11 +386,11 @@ Entry.byrobot_controller_4.blockMenuBlocks = [
     'byrobot_controller_4_value_joystick',
     'byrobot_controller_4_if_button_press',
     'byrobot_controller_4_if_joystick_direction',
-    'byrobot_controller_4_light_controller_manual_single_off',
-    'byrobot_controller_4_light_controller_manual_single_input',
-    'byrobot_controller_4_light_controller_color_preset',
-    'byrobot_controller_4_light_controller_color_input',
-    'byrobot_controller_4_light_controller_color_select',
+    'byrobot_controller_4_controller_light_manual_single_off',
+    'byrobot_controller_4_controller_light_manual_single_input',
+    'byrobot_controller_4_controller_light_color_preset',
+    'byrobot_controller_4_controller_light_color_input',
+    'byrobot_controller_4_controller_light_color_select',
     'byrobot_controller_4_display_clear_all',
     'byrobot_controller_4_display_clear',
     'byrobot_controller_4_display_draw_point',
@@ -440,7 +442,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_4_value_button', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_controller_4_value_button',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -481,7 +483,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_4_value_joystick', // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+                type: 'byrobot_controller_4_value_joystick',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -532,7 +534,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             paramsKeyMap: {
                 BUTTON: 0,
             },
-            class: 'byrobot_controller_4_boolean_input',
+            class: 'boolean_input',
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
@@ -614,7 +616,7 @@ Entry.byrobot_controller_4.getBlocks = function()
         },
 
 
-        byrobot_controller_4_light_controller_manual_single_off: {
+        byrobot_controller_4_controller_light_manual_single_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -623,7 +625,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null],
-                type: 'byrobot_controller_4_light_controller_manual_single_off',
+                type: 'byrobot_controller_4_controller_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'controller_light',
@@ -635,7 +637,7 @@ Entry.byrobot_controller_4.getBlocks = function()
         },
 
 
-        byrobot_controller_4_light_controller_color_preset: {
+        byrobot_controller_4_controller_light_color_preset: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -683,7 +685,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, null],
-                type: 'byrobot_controller_4_light_controller_color_preset',
+                type: 'byrobot_controller_4_controller_light_color_preset',
             },
             paramsKeyMap: {
                 COLOR: 0,
@@ -701,7 +703,7 @@ Entry.byrobot_controller_4.getBlocks = function()
         },
 
 
-        byrobot_controller_4_light_controller_manual_single_input: {
+        byrobot_controller_4_controller_light_manual_single_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -714,11 +716,11 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [
-                    { type: 'text', params: ['0b00000111'] },
+                    { type: 'text', params: ['0xFF'] },
                     { type: 'text', params: ['255'] },
                     null,
                 ],
-                type: 'byrobot_controller_4_light_controller_manual_single_input',
+                type: 'byrobot_controller_4_controller_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -728,14 +730,14 @@ Entry.byrobot_controller_4.getBlocks = function()
             isNotFor: ['byrobot_controller_4'],
             func(sprite, script)
             {
-                const flags      = script.getNumberValue('FLAGS');
+                const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_base.setLightManual(script, 0x20, flags, brightness);
             },
         },
 
 
-        byrobot_controller_4_light_controller_color_input: {
+        byrobot_controller_4_controller_light_color_input: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -774,7 +776,7 @@ Entry.byrobot_controller_4.getBlocks = function()
                     { type: 'text', params: ['250'] },
                     null,
                 ],
-                type: 'byrobot_controller_4_light_controller_color_input',
+                type: 'byrobot_controller_4_controller_light_color_input',
             },
             paramsKeyMap: {
                 RED: 0,
@@ -797,7 +799,7 @@ Entry.byrobot_controller_4.getBlocks = function()
         },
 
 
-        byrobot_controller_4_light_controller_color_select: {
+        byrobot_controller_4_controller_light_color_select: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -848,7 +850,7 @@ Entry.byrobot_controller_4.getBlocks = function()
             events: {},
             def: {
                 params: [null, null, { type: 'text', params: ['250'] }, null],
-                type: 'byrobot_controller_4_light_controller_color_select',
+                type: 'byrobot_controller_4_controller_light_color_select',
             },
             paramsKeyMap: {
                 COLOR: 0,
@@ -1411,6 +1413,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -1480,6 +1485,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
@@ -1557,6 +1565,9 @@ Entry.byrobot_controller_4.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
                         ['4', '3'],
                         ['5', '4'],
                         ['6', '5'],
