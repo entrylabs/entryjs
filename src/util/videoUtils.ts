@@ -509,6 +509,19 @@ class VideoUtils implements MediaUtilsInterface {
             });
             return;
         }
+
+        // NT11576 이재원 #11709 sprite가 뒤집혔을때 minX와 maxX가 바뀌는 경우가 생김, sprite의 상태값을 저장하는 부분이 없으므로 비교 후 재설정으로 해결
+        if (minX > maxX) {
+            const temp = minX;
+            minX = maxX;
+            maxX = temp;
+        }
+        if (minY > maxY) {
+            const temp = minY;
+            minY = maxY;
+            maxY = temp;
+        }
+
         const data = imageData.data;
         let areaMotion = 0;
         let totalMotionDirectionX = 0;

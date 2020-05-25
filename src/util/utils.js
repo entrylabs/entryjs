@@ -3,7 +3,7 @@
 import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
-import _clamp from 'lodash/clamp'
+import _clamp from 'lodash/clamp';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 
