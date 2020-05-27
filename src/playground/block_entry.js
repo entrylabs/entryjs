@@ -257,7 +257,7 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        Entry.dispatchEvent('openAIUtilizeTrainManager');
+                        Entry.aiLearning.openManager();
                     },
                 ],
             },
