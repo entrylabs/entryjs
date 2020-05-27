@@ -12,13 +12,30 @@ export default class AILearning {
     isLoaded = false;
     isLoading = false;
     result = [];
+    isEnable;
 
-    constructor(playground) {
+    constructor(playground, isEnable = true) {
         this.#playground = playground;
+        this.isEnable = isEnable;
+    }
+
+    isAvailable() {
+        if (!this.isEnable) {
+            return false;
+        }
+        if (!this.isLoaded) {
+            this.toastError();
+            throw new Error('ai learning model load error');
+        }
+        return true;
     }
 
     openManager() {
-        Entry.dispatchEvent('openAIUtilizeTrainManager');
+        if(this.isEnable) {
+            Entry.dispatchEvent('openAIUtilizeTrainManager');
+        } else {
+            console.log('Disabled learning for offline');
+        }
     }
 
     get labels() {
@@ -27,6 +44,10 @@ export default class AILearning {
 
     getResult(index) {
         const defaultResult = {probability: 0, className: ''};
+        const isAvailable = this.isAvailable();
+        if (!isAvailable) {
+            return defaultResult;
+        }
         if(index !== undefined && index > -1) {
             return this.result.find(({className}) => className === this.labels[index]) || defaultResult;
         }
@@ -34,8 +55,9 @@ export default class AILearning {
 
     }
 
-    load({url, labels, type, classes = [], model, id, _id } = {}) {
-        if(!url) {
+    load(modelInfo) {
+        const { url, labels, type, classes = [], model, id, _id, isActive = true } = modelInfo || {};
+        if(!url ||  !this.isEnable || !isActive) {
             return ;
         }
         this.#labels = labels || classes.map(({name}) => name);
@@ -104,7 +126,15 @@ export default class AILearning {
     }
 
     openInputPopup() {
+        const isAvailable = this.isAvailable();
+        if (!isAvailable) {
+            return;
+        }
         this.popupHelper.show(this.#popupKey);
+    }
+
+    toastError() {
+        Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.ai_utilize_train_pop_error, true);
     }
 
     generatePopupView({url, labels, type}) {
@@ -160,6 +190,10 @@ export default class AILearning {
                                 Entry.engine.togglePause({visible:false});
                             }
                             Entry.engine.togglePause();
+                        }
+                        if(key === 'error') {
+                            this.popupHelper.hide();
+                            this.toastError();
                         }
                     }, false);
                 });
