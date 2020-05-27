@@ -12,9 +12,11 @@ export default class AILearning {
     isLoaded = false;
     isLoading = false;
     result = [];
+    isDisable = false;
 
-    constructor(playground) {
+    constructor(playground, isDiabled) {
         this.#playground = playground;
+        this.isDisable = isDisable;
     }
 
     openManager() {
@@ -35,7 +37,7 @@ export default class AILearning {
     }
 
     load({url, labels, type, classes = [], model, id, _id } = {}) {
-        if(!url) {
+        if(!url ||  this.isDisable) {
             return ;
         }
         this.#labels = labels || classes.map(({name}) => name);
@@ -160,6 +162,10 @@ export default class AILearning {
                                 Entry.engine.togglePause({visible:false});
                             }
                             Entry.engine.togglePause();
+                        }
+                        if(key === 'error') {
+                            this.popupHelper.hide();
+                            Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.ai_utilize_train_pop_error, true);
                         }
                     }, false);
                 });
