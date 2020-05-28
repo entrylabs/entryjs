@@ -215,11 +215,11 @@ Entry.PyToBlockParser = class {
         for (const i in lefts) {
             const result = { params: [] };
             const left = lefts[i];
-            var leftVar;
+            let leftVar;
             switch (left.type) {
                 case 'MemberExpression':
                     result.type = 'change_value_list_index';
-                    var leftName = left.object.name;
+                    let leftName = left.object.name;
                     if (leftName === 'self') {
                         result.type = 'set_variable';
                         leftVar = Entry.variableContainer.getVariableByName(
@@ -283,9 +283,9 @@ Entry.PyToBlockParser = class {
                 case '/=':
                 case '*=':
                 default:
-                    var operator = this.arithmeticOperator[component.operator[0]];
+                    let operator = this.arithmeticOperator[component.operator[0]];
                     if (operator) {
-                        var getBlock;
+                        let getBlock;
                         if (result.type === 'set_variable') {
                             getBlock = {
                                 type: 'get_variable',
@@ -505,7 +505,7 @@ Entry.PyToBlockParser = class {
     }
 
     ForInStatement(component) {
-        // var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
+        // let  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
         //                     this.Node(component.body.body[0].expression) : null;
         const result = {
             type: 'repeat_basic',
@@ -535,7 +535,7 @@ Entry.PyToBlockParser = class {
                 };
             case '-':
             case '+':
-                var result = this.Node(component.argument);
+                let result = this.Node(component.argument);
                 if (result.type === 'number') {
                     result.params = [component.operator + result.params[0]];
                     return result;
@@ -846,9 +846,9 @@ Entry.PyToBlockParser = class {
             case 'sprites':
 
             case 'spritesWithMouse':
-                var object;
+                let object;
 
-                var objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                let objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                 if (objects && objects.length > 0) {
                     object = objects[0].id;
@@ -858,26 +858,24 @@ Entry.PyToBlockParser = class {
 
                 return object;
 
-                break;
             case 'spritesWithSelf':
-                var object;
+                let object;
 
                 if (!value) {
                     object = 'None';
                 } else if (value == 'self') {
                     object = value;
                 } else {
-                    var objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                    let objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                     object = objects[0].id;
                 }
 
                 return object;
-                break;
             case 'collision':
-                var object;
+                let object;
 
-                var objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                let objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                 if (objects && objects.length > 0) {
                     object = objects[0].id;
@@ -887,19 +885,17 @@ Entry.PyToBlockParser = class {
 
                 return object;
 
-                break;
             case 'pictures':
-                var picture = this.object.getPicture(value);
+                let picture = this.object.getPicture(value);
                 return picture ? picture.id : undefined;
             case 'messages':
                 return this.getMessage(value);
-                break;
             case 'variables':
                 if (!value) {
                     return;
                 }
                 value = value.split('.');
-                var variable;
+                let variable;
                 if (value.length > 1) {
                     // self variable
                     variable = Entry.variableContainer.getVariableByName(
@@ -920,7 +916,7 @@ Entry.PyToBlockParser = class {
                     return;
                 }
                 value = value.split('.');
-                var list;
+                let list;
                 if (value.length > 1) {
                     // self variable
                     list = Entry.variableContainer.getListByName(value[1], true, this.object.id);
@@ -929,23 +925,23 @@ Entry.PyToBlockParser = class {
                 }
                 return list ? list.id_ : undefined;
             case 'scenes':
-                var scenes = Entry.scene.scenes_.filter((s) => s.name === value);
+                let scenes = Entry.scene.scenes_.filter((s) => s.name === value);
                 return scenes[0] ? scenes[0].id : undefined;
             case 'sounds':
                 if (value) {
-                    var sound = this.object.getSound(value);
+                    let sound = this.object.getSound(value);
                 }
                 return sound ? sound.id : undefined;
             case 'clone':
             case 'textBoxWithSelf':
-                var object;
+                let object;
 
                 if (!value) {
                     object = null;
                 } else if (value == 'self') {
                     object = value;
                 } else {
-                    var objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                    let objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                     object = objects[0] ? objects[0].id : null;
                 }
