@@ -1401,7 +1401,6 @@ Entry.EntityObject = class EntityObject {
         const isWebGL = GEHelper.isWebGL;
         if (this.lineBreak) {
             if (isWebGL) {
-                textObject.y = -this.getHeight() / 2;
                 textObject.y = -this.getHeight() / 2 + TEXT_BOX_REPOSITION_OFFSET;
             } else {
                 const desiredValue =
