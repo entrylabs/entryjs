@@ -219,7 +219,7 @@ Entry.PyToBlockParser = class {
             switch (left.type) {
                 case 'MemberExpression':
                     result.type = 'change_value_list_index';
-                    let leftName = left.object.name;
+                    const leftName = left.object.name;
                     if (leftName === 'self') {
                         result.type = 'set_variable';
                         leftVar = Entry.variableContainer.getVariableByName(
@@ -283,7 +283,7 @@ Entry.PyToBlockParser = class {
                 case '/=':
                 case '*=':
                 default:
-                    let operator = this.arithmeticOperator[component.operator[0]];
+                    const operator = this.arithmeticOperator[component.operator[0]];
                     if (operator) {
                         let getBlock;
                         if (result.type === 'set_variable') {
@@ -535,7 +535,7 @@ Entry.PyToBlockParser = class {
                 };
             case '-':
             case '+':
-                let result = this.Node(component.argument);
+                const result = this.Node(component.argument);
                 if (result.type === 'number') {
                     result.params = [component.operator + result.params[0]];
                     return result;
@@ -841,14 +841,13 @@ Entry.PyToBlockParser = class {
         if (_.isFunction(paramSchema.menuName)) {
             return value;
         }
-
+        let object;
+        let objects;
         switch (paramSchema.menuName) {
             case 'sprites':
 
             case 'spritesWithMouse':
-                let object;
-
-                let objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                 if (objects && objects.length > 0) {
                     object = objects[0].id;
@@ -859,23 +858,19 @@ Entry.PyToBlockParser = class {
                 return object;
 
             case 'spritesWithSelf':
-                let object;
-
                 if (!value) {
                     object = 'None';
                 } else if (value == 'self') {
                     object = value;
                 } else {
-                    let objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                    objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                     object = objects[0].id;
                 }
 
                 return object;
             case 'collision':
-                let object;
-
-                let objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                 if (objects && objects.length > 0) {
                     object = objects[0].id;
@@ -886,7 +881,7 @@ Entry.PyToBlockParser = class {
                 return object;
 
             case 'pictures':
-                let picture = this.object.getPicture(value);
+                const picture = this.object.getPicture(value);
                 return picture ? picture.id : undefined;
             case 'messages':
                 return this.getMessage(value);
@@ -925,11 +920,11 @@ Entry.PyToBlockParser = class {
                 }
                 return list ? list.id_ : undefined;
             case 'scenes':
-                let scenes = Entry.scene.scenes_.filter((s) => s.name === value);
+                const scenes = Entry.scene.scenes_.filter((s) => s.name === value);
                 return scenes[0] ? scenes[0].id : undefined;
             case 'sounds':
                 if (value) {
-                    let sound = this.object.getSound(value);
+                    const sound = this.object.getSound(value);
                 }
                 return sound ? sound.id : undefined;
             case 'clone':
@@ -941,7 +936,7 @@ Entry.PyToBlockParser = class {
                 } else if (value == 'self') {
                     object = value;
                 } else {
-                    let objects = Entry.container.objects_.filter((obj) => obj.name === value);
+                    const objects = Entry.container.objects_.filter((obj) => obj.name === value);
 
                     object = objects[0] ? objects[0].id : null;
                 }
