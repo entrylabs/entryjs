@@ -8,7 +8,8 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 
 const FONT_PADDING_TOP_EXCEPTIONS = ['Nanum Gothic Coding', 'SDMapssi'];
-const TEXT_BOX_REPOSITION_THRESHOLD = 5;
+const TEXT_BOX_REPOSITION_THRESHOLD = 10;
+const TEXT_BOX_REPOSITION_OFFSET = 10;
 
 /**
  * Construct entity class
@@ -1401,16 +1402,17 @@ Entry.EntityObject = class EntityObject {
         if (this.lineBreak) {
             if (isWebGL) {
                 textObject.y = -this.getHeight() / 2;
+                textObject.y = -this.getHeight() / 2 + TEXT_BOX_REPOSITION_OFFSET;
             } else {
                 const desiredValue =
                     textObject.getMeasuredLineHeight() / 2 -
                     this.getHeight() / 2 +
-                    TEXT_BOX_REPOSITION_THRESHOLD;
+                    TEXT_BOX_REPOSITION_OFFSET / 2;
                 // 가끔씩 계산의 값이 달라지는 경우가 있어서 확인하여서 기존과 차이가 거의 없다면 그대로,
-                if (Math.abs(desiredValue - textObject.y) > 10) {
+                if (Math.abs(desiredValue - textObject.y) > TEXT_BOX_REPOSITION_THRESHOLD) {
                     textObject.y =
                         FONT_PADDING_TOP_EXCEPTIONS.indexOf(this.fontType) > -1
-                            ? desiredValue + 10
+                            ? desiredValue + TEXT_BOX_REPOSITION_OFFSET
                             : desiredValue;
                 }
             }
