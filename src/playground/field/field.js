@@ -360,8 +360,12 @@ Entry.Field = class Field {
             return 'dropdown';
         } else if (this instanceof Entry.FieldDropdownDynamic) {
             return 'dropdownDynamic';
+        } else if (this instanceof Entry.FieldDropdownExtra) {
+            return 'dropdownExtra';
         } else if (this instanceof Entry.FieldKeyboard) {
             return 'keyboard';
+        } else if (this instanceof Entry.FieldLed) {
+            return 'led';
         }
     }
 

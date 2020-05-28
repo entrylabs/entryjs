@@ -87,6 +87,8 @@ Entry.ThinkBoard =
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},	
+    sValue1: 0,               // LEEJC 2020/03/17
+    sValue2: 0	
 };
 
 Entry.ThinkBoard.blockMenuBlocks = [
@@ -1740,6 +1742,11 @@ Entry.ThinkBoard.getBlocks = function() {
                     port: [port, mode],
                     time: new Date().getTime(),
                 };
+				
+                // LEEJC 2020.3.17
+                if(port === 1)  Entry.hw.portData.SERVO[port] = Entry.ThinkBoard.sValue1;     
+                else Entry.hw.portData.SERVO[port] = Entry.ThinkBoard.sValue2;    
+				
                 return Entry.hw.portData.SERVO[port] || 0;
             },
             syntax: { js: [], py: [] },
@@ -1807,6 +1814,11 @@ Entry.ThinkBoard.getBlocks = function() {
                     data: [mode, angle],
                     time: new Date().getTime(),
                 };
+				
+                // LEEJC 2020.3.17
+                if(port === 1)  Entry.ThinkBoard.sValue1 = angle;     
+                else Entry.ThinkBoard.sValue2 = angle;    
+				
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -1869,6 +1881,32 @@ Entry.ThinkBoard.getBlocks = function() {
                     data: [mode, dir],
                     time: new Date().getTime(),
                 };
+				
+                if(dir === 0) // 반시계 방향 (-)
+                {
+                    // LEEJC 2020.3.17
+                    if(port === 1)
+                    {
+                        if(Entry.ThinkBoard.sValue1 > 0) Entry.ThinkBoard.sValue1--;     
+                    }
+                    else 
+                    {
+                        if(Entry.ThinkBoard.sValue2 > 0) Entry.ThinkBoard.sValue2--;                  
+                    }
+                }
+                else    // (dir === 1) 시계 방향(++)
+                {
+                    // LEEJC 2020.3.17
+                    if(port === 1)
+                    {
+                        if(Entry.ThinkBoard.sValue1 < 180) Entry.ThinkBoard.sValue1++;     
+                    }
+                    else 
+                    {
+                        if(Entry.ThinkBoard.sValue2 < 180) Entry.ThinkBoard.sValue2++;                  
+                    }
+                }
+				
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -1923,6 +1961,11 @@ Entry.ThinkBoard.getBlocks = function() {
                     data: [mode, angle],
                     time: new Date().getTime(),
                 };
+			
+                    // LEEJC 2020.3.17
+                if(port === 1) Entry.ThinkBoard.sValue1 = 0;    
+                else Entry.ThinkBoard.sValue2 = 0;  	
+				
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },

@@ -130,6 +130,37 @@
         dom: ['playground', 'soundAddButton'],
     };
 
+    c[COMMAND_TYPES.playgroundClickAddTable] = {
+        do() {
+            Entry.dispatchEvent('openTableManager');
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        validate: false,
+        undo: 'playgroundClickAddTableCancel',
+        dom: ['playground', 'tableAddButton'],
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddTableCancel] = {
+        do() {
+            Entry.dispatchEvent('dismissModal');
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: '',
+        dom: ['playground', 'tableAddButton'],
+    };
+
     c[COMMAND_TYPES.playgroundClickAddExpansionBlock] = {
         do() {
             Entry.dispatchEvent('openExpansionBlockManager');
@@ -172,6 +203,56 @@
             return [];
         },
         log() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: '',
+        dom: ['playground', 'soundAddButton'],
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddAIUtilizeBlock] = {
+        do: function() {
+            Entry.dispatchEvent('openAIUtilizeBlockManager');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback, restrictor) {
+            Entry.dispatchEvent('dismissModal');
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: domQuery,
+                    },
+                ],
+                {
+                    restrict: true,
+                    dimmed: true,
+                    callBack: callback,
+                }
+            );
+            return tooltip;
+        },
+        undo: 'playgroundClickAddAIUtilizeBlockCancel',
+        dom: ['playground', 'soundAddButton'],
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddAIUtilizeBlockCancel] = {
+        do: function() {
+            Entry.dispatchEvent('dismissModal');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
             return [];
         },
         validate: false,

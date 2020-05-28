@@ -441,6 +441,7 @@ module.exports = {
                     }
 
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    const { isRealTime_ } = variable;
                     let variableValue = variable.getValue();
                     let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
@@ -454,9 +455,19 @@ module.exports = {
                     } else {
                         sumValue = `${variableValue}${value}`;
                     }
-
-                    variable.setValue(sumValue);
-                    return script.callReturn();
+                    if (!isRealTime_) {
+                        variable.setValue(sumValue);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                await variable.setValue(sumValue);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
@@ -573,8 +584,21 @@ module.exports = {
                     const variableId = script.getField('VARIABLE', script);
                     const value = script.getValue('VALUE', script);
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    variable.setValue(value);
-                    return script.callReturn();
+                    const { isRealTime_ } = variable;
+
+                    if (!isRealTime_) {
+                        variable.setValue(value);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                await variable.setValue(value);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
@@ -844,16 +868,12 @@ module.exports = {
                     let index = script.getValue('INDEX', script);
                     const list = Entry.variableContainer.getList(listId, sprite);
                     index = Entry.getListRealIndex(index, list);
-
-                    if (
-                        !list.array_ ||
-                        !Entry.Utils.isNumber(index) ||
-                        index > list.array_.length
-                    ) {
+                    const array = list.getArray();
+                    if (!array || !Entry.Utils.isNumber(index) || index > array.length) {
                         throw new Error('can not insert value to array');
                     }
 
-                    return list.array_[index - 1].data;
+                    return array[index - 1].data;
                 },
                 syntax: {
                     js: [],
@@ -958,12 +978,19 @@ module.exports = {
                     const value = script.getValue('VALUE', script);
                     const list = Entry.variableContainer.getList(listId, sprite);
 
-                    if (!list.array_) {
-                        list.array_ = [];
+                    if (!list.isCloud_) {
+                        list.appendValue(value);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                await list.appendValue(value);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
                     }
-                    list.array_.push({ data: value });
-                    list.updateView();
-                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -1065,19 +1092,25 @@ module.exports = {
                     const listId = script.getField('LIST', script);
                     const value = script.getValue('VALUE', script);
                     const list = Entry.variableContainer.getList(listId, sprite);
-
-                    if (
-                        !list.array_ ||
-                        !Entry.Utils.isNumber(value) ||
-                        value > list.array_.length
-                    ) {
+                    const array = list.getArray();
+                    if (!array || !Entry.Utils.isNumber(value) || value > array.length) {
                         throw new Error('can not remove value from array');
                     }
 
-                    list.array_.splice(value - 1, 1);
-
-                    list.updateView();
-                    return script.callReturn();
+                    const { isRealTime_ } = list;
+                    if (!isRealTime_) {
+                        list.deleteValue(+value);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                await list.deleteValue(+value);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
@@ -1193,19 +1226,30 @@ module.exports = {
                     const listId = script.getField('LIST', script);
                     const [data, index] = script.getValues(['DATA', 'INDEX'], script);
                     const list = Entry.variableContainer.getList(listId, sprite);
-
+                    const array = list.getArray();
                     if (
-                        !list.array_ ||
+                        !array ||
                         !Entry.Utils.isNumber(index) ||
                         index == 0 ||
-                        index > list.array_.length + 1
+                        index > array.length + 1
                     ) {
                         throw new Error('can not insert value to array');
                     }
 
-                    list.array_.splice(index - 1, 0, { data });
-                    list.updateView();
-                    return script.callReturn();
+                    const { isRealTime_ } = list;
+                    if (!isRealTime_) {
+                        list.insertValue(index, data);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                await list.insertValue(index, data);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
@@ -1325,18 +1369,25 @@ module.exports = {
                     const listId = script.getField('LIST', script);
                     const [data, index] = script.getValues(['DATA', 'INDEX'], script);
                     const list = Entry.variableContainer.getList(listId, sprite);
-
-                    if (
-                        !list.array_ ||
-                        !Entry.Utils.isNumber(index) ||
-                        index > list.array_.length
-                    ) {
+                    const array = list.getArray();
+                    if (!array || !Entry.Utils.isNumber(index) || index > array.length) {
                         throw new Error('can not insert value to array');
                     }
 
-                    list.array_[index - 1].data = data;
-                    list.updateView();
-                    return script.callReturn();
+                    const { isRealTime_ } = list;
+                    if (!isRealTime_) {
+                        list.replaceValue(index, data);
+                        return script.callReturn();
+                    } else {
+                        return new Promise(async (resolve, reject) => {
+                            try {
+                                await list.replaceValue(index, data);
+                                resolve();
+                            } catch (e) {
+                                reject(e);
+                            }
+                        });
+                    }
                 },
                 syntax: {
                     js: [],
@@ -1427,8 +1478,7 @@ module.exports = {
                 func(sprite, script) {
                     const listId = script.getField('LIST', script);
                     const list = Entry.variableContainer.getList(listId, sprite);
-
-                    return list.array_.length;
+                    return list.getArray().length;
                 },
                 syntax: {
                     js: [],
@@ -1544,7 +1594,7 @@ module.exports = {
                     if (!list) {
                         return false;
                     }
-                    const arr = list.array_;
+                    const arr = list.getArray();
 
                     for (let i = 0, len = arr.length; i < len; i++) {
                         if (arr[i].data.toString() == data.toString()) {

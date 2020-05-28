@@ -1,6 +1,5 @@
 'use strict';
 
-const _includes = require('lodash/includes');
 const hardware = require('./hardware/index');
 const _union = require('lodash/union');
 const _flatten = require('lodash/flatten');
@@ -17,25 +16,34 @@ const basicBlockList = [
     require('./block_calc'),
     require('./block_variable'),
     require('./block_func'),
-    require('./block_analysis'),
     require('./block_ai'),
+    require('./block_analysis'),
+    require('./block_ai_learning'),
 ];
+
+Entry.AI_UTILIZE_BLOCK = {};
+require('./block_ai_utilize_audio');
+require('./block_ai_utilize_tts');
+require('./block_ai_utilize_translate');
+require('./block_ai_utilize_video');
+Entry.AI_UTILIZE_BLOCK_LIST = {
+    audio: Entry.AI_UTILIZE_BLOCK.audio,
+    tts: Entry.AI_UTILIZE_BLOCK.tts,
+    translate: Entry.AI_UTILIZE_BLOCK.translate,
+    video: Entry.AI_UTILIZE_BLOCK.video,
+};
 
 Entry.EXPANSION_BLOCK = {};
 require('./block_expansion_weather');
 require('./block_expansion_festival');
-require('./block_expansion_translate');
 require('./block_expansion_behaviorconduct_disaster');
 require('./block_expansion_behaviorconduct_lifesafety');
-require('./block_expansion_tts');
 
 Entry.EXPANSION_BLOCK_LIST = {
     weather: Entry.Expansion_Weather,
     festival: Entry.EXPANSION_BLOCK.festival,
-    translate: Entry.EXPANSION_BLOCK.translate,
     behaviorConductDisaster: Entry.EXPANSION_BLOCK.behaviorConductDisaster,
     behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
-    tts: Entry.EXPANSION_BLOCK.tts,
 };
 
 function getBlockObject(items) {
@@ -68,9 +76,10 @@ module.exports = {
     getBlocks() {
         const hardwareModules = hardware.getHardwareModuleList();
         registerHardwareBlockToStatic(hardwareModules);
-
         const basicAndExpansionBlockObjectList = getBlockObject(
-            basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
+            basicBlockList
+                .concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
+                .concat(Object.values(Entry.AI_UTILIZE_BLOCK_LIST))
         );
         const hardwareBlockObjectList = getBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);

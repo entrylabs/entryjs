@@ -1,23 +1,25 @@
-/**
- * @fileoverview Initialize code fore Entry
- */
-
 'use strict';
 
 import { Destroyer } from './destroyer/Destroyer';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import Expansion from '../class/Expansion';
+import EntryBlockHelper from '../class/helper';
+import AIUtilize from '../class/AIUtilize';
+import AILearning from '../class/AILearning';
 import Extension from '../extensions/extension';
+import CloudVariable from '../extensions/CloudVariable';
 
-require('./utils');
+import './utils';
 
 /**
  * Initialize method with options.
- * @param {!Element} container for entry workspace or others.
- * @param {!object} options for initialize.
+ * @param {HTMLElement} container for entry workspace or others.
+ * @param {Object} options for initialize.
  */
 Entry.init = function(container, options) {
     Entry.assert(typeof options === 'object', 'Init option is not object');
+    Entry.assert(!!container, 'root container must be provided');
+
     this.events_ = {};
     this.interfaceState = {
         menuWidth: 264,
@@ -32,21 +34,16 @@ Entry.init = function(container, options) {
         'dispose',
     ]);
 
-    /** @type {object} */
     this.options = options;
     this.parseOptions(options);
-    this.mediaFilePath = `${options.libDir ? options.libDir : '/lib'}/entry-js/images/`;
-    this.painterBaseUrl = `${
-        options.libDir ? options.libDir : '/lib'
-    }/literallycanvas-mobile/lib/img`;
-    this.defaultPath = options.defaultDir || '';
-    this.soundPath = options.soundDir || '';
-    this.blockInjectPath = options.blockInjectDir || '';
+    setDefaultPathsFromOptions(options);
+    this.cloudVariable = CloudVariable.getInstance();
 
     if (this.type === 'workspace' && this.isPhone()) {
         this.type = 'phone';
     }
     this.initialize_();
+    this.initSoundQueue_();
     /** @type {!Element} */
     this.view_ = container;
     $(this.view_).addClass('entry');
@@ -56,18 +53,10 @@ Entry.init = function(container, options) {
     // if (this.device === 'tablet') $(this.view_).addClass('tablet');
 
     Entry.initFonts(options.fonts);
-    const { theme = 'default' } = options;
-    if (theme !== 'default') {
-        try {
-            EntryStatic.colorSet = require(`../theme/${theme}`);
-            require('../playground/block_entry').assignBlocks();
-        } catch (e) {
-            console.log('not exist theme!', e);
-        }
-    }
+    setDefaultTheme(options);
 
     Entry.paintMode = options.paintMode || 'literallycanvas';
-    this.createDom(container, this.type);
+    container && this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
     this.maxCloneLimit = 360;
@@ -101,31 +90,6 @@ Entry.init = function(container, options) {
         createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
     }
 
-    Entry.soundQueue = new createjs.LoadQueue();
-    Entry.soundQueue.installPlugin(createjs.Sound);
-    Entry.soundInstances = [];
-    Entry.soundQueue.urls = new Set();
-    Entry.soundQueue.total = 0;
-    Entry.soundQueue.loadCallback = (src) => {
-        // if (!Entry.soundQueue.urls.has(src)) {
-        //     return;
-        // }
-        Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
-        Entry.soundQueue.urls.delete(src);
-        const now = Entry.soundQueue.urls.size;
-        if (!Entry.soundQueue.loadComplete && now < 1) {
-            Entry.soundQueue.loadComplete = true;
-            Entry.dispatchEvent('soundLoaded');
-        }
-    };
-    Entry.soundQueue.on('fileload', (event) => {
-        Entry.soundQueue.loadCallback(event.item.src);
-    });
-    Entry.soundQueue.on('error', (event) => {
-        console.error('load sound, error', event);
-        Entry.soundQueue.loadCallback(event.data.src);
-    });
-
     Entry.loadAudio_(
         [
             `${Entry.mediaFilePath}sounds/click.mp3`,
@@ -147,6 +111,37 @@ Entry.init = function(container, options) {
     BigNumber.config({ ERRORS: false });
 };
 
+const setDefaultPathsFromOptions = function(options) {
+    const {
+        libDir = '/lib',
+        defaultDir = '',
+        soundDir = '',
+        blockInjectDir = '',
+        baseUrl = location.origin || 'https://playentry.org',
+    } = options;
+
+    Entry.mediaFilePath = `${libDir}/entry-js/images/`;
+    Entry.painterBaseUrl = `${libDir}/literallycanvas-mobile/lib/img`;
+    Entry.defaultPath = defaultDir;
+    Entry.soundPath = soundDir;
+    Entry.blockInjectPath = blockInjectDir;
+
+    Entry.baseUrl = baseUrl.replace(/\/$/, '');
+    Entry.moduleBaseUrl = `${Entry.baseUrl}/modules/`;
+};
+
+const setDefaultTheme = function(options) {
+    const { theme = 'default' } = options;
+    if (theme !== 'default') {
+        try {
+            EntryStatic.colorSet = require(`../theme/${theme}`);
+            require('../playground/block_entry').assignBlocks();
+        } catch (e) {
+            console.log('not exist theme!', e);
+        }
+    }
+};
+
 Entry.changeContainer = function(container) {
     container.appendChild(this.view_);
 };
@@ -159,8 +154,6 @@ Entry.loadAudio_ = function(filenames, name) {
 
     for (let i = 0; i < filenames.length; i++) {
         const filename = filenames[i];
-        //var path = Blockly.pathToBlockly + filename;
-        //createjs.Sound.registerSound(path, id, 4);
         Entry.soundQueue.loadFile({
             id: name,
             src: filename,
@@ -179,91 +172,58 @@ Entry.initialize_ = function() {
     this._destroyer = this._destroyer || new Destroyer();
     this._destroyer.destroy();
 
-    /**
-     * Initialize stage
-     * @type {!Entry.Stage}
-     * @type {!object}
-     */
+    GEHelper.INIT(this.options.useWebGL);
     this.stage = new Entry.Stage();
     this._destroyer.add(this.stage);
 
     if (Entry.engine && Entry.engine.projectTimer) {
         Entry.engine.clearTimer();
     }
-    /**
-     * Initialize engine for run.
-     * @type {!Entry.Engine}
-     * @type {!object}
-     */
+
     this.engine = new Entry.Engine();
     this._destroyer.add(this.engine);
-
-    /**
-     * Initialize PropertyPanel.
-     * @type {!object}
-     */
 
     if (this.type !== 'minimize') {
         this.propertyPanel = new Entry.PropertyPanel();
     }
 
-    /**
-     * Initialize container for objects.
-     * @type {!Entry.Container}π
-     * @type {!object}
-     */
     this.container = new Entry.Container();
     this._destroyer.add(this.container);
 
-    /**
-     * Initialize helper.
-     * @type {!Entry.Helper}
-     * @type {!object}
-     */
-    this.helper = new Entry.Helper();
+    this.helper = new EntryBlockHelper();
     this.youtube = new Entry.Youtube();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
-    /**
-     * Initialize container for objects.
-     * @type {!Entry.VariableContainer}
-     * @type {!object}
-     */
+
     this.variableContainer = new Entry.VariableContainer();
 
+    if (this.type === 'workspace' || this.type === 'phone' || this.type === 'playground') {
+        this.stateManager = new Entry.StateManager();
+    }
     this.commander = new Entry.Commander(this.type, this.doNotSkipAny);
 
-    /**
-     * Initialize scenes.
-     * @type {!Entry.Scene}
-     * @type {!object}
-     */
     this.scene = new Entry.Scene();
     this._destroyer.add(this.scene);
 
-    /**
-     * Initialize playground.
-     * @type {!Entry.Playground}
-     */
     this.playground = new Entry.Playground();
     this._destroyer.add(this.playground);
 
     this.expansion = new Expansion(this.playground);
     this._destroyer.add(this.expansion);
+
+    this.aiUtilize = new AIUtilize(this.playground);
+    this._destroyer.add(this.aiUtilize);
+
+    this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
+    this._destroyer.add(this.aiLearning);
+
     this.intro = new Entry.Intro();
-    /**
-     * Initialize toast. Toast don't need generate view.
-     * @type {!Entry.Toast}
-     */
+
     this.toast = new Entry.Toast();
 
     if (this.hw) {
         this.hw.closeConnection();
     }
-    /**
-     * Initialize hardware manager.
-     * @type {!Entry.Toast}
-     */
     this.hw = new Entry.HW();
 
     if (Entry.enableActivityLogging) {
@@ -271,9 +231,6 @@ Entry.initialize_ = function() {
     } else if (this.type === 'workspace' || this.type === 'phone') {
         this.reporter = new Entry.Reporter(true);
     }
-
-    GEHelper.INIT(this.options.useWebGL);
-    // GEHelper.INIT(0);
 };
 
 Entry.disposeContainer = function() {
@@ -282,160 +239,190 @@ Entry.disposeContainer = function() {
     }
 };
 
+Entry.initSoundQueue_ = function() {
+    Entry.soundQueue = new createjs.LoadQueue();
+    Entry.soundQueue.installPlugin(createjs.Sound);
+    Entry.soundInstances = [];
+    Entry.soundQueue.urls = new Set();
+    Entry.soundQueue.total = 0;
+    Entry.soundQueue.loadCallback = (src) => {
+        if (!Entry.soundQueue.urls.has(src)) {
+            return;
+        }
+        Entry.soundQueue.total = Math.max(Entry.soundQueue.total, Entry.soundQueue.urls.size);
+        Entry.soundQueue.urls.delete(src);
+        const now = Entry.soundQueue.urls.size;
+        if (!Entry.soundQueue.loadComplete && now < 1) {
+            Entry.soundQueue.loadComplete = true;
+            Entry.dispatchEvent('soundLoaded');
+        }
+    };
+    Entry.soundQueue.on('fileload', (event) => {
+        Entry.soundQueue.loadCallback(event.item.src);
+    });
+    Entry.soundQueue.on('error', (event) => {
+        console.error('load sound, error', event);
+        Entry.soundQueue.loadCallback(event.data.src);
+    });
+};
 /**
  * Initialize html DOM view for entry.
  * This work differently with initialize option.
- * @param {!Element} container for entry workspace or others.
- * @param {!string} option for create dom by type.
+ * @param {HTMLElement} container for entry workspace or others.
+ * @param {string} type for create dom by type.
  */
-Entry.createDom = function(container, option) {
-    const that = this;
-
+Entry.createDom = function(container, type) {
     const textCanvasContainer = Entry.createElement('div', 'textCanvasContainer');
     textCanvasContainer.style.display = 'none';
     container.appendChild(textCanvasContainer);
 
-    if (!option || option === 'workspace') {
-        Entry.documentMousedown.attach(that, that.cancelObjectEdit);
+    switch (type) {
+        case 'minimize': {
+            const canvas = _createCanvasElement(['entryCanvasWorkspace', 'minimize']);
+            const canvasWrapper = Entry.createElement('div', 'entryCanvasWrapper');
+            canvasWrapper.appendChild(canvas);
+            container.appendChild(canvasWrapper);
 
-        const sceneView = Entry.createElement('div');
-        container.appendChild(sceneView);
-        /** @type {!Element} */
-        this.sceneView = sceneView;
-        this.scene.generateView(this.sceneView, option);
+            this.canvas_ = canvas;
+            this.stage.initStage(this.canvas_);
 
-        const stateManagerView = Entry.createElement('div');
-        this.sceneView.appendChild(stateManagerView);
-        /** @type {!Element} */
-        this.stateManagerView = stateManagerView;
-        this.stateManager.generateView(this.stateManagerView, option);
+            const engineView = Entry.createElement('div');
+            container.appendChild(engineView);
+            this.engineView = engineView;
+            this.engine.generateView(this.engineView, type);
+            break;
+        }
+        case 'phone': {
+            this.stateManagerView = Entry.createElement('div');
+            this.stateManager.generateView(this.stateManagerView, type);
 
-        const engineContainer = Entry.createElement('div');
-        engineContainer.classList.add('engineContainer');
-        container.appendChild(engineContainer);
-        const engineView = Entry.createElement('div');
-        engineContainer.appendChild(engineView);
-        this.engineContainer = engineContainer;
-        /** @type {!Element} */
-        this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
+            const engineView = Entry.createElement('div');
+            container.appendChild(engineView);
+            this.engineView = engineView;
+            this.engine.generateView(this.engineView, type);
 
-        const canvas = Entry.createElement('canvas');
-        canvas.addClass('entryCanvasWorkspace');
-        canvas.id = 'entryCanvas';
-        canvas.width = 640;
-        canvas.height = 360;
-        engineView.insertBefore(canvas, this.engine.buttonWrapper);
+            const canvas = _createCanvasElement('entryCanvasPhone');
 
-        canvas.addEventListener('mousewheel', (evt) => {
-            const mousePosition = Entry.stage.mouseCoordinate;
-            const tempList = Entry.variableContainer.getListById(mousePosition);
-            const wheelDirection = evt.wheelDelta > 0;
+            engineView.insertBefore(canvas, this.engine.footerView_);
+            this.canvas_ = canvas;
+            this.stage.initStage(this.canvas_);
 
-            for (let i = 0; i < tempList.length; i++) {
-                const list = tempList[i];
-                if (wheelDirection) {
-                    if (list.scrollButton_.y >= 46) {
-                        list.scrollButton_.y -= 23;
+            const containerView = Entry.createElement('div');
+            container.appendChild(containerView);
+            this.containerView = containerView;
+            this.container.generateView(this.containerView);
+
+            const playgroundView = Entry.createElement('div');
+            container.appendChild(playgroundView);
+            this.playgroundView = playgroundView;
+            this.playground.generateView(this.playgroundView, type);
+            break;
+        }
+        case 'playground': {
+            const playgroundView = Entry.createElement('div');
+            container.appendChild(playgroundView);
+            this.playgroundView = playgroundView;
+            this.playground.generateView(this.playgroundView, type);
+            break;
+        }
+        case 'invisible': {
+            // 아무런 뷰도 그리지 않는다.
+            break;
+        }
+        case 'workspace':
+        default: {
+            Entry.documentMousedown.attach(this, this.cancelObjectEdit);
+
+            const sceneView = Entry.createElement('div');
+            container.appendChild(sceneView);
+            this.sceneView = sceneView;
+            this.scene.generateView(this.sceneView, type);
+
+            const stateManagerView = Entry.createElement('div');
+            this.sceneView.appendChild(stateManagerView);
+            this.stateManagerView = stateManagerView;
+            this.stateManager.generateView(this.stateManagerView, type);
+
+            const engineContainer = Entry.createElement('div');
+            engineContainer.classList.add('engineContainer');
+            container.appendChild(engineContainer);
+            const engineView = Entry.createElement('div');
+            engineContainer.appendChild(engineView);
+            this.engineContainer = engineContainer;
+            this.engineView = engineView;
+            this.engine.generateView(this.engineView, type);
+
+            const canvas = _createCanvasElement('entryCanvasWorkspace');
+            engineView.insertBefore(canvas, this.engine.buttonWrapper);
+
+            canvas.addEventListener('mousewheel', (evt) => {
+                const mousePosition = Entry.stage.mouseCoordinate;
+                const tempList = Entry.variableContainer.getListById(mousePosition);
+                const wheelDirection = evt.wheelDelta > 0;
+
+                for (let i = 0; i < tempList.length; i++) {
+                    const list = tempList[i];
+                    if (wheelDirection) {
+                        if (list.scrollButton_.y >= 46) {
+                            list.scrollButton_.y -= 23;
+                        } else {
+                            list.scrollButton_.y = 23;
+                        }
                     } else {
-                        list.scrollButton_.y = 23;
+                        list.scrollButton_.y += 23;
                     }
-                } else {
-                    list.scrollButton_.y += 23;
+                    list.updateView();
                 }
-                list.updateView();
-            }
-        });
+            });
 
-        /** @type {!Element} */
-        this.canvas_ = canvas;
-        this.extension = new Extension();
-        this.stage.initStage(this.canvas_);
+            this.canvas_ = canvas;
+            this.extension = new Extension();
+            this.stage.initStage(this.canvas_);
 
-        const containerView = Entry.createElement('div');
-        //container.appendChild(containerView);
-        this.propertyPanel.generateView(engineContainer, option);
-        /** @type {!Element} */
-        this.containerView = containerView;
-        this.container.generateView(this.containerView, option);
-        this.propertyPanel.addMode('object', this.container);
+            const containerView = Entry.createElement('div');
+            this.propertyPanel.generateView(engineContainer, type);
+            this.containerView = containerView;
+            this.container.generateView(this.containerView);
+            this.propertyPanel.addMode('object', this.container);
 
-        this.helper.generateView(this.containerView, option);
-        this.propertyPanel.addMode('helper', this.helper);
+            this.helper.generateView(this.containerView, type);
+            this.propertyPanel.addMode('helper', this.helper);
 
-        const introView = Entry.createElement('div');
-        container.appendChild(introView);
-        this.introView = introView;
-        this.intro.generateView(this.introView, option);
+            const introView = Entry.createElement('div');
+            container.appendChild(introView);
+            this.introView = introView;
+            this.intro.generateView(this.introView, type);
 
-        const playgroundView = Entry.createElement('div');
-        container.appendChild(playgroundView);
-        /** @type {!Element} */
-        this.playgroundView = playgroundView;
-        this.playground.generateView(this.playgroundView, option);
+            const playgroundView = Entry.createElement('div');
+            container.appendChild(playgroundView);
+            this.playgroundView = playgroundView;
+            this.playground.generateView(this.playgroundView, type);
 
-        this.propertyPanel.select('object');
-        this.helper.bindWorkspace(this.playground.mainWorkspace);
-    } else if (option === 'minimize') {
-        const canvas = Entry.createElement('canvas');
-        canvas.className = 'entryCanvasWorkspace minimize';
-        canvas.id = 'entryCanvas';
-        canvas.width = 640;
-        canvas.height = 360;
-        const canvasWrapper = Entry.createElement('div', 'entryCanvasWrapper');
-        canvasWrapper.appendChild(canvas);
-        container.appendChild(canvasWrapper);
-
-        /** @type {!Element} */
-        this.canvas_ = canvas;
-        this.stage.initStage(this.canvas_);
-
-        const engineView = Entry.createElement('div');
-        container.appendChild(engineView);
-        /** @type {!Element} */
-        this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
-    } else if (option === 'phone') {
-        const stateManagerView = Entry.createElement('div');
-        /** @type {!Element} */
-        this.stateManagerView = stateManagerView;
-        this.stateManager.generateView(this.stateManagerView, option);
-
-        const engineView = Entry.createElement('div');
-        container.appendChild(engineView);
-        /** @type {!Element} */
-        this.engineView = engineView;
-        this.engine.generateView(this.engineView, option);
-
-        const canvas = Entry.createElement('canvas');
-        canvas.addClass('entryCanvasPhone');
-        canvas.id = 'entryCanvas';
-        canvas.width = 640;
-        canvas.height = 360;
-
-        engineView.insertBefore(canvas, this.engine.footerView_);
-        /** @type {!Element} */
-        this.canvas_ = canvas;
-        this.stage.initStage(this.canvas_);
-
-        const containerView = Entry.createElement('div');
-        container.appendChild(containerView);
-        /** @type {!Element} */
-        this.containerView = containerView;
-        this.container.generateView(this.containerView, option);
-
-        const playgroundView = Entry.createElement('div');
-        container.appendChild(playgroundView);
-        /** @type {!Element} */
-        this.playgroundView = playgroundView;
-        this.playground.generateView(this.playgroundView, option);
+            this.propertyPanel.select('object');
+            this.helper.bindWorkspace(this.playground.mainWorkspace);
+        }
     }
 };
 
 /**
- * start running
- * @param {?number} FPS
+ * @param className {string|string[]}
+ * @private
  */
+const _createCanvasElement = (className) => {
+    const canvas = Entry.createElement('canvas');
+    canvas.id = 'entryCanvas';
+    canvas.width = 640;
+    canvas.height = 360;
+
+    if (Array.isArray(className)) {
+        canvas.className = className.join(' ');
+    } else {
+        canvas.addClass(className);
+    }
+
+    return canvas;
+};
+
 Entry.start = function() {
     if (Entry.type === 'invisible') {
         return;
@@ -464,7 +451,7 @@ Entry.parseOptions = function(options) {
     /** @type {string} */
     this.type = options.type || this.type;
 
-    this.hashId = options.hashId || this.hasId;
+    this.hashId = options.hashId || this.hashId;
 
     if (options.device) {
         this.device = options.device;
@@ -523,6 +510,21 @@ Entry.parseOptions = function(options) {
         this.variableEnable = true;
     }
 
+    this.dataTableEnable = options.dataTableEnable;
+    if (this.dataTableEnable === undefined) {
+        this.dataTableEnable = false;
+    }
+
+    this.aiLearningEnable = options.aiLearningEnable;
+    if (this.aiLearningEnable === undefined) {
+        this.aiLearningEnable = true;
+    }
+
+    this.hardwareEnable = options.hardwareEnable;
+    if (this.hardwareEnable === undefined) {
+        this.hardwareEnable = true;
+    }
+
     this.listEnable = options.listEnable;
     if (this.listEnable === undefined) {
         this.listEnable = true;
@@ -579,7 +581,7 @@ Entry.Utils.initEntryEvent_ = function() {
 
 /**
  * initialize sound
- * @param {sound object} sound
+ * @param {object} sound
  */
 Entry.initSound = function(sound) {
     if (!sound || !sound.duration || sound.duration == 0) {

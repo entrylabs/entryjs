@@ -178,6 +178,8 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         if (this._originBlock) {
             blockType = this._originBlock.type;
             delete this._originBlock;
+        } else if (this._content.blockType) {
+            blockType = this._content.blockType;
         } else if (this._content.defaultType) {
             blockType = this._content.defaultType;
         } else {
@@ -367,10 +369,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         delete this._oldPrimitiveValue;
         return block;
-    }
-
-    spliceBlock() {
-        this.updateValueBlock();
     }
 
     _updateBG() {

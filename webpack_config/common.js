@@ -1,11 +1,10 @@
-'use strict';
+/*eslint-env node*/
 
 const path = require('path');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -15,12 +14,25 @@ module.exports = {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
         filename: '[name].js',
+        jsonpFunction: 'entryJsonp',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
+    node: {
+        fs: 'empty',
+    },
     module: {
         rules: [
+            {
+                test: /\.worker\.ts$/,
+                use: {
+                    loader: 'worker-loader',
+                    options: {
+                        inline: true,
+                    },
+                },
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -48,14 +60,9 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader',
-                options: {
-                    useCache: true,
-                    cacheDirectory: path.join(__dirname, '..', 'node_modules', '.cache', 'awcache'),
-                    reportFiles: ['src/**/*.{ts,tsx}'],
-                    transpileOnly: true,
-                    useTranspileModule: true,
-                },
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+                options: { transpileOnly: true },
             },
             {
                 test: /\.(css|less)$/,

@@ -15,7 +15,7 @@ class Scope {
     getParam(index) {
         const fieldBlock = this.block.params[index];
         const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        const result = newScope.run(this.entity, true);
         return result;
     }
 
@@ -25,7 +25,7 @@ class Scope {
             if (param instanceof Entry.Block) {
                 const fieldBlock = param;
                 const newScope = new Entry.Scope(fieldBlock, that.executor);
-                return Entry.block[fieldBlock.type].func.call(newScope, that.entity, newScope);
+                return newScope.run(this.entity, true);
             } else {
                 return param;
             }
@@ -74,34 +74,11 @@ class Scope {
     }
 
     getValues(keys, scope) {
-        const valueState = this.executor.valueState || {};
-        const fieldBlocks = keys.map((key) => {
-            return this.block.params[this._getParamIndex(key, scope)];
-        });
-        const currentBlockId = scope.block.data.id;
-        valueState[currentBlockId] = valueState[currentBlockId] || { state: 'wait' };
-
-        this._setChildBlockState(fieldBlocks, currentBlockId);
-
-        fieldBlocks.forEach((fieldBlock) => {
-            const blockId = fieldBlock.data.id;
-            if (valueState[blockId].state === 'pending') {
-                this._setBlockState(fieldBlock, valueState);
-            }
-        });
-
-        return fieldBlocks.map((fieldBlock) => {
-            return valueState[fieldBlock.data.id].value;
-        });
+        return keys.map((key) => this.values[this._getParamIndex(key, scope)]);
     }
 
     getValue(key, scope) {
-        const executorValueMap = this.executor.valueMap;
-        const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
-        const blockId = fieldBlock.data.id;
-
-        this._setExecutorValueMap([fieldBlock]);
-        return executorValueMap[blockId];
+        return this.values[this._getParamIndex(key, scope)];
     }
 
     /**
@@ -118,6 +95,11 @@ class Scope {
 
             if (executorValueMap[blockId] === 'isPending') {
                 throw new Entry.Utils.AsyncError();
+            } else if (
+                executorValueMap[blockId] &&
+                executorValueMap[blockId].name === 'IncompatibleError'
+            ) {
+                throw executorValueMap[blockId];
             } else if (executorValueMap[blockId] !== undefined) {
                 return executorValueMap[blockId];
             }
@@ -142,7 +124,7 @@ class Scope {
     }
 
     getNumberValue(key, scope) {
-        return Number(this.getValue(key, scope));
+        return parseFloat(this.getValue(key, scope));
     }
 
     getBooleanValue(key, scope) {
@@ -187,6 +169,30 @@ class Scope {
     die() {
         this.block = null;
         return Entry.STATIC.BREAK;
+    }
+
+    run(entity, isValue) {
+        const schema = this.block.getSchema();
+        if (this.isCondition) {
+            return schema.func.call(this, entity, this);
+        }
+        const values = this.getParams();
+        const isPromise = values.some((value) => value instanceof Promise);
+        // const schema = this.block.getSchema();
+        if (!schema.func) {
+            return;
+        }
+        if (!isPromise) {
+            this.values = values;
+            return schema.func.call(this, entity, this);
+        } else {
+            return Promise.all(values).then(async (values) => {
+                if (Entry.engine.state !== 'stop' && this.block) {
+                    this.values = values;
+                    return await schema.func.call(this, entity, this);
+                }
+            });
+        }
     }
 }
 

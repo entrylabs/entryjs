@@ -1018,11 +1018,31 @@ Entry.EntityObject = class EntityObject {
             if (~diffEffects.indexOf('hsv')) {
                 /* eslint-disable */
                 let matrixValue = [
-                    1, 0, 0, 0, 0,
-                    0, 1, 0, 0, 0,
-                    0, 0, 1, 0, 0,
-                    0, 0, 0, 1, 0,
-                    0, 0, 0, 0, 1,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
                 ];
                 /* eslint-enable */
 
@@ -1039,27 +1059,87 @@ Entry.EntityObject = class EntityObject {
                 if (v > 0 && v <= 0.33) {
                     /* eslint-disable */
                     matrixValue = [
-                        1, 0, 0, 0, 0,
-                        0, cosVal, sinVal, 0, 0,
-                        0, -1 * sinVal, cosVal, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        cosVal,
+                        sinVal,
+                        0,
+                        0,
+                        0,
+                        -1 * sinVal,
+                        cosVal,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
                     ];
                 } else if (v <= 0.66) {
                     matrixValue = [
-                        cosVal, 0, sinVal, 0, 0,
-                        1, 0, 0, 0, 0,
-                        sinVal, 0, cosVal, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1,
+                        cosVal,
+                        0,
+                        sinVal,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        sinVal,
+                        0,
+                        cosVal,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
                     ];
                 } else if (v <= 0.99) {
                     matrixValue = [
-                        cosVal, sinVal, 0, 0, 0,
-                        -1 * sinVal, cosVal, 0, 0, 0,
-                        0, 0, 1, 0, 0,
-                        0, 0, 0, 1, 0,
-                        0, 0, 0, 0, 1,
+                        cosVal,
+                        sinVal,
+                        0,
+                        0,
+                        0,
+                        -1 * sinVal,
+                        cosVal,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
                     ];
                 }
                 /* eslint-enable */
@@ -1254,11 +1334,28 @@ Entry.EntityObject = class EntityObject {
         this.brush = null;
     }
 
-    /*
-     * erase brush
-     */
     eraseBrush() {
-        this._removeShapes();
+        const brush = this.brush;
+        if (brush) {
+            // WebGL 인경우 createjs와 같은 코드로 동작하지 않아서 코드 분기생성 (#11626)
+            const isWebGL = GEHelper.isWebGL;
+            if (isWebGL) {
+                const { r, g, b } = brush.rgb;
+                const thickness = brush.thickness;
+                const opacity = 1 - brush.opacity / 100;
+                brush.clear();
+                brush.setStrokeStyle(thickness);
+                brush.beginStrokeFast(Entry.rgb2Number(r, g, b), opacity);
+            } else {
+                // 기존 스펙으로 롤백(#11434)
+                const stroke = brush._stroke.style;
+                const thickness = brush._strokeStyle.width;
+                brush
+                    .clear()
+                    .setStrokeStyle(thickness)
+                    .beginStroke(stroke);
+            }
+        }
         Entry.requestUpdate = true;
     }
 
@@ -1385,7 +1482,7 @@ Entry.EntityObject = class EntityObject {
             this._scaleAdaptor = null;
         }
 
-        if (this.stamps) {
+        if (this.stamps && this.stamps.length) {
             this.removeStamps();
         }
 

@@ -1,6 +1,8 @@
 'use strict';
 
-import { get, pick, isMatch } from 'lodash';
+import get from 'lodash/get';
+import isMatch from 'lodash/isMatch';
+import pick from 'lodash/pick';
 
 function scriptCheck(script) {
     if (script.length !== 1 || script[0].length !== 2) {
@@ -32,11 +34,12 @@ Entry.isDefaultProject = function(project) {
         }
 
         const script = JSON.parse(get(project, 'objects.0.script'));
-        const { scenes, variables, objects } = project;
+        const { scenes, variables, objects, tables } = project;
         if (
             scenes.length !== 1 ||
             variables.length !== 2 ||
             objects.length !== 1 ||
+            tables.length !== 0 ||
             !scriptCheck(script)
         ) {
             return false;
@@ -56,9 +59,12 @@ Entry.isDefaultProject = function(project) {
             'objects.0.id',
             'objects.0.scene',
             'objects.0.sprite.sounds.0.id',
+            'objects.0.sprite.sounds.length',
             'objects.0.sprite.pictures.0.id',
             'objects.0.sprite.pictures.1.id',
+            'objects.0.sprite.pictures.length',
             'expansionBlocks',
+            'aiUtilizeBlocks',
             'speed',
         ]);
         return isMatch(Entry.getStartProject(), pickData);
@@ -182,6 +188,7 @@ Entry.getStartProject = function(mediaFilePath) {
             },
         ],
         expansionBlocks: [],
+        aiUtilizeBlocks: [],
         speed: 60,
     };
 };

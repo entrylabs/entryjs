@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import isObject from 'lodash/isObject';
 
 /**
  * 엔트리 하드웨어 -> 엔트리 워크스페이스간 통신을 정리한 클래스
@@ -26,13 +26,16 @@ export default class {
     }
 
     _onAction(message: EntryHardwareSocketMessage) {
-        const { action, data } = message;
+        // 객체 구조가 이모양인건 기존 호환성때문.
+        // 정리해서 이쁘게 만들도록 하자 (entry-hw-server 수정필요)
+        const { data } = message;
+        const { action, data: payload } = data;
         switch (action) {
             case 'state':
-                this._onStateAction(data);
+                this._onStateAction(payload);
                 break;
             case 'init':
-                this._onInitAction(data);
+                this._onInitAction(payload);
                 break;
             default:
                 this._onDefaultAction(data);
@@ -42,12 +45,11 @@ export default class {
     /**
      * 현재 하드웨어 연결 상태를 표기한다.
      * connected 의 경우 어떤 하드웨어와 연결되었는지 표기된다.
-     * @param statement {string} 하드웨어 연결상태
-     * @param args
+     * @param payload {*} payload
      * @private
      */
-    _onStateAction({ statement, args }: any) {
-        const [name] = args;
+    _onStateAction(payload: any) {
+        const { statement, name } = payload;
         this.dispatchEvent('state', statement, name);
     }
 
@@ -74,7 +76,7 @@ export default class {
                         break;
                     }
                 }
-            } else if (_.isObject(data)) {
+            } else if (isObject(data)) {
                 portData = data;
             }
             this.dispatchEvent('data', portData);
