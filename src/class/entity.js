@@ -641,28 +641,15 @@ Entry.EntityObject = class EntityObject {
         this.setFontType(fontArray.join(' '));
 
         this._syncFontStyle();
-        Entry.stage.update();
         this.setWidth(this.textObject.getMeasuredWidth());
         this.updateBG();
+        Entry.stage.update();
         Entry.stage.updateObject();
     }
 
     setLineHeight() {
-        let lineHeight;
-        switch (this.getFontType()) {
-            case 'Nanum Gothic Coding': {
-                lineHeight = this.fontSize;
-                break;
-            }
-            case 'DungGeunMo': {
-                lineHeight = this.fontSize;
-                break;
-            }
-            default: {
-                lineHeight = 0;
-                break;
-            }
-        }
+        const lineHeight = this.fontSize + 2;
+
         if (GEHelper.isWebGL) {
             this.textObject.style.lineHeight = lineHeight;
         } else {
