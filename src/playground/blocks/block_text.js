@@ -273,9 +273,45 @@ module.exports = {
                     sprite.setTextEffect(effect, mode);
                     return script.callReturn();
                 },
+                syntax: { js: [], py: ['Entry.changeTextEffect(%1, %2)'] },
+            },
+            text_change_font: {
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                template: '글씨체를 %1 로 변경 %2',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'fonts',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: `block_icon/${filename}`,
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'text_change_font',
+                },
+                paramsKeyMap: {
+                    FONT: 0,
+                },
+                class: 'text',
+                isNotFor: ['sprite'],
+                func(sprite, script) {
+                    const font = script.getField('FONT');
+                    console.log(sprite.getFontSize());
+                    sprite.setFont(`${sprite.getFontSize()} ${font}`);
+                    return script.callReturn();
+                },
                 syntax: { js: [], py: ['Entry.addEffect(%1)'] },
             },
-
             text_flush: {
                 color: EntryStatic.colorSet.block.default.TEXT,
                 outerLine: EntryStatic.colorSet.block.darken.TEXT,

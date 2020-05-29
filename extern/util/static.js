@@ -296,6 +296,7 @@ EntryStatic.getAllBlocks = function() {
                 'text_append',
                 'text_prepend',
                 'text_change_effect',
+                'text_change_font',
                 'text_flush',
             ],
         },

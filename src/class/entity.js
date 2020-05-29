@@ -619,7 +619,8 @@ Entry.EntityObject = class EntityObject {
     /**
      * font setter
      */
-    setFont(font = '20px Nanum Gothic') {
+    setFont(font = '20 Nanum Gothic', shouldUpdateWidth = true) {
+        console.log(font);
         if (this.parent.objectType !== 'textBox') {
             return;
         }
@@ -628,22 +629,39 @@ Entry.EntityObject = class EntityObject {
         }
 
         const fontArray = font.split(' ');
+        console.log(fontArray);
         let i = 0;
 
-        if ((i = fontArray.indexOf('bold') > -1) || this.fontBold) {
+        // NT11576 wodnjs6512
+        // #3513 글씨체 변경시에 기존 bold 와 italic을 받아와서 사용하도록
+        if ((i = fontArray.indexOf('bold') > -1)) {
             fontArray.splice(i - 1, 1);
             this.setFontBold(true);
+        } else if (this.fontBold) {
+            this.setFontBold(true);
         }
-        if ((i = fontArray.indexOf('italic') > -1) || this.fontItalic) {
+        if ((i = fontArray.indexOf('italic') > -1)) {
             fontArray.splice(i - 1, 1);
             this.setFontItalic(true);
+        } else if (this.fontItalic) {
+            this.setFontItalic(true);
         }
-        this.setFontSize(parseInt(fontArray.shift()));
+
+        if (this.getLineBreak()) {
+            this.setLineBreak(this.getLineBreak());
+        }
+
+        this.setFontSize(parseFloat(fontArray.shift()));
         this.setFontType(fontArray.join(' '));
 
         this._syncFontStyle();
         Entry.stage.update();
-        this.setWidth(this.textObject.getMeasuredWidth());
+
+        // NT11576 wodnjs6512
+        // #3513 기존의 텍스트 상자 리사이즈가 필요없는 경우에는 disable 할수 있도록 옵션으로 실행 default = 실행
+        if (shouldUpdateWidth) {
+            this.setWidth(this.textObject.getMeasuredWidth());
+        }
         this.updateBG();
         Entry.stage.updateObject();
     }
@@ -717,6 +735,7 @@ Entry.EntityObject = class EntityObject {
      * font size setter
      */
     setFontSize(fontSize = 20) {
+        console.log(fontSize);
         if (this.parent.objectType !== 'textBox') {
             return;
         }
@@ -780,7 +799,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * NT11576 wodnjs6512
-     * text effect setter
+     * #3513 text effect setter
      * @param {string} effect
      */
     setTextEffect(effect, mode) {
@@ -797,7 +816,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * NT11576 wodnjs6512
-     * reset text effect accroding to the log left with setTextEffect()
+     * #3513 reset text effect accroding to the log left with setTextEffect()
      */
     resetTextEffect() {
         for (const effect of Object.keys(this.textEffectLog)) {
@@ -809,7 +828,7 @@ Entry.EntityObject = class EntityObject {
 
     /**
      * NT11576 wodnjs6512
-     * change font style and update stage
+     * #3513 change font style and update stage
      * @param {*} effect
      * @param {*} mode
      */
