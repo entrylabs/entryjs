@@ -28,6 +28,8 @@ Entry.EntityObject = class EntityObject {
         this._rndPosY = 0;
         this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
         this.textEffectLog = {};
+        this.textColorLog = null;
+        this.textFontLog = null;
 
         if (this.type === 'sprite') {
             this._rndPosX = GEHelper.rndPosition();
@@ -531,6 +533,13 @@ Entry.EntityObject = class EntityObject {
         return this.height;
     }
 
+    setColorWithLog(colour) {
+        if (!this.textColorLog) {
+            this.textColorLog = this.colour;
+        }
+        this.setColour(colour);
+    }
+
     /**
      * colour setter
      * @param {?string} colour
@@ -616,11 +625,18 @@ Entry.EntityObject = class EntityObject {
         return fontArray.join(' ');
     }
 
+    setFontWithLog(font, shouldUpdateWidth) {
+        if (!this.textFontLog) {
+            this.textFontLog = `${this.getFontSize()} ${this.fontType}`;
+        }
+        this.setFont(font, shouldUpdateWidth);
+    }
+
     /**
      * font setter
      */
     setFont(font = '20 Nanum Gothic', shouldUpdateWidth = true) {
-        console.log(font);
+        console.log(font, shouldUpdateWidth);
         if (this.parent.objectType !== 'textBox') {
             return;
         }
@@ -629,7 +645,6 @@ Entry.EntityObject = class EntityObject {
         }
 
         const fontArray = font.split(' ');
-        console.log(fontArray);
         let i = 0;
 
         // NT11576 wodnjs6512
@@ -823,7 +838,16 @@ Entry.EntityObject = class EntityObject {
             const value = this.textEffectLog[effect];
             this.applyEffectByNameAndValue(effect, value);
         }
+        if (this.setColorWithLog) {
+            this.setColour(this.textColorLog);
+        }
+        if (this.textFontLog) {
+            this.setFont(this.textFontLog);
+        }
+
         this.textEffectLog = {};
+        this.textColorLog = null;
+        this.textFontLog = null;
     }
 
     /**
@@ -1583,9 +1607,10 @@ Entry.EntityObject = class EntityObject {
     }
 
     reset() {
+        this.resetTextEffect();
         this.loadSnapshot();
         this.resetFilter();
-        this.resetTextEffect();
+
         _.result(this.dialog, 'remove');
         this.shapes.length && this.removeBrush();
     }
