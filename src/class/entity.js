@@ -630,11 +630,11 @@ Entry.EntityObject = class EntityObject {
         const fontArray = font.split(' ');
         let i = 0;
 
-        if ((i = fontArray.indexOf('bold') > -1)) {
+        if ((i = fontArray.indexOf('bold') > -1) || this.fontBold) {
             fontArray.splice(i - 1, 1);
             this.setFontBold(true);
         }
-        if ((i = fontArray.indexOf('italic') > -1)) {
+        if ((i = fontArray.indexOf('italic') > -1) || this.fontItalic) {
             fontArray.splice(i - 1, 1);
             this.setFontItalic(true);
         }
@@ -779,7 +779,7 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
-     * NT11576
+     * NT11576 wodnjs6512
      * text effect setter
      * @param {string} effect
      */
@@ -795,6 +795,25 @@ Entry.EntityObject = class EntityObject {
         this.applyEffectByNameAndValue(effect, mode);
     }
 
+    /**
+     * NT11576 wodnjs6512
+     * reset text effect accroding to the log left with setTextEffect()
+     */
+    resetTextEffect() {
+        for (const effect of Object.keys(this.textEffectLog)) {
+            const value = this.textEffectLog[effect];
+            this.applyEffectByNameAndValue(effect, value);
+        }
+        this.textEffectLog = {};
+    }
+
+    /**
+     * NT11576 wodnjs6512
+     * change font style and update stage
+     * @param {*} effect
+     * @param {*} mode
+     */
+
     applyEffectByNameAndValue(effect, mode) {
         switch (effect) {
             case 'fontBold':
@@ -803,22 +822,14 @@ Entry.EntityObject = class EntityObject {
             case 'fontItalic':
                 this.toggleFontItalic();
                 break;
-            default:
-                this.textObject[effect] = mode;
+            case 'underLine':
+                this.setUnderLine(mode);
+                break;
+            case 'strike':
+                this.setStrike(mode);
+                break;
         }
         this.updateTextbox();
-    }
-
-    /**
-     *
-     * @param {*} text
-     */
-    resetTextEffect() {
-        for (const effect of Object.keys(this.textEffectLog)) {
-            const value = this.textEffectLog[effect];
-            this.applyEffectByNameAndValue(effect, value);
-        }
-        this.textEffectLog = {};
     }
 
     updateTextbox() {
