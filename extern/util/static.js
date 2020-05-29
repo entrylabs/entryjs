@@ -290,7 +290,14 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'text',
-            blocks: ['text_read', 'text_write', 'text_append', 'text_prepend', 'text_flush'],
+            blocks: [
+                'text_read',
+                'text_write',
+                'text_append',
+                'text_prepend',
+                'text_change_effect',
+                'text_flush',
+            ],
         },
         {
             category: 'sound',

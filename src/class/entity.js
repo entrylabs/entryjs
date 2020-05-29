@@ -27,6 +27,7 @@ Entry.EntityObject = class EntityObject {
         this._rndPosX = 0;
         this._rndPosY = 0;
         this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
+        this.textEffectLog = {};
 
         if (this.type === 'sprite') {
             this._rndPosX = GEHelper.rndPosition();
@@ -778,6 +779,58 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
+     * NT11576
+     * text effect setter
+     * @param {string} effect
+     */
+    setTextEffect(effect, mode) {
+        if (this.parent.objectType !== 'textBox') {
+            return;
+        }
+        // remember default
+        if (this.textEffectLog[effect] == undefined) {
+            this.textEffectLog[effect] = this.textObject[effect];
+        }
+        this.textObject.text = this.text;
+        this.applyEffectByNameAndValue(effect, mode);
+    }
+
+    applyEffectByNameAndValue(effect, mode) {
+        switch (effect) {
+            case 'fontBold':
+                this.toggleFontBold();
+                break;
+            case 'fontItalic':
+                this.toggleFontItalic();
+                break;
+            default:
+                this.textObject[effect] = mode;
+        }
+        this.updateTextbox();
+    }
+
+    /**
+     *
+     * @param {*} text
+     */
+    resetTextEffect() {
+        for (const effect of Object.keys(this.textEffectLog)) {
+            const value = this.textEffectLog[effect];
+            this.applyEffectByNameAndValue(effect, value);
+        }
+        this.textEffectLog = {};
+    }
+
+    updateTextbox() {
+        if (!this.lineBreak) {
+            this.setWidth(this.textObject.getMeasuredWidth());
+            this.parent.updateCoordinateView();
+        }
+        this.updateBG();
+        Entry.stage.updateObject();
+    }
+
+    /**
      * text setter
      * @param {string} text
      */
@@ -788,12 +841,7 @@ Entry.EntityObject = class EntityObject {
         /** @type {string} */
         this.text = text;
         this.textObject.text = this.text;
-        if (!this.lineBreak) {
-            this.setWidth(this.textObject.getMeasuredWidth());
-            this.parent.updateCoordinateView();
-        }
-        this.updateBG();
-        Entry.stage.updateObject();
+        this.updateTextbox();
     }
 
     /**
@@ -1507,6 +1555,7 @@ Entry.EntityObject = class EntityObject {
     reset() {
         this.loadSnapshot();
         this.resetFilter();
+        this.resetTextEffect();
         _.result(this.dialog, 'remove');
         this.shapes.length && this.removeBrush();
     }

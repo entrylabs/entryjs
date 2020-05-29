@@ -216,6 +216,66 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
             },
+            text_change_effect: {
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                template: '텍스트에 %1 효과 %2 %3',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            // display, actual value
+                            ['가로줄', 'strike'],
+                            ['밑줄', 'underLine'],
+                            ['이탤릭', 'fontItalic'],
+                            ['볼드', 'fontBold'],
+                        ],
+                        value: 'strike',
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['켜기', true],
+                            ['끄기', false],
+                        ],
+                        value: true,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: `block_icon/${filename}`,
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'text_change_effect',
+                },
+                paramsKeyMap: {
+                    EFFECT: 0,
+                    MODE: 1,
+                },
+                class: 'text',
+                isNotFor: ['sprite'],
+                func(sprite, script) {
+                    const effect = script.getField('EFFECT');
+                    const mode = script.getField('MODE');
+                    sprite.setTextEffect(effect, mode);
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.addEffect(%1)'] },
+            },
+
             text_flush: {
                 color: EntryStatic.colorSet.block.default.TEXT,
                 outerLine: EntryStatic.colorSet.block.darken.TEXT,
