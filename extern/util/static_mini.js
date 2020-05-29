@@ -276,6 +276,15 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_set_servo_joint',
                 'robotis_set_servo_wheel',
                 'robotis_move_for_secs',
+                'robotis_move_for_secs_dream',
+                'robotis_aux_move_for_dream',
+                'robotis_aux_stop_for_dream',
+                //'robotis_set_servo_wheel_dream',
+                //'robotis_set_servo_joint_dream',
+                'robotis_set_servo_mode_dream',
+                'robotis_set_servo_speed_dream',
+                'robotis_set_servo_position_dream',
+                'robotis_servo_stop_for_dream',
             ],
         },
         {
@@ -316,7 +325,7 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_irs_value',
                 'robotis_irs_value_boolean',
                 'robotis_light_value',
-                'robotis_light_value_boolean',
+                'robotis_light_value_boolean',                
                 'robotis_detectedsound_value',
                 'robotis_detectingsound_value',
                 'robotis_detectedsound_value_boolean',
@@ -330,6 +339,19 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_temperature_value_boolean',
                 'robotis_userbutton_value',
                 'robotis_userbutton_value_boolean',
+                'robotis_touch_value_dream',
+                'robotis_touch_value_boolean_dream',
+                'robotis_irs_value_dream',
+                'robotis_irs_value_boolean_dream',
+                'robotis_irsInner_value_dream',
+                'robotis_light_value_dream',
+                'robotis_light_value_boolean_dream',
+                'robotis_color_value_dream',
+                'robotis_color_value_boolean_dream',
+                'robotis_humidity_value_dream',
+                'robotis_humidity_value_boolean_dream',
+                'robotis_temperature_value_dream',
+                'robotis_temperature_value_boolean_dream',
             ],
         },
         {
@@ -350,6 +372,7 @@ EntryStatic.getAllBlocks = function() {
                 'roborobo_diode_input_value',
                 //robotis
                 'robotis_set_led',
+                'robotis_set_led_dream',
             ],
         },
         {
@@ -783,6 +806,7 @@ EntryStatic.hwMiniSupportList = [
     'roborobo_schoolkit',
     'robotis_openCM70',
     'robotis_openCM70EDU',
+    'robotis_Dream'
 ];
 
 EntryStatic.COMMAND_TYPES = {
