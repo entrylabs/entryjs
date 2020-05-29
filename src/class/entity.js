@@ -27,9 +27,9 @@ Entry.EntityObject = class EntityObject {
         this._rndPosX = 0;
         this._rndPosY = 0;
         this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
-        this.textEffectLog = {};
-        this.textColorLog = null;
-        this.textFontLog = null;
+        this.defaultLog = {
+            textEffect: {},
+        };
 
         if (this.type === 'sprite') {
             this._rndPosX = GEHelper.rndPosition();
@@ -534,8 +534,8 @@ Entry.EntityObject = class EntityObject {
     }
 
     setColorWithLog(colour) {
-        if (!this.textColorLog) {
-            this.textColorLog = this.colour;
+        if (!this.defaultLog.textColor) {
+            this.defaultLog.textColor = this.colour || '#000000';
         }
         this.setColour(colour);
     }
@@ -559,6 +559,17 @@ Entry.EntityObject = class EntityObject {
      */
     getColour() {
         return this.colour;
+    }
+
+    /**
+     * NT11576 BGcolor with log #3513
+     * @param {*} colour
+     */
+    setBGColourWithLog(colour = 'transparent') {
+        if (!this.defaultLog.textBGColor) {
+            this.defaultLog.textBGColor = this.bgColor || 'transparent';
+        }
+        this.setBGColour(colour);
     }
 
     /**
@@ -626,8 +637,8 @@ Entry.EntityObject = class EntityObject {
     }
 
     setFontWithLog(font, shouldUpdateWidth) {
-        if (!this.textFontLog) {
-            this.textFontLog = `${this.getFontSize()} ${this.fontType}`;
+        if (!this.defaultLog.textFont) {
+            this.defaultLog.textFont = `${this.getFontSize()} ${this.fontType}`;
         }
         this.setFont(font, shouldUpdateWidth);
     }
@@ -636,7 +647,6 @@ Entry.EntityObject = class EntityObject {
      * font setter
      */
     setFont(font = '20 Nanum Gothic', shouldUpdateWidth = true) {
-        console.log(font, shouldUpdateWidth);
         if (this.parent.objectType !== 'textBox') {
             return;
         }
@@ -750,7 +760,6 @@ Entry.EntityObject = class EntityObject {
      * font size setter
      */
     setFontSize(fontSize = 20) {
-        console.log(fontSize);
         if (this.parent.objectType !== 'textBox') {
             return;
         }
@@ -822,11 +831,11 @@ Entry.EntityObject = class EntityObject {
             return;
         }
         // remember default
-        if (this.textEffectLog[effect] == undefined) {
-            this.textEffectLog[effect] = this.textObject[effect];
+        if (this.defaultLog.textEffect[effect] == undefined) {
+            this.defaultLog.textEffect[effect] = this[effect];
         }
         this.textObject.text = this.text;
-        this.applyEffectByNameAndValue(effect, mode);
+        this.applyEffectByNameAndValue(effect, mode == 'on');
     }
 
     /**
@@ -834,20 +843,22 @@ Entry.EntityObject = class EntityObject {
      * #3513 reset text effect accroding to the log left with setTextEffect()
      */
     resetTextEffect() {
-        for (const effect of Object.keys(this.textEffectLog)) {
-            const value = this.textEffectLog[effect];
+        for (const effect of Object.keys(this.defaultLog.textEffect)) {
+            const value = this.defaultLog.textEffect[effect];
             this.applyEffectByNameAndValue(effect, value);
         }
-        if (this.setColorWithLog) {
-            this.setColour(this.textColorLog);
+        if (this.defaultLog.textColor) {
+            this.setColour(this.defaultLog.textColor);
         }
-        if (this.textFontLog) {
-            this.setFont(this.textFontLog);
+        if (this.defaultLog.textFont) {
+            this.setFont(this.defaultLog.textFont);
         }
-
-        this.textEffectLog = {};
-        this.textColorLog = null;
-        this.textFontLog = null;
+        if (this.defaultLog.textBGColor) {
+            this.setBGColour(this.defaultLog.textBGColor);
+        }
+        this.defaultLog = {
+            textEffect: {},
+        };
     }
 
     /**

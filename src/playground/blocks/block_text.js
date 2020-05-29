@@ -241,8 +241,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['켜기', true],
-                            ['끄기', false],
+                            ['켜기', 'on'],
+                            ['끄기', 'off'],
                         ],
                         value: true,
                         fontSize: 10,
@@ -339,8 +339,40 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const color = script.getField('VALUE', script);
-                    const rgb = Entry.hex2rgb(color);
-                    sprite.setColour(color);
+                    sprite.setColorWithLog(color);
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.addEffect(%1)'] },
+            },
+            text_change_bg_color: {
+                color: EntryStatic.colorSet.block.default.TEXT,
+                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                template: '배경색을 %1 로 변경 %2',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Color',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: `block_icon/${filename}`,
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'text_change_bg_color',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'text',
+                isNotFor: ['sprite'],
+                func(sprite, script) {
+                    const color = script.getField('VALUE', script);
+                    sprite.setBGColourWithLog(color);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.addEffect(%1)'] },
