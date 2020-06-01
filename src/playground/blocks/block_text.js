@@ -244,7 +244,7 @@ module.exports = {
                             ['켜기', 'on'],
                             ['끄기', 'off'],
                         ],
-                        value: true,
+                        value: 'on',
                         fontSize: 10,
                         textColor: '#fff',
                         bgColor: EntryStatic.colorSet.block.darken.LOOKS,
