@@ -33,6 +33,13 @@ export default class Hardware implements IEntry.Hardware {
     private programConnected: boolean;
     private socket: SocketIOClient.Socket; // 실제 연결된 소켓
     private socketMode: number;
+    private socketConnectOption = {
+        transports: ['websocket', 'polling'],
+        query: {
+            client: true,
+            roomId: this.sessionRoomId,
+        },
+    };
 
     // entryjs 내 하드웨어모듈 통신용
     public portData: UnknownAny;
@@ -68,6 +75,287 @@ export default class Hardware implements IEntry.Hardware {
         this._addEntryEventListener();
     }
 
+    async _loadExternalHardwareBlock(moduleName: string) {
+        try {
+            await Entry.moduleManager.loadExternalModule(moduleName);
+        } catch (e) {
+            Entry.toast.alert(
+                window.Lang.Hw.hw_module_load_fail_title,
+                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`,
+            );
+        }
+    }
+
+    retryConnect() {
+        this._initSocket();
+    }
+
+    openHardwareProgram(args?: { [key: string]: string }) {
+        this._alertUnderVersionUsed().then(() => {
+            this._executeHardware(args);
+
+            if (!this.socket || !this.socket.connected) {
+                setTimeout(() => {
+                    this._initSocket();
+                }, 1000);
+            }
+        });
+    }
+
+    /**
+     * 외부 하드웨어 모듈을 등록한다.
+     * 이때 기존 외부 하드웨어 모듈이 추가되어있는 경우를 대비하여,
+     * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
+     * @param moduleObject
+     */
+    setExternalModule(moduleObject: IEntry.HardwareModule) {
+        this.hwModule = moduleObject;
+        this.hwModuleType = HardwareModuleType.module;
+        this._banClassAllHardware();
+        Entry.dispatchEvent('hwChanged');
+    }
+
+    /**
+     * 하드웨어 블록메뉴의 노출상태를 변경한다.
+     * 최초 실행시 모든 하드웨어 블록 숨김 / 미연결 상태 버튼 출력
+     * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
+     */
+    refreshHardwareBlockMenu() {
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
+
+        if (!blockMenu) {
+            return;
+        }
+
+        if (!this.hwModule) {
+            // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
+            this._banClassAllHardware();
+        }
+
+        const { disconnected, socketConnected, hardwareConnected } = HardwareStatement;
+        if (this.programConnected) {
+            if (this.hwModule) {
+                blockMenu.unbanClass(this.hwModule.name);
+                this._setHardwareDefaultMenu(hardwareConnected);
+            } else {
+                this._setHardwareDefaultMenu(socketConnected);
+            }
+        } else {
+            this._setHardwareDefaultMenu(disconnected);
+        }
+
+        blockMenu.hwCodeOutdated = true;
+        blockMenu._generateHwCode(true);
+        blockMenu.reDraw();
+    }
+
+    disconnectSocket() {
+        if (this.programConnected) {
+            Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
+            this.programConnected = false;
+            this.currentDeviceKey = undefined;
+
+            /*
+            entryjs 내에 존재하던 기존 하드웨어의 경우 원래 프로세스에 따라 연결 종료시 보여주지 않는다.
+            만약 외부모듈인 경우, 하드웨어가 연결종료 되더라도 블록은 남는다.
+             */
+            if (this.hwModuleType === HardwareModuleType.builtIn) {
+                this.hwModule = undefined;
+            }
+
+            this.socket && this.socket.close();
+            this.socket = undefined;
+
+            Entry.dispatchEvent('hwChanged');
+            Entry.toast.alert(
+                window.Lang.Hw.hw_module_terminaltion_title,
+                window.Lang.Hw.hw_module_terminaltion_desc,
+                false,
+            );
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    setDigitalPortValue(port: any, value: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
+        this.sendQueue[port] = value;
+        this.removePortReadable(port);
+    }
+
+    /**
+     * @deprecated
+     */
+    getAnalogPortValue(port: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
+        if (!this.programConnected || !this.hwModule) {
+            return 0;
+        }
+        return this.portData[`a${port}`];
+    }
+
+    /**
+     * @deprecated
+     */
+    getDigitalPortValue(port: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
+        if (!this.programConnected || !this.hwModule) {
+            return 0;
+        }
+        this.setPortReadable(port);
+        if (this.portData[port] !== undefined) {
+            return this.portData[port];
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    setPortReadable(port: any) {
+        console.warn('this function will be deprecated. please control port state directly.');
+        if (!this.sendQueue.readablePorts) {
+            this.sendQueue.readablePorts = [];
+        }
+
+        let isPass = false;
+        for (const i in this.sendQueue.readablePorts) {
+            if (this.sendQueue.readablePorts[i] == port) {
+                isPass = true;
+                break;
+            }
+        }
+
+        if (!isPass) {
+            this.sendQueue.readablePorts.push(port);
+        }
+    }
+
+    /**
+     * @deprecated
+     */
+    removePortReadable(port: any) {
+        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
+        if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
+            return;
+        }
+        let target;
+        for (const i in this.sendQueue.readablePorts) {
+            if (this.sendQueue.readablePorts[i] == port) {
+                target = Number(i);
+                break;
+            }
+        }
+
+        if (target != undefined) {
+            this.sendQueue.readablePorts = this.sendQueue.readablePorts
+                .slice(0, target)
+                .concat(
+                    this.sendQueue.readablePorts.slice(
+                        target + 1,
+                        this.sendQueue.readablePorts.length,
+                    ),
+                );
+        }
+    }
+
+    update() {
+        if (!this.socket || this.socket.disconnected) {
+            return;
+        }
+
+        if (this.hwModule && this.hwModule.sendMessage) {
+            this.hwModule.sendMessage(this);
+        } else {
+            this._sendSocketMessage({
+                data: JSON.stringify(this.sendQueue),
+                mode: this.socketMode,
+                type: 'utf8',
+            });
+        }
+
+        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
+    }
+
+
+    closeConnection() {
+        if (this.socket) {
+            this.socket.close();
+        }
+    }
+
+    downloadConnector() {
+        Entry.dispatchEvent('hwDownload', 'hardware');
+    }
+
+    downloadGuide() {
+        Entry.dispatchEvent('hwDownload', 'manual');
+    }
+
+    downloadSource() {
+        Entry.dispatchEvent('hwDownload', 'ino');
+    }
+
+    setZero() {
+        if (!this.hwModule) {
+            return;
+        }
+        this.hwModule.setZero();
+    }
+
+    /**
+     * 디바이스의 연결상태를 체크한다.
+     * 만약 이미 바로 직전에 동일한 하드웨어와 연결된 경우는 dataHandler 로 데이터를 전송하기만 한다.
+     * 새로운 하드웨어의 연결인 경우는 연결 하드웨어를 치환하고 엔트리에 상태변경을 요청한다.
+     * @param data
+     */
+    checkDevice(data: HardwareMessageData) {
+        if (data.company === undefined) {
+            return;
+        }
+
+        const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
+            data.model,
+        )}`;
+
+        if (this.currentDeviceKey && key === this.currentDeviceKey) {
+            if (this.hwModule && this.hwModule.dataHandler) {
+                this.hwModule.dataHandler(data);
+            }
+            return;
+        }
+
+        this.currentDeviceKey = key;
+        this.hwModule = Entry.HARDWARE_LIST[key];
+        if (!this.hwModule) {
+            return;
+        }
+        this.communicationType = this.hwModule.communicationType || 'auto';
+        this._banClassAllHardware();
+        Entry.dispatchEvent('hwChanged');
+
+        let descMsg = '';
+        if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
+            descMsg = window.Lang.Msgs.hw_connection_success_desc;
+            this._setHardwareMonitorTemplate();
+        } else {
+            descMsg = window.Lang.Msgs.hw_connection_success_desc2;
+        }
+        Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
+    }
+
+    openHardwareDownloadPopup() {
+        if (Entry.events_.openHardWareDownloadModal) {
+            Entry.dispatchEvent('openHardWareDownloadModal');
+        } else {
+            this.popupHelper.show('hwDownload', true);
+        }
+    }
+
+
     private _initHardwareObject() {
         const { hardwareEnable } = Entry;
         this._hwPopupCreate();
@@ -88,20 +376,9 @@ export default class Hardware implements IEntry.Hardware {
         });
     }
 
-    async _loadExternalHardwareBlock(moduleName: string) {
-        try {
-            await Entry.moduleManager.loadExternalModule(moduleName);
-        } catch (e) {
-            Entry.toast.alert(
-                window.Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`
-            );
-        }
-    }
-
-    private _trySocketConnect(url: string, option: SocketIOClient.ConnectOpts) {
+    private _trySocketConnect(url: string) {
         return new Promise((resolve, reject) => {
-            const socket = io.connect(url, option);
+            const socket = io.connect(url, this.socketConnectOption);
             socket.io.reconnectionAttempts(this.socketConnectionRetryCount);
             socket.io.reconnectionDelayMax(1000);
             socket.io.timeout(1000);
@@ -193,17 +470,12 @@ export default class Hardware implements IEntry.Hardware {
         needRedraw && Entry.dispatchEvent('hwChanged');
     }
 
+    /**
+     * 이미 연결했던 소켓이 존재한다면 재연결을 시도한다.
+     * 연결성공했던 소켓이 없다면 전체 리스트를 순회하며 연결을 시도한다.
+     * @private
+     */
     private _initSocket() {
-        const connectHttpsWebSocket = (url: string) =>
-            // TODO ajax 로 entry-hw 살아있는지 확인 후 연결시도 (TRIAL_LIMIT = ajax 로)
-            this._trySocketConnect(url, {
-                transports: ['websocket', 'polling'],
-                query: {
-                    client: true,
-                    roomId: this.sessionRoomId,
-                },
-            });
-
         if (this.socket) {
             if (this.reconnectionTimeout) {
                 clearTimeout(this.reconnectionTimeout);
@@ -229,7 +501,7 @@ export default class Hardware implements IEntry.Hardware {
                     }
 
                     try {
-                        await connectHttpsWebSocket(address);
+                        await this._trySocketConnect(address);
                         return true;
                     } catch (e) {
                         return !!(this.programConnected || this.socket);
@@ -246,70 +518,6 @@ export default class Hardware implements IEntry.Hardware {
                     console.error('Error occurred while try to connect hardware socket');
                 });
         }
-    }
-
-    retryConnect() {
-        this._initSocket();
-    }
-
-    openHardwareProgram(args?: { [key: string]: string }) {
-        this._alertUnderVersionUsed().then(() => {
-            this._executeHardware(args);
-
-            if (!this.socket || !this.socket.connected) {
-                setTimeout(() => {
-                    this._initSocket();
-                }, 1000);
-            }
-        });
-    }
-
-    /**
-     * 외부 하드웨어 모듈을 등록한다.
-     * 이때 기존 외부 하드웨어 모듈이 추가되어있는 경우를 대비하여,
-     * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
-     * @param moduleObject
-     */
-    setExternalModule(moduleObject: IEntry.HardwareModule) {
-        this.hwModule = moduleObject;
-        this.hwModuleType = HardwareModuleType.module;
-        this._banClassAllHardware();
-        Entry.dispatchEvent('hwChanged');
-    }
-
-    /**
-     * 하드웨어 블록메뉴의 노출상태를 변경한다.
-     * 최초 실행시 모든 하드웨어 블록 숨김 / 미연결 상태 버튼 출력
-     * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
-     */
-    refreshHardwareBlockMenu() {
-        const workspace = Entry.getMainWS();
-        const blockMenu = workspace && workspace.blockMenu;
-
-        if (!blockMenu) {
-            return;
-        }
-
-        if (!this.hwModule) {
-            // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
-            this._banClassAllHardware();
-        }
-
-        const { disconnected, socketConnected, hardwareConnected } = HardwareStatement;
-        if (this.programConnected) {
-            if (this.hwModule) {
-                blockMenu.unbanClass(this.hwModule.name);
-                this._setHardwareDefaultMenu(hardwareConnected);
-            } else {
-                this._setHardwareDefaultMenu(socketConnected);
-            }
-        } else {
-            this._setHardwareDefaultMenu(disconnected);
-        }
-
-        blockMenu.hwCodeOutdated = true;
-        blockMenu._generateHwCode(true);
-        blockMenu.reDraw();
     }
 
     /**
@@ -371,136 +579,6 @@ export default class Hardware implements IEntry.Hardware {
         }
     }
 
-    disconnectSocket() {
-        if (this.programConnected) {
-            Entry.propertyPanel && Entry.propertyPanel.removeMode('hw');
-            this.programConnected = false;
-            this.currentDeviceKey = undefined;
-
-            /*
-            entryjs 내에 존재하던 기존 하드웨어의 경우 원래 프로세스에 따라 연결 종료시 보여주지 않는다.
-            만약 외부모듈인 경우, 하드웨어가 연결종료 되더라도 블록은 남는다.
-             */
-            if (this.hwModuleType === HardwareModuleType.builtIn) {
-                this.hwModule = undefined;
-            }
-
-            this.socket && this.socket.close();
-            this.socket = undefined;
-
-            Entry.dispatchEvent('hwChanged');
-            Entry.toast.alert(
-                window.Lang.Hw.hw_module_terminaltion_title,
-                window.Lang.Hw.hw_module_terminaltion_desc,
-                false
-            );
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    setDigitalPortValue(port: any, value: any) {
-        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
-        this.sendQueue[port] = value;
-        this.removePortReadable(port);
-    }
-
-    /**
-     * @deprecated
-     */
-    getAnalogPortValue(port: any) {
-        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
-        if (!this.programConnected || !this.hwModule) {
-            return 0;
-        }
-        return this.portData[`a${port}`];
-    }
-
-    /**
-     * @deprecated
-     */
-    getDigitalPortValue(port: any) {
-        console.warn('this function will be deprecated. please use Entry.hw.portData directly.');
-        if (!this.programConnected || !this.hwModule) {
-            return 0;
-        }
-        this.setPortReadable(port);
-        if (this.portData[port] !== undefined) {
-            return this.portData[port];
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    setPortReadable(port: any) {
-        console.warn('this function will be deprecated. please control port state directly.');
-        if (!this.sendQueue.readablePorts) {
-            this.sendQueue.readablePorts = [];
-        }
-
-        let isPass = false;
-        for (const i in this.sendQueue.readablePorts) {
-            if (this.sendQueue.readablePorts[i] == port) {
-                isPass = true;
-                break;
-            }
-        }
-
-        if (!isPass) {
-            this.sendQueue.readablePorts.push(port);
-        }
-    }
-
-    /**
-     * @deprecated
-     */
-    removePortReadable(port: any) {
-        console.warn('this function will be deprecated. please use Entry.hw.sendQueue directly.');
-        if (!this.sendQueue.readablePorts && !Array.isArray(this.sendQueue.readablePorts)) {
-            return;
-        }
-        let target;
-        for (const i in this.sendQueue.readablePorts) {
-            if (this.sendQueue.readablePorts[i] == port) {
-                target = Number(i);
-                break;
-            }
-        }
-
-        if (target != undefined) {
-            this.sendQueue.readablePorts = this.sendQueue.readablePorts
-                .slice(0, target)
-                .concat(
-                    this.sendQueue.readablePorts.slice(
-                        target + 1,
-                        this.sendQueue.readablePorts.length
-                    )
-                );
-        }
-    }
-
-    update() {
-        if (!this.socket || this.socket.disconnected) {
-            return;
-        }
-
-        if (this.hwModule && this.hwModule.sendMessage) {
-            this.hwModule.sendMessage(this);
-        } else {
-            this._sendSocketMessage({
-                data: JSON.stringify(this.sendQueue),
-                mode: this.socketMode,
-                type: 'utf8',
-            });
-        }
-
-        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
-    }
-
     private _sendSocketMessage(message: WebSocketMessage) {
         if (this.programConnected && this.socket && !this.socket.disconnected) {
             this.socket.emit('message', message);
@@ -510,80 +588,6 @@ export default class Hardware implements IEntry.Hardware {
     private _updatePortData(data: HardwareMessageData) {
         if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
             this.hwMonitor.update(data, this.sendQueue);
-        }
-    }
-
-    closeConnection() {
-        if (this.socket) {
-            this.socket.close();
-        }
-    }
-
-    downloadConnector() {
-        Entry.dispatchEvent('hwDownload', 'hardware');
-    }
-
-    downloadGuide() {
-        Entry.dispatchEvent('hwDownload', 'manual');
-    }
-
-    downloadSource() {
-        Entry.dispatchEvent('hwDownload', 'ino');
-    }
-
-    setZero() {
-        if (!this.hwModule) {
-            return;
-        }
-        this.hwModule.setZero();
-    }
-
-    /**
-     * 디바이스의 연결상태를 체크한다.
-     * 만약 이미 바로 직전에 동일한 하드웨어와 연결된 경우는 dataHandler 로 데이터를 전송하기만 한다.
-     * 새로운 하드웨어의 연결인 경우는 연결 하드웨어를 치환하고 엔트리에 상태변경을 요청한다.
-     * @param data
-     */
-    checkDevice(data: HardwareMessageData) {
-        if (data.company === undefined) {
-            return;
-        }
-
-        const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
-            data.model
-        )}`;
-
-        if (this.currentDeviceKey && key === this.currentDeviceKey) {
-            if (this.hwModule && this.hwModule.dataHandler) {
-                this.hwModule.dataHandler(data);
-            }
-            return;
-        }
-
-        this.currentDeviceKey = key;
-        this.hwModule = Entry.HARDWARE_LIST[key];
-        if (!this.hwModule) {
-            return;
-        }
-        this.communicationType = this.hwModule.communicationType || 'auto';
-        this._banClassAllHardware();
-        Entry.dispatchEvent('hwChanged');
-
-        let descMsg = '';
-        if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
-            descMsg = window.Lang.Msgs.hw_connection_success_desc;
-            this._setHardwareMonitorTemplate();
-        } else {
-            descMsg = window.Lang.Msgs.hw_connection_success_desc2;
-        }
-        Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
-    }
-
-    openHardwareDownloadPopup() {
-        if (Entry.events_.openHardWareDownloadModal) {
-            Entry.dispatchEvent('openHardWareDownloadModal');
-        } else {
-            this.popupHelper.show('hwDownload', true);
         }
     }
 
@@ -620,7 +624,7 @@ export default class Hardware implements IEntry.Hardware {
                                 localStorage.setItem('skipNoticeHWOldVersion', 'true');
                             }
                             resolve();
-                        }
+                        },
                     );
             } else {
                 resolve();
@@ -647,7 +651,7 @@ export default class Hardware implements IEntry.Hardware {
             },
             runViewer(sUrl: string, fpCallback: (bNotInstalled: boolean) => void) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
@@ -691,7 +695,7 @@ export default class Hardware implements IEntry.Hardware {
         }).reduce(
             (result, [key, value]) =>
                 result === '' ? `${key}:${value}` : `${result}&${key}:${value}`,
-            ''
+            '',
         );
 
         const entryHardwareUrl = `entryhw://?${customSchemaArgsString}`;
@@ -732,10 +736,11 @@ export default class Hardware implements IEntry.Hardware {
         function executeIe(customUrl: string) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {},
+                () => {
+                },
                 () => {
                     hw.openHardwareDownloadPopup();
-                }
+                },
             );
         }
 
