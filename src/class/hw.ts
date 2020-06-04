@@ -26,21 +26,26 @@ export default class Hardware implements IEntry.Hardware {
     get httpServerAddress() {
         return 'http://127.0.0.1:23518';
     } // http 인 오프라인 접속용 주소
+    get cloudRoomIdKey() {
+        return 'entryhwRoomId';
+    }
+    private get socketConnectOption() {
+        return {
+            transports: ['websocket', 'polling'],
+            query: {
+                client: true,
+                roomId: this.sessionRoomId,
+            },
+        };
+    }
 
     // socketIO 및 하드웨어 커넥션용
     private readonly sessionRoomId: string | null;
-    private readonly socketConnectionRetryCount: number;
+    private readonly socketConnectionRetryCount = 3;
     private reconnectionTimeout: NodeJS.Timeout;
     private programConnected: boolean;
     private socket: SocketIOClient.Socket; // 실제 연결된 소켓
     private socketMode: number;
-    private socketConnectOption = {
-        transports: ['websocket', 'polling'],
-        query: {
-            client: true,
-            roomId: this.sessionRoomId,
-        },
-    };
 
     // entryjs 내 하드웨어모듈 통신용
     public portData: UnknownAny;
@@ -54,19 +59,17 @@ export default class Hardware implements IEntry.Hardware {
     private hwMonitor?: HardwareMonitor;
 
     // 하드웨어 설치여부 확인용
-    // public ieLauncher 는 아래 프로그램 런처가 만든 iframe view 에서 onload 로 호출한다
+    // public programLauncher 는 ExternalProgramLauncher 만든 iframe view 에서 onload 로 호출한다
     public programLauncher: ExternalProgramLauncher;
     private popupHelper?: UnknownAny;
-    private _w: any;
 
     constructor() {
-        const prevRoomId = localStorage.getItem('entryhwRoomId');
+        const prevRoomId = localStorage.getItem(this.cloudRoomIdKey);
         this.sessionRoomId = prevRoomId || this._createRandomRoomId();
         if (!prevRoomId) {
-            localStorage.setItem('entryhwRoomId', this.sessionRoomId);
+            localStorage.setItem(this.cloudRoomIdKey, this.sessionRoomId);
         }
 
-        this.socketConnectionRetryCount = 3;
         this.programConnected = false;
         this.communicationType = 'auto';
         this.portData = {};
@@ -81,9 +84,13 @@ export default class Hardware implements IEntry.Hardware {
         try {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
+            // Entry.toast.alert(
+            //     Lang.Hw.hw_module_load_fail_title,
+            //     `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
+            // );
             Entry.toast.alert(
-                Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
+                '모듈 로드 실패',
+                `${moduleName} 로드에 실패했습니다. 관리자에게 문의하세요`
             );
         }
     }
@@ -283,9 +290,7 @@ export default class Hardware implements IEntry.Hardware {
     }
 
     closeConnection() {
-        if (this.socket) {
-            this.socket.close();
-        }
+        this.socket?.close();
     }
 
     downloadConnector() {
@@ -301,10 +306,7 @@ export default class Hardware implements IEntry.Hardware {
     }
 
     setZero() {
-        if (!this.hwModule) {
-            return;
-        }
-        this.hwModule.setZero();
+        this.hwModule?.setZero();
     }
 
     /**
@@ -495,6 +497,7 @@ export default class Hardware implements IEntry.Hardware {
                 connectionTries.push(this.httpServerAddress);
             }
 
+            // 주소에 담겨져있는 순서대로 소켓 연결을 요청한다.
             connectionTries
                 .reduce<Promise<boolean>>(async (prevPromise, address) => {
                     const prevResult = await prevPromise;
