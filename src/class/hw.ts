@@ -29,7 +29,7 @@ export default class Hardware implements IEntry.Hardware {
     // socketIO 및 하드웨어 커넥션용
     private readonly sessionRoomId: string | null;
     private readonly socketConnectionRetryCount: number;
-    private reconnectionTimeout: number;
+    private reconnectionTimeout: NodeJS.Timeout;
     private programConnected: boolean;
     private socket: SocketIOClient.Socket; // 실제 연결된 소켓
     private socketMode: number;
@@ -80,8 +80,8 @@ export default class Hardware implements IEntry.Hardware {
             await Entry.moduleManager.loadExternalModule(moduleName);
         } catch (e) {
             Entry.toast.alert(
-                window.Lang.Hw.hw_module_load_fail_title,
-                `${moduleName} ${window.Lang.Hw.hw_module_load_fail_desc}`,
+                Lang.Hw.hw_module_load_fail_title,
+                `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
             );
         }
     }
@@ -169,9 +169,9 @@ export default class Hardware implements IEntry.Hardware {
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                window.Lang.Hw.hw_module_terminaltion_title,
-                window.Lang.Hw.hw_module_terminaltion_desc,
-                false,
+                Lang.Hw.hw_module_terminaltion_title,
+                Lang.Hw.hw_module_terminaltion_desc,
+                false
             );
         }
     }
@@ -256,8 +256,8 @@ export default class Hardware implements IEntry.Hardware {
                 .concat(
                     this.sendQueue.readablePorts.slice(
                         target + 1,
-                        this.sendQueue.readablePorts.length,
-                    ),
+                        this.sendQueue.readablePorts.length
+                    )
                 );
         }
     }
@@ -279,7 +279,6 @@ export default class Hardware implements IEntry.Hardware {
 
         this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
-
 
     closeConnection() {
         if (this.socket) {
@@ -318,7 +317,7 @@ export default class Hardware implements IEntry.Hardware {
         }
 
         const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
-            data.model,
+            data.model
         )}`;
 
         if (this.currentDeviceKey && key === this.currentDeviceKey) {
@@ -337,14 +336,14 @@ export default class Hardware implements IEntry.Hardware {
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
-        let descMsg = '';
+        let descMsg;
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
-            descMsg = window.Lang.Msgs.hw_connection_success_desc;
+            descMsg = Lang.Msgs.hw_connection_success_desc;
             this._setHardwareMonitorTemplate();
         } else {
-            descMsg = window.Lang.Msgs.hw_connection_success_desc2;
+            descMsg = Lang.Msgs.hw_connection_success_desc2;
         }
-        Entry.toast.success(window.Lang.Msgs.hw_connection_success, descMsg);
+        Entry.toast.success(Lang.Msgs.hw_connection_success, descMsg);
     }
 
     openHardwareDownloadPopup() {
@@ -354,7 +353,6 @@ export default class Hardware implements IEntry.Hardware {
             this.popupHelper.show('hwDownload', true);
         }
     }
-
 
     private _initHardwareObject() {
         const { hardwareEnable } = Entry;
@@ -447,7 +445,7 @@ export default class Hardware implements IEntry.Hardware {
         socket.on('disconnect', () => {
             // cloud PC 연결 클릭시 순간 disconnect 되고 재연결을 시도하기 위한 로직
             this._setSocketClosed();
-            this.reconnectionTimeout = window.setTimeout(() => {
+            this.reconnectionTimeout = setTimeout(() => {
                 this._initSocket();
             }, 1500);
         });
@@ -613,9 +611,9 @@ export default class Hardware implements IEntry.Hardware {
         return new Promise((resolve) => {
             const dontShowChecked = localStorage.getItem('skipNoticeHWOldVersion');
             if (!dontShowChecked) {
-                const title = window.Lang.Msgs.hardware_need_update_title;
-                const content = window.Lang.Msgs.hardware_need_update_content;
-                window.entrylms
+                const title = Lang.Msgs.hardware_need_update_title;
+                const content = Lang.Msgs.hardware_need_update_content;
+                entrylms
                     .alert(content, title, { withDontShowAgain: true })
                     .one(
                         'click',
@@ -624,7 +622,7 @@ export default class Hardware implements IEntry.Hardware {
                                 localStorage.setItem('skipNoticeHWOldVersion', 'true');
                             }
                             resolve();
-                        },
+                        }
                     );
             } else {
                 resolve();
@@ -643,20 +641,21 @@ export default class Hardware implements IEntry.Hardware {
                 const top = window.screenTop;
                 const settings = `width=${width}, height=${height},  top=${top}, left=${left}`;
                 this._w = window.open('/views/hwLoading.html', 'entry_hw_launcher', settings);
-                let fnInterval: number = undefined;
-                fnInterval = window.setTimeout(() => {
+                let fnInterval: NodeJS.Timeout = undefined;
+                fnInterval = setTimeout(() => {
                     executeIeCustomLauncher.runViewer(sUrl, fpCallback);
                     clearInterval(fnInterval);
                 }, 1000);
             },
             runViewer(sUrl: string, fpCallback: (bNotInstalled: boolean) => void) {
                 this._w.document.write(
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`,
+                    // eslint-disable-next-line max-len
+                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
                 );
                 let nCounter = 0;
                 const bNotInstalled = false;
-                let nInterval: number = undefined;
-                nInterval = window.setInterval(() => {
+                let nInterval: NodeJS.Timeout = undefined;
+                nInterval = setInterval(() => {
                     try {
                         this._w.location.href;
                     } catch (e) {
@@ -666,8 +665,8 @@ export default class Hardware implements IEntry.Hardware {
                     if (bNotInstalled || nCounter > 10) {
                         clearInterval(nInterval);
                         let nCloseCounter = 0;
-                        let nCloseInterval: number = undefined;
-                        nCloseInterval = window.setInterval(() => {
+                        let nCloseInterval: NodeJS.Timeout = undefined;
+                        nCloseInterval = setInterval(() => {
                             nCloseCounter++;
                             if (this._w.closed || nCloseCounter > 2) {
                                 clearInterval(nCloseInterval);
@@ -695,7 +694,7 @@ export default class Hardware implements IEntry.Hardware {
         }).reduce(
             (result, [key, value]) =>
                 result === '' ? `${key}:${value}` : `${result}&${key}:${value}`,
-            '',
+            ''
         );
 
         const entryHardwareUrl = `entryhw://?${customSchemaArgsString}`;
@@ -714,7 +713,7 @@ export default class Hardware implements IEntry.Hardware {
                 }
 
                 if (ieVersion < 9) {
-                    alert(window.Lang.msgs.not_support_browser);
+                    alert(Lang.msgs.not_support_browser);
                 } else {
                     executeIeCustomLauncher.init(entryHardwareUrl, (bInstalled) => {
                         if (bInstalled === false) {
@@ -730,17 +729,16 @@ export default class Hardware implements IEntry.Hardware {
         } else if (navigator.userAgent.indexOf('Safari') > 0) {
             executeSafari(entryHardwareUrl);
         } else {
-            alert(window.Lang.msgs.not_support_browser);
+            alert(Lang.msgs.not_support_browser);
         }
 
         function executeIe(customUrl: string) {
             navigator.msLaunchUri(
                 customUrl,
-                () => {
-                },
+                () => {},
                 () => {
                     hw.openHardwareDownloadPopup();
-                },
+                }
             );
         }
 
@@ -749,8 +747,7 @@ export default class Hardware implements IEntry.Hardware {
             iFrame.src = 'about:blank';
             iFrame.setAttribute('style', 'display:none');
             document.getElementsByTagName('body')[0].appendChild(iFrame);
-            let fnTimeout: number = undefined;
-            fnTimeout = window.setTimeout(() => {
+            const fnTimeout = setTimeout(() => {
                 let isInstalled = false;
                 try {
                     iFrame.contentWindow.location.href = customUrl;
@@ -800,11 +797,10 @@ export default class Hardware implements IEntry.Hardware {
             iFrame.src = 'about:blank';
             iFrame.setAttribute('style', 'display:none');
             document.getElementsByTagName('body')[0].appendChild(iFrame);
-            let isInstalled = false;
+            let isInstalled;
 
             try {
                 iFrame.contentWindow.location.href = customUrl;
-
                 isInstalled = true;
             } catch (err) {
                 isInstalled = false;
@@ -831,7 +827,7 @@ export default class Hardware implements IEntry.Hardware {
 
         this.popupHelper.addPopup('hwDownload', {
             type: 'confirm',
-            title: window.Lang.Msgs.not_install_title,
+            title: Lang.Msgs.not_install_title,
             setPopupLayout(popup: any) {
                 const content = Entry.Dom('div', {
                     class: 'contentArea',
@@ -864,12 +860,12 @@ export default class Hardware implements IEntry.Hardware {
                     classes: ['popupOkBtn', 'popupDefaultBtn'],
                     parent: content,
                 });
-                (text1 as any).text(window.Lang.Msgs.hw_download_text1);
-                (text2 as any).html(window.Lang.Msgs.hw_download_text2);
-                (text3 as any).text(window.Lang.Msgs.hw_download_text3);
-                (text4 as any).text(window.Lang.Msgs.hw_download_text4);
-                (cancel as any).text(window.Lang.Buttons.cancel);
-                (ok as any).html(window.Lang.Msgs.hw_download_btn);
+                (text1 as any).text(Lang.Msgs.hw_download_text1);
+                (text2 as any).html(Lang.Msgs.hw_download_text2);
+                (text3 as any).text(Lang.Msgs.hw_download_text3);
+                (text4 as any).text(Lang.Msgs.hw_download_text4);
+                (cancel as any).text(Lang.Buttons.cancel);
+                (ok as any).html(Lang.Msgs.hw_download_btn);
 
                 (content as any).bindOnClick('.popupDefaultBtn', function() {
                     const $this = $(this);
