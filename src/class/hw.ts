@@ -3,6 +3,7 @@
 import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
 import HardwareMonitor from './hardware/hardwareMonitor';
 import createHardwarePopup from './hardware/functions/createHardwarePopup';
+import ExternalProgramLauncher from './hardware/externalProgramLauncher';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -53,7 +54,8 @@ export default class Hardware implements IEntry.Hardware {
     private hwMonitor?: HardwareMonitor;
 
     // 하드웨어 설치여부 확인용
-    private ieLauncher: { set: () => void };
+    // public ieLauncher 는 아래 프로그램 런처가 만든 iframe view 에서 onload 로 호출한다
+    public programLauncher: ExternalProgramLauncher;
     private popupHelper?: UnknownAny;
     private _w: any;
 
@@ -633,62 +635,7 @@ export default class Hardware implements IEntry.Hardware {
     }
 
     private _executeHardware(args?: { [key: string]: string }) {
-        const hw = this;
-        const executeIeCustomLauncher = {
-            _bNotInstalled: false,
-            init(sUrl: string, fpCallback: (bInstalled: boolean) => void) {
-                const width = 220;
-                const height = 225;
-                const left = window.screenLeft;
-                const top = window.screenTop;
-                const settings = `width=${width}, height=${height},  top=${top}, left=${left}`;
-                this._w = window.open('/views/hwLoading.html', 'entry_hw_launcher', settings);
-                let fnInterval: NodeJS.Timeout = undefined;
-                fnInterval = setTimeout(() => {
-                    executeIeCustomLauncher.runViewer(sUrl, fpCallback);
-                    clearInterval(fnInterval);
-                }, 1000);
-            },
-            runViewer(sUrl: string, fpCallback: (bNotInstalled: boolean) => void) {
-                this._w.document.write(
-                    // eslint-disable-next-line max-len
-                    `<iframe src='${sUrl}' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>`
-                );
-                let nCounter = 0;
-                const bNotInstalled = false;
-                let nInterval: NodeJS.Timeout = undefined;
-                nInterval = setInterval(() => {
-                    try {
-                        this._w.location.href;
-                    } catch (e) {
-                        this._bNotInstalled = true;
-                    }
-
-                    if (bNotInstalled || nCounter > 10) {
-                        clearInterval(nInterval);
-                        let nCloseCounter = 0;
-                        let nCloseInterval: NodeJS.Timeout = undefined;
-                        nCloseInterval = setInterval(() => {
-                            nCloseCounter++;
-                            if (this._w.closed || nCloseCounter > 2) {
-                                clearInterval(nCloseInterval);
-                            } else {
-                                this._w.close();
-                            }
-                            this._bNotInstalled = false;
-                            nCounter = 0;
-                        }, 5000);
-                        fpCallback(!this._bNotInstalled);
-                    }
-                    nCounter++;
-                }, 100);
-            },
-            set() {
-                this._bNotInstalled = true;
-            },
-        };
-
-        this.ieLauncher = executeIeCustomLauncher;
+        this.programLauncher = new ExternalProgramLauncher();
 
         const customSchemaArgsString = Object.entries({
             roomId: this.sessionRoomId,
@@ -701,120 +648,7 @@ export default class Hardware implements IEntry.Hardware {
 
         const entryHardwareUrl = `entryhw://?${customSchemaArgsString}`;
         console.log('request Hardware using url custom schema.. : ', entryHardwareUrl);
-        if (navigator.userAgent.indexOf('MSIE') > 0 || navigator.userAgent.indexOf('Trident') > 0) {
-            if (navigator.msLaunchUri !== undefined) {
-                executeIe(entryHardwareUrl);
-            } else {
-                let ieVersion;
-                // @ts-ignore IE 에 실제 있는 프로퍼티이다.
-                if (document.documentMode > 0) {
-                    // @ts-ignore IE 에 실제 있는 프로퍼티이다.
-                    ieVersion = document.documentMode;
-                } else {
-                    ieVersion = navigator.userAgent.match(/(?:MSIE) ([0-9.]+)/)[1];
-                }
-
-                if (ieVersion < 9) {
-                    alert(Lang.msgs.not_support_browser);
-                } else {
-                    executeIeCustomLauncher.init(entryHardwareUrl, (bInstalled) => {
-                        if (bInstalled === false) {
-                            hw.openHardwareDownloadPopup();
-                        }
-                    });
-                }
-            }
-        } else if (navigator.userAgent.indexOf('Firefox') > 0) {
-            executeFirefox(entryHardwareUrl);
-        } else if (navigator.userAgent.indexOf('Chrome') > 0) {
-            executeChrome(entryHardwareUrl);
-        } else if (navigator.userAgent.indexOf('Safari') > 0) {
-            executeSafari(entryHardwareUrl);
-        } else {
-            alert(Lang.msgs.not_support_browser);
-        }
-
-        function executeIe(customUrl: string) {
-            navigator.msLaunchUri(
-                customUrl,
-                () => {},
-                () => {
-                    hw.openHardwareDownloadPopup();
-                }
-            );
-        }
-
-        function executeFirefox(customUrl: string) {
-            const iFrame = document.createElement('iframe');
-            iFrame.src = 'about:blank';
-            iFrame.setAttribute('style', 'display:none');
-            document.getElementsByTagName('body')[0].appendChild(iFrame);
-            const fnTimeout = setTimeout(() => {
-                let isInstalled = false;
-                try {
-                    iFrame.contentWindow.location.href = customUrl;
-                    isInstalled = true;
-                } catch (e) {
-                    if (e.name === 'NS_ERROR_UNKNOWN_PROTOCOL') {
-                        isInstalled = false;
-                    }
-                }
-
-                if (!isInstalled) {
-                    hw.openHardwareDownloadPopup();
-                }
-
-                document.getElementsByTagName('body')[0].removeChild(iFrame);
-                clearTimeout(fnTimeout);
-            }, 500);
-        }
-
-        function executeChrome(customUrl: string) {
-            let isInstalled = false;
-            window.focus();
-            $(window).one('blur', () => {
-                isInstalled = true;
-            });
-            Entry.dispatchEvent('workspaceUnbindUnload', true);
-            location.assign(encodeURI(customUrl));
-            setTimeout(() => {
-                Entry.dispatchEvent('workspaceBindUnload', true);
-            }, 100);
-            setTimeout(() => {
-                if (isInstalled === false) {
-                    hw.openHardwareDownloadPopup();
-                }
-                window.onblur = null;
-            }, 3000);
-        }
-
-        /**
-         * safari 브라우저에서 ${customUrl} 인식하여 페이지 이동 처리되서 분기처리(미설치 안내팝업)
-         *
-         *
-         * @param customUrl
-         */
-        function executeSafari(customUrl: string) {
-            const iFrame = document.createElement('iframe');
-            iFrame.src = 'about:blank';
-            iFrame.setAttribute('style', 'display:none');
-            document.getElementsByTagName('body')[0].appendChild(iFrame);
-            let isInstalled;
-
-            try {
-                iFrame.contentWindow.location.href = customUrl;
-                isInstalled = true;
-            } catch (err) {
-                isInstalled = false;
-            }
-
-            if (!isInstalled) {
-                hw.openHardwareDownloadPopup();
-            }
-            setTimeout(() => {
-                document.getElementsByTagName('body')[0].removeChild(iFrame);
-            }, 500);
-        }
+        this.programLauncher.executeUrl(entryHardwareUrl, () => this.openHardwareDownloadPopup());
     }
 
     private _convertHexToString(num: number | string) {
