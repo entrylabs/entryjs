@@ -22,18 +22,86 @@ Entry.CODEino = {
         return new Date().getTime() + type;
     },
     setZero: function() {
+        // Entry.hw.sendQueue = {
+        //     GET: {},
+        //     SET: {
+        //         13:{
+        //              type: Entry.CODEino.sensorTypes.RESET,
+        //              data: 0,
+        //              time: new Date().getTime()
+        //         }
+        //     }
+        // };
+        // console.log(Entry.hw.sendQueue);
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
                 SET: {},
             };
         } else {
+            //초기화 코드보내고 큐 지워버리면 안되낭
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            let isFirst = true;
             keySet.forEach(function(key) {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
+                if(Entry.hw.sendQueue.SET[key].type===Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL){
+                    // opcode >> 0:끄기, 1:켜기, 2:밝기 로 만들어야디
+                    // .. 덮어버려서 하지말래 ㅁㄴㅇㄹ.. 블럭 2개만 붙여도 뒤에꺼만 시리얼로 날림
+                    Entry.hw.sendQueue.SET[key].data = {
+                        rValue:0,
+                        gValue:0,
+                        bValue:0,
+                        brightness:22,
+                    }
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                } else if(Entry.hw.sendQueue.SET[key].type===Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER) {
+                    // 모두 끄기, 이미 등록이 불린상태
+                    Entry.CODEino.CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE=22;
+                    Entry.hw.sendQueue.SET[key].data= {
+                            isOn:0,
+                            brightness:Entry.CODEino.CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE,
+                    }
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                } 
+                else if(Entry.hw.sendQueue.SET[key].type===Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE) {
+                    // LED컨트롤 제거
+                    delete Entry.hw.sendQueue.SET[key];
+                    // Entry.hw.sendQueue.SET[key].data= {
+                    //     r:0,
+                    //     g:0,
+                    //     b:0,
+                    // }
+                }else if((Entry.hw.sendQueue.SET[key].type===Entry.CODEino.sensorTypes.RGBLED_PIN) ||
+                (Entry.hw.sendQueue.SET[key].type===Entry.CODEino.sensorTypes.ULTRASONIC)) {
+                    // RGB나 초음파 RESET
+                    if(isFirst) {
+                        Entry.CODEino.LED_VALUES = [0,0,0];
+                        Entry.hw.sendQueue.SET[key].type=Entry.CODEino.sensorTypes.RESET;
+                        Entry.hw.sendQueue.SET[key].data = {
+                            r:Entry.CODEino.LED_VALUES[0],
+                            g:Entry.CODEino.LED_VALUES[1],
+                            b:Entry.CODEino.LED_VALUES[2]
+                        };
+                        Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                        isFirst = false;
+                    } else {
+                        delete Entry.hw.sendQueue.SET[key];
+                    }
+                } 
+                else {
+                    Entry.hw.sendQueue.SET[key].data = 0;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
+            });// foreach 끗
+
+            // // 초기화메세지
+            // Entry.hw.sendQueue.SET['0'] = {
+            //     type:,
+            //     data:0,
+            //     time:new Date().getTime()
+            // };
         }
+        console.log(Entry.hw.sendQueue.SET);
+        Entry.CODEino.LAST_ORDER_PORT=0;
         Entry.hw.update();
     },
     monitorTemplate: {
@@ -145,19 +213,152 @@ Entry.CODEino = {
         ANALOG: 2,
         PWM: 3,
         RGBLED_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-        ADDCOLOR: 9,
+        
+        SERVO_PIN: 10,
+        // 와 안쓰는 데이터도 같이 보내야겠네... 덮어버리네 구데긴가..
+        DEFAULT_NEOPIXEL: 11,
+        CUSTOM_NEOPIXEL_POWER:12,
+        CUSTOM_NEOPIXEL_LED_HANDLE:13,
+
+        DEFAULT_BUZZER: 5,
+        CUSTOM_BUZZER: 6,
+        RESET:0xFF
     },
     BlockState: {},
+    toneTable: {
+        '0': 0,
+        C: 1,
+        CS: 2,
+        D: 3,
+        DS: 4,
+        E: 5,
+        F: 6,
+        FS: 7,
+        G: 8,
+        GS: 9,
+        A: 10,
+        AS: 11,
+        B: 12,
+    },
+    toneMap: {
+        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+    },
+    customNeoPixelPin:50,
+    customNeoPixelBrightness: 0,
+    // customNeoPixelValues : [
+    //     {r:0, g:0, b:0},
+    //     {r:0, g:0, b:0},
+    //     {r:0, g:0, b:0},
 
+    //     {r:0, g:0, b:0},
+    //     {r:0, g:0, b:0},
+    //     {r:0, g:0, b:0},
+        
+    //     {r:0, g:0, b:0},
+    //     {r:0, g:0, b:0},
+    //     {r:0, g:0, b:0}
+    // ],
+    LED_VALUES:[0,0,0],
     LED_RED_VALUE: 0,
     LED_GREEN_VALUE: 0,
     LED_BLUE_VALUE: 0,
+
+    DEFAULT_NEOPIXEL_RED_VALUE: 0,
+    DEFAULT_NEOPIXEL_GREEN_VALUE: 0,
+    DEFAULT_NEOPIXEL_BLUE_VALUE: 0,
+    DEFAULT_NEOPIXEL_BRIGHTNESS_VALUE: 22,
+
+    CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE: 22,
+
+    LAST_ORDER_PORT:0,
+};
+// Entry.CODEino.wait = function(script, timeValue) {
+//     if (!script.isStart) {
+//         script.isStart = true;
+//         script.timeFlag = 1;
+//         const fps = Entry.FPS || 60;
+//         timeValue = 60 / fps * timeValue * 1000;
+
+//         const blockId = script.block.id;
+//         console.log("Entry.TimeWaitManager:",Entry.TimeWaitManager);
+//         Entry.TimeWaitManager.add(
+//             blockId,
+//             function() {
+//                 script.timeFlag = 0;
+//             },
+//             timeValue
+//         );
+
+//         return script;
+//     } else if (script.timeFlag == 1) {
+//         return script;
+//     } else {
+//         delete script.timeFlag;
+//         delete script.isStart;
+//         Entry.engine.isContinue = false;
+//         return script.callReturn();
+//     }
+// }
+Entry.CODEino.setLanguage = function () {
+    return {
+        ko: {
+            // ko.js에 작성하던 내용
+            template: {
+                CODEino_default_neopixel_on: "기본 네오픽셀을 %1(으)로 켜기 %2",
+                CODEino_default_neopixel_setBrightness: "기본 네오픽셀의 밝기를 %1(으)로 설정%2",
+                CODEino_default_neopixel_off: "기본 네오픽셀을 끄기 %1",
+                CODEino_default_buzzer: '기본 부저를 %1옥타브 %2음으로 %3초 연주하기%4',
+                CODEino_custom_buzzer: '%1번핀 부저를 %2옥타브 %3음으로 %4초 연주하기%5',
+
+                CODEino_custom_neopixel_on: "네오픽셀을 %1번 핀에 등록%2",
+                CODEino_custom_neopixel_setBrightness: "네오픽셀의 밝기를 %1(으)로 설정%2",
+                CODEino_custom_neopixel_off: "네오픽셀을 모두 끄기 %1",
+
+                CODEino_custom_neopixel_set_led_color: "네오픽셀 %1번째 LED를 %2로 설정%3",
+                CODEino_custom_neopixel_set_led_off: "네오픽셀 %1번째 LED를 끄기%2",
+                
+                CODEino_set_servo:"%1번 핀의 서보모터를 %2의 각도로 정하기%3",
+                CODEino_get_ultrasonic:"초음파센서(Trig:%1, Echo:%2)의 값",
+               
+            }
+        },
+        en: {
+            // en.js에 작성하던 내용
+            template: {
+                CODEino_default_neopixel_on: "Default Neopixel ON %1 %2",
+                CODEino_default_neopixel_setBrightness: "Set Default Neopixel-brightness %1 %2",
+                CODEino_default_neopixel_off: "Default Neopixel OFF %1",
+                CODEino_default_buzzer: 'Play the default buzzer in a %1 octave %2 notes for %3 seconds %4',
+                CODEino_custom_buzzer: 'Play the buzzer on %1pin in a %2 octave %3 notes for %4 seconds %5',
+
+                CODEino_custom_neopixel_on: "Set Neopixel on %1pin%2",
+                CODEino_custom_neopixel_setBrightness: "Set Neopixel-brightness %1 %2",
+                CODEino_custom_neopixel_off: "Set Neopixel OFF %1",
+
+                CODEino_custom_neopixel_set_led_color: "Set Neopixel %1LED to %2 %3",
+                CODEino_custom_neopixel_set_led_off: "Set Neopixel %1LED OFF %2",
+
+                CODEino_set_servo:"Set servo in %1 to degree %2 %3",
+                CODEino_get_ultrasonic:"Get value of Ultrasonic(Trig:%1, Echo:%2)",
+            }
+        }
+    }
 };
 Entry.CODEino.blockMenuBlocks = [
+    'CODEino_get_sensor_number',
     'CODEino_get_named_sensor_value',
     'CODEino_get_sound_status',
     'CODEino_get_light_status',
@@ -165,20 +366,38 @@ Entry.CODEino.blockMenuBlocks = [
     'CODEino_get_accelerometer_direction',
     'CODEino_get_accelerometer_value',
     //"CODEino_get_number_sensor_value",
+    //digital
     'CODEino_get_digital_value',
-    //"CODEino_toggle_led",
-    //"CODEino_toggle_pwm",
-    'CODEino_convert_scale',
-    //2016-09-23
-    'CODEino_get_analog_value',
     'CODEino_set_digital_value',
     'CODEino_set_pwm_value',
+    //"CODEino_toggle_led",
+    //"CODEino_toggle_pwm",
+    //analog
+    'CODEino_get_analog_value',
+    'CODEino_convert_scale',
+    // 200528 기본블록 : 기본네오픽셀, 기본패시브부저
+    'CODEino_default_neopixel_on',
+    'CODEino_default_neopixel_setBrightness',
+    'CODEino_default_neopixel_off',
+    'CODEino_default_buzzer',
+    'CODEino_custom_buzzer',
+
     'CODEino_led_by_value',
     'CODEino_set_rgb_off',
     'CODEino_set__led_by_rgb',
     'CODEino_rgb_set_color',
     'CODEino_set_rgb_value',
     'CODEino_set_rgb_add_value',
+
+    'CODEino_custom_neopixel_on',
+    'CODEino_custom_neopixel_off',
+    'CODEino_custom_neopixel_setBrightness',
+
+    'CODEino_custom_neopixel_set_led_color',
+    'CODEino_custom_neopixel_set_led_off',
+
+    'CODEino_get_ultrasonic',
+    'CODEino_set_servo',
 ];
 Entry.CODEino.getBlocks = function() {
     return {
@@ -636,6 +855,7 @@ Entry.CODEino.getBlocks = function() {
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
                 var ANALOG = Entry.hw.portData.ANALOG;
+                //console.log('accel ANALOG:',ANALOG);
                 var result = 0;
                 if (!scope.isStart) {
                     scope.isStart = true;
@@ -656,6 +876,7 @@ Entry.CODEino.getBlocks = function() {
                     result = (result - 333) * 1.46;
                     result = Math.min(90, result);
                     result = Math.max(-90, result);
+                    //console.log('result 1:',result);
                     return Math.round(result);
                 } else if (nowTime - scope.stamp > 64) {
                     delete scope.isStart;
@@ -664,6 +885,7 @@ Entry.CODEino.getBlocks = function() {
                     result = (result - 333) * 1.46;
                     result = Math.min(90, result);
                     result = Math.max(-90, result);
+                    //console.log('result 2:',result);
                     return Math.round(result);
                 } else {
                     throw new Entry.Utils.AsyncError();
@@ -690,7 +912,7 @@ Entry.CODEino.getBlocks = function() {
                         ['5', '5'],
                         ['6', '6'],
                     ],
-                    value: '0',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -704,7 +926,7 @@ Entry.CODEino.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'CODEino_Adumode',
+            class: 'CODEino_analogSensor',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var port = script.getField('PORT', script);
@@ -712,6 +934,7 @@ Entry.CODEino.getBlocks = function() {
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
                 var ANALOG = Entry.hw.portData.ANALOG;
+                console.log('ANALOG:',ANALOG);
                 if (!scope.isStart) {
                     scope.isStart = true;
                     scope.stamp = nowTime;
@@ -746,23 +969,34 @@ Entry.CODEino.getBlocks = function() {
             skeleton: 'basic_boolean_field',
             params: [
                 {
-                    type: 'Block',
                     accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                        ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                        ['10', '10'], ['11', '11'], ['12', '12']
+                    ],
+                    value: '4',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'arduino_get_port_number',
-                    },
+                    // {
+                    //     type: 'arduino_get_port_number',
+                    //     params:['13'],
+                    // },
+                    null
                 ],
                 type: 'CODEino_get_digital_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'CODEino_Adumode',
+            class: 'CODEino_digitalSensor',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
@@ -770,6 +1004,7 @@ Entry.CODEino.getBlocks = function() {
                 var hardwareTime = Entry.hw.portData['TIME'] || 0;
                 var scope = script.executor.scope;
                 var DIGITAL = Entry.hw.portData.DIGITAL;
+                //console.log('DIGITAL:',DIGITAL);
                 if (!scope.isStart) {
                     scope.isStart = true;
                     scope.stamp = nowTime;
@@ -804,8 +1039,17 @@ Entry.CODEino.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Block',
                     accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                        ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                        ['10', '10'], ['11', '11'], ['12', '12'], ['13', '13']
+                    ],
+                    value: '13',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -823,9 +1067,11 @@ Entry.CODEino.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'arduino_get_port_number',
-                    },
+                    // {
+                    //     type: 'arduino_get_port_number',
+                    //     params:['13'],
+                    // },
+                    null,
                     '255',
                     null,
                 ],
@@ -835,20 +1081,30 @@ Entry.CODEino.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'CODEino_Setmode',
+            class: 'CODEino_digitalSensor',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberField('VALUE');
-
+                
+                //console.log(Entry.hw);
+                //console.log(Entry.hw.sendQueue);
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+
+                if(Entry.CODEino.LAST_ORDER_PORT === port){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=port;
+                }
+
                 Entry.hw.sendQueue['SET'][port] = {
                     type: Entry.CODEino.sensorTypes.DIGITAL,
                     data: value,
                     time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DIGITAL),
                 };
+                
                 return script.callReturn();
             },
             syntax: {
@@ -896,6 +1152,7 @@ Entry.CODEino.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_pwm_port_number',
+                        params:['3'],
                     },
                     {
                         type: 'arduino_text',
@@ -909,7 +1166,7 @@ Entry.CODEino.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'CODEino_Setmode',
+            class: 'CODEino_analogSensor',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -919,6 +1176,11 @@ Entry.CODEino.getBlocks = function() {
                 value = Math.min(value, 255);
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
+                }
+                if(Entry.CODEino.LAST_ORDER_PORT === port){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=port;
                 }
                 Entry.hw.sendQueue['SET'][port] = {
                     type: Entry.CODEino.sensorTypes.PWM,
@@ -980,7 +1242,7 @@ Entry.CODEino.getBlocks = function() {
                 params: [
                     {
                         type: 'CODEino_get_analog_value',
-                        value: '0',
+                        value: '2',
                     },
                     {
                         type: 'number',
@@ -1008,7 +1270,7 @@ Entry.CODEino.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'CODEino_extmode',
+            class: 'CODEino_analogSensor',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var value1 = script.getNumberValue('VALUE1', script);
@@ -1075,33 +1337,33 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT', script);
                 var value = script.getNumberValue('VALUE', script);
+
                 value = Math.min(255, value);
                 value = Math.max(0, value);
+                Entry.CODEino.LED_VALUES[port - 17] = value;
 
-                if (port == 17) {
-                    Entry.CODEino.LED_RED_VALUE = value;
-                } else if (port == 18) {
-                    Entry.CODEino.LED_GREEN_VALUE = value;
-                } else if (port == 19) {
-                    Entry.CODEino.LED_BLUE_VALUE = value;
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                //컬러 LED는 무조건 18로 보내야겠다
+                if(Entry.CODEino.LAST_ORDER_PORT === 18){
+                    Entry.hw.update();
                 } else {
-                    port = 0;
+                    Entry.CODEino.LAST_ORDER_PORT=18;
                 }
-
-                if (port > 0) {
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
-                    Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                        data: value,
-                        time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                    };
-                    return script.callReturn();
-                }
+                Entry.hw.sendQueue['SET'][18] = {
+                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
+                    data: {
+                        r: Entry.CODEino.LED_VALUES[0],
+                        g: Entry.CODEino.LED_VALUES[1],
+                        b: Entry.CODEino.LED_VALUES[2]
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
+                };
+                return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1164,34 +1426,26 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getNumberField('PORT', script);
                 var value = script.getNumberValue('VALUE', script);
+
+                value += Entry.CODEino.LED_VALUES[port-17];
                 value = Math.min(255, value);
                 value = Math.max(0, value);
-
-                if (port == 17) {
-                    Entry.CODEino.LED_RED_VALUE = Entry.CODEino.LED_RED_VALUE + value;
-                    Entry.CODEino.LED_RED_VALUE = Math.min(255, Entry.CODEino.LED_RED_VALUE);
-                    Entry.CODEino.LED_RED_VALUE = Math.max(0, Entry.CODEino.LED_RED_VALUE);
-                    value = Entry.CODEino.LED_RED_VALUE;
-                }
-                if (port == 18) {
-                    Entry.CODEino.LED_GREEN_VALUE = Entry.CODEino.LED_GREEN_VALUE + value;
-                    Entry.CODEino.LED_GREEN_VALUE = Math.min(255, Entry.CODEino.LED_GREEN_VALUE);
-                    Entry.CODEino.LED_GREEN_VALUE = Math.max(0, Entry.CODEino.LED_GREEN_VALUE);
-                    value = Entry.CODEino.LED_GREEN_VALUE;
-                }
-                if (port == 19) {
-                    Entry.CODEino.LED_BLUE_VALUE = Entry.CODEino.LED_BLUE_VALUE + value;
-                    Entry.CODEino.LED_BLUE_VALUE = Math.min(255, Entry.CODEino.LED_BLUE_VALUE);
-                    Entry.CODEino.LED_BLUE_VALUE = Math.max(0, Entry.CODEino.LED_BLUE_VALUE);
-                    value = Entry.CODEino.LED_BLUE_VALUE;
-                }
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = {
+                if(Entry.CODEino.LAST_ORDER_PORT === 18){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=18;
+                }
+                Entry.hw.sendQueue['SET'][18] = {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: value,
+                    data: {
+                        r:Entry.CODEino.LED_VALUES[0],
+                        g:Entry.CODEino.LED_VALUES[1],
+                        b:Entry.CODEino.LED_VALUES[2]
+                    },
                     time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
                 };
                 return script.callReturn();
@@ -1227,39 +1481,30 @@ Entry.CODEino.getBlocks = function() {
                 var value = script.getStringField('VALUE');
                 var sq = Entry.hw.sendQueue;
 
-                Entry.CODEino.LED_RED_VALUE = parseInt(value.substr(1, 2), 16);
-                Entry.CODEino.LED_GREEN_VALUE = parseInt(value.substr(3, 2), 16);
-                Entry.CODEino.LED_BLUE_VALUE = parseInt(value.substr(5, 2), 16);
-
-                var port = 17;
+                Entry.CODEino.LED_VALUES= [
+                    parseInt(value.substr(1, 2), 16),
+                    parseInt(value.substr(3, 2), 16),
+                    parseInt(value.substr(5, 2), 16)
+                ];
+                
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
-                sq['SET'][port] = {
+                if(Entry.CODEino.LAST_ORDER_PORT === 18){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=18;
+                }
+                sq['SET'][18] = {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_RED_VALUE,
+                    data: {
+                        r:Entry.CODEino.LED_VALUES[0],
+                        g:Entry.CODEino.LED_VALUES[1],
+                        b:Entry.CODEino.LED_VALUES[2]
+                    },
                     time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
                 };
 
-                port = 18;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_GREEN_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
-
-                port = 19;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_BLUE_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
                 return script.callReturn();
             },
         },
@@ -1286,36 +1531,22 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                var port = 17;
-                Entry.CODEino.LED_RED_VALUE = 0;
+                Entry.CODEino.LED_VALUES = [0,0,0]
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_RED_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
-
-                port = 18;
-                Entry.CODEino.LED_GREEN_VALUE = 0;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
+                if(Entry.CODEino.LAST_ORDER_PORT === 18){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=18;
                 }
-                sq['SET'][port] = {
+                sq['SET'][18] = {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_GREEN_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
-
-                port = 19;
-                Entry.CODEino.LED_BLUE_VALUE = 0;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_BLUE_VALUE,
+                    data: {
+                        r:Entry.CODEino.LED_VALUES[0],
+                        g:Entry.CODEino.LED_VALUES[1],
+                        b:Entry.CODEino.LED_VALUES[2]
+                    },
                     time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
                 };
                 return script.callReturn();
@@ -1340,6 +1571,7 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set__led_by_rgb: {
+            // r값 g값 b값 수동으로 주는 블록
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1391,40 +1623,36 @@ Entry.CODEino.getBlocks = function() {
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
+                let values = [
+                    script.getNumberValue('rValue'), 
+                    script.getNumberValue('gValue'), 
+                    script.getNumberValue('bValue')
+                ];
+                // 0~255값이면 정상범위니까 넣어주고 아니면 갱신안해줄끼다
+                for(let i=0; i<values.length; ++i) {
+                    if(values[i] >=0 && values[i] <=255) {
+                        Entry.CODEino.LED_VALUES[i] = values[i]; 
+                    }
+                }
 
-                Entry.CODEino.LED_RED_VALUE = script.getNumberValue('rValue');
-                Entry.CODEino.LED_GREEN_VALUE = script.getNumberValue('gValue');
-                Entry.CODEino.LED_BLUE_VALUE = script.getNumberValue('bValue');
-
-                var port = 17;
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
-                sq['SET'][port] = {
+                if(Entry.CODEino.LAST_ORDER_PORT === 18){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=18;
+                }
+                sq['SET'][18] = {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_RED_VALUE,
+                    data: {
+                        r:Entry.CODEino.LED_VALUES[0],
+                        g:Entry.CODEino.LED_VALUES[1],
+                        b:Entry.CODEino.LED_VALUES[2]
+                    },
                     time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
                 };
 
-                port = 18;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_GREEN_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
-
-                port = 19;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_BLUE_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
                 return script.callReturn();
             },
         },
@@ -1451,38 +1679,29 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                var port = 17;
-                Entry.CODEino.LED_RED_VALUE = 100;
+                // 기존값을 불러오는게 맞지 않을까 끄기상태일때 000 저장하지 말고
+                // 안된다고 한다..
+
+                Entry.CODEino.LED_VALUES = [100,100,100];
+
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
-                sq['SET'][port] = {
+                if(Entry.CODEino.LAST_ORDER_PORT === 18){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=18;
+                }
+                sq['SET'][18] = {
                     type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_RED_VALUE,
+                    data: {
+                        r:Entry.CODEino.LED_VALUES[0],
+                        g:Entry.CODEino.LED_VALUES[1],
+                        b:Entry.CODEino.LED_VALUES[2]
+                    },
                     time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
                 };
 
-                port = 18;
-                Entry.CODEino.LED_GREEN_VALUE = 100;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_GREEN_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
-
-                port = 19;
-                Entry.CODEino.LED_BLUE_VALUE = 100;
-                if (!sq['SET']) {
-                    sq['SET'] = {};
-                }
-                sq['SET'][port] = {
-                    type: Entry.CODEino.sensorTypes.RGBLED_PIN,
-                    data: Entry.CODEino.LED_BLUE_VALUE,
-                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.RGBLED_PIN),
-                };
                 return script.callReturn();
             },
         },
@@ -1535,6 +1754,1016 @@ Entry.CODEino.getBlocks = function() {
             class: 'arduino_set',
             syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
+
+        CODEino_default_neopixel_on: {
+            // Block UI : 기본 네오픽셀을 <색상표>(으)로 켜기
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CODEino_default_neopixel_on',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'CODEino_default_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                var value = script.getStringField('VALUE');
+                var sq = Entry.hw.sendQueue;
+                var port = 11;
+
+                let red = parseInt(value.substr(1, 2), 16);
+                let green = parseInt(value.substr(3, 2), 16);
+                let blue = parseInt(value.substr(5, 2), 16);
+                // console.log("RED:",red);
+                // console.log("GREEN:",green);
+                // console.log("BLUE:",blue);
+                // console.log("value:",value);
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                
+                Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE= red;
+                Entry.CODEino.DEFAULT_NEOPIXEL_GREEN_VALUE= green;
+                Entry.CODEino.DEFAULT_NEOPIXEL_BLUE_VALUE= blue;
+                
+                if(Entry.CODEino.LAST_ORDER_PORT === port){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=port;
+                }
+                
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL,
+                    data: {
+                        rValue:Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE,
+                        gValue:Entry.CODEino.DEFAULT_NEOPIXEL_GREEN_VALUE,
+                        bValue:Entry.CODEino.DEFAULT_NEOPIXEL_BLUE_VALUE,
+                        brightness:Entry.CODEino.DEFAULT_NEOPIXEL_BRIGHTNESS_VALUE,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL),
+                };
+                
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_default_neopixel_off: {
+            // Block UI : 기본 네오픽셀을 끄기 %1
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CODEino_default_neopixel_off',
+            },
+            class: 'CODEino_default_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+
+                var port = 11;
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE= 0;
+                Entry.CODEino.DEFAULT_NEOPIXEL_GREEN_VALUE= 0;
+                Entry.CODEino.DEFAULT_NEOPIXEL_BLUE_VALUE= 0;
+                
+                if(Entry.CODEino.LAST_ORDER_PORT === port){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=port;
+                }
+                
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL,
+                    data: {
+                        rValue:Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE,
+                        gValue:Entry.CODEino.DEFAULT_NEOPIXEL_GREEN_VALUE,
+                        bValue:Entry.CODEino.DEFAULT_NEOPIXEL_BLUE_VALUE,
+                        brightness:Entry.CODEino.DEFAULT_NEOPIXEL_BRIGHTNESS_VALUE,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL),
+                };
+
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_default_neopixel_setBrightness: {
+            // Block UI : 기본 네오픽셀의 밝기를 %1(으)로 하기 %2
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                    type: 'number',
+                    params: ['22'],
+                    },
+                    null
+                ],
+                type: 'CODEino_default_neopixel_setBrightness',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'CODEino_default_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                var value = script.getNumberValue('VALUE', script);
+                var sq = Entry.hw.sendQueue;
+
+                var port = 11;
+
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                Entry.CODEino.DEFAULT_NEOPIXEL_BRIGHTNESS_VALUE = value;
+
+                if(Entry.CODEino.LAST_ORDER_PORT === port){
+                    Entry.hw.update();
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT=port;
+                }
+                
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL,
+                    data: {
+                        rValue:Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE,
+                        gValue:Entry.CODEino.DEFAULT_NEOPIXEL_GREEN_VALUE,
+                        bValue:Entry.CODEino.DEFAULT_NEOPIXEL_BLUE_VALUE,
+                        brightness:Entry.CODEino.DEFAULT_NEOPIXEL_BRIGHTNESS_VALUE,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL),
+                };
+
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_default_buzzer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },                
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'CODEino_octave_list',
+                    },
+                    {
+                        type: 'CODEino_tone_list',
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'CODEino_default_buzzer',
+            },
+            paramsKeyMap: {
+                OCTAVE: 0,
+                NOTE: 1,
+                DURATION: 2,
+            },
+            class: 'CODEino_default_buzzer_mode',
+            isNotFor: ['CODEino'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = 12;
+
+                if (!script.isStart) {
+                    let note = script.getValue('NOTE', script);
+                    if (!Entry.Utils.isNumber(note)) {
+                        note = Entry.CODEino.toneTable[note];
+                    }
+
+                    if (note < 0) {
+                        note = 0;
+                    } else if (note > 12) {
+                        note = 12;
+                    }
+
+                    let duration = script.getNumberValue('DURATION', script);
+
+                    if (duration < 0) {
+                        duration = 0;
+                    }
+
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+
+                    if (Entry.CODEino.LAST_ORDER_PORT === port) {
+                        Entry.hw.update();
+                    } else {
+                        Entry.CODEino.LAST_ORDER_PORT = port;
+                    }
+
+                    if (duration === 0) {
+                        sq.SET[port] = {
+                            type: Entry.CODEino.sensorTypes.DEFAULT_BUZZER,
+                            data: 0,
+                            time: new Date().getTime(),
+                        };
+                        return script.callReturn();
+                    }
+
+                    let octave = script.getNumberValue('OCTAVE', script) - 1;
+                    if (octave < 0) {
+                        octave = 0;
+                    } else if (octave > 5) {
+                        octave = 5;
+                    }
+
+                    let value = 0;
+
+                    if (note != 0) {
+                        value = Entry.CODEino.toneMap[note][octave];
+                    }
+
+                    duration = duration * 1000;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    sq.SET[port] = {
+                        type: Entry.CODEino.sensorTypes.DEFAULT_BUZZER,
+                        data: {
+                            value,
+                            duration,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    sq.SET[port] = {
+                        type: Entry.CODEino.sensorTypes.DEFAULT_BUZZER,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        CODEino_custom_buzzer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                        ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                        ['10', '10'], ['11', '11'], ['12', '12']
+                    ],
+                    value: '12',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },                
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'CODEino_octave_list',
+                    },
+                    {
+                        type: 'CODEino_tone_list',
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'CODEino_custom_buzzer',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                OCTAVE: 1,
+                NOTE: 2,
+                DURATION: 3,
+            },
+            class: 'CODEino_custom_buzzer_mode',
+            isNotFor: ['CODEino'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT');
+
+                if (!script.isStart) {
+                    let note = script.getValue('NOTE', script);
+                    if (!Entry.Utils.isNumber(note)) {
+                        note = Entry.CODEino.toneTable[note];
+                    }
+
+                    if (note < 0) {
+                        note = 0;
+                    } else if (note > 12) {
+                        note = 12;
+                    }
+
+                    let duration = script.getNumberValue('DURATION', script);
+
+                    if (duration < 0) {
+                        duration = 0;
+                    }
+
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+                    
+                    if (Entry.CODEino.LAST_ORDER_PORT === port) {
+                        Entry.hw.update();
+                    } else {
+                        Entry.CODEino.LAST_ORDER_PORT = port;
+                    }
+
+                    if (duration === 0) {
+                        sq.SET[port] = {
+                            type: Entry.CODEino.sensorTypes.CUSTOM_BUZZER,
+                            data: 0,
+                            time: new Date().getTime(),
+                        };
+                        return script.callReturn();
+                    }
+
+                    let octave = script.getNumberValue('OCTAVE', script) - 1;
+                    if (octave < 0) {
+                        octave = 0;
+                    } else if (octave > 5) {
+                        octave = 5;
+                    }
+
+                    let value = 0;
+
+                    if (note != 0) {
+                        value = Entry.CODEino.toneMap[note][octave];
+                    }
+
+                    duration = duration * 1000;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    sq.SET[port] = {
+                        type: Entry.CODEino.sensorTypes.CUSTOM_BUZZER,
+                        data: {
+                            value,
+                            duration,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    sq.SET[port] = {
+                        type: Entry.CODEino.sensorTypes.CUSTOM_BUZZER,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        CODEino_tone_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.silent, '0'],
+                        [Lang.Blocks.do_name, 'C'],
+                        [Lang.Blocks.do_sharp_name, 'CS'],
+                        [Lang.Blocks.re_name, 'D'],
+                        [Lang.Blocks.re_sharp_name, 'DS'],
+                        [Lang.Blocks.mi_name, 'E'],
+                        [Lang.Blocks.fa_name, 'F'],
+                        [Lang.Blocks.fa_sharp_name, 'FS'],
+                        [Lang.Blocks.sol_name, 'G'],
+                        [Lang.Blocks.sol_sharp_name, 'GS'],
+                        [Lang.Blocks.la_name, 'A'],
+                        [Lang.Blocks.la_sharp_name, 'AS'],
+                        [Lang.Blocks.si_name, 'B'],
+                    ],
+                    value: 'C',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                NOTE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('NOTE');
+            },            
+        },
+        CODEino_octave_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                    ],
+                    value: '4',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                OCTAVE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('OCTAVE');
+            },
+        },
+        CODEino_custom_neopixel_on: {
+            // Block UI : %1번핀에 커스텀 네오픽셀 등록
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                        ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                        ['10', '10'], ['11', '11'], ['12', '12']
+                    ],
+                    value: '10',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: 'CODEino_custom_neopixel_on',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'CODEino_custom_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT');
+
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
+                    data: {
+                        isOn:1,
+                        brightness:22,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER),
+                };
+                
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_custom_neopixel_off: {
+            // Block UI : 커스텀 네오픽셀 모두 끄기 %1
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CODEino_custom_neopixel_off',
+            },
+            class: 'CODEino_custom_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+
+                var port = Entry.CODEino.customNeoPixelPin+9;//59
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
+                    data: {
+                        isOn:0,
+                        brightness:Entry.CODEino.CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER),
+                };
+
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_custom_neopixel_setBrightness: {
+            // Block UI : 커스텀 네오픽셀의 밝기를 %1(으)로 하기 %2
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                    type: 'number',
+                    params: ['22'],
+                    },
+                    null
+                ],
+                type: 'CODEino_custom_neopixel_setBrightness',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'CODEino_custom_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                var value = script.getNumberValue('VALUE', script);
+                var sq = Entry.hw.sendQueue;
+
+                var port = Entry.CODEino.customNeoPixelPin+10;//60
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                Entry.CODEino.CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE = value;
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
+                    data: {
+                        isOn:2,
+                        brightness:Entry.CODEino.CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER),
+                };
+
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_custom_neopixel_set_led_color: {
+            // Block UI : 커스텀 네오픽셀 %1번째 LED를 <색상표>(으)로 설정
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                        ['9', '8']
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CODEino_custom_neopixel_set_led_color',
+            },
+            paramsKeyMap: {
+                LED:0,
+                COLOR: 1
+            },
+            class: 'CODEino_custom_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                let led = script.getNumberValue('LED', script)
+
+                var value = script.getStringField('COLOR');
+                var sq = Entry.hw.sendQueue;
+                // 등록부터 해서 핀값을 정해놔야함
+                // 200601 : port를 (가상디폴트포트50 + led 넘버로 정하자)
+                var port = Entry.CODEino.customNeoPixelPin+led;
+
+                let red = parseInt(value.substr(1, 2), 16);
+                let green = parseInt(value.substr(3, 2), 16);
+                let blue = parseInt(value.substr(5, 2), 16);
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                
+                //update
+                //Entry.CODEino.customNeoPixelValues[led].r = red;
+                //Entry.CODEino.customNeoPixelValues[led].g = green;
+                //Entry.CODEino.customNeoPixelValues[led].b = blue;
+                
+                // led 
+                // 켜고 끄기 밝기는 포트를 임의로 쓰고 hw에서 받고나서 바꿔서 나가야겠다..
+                sq.SET[port] = {
+                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
+                    type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE,
+                    data :{ 
+                        r: red,
+                        g: green,
+                        b: blue,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE),
+                };
+                //console.log(sq.SET);
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_custom_neopixel_set_led_off: {
+            // Block UI : 커스텀 네오픽셀 %1번째 LED를 끄기%2
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                        ['7', '6'],
+                        ['8', '7'],
+                        ['9', '8']
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CODEino_custom_neopixel_set_led_off',
+            },
+            paramsKeyMap: {
+                LED:0
+            },
+            class: 'CODEino_custom_neopixel_mode',
+            isNotFor: ['CODEino'],
+            func: function(sprite, script) {
+                let led = script.getNumberValue('LED', script)
+
+                var sq = Entry.hw.sendQueue;
+                // 등록부터 해서 핀값을 정해놔야함
+                // 200601 : port를 (가상디폴트포트50 + led 넘버로 정하자)
+                var port = Entry.CODEino.customNeoPixelPin+led;
+
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+
+                // led 
+                sq.SET[port] = {
+                    type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE,
+                    data :{ 
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    },
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE),
+                };
+                return script.callReturn();
+            },
+            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
+        },
+        CODEino_set_servo: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                        ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                        ['10', '10'], ['11', '11'], ['12', '12']
+                    ],
+                    value: '7',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'CODEino_set_servo',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'CODEino_servo',
+            isNotFor: ['CODEino'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let value = script.getNumberValue('VALUE', script);
+                value = Math.min(180, value);
+                value = Math.max(0, value);
+                console.log("servo_script:",script);
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+
+                if (Entry.CODEino.LAST_ORDER_PORT === port) {
+                    Entry.hw.update();
+                    delete Entry.hw.sendQueue["SET"][port];
+                } else {
+                    Entry.CODEino.LAST_ORDER_PORT = port;                    
+                }
+                // sq.SET = Object.assign(sq.SET, {
+                //     [port]:{
+                //         type: Entry.CODEino.sensorTypes.SERVO_PIN,
+                //         data: value,
+                //         //time: new Date().getTime(),
+                //         time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.SERVO_PIN),
+                //     },
+                // });  
+                sq.SET[port] = {
+                    type: Entry.CODEino.sensorTypes.SERVO_PIN,
+                    data: value,
+                    //time: new Date().getTime(),
+                    time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.SERVO_PIN),
+                };
+                Entry.hw.update();
+                return script.callReturn();            
+            },
+        },
+
+        CODEino_get_ultrasonic: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#fff',
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        accept: 'string',
+                        type: 'Dropdown',
+                        options: [
+                            ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                            ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                            ['10', '10'], ['11', '11'], ['12', '12']
+                        ],
+                        value: '2',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        accept: 'string',
+                        type: 'Dropdown',
+                        options: [
+                            ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5'],
+                            ['6', '6'], ['7', '7'], ['8', '8'], ['9', '9'],
+                            ['10', '10'], ['11', '11'], ['12', '12']
+                        ],
+                        value: '3',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null
+                    ],
+                    type: 'CODEino_get_ultrasonic',
+                },
+                paramsKeyMap: {
+                    PORT1: 0,
+                    PORT2: 1,
+                },
+                class: 'CODEino_ultrasonic',
+                isNotFor: ['CODEino'],
+                func(sprite, script) {
+                    const port1 = script.getNumberValue('PORT1', script);
+                    const port2 = script.getNumberValue('PORT2', script);
+    
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+                    // delete Entry.hw.sendQueue.SET[port1];
+                    // delete Entry.hw.sendQueue.SET[port2];
+    
+                    // if (!Entry.hw.sendQueue.GET) {
+                    //     Entry.hw.sendQueue.GET = {};
+                    // }
+                    // Entry.hw.sendQueue.GET[Entry.CODEino.sensorTypes.ULTRASONIC] = {
+                    //     port: [port1, port2],
+                    //     time: new Date().getTime(),
+                    // };
+                    Entry.hw.sendQueue.SET[port1] = {
+                        type: Entry.CODEino.sensorTypes.ULTRASONIC,
+                        data: port2,
+                        time: Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.ULTRASONIC),
+                    };
+                    return Entry.hw.portData.ULTRASONIC || 0;
+                },
+            },
         //endregion codeino 코드이노
     };
 };
