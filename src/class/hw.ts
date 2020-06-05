@@ -4,6 +4,8 @@ import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandle
 import HardwareMonitor from './hardware/hardwareMonitor';
 import createHardwarePopup from './hardware/functions/createHardwarePopup';
 import ExternalProgramLauncher from './hardware/externalProgramLauncher';
+// eslint-disable-next-line prettier/prettier
+import type PopupHelper from './popup_helper';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -61,7 +63,7 @@ export default class Hardware implements IEntry.Hardware {
     // 하드웨어 설치여부 확인용
     // public programLauncher 는 ExternalProgramLauncher 만든 iframe view 에서 onload 로 호출한다
     public programLauncher: ExternalProgramLauncher;
-    private popupHelper?: UnknownAny;
+    private popupHelper?: PopupHelper;
 
     constructor() {
         const prevRoomId = localStorage.getItem(this.cloudRoomIdKey);
