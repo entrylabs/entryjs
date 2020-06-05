@@ -42,7 +42,7 @@ export default class Hardware implements IEntry.Hardware {
     }
 
     // socketIO 및 하드웨어 커넥션용
-    private readonly sessionRoomId: string | null;
+    private readonly sessionRoomId: string;
     private readonly socketConnectionRetryCount = 3;
     private reconnectionTimeout: NodeJS.Timeout;
     private programConnected: boolean;
