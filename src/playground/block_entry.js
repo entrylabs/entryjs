@@ -240,15 +240,14 @@ const blocks = require('./blocks');
 function getBlocks() {
     return {
         aiUtilizeModelTrainButton: {
-            skeleton: 'basic_button_disabled',
-            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND_DISABLED,
-            outerLine: EntryStatic.colorSet.common.BUTTON_DISABLED,
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
             isNotFor: ['functionInit'],
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.load_ai_utilize_train_block,
-                    color: EntryStatic.colorSet.common.BUTTON_DISABLED,
+                    color: EntryStatic.colorSet.common.BUTTON,
                     align: 'center',
                 },
             ],
@@ -258,7 +257,7 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        console.log('NOT IMPLEMENTED');
+                        Entry.aiLearning.openManager();
                     },
                 ],
             },
@@ -3013,21 +3012,21 @@ function getBlocks() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['q', '81'],
-                        ['w', '87'],
-                        ['e', '69'],
-                        ['r', '82'],
-                        ['a', '65'],
-                        ['s', '83'],
-                        ['d', '68'],
-                        ['위쪽 화살표', '38'],
-                        ['아래쪽 화살표', '40'],
-                        ['왼쪽 화살표', '37'],
-                        ['오른쪽 화살표', '39'],
-                        ['엔터', '13'],
-                        ['스페이스', '32'],
+                        ['q', 81],
+                        ['w', 87],
+                        ['e', 69],
+                        ['r', 82],
+                        ['a', 65],
+                        ['s', 83],
+                        ['d', 68],
+                        ['위쪽 화살표', 38],
+                        ['아래쪽 화살표', 40],
+                        ['왼쪽 화살표', 37],
+                        ['오른쪽 화살표', 39],
+                        ['엔터', 13],
+                        ['스페이스', 32],
                     ],
-                    value: '81',
+                    value: 81,
                     fontSize: 11,
                 },
                 {

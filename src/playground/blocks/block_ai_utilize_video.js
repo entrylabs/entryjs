@@ -171,6 +171,97 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
+        getObjectList() {
+            return {
+                type: 'DropdownExtra',
+                options: [
+                    [Lang.video_object_params.person, 'person'],
+                    [Lang.video_object_params.bicycle, 'bicycle'],
+                    [Lang.video_object_params.car, 'car'],
+                    [Lang.video_object_params.motorcycle, 'motorcycle'],
+                    [Lang.video_object_params.airplane, 'airplane'],
+                    [Lang.video_object_params.bus, 'bus'],
+                    [Lang.video_object_params.train, 'train'],
+                    [Lang.video_object_params.truck, 'truck'],
+                    [Lang.video_object_params.boat, 'boat'],
+                    [Lang.video_object_params['traffic light'], 'traffic light'],
+                    [Lang.video_object_params['fire hydrant'], 'fire hydrant'],
+                    [Lang.video_object_params['stop sign'], 'stop sign'],
+                    [Lang.video_object_params['parking meter'], 'parking meter'],
+                    [Lang.video_object_params.bench, 'bench'],
+                    [Lang.video_object_params.bird, 'bird'],
+                    [Lang.video_object_params.cat, 'cat'],
+                    [Lang.video_object_params.dog, 'dog'],
+                    [Lang.video_object_params.horse, 'horse'],
+                    [Lang.video_object_params.sheep, 'sheep'],
+                    [Lang.video_object_params.cow, 'cow'],
+                    [Lang.video_object_params.elephant, 'elephant'],
+                    [Lang.video_object_params.bear, 'bear'],
+                    [Lang.video_object_params.zebra, 'zebra'],
+                    [Lang.video_object_params.giraffe, 'giraffe'],
+                    [Lang.video_object_params.backpack, 'backpack'],
+                    [Lang.video_object_params.umbrella, 'umbrella'],
+                    [Lang.video_object_params.handbag, 'handbag'],
+                    [Lang.video_object_params.tie, 'tie'],
+                    [Lang.video_object_params.suitcase, 'suitcase'],
+                    [Lang.video_object_params.frisbee, 'frisbee'],
+                    [Lang.video_object_params.skis, 'skis'],
+                    [Lang.video_object_params.snowboard, 'snowboard'],
+                    [Lang.video_object_params['sports ball'], 'sports ball'],
+                    [Lang.video_object_params.kite, 'kite'],
+                    [Lang.video_object_params['baseball bat'], 'baseball bat'],
+                    [Lang.video_object_params['baseball glove'], 'baseball glove'],
+                    [Lang.video_object_params.skateboard, 'skateboard'],
+                    [Lang.video_object_params.surfboard, 'surfboard'],
+                    [Lang.video_object_params['tennis racket'], 'tennis racket'],
+                    [Lang.video_object_params.bottle, 'bottle'],
+                    [Lang.video_object_params['wine glass'], 'wine glass'],
+                    [Lang.video_object_params.cup, 'cup'],
+                    [Lang.video_object_params.fork, 'fork'],
+                    [Lang.video_object_params.knife, 'knife'],
+                    [Lang.video_object_params.spoon, 'spoon'],
+                    [Lang.video_object_params.bowl, 'bowl'],
+                    [Lang.video_object_params.banana, 'banana'],
+                    [Lang.video_object_params.apple, 'apple'],
+                    [Lang.video_object_params.sandwich, 'sandwich'],
+                    [Lang.video_object_params.orange, 'orange'],
+                    [Lang.video_object_params.broccoli, 'broccoli'],
+                    [Lang.video_object_params.carrot, 'carrot'],
+                    [Lang.video_object_params['hot dog'], 'hot dog'],
+                    [Lang.video_object_params.pizza, 'pizza'],
+                    [Lang.video_object_params.donut, 'donut'],
+                    [Lang.video_object_params.cake, 'cake'],
+                    [Lang.video_object_params.chair, 'chair'],
+                    [Lang.video_object_params.couch, 'couch'],
+                    [Lang.video_object_params['potted plant'], 'potted plant'],
+                    [Lang.video_object_params.bed, 'bed'],
+                    [Lang.video_object_params['dining table'], 'dining table'],
+                    [Lang.video_object_params.toilet, 'toilet'],
+                    [Lang.video_object_params.tv, 'tv'],
+                    [Lang.video_object_params.laptop, 'laptop'],
+                    [Lang.video_object_params.mouse, 'mouse'],
+                    [Lang.video_object_params.remote, 'remote'],
+                    [Lang.video_object_params.keyboard, 'keyboard'],
+                    [Lang.video_object_params['cell phone'], 'cell phone'],
+                    [Lang.video_object_params.microwave, 'microwave'],
+                    [Lang.video_object_params.oven, 'oven'],
+                    [Lang.video_object_params.toaster, 'toaster'],
+                    [Lang.video_object_params.sink, 'sink'],
+                    [Lang.video_object_params.refrigerator, 'refrigerator'],
+                    [Lang.video_object_params.book, 'book'],
+                    [Lang.video_object_params.clock, 'clock'],
+                    [Lang.video_object_params.vase, 'vase'],
+                    [Lang.video_object_params.scissors, 'scissors'],
+                    [Lang.video_object_params['teddy bear'], 'teddy bear'],
+                    [Lang.video_object_params['hair drier'], 'hair drier'],
+                    [Lang.video_object_params.toothbrush, 'toothbrush'],
+                ],
+                value: 'person',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
     };
     return {
         video_title: {
@@ -412,6 +503,42 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
+        video_object_detected: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getObjectList()],
+            events: {},
+            def: {
+                type: 'video_object_detected',
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const target = script.getField('TARGET');
+                if (!VideoUtils.isInitialized) {
+                    await VideoUtils.initialize();
+                }
+                let result = false;
+                VideoUtils.objects.forEach((detected) => {
+                    if (detected.class === target) {
+                        console.log(detected.class, target, detected.class === target);
+                        result = true;
+                    }
+                });
+
+                return result;
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+
         video_is_model_loaded: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -430,14 +557,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     await VideoUtils.initialize();
                     return false;
                 }
-                switch (target) {
-                    case 'face':
-                        return VideoUtils.faces && VideoUtils.faces.length > 0;
-                    case 'pose':
-                        return !!VideoUtils.poses;
-                    case 'object':
-                        return VideoUtils.objects && VideoUtils.objects.length > 0;
-                }
+                return VideoUtils.modelMountStatus[target];
             },
             paramsKeyMap: {
                 TARGET: 0,
