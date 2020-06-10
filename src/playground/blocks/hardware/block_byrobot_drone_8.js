@@ -2831,7 +2831,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 200); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 5000); // 0x11 : FlightEvent::TakeOff
             },
         },
 
@@ -2851,7 +2851,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 200); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 5000); // 0x12 : FlightEvent::Landing
             },
         },
 
@@ -3153,7 +3153,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
-                const time = (distance / speed) * 1.2 * 1000;
+                const time = (distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
 
                 switch( controlDirection )
                 {
@@ -3205,7 +3205,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const controlRotation = script.getField('CONTROLROTATION');
                 const degree = script.getNumberValue('DEGREE');
                 const speed = script.getNumberValue('SPEED');
-                const time = (degree / speed) * 1.2 * 1000;
+                const time = (degree / speed) * 2 * 1000 + 3000;
 
                 switch( controlRotation )
                 {
@@ -3290,14 +3290,14 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const directionRoll     = script.getNumberValue('DIRECTION_ROLL');
                 const directionThrottle = script.getNumberValue('DIRECTION_THROTTLE');
                 
-                const x = directionPitch     + script.getNumberValue('DISTANCE_PITCH');
-                const y = directionRoll      + script.getNumberValue('DISTANCE_ROLL');
-                const z = directionThrottle  + script.getNumberValue('DISTANCE_THROTTLE');
+                const x = directionPitch     * script.getNumberValue('DISTANCE_PITCH');
+                const y = directionRoll      * script.getNumberValue('DISTANCE_ROLL');
+                const z = directionThrottle  * script.getNumberValue('DISTANCE_THROTTLE');
 
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
-                const time = (distance / speed) * 1.2 * 1000;
+                const time = (distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
@@ -3409,7 +3409,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const time = Math.max(Math.abs((distance / speed)), Math.abs((degree / speedYaw))) * 1.2 * 1000;
+                const time = Math.max(Math.abs((distance / speed)), Math.abs((degree / speedYaw))) * 1000 + Math.min(1000 * speed, 3000) + 3000;
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
             },

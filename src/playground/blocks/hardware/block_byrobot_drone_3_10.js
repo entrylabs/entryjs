@@ -1919,7 +1919,7 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             isNotFor: ['byrobot_drone_3_10'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 200); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 5000); // 0x11 : FlightEvent::TakeOff
             },
         },
 
@@ -1939,7 +1939,7 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             isNotFor: ['byrobot_drone_3_10'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 200); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 5000); // 0x12 : FlightEvent::Landing
             },
         },
 
