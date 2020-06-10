@@ -120,6 +120,7 @@ export default class AILearning {
         this.#type = null;
         this.isLoading = false;
         this.result = [];
+        this.isLoaded = false;
     }
 
     toJSON() {
