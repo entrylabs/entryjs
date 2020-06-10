@@ -2969,7 +2969,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
-                const time = (distance / speed) * 1.2;
+                const time = (distance / speed) * 1.2 * 1000;
 
                 switch( controlDirection )
                 {
@@ -3021,7 +3021,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const controlRotation = script.getField('CONTROLROTATION');
                 const degree = script.getNumberValue('DEGREE');
                 const speed = script.getNumberValue('SPEED');
-                const time = (degree / speed) * 1.2;
+                const time = (degree / speed) * 1.2 * 1000;
 
                 switch( controlRotation )
                 {
@@ -3113,7 +3113,7 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
-                const time = (distance / speed) * 1.2;
+                const time = (distance / speed) * 1.2 * 1000;
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
@@ -3223,9 +3223,9 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const directionYaw  = script.getNumberValue('DIRECTION_YAW');
                 const degree        = script.getNumberValue('DEGREE_YAW');
                 const yaw           = directionYaw * degree;
-                const speedYaw = script.getNumberValue('SPEED_YAW');
+                const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const time =  Math.max(Math.abs((distance / speed)), Math.abs((degree / speedYaw))) * 1.2;
+                const time = Math.max(Math.abs((distance / speed)), Math.abs((degree / speedYaw))) * 1.2 * 1000;
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
             },
