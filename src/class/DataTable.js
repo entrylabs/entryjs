@@ -11,6 +11,15 @@ class DataTable {
     modal;
     selected;
 
+    removeAllBlocks() {
+        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'analysis');
+        blocks.forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
+        this.banAllBlock();
+        this.clear();
+    }
+
     banAllBlock() {
         Entry.playground.blockMenu.banClass('analysis');
     }

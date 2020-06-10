@@ -19,6 +19,16 @@ export default class AILearning {
         this.isEnable = isEnable;
     }
 
+    removeAllBlocks() {
+        const utilizeBlock  = Object.values(Entry.AI_UTILIZE_BLOCK_LIST).map(x => Object.keys(x.getBlocks())).flatten();
+        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
+        blocks.filter(x => !utilizeBlock.includes(x)).forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
+        this.banBlocks();
+        this.destroy();
+    }
+
     isAvailable() {
         if (!this.isEnable) {
             return false;
