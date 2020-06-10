@@ -75,7 +75,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['OUT1', '1'], ['OUT2', '2'], ['OUT3', '3']],
+                options: [
+                    ['OUT1', '1'],
+                    ['OUT2', '2'],
+                    ['OUT3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -129,7 +133,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['양쪽', '1'], ['오른쪽', '2'], ['왼쪽', '3']],
+                options: [
+                    ['양쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['왼쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -137,7 +145,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '16'], ['뒤로', '32']],
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32'],
+                ],
                 value: '16',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -251,7 +262,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['앞으로', '16'], ['뒤로', '32']],
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32'],
+                ],
                 value: '16',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -263,7 +277,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '16'], ['뒤로', '32']],
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32'],
+                ],
                 value: '16',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -355,7 +372,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['양쪽', '1'], ['오른쪽', '2'], ['왼쪽', '3']],
+                options: [
+                    ['양쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['왼쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -363,7 +384,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '16'], ['뒤로', '32']],
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32'],
+                ],
                 value: '16',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -436,7 +460,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['앞으로', '16'], ['뒤로', '32']],
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32'],
+                ],
                 value: '16',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -448,7 +475,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '16'], ['뒤로', '32']],
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32'],
+                ],
                 value: '16',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -512,7 +542,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['양쪽', '1'], ['오른쪽', '2'], ['왼쪽', '3']],
+                options: [
+                    ['양쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['왼쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -557,7 +591,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -589,7 +627,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -597,7 +639,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['접촉 되면', '1'], ['접촉 안되면', '0']],
+                options: [
+                    ['접촉 되면', '1'],
+                    ['접촉 안되면', '0'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -633,7 +678,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -664,7 +713,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -746,7 +799,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#00b36a',
@@ -777,7 +834,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#00b36a',
@@ -859,7 +920,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -891,7 +956,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -974,7 +1043,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['OUT 1', '1'], ['OUT 2', '2'], ['OUT 3', '3']],
+                options: [
+                    ['OUT 1', '1'],
+                    ['OUT 2', '2'],
+                    ['OUT 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -986,7 +1059,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['켜기', '255'], ['끄기', '0']],
+                options: [
+                    ['켜기', '255'],
+                    ['끄기', '0'],
+                ],
                 value: '255',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1069,7 +1145,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['OUT 1', '1'], ['OUT 2', '2'], ['OUT 3', '3']],
+                options: [
+                    ['OUT 1', '1'],
+                    ['OUT 2', '2'],
+                    ['OUT 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1077,7 +1157,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['켜기', '255'], ['끄기', '0']],
+                options: [
+                    ['켜기', '255'],
+                    ['끄기', '0'],
+                ],
                 value: '255',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1132,7 +1215,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['OUT 1', '1'], ['OUT 2', '2'], ['OUT 3', '3']],
+                options: [
+                    ['OUT 1', '1'],
+                    ['OUT 2', '2'],
+                    ['OUT 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1140,7 +1227,11 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1216,7 +1307,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['OUT 1', '1'], ['OUT 2', '2'], ['OUT 3', '3']],
+                options: [
+                    ['OUT 1', '1'],
+                    ['OUT 2', '2'],
+                    ['OUT 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1278,7 +1373,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['IN 1', '1'], ['IN 2', '2'], ['IN 3', '3']],
+                options: [
+                    ['IN 1', '1'],
+                    ['IN 2', '2'],
+                    ['IN 3', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -1330,7 +1429,14 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['1', '0'], ['2', '1'], ['3', '2'], ['4', '3'], ['5', '4'], ['6', '5']],
+                options: [
+                    ['1', '0'],
+                    ['2', '1'],
+                    ['3', '2'],
+                    ['4', '3'],
+                    ['5', '4'],
+                    ['6', '5'],
+                ],
                 value: '2',
                 fontSize: 11,
                 bgColor: '#ce105e',
@@ -1461,7 +1567,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['양쪽', '1'], ['오른쪽', '2'], ['왼쪽', '3']],
+                options: [
+                    ['양쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['왼쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1469,7 +1579,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '1'], ['뒤로', '2']],
+                options: [
+                    ['앞으로', '1'],
+                    ['뒤로', '2'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1594,7 +1707,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['양쪽', '1'], ['오른쪽', '2'], ['왼쪽', '3']],
+                options: [
+                    ['양쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['왼쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1602,7 +1719,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '1'], ['뒤로', '2']],
+                options: [
+                    ['앞으로', '1'],
+                    ['뒤로', '2'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1699,7 +1819,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['앞으로', '1'], ['뒤로', '2']],
+                options: [
+                    ['앞으로', '1'],
+                    ['뒤로', '2'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1711,7 +1834,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', '1'], ['뒤로', '2']],
+                options: [
+                    ['앞으로', '1'],
+                    ['뒤로', '2'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1790,7 +1916,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['양쪽', '1'], ['오른쪽', '2'], ['왼쪽', '3']],
+                options: [
+                    ['양쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['왼쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -1881,7 +2011,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['접촉 되면', '1'], ['접촉 안되면', '0']],
+                options: [
+                    ['접촉 되면', '1'],
+                    ['접촉 안되면', '0'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -2152,7 +2285,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['감지 되면', '1'], ['감지 안되면', '0']],
+                options: [
+                    ['감지 되면', '1'],
+                    ['감지 안되면', '0'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -2192,7 +2328,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['LED 1', '5'], ['LED 2', '4'], ['R - A', '3'], ['R - B', '2']],
+                options: [
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2'],
+                ],
                 value: '5',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2204,7 +2345,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['켜기', '255'], ['끄기', '0']],
+                options: [
+                    ['켜기', '255'],
+                    ['끄기', '0'],
+                ],
                 value: '255',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2275,7 +2419,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['LED 1', '5'], ['LED 2', '4'], ['R - A', '3'], ['R - B', '2']],
+                options: [
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2'],
+                ],
                 value: '5',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2283,7 +2432,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['켜기', '255'], ['끄기', '0']],
+                options: [
+                    ['켜기', '255'],
+                    ['끄기', '0'],
+                ],
                 value: '255',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2331,7 +2483,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['LED 1', '5'], ['LED 2', '4'], ['R - A', '3'], ['R - B', '2']],
+                options: [
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2'],
+                ],
                 value: '5',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2339,7 +2496,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['소 리', '8'], ['CDS', '10']],
+                options: [
+                    ['소 리', '8'],
+                    ['CDS', '10'],
+                ],
                 value: '8',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2416,7 +2576,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['LED 1', '5'], ['LED 2', '4'], ['R - A', '3'], ['R - B', '2']],
+                options: [
+                    ['LED 1', '5'],
+                    ['LED 2', '4'],
+                    ['R - A', '3'],
+                    ['R - B', '2'],
+                ],
                 value: '5',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2479,7 +2644,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['적외선', '7'], ['소 리', '8'], ['접 촉', '9'], ['CDS', '10']],
+                options: [
+                    ['적외선', '7'],
+                    ['소 리', '8'],
+                    ['접 촉', '9'],
+                    ['CDS', '10'],
+                ],
                 value: '8',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -2511,7 +2681,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -2590,7 +2765,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -2638,7 +2818,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -2646,7 +2831,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['접촉 되면', '1'], ['접촉 안되면', '0']],
+                options: [
+                    ['접촉 되면', '1'],
+                    ['접촉 안되면', '0'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -2697,7 +2885,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -2778,7 +2971,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -2909,7 +3107,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '0'], ['PORT 4', '1'], ['PORT 5', '2'], ['PORT 6', '3']],
+                options: [
+                    ['PORT 3', '0'],
+                    ['PORT 4', '1'],
+                    ['PORT 5', '2'],
+                    ['PORT 6', '3'],
+                ],
                 value: '0',
                 outerLine: '#e37100',
                 fontSize: 11,
@@ -2942,7 +3145,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '0'], ['PORT 4', '1'], ['PORT 5', '2'], ['PORT 6', '3']],
+                options: [
+                    ['PORT 3', '0'],
+                    ['PORT 4', '1'],
+                    ['PORT 5', '2'],
+                    ['PORT 6', '3'],
+                ],
                 value: '0',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -3049,7 +3257,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['접촉 되면', '1'], ['접촉 안되면', '0']],
+                options: [
+                    ['접촉 되면', '1'],
+                    ['접촉 안되면', '0'],
+                ],
                 value: '1',
                 fontsIze: 11,
             },
@@ -3079,7 +3290,7 @@ const miniBlock = {
         skeleton: 'basic_string_field',
         fontColor: '#fff',
         statements: [],
-        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU','robotis_Dream'],
+        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU', 'robotis_Dream'],
         template: '소리 센서 최종 소리 횟수',
         events: {},
         params: [
@@ -3104,7 +3315,7 @@ const miniBlock = {
         outerLine: '#00b36a',
         skeleton: 'basic_boolean_field',
         fontColor: '#fff',
-        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU','robotis_Dream'],
+        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU', 'robotis_Dream'],
         template: '소리 센서 최종 소리 횟수 %1 %2',
         params: [
             {
@@ -3176,7 +3387,7 @@ const miniBlock = {
         skeleton: 'basic',
         fontColor: '#fff',
         statements: [],
-        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU','robotis_Dream'],
+        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU', 'robotis_Dream'],
         template: '소리 센서 최종 소리 횟수 초기화 %1',
         params: [
             {
@@ -3214,7 +3425,7 @@ const miniBlock = {
         skeleton: 'basic_string_field',
         fontColor: '#fff',
         statements: [],
-        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU','robotis_Dream'],
+        isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU', 'robotis_Dream'],
         template: '소리 센서 실시간 소리 횟수',
         events: {},
         params: [
@@ -3316,7 +3527,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -3400,7 +3616,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -3516,7 +3737,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -3576,7 +3802,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -3685,7 +3916,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -3745,7 +3981,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -3854,7 +4095,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
+                options: [
+                    ['왼쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['양쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -3862,7 +4107,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', 'CW'], ['뒤로', 'CCW']],
+                options: [
+                    ['앞으로', 'CW'],
+                    ['뒤로', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -3999,7 +4247,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
+                options: [
+                    ['왼쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['양쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -4007,7 +4259,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['앞으로', 'CW'], ['뒤로', 'CCW']],
+                options: [
+                    ['앞으로', 'CW'],
+                    ['뒤로', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -4108,7 +4363,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
+                options: [
+                    ['왼쪽', '1'],
+                    ['오른쪽', '2'],
+                    ['양쪽', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -4168,7 +4427,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -4176,7 +4440,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['시계방향', 'CW'], ['반시계방향', 'CCW']],
+                options: [
+                    ['시계방향', 'CW'],
+                    ['반시계방향', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -4369,7 +4636,12 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4'], ['PORT 5', '5'], ['PORT 6', '6']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -4546,7 +4818,7 @@ const miniBlock = {
         color: '#FC327F',
         skeleton: 'basic',
         statements: [],
-        isNotFor: ['robotis_openCM70', , 'robotis_openCM70EDU','robotis_Dream'],
+        isNotFor: ['robotis_openCM70', , 'robotis_openCM70EDU', 'robotis_Dream'],
         template: '멜로디 %1 을(를) %2 옥타브로 %3 만큼 소리내기 %4',
         params: [
             {
@@ -4573,7 +4845,14 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['1', '0'], ['2', '1'], ['3', '2'], ['4', '3'], ['5', '4'], ['6', '5']],
+                options: [
+                    ['1', '0'],
+                    ['2', '1'],
+                    ['3', '2'],
+                    ['4', '3'],
+                    ['5', '4'],
+                    ['6', '5'],
+                ],
                 value: '2',
                 fontSize: 11,
                 bgColor: '#ce105e',
@@ -4673,7 +4952,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -4748,7 +5030,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -4790,7 +5075,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -4798,7 +5086,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['접촉 되면', '1'], ['접촉 안되면', '0']],
+                options: [
+                    ['접촉 되면', '1'],
+                    ['접촉 안되면', '0'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -4843,7 +5134,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -4909,7 +5203,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -4984,7 +5281,7 @@ const miniBlock = {
             if (!Entry.Robotis_DREAM.IRS_MODULEWRITE.PORT3 && port == '3') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                 Entry.Robotis_DREAM.update();
-                Entry.Robotis_DREAM.IRS_MODULEWRITE.PORT3 = true;                
+                Entry.Robotis_DREAM.IRS_MODULEWRITE.PORT3 = true;
             }
             if (!Entry.Robotis_DREAM.IRS_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
@@ -5024,7 +5321,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['오른쪽', '0'], ['왼쪽', '1'], ['중앙', '2']],
+                options: [
+                    ['오른쪽', '0'],
+                    ['왼쪽', '1'],
+                    ['중앙', '2'],
+                ],
                 value: '0',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -5045,7 +5346,7 @@ const miniBlock = {
             Entry.hw.sendQueue.IS_EDU = true;
             const port = script.getStringField('PORT');
             let value = 0;
-            let data_address = 0;
+            const data_address = 0;
             switch (port) {
                 case '0':
                     value = Entry.hw.portData.IRINNER0;
@@ -5072,7 +5373,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '0'], ['PORT 4', '1']],
+                options: [
+                    ['PORT 3', '0'],
+                    ['PORT 4', '1'],
+                ],
                 value: '0',
                 outerLine: '#e37100',
                 fontSize: 11,
@@ -5105,7 +5409,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '0'], ['PORT 4', '1']],
+                options: [
+                    ['PORT 3', '0'],
+                    ['PORT 4', '1'],
+                ],
                 value: '0',
                 fontSize: 11,
                 bgColor: '#e37100',
@@ -5188,7 +5495,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -5226,13 +5536,13 @@ const miniBlock = {
             // const data_value = 4;
             const data_value = Entry.Robotis_DREAM.MODULE_VALUE.COLOR;
 
-            const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];            
+            const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
 
-            if(!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT3 && port == '3'){
+            if (!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT3 && port == '3') {
                 Entry.Robotis_carCont.setRobotisData(data_sendqueue);
                 Entry.Robotis_carCont.update();
                 Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT3 = true;
-            }else if(!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT4 && port == '4'){                
+            } else if (!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_carCont.setRobotisData(data_sendqueue);
                 Entry.Robotis_carCont.update();
                 Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT4 = true;
@@ -5275,7 +5585,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -5350,12 +5663,12 @@ const miniBlock = {
             // const data_value = 4;
             const data_value = Entry.Robotis_DREAM.MODULE_VALUE.COLOR;
             const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-            
-            if(!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT3 && port == '3'){
+
+            if (!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT3 && port == '3') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
-                Entry.Robotis_DREAM.update(); 
+                Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT3 = true;
-            }else if(!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT4 && port == '4'){
+            } else if (!Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                 Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.COLOR_MODULEWRITE.PORT4 = true;
@@ -5396,7 +5709,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -5436,14 +5752,14 @@ const miniBlock = {
 
             const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
 
-            if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3'){
-                console.log("address : " + data_address + " value : " + data_value);
+            if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3') {
+                console.log(`address : ${data_address} value : ${data_value}`);
                 Entry.Robotis_carCont.setRobotisData(data_sendqueue);
-                Entry.Robotis_carCont.update(); 
+                Entry.Robotis_carCont.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 = true;
-            }else if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4'){
+            } else if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_carCont.setRobotisData(data_sendqueue);
-                Entry.Robotis_carCont.update(); 
+                Entry.Robotis_carCont.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 = true;
             }
             // Entry.Robotis_carCont.setRobotisData(data_sendqueue);
@@ -5462,7 +5778,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -5533,13 +5852,13 @@ const miniBlock = {
             const data_value = Entry.Robotis_DREAM.MODULE_VALUE.MOISTURE;
 
             const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-            if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3'){
+            if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
-                Entry.Robotis_DREAM.update(); 
+                Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 = true;
-            }else if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4'){
+            } else if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
-                Entry.Robotis_DREAM.update(); 
+                Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 = true;
             }
             // Entry.Robotis_carCont.setRobotisData(data_sendqueue);
@@ -5575,7 +5894,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#0e93b1',
@@ -5614,11 +5936,11 @@ const miniBlock = {
             const data_value = Entry.Robotis_DREAM.MODULE_VALUE.MOISTURE;
 
             const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-            if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3'){
+            if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                 Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 = true;
-            }else if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4'){
+            } else if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                 Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 = true;
@@ -5641,7 +5963,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#9a0045',
@@ -5712,11 +6037,11 @@ const miniBlock = {
             const data_value = Entry.Robotis_DREAM.MODULE_VALUE.MOISTURE;
 
             const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-            if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3'){
+            if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 && port == '3') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                 Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT3 = true;
-            }else if(!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4'){
+            } else if (!Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 && port == '4') {
                 Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                 Entry.Robotis_DREAM.update();
                 Entry.Robotis_DREAM.TEMPER_MOISTURE_MODULEWRITE.PORT4 = true;
@@ -5756,7 +6081,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['1번 포트', '1'], ['2번 포트', '2']],
+                options: [
+                    ['1번 포트', '1'],
+                    ['2번 포트', '2'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -5764,7 +6092,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['시계방향', 'CW'], ['반시계방향', 'CCW']],
+                options: [
+                    ['시계방향', 'CW'],
+                    ['반시계방향', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -5816,7 +6147,8 @@ const miniBlock = {
 
             const data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
             // let data_address = 0;
-            let data_address = data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+            let data_address = (data_address =
+                Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0]);
             let data_length = 0;
             let data_value = 0;
 
@@ -5913,7 +6245,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['1번 포트', '1'], ['2번 포트', '2'], ['모두', '3']],
+                options: [
+                    ['1번 포트', '1'],
+                    ['2번 포트', '2'],
+                    ['모두', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -5921,7 +6257,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['시계방향', 'CW'], ['반시계방향', 'CCW']],
+                options: [
+                    ['시계방향', 'CW'],
+                    ['반시계방향', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -6033,7 +6372,11 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['1번 포트', '1'], ['2번 포트', '2'], ['모두', '3']],
+                options: [
+                    ['1번 포트', '1'],
+                    ['2번 포트', '2'],
+                    ['모두', '3'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#019101',
@@ -6061,16 +6404,17 @@ const miniBlock = {
 
             const data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
             // let data_address = 0;
-            let data_address = data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+            let data_address = (data_address =
+                Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0]);
             let data_length = 0;
             // let data_value = 0;
             let data_value = Entry.Robotis_DREAM.MODULE_VALUE.DEFAULT;
 
             data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
 
-            console.log("wheel " + wheel);
+            console.log(`wheel ${wheel}`);
             if (wheel == '3') {
-                data_length = 4;                
+                data_length = 4;
                 // data_address = 136;
             } else {
                 data_length = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
@@ -6086,7 +6430,7 @@ const miniBlock = {
                 Entry.Robotis_openCM70.delay
             );
         },
-    },    
+    },
     robotis_set_servo_mode_dream: {
         color: '#D128BD',
         outerLine: '#a2049e',
@@ -6097,7 +6441,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -6105,12 +6452,15 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['회전모드', 0], ['관절모드', 1]],
+                options: [
+                    ['회전모드', 0],
+                    ['관절모드', 1],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#A2049E',
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-            },            
+            },
             {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/servo.png',
@@ -6131,11 +6481,11 @@ const miniBlock = {
             Entry.hw.sendQueue.IS_EDU = true;
             // instruction / address / length / value / default length
             const port = script.getField('PORT', script);
-            var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
-            var data_address = 0;
-            var data_length = 1;
-            var data_value = Entry.Robotis_DREAM.MODULE_VALUE.SERVO;
-            const data_mode = script.getNumberField('MODE');            
+            const data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
+            let data_address = 0;
+            const data_length = 1;
+            const data_value = Entry.Robotis_DREAM.MODULE_VALUE.SERVO;
+            const data_mode = script.getNumberField('MODE');
             switch (port) {
                 case '3':
                     data_address = Entry.Robotis_DREAM.CONTROL_TABLE.CM_MODULE_CLASS[0];
@@ -6145,34 +6495,45 @@ const miniBlock = {
                     break;
             }
             //
-            if((!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3) && port == '3' ||
-                (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 )&& port == '4') {
-                    
-                    var data_sendqueue;
-                    if(port == '3'){
-                        Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 = true;
-                        data_sendqueue = [
-                            [data_instruction, Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[0], Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1], data_mode],
-                        ];
-                    }else if (port == '4'){
-                        Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 = true;
-                        data_sendqueue = [
-                            [data_instruction, Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[2], Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1], data_mode],
-                        ];
-                    }
-
-                    return Entry.Robotis_carCont.postCallReturn(
-                        script,
-                        data_sendqueue,
-                        Entry.Robotis_openCM70.delay
-                    );
+            if (
+                (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3') ||
+                (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')
+            ) {
+                let data_sendqueue;
+                if (port == '3') {
+                    Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 = true;
+                    data_sendqueue = [
+                        [
+                            data_instruction,
+                            Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[0],
+                            Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1],
+                            data_mode,
+                        ],
+                    ];
+                } else if (port == '4') {
+                    Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 = true;
+                    data_sendqueue = [
+                        [
+                            data_instruction,
+                            Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[2],
+                            Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1],
+                            data_mode,
+                        ],
+                    ];
                 }
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            }
             /*
             if (!script.isStart) {
                 if (
                     (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3') ||
                     (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')
-                ) {                    
+                ) {
                     var data_sendqueue = [
                         [data_instruction, data_address, data_length, data_value],
                     ];
@@ -6195,10 +6556,10 @@ const miniBlock = {
                     delete script.timeFlag;
                     delete script.isStart;
                     delete script.wheelMode;
-                    Entry.engine.isContinue = false;   
-                    if(!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3' || !Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')        
-                    {                        
-                        
+                    Entry.engine.isContinue = false;
+                    if(!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3' || !Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')
+                    {
+
                         if(port == '3'){
                             Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 = true;
                             data_sendqueue = [
@@ -6210,10 +6571,10 @@ const miniBlock = {
                                 [data_instruction, Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[2], Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1], data_mode],
                             ];
                         }
-                        
+
                         Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                         Entry.engine.isContinue = false;
-                        Entry.Robotis_DREAM.update();      
+                        Entry.Robotis_DREAM.update();
                         console.log("datasend mode " + data_sendqueue);
                     }
                     return script.callReturn();
@@ -6231,7 +6592,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -6239,7 +6603,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['시계방향', 'CW'], ['반시계방향', 'CCW']],
+                options: [
+                    ['시계방향', 'CW'],
+                    ['반시계방향', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -6268,7 +6635,7 @@ const miniBlock = {
                 fontSize: 11,
                 bgColor: '#A2049E',
                 arrowColor: EntryStatic.colorSet.common.WHITE,
-            },            
+            },
             {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/servo.png',
@@ -6290,21 +6657,21 @@ const miniBlock = {
             Entry.hw.sendQueue.IS_EDU = true;
             // instruction / address / length / value / default length
             const port = script.getField('PORT', script);
-            var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
-            var data_address = 0;
-            var data_length = 0;
-            var data_value = script.getNumberField('SPEED');
+            const data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
+            let data_address = 0;
+            let data_length = 0;
+            let data_value = script.getNumberField('SPEED');
             const direction = script.getStringField('DIRECTION');
             data_value = data_value * 68;
-            
-            console.log("kjsDebug " + data_value + "  " + direction);
-            if(direction == 'CW'){            
+
+            console.log(`kjsDebug ${data_value}  ${direction}`);
+            if (direction == 'CW') {
                 data_value = data_value + 1024;
                 if (data_value > 2047) {
                     data_value = 2047;
-               }            
-            }else{
-                if(data_value > 1023){
+                }
+            } else {
+                if (data_value > 1023) {
                     data_value = 1023;
                 }
             }
@@ -6319,17 +6686,11 @@ const miniBlock = {
                     data_length = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_SPEED[1];
                     break;
             }
-            var data_sendqueue = [
-                [data_instruction, data_address, data_length, data_value],
-            ];            
-            return Entry.Robotis_DREAM.postCallReturn(
-                script,
-                data_sendqueue,
-                300
-            );
+            const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_DREAM.postCallReturn(script, data_sendqueue, 300);
             /*
-            if(!Entry.Robotis_DREAM.SERVO_WHEELWRITE.PORT3 && port == '3' || !Entry.Robotis_DREAM.SERVO_WHEELWRITE.PORT4 && port == '4')        
-            { 
+            if(!Entry.Robotis_DREAM.SERVO_WHEELWRITE.PORT3 && port == '3' || !Entry.Robotis_DREAM.SERVO_WHEELWRITE.PORT4 && port == '4')
+            {
                 console.log("datasend " + data_sendqueue);
                 if(port == '3'){
                     Entry.Robotis_DREAM.SERVO_WHEELWRITE.PORT3 = true;
@@ -6355,7 +6716,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '1'], ['PORT 4', '2']],
+                options: [
+                    ['PORT 3', '1'],
+                    ['PORT 4', '2'],
+                ],
                 value: '1',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -6383,7 +6747,8 @@ const miniBlock = {
 
             const data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
             // let data_address = 0;
-            let data_address = data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+            let data_address = (data_address =
+                Entry.Robotis_DREAM.CONTROL_TABLE.AUX_MOTOR_SPEED[0]);
             let data_length = 0;
             // let data_value = 0;
             let data_value = 0;
@@ -6404,14 +6769,10 @@ const miniBlock = {
             data_value = value;
 
             const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-            console.log("kjsDebug data_sendqueue : " + data_sendqueue);
-            return Entry.Robotis_DREAM.postCallReturn(
-                script,
-                data_sendqueue,
-                300
-            );
+            console.log(`kjsDebug data_sendqueue : ${data_sendqueue}`);
+            return Entry.Robotis_DREAM.postCallReturn(script, data_sendqueue, 300);
         },
-    },    
+    },
     robotis_set_servo_position_dream: {
         color: '#D128BD',
         outerLine: '#a2049e',
@@ -6422,16 +6783,19 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#A2049E',
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             },
             {
-                type: 'Block',                
+                type: 'Block',
                 accept: 'string',
-            },            
+            },
             {
                 type: 'Indicator',
                 img: 'block_icon/practical_course/servo.png',
@@ -6446,8 +6810,8 @@ const miniBlock = {
                     type: 'number',
                     params: ['512'],
                 },
-                null
-                ],
+                null,
+            ],
             type: 'robotis_set_servo_position_dream',
         },
         paramsKeyMap: {
@@ -6456,18 +6820,16 @@ const miniBlock = {
         },
         class: 'robotis_servo_motor',
         func(sprite, script) {
-            var port = script.getField('PORT', script);
-            var value = script.getNumberValue('VALUE');
+            const port = script.getField('PORT', script);
+            let value = script.getNumberValue('VALUE');
 
-            var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
-            var data_address = 0;
-            var data_length = 0;
-            var data_value = 0;
+            const data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
+            let data_address = 0;
+            let data_length = 0;
+            let data_value = 0;
 
-            data_address =
-                Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-            data_length =
-                Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+            data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+            data_length = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[1];
 
             data_address = data_address + (port - 3) * data_length;
 
@@ -6479,14 +6841,8 @@ const miniBlock = {
 
             data_value = value;
 
-            var data_sendqueue = [
-                [data_instruction, data_address, data_length, data_value],
-            ];
-            return Entry.Robotis_carCont.postCallReturn(
-                script,
-                data_sendqueue,
-                300
-            );            
+            const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+            return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 300);
         },
     },
     robotis_set_servo_wheel_dream: {
@@ -6499,7 +6855,10 @@ const miniBlock = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['PORT 3', '3'], ['PORT 4', '4']],
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
                 value: '3',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -6507,7 +6866,10 @@ const miniBlock = {
             },
             {
                 type: 'Dropdown',
-                options: [['시계방향', 'CW'], ['반시계방향', 'CCW']],
+                options: [
+                    ['시계방향', 'CW'],
+                    ['반시계방향', 'CCW'],
+                ],
                 value: 'CW',
                 fontSize: 11,
                 bgColor: '#A2049E',
@@ -6561,9 +6923,10 @@ const miniBlock = {
             const direction = script.getStringField('DIRECTION');
             const speed = script.getNumberField('SPEED');
             const value = 0;
-            
-            let data_address3 = 0;32
-            let data_length3 = 0;
+
+            const data_address3 = 0;
+            32;
+            const data_length3 = 0;
             let data_value3 = 0;
 
             let data_address2 = 0;
@@ -6628,11 +6991,11 @@ const miniBlock = {
                 if (
                     (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3') ||
                     (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')
-                ) {                    
+                ) {
                     var data_sendqueue = [
                         [data_instruction, data_address2, data_length2, data_value2],
                     ];
-                    console.log("kjDebug : " + data_sendqueue);
+                    console.log(`kjDebug : ${data_sendqueue}`);
                     Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                     Entry.Robotis_DREAM.update();
                     script.isStart = true;
@@ -6656,222 +7019,228 @@ const miniBlock = {
                     }, 1 * 650);
                     */
 
-                   return script;
-                } else if (script.timeFlag == 1) {
-                    //data_sendqueue = [[data_instruction, data_address, data_length, 0]];
-                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    delete script.wheelMode;
-                    Entry.engine.isContinue = false;   
-                    if(!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3' || !Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')        
-                    {                        
-                        data_sendqueue = [
-                            [data_instruction, data_address, data_length, data_value],
-                            [data_instruction, data_address4, data_length4, data_value4],
-                        ];
-                        console.log("kjsDebug port :" + port + " data " + data_sendqueue);
-                        Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
-                        Entry.engine.isContinue = false;
-                        Entry.Robotis_DREAM.update();
-
-                        if(port == '3'){
-                            Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 = true;
-                        }else if (port == '4'){
-                            Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 = true;
-                        }
-                    }
-                    // data_sendqueue = [
-                    //     [data_instruction, data_address, data_length, data_value],
-                    //     [data_instruction, data_address4, data_length4, data_value4],
-                    // ];
-                    
-                    // Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
-                    // Entry.engine.isContinue = false;
-                    // Entry.Robotis_DREAM.update();
-
-                    return script.callReturn();
-                }
-                //
-            },
-        },
-        robotis_set_servo_joint_dream: {
-            color: '#D128BD',
-            outerLine: '#a2049e',
-            skeleton: 'basic',
-            statements: [],
-            isNotFor: ['robotis_Dream'],
-            template: '%1 포트의 서보모터를 %2 도 %3속도로 이동 %4',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['PORT 3', '3'], ['PORT 4', '4']],
-                    value: '3',
-                    fontSize: 11,
-                    bgColor: '#A2049E',
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1', 1],
-                        ['2', 2],
-                        ['3', 3],
-                        ['4', 4],
-                        ['5', 5],
-                        ['6', 6],
-                        ['7', 7],
-                        ['8', 8],
-                        ['9', 9],
-                        ['10', 10],
-                        ['11', 11],
-                        ['12', 12],
-                        ['13', 13],
-                        ['14', 14],
-                        ['15', 15],
-                    ],
-                    value: 7,
-                    fontSize: 11,
-                    bgColor: '#A2049E',
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/practical_course/servo.png',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['512'],
-                    },
-                    null,
-                    null,
-                ],
-                type: 'robotis_set_servo_joint_dream',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-                SPEED: 2,
-            },
-            class: 'robotis_servo_motor',
-            func(sprite, script) {
-                Entry.hw.sendQueue.IS_EDU = true;
-                // instruction / address / length / value / default length
-                const port = script.getField('PORT', script);
-                let value = script.getNumberValue('VALUE');
-                const speed = script.getNumberField('SPEED');
-    
-                var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
-                let data_address3 = 0;
-                let data_length3 = 0;
-                let data_value3 = 0;
-    
-                let data_address2 = 0;
-                const data_length2 = 1;
-                const data_value2 = 7;
-    
-                var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
-                let data_address = 0;
-                let data_length = 0;
-                let data_value = 0;
-    
-                let data_address4 = 0; // servo speed
-                let data_length4 = 2;
-                let data_value4 = 0;
-    
-                data_value4 = speed * 68;
-                if (data_value4 > 1023) {
-                    data_value4 = 1023;
-                }
-                switch (port) {
-                    case '3':5
-                        data_address2 = 104;
-                        break;
-                    case '4':
-                        data_address2 = 105;
-                        break;
-                }
-    
-                data_address3 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-                data_length3 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[1];
-    
-                data_address3 = data_address3 + (port - 3) * data_length3;
-    
-                data_address4 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_SPEED[0];
-                data_length4 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_SPEED[1];
-    
-                data_address4 = data_address4 + (port - 3) * data_length4;
-    
-                data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[0];
-                data_length = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1];
-    
-                data_address = data_address + (port - 3) * data_length;
-                data_value = 1;
-    
-                if (value > 1023) {
-                    value = 1023;
-                } else if (value < 0) {
-                    value = 0;
-                }
-    
-                data_value3 = value;
-    
-                if (!script.isStart) {
-                    var data_sendqueue = [[data_instruction, data_address2, data_length2, data_value2]];
-                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
-                    //Entry.Robotis_carCont.update();
-                    if (
-                        (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && port == '3') ||
-                        (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && port == '4')
-                    ) {
-                        script.isStart = true;
-                        script.timeFlag = 1;
-                        setTimeout(() => {
-                            script.timeFlag = 0;
-                        }, 1 * 650);
-                    } else {
-                        script.isStart = true;
-                        script.timeFlag = 0;
-                    }
-    
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    delete script.wheelMode;
-                    Entry.engine.isContinue = false;
-    
-                    setTimeout(() => {
-                        script.timeFlag = 0;
-                    }, 1 * 70);
-    
+                return script;
+            } else if (script.timeFlag == 1) {
+                //data_sendqueue = [[data_instruction, data_address, data_length, 0]];
+                //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.wheelMode;
+                Entry.engine.isContinue = false;
+                if (
+                    (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 && port == '3') ||
+                    (!Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 && port == '4')
+                ) {
                     data_sendqueue = [
                         [data_instruction, data_address, data_length, data_value],
                         [data_instruction, data_address4, data_length4, data_value4],
-                        [data_instruction, data_address3, data_length3, data_value3],
                     ];
-                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    console.log(`kjsDebug port :${port} data ${data_sendqueue}`);
+                    Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
                     Entry.engine.isContinue = false;
-                    Entry.Robotis_carCont.update();
-                    return script.callReturn();
+                    Entry.Robotis_DREAM.update();
+
+                    if (port == '3') {
+                        Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT3 = true;
+                    } else if (port == '4') {
+                        Entry.Robotis_DREAM.SERVO_MODULEWRITE.PORT4 = true;
+                    }
                 }
-                //
-            },
+                // data_sendqueue = [
+                //     [data_instruction, data_address, data_length, data_value],
+                //     [data_instruction, data_address4, data_length4, data_value4],
+                // ];
+
+                // Entry.Robotis_DREAM.setRobotisData(data_sendqueue);
+                // Entry.engine.isContinue = false;
+                // Entry.Robotis_DREAM.update();
+
+                return script.callReturn();
+            }
+            //
         },
+    },
+    robotis_set_servo_joint_dream: {
+        color: '#D128BD',
+        outerLine: '#a2049e',
+        skeleton: 'basic',
+        statements: [],
+        isNotFor: ['robotis_Dream'],
+        template: '%1 포트의 서보모터를 %2 도 %3속도로 이동 %4',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                ],
+                value: '3',
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['1', 1],
+                    ['2', 2],
+                    ['3', 3],
+                    ['4', 4],
+                    ['5', 5],
+                    ['6', 6],
+                    ['7', 7],
+                    ['8', 8],
+                    ['9', 9],
+                    ['10', 10],
+                    ['11', 11],
+                    ['12', 12],
+                    ['13', 13],
+                    ['14', 14],
+                    ['15', 15],
+                ],
+                value: 7,
+                fontSize: 11,
+                bgColor: '#A2049E',
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/practical_course/servo.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['512'],
+                },
+                null,
+                null,
+            ],
+            type: 'robotis_set_servo_joint_dream',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1,
+            SPEED: 2,
+        },
+        class: 'robotis_servo_motor',
+        func(sprite, script) {
+            Entry.hw.sendQueue.IS_EDU = true;
+            // instruction / address / length / value / default length
+            const port = script.getField('PORT', script);
+            let value = script.getNumberValue('VALUE');
+            const speed = script.getNumberField('SPEED');
+
+            var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
+            let data_address3 = 0;
+            let data_length3 = 0;
+            let data_value3 = 0;
+
+            let data_address2 = 0;
+            const data_length2 = 1;
+            const data_value2 = 7;
+
+            var data_instruction = Entry.Robotis_DREAM.INSTRUCTION.WRITE;
+            let data_address = 0;
+            let data_length = 0;
+            let data_value = 0;
+
+            let data_address4 = 0; // servo speed
+            let data_length4 = 2;
+            let data_value4 = 0;
+
+            data_value4 = speed * 68;
+            if (data_value4 > 1023) {
+                data_value4 = 1023;
+            }
+            switch (port) {
+                case '3':
+                    5;
+                    data_address2 = 104;
+                    break;
+                case '4':
+                    data_address2 = 105;
+                    break;
+            }
+
+            data_address3 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+            data_length3 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+
+            data_address3 = data_address3 + (port - 3) * data_length3;
+
+            data_address4 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_SPEED[0];
+            data_length4 = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+
+            data_address4 = data_address4 + (port - 3) * data_length4;
+
+            data_address = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[0];
+            data_length = Entry.Robotis_DREAM.CONTROL_TABLE.AUX_SERVO_MODE[1];
+
+            data_address = data_address + (port - 3) * data_length;
+            data_value = 1;
+
+            if (value > 1023) {
+                value = 1023;
+            } else if (value < 0) {
+                value = 0;
+            }
+
+            data_value3 = value;
+
+            if (!script.isStart) {
+                var data_sendqueue = [[data_instruction, data_address2, data_length2, data_value2]];
+                //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                //Entry.Robotis_carCont.update();
+                if (
+                    (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && port == '3') ||
+                    (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && port == '4')
+                ) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, 1 * 650);
+                } else {
+                    script.isStart = true;
+                    script.timeFlag = 0;
+                }
+
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                delete script.wheelMode;
+                Entry.engine.isContinue = false;
+
+                setTimeout(() => {
+                    script.timeFlag = 0;
+                }, 1 * 70);
+
+                data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                    [data_instruction, data_address4, data_length4, data_value4],
+                    [data_instruction, data_address3, data_length3, data_value3],
+                ];
+                Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                Entry.engine.isContinue = false;
+                Entry.Robotis_carCont.update();
+                return script.callReturn();
+            }
+            //
+        },
+    },
 };
 
 module.exports.practicalCourseBlock = miniBlock;
@@ -6880,25 +7249,34 @@ module.exports.setLanguage = () => ({
         Helper: {
             robotis_set_led: 'LED 모듈이 연결된 [포트]를 선택해 지정한 색의 LED를 켜거나 끕니다.',
             robotis_touch_value: '접촉센서가 연결된 [포트]의 값입니다.',
-            robotis_touch_value_boolean: '접촉센서가 연결된 [포트]를 선택해 [접촉되면/접촉 안되면]을 지정합니다.',
+            robotis_touch_value_boolean:
+                '접촉센서가 연결된 [포트]를 선택해 [접촉되면/접촉 안되면]을 지정합니다.',
             robotis_irs_value: '적외선 센서가 연결된 [포트]의 값입니다.',
-            robotis_irs_value_boolean: '적외선 센서가 연결된 [포트]의 값을 [입력]한 숫자와 비교합니다.',
+            robotis_irs_value_boolean:
+                '적외선 센서가 연결된 [포트]의 값을 [입력]한 숫자와 비교합니다.',
             robotis_light_value: '빛감지 센서가 연결된 [포트]의 값입니다.',
-            robotis_light_value_boolean: '빛감지 센서가 연결된 [포트]의값을 [입력]한 숫자와 비교합니다.',
+            robotis_light_value_boolean:
+                '빛감지 센서가 연결된 [포트]의값을 [입력]한 숫자와 비교합니다.',
             robotis_userbutton_value: '사용자 버튼의 값입니다.',
             robotis_userbutton_value_boolean: '사용자 버튼이 [접촉되면/접촉 안되면]을 지정합니다.',
             robotis_detectedsound_value: '소리 센서가 입력받은 실시간 소리 값입니다.',
-            robotis_detectedsound_value_boolean: '소리 센서의 실시간 소리 값과 [입력]한 숫자를 비교합니다.',
+            robotis_detectedsound_value_boolean:
+                '소리 센서의 실시간 소리 값과 [입력]한 숫자를 비교합니다.',
             robotis_detectedsound_value_init: '소리 센서의 최종 소리 값을 초기화합니다.',
             robotis_detectingsound_value: '소리 센서가 입력받은 최종 소리 값입니다.',
-            robotis_detectingsound_value_boolean: '소리 센서의 최종 소리 값과 [입력]한 숫자를 비교합니다.',
+            robotis_detectingsound_value_boolean:
+                '소리 센서의 최종 소리 값과 [입력]한 숫자를 비교합니다.',
             robotis_color_value: '컬러 센서가 연결된 [포트]의 값입니다.',
-            robotis_color_value_boolean: '컬러 센서가 연결된 [포트]의 값을 [선택]한 숫자와 비교합니다.',
+            robotis_color_value_boolean:
+                '컬러 센서가 연결된 [포트]의 값을 [선택]한 숫자와 비교합니다.',
             robotis_humidity_value: '습도 센서가 연결된 [포트]의 값입니다.',
-            robotis_humidity_value_boolean: '습도 센서가 연결된 [포트]의 값을 [입력]한 숫자와 비교합니다.',
+            robotis_humidity_value_boolean:
+                '습도 센서가 연결된 [포트]의 값을 [입력]한 숫자와 비교합니다.',
             robotis_temperature_value: '온도 센서가 연결된 [포트]의 값입니다.',
-            robotis_temperature_value_boolean: '온도 센서가 연결된 [포트]의 값을 [입력]한 숫자와 비교합니다.',
-            robotis_move_for_secs: '연결된 모터의 [방향/속도]를 선택하고 [입력]한 시간만큼 회전시킵니다.\n입력한시간이 끝나면 모터는 정지합니다.',
+            robotis_temperature_value_boolean:
+                '온도 센서가 연결된 [포트]의 값을 [입력]한 숫자와 비교합니다.',
+            robotis_move_for_secs:
+                '연결된 모터의 [방향/속도]를 선택하고 [입력]한 시간만큼 회전시킵니다.\n입력한시간이 끝나면 모터는 정지합니다.',
             robotis_aux_move_for: '연결된 모터의 [방향/속도]를 선택해 회전시킵니다.',
             robotis_aux_stop_for: '모터를 선택해 정지시킵니다',
             robotis_set_servo_wheel: '서보모터의 [포트/방향/속도]를 선택해 회전시킵니다',
