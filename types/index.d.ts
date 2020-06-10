@@ -134,7 +134,7 @@ declare module IEntry {
     }
 
     export interface ExternalModuleManager {
-        loadExternalModule(moduleName: string): Promise<void>;
+        loadModule(moduleName: string): Promise<void>;
         registerHardwareModule(moduleObject: HardwareModule): void;
     }
 

@@ -90,7 +90,7 @@ export default class Hardware implements IEntry.Hardware {
 
     async _loadExternalHardwareBlock(moduleName: string) {
         try {
-            await Entry.moduleManager.loadExternalModule(moduleName);
+            await Entry.moduleManager.loadModule(moduleName);
         } catch (e) {
             Entry.toast.alert(
                 window.Lang.Hw.hw_module_load_fail_title,

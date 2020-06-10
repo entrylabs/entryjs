@@ -1,9 +1,17 @@
-class ModuleManager implements IEntry.ExternalModuleManager {
+type LoadBlockParam = {
+    categoryName: string;
+    blockName: string;
+    block: any;
+    isBlockShow: boolean;
+};
+
+class BlockLoader implements IEntry.ExternalModuleManager {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
      */
-    loadExternalModule(moduleName: string): Promise<void> {
+    // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
+    loadModule(moduleName: string): Promise<void> {
         if (!Entry.EXTERNAL_MODULE_LIST) {
             Entry.EXTERNAL_MODULE_LIST = [];
         } else if (Entry.EXTERNAL_MODULE_LIST.includes(moduleName)) {
@@ -66,17 +74,26 @@ class ModuleManager implements IEntry.ExternalModuleManager {
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
-        const blockMenu = Entry.getMainWS().blockMenu;
 
         Object.entries(blockObjects).forEach(([blockName, block]) => {
-            Entry.block[blockName] = block;
-
-            if (blockMenuBlocks.indexOf(blockName) > -1) {
-                blockMenu.addCategoryData('arduino', blockName);
-            }
+            this.loadBlock({
+                categoryName: 'arduino',
+                isBlockShow: blockMenuBlocks.indexOf(blockName) > -1,
+                blockName,
+                block,
+            });
         });
         Entry.hw.setExternalModule(moduleObject);
         Entry.dispatchEvent('hwChanged');
+    }
+
+    loadBlock({ categoryName, blockName, block, isBlockShow = false }: LoadBlockParam) {
+        const blockMenu = Entry.getMainWS().blockMenu;
+        Entry.block[blockName] = block;
+
+        if (isBlockShow) {
+            blockMenu.addCategoryData(categoryName, blockName);
+        }
     }
 
     /**
@@ -93,7 +110,7 @@ class ModuleManager implements IEntry.ExternalModuleManager {
     }
 }
 
-Entry.moduleManager = new ModuleManager();
+Entry.moduleManager = new BlockLoader();
 
 /**
  * 프로젝트 가 외부 모듈이 사용되었는지 확인하고, 로드한다
@@ -102,5 +119,5 @@ Entry.moduleManager = new ModuleManager();
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
+    await Promise.all(externalModules.map(Entry.moduleManager.loadModule));
 };
