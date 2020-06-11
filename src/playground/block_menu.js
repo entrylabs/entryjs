@@ -13,7 +13,6 @@ class BlockMenu {
         const { hardwareEnable, dataTableEnable } = Entry;
 
         this.reDraw = debounce(this.reDraw, 100);
-        this._dAlign = this.align;
         this._setDynamic = debounce(this._setDynamic, 150);
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
@@ -206,7 +205,7 @@ class BlockMenu {
         delete playground.focusBlockMenu;
     }
 
-    changeCode(code, isImmediate) {
+    changeCode(code) {
         if (code instanceof Array) {
             code = new Entry.Code(code);
         }
@@ -224,11 +223,7 @@ class BlockMenu {
         });
         code.createView(this);
 
-        if (isImmediate) {
-            this.align();
-        } else {
-            this._dAlign();
-        }
+        this.align();
     }
 
     bindCodeView(codeView) {
@@ -586,7 +581,7 @@ class BlockMenu {
 
         const name = this._convertSelector(selector);
         if (selector !== undefined && !name) {
-            this._dAlign();
+            this.align();
             return;
         }
 
@@ -656,7 +651,7 @@ class BlockMenu {
             }
         }
 
-        doNotAlign !== true && this._dAlign();
+        doNotAlign !== true && this.align();
     }
 
     _generateCategoryCodes(elems) {
@@ -754,7 +749,7 @@ class BlockMenu {
         const banned = this._bannedClass;
         if (!_.includes(banned, className)) {
             banned.push(className);
-            doNotAlign !== true && this._dAlign();
+            doNotAlign !== true && this.align();
         }
     }
 
@@ -763,7 +758,7 @@ class BlockMenu {
         const index = banned.indexOf(className);
         if (index > -1) {
             banned.splice(index, 1);
-            doNotAlign !== true && this._dAlign();
+            doNotAlign !== true && this.align();
         }
     }
 
@@ -988,7 +983,7 @@ class BlockMenu {
     setNoCategoryData(data) {
         this._clearCategory();
         Entry.resizeElement();
-        this.changeCode(data, true);
+        this.changeCode(data);
         this.categoryDoneEvent.notify();
     }
 
