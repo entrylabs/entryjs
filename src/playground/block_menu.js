@@ -8,7 +8,7 @@ const splitterHPadding = EntryStatic.splitterHPadding || 20;
 const BETA_LIST = ['ai_utilize', 'analysis'];
 
 class BlockMenu {
-    constructor(dom, align, categoryData, scroll, readOnly) {
+    constructor(dom, align, categoryData, scroll) {
         Entry.Model(this, false);
         const { hardwareEnable, dataTableEnable } = Entry;
 
@@ -24,18 +24,10 @@ class BlockMenu {
         this._dynamicThreads = [];
         this._setDynamicTimer = null;
         this._renderedCategories = {};
-        this.readOnly = readOnly === undefined ? true : readOnly;
         this.scale = 1;
 
         this._threadsMap = {};
-        let $dom;
-
-        if (typeof dom === 'string') {
-            $dom = $(`#${dom}`);
-        } else {
-            $dom = $(dom);
-        }
-
+        const $dom = typeof dom === 'string' ? $(`#${dom}`) : $(dom);
         if ($dom.prop('tagName') !== 'DIV') {
             return console.error('Dom is not div element');
         }
@@ -54,11 +46,7 @@ class BlockMenu {
                 return false;
             }
 
-            if (!hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1) {
-                return false;
-            }
-
-            return true;
+            return !(!hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1);
         });
 
         this._generateView(this._categoryData);
@@ -135,14 +123,11 @@ class BlockMenu {
     }
 
     _generateView(categoryData) {
-        const parent = this.view;
-        const that = this;
-
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             class: 'blockMenuContainer',
-            parent,
+            parent: this.view,
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
         this.blockMenuWrapper = Entry.Dom('div', {
@@ -156,10 +141,10 @@ class BlockMenu {
             ),
             { parent: this.blockMenuWrapper }
         );
-        this.svgDom.mouseenter(function() {
-            that._scroller && that._scroller.setOpacity(0.8);
+        this.svgDom.mouseenter(() => {
+            this._scroller && this._scroller.setOpacity(0.8);
 
-            const selectedBlockView = that.workspace.selectedBlockView;
+            const selectedBlockView = this.workspace.selectedBlockView;
             if (
                 !Entry.playground ||
                 Entry.playground.resizing ||
@@ -169,13 +154,13 @@ class BlockMenu {
                 return;
             }
             Entry.playground.focusBlockMenu = true;
-            const bBox = that.svgGroup.getBBox();
-            const adjust = that.hasCategory() ? 64 : 0;
+            const bBox = this.svgGroup.getBBox();
+            const adjust = this.hasCategory() ? 64 : 0;
             const expandWidth = bBox.width + bBox.x + adjust + 2;
             const { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust - 2;
-                $(that.blockMenuWrapper).css('width', expandWidth - adjust);
+                $(this.blockMenuWrapper).css('width', expandWidth - adjust);
             }
         });
 
@@ -611,9 +596,7 @@ class BlockMenu {
             oldView.addClass(className2);
         }
 
-        doNotFold = doNotFold || !this.hasCategory();
-
-        if (elem == oldView && !doNotFold) {
+        if (elem == oldView && !(doNotFold || !this.hasCategory())) {
             boardView.addClass('folding');
             this._selectedCategoryView = null;
             if (elem) {
@@ -969,8 +952,9 @@ class BlockMenu {
         this._categoryData = null;
     }
 
-    clearCategory = this._clearCategory;
-
+    /**
+     * lms, entry-web 에서 사용 중
+     */
     setCategoryData(data) {
         this._clearCategory();
         this._categoryData = data;
@@ -980,6 +964,9 @@ class BlockMenu {
         Entry.resizeElement();
     }
 
+    /**
+     * lms 에서 사용 중
+     */
     setNoCategoryData(data) {
         this._clearCategory();
         Entry.resizeElement();
