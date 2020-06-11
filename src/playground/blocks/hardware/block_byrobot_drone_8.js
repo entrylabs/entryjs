@@ -37,7 +37,15 @@ Entry.byrobot_drone_8 =
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++)
         {
-            Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
+            if( Entry.hw.portData['state_modeFlight'] == 0x10 )
+            {
+                Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
+            }
+            else
+            {
+                Entry.byrobot_base.transferCommand(0x10, 0x07, 0x12); // 0x12 : FlightEvent::Landing
+            }
+
             Entry.byrobot_base.transferBuzzer(0x10, 0, 0, 0);
             Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
@@ -3153,17 +3161,23 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
-                const time = (distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+				
+				let x = 0;
+				let y = 0;
+				let z = 0;
 
                 switch( controlDirection )
                 {
-                    case 'pitch_forward':   return Entry.byrobot_base.sendControlPosition(script, 0x10, distance, 0, 0, speed, 0, 0, time, true);
-                    case 'pitch_backward':  return Entry.byrobot_base.sendControlPosition(script, 0x10, -distance, 0, 0, speed, 0, 0, time, true);
-                    case 'roll_left':       return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, distance, 0, speed, 0, 0, time, true);
-                    case 'roll_right':      return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, -distance, 0, speed, 0, 0, time, true);
-                    case 'throttle_up':     return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, distance, speed, 0, 0, time, true);
-                    default:                return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, -distance, speed, 0, 0, time, true); // throttle_down
+                    case 'pitch_forward':   x = distance;	break;
+                    case 'pitch_backward':  x = -distance;	break;
+                    case 'roll_left':       y = distance;	break;
+                    case 'roll_right':      y = -distance;	break;
+                    case 'throttle_up':     z = distance;	break;
+                    default:                z = -distance;	break;
                 }
+
+				return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
         },
 
@@ -3176,10 +3190,10 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_yaw_cw,  'yaw_cw'],
-                        [Lang.Blocks.drone_control_quad_yaw_ccw, 'yaw_ccw'],
+                        [Lang.Blocks.drone_control_quad_yaw_cw,  '-1'],
+                        [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
                     ],
-                    value: 'yaw_cw',
+                    value: '+1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3190,28 +3204,31 @@ Entry.byrobot_drone_8.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [null, { type: 'number', params: ['90'] }, { type: 'number', params: ['45'] }, null],
+                params: [
+                    null,
+                    { type: 'number', params: ['90'] },
+                    { type: 'number', params: ['45'] },
+                    null
+                ],
                 type: 'byrobot_drone_8_drone_control_position_turn',
             },
             paramsKeyMap: {
-                CONTROLROTATION: 0,
-                DEGREE: 1,
-                SPEED: 2,
+                DIRECTION_YAW: 0,
+                DEGREE_YAW: 1,
+                SPEED_YAW: 2,
             },
             class: 'control_position',
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const controlRotation = script.getField('CONTROLROTATION');
-                const degree = script.getNumberValue('DEGREE');
-                const speed = script.getNumberValue('SPEED');
-                const time = (degree / speed) * 2 * 1000 + 3000;
+                const directionYaw  = script.getNumberValue('DIRECTION_YAW');
+                const degree        = script.getNumberValue('DEGREE_YAW');
+                const yaw           = directionYaw * degree;
+                const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                switch( controlRotation )
-                {
-                    case 'yaw_ccw':     return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, degree, speed, time, true);
-                    default:            return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, -degree, speed, time, true); // yaw_cw
-                }
+                const time          = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+
+                Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
             },
         },
 
@@ -3297,7 +3314,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
-                const time = (distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
@@ -3312,10 +3329,10 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_pitch_forward,  'pitch_forward'],
-                        [Lang.Blocks.drone_control_quad_pitch_backward, 'pitch_backward'],
+                        [Lang.Blocks.drone_control_quad_pitch_forward,  '+1'],
+                        [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
                     ],
-                    value: 'pitch_forward',
+                    value: '+1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3324,10 +3341,10 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_roll_left,      'roll_left'],
-                        [Lang.Blocks.drone_control_quad_roll_right,     'roll_right'],
+                        [Lang.Blocks.drone_control_quad_roll_left,      '+1'],
+                        [Lang.Blocks.drone_control_quad_roll_right,     '-1'],
                     ],
-                    value: 'roll_left',
+                    value: '+1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3336,10 +3353,10 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_throttle_up,    'throttle_up'],
-                        [Lang.Blocks.drone_control_quad_throttle_down,  'throttle_down'],
+                        [Lang.Blocks.drone_control_quad_throttle_up,    '+1'],
+                        [Lang.Blocks.drone_control_quad_throttle_down,  '-1'],
                     ],
-                    value: 'throttle_up',
+                    value: '+1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3349,10 +3366,10 @@ Entry.byrobot_drone_8.getBlocks = function()
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_control_quad_yaw_cw,  'yaw_cw'],
-                        [Lang.Blocks.drone_control_quad_yaw_ccw, 'yaw_ccw'],
+                        [Lang.Blocks.drone_control_quad_yaw_cw,  '-1'],
+                        [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
                     ],
-                    value: 'yaw_cw',
+                    value: '+1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -3409,9 +3426,10 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const time = Math.max(Math.abs((distance / speed)), Math.abs((degree / speedYaw))) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                const timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                const timeRotation = Math.abs(degree / speedYaw) * 1000 + Math.min(1000 * speed, 3000) + 3000;
 
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, Math.max(timePosition, timeRotation), true);
             },
         },
     };
