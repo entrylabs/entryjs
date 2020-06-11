@@ -1,5 +1,14 @@
 import Visible from '@egjs/visible';
+import compact from 'lodash/compact';
 import debounce from 'lodash/debounce';
+import each from 'lodash/each';
+import isEmpty from 'lodash/isEmpty';
+import identity from 'lodash/identity';
+import result from 'lodash/result';
+import remove from 'lodash/remove';
+import includes from 'lodash/includes';
+import head from 'lodash/head';
+import find from 'lodash/find';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
@@ -36,12 +45,12 @@ class BlockMenu {
 
         this.visible = true;
         this.hwCodeOutdated = false;
-        this._svgId = `blockMenu${_.now()}`;
+        this._svgId = `blockMenu${Date.now()}`;
         this._clearCategory();
 
         // hardwareEnable 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
         // dataTableEnable 이 false 인 경우, anlaysis 카테고리를 제외한다.
-        this._categoryData = _.remove(categoryData, ({ category }) => {
+        this._categoryData = remove(categoryData, ({ category }) => {
             if (!dataTableEnable && category === 'analysis') {
                 return false;
             }
@@ -199,7 +208,7 @@ class BlockMenu {
             return console.error('You must inject code instance');
         }
 
-        _.result(this.codeListener, 'destroy');
+        result(this.codeListener, 'destroy');
 
         const that = this;
         this.set({ code });
@@ -343,7 +352,7 @@ class BlockMenu {
                 const distance = this.offset().top - board.offset().top - $(window).scrollTop();
 
                 const datum = currentThread.toJSON(true);
-                const firstBlock = _.head(datum);
+                const firstBlock = head(datum);
                 firstBlock.x = firstBlock.x - svgWidth + (dx || 0);
                 firstBlock.y = firstBlock.y + distance + (dy || 0);
 
@@ -353,7 +362,7 @@ class BlockMenu {
                 // if some error occured
                 // blockView is not exist
                 if (!newBlockView) {
-                    _.result(newBlock, 'destroy');
+                    result(newBlock, 'destroy');
                     return;
                 }
 
@@ -396,7 +405,7 @@ class BlockMenu {
     }
 
     setSelectedBlock(blockView) {
-        _.result(this.selectedBlockView, 'removeSelected');
+        result(this.selectedBlockView, 'removeSelected');
 
         if (blockView instanceof Entry.BlockView) {
             blockView.addSelected();
@@ -642,7 +651,7 @@ class BlockMenu {
             this.view.addClass('init');
             elems = Object.keys(this._categoryElems);
         }
-        if (_.isEmpty(elems)) {
+        if (isEmpty(elems)) {
             return;
         }
         const key = elems.shift();
@@ -668,7 +677,7 @@ class BlockMenu {
         }
 
         const code = this.code;
-        const blocks = _.result(_.find(this._categoryData, { category }), 'blocks');
+        const blocks = result(find(this._categoryData, { category }), 'blocks');
         if (!blocks) {
             return;
         }
@@ -710,7 +719,7 @@ class BlockMenu {
     }
 
     unbanCategory(category) {
-        const threads = _.result(_.find(this._categoryData, { category }), 'blocks');
+        const threads = result(find(this._categoryData, { category }), 'blocks');
 
         if (!threads) {
             return;
@@ -730,7 +739,7 @@ class BlockMenu {
 
     banClass(className, doNotAlign) {
         const banned = this._bannedClass;
-        if (!_.includes(banned, className)) {
+        if (!includes(banned, className)) {
             banned.push(className);
             doNotAlign !== true && this.align();
         }
@@ -746,15 +755,15 @@ class BlockMenu {
     }
 
     checkBanClass({ isNotFor = [] } = {}) {
-        if (_.isEmpty(isNotFor)) {
+        if (isEmpty(isNotFor)) {
             return false;
         }
 
         const banned = this._bannedClass;
-        isNotFor = isNotFor.filter(_.identity);
+        isNotFor = isNotFor.filter(identity);
 
         for (let i = 0; i < isNotFor.length; i++) {
-            if (!_.includes(banned, isNotFor[i])) {
+            if (!includes(banned, isNotFor[i])) {
                 return false;
             }
         }
@@ -771,7 +780,7 @@ class BlockMenu {
             return true;
         }
 
-        return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
+        return !includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
     }
 
     /**
@@ -937,10 +946,7 @@ class BlockMenu {
         this._categories = [];
         this._threadsMap = {};
 
-        const _removeFunc = _.partial(_.result, _, 'remove');
-
-        _.each(this._categoryElems, _removeFunc);
-
+        each(this._categoryElems, (elem) => elem.remove());
         this._categoryElems = {};
 
         const code = this.code;
@@ -948,7 +954,7 @@ class BlockMenu {
             code.clear();
         }
 
-        _removeFunc(this._categoryCol);
+        this._categoryCol && this._categoryCol.remove();
         this._categoryData = null;
     }
 
@@ -984,7 +990,7 @@ class BlockMenu {
             return;
         }
 
-        _.result(this._categoryCol, 'remove');
+        result(this._categoryCol, 'remove');
 
         // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
         // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
@@ -1010,7 +1016,7 @@ class BlockMenu {
         data.forEach(({ category, visible }) =>
             fragment.appendChild(this._generateCategoryElement(category, visible)[0])
         );
-        this.firstSelector = _.head(data).category;
+        this.firstSelector = head(data).category;
         this._categoryCol[0].appendChild(fragment);
         this.makeScrollIndicator();
     }
@@ -1125,9 +1131,9 @@ class BlockMenu {
             t.destroy();
         });
 
-        const blocks = _.result(_.find(this._categoryData, { category: HW }), 'blocks');
+        const blocks = result(find(this._categoryData, { category: HW }), 'blocks');
 
-        if (_.isEmpty(blocks)) {
+        if (isEmpty(blocks)) {
             return;
         }
 
@@ -1164,17 +1170,12 @@ class BlockMenu {
         let inVisibles;
         let block;
 
-        const _getFirstBlock = _.partial(_.result, _, 'getFirstBlock');
-
-        const allBlocks = _.chain(this._getThreads())
-            .map(_getFirstBlock)
-            .compact()
-            .value();
+        const allBlocks = compact(this._getThreads().map((thread) => thread.getFirstBlock()));
 
         if (this._selectDynamic) {
             const threadsMap = this._threadsMap;
             visibles = this._dynamicThreads.reduce((visibles, type) => {
-                block = _getFirstBlock(threadsMap[type]);
+                block = threadsMap[type].getFirstBlock();
                 if (block) {
                     visibles.push(block);
                 }
@@ -1216,7 +1217,7 @@ class BlockMenu {
                     return keyName;
                 }
             })
-            .filter(_.identity);
+            .filter(identity);
 
         this._selectDynamic = true;
         this.selectMenu(undefined, true);
@@ -1252,7 +1253,7 @@ class BlockMenu {
     }
 
     getDom(query) {
-        if (_.isEmpty(query)) {
+        if (isEmpty(query)) {
             return;
         }
         if (query[0] === 'category') {
@@ -1266,7 +1267,7 @@ class BlockMenu {
     }
 
     getSvgDomByType(blockType, params) {
-        const thread = _.find(this.code.getThreads(), (thread) => {
+        const thread = find(this.code.getThreads(), (thread) => {
             if (!thread) {
                 return;
             }
@@ -1294,7 +1295,7 @@ class BlockMenu {
             return;
         }
 
-        const block = _.head(this.code.getBlockList(false, type));
+        const block = head(this.code.getBlockList(false, type));
         if (!block) {
             return;
         }
