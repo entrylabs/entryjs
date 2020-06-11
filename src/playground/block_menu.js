@@ -18,7 +18,6 @@ class BlockMenu {
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
-        this.setAlign(this._align);
         this._scroll = scroll !== undefined ? scroll : false;
         this._bannedClass = [];
         this._categories = [];
@@ -1165,6 +1164,11 @@ class BlockMenu {
         Entry.dispatchEvent('hwCodeGenerated');
     }
 
+    /**
+     * Ntry systems/entryPlayground.js#loadConfig 에서 사용됨
+     * 그 외에는 쓸모없음
+     * @deprecated
+     */
     setAlign(align) {
         this._align = align || 'CENTER';
     }
