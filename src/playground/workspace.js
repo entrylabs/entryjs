@@ -439,7 +439,10 @@ Entry.Workspace = class Workspace {
                     break;
                 case 219: {
                     //setMode(block) for textcoding ( ctrl + [ )
-                    if (!Entry.options.textCodingEnable) {
+                    if (
+                        !Entry.options.textCodingEnable ||
+                        Entry.playground.getViewMode() === 'picture'
+                    ) {
                         return;
                     }
                     const oldMode = Entry.getMainWS().oldMode;
@@ -456,7 +459,10 @@ Entry.Workspace = class Workspace {
                 }
                 case 221: {
                     //setMode(python) for textcoding ( ctrl + ] )
-                    if (!Entry.options.textCodingEnable) {
+                    if (
+                        !Entry.options.textCodingEnable ||
+                        Entry.playground.getViewMode() === 'picture'
+                    ) {
                         return;
                     }
 
