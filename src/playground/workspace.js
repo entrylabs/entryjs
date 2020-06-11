@@ -178,7 +178,7 @@ Entry.Workspace = class Workspace {
                 const alertMessage =
                     Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
-                    Util.hasExpansionBlocks();
+                    Util.hasNotSupportedBlocks();
 
                 const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
@@ -192,7 +192,10 @@ Entry.Workspace = class Workspace {
                     if (alertMessage.type === 'warning') {
                         entrylms.confirm(alertMessage.message).then((result) => {
                             if (result) {
-                                //Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
+                                Entry.playground.dataTable.removeAllBlocks();
+                                Entry.aiLearning.removeAllBlocks();
                                 changeToPythonMode();
                                 dispatchChangeBoardEvent();
                             } else {
