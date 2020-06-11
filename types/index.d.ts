@@ -60,6 +60,7 @@ declare interface EntryDomOptions {
 }
 
 declare interface EntryDom extends JQuery {
+    innerHTML?: string;
     bindOnClick?: (e: any) => this;
 }
 
@@ -95,6 +96,10 @@ declare module IEntry {
     export interface Playground {
         object?: UnknownAny;
         setMenu?: UnknownFunction;
+        resizing: boolean;
+        checkVariables: () => void;
+        hideTabs: () => void;
+        showTabs: () => void;
     }
 
     /**
@@ -124,6 +129,7 @@ declare module IEntry {
         alert: WSToastFunction;
         warning: WSToastFunction;
         success: WSToastFunction;
+        isOpen: (target?: any) => boolean;
     }
 
     /**
@@ -131,6 +137,9 @@ declare module IEntry {
      */
     export interface EntryOptions {
         hardwareEnable?: boolean;
+        dataTableEnable?: boolean;
+        mediaFilePath?: string;
+        moduleBaseUrl?: string;
     }
 
     export interface ExternalModuleManager {
