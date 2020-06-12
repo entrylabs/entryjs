@@ -1241,7 +1241,7 @@ class BlockMenu extends ModelClass<Schema> {
         let inVisibles: any[];
         let block;
 
-        const allBlocks: any[] = compact(this._getThreads().map((thread: any) => thread.getFirstBlock()));
+        const allBlocks: any[] = compact(this.code.getThreads().map((thread: any) => thread.getFirstBlock()));
 
         if (this._selectDynamic) {
             const threadsMap = this._threadsMap;
@@ -1403,10 +1403,6 @@ class BlockMenu extends ModelClass<Schema> {
 
     getThreadByBlockKey(key: string) {
         return this._threadsMap[key];
-    }
-
-    _getThreads() {
-        return this.code.getThreads();
     }
 
     _createThread(data: any, index?: number, keyName?: string) {
