@@ -1,6 +1,6 @@
 import intersection from 'lodash/intersection';
 
-export default abstract class ModelClass<T extends {[key: string]: any}> {
+export default abstract class ModelClass<T extends { [key: string]: any }> {
     public data: Partial<T>;
     public observers: any[] = []; // new Entry.Observer
     protected schema: T;
@@ -89,13 +89,11 @@ export default abstract class ModelClass<T extends {[key: string]: any}> {
             }
 
             observeData.object[observeData.funcName](
-                attrs.forEach((key) => {
-                    return {
-                        name: key,
-                        object: this,
-                        oldValue: oldValue[key],
-                    };
-                }),
+                attrs.forEach((key) => ({
+                    name: key,
+                    object: this,
+                    oldValue: oldValue[key],
+                }))
             );
         });
     }

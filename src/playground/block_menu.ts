@@ -716,10 +716,10 @@ class BlockMenu extends ModelClass<Schema> {
         }
 
         const banned = this._bannedClass;
-        isNotFor = isNotFor.filter(identity);
+        const filteredIsNotFor = isNotFor.filter(identity);
 
-        for (let i = 0; i < isNotFor.length; i++) {
-            if (!includes(banned, isNotFor[i])) {
+        for (let i = 0; i < filteredIsNotFor.length; i++) {
+            if (!includes(banned, filteredIsNotFor[i])) {
                 return false;
             }
         }
@@ -1135,14 +1135,14 @@ class BlockMenu extends ModelClass<Schema> {
             return selector;
         }
 
-        selector = Number(selector);
+        let selectorNumber = Number(selector);
         const categories = this._categories;
         const elems = this._categoryElems;
         for (let i = 0; i < categories.length; i++) {
             const key = categories[i];
             const visible = !elems[key].hasClass('entryRemove');
             if (visible) {
-                if (selector-- === 0) {
+                if (selectorNumber-- === 0) {
                     return key;
                 }
             }
@@ -1150,22 +1150,23 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     private _generateCategoryCodes(elems?: any[]) {
+        let elemKeys: string[];
         if (!elems) {
             this.view.addClass('init');
-            elems = Object.keys(this._categoryElems);
+            elemKeys = Object.keys(this._categoryElems);
         }
-        if (isEmpty(elems)) {
+        if (isEmpty(elemKeys)) {
             return;
         }
-        const key = elems.shift();
+        const key = elemKeys.shift();
         if (key !== HW) {
             this._generateCategoryCode(key);
         } else {
             this._generateHwCode(true);
         }
 
-        if (elems.length) {
-            this._generateCodesTimer = setTimeout(() => this._generateCategoryCodes(elems), 0);
+        if (elemKeys.length) {
+            this._generateCodesTimer = setTimeout(() => this._generateCategoryCodes(elemKeys), 0);
         } else {
             this._generateCodesTimer = null;
             this.view.removeClass('init');
@@ -1220,13 +1221,13 @@ class BlockMenu extends ModelClass<Schema> {
 
     // WheelEvent?
     private _mouseWheel(e: any) {
-        e = e.originalEvent;
-        e.preventDefault();
+        const originalEvent = e.originalEvent;
+        originalEvent.preventDefault();
         const disposeEvent = Entry.disposeEvent;
         if (disposeEvent) {
-            disposeEvent.notify(e);
+            disposeEvent.notify(originalEvent);
         }
-        this._scroller.scroll(-e.wheelDeltaY || e.deltaY / 3);
+        this._scroller.scroll(-originalEvent.wheelDeltaY || originalEvent.deltaY / 3);
     }
 
     private _captureKeyEvent(e: KeyboardEvent) {
