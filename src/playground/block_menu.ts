@@ -4,7 +4,6 @@ import debounce from 'lodash/debounce';
 import each from 'lodash/each';
 import isEmpty from 'lodash/isEmpty';
 import identity from 'lodash/identity';
-import result from 'lodash/result';
 import remove from 'lodash/remove';
 import includes from 'lodash/includes';
 import head from 'lodash/head';
@@ -18,11 +17,12 @@ const splitterHPadding = EntryStatic.splitterHPadding || 20;
 const BETA_LIST = ['ai_utilize', 'analysis'];
 
 type BlockMenuAlignType = 'LEFT' | 'CENTER';
+
 type CategoryData = {
     category: string;
     blocks: string[];
     visible?: boolean;
-}[];
+};
 
 type Schema = {
     code: any;
@@ -66,7 +66,7 @@ class BlockMenu extends ModelClass<Schema> {
     private _setDynamicTimer: any;
     private _align: BlockMenuAlignType;
     private _categories: any[];
-    private _categoryData: CategoryData;
+    private _categoryData: CategoryData[];
     private _categoryElems: { [categoryName: string]: EntryDom };
     private _selectedCategoryView?: EntryDom;
     private _renderedCategories: { [key: string]: boolean };
@@ -129,7 +129,7 @@ class BlockMenu extends ModelClass<Schema> {
     constructor(
         dom: EntryDom,
         align: BlockMenuAlignType,
-        categoryData: CategoryData,
+        categoryData: CategoryData[],
         scroll: boolean
     ) {
         super(
@@ -253,8 +253,7 @@ class BlockMenu extends ModelClass<Schema> {
             return console.error('You must inject code instance');
         }
 
-        result(this.codeListener, 'destroy');
-
+        this.codeListener?.destory();
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             this.changeEvent.notify();
@@ -401,12 +400,12 @@ class BlockMenu extends ModelClass<Schema> {
                 firstBlock.y = firstBlock.y + distance + (dy || 0);
 
                 const newBlock = Entry.do('addThreadFromBlockMenu', datum).value.getFirstBlock();
-                const newBlockView = newBlock && newBlock.view;
+                const newBlockView = newBlock?.view;
 
                 // if some error occured
                 // blockView is not exist
                 if (!newBlockView) {
-                    result(newBlock, 'destroy');
+                    newBlock?.destory();
                     return;
                 }
 
@@ -449,7 +448,7 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     setSelectedBlock(blockView?: any) {
-        result(this.selectedBlockView, 'removeSelected');
+        this.selectedBlockView?.removeSelected();
 
         if (blockView instanceof Entry.BlockView) {
             blockView.addSelected();
@@ -676,15 +675,15 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     unbanCategory(category: string) {
-        const threads: string[] = result(find(this._categoryData, { category }), 'blocks');
+        const blockList = this._getCategoryBlocks(category);
 
-        if (!threads) {
+        if (!blockList) {
             return;
         }
 
-        const count = threads.reduce(
+        const count = blockList.reduce(
             (count, block) => (this.checkBanClass(Entry.block[block]) ? count - 1 : count),
-            threads.length
+            blockList.length
         );
 
         const categoryElem = this._categoryElems[category];
@@ -751,7 +750,7 @@ class BlockMenu extends ModelClass<Schema> {
         const selectedCategory = this._categoryData.find(
             (element) => element.category === categoryName
         );
-        if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
+        if (selectedCategory?.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
         }
     }
@@ -797,7 +796,7 @@ class BlockMenu extends ModelClass<Schema> {
             e.preventDefault();
         }
 
-        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+        if (e.button === 0 || e.originalEvent?.touches) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown) {
                 Entry.documentMousedown.notify(mouseEvent);
@@ -836,7 +835,7 @@ class BlockMenu extends ModelClass<Schema> {
     /**
      * lms, entry-web 에서 사용 중
      */
-    setCategoryData(data: CategoryData) {
+    setCategoryData(data: CategoryData[]) {
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
@@ -939,7 +938,7 @@ class BlockMenu extends ModelClass<Schema> {
             t.destroy();
         });
 
-        const blocks: string[] = result(find(this._categoryData, { category: HW }), 'blocks');
+        const blocks = this._getCategoryBlocks(HW);
 
         if (isEmpty(blocks)) {
             return;
@@ -1075,7 +1074,7 @@ class BlockMenu extends ModelClass<Schema> {
         }, []);
     }
 
-    private _generateView(categoryData: CategoryData) {
+    private _generateView(categoryData: CategoryData[]) {
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
@@ -1096,13 +1095,13 @@ class BlockMenu extends ModelClass<Schema> {
             { parent: this.blockMenuWrapper }
         );
         this.svgDom.mouseenter(() => {
-            this._scroller && this._scroller.setOpacity(0.8);
+            this._scroller?.setOpacity(0.8);
 
             const selectedBlockView = this.workspace.selectedBlockView;
             if (
                 !Entry.playground ||
                 Entry.playground.resizing ||
-                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG) ||
+                selectedBlockView?.dragMode === Entry.DRAG_MODE_DRAG ||
                 Entry.GlobalSvg.isShow
             ) {
                 return;
@@ -1175,13 +1174,13 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
-    private _generateCategoryCode(category: any) {
+    private _generateCategoryCode(category: string) {
         if (!this._categoryData) {
             return;
         }
 
         const code = this.code;
-        const blocks = result(find(this._categoryData, { category }), 'blocks');
+        const blocks = this._getCategoryBlocks(category);
         if (!blocks) {
             return;
         }
@@ -1268,11 +1267,11 @@ class BlockMenu extends ModelClass<Schema> {
         this._categoryElems = {};
 
         const code = this.code;
-        if (code && code.constructor == Entry.Code) {
+        if (code?.constructor == Entry.Code) {
             code.clear();
         }
 
-        this._categoryCol && this._categoryCol.remove();
+        this._categoryCol?.remove();
         this._categoryData = null;
     }
 
@@ -1281,12 +1280,12 @@ class BlockMenu extends ModelClass<Schema> {
      * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
      * @private
      */
-    private _generateCategoryView(data: CategoryData) {
+    private _generateCategoryView(data: CategoryData[]) {
         if (!data) {
             return;
         }
 
-        result(this._categoryCol, 'remove');
+        this._categoryCol?.remove();
 
         // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
         // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
@@ -1388,14 +1387,14 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     private _registerThreadsMap(type: string, thread: any) {
-        if (!(type && thread && thread.getFirstBlock())) {
+        if (!(type && thread?.getFirstBlock())) {
             return;
         }
         this._threadsMap[type] = thread;
     }
 
     private _deleteThreadsMap(thread: any) {
-        const block = thread && thread.getFirstBlock();
+        const block = thread?.getFirstBlock();
         if (!block) {
             return;
         }
@@ -1411,6 +1410,11 @@ class BlockMenu extends ModelClass<Schema> {
         const thread = this.code.createThread(data, index);
         this._registerThreadsMap(keyName, thread);
         return thread;
+    }
+
+    private _getCategoryBlocks(category: string): string[] | undefined {
+        const selectedCategory = find(this._categoryData, { category });
+        return selectedCategory?.blocks;
     }
 }
 
