@@ -89,7 +89,6 @@ class BlockMenu extends ModelClass<Schema> {
     public codeListener: any; // Entry.Event
 
     constructor(dom: EntryDom, align: BlockMenuAlignType, categoryData: CategoryData, scroll: boolean) {
-        // Entry.Model(this, false);
         super({
             code: null,
             dragBlock: null,
@@ -98,8 +97,6 @@ class BlockMenu extends ModelClass<Schema> {
         }, false);
         const { hardwareEnable, dataTableEnable } = Entry;
 
-        // this.reDraw = debounce(this.reDraw, 100);
-        // this._setDynamic = debounce(this._setDynamic, 150);
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
         this._align = align || 'CENTER';
@@ -109,7 +106,6 @@ class BlockMenu extends ModelClass<Schema> {
         this._dynamicThreads = [];
         this._setDynamicTimer = null;
         this._renderedCategories = {};
-        // this.scale = 1;
 
         this._threadsMap = {};
         const $dom = typeof dom === 'string' ? $(`#${dom}`) : $(dom);
@@ -489,7 +485,7 @@ class BlockMenu extends ModelClass<Schema> {
         this.view.removeClass('entryRemove');
     }
 
-    renderText(blocks: any[]) {
+    renderText(blocks?: any[]) {
         if (!this._isOn()) {
             return;
         }
@@ -512,7 +508,7 @@ class BlockMenu extends ModelClass<Schema> {
         return blocks;
     }
 
-    renderBlock(blocks: any[]) {
+    renderBlock(blocks?: any[]) {
         if (!this._isOn()) {
             return;
         }
@@ -562,9 +558,8 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     _clearSplitters() {
-        const splitters = this._splitters;
-        while (splitters.length) {
-            splitters.pop().remove();
+        while (this._splitters.length) {
+            this._splitters.pop().remove();
         }
     }
 
@@ -736,7 +731,7 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
-    _generateCategoryCode(category: any) {
+    private _generateCategoryCode(category: any) {
         if (!this._categoryData) {
             return;
         }
@@ -933,7 +928,7 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     // WheelEvent?
-    _mouseWheel(e: any) {
+    private _mouseWheel(e: any) {
         e = e.originalEvent;
         e.preventDefault();
         const disposeEvent = Entry.disposeEvent;
@@ -970,7 +965,7 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
-    _captureKeyEvent(e: KeyboardEvent) {
+    private _captureKeyEvent(e: KeyboardEvent) {
         let keyCode = e.code || e.key;
         if (!keyCode) {
             return;
@@ -1002,7 +997,7 @@ class BlockMenu extends ModelClass<Schema> {
         this.pattern.attr({ style: 'display: none' });
     }
 
-    _clearCategory() {
+    private _clearCategory() {
         if (this._generateCodesTimer) {
             clearTimeout(this._generateCodesTimer);
             this._generateCodesTimer = null;
@@ -1051,7 +1046,7 @@ class BlockMenu extends ModelClass<Schema> {
      * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
      * @private
      */
-    _generateCategoryView(data: CategoryData) {
+    private _generateCategoryView(data: CategoryData) {
         if (!data) {
             return;
         }
@@ -1147,7 +1142,7 @@ class BlockMenu extends ModelClass<Schema> {
         });
     }
 
-    _generateCategoryElement(name: string, visible: boolean) {
+    private _generateCategoryElement(name: string, visible: boolean) {
         this._categoryElems[name] = Entry.Dom('li', {
             id: `entryCategory${name}`,
             classes: [
@@ -1229,11 +1224,11 @@ class BlockMenu extends ModelClass<Schema> {
         this._align = align || 'CENTER';
     }
 
-    _isNotVisible(blockInfo: any) {
+    private _isNotVisible(blockInfo: any) {
         return this.checkCategory(blockInfo) || this.checkBanClass(blockInfo);
     }
 
-    _getSortedBlocks(): [any[], any[]] {
+    private _getSortedBlocks(): [any[], any[]] {
         let visibles: any[] = [];
         let inVisibles: any[];
         let block;
@@ -1304,7 +1299,7 @@ class BlockMenu extends ModelClass<Schema> {
         cb && cb();
     }
 
-    _isOn() {
+    private _isOn() {
         return this.view.css('display') !== 'none';
     }
 
@@ -1383,14 +1378,14 @@ class BlockMenu extends ModelClass<Schema> {
         return this.hwCodeOutdated || threads.length === 0;
     }
 
-    _registerThreadsMap(type: string, thread: any) {
+    private _registerThreadsMap(type: string, thread: any) {
         if (!(type && thread && thread.getFirstBlock())) {
             return;
         }
         this._threadsMap[type] = thread;
     }
 
-    _deleteThreadsMap(thread: any) {
+    private _deleteThreadsMap(thread: any) {
         const block = thread && thread.getFirstBlock();
         if (!block) {
             return;
@@ -1402,7 +1397,7 @@ class BlockMenu extends ModelClass<Schema> {
         return this._threadsMap[key];
     }
 
-    _createThread(data: any, index?: number, keyName?: string) {
+    private _createThread(data: any, index?: number, keyName?: string) {
         if (typeof keyName !== 'string') {
             keyName = undefined;
         }
