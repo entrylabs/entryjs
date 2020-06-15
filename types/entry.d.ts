@@ -1,43 +1,44 @@
 /// <reference path="./index.d.ts" />
 
+declare interface EntryOptions {
+    hardwareEnable?: boolean;
+    dataTableEnable?: boolean;
+    mediaFilePath?: string;
+    moduleBaseUrl?: string;
+}
+
 /**
  * 엔트리 실제 인스턴스에 대한 정의
  */
-
-declare var Entry: {
-    HW: new () => IEntry.Hardware;
-    Intro: new () => IEntry.Intro;
-    PropertyPanel: new () => IEntry.PropertyPanel;
-    Pdf: new (filename: string) => IEntry.PDF;
-    BlockMenu: any;
-    BlockView: any;
-    Dom: EntryDomConstructor;
-    Dialog: new (
-        entity: any,
-        message: string | number,
-        mode: 'speak' | 'ask',
-        isStamp: boolean,
-    ) => IEntry.Dialog;
-    SVG: any;
+declare interface IEntry extends EntryOptions {
+    HW: typeof import('../src/class/hw').default;
+    Intro: typeof import('../src/class/intro').default;
+    PropertyPanel: typeof import('../src/class/property_panel').default;
+    Pdf: typeof import('../src/class/pdf').default;
+    BlockMenu: typeof import('../src/playground/block_menu').default;
+    Dom: typeof import('../src/core/dom').default;
+    Dialog: typeof import('../src/class/dialog').default;
+    popupHelper: typeof import('../src/class/popup_helper').default;
+    moduleManager: import('../src/class/moduleManager').default;
     Model: (target: any, isSeal: boolean) => void;
+    BlockView: any;
+    SVG: any;
     Event: any;
     Code: any;
     BlockMenuScroller: any;
-    moduleManager: IEntry.ExternalModuleManager;
-    popupHelper: any; //TODO
 
     // 엔트리 내 클래스들
     skeleton: { [name: string]: ISkeleton };
-    options: IEntry.EntryOptions;
+    options: EntryOptions;
     engine: any;
     toast: IEntry.WorkspaceToast;
     playground: IEntry.Playground;
-    workspace: UnknownAny;
+    workspace: any;
     console: any;
-    propertyPanel: IEntry.PropertyPanel;
+    propertyPanel: import('../src/class/property_panel').default;
     container: IEntry.Container;
     stage: IEntry.Stage;
-    Utils: UnknownAny;
+    Utils: any;
     GlobalSvg: any;
     Workspace: any;
     DragInstance: any;
@@ -45,7 +46,10 @@ declare var Entry: {
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     HARDWARE_LIST: { [hardwareName: string]: any };
     EXTERNAL_MODULE_LIST?: string[];
-    KeyboardCode: {map: {[keyname: string]: number}; codeToKeyCode: {[keyname: string]: number}}
+    KeyboardCode: {
+        map: { [keyname: string]: number };
+        codeToKeyCode: { [keyname: string]: number };
+    };
     events_: any;
     requestUpdate: boolean;
     TEXT_ALIGNS: string[];
@@ -53,7 +57,7 @@ declare var Entry: {
     TEXT_ALIGN_CENTER: number;
     TEXT_ALIGN_RIGHT: number;
     block: { [blockName: string]: any };
-    hw: IEntry.Hardware; // HW instance
+    hw: import('../src/class/hw').default; // HW instance
     interfaceState: { [key: string]: any };
 
     // 엔트리 전역에 할당된 이벤트 객체
@@ -64,7 +68,7 @@ declare var Entry: {
     documentMousedown: any;
 
     // 엔트리 전역에 할당된 상수
-    DRAG_MODE_DRAG: 2 // utils.js
+    DRAG_MODE_DRAG: 2; // utils.js
     DRAG_MODE_NONE: 0;
     DRAG_MODE_MOUSEDOWN: 1;
     type: 'workspace' | string;
@@ -81,7 +85,9 @@ declare var Entry: {
     bindAnimationCallbackOnce(element: any, func: () => void): void;
     createElement<K extends keyof HTMLElementTagNameMap>(
         type: HTMLElement | K,
-        elementId?: string,
+        elementId?: string
     ): HTMLElementTagNameMap[K];
     do(commandName: string, ...args: any[]): any;
-} & IEntry.EntryOptions;
+}
+
+declare var Entry: IEntry;

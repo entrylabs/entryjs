@@ -1419,4 +1419,5 @@ class BlockMenu extends ModelClass<Schema> {
     }
 }
 
+export default BlockMenu;
 Entry.BlockMenu = BlockMenu;
