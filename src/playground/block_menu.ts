@@ -10,9 +10,6 @@ import includes from 'lodash/includes';
 import head from 'lodash/head';
 import find from 'lodash/find';
 import ModelClass from '../core/modelClass';
-import MouseUpEvent = JQuery.MouseUpEvent;
-import MouseMoveEvent = JQuery.MouseMoveEvent;
-import TouchMoveEvent = JQuery.TouchMoveEvent;
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
@@ -887,7 +884,7 @@ class BlockMenu extends ModelClass<Schema> {
         this.svgDom.off(eventType);
     }
 
-    onMouseMove(e: MouseMoveEvent) {
+    onMouseMove(e: JQuery.MouseMoveEvent) {
         if (e.stopPropagation) {
             e.stopPropagation();
         }
@@ -903,7 +900,7 @@ class BlockMenu extends ModelClass<Schema> {
         dragInstance.set({ offsetY: pageY });
     };
 
-    onMouseUp(e: MouseUpEvent) {
+    onMouseUp(e: JQuery.MouseUpEvent) {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
@@ -913,7 +910,7 @@ class BlockMenu extends ModelClass<Schema> {
         }
     };
 
-    onMouseDown(e: TouchMoveEvent) {
+    onMouseDown(e: JQuery.TouchMoveEvent) {
         if (e.preventDefault) {
             e.preventDefault();
         }
