@@ -25,22 +25,27 @@ type CategoryData = {
 }[];
 
 type Schema = {
-    code: any,
-    dragBlock: any,
-    closeBlock: any,
-    selectedBlockView: any,
-}
+    code: any;
+    dragBlock: any;
+    closeBlock: any;
+    selectedBlockView: any;
+};
 
 class BlockMenu extends ModelClass<Schema> {
+    public visible = true;
+    public hwCodeOutdated = false;
+    public code: any;
+    public view: EntryDom;
+    public changeEvent: any; // Entry.Event
+    public categoryDoneEvent: any; // Entry.Event
+    public codeListener: any; // Entry.Event
     private readonly _svgId = `blockMenu${Date.now()}`;
     private readonly suffix = 'blockMenu';
-
     private readonly _dSelectMenu: any;
     private readonly _scroll: boolean;
     private readonly _scroller: any; // Entry.BlockMenuScroller
     private readonly _bannedClass: string[];
     private readonly _splitters: any[];
-
     // view elements
     private svg: any; // Entry.SVG
     private svgDom: EntryDom;
@@ -56,7 +61,6 @@ class BlockMenu extends ModelClass<Schema> {
     private blockMenuContainer: EntryDom;
     private blockMenuWrapper: EntryDom;
     private objectAlert: any;
-
     private _dynamicThreads: any[];
     private _selectDynamic: boolean;
     private _setDynamicTimer: any;
@@ -72,29 +76,71 @@ class BlockMenu extends ModelClass<Schema> {
     private categoryIndicatorVisible: any; // egjs.visible
     private widthBackup: number;
     private lastSelector: string;
+
     private firstSelector: string;
     private workspace: any;
     private dragInstance: any; // Entry.dragInstance
-
     // schema
     private selectedBlockView: any;
     private dragBlock: any;
 
-    public visible = true;
-    public hwCodeOutdated = false;
-    public code: any;
-    public view: EntryDom;
-    public changeEvent: any; // Entry.Event
-    public categoryDoneEvent: any; // Entry.Event
-    public codeListener: any; // Entry.Event
+    _setDynamic = debounce((blocks = []) => {
+        if (!this._isOn()) {
+            return;
+        }
+        let data;
 
-    constructor(dom: EntryDom, align: BlockMenuAlignType, categoryData: CategoryData, scroll: boolean) {
-        super({
-            code: null,
-            dragBlock: null,
-            closeBlock: null,
-            selectedBlockView: null,
-        }, false);
+        this._dynamicThreads = blocks
+            .map((block: any) => {
+                if (typeof block === 'string') {
+                    return block;
+                } else if (block.constructor === Array) {
+                    const keyName = block[0];
+                    if (!this.getThreadByBlockKey(keyName)) {
+                        data = block[1];
+                        data.category = 'extra';
+                        this._createThread([data], undefined, keyName);
+                    }
+                    return keyName;
+                }
+            })
+            .filter(identity);
+
+        this._selectDynamic = true;
+        this.selectMenu(undefined, true);
+    }, 150);
+
+    reDraw = debounce(() => {
+        if (!this._isOn()) {
+            return;
+        }
+
+        let selector = this.lastSelector;
+        if (this._selectDynamic) {
+            selector = undefined;
+        }
+
+        this.selectMenu(selector, true);
+        this._getSortedBlocks()
+            .shift()
+            .forEach(({ view }) => view.reDraw());
+    }, 100);
+
+    constructor(
+        dom: EntryDom,
+        align: BlockMenuAlignType,
+        categoryData: CategoryData,
+        scroll: boolean
+    ) {
+        super(
+            {
+                code: null,
+                dragBlock: null,
+                closeBlock: null,
+                selectedBlockView: null,
+            },
+            false
+        );
         const { hardwareEnable, dataTableEnable } = Entry;
 
         this._dSelectMenu = debounce(this.selectMenu, 0);
@@ -115,7 +161,6 @@ class BlockMenu extends ModelClass<Schema> {
 
         this.view = $dom;
 
-
         this._clearCategory();
 
         // hardwareEnable 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
@@ -125,7 +170,9 @@ class BlockMenu extends ModelClass<Schema> {
                 return false;
             }
 
-            return !(!hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1);
+            return !(
+                !hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1
+            );
         });
 
         this._generateView(this._categoryData);
@@ -152,7 +199,6 @@ class BlockMenu extends ModelClass<Schema> {
         this.changeEvent = new Entry.Event(this);
         this.categoryDoneEvent = new Entry.Event(this);
 
-        //@ts-ignore
         this.observe(this, '_handleDragBlock', ['dragBlock']);
 
         this.changeCode(new Entry.Code([]));
@@ -174,74 +220,11 @@ class BlockMenu extends ModelClass<Schema> {
             'setBlockMenuDynamic',
             function() {
                 this._setDynamicTimer = this._setDynamic.apply(this, arguments);
-            }.bind(this),
+            }.bind(this)
         );
 
         Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
         Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
-    }
-
-    _buildCategoryCodes(blocks: any, category: string) {
-        return blocks.reduce((threads: any, type: string) => {
-            const block = Entry.block[type];
-            if (!block || !block.def) {
-                return [...threads, [{ type, category }]];
-            } else {
-                return (block.defs || [block.def]).reduce(
-                    (threads: any, d: any) => [...threads, [Object.assign(d, { category })]],
-                    threads,
-                );
-            }
-        }, []);
-    }
-
-    _generateView(categoryData: CategoryData) {
-        categoryData && this._generateCategoryView(categoryData);
-
-        this.blockMenuContainer = Entry.Dom('div', {
-            class: 'blockMenuContainer',
-            parent: this.view,
-        });
-        Entry.Utils.disableContextmenu(this.blockMenuContainer);
-        this.blockMenuWrapper = Entry.Dom('div', {
-            class: 'blockMenuWrapper',
-            parent: this.blockMenuContainer,
-        });
-
-        this.svgDom = Entry.Dom(
-            $(
-                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`,
-            ),
-            { parent: this.blockMenuWrapper },
-        );
-        this.svgDom.mouseenter(() => {
-            this._scroller && this._scroller.setOpacity(0.8);
-
-            const selectedBlockView = this.workspace.selectedBlockView;
-            if (
-                !Entry.playground ||
-                Entry.playground.resizing ||
-                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG) ||
-                Entry.GlobalSvg.isShow
-            ) {
-                return;
-            }
-            const bBox = this.svgGroup.getBBox();
-            const adjust = this.hasCategory() ? 64 : 0;
-            const expandWidth = bBox.width + bBox.x + adjust + 2;
-            const { menuWidth } = Entry.interfaceState;
-            if (expandWidth > menuWidth) {
-                this.widthBackup = menuWidth - adjust - 2;
-                $(this.blockMenuWrapper).css('width', expandWidth - adjust);
-            }
-        });
-
-        this.svgDom.mouseleave(() => {
-            this.foldBlockMenu();
-        });
-
-        Entry.Utils.bindBlockViewHoverEvent(this, this.svgDom);
-        $(window).scroll(this.updateOffset.bind(this));
     }
 
     foldBlockMenu() {
@@ -254,11 +237,11 @@ class BlockMenu extends ModelClass<Schema> {
             this._scroller.setOpacity(0);
         }
 
-        const widthBackup = this.svg.widthBackup;
+        const widthBackup = this.widthBackup;
         if (widthBackup) {
             $(this.blockMenuWrapper).css('width', widthBackup);
         }
-        delete this.svg.widthBackup;
+        delete this.widthBackup;
     }
 
     changeCode(code: any) {
@@ -372,7 +355,7 @@ class BlockMenu extends ModelClass<Schema> {
     cloneToGlobal(e: any) {
         const blockView = this.dragBlock;
         if (this._boardBlockView || blockView === null) {
-            if (this.svg.widthBackup) {
+            if (this.widthBackup) {
                 this.foldBlockMenu();
             }
             return;
@@ -394,7 +377,7 @@ class BlockMenu extends ModelClass<Schema> {
                 if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
                     this.objectAlert = Entry.toast.alert(
                         Lang.Workspace.add_object_alert,
-                        Lang.Workspace.add_object_alert_msg,
+                        Lang.Workspace.add_object_alert_msg
                     );
                 }
                 if (this.selectedBlockView) {
@@ -540,7 +523,7 @@ class BlockMenu extends ModelClass<Schema> {
                 x2: this._svgWidth - splitterHPadding,
                 y2: topPos,
                 stroke: common.SPLITTER || '#AAC5D5',
-            }),
+            })
         );
     }
 
@@ -555,12 +538,6 @@ class BlockMenu extends ModelClass<Schema> {
                 y2: yDest,
             });
         });
-    }
-
-    _clearSplitters() {
-        while (this._splitters.length) {
-            this._splitters.pop().remove();
-        }
     }
 
     setWidth() {
@@ -584,7 +561,7 @@ class BlockMenu extends ModelClass<Schema> {
             const inVisible =
                 threads.reduce(
                     (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
-                    threads.length,
+                    threads.length
                 ) === 0;
             const elem = this._categoryElems[category];
 
@@ -602,25 +579,6 @@ class BlockMenu extends ModelClass<Schema> {
             sorted[1].forEach((elem) => elem.addClass('entryRemove'));
             this.selectMenu(0, true, doNotAlign);
         });
-    }
-
-    _convertSelector(selector: number | string) {
-        if (!Entry.Utils.isNumber(selector)) {
-            return selector;
-        }
-
-        selector = Number(selector);
-        const categories = this._categories;
-        const elems = this._categoryElems;
-        for (let i = 0; i < categories.length; i++) {
-            const key = categories[i];
-            const visible = !elems[key].hasClass('entryRemove');
-            if (visible) {
-                if (selector-- === 0) {
-                    return key;
-                }
-            }
-        }
     }
 
     selectMenu(selector: number | string, doNotFold: boolean, doNotAlign?: boolean) {
@@ -706,67 +664,6 @@ class BlockMenu extends ModelClass<Schema> {
         doNotAlign !== true && this.align();
     }
 
-    _generateCategoryCodes(elems?: any[]) {
-        if (!elems) {
-            this.view.addClass('init');
-            elems = Object.keys(this._categoryElems);
-        }
-        if (isEmpty(elems)) {
-            return;
-        }
-        const key = elems.shift();
-        if (key !== HW) {
-            this._generateCategoryCode(key);
-        } else {
-            this._generateHwCode(true);
-        }
-
-        if (elems.length) {
-            this._generateCodesTimer = setTimeout(() => this._generateCategoryCodes(elems), 0);
-        } else {
-            this._generateCodesTimer = null;
-            this.view.removeClass('init');
-            this.align();
-            this.categoryDoneEvent.notify();
-        }
-    }
-
-    private _generateCategoryCode(category: any) {
-        if (!this._categoryData) {
-            return;
-        }
-
-        const code = this.code;
-        const blocks = result(find(this._categoryData, { category }), 'blocks');
-        if (!blocks) {
-            return;
-        }
-
-        this._categories.push(category);
-
-        let index: number;
-        if (category === 'func') {
-            const threads = this.code.getThreadsByCategory('func');
-            if (threads.length) {
-                index = this.code.getThreadIndex(threads[0]);
-            }
-        }
-
-        this._buildCategoryCodes(blocks, category).forEach((t: any) => {
-            if (!t || !t[0]) {
-                return;
-            }
-            t[0].x = -99999;
-            this._createThread(t, index);
-            if (index !== undefined) {
-                index++;
-            }
-            delete t[0].x;
-        });
-
-        code.changeEvent.notify();
-    }
-
     banCategory(categoryName: string) {
         const categoryElem = this._categoryElems[categoryName];
         if (!categoryElem) {
@@ -787,7 +684,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         const count = threads.reduce(
             (count, block) => (this.checkBanClass(Entry.block[block]) ? count - 1 : count),
-            threads.length,
+            threads.length
         );
 
         const categoryElem = this._categoryElems[category];
@@ -852,20 +749,10 @@ class BlockMenu extends ModelClass<Schema> {
      */
     addCategoryData(categoryName: string, blockName: string) {
         const selectedCategory = this._categoryData.find(
-            (element) => element.category === categoryName,
+            (element) => element.category === categoryName
         );
         if (selectedCategory && selectedCategory.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
-        }
-    }
-
-    _addControl(dom: EntryDom) {
-        const { _mouseWheel, onMouseDown, _scroller } = this;
-
-        dom.on('wheel', _mouseWheel.bind(this));
-
-        if (_scroller) {
-            $(this.svg).bind('mousedown touchstart', onMouseDown.bind(this));
         }
     }
 
@@ -893,7 +780,7 @@ class BlockMenu extends ModelClass<Schema> {
         const dragInstance = this.dragInstance;
         this._scroller.scroll(-pageY + dragInstance.offsetY);
         dragInstance.set({ offsetY: pageY });
-    };
+    }
 
     onMouseUp(e: JQuery.MouseUpEvent) {
         if (Entry.isMobile()) {
@@ -903,7 +790,7 @@ class BlockMenu extends ModelClass<Schema> {
             $(document).unbind('.blockMenu');
             delete this.dragInstance;
         }
-    };
+    }
 
     onMouseDown(e: JQuery.TouchMoveEvent) {
         if (e.preventDefault) {
@@ -927,65 +814,14 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
-    // WheelEvent?
-    private _mouseWheel(e: any) {
-        e = e.originalEvent;
-        e.preventDefault();
-        const disposeEvent = Entry.disposeEvent;
-        if (disposeEvent) {
-            disposeEvent.notify(e);
-        }
-        this._scroller.scroll(-e.wheelDeltaY || e.deltaY / 3);
-    }
-
     dominate({ view: { svgGroup } }: any) {
         this.svgBlockGroup.appendChild(svgGroup);
     }
-
-    reDraw = debounce(() => {
-        if (!this._isOn()) {
-            return;
-        }
-
-        let selector = this.lastSelector;
-        if (this._selectDynamic) {
-            selector = undefined;
-        }
-
-        this.selectMenu(selector, true);
-        this._getSortedBlocks()
-            .shift()
-            .forEach(({ view }) => view.reDraw());
-    }, 100);
 
     _handleDragBlock() {
         this._boardBlockView = null;
         if (this._scroller) {
             this._scroller.setOpacity(0);
-        }
-    }
-
-    private _captureKeyEvent(e: KeyboardEvent) {
-        let keyCode = e.code || e.key;
-        if (!keyCode) {
-            return;
-        }
-        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-            keyCode = keyCode.replace('Left', '');
-            keyCode = keyCode.replace('Right', '');
-        }
-        keyCode = keyCode.replace('Digit', '');
-        keyCode = keyCode.replace('Numpad', '');
-        const entryKeyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
-        if (!entryKeyCode) {
-            return;
-        }
-        if (e.ctrlKey && Entry.type === 'workspace' && !isNaN(Number(entryKeyCode))) {
-            e.preventDefault();
-            setTimeout(() => {
-                this._cancelDynamic(true);
-                this._dSelectMenu(entryKeyCode, true);
-            }, 200);
         }
     }
 
@@ -995,28 +831,6 @@ class BlockMenu extends ModelClass<Schema> {
 
     disablePattern() {
         this.pattern.attr({ style: 'display: none' });
-    }
-
-    private _clearCategory() {
-        if (this._generateCodesTimer) {
-            clearTimeout(this._generateCodesTimer);
-            this._generateCodesTimer = null;
-        }
-
-        this._selectedCategoryView = null;
-        this._categories = [];
-        this._threadsMap = {};
-
-        each(this._categoryElems, (elem) => elem.remove());
-        this._categoryElems = {};
-
-        const code = this.code;
-        if (code && code.constructor == Entry.Code) {
-            code.clear();
-        }
-
-        this._categoryCol && this._categoryCol.remove();
-        this._categoryData = null;
     }
 
     /**
@@ -1039,47 +853,6 @@ class BlockMenu extends ModelClass<Schema> {
         Entry.resizeElement();
         this.changeCode(data);
         this.categoryDoneEvent.notify();
-    }
-
-    /**
-     * 카테고리의 목록 뷰를 그린다.
-     * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
-     * @private
-     */
-    private _generateCategoryView(data: CategoryData) {
-        if (!data) {
-            return;
-        }
-
-        result(this._categoryCol, 'remove');
-
-        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
-        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
-        if (!this.categoryWrapper) {
-            this.categoryWrapper = Entry.Dom('div', {
-                class: 'entryCategoryListWorkspace',
-            });
-        } else {
-            this.categoryWrapper.innerHTML = '';
-        }
-
-        this._categoryCol = Entry.Dom('ul', {
-            class: 'entryCategoryList',
-            parent: this.categoryWrapper,
-        });
-        this.view.prepend(this.categoryWrapper);
-
-        const fragment = document.createDocumentFragment();
-
-        /*
-        visible = static_mini 의 실과형 하드웨어에서만 사용됩니다. (EntryStatic 에 책임)
-         */
-        data.forEach(({ category, visible }) =>
-            fragment.appendChild(this._generateCategoryElement(category, visible)[0]),
-        );
-        this.firstSelector = head(data).category;
-        this._categoryCol[0].appendChild(fragment);
-        this.makeScrollIndicator();
     }
 
     makeScrollIndicator() {
@@ -1123,7 +896,7 @@ class BlockMenu extends ModelClass<Schema> {
             'scroll',
             debounce(() => {
                 this.categoryIndicatorVisible.check();
-            }, 100),
+            }, 100)
         );
         setTimeout(() => {
             this.categoryIndicatorVisible.check();
@@ -1140,34 +913,6 @@ class BlockMenu extends ModelClass<Schema> {
                 });
             }
         });
-    }
-
-    private _generateCategoryElement(name: string, visible: boolean) {
-        this._categoryElems[name] = Entry.Dom('li', {
-            id: `entryCategory${name}`,
-            classes: [
-                'entryCategoryElementWorkspace',
-                'entryRemove',
-                visible === false ? 'entryRemoveCategory' : '',
-            ],
-        })
-            .bindOnClick(() => {
-                this._cancelDynamic(true, () => {
-                    this.selectMenu(name, undefined, true);
-                    this.align();
-                });
-            })
-            .text(Lang.Blocks[name.toUpperCase()]);
-        if (BETA_LIST.includes(name)) {
-            this._categoryElems[name][0].appendChild(
-                Entry.Dom('div', {
-                    id: `entryCategory${name}BetaTag`,
-                    classes: ['entryCategoryBetaTag'],
-                })[0],
-            );
-        }
-
-        return this._categoryElems[name];
     }
 
     updateOffset() {
@@ -1202,7 +947,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         this._buildCategoryCodes(
             blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
-            HW,
+            HW
         ).forEach((t: any) => {
             if (shouldHide) {
                 t[0].x = -99999;
@@ -1224,68 +969,6 @@ class BlockMenu extends ModelClass<Schema> {
         this._align = align || 'CENTER';
     }
 
-    private _isNotVisible(blockInfo: any) {
-        return this.checkCategory(blockInfo) || this.checkBanClass(blockInfo);
-    }
-
-    private _getSortedBlocks(): [any[], any[]] {
-        let visibles: any[] = [];
-        let inVisibles: any[];
-        let block;
-
-        const allBlocks: any[] = compact(this.code.getThreads().map((thread: any) => thread.getFirstBlock()));
-
-        if (this._selectDynamic) {
-            const threadsMap = this._threadsMap;
-            visibles = this._dynamicThreads.reduce((visibles, type) => {
-                block = threadsMap[type].getFirstBlock();
-                if (block) {
-                    visibles.push(block);
-                }
-                return visibles;
-            }, []);
-
-            inVisibles = allBlocks;
-        } else {
-            inVisibles = [];
-            allBlocks.forEach((block) => {
-                if (!this._isNotVisible(Entry.block[block.type])) {
-                    visibles.push(block);
-                } else {
-                    inVisibles.push(block);
-                }
-            });
-        }
-
-        return [visibles, inVisibles];
-    }
-
-    _setDynamic = debounce((blocks = []) => {
-        if (!this._isOn()) {
-            return;
-        }
-        let data;
-
-        this._dynamicThreads = blocks
-            .map((block: any) => {
-                if (typeof block === 'string') {
-                    return block;
-                } else if (block.constructor === Array) {
-                    const keyName = block[0];
-                    if (!this.getThreadByBlockKey(keyName)) {
-                        data = block[1];
-                        data.category = 'extra';
-                        this._createThread([data], undefined, keyName);
-                    }
-                    return keyName;
-                }
-            })
-            .filter(identity);
-
-        this._selectDynamic = true;
-        this.selectMenu(undefined, true);
-    }, 150);
-
     _cancelDynamic(fromElement: boolean, cb?: () => void) {
         if (this._setDynamicTimer) {
             clearTimeout(this._setDynamicTimer);
@@ -1297,10 +980,6 @@ class BlockMenu extends ModelClass<Schema> {
             this.selectMenu(this.lastSelector, true);
         }
         cb && cb();
-    }
-
-    private _isOn() {
-        return this.view.css('display') !== 'none';
     }
 
     deleteRendered(name: string) {
@@ -1378,6 +1057,336 @@ class BlockMenu extends ModelClass<Schema> {
         return this.hwCodeOutdated || threads.length === 0;
     }
 
+    getThreadByBlockKey(key: string) {
+        return this._threadsMap[key];
+    }
+
+    private _buildCategoryCodes(blocks: any, category: string) {
+        return blocks.reduce((threads: any, type: string) => {
+            const block = Entry.block[type];
+            if (!block || !block.def) {
+                return [...threads, [{ type, category }]];
+            } else {
+                return (block.defs || [block.def]).reduce(
+                    (threads: any, d: any) => [...threads, [Object.assign(d, { category })]],
+                    threads
+                );
+            }
+        }, []);
+    }
+
+    private _generateView(categoryData: CategoryData) {
+        categoryData && this._generateCategoryView(categoryData);
+
+        this.blockMenuContainer = Entry.Dom('div', {
+            class: 'blockMenuContainer',
+            parent: this.view,
+        });
+        Entry.Utils.disableContextmenu(this.blockMenuContainer);
+        this.blockMenuWrapper = Entry.Dom('div', {
+            class: 'blockMenuWrapper',
+            parent: this.blockMenuContainer,
+        });
+
+        this.svgDom = Entry.Dom(
+            $(
+                // eslint-disable-next-line max-len
+                `<svg id="${this._svgId}" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+            ),
+            { parent: this.blockMenuWrapper }
+        );
+        this.svgDom.mouseenter(() => {
+            this._scroller && this._scroller.setOpacity(0.8);
+
+            const selectedBlockView = this.workspace.selectedBlockView;
+            if (
+                !Entry.playground ||
+                Entry.playground.resizing ||
+                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG) ||
+                Entry.GlobalSvg.isShow
+            ) {
+                return;
+            }
+            const bBox = this.svgGroup.getBBox();
+            const adjust = this.hasCategory() ? 64 : 0;
+            const expandWidth = bBox.width + bBox.x + adjust + 2;
+            const { menuWidth } = Entry.interfaceState;
+            if (expandWidth > menuWidth) {
+                this.widthBackup = menuWidth - adjust - 2;
+                $(this.blockMenuWrapper).css('width', expandWidth - adjust);
+            }
+        });
+
+        this.svgDom.mouseleave(() => {
+            this.foldBlockMenu();
+        });
+
+        Entry.Utils.bindBlockViewHoverEvent(this, this.svgDom);
+        $(window).scroll(this.updateOffset.bind(this));
+    }
+
+    private _clearSplitters() {
+        while (this._splitters.length) {
+            this._splitters.pop().remove();
+        }
+    }
+
+    private _convertSelector(selector: number | string) {
+        if (!Entry.Utils.isNumber(selector)) {
+            return selector;
+        }
+
+        selector = Number(selector);
+        const categories = this._categories;
+        const elems = this._categoryElems;
+        for (let i = 0; i < categories.length; i++) {
+            const key = categories[i];
+            const visible = !elems[key].hasClass('entryRemove');
+            if (visible) {
+                if (selector-- === 0) {
+                    return key;
+                }
+            }
+        }
+    }
+
+    private _generateCategoryCodes(elems?: any[]) {
+        if (!elems) {
+            this.view.addClass('init');
+            elems = Object.keys(this._categoryElems);
+        }
+        if (isEmpty(elems)) {
+            return;
+        }
+        const key = elems.shift();
+        if (key !== HW) {
+            this._generateCategoryCode(key);
+        } else {
+            this._generateHwCode(true);
+        }
+
+        if (elems.length) {
+            this._generateCodesTimer = setTimeout(() => this._generateCategoryCodes(elems), 0);
+        } else {
+            this._generateCodesTimer = null;
+            this.view.removeClass('init');
+            this.align();
+            this.categoryDoneEvent.notify();
+        }
+    }
+
+    private _generateCategoryCode(category: any) {
+        if (!this._categoryData) {
+            return;
+        }
+
+        const code = this.code;
+        const blocks = result(find(this._categoryData, { category }), 'blocks');
+        if (!blocks) {
+            return;
+        }
+
+        this._categories.push(category);
+
+        let index: number;
+        if (category === 'func') {
+            const threads = this.code.getThreadsByCategory('func');
+            if (threads.length) {
+                index = this.code.getThreadIndex(threads[0]);
+            }
+        }
+
+        this._buildCategoryCodes(blocks, category).forEach((t: any) => {
+            if (!t || !t[0]) {
+                return;
+            }
+            t[0].x = -99999;
+            this._createThread(t, index);
+            if (index !== undefined) {
+                index++;
+            }
+            delete t[0].x;
+        });
+
+        code.changeEvent.notify();
+    }
+
+    private _addControl(dom: EntryDom) {
+        dom.on('wheel', this._mouseWheel.bind(this));
+
+        if (this._scroller) {
+            $(this.svg).bind('mousedown touchstart', this.onMouseDown.bind(this));
+        }
+    }
+
+    // WheelEvent?
+    private _mouseWheel(e: any) {
+        e = e.originalEvent;
+        e.preventDefault();
+        const disposeEvent = Entry.disposeEvent;
+        if (disposeEvent) {
+            disposeEvent.notify(e);
+        }
+        this._scroller.scroll(-e.wheelDeltaY || e.deltaY / 3);
+    }
+
+    private _captureKeyEvent(e: KeyboardEvent) {
+        let keyCode = e.code || e.key;
+        if (!keyCode) {
+            return;
+        }
+        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
+            keyCode = keyCode.replace('Left', '');
+            keyCode = keyCode.replace('Right', '');
+        }
+        keyCode = keyCode.replace('Digit', '');
+        keyCode = keyCode.replace('Numpad', '');
+        const entryKeyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        if (!entryKeyCode) {
+            return;
+        }
+        if (e.ctrlKey && Entry.type === 'workspace' && !isNaN(Number(entryKeyCode))) {
+            e.preventDefault();
+            setTimeout(() => {
+                this._cancelDynamic(true);
+                this._dSelectMenu(entryKeyCode, true);
+            }, 200);
+        }
+    }
+
+    private _clearCategory() {
+        if (this._generateCodesTimer) {
+            clearTimeout(this._generateCodesTimer);
+            this._generateCodesTimer = null;
+        }
+
+        this._selectedCategoryView = null;
+        this._categories = [];
+        this._threadsMap = {};
+
+        each(this._categoryElems, (elem) => elem.remove());
+        this._categoryElems = {};
+
+        const code = this.code;
+        if (code && code.constructor == Entry.Code) {
+            code.clear();
+        }
+
+        this._categoryCol && this._categoryCol.remove();
+        this._categoryData = null;
+    }
+
+    /**
+     * 카테고리의 목록 뷰를 그린다.
+     * @param data {{category: string, blocks: object[]}[]} EntryStatic.getAllBlocks
+     * @private
+     */
+    private _generateCategoryView(data: CategoryData) {
+        if (!data) {
+            return;
+        }
+
+        result(this._categoryCol, 'remove');
+
+        // 카테고리가 이미 만들어져있는 상태에서 데이터만 새로 추가된 경우,
+        // categoryWrapper 는 살리고 내부 컬럼 엘리먼트만 치환한다.
+        if (!this.categoryWrapper) {
+            this.categoryWrapper = Entry.Dom('div', {
+                class: 'entryCategoryListWorkspace',
+            });
+        } else {
+            this.categoryWrapper.innerHTML = '';
+        }
+
+        this._categoryCol = Entry.Dom('ul', {
+            class: 'entryCategoryList',
+            parent: this.categoryWrapper,
+        });
+        this.view.prepend(this.categoryWrapper);
+
+        const fragment = document.createDocumentFragment();
+
+        /*
+        visible = static_mini 의 실과형 하드웨어에서만 사용됩니다. (EntryStatic 에 책임)
+         */
+        data.forEach(({ category, visible }) =>
+            fragment.appendChild(this._generateCategoryElement(category, visible)[0])
+        );
+        this.firstSelector = head(data).category;
+        this._categoryCol[0].appendChild(fragment);
+        this.makeScrollIndicator();
+    }
+
+    private _generateCategoryElement(name: string, visible: boolean) {
+        this._categoryElems[name] = Entry.Dom('li', {
+            id: `entryCategory${name}`,
+            classes: [
+                'entryCategoryElementWorkspace',
+                'entryRemove',
+                visible === false ? 'entryRemoveCategory' : '',
+            ],
+        })
+            .bindOnClick(() => {
+                this._cancelDynamic(true, () => {
+                    this.selectMenu(name, undefined, true);
+                    this.align();
+                });
+            })
+            .text(Lang.Blocks[name.toUpperCase()]);
+        if (BETA_LIST.includes(name)) {
+            this._categoryElems[name][0].appendChild(
+                Entry.Dom('div', {
+                    id: `entryCategory${name}BetaTag`,
+                    classes: ['entryCategoryBetaTag'],
+                })[0]
+            );
+        }
+
+        return this._categoryElems[name];
+    }
+
+    private _isNotVisible(blockInfo: any) {
+        return this.checkCategory(blockInfo) || this.checkBanClass(blockInfo);
+    }
+
+    private _getSortedBlocks(): [any[], any[]] {
+        let visibles: any[] = [];
+        let inVisibles: any[];
+        let block;
+
+        const allBlocks: any[] = compact(
+            this.code.getThreads().map((thread: any) => thread.getFirstBlock())
+        );
+
+        if (this._selectDynamic) {
+            const threadsMap = this._threadsMap;
+            visibles = this._dynamicThreads.reduce((visibles, type) => {
+                block = threadsMap[type].getFirstBlock();
+                if (block) {
+                    visibles.push(block);
+                }
+                return visibles;
+            }, []);
+
+            inVisibles = allBlocks;
+        } else {
+            inVisibles = [];
+            allBlocks.forEach((block) => {
+                if (!this._isNotVisible(Entry.block[block.type])) {
+                    visibles.push(block);
+                } else {
+                    inVisibles.push(block);
+                }
+            });
+        }
+
+        return [visibles, inVisibles];
+    }
+
+    private _isOn() {
+        return this.view.css('display') !== 'none';
+    }
+
     private _registerThreadsMap(type: string, thread: any) {
         if (!(type && thread && thread.getFirstBlock())) {
             return;
@@ -1391,10 +1400,6 @@ class BlockMenu extends ModelClass<Schema> {
             return;
         }
         delete this._threadsMap[block.type];
-    }
-
-    getThreadByBlockKey(key: string) {
-        return this._threadsMap[key];
     }
 
     private _createThread(data: any, index?: number, keyName?: string) {
