@@ -746,12 +746,16 @@ class BlockMenu extends ModelClass<Schema> {
      * @param categoryName {string}
      * @param blockName {string}
      */
-    addCategoryData(categoryName: string, blockName: string) {
+    addCategoryData(categoryName: string, blockName: string, block: any) {
         const selectedCategory = this._categoryData.find(
             (element) => element.category === categoryName
         );
         if (selectedCategory?.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
+        }
+
+        if (!this.getThreadByBlockKey(blockName)) {
+            this._createThread([block]);
         }
     }
 

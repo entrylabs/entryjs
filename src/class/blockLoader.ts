@@ -2,7 +2,8 @@ type LoadBlockParam = {
     categoryName: string;
     blockName: string;
     block: any;
-    isBlockShow: boolean;
+    isBlockShow?: boolean;
+    needRedraw?: boolean;
 };
 
 class BlockLoader {
@@ -87,12 +88,27 @@ class BlockLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
-    loadBlock({ categoryName, blockName, block, isBlockShow = false }: LoadBlockParam) {
+    loadBlock({ categoryName, blockName, block, isBlockShow = false, needRedraw = false }: LoadBlockParam) {
         const blockMenu = Entry.getMainWS().blockMenu;
+
+        // 블록을 BlockMenu thread 에 포함시키려면 이 값이 필요함 (key 로 사용됨)
+        if (!block.type) {
+            block.type = blockName;
+        }
+
+        // BlockMenu 가 블록의 표기상태를 찾을때 사용함.
+        if (!block.isFor) {
+            block.isFor = [`category_${categoryName}`];
+        }
+
         Entry.block[blockName] = block;
 
         if (isBlockShow) {
-            blockMenu.addCategoryData(categoryName, blockName);
+            blockMenu.addCategoryData(categoryName, blockName, block);
+        }
+
+        if (needRedraw) {
+            blockMenu.reDraw();
         }
     }
 
