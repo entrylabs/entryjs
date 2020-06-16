@@ -745,6 +745,7 @@ class BlockMenu extends ModelClass<Schema> {
      * Entry.block 목록에 실제 데이터가 있는지, blockMenu 의 그리기 갱신이 필요한지는 상관하지 않는다.
      * @param categoryName {string}
      * @param blockName {string}
+     * @param block {Entry.Block}
      */
     addCategoryData(categoryName: string, blockName: string, block: any) {
         const selectedCategory = this._categoryData.find(
@@ -755,7 +756,8 @@ class BlockMenu extends ModelClass<Schema> {
         }
 
         if (!this.getThreadByBlockKey(blockName)) {
-            this._createThread([block]);
+            const threadDatum = this._buildCategoryCodes([blockName], categoryName);
+            this._createThread(threadDatum[0]);
         }
     }
 
