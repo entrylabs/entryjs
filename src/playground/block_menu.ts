@@ -1154,7 +1154,10 @@ class BlockMenu extends ModelClass<Schema> {
         if (!elems) {
             this.view.addClass('init');
             elemKeys = Object.keys(this._categoryElems);
+        } else {
+            elemKeys = elems;
         }
+
         if (isEmpty(elemKeys)) {
             return;
         }
