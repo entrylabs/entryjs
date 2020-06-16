@@ -5,7 +5,7 @@ type LoadBlockParam = {
     isBlockShow: boolean;
 };
 
-class BlockLoader implements IEntry.ExternalModuleManager {
+class BlockLoader {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
@@ -110,6 +110,7 @@ class BlockLoader implements IEntry.ExternalModuleManager {
     }
 }
 
+export default BlockLoader;
 Entry.moduleManager = new BlockLoader();
 
 /**

@@ -37,7 +37,14 @@ Entry.byrobot_drone_3_10 =
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++)
         {
-            Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
+            if( Entry.hw.portData['state_modeFlight'] == 0x10 )
+            {
+                Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
+            }
+            else
+            {
+                Entry.byrobot_base.transferCommand(0x10, 0x07, 0x12); // 0x12 : FlightEvent::Landing
+            }
             Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
             Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
@@ -308,7 +315,7 @@ Entry.byrobot_drone_3_10.setLanguage = function() {
                 byrobot_drone_3_10_drone_motor_stop                : "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
                 byrobot_drone_3_10_drone_motorsingle               : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 byrobot_drone_3_10_drone_motorsingle_input         : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
-                byrobot_drone_3_10_drone_battle_ir_message         : "<br>드론 적외선 데이터 송신 장치로 지정한 값을 전송합니다. 값의 범위는 0 ~ 0xFFFFFFFF 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#적외선_데이터_송신</font>",
+                byrobot_drone_3_10_drone_battle_ir_message         : "<br>드론 적외선 데이터 송신 장치로 지정한 값을 전송합니다. 값의 범위는 0 ~ 0xFF 입니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#적외선_데이터_송신</font>",
                 byrobot_drone_3_10_drone_value_attitude            : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
                 byrobot_drone_3_10_drone_value_etc                 : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
                 byrobot_drone_3_10_drone_value_motion              : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
@@ -1887,7 +1894,7 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             ],
             events: {},
             def: {
-                params: [{ type: 'text', params: ['12345'] }, null],
+                params: [{ type: 'text', params: ['123'] }, null],
                 type: 'byrobot_drone_3_10_drone_battle_ir_message',
             },
             paramsKeyMap: {
@@ -1919,7 +1926,7 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             isNotFor: ['byrobot_drone_3_10'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 200); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 5000); // 0x11 : FlightEvent::TakeOff
             },
         },
 
@@ -1939,7 +1946,7 @@ Entry.byrobot_drone_3_10.getBlocks = function()
             isNotFor: ['byrobot_drone_3_10'],
             func(sprite, script)
             {
-                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 200); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 5000); // 0x12 : FlightEvent::Landing
             },
         },
 
