@@ -28,16 +28,6 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.learn_type_image, 'image'],
-                        ],
-                        value: 'image',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                    },
-                    {
                         type: 'Indicator',
                         img: 'block_icon/ai_utilize_icon.svg',
                         size: 11,
@@ -46,17 +36,15 @@ module.exports = {
                 events: {},
                 def: {
                     params: [
-                        'image',
                         null,
                     ],
                     type: 'insert_data_for_test',
                 },
                 pyHelpDef: {
-                    params: ['A&value'],
+                    params: [],
                     type: 'insert_data_for_test',
                 },
                 paramsKeyMap: {
-                    TYPE: 0,
                 },
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
@@ -70,6 +58,52 @@ module.exports = {
                         delete script.isStart;
                         return script.callReturn();
                     }
+                    return script;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            insert_text_block_for_test: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    }
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: [Lang.Blocks.entry],
+                        },
+                        null,
+                    ],
+                    type: 'insert_text_block_for_test',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'insert_text_block_for_test',
+                },
+                paramsKeyMap: {
+                    TEXT: 0,
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_text'],
+                async func(sprite, script) {
+                    const text = script.getStringValue('TEXT', script);
+                    await Entry.aiLearning.predict(text);
                     return script;
                 },
                 syntax: {
