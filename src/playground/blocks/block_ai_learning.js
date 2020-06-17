@@ -3,7 +3,43 @@ import VideoUtils from '../../util/videoUtils';
 module.exports = {
     getBlocks() {
         return {
-            learning_title: {
+            learning_title_image: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.learning_title_image,
+                        color: EntryStatic.colorSet.common.TEXT,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'learning_title_image',
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_image'],
+                events: {},
+            },
+            learning_title_speech: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.learning_title_speech,
+                        color: EntryStatic.colorSet.common.TEXT,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'learning_title_speech',
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_speech'],
+                events: {},
+            },
+            learning_title_text: {
                 skeleton: 'basic_text',
                 color: EntryStatic.colorSet.common.TRANSPARENT,
                 params: [
@@ -15,10 +51,10 @@ module.exports = {
                     },
                 ],
                 def: {
-                    type: 'learning_title',
+                    type: 'learning_title_text',
                 },
                 class: 'ai_learning',
-                isNotFor: ['ai_learning'],
+                isNotFor: ['ai_learning_text'],
                 events: {},
             },
             insert_data_for_test: {
