@@ -6,15 +6,19 @@ type LoadBlockParam = {
 };
 
 class BlockLoader {
+    private _moduleList: string[] = [];
+
+    get moduleList() {
+        return this._moduleList;
+    }
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
     loadModule(moduleName: string): Promise<void> {
-        if (!Entry.EXTERNAL_MODULE_LIST) {
-            Entry.EXTERNAL_MODULE_LIST = [];
-        } else if (Entry.EXTERNAL_MODULE_LIST.includes(moduleName)) {
+        // 이미 로드된 모듈은 다시 로드하지 않는다.
+        if (this._moduleList.includes(moduleName)) {
             return Promise.resolve();
         }
 
@@ -28,10 +32,7 @@ class BlockLoader {
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                if (!Entry.EXTERNAL_MODULE_LIST) {
-                    Entry.EXTERNAL_MODULE_LIST = [];
-                }
-                Entry.EXTERNAL_MODULE_LIST.push(moduleName);
+                this._moduleList.push(moduleName);
                 scriptElement.remove();
                 resolve();
             };
@@ -122,7 +123,7 @@ class BlockLoader {
     }
 }
 
-export default BlockLoader;
+export default new BlockLoader();
 Entry.moduleManager = new BlockLoader();
 
 /**

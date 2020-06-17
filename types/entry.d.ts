@@ -19,7 +19,7 @@ declare interface IEntry extends EntryOptions {
     Dom: typeof import('../src/core/dom').default;
     Dialog: typeof import('../src/class/dialog').default;
     popupHelper: typeof import('../src/class/popup_helper').default;
-    moduleManager: import('../src/class/moduleManager').default;
+    moduleManager: typeof import('../src/class/blockLoader').default;
     Model: (target: any, isSeal: boolean) => void;
     BlockView: any;
     SVG: any;
@@ -45,7 +45,6 @@ declare interface IEntry extends EntryOptions {
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     HARDWARE_LIST: { [hardwareName: string]: any };
-    EXTERNAL_MODULE_LIST?: string[];
     KeyboardCode: {
         map: { [keyname: string]: number };
         codeToKeyCode: { [keyname: string]: number };
