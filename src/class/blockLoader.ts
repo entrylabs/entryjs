@@ -5,6 +5,14 @@ type LoadBlockParam = {
     isBlockShow?: boolean;
 };
 
+// expansion blocks 의 스키마를 따름
+type EntryBlockModule = {
+    name: string;
+    title: { [key: string]: string };
+    description: string;
+    getBlocks: () => { [blockName: string]: any };
+};
+
 class BlockLoader {
     private _moduleList: string[] = [];
 
@@ -88,6 +96,20 @@ class BlockLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
+    /**
+     * 이 함수는 외부 블록 모듈 URL 의 코드가 호출한다.
+     * 엔트리 내 '확장' 카테고리에 블록을 추가한다.
+     * 블록은 moduleObject 의 정보에 따라 타이틀, 설명 TextBlock 이 같이 추가된다.
+     * @param moduleObject
+     */
+    registerBlockModule(moduleObject: EntryBlockModule) {
+        // 1. 모듈 프로퍼티에 대한 검증. 블록이 없다거나 잘못된 값이 있다거나 등등.
+        // 2. 타이틀 블록과 설명 블록을 만든다
+        // 3. 타이틀 블록, 설명 블록, getBlocks 로 가져온 블록오브젝트 순으로 loadBlock 한다.
+        // 4. 마지막에 reDraw 한다. (현재는 매 block load 당 reDraw)
+        // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
+    }
+
     loadBlock({ categoryName, blockName, block, isBlockShow = false }: LoadBlockParam) {
         const blockMenu = Entry.getMainWS().blockMenu;
 
@@ -123,8 +145,9 @@ class BlockLoader {
     }
 }
 
-export default new BlockLoader();
-Entry.moduleManager = new BlockLoader();
+const instance = new BlockLoader();
+export default instance;
+Entry.moduleManager = instance;
 
 /**
  * 프로젝트 가 외부 모듈이 사용되었는지 확인하고, 로드한다
@@ -133,5 +156,5 @@ Entry.moduleManager = new BlockLoader();
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(Entry.moduleManager.loadModule));
+    await Promise.all(externalModules.map(instance.loadModule));
 };
