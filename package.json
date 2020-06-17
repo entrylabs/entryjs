@@ -69,7 +69,7 @@
         "@babel/plugin-transform-modules-commonjs": "^7.8.3",
         "@babel/plugin-transform-object-assign": "^7.8.3",
         "@babel/plugin-transform-runtime": "^7.8.3",
-        "@babel/preset-env": "^7.8.4",
+        "@babel/preset-env": "^7.10.2",
         "@babel/runtime": "^7.8.4",
         "@egjs/visible": "^2.1.0",
         "@types/createjs": "^0.0.29",

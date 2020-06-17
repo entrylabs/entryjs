@@ -1,4 +1,5 @@
 __webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
+import showConsoleBanner from './util/functions/showConsoleBanner';
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
@@ -147,3 +148,4 @@ require('./textcoding/util/console');
 require('./textcoding/util/textCodingUtil');
 
 window.Entry = Entry;
+showConsoleBanner();
