@@ -9,7 +9,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Text',
-                        text: Lang.template.learning_title_image,
+                        text: Lang.template.learning_title_image_str,
                         color: EntryStatic.colorSet.common.TEXT,
                         align: 'center',
                     },
@@ -27,7 +27,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Text',
-                        text: Lang.template.learning_title_speech,
+                        text: Lang.template.learning_title_speech_str,
                         color: EntryStatic.colorSet.common.TEXT,
                         align: 'center',
                     },
@@ -45,7 +45,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Text',
-                        text: Lang.template.learning_title_text,
+                        text: Lang.template.learning_title_text_str,
                         color: EntryStatic.colorSet.common.TEXT,
                         align: 'center',
                     },
