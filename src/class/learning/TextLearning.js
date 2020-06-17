@@ -4,12 +4,12 @@ const { callApi } = require('../../util/common');
 class TextNaiveBaye {
     constructor() {
         this.classifier = new Bayes({
-            tokenizer: this.tokenizer
+            tokenizer: this.tokenizer,
         });
     }
 
     async tokenizer(text) {
-        const params = { q : text };
+        const params = { q: text };
         try {
             const { data } = await callApi(text, { url: '/learning/mecab', params });
             return data;
