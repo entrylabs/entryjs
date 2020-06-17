@@ -1,4 +1,4 @@
-import PopupHelper from "./popup_helper";
+import PopupHelper from './popup_helper';
 
 export default class AILearning {
     #playground;
@@ -17,6 +17,16 @@ export default class AILearning {
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
+    }
+
+    removeAllBlocks() {
+        const utilizeBlock  = Object.values(Entry.AI_UTILIZE_BLOCK_LIST).map(x => Object.keys(x.getBlocks())).flatten();
+        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
+        blocks.filter(x => !utilizeBlock.includes(x)).forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
+        this.banBlocks();
+        this.destroy();
     }
 
     isAvailable() {
@@ -110,6 +120,7 @@ export default class AILearning {
         this.#type = null;
         this.isLoading = false;
         this.result = [];
+        this.isLoaded = false;
     }
 
     toJSON() {

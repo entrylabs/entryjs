@@ -178,7 +178,7 @@ Entry.Workspace = class Workspace {
                 const alertMessage =
                     Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
-                    Util.hasExpansionBlocks();
+                    Util.hasNotSupportedBlocks();
 
                 const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
@@ -192,7 +192,10 @@ Entry.Workspace = class Workspace {
                     if (alertMessage.type === 'warning') {
                         entrylms.confirm(alertMessage.message).then((result) => {
                             if (result) {
-                                //Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
+                                Entry.playground.dataTable.removeAllBlocks();
+                                Entry.aiLearning.removeAllBlocks();
                                 changeToPythonMode();
                                 dispatchChangeBoardEvent();
                             } else {
@@ -436,7 +439,10 @@ Entry.Workspace = class Workspace {
                     break;
                 case 219: {
                     //setMode(block) for textcoding ( ctrl + [ )
-                    if (!Entry.options.textCodingEnable) {
+                    if (
+                        !Entry.options.textCodingEnable ||
+                        Entry.playground.getViewMode() === 'picture'
+                    ) {
                         return;
                     }
                     const oldMode = Entry.getMainWS().oldMode;
@@ -453,7 +459,10 @@ Entry.Workspace = class Workspace {
                 }
                 case 221: {
                     //setMode(python) for textcoding ( ctrl + ] )
-                    if (!Entry.options.textCodingEnable) {
+                    if (
+                        !Entry.options.textCodingEnable ||
+                        Entry.playground.getViewMode() === 'picture'
+                    ) {
                         return;
                     }
 

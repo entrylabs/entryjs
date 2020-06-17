@@ -495,18 +495,19 @@ class TextCodingUtil {
      * https://oss.navercorp.com/entry/Entry/issues/9155 링크 참조
      * @returns {{message: string, type: string} || undefined}
      */
-    hasExpansionBlocks() {
+    hasNotSupportedBlocks() {
         const vc = Entry.variableContainer;
         if (!vc) {
             return;
         }
 
         const activatedExpansionBlocks = Entry.expansionBlocks;
-
-        if (activatedExpansionBlocks.length > 0) {
+        const activatedUtilizeBlock = Entry.aiUtilizeBlocks;
+        const tables = Entry.playground.dataTable.tables;
+        if (activatedExpansionBlocks.length > 0 || activatedUtilizeBlock.length > 0 || Entry.aiLearning.isLoaded || tables.length > 0) {
             return {
                 message: Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
-                type: 'error',
+                type: 'warning',
             };
         }
     }
