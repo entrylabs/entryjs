@@ -2,7 +2,7 @@
 type EntryBlockModule = {
     name: string;
     title: { [key: string]: string };
-    description: string;
+    description?: string;
     getBlocks: () => { [blockName: string]: any };
 };
 
@@ -96,20 +96,17 @@ class BlockLoader {
      * @param moduleObject
      */
     registerBlockModule(moduleObject: EntryBlockModule) {
-        // 1. 모듈 프로퍼티에 대한 검증. 블록이 없다거나 잘못된 값이 있다거나 등등.
-        // 2. 타이틀 블록과 설명 블록을 만든다
-        const { name, title, description } = moduleObject;
-        const [titleBlockName, titleBlock] = this.createTextBlock(name, title.ko);
-        const [descriptionBlockName, descriptionBlock] = this.createTextBlock(name, description);
+        const { name, title, description, getBlocks } = moduleObject;
+        const blockEntries = [];
+
+        title && blockEntries.push(this.createTextBlock(name, title.ko));
+        description && blockEntries.push(this.createTextBlock(name, description));
+        getBlocks && blockEntries.push(...Object.entries(getBlocks()));
+
         this.loadBlocks({
             categoryName: 'expansion',
-            blockEntries: [
-                [titleBlockName, titleBlock],
-                [descriptionBlockName, descriptionBlock],
-            ],
+            blockEntries,
         });
-        // 3. 타이틀 블록, 설명 블록, getBlocks 로 가져온 블록오브젝트 순으로 loadBlock 한다.
-        // 4. 마지막에 reDraw 한다. (현재는 매 block load 당 reDraw)
         // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
     }
 
