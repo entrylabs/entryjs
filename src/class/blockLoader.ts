@@ -1,10 +1,3 @@
-type LoadBlockParam = {
-    categoryName: string;
-    blockName: string;
-    block: any;
-    isBlockShow?: boolean;
-};
-
 // expansion blocks 의 스키마를 따름
 type EntryBlockModule = {
     name: string;
@@ -19,6 +12,7 @@ class BlockLoader {
     get moduleList() {
         return this._moduleList;
     }
+
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
@@ -84,14 +78,13 @@ class BlockLoader {
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
 
-        Object.entries(blockObjects).forEach(([blockName, block]) => {
-            this.loadBlock({
-                categoryName: 'arduino',
-                isBlockShow: blockMenuBlocks.indexOf(blockName) > -1,
-                blockName,
-                block,
-            });
+        this.loadBlocks({
+            categoryName: 'arduino',
+            blockEntries: Object.entries(blockObjects).map(([blockName, block]) =>
+                [blockName, block, blockMenuBlocks.indexOf(blockName) > -1],
+            ),
         });
+
         Entry.hw.setExternalModule(moduleObject);
         Entry.dispatchEvent('hwChanged');
     }
@@ -105,30 +98,67 @@ class BlockLoader {
     registerBlockModule(moduleObject: EntryBlockModule) {
         // 1. 모듈 프로퍼티에 대한 검증. 블록이 없다거나 잘못된 값이 있다거나 등등.
         // 2. 타이틀 블록과 설명 블록을 만든다
+        const { name, title, description } = moduleObject;
+        const [titleBlockName, titleBlock] = this.createTextBlock(name, title.ko);
+        const [descriptionBlockName, descriptionBlock] = this.createTextBlock(name, description);
+        this.loadBlocks({
+            categoryName: 'expansion',
+            blockEntries: [
+                [titleBlockName, titleBlock],
+                [descriptionBlockName, descriptionBlock],
+            ],
+        });
         // 3. 타이틀 블록, 설명 블록, getBlocks 로 가져온 블록오브젝트 순으로 loadBlock 한다.
         // 4. 마지막에 reDraw 한다. (현재는 매 block load 당 reDraw)
         // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
     }
 
-    loadBlock({ categoryName, blockName, block, isBlockShow = false }: LoadBlockParam) {
+    loadBlocks({
+        categoryName,
+        blockEntries,
+    }: { categoryName: string, blockEntries: [string, EntryBlock, boolean?][] }) {
         const blockMenu = Entry.getMainWS().blockMenu;
 
-        // 블록을 BlockMenu thread 에 포함시키려면 이 값이 필요함 (key 로 사용됨)
-        if (!block.type) {
-            block.type = blockName;
-        }
+        blockEntries.forEach(([blockName, block, isBlockView = true]) => {
+            if (!block.type) {
+                block.type = blockName;
+            }
 
-        // 블록의 카테고리를 정의할때 사용
-        if (!block.category) {
-            block.category = categoryName;
-        }
+            // 블록의 카테고리를 정의할때 사용
+            if (!block.category) {
+                block.category = categoryName;
+            }
 
-        Entry.block[blockName] = block;
+            Entry.block[blockName] = block;
 
-        if (isBlockShow) {
-            blockMenu.addCategoryData(categoryName, blockName);
-            blockMenu.reDraw();
-        }
+            if (isBlockView) {
+                blockMenu.addCategoryData(categoryName, blockName);
+            }
+        });
+
+        blockMenu.reDraw();
+    }
+
+    private createTextBlock(moduleName: string, content: string): [string, EntryBlock] {
+        const blockName = `${moduleName}_${Math.random()}`;
+        const block: EntryBlock = {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            skeleton: 'basic_text',
+            class: moduleName,
+            template: '%1',
+            params: [{
+                type: 'Text',
+                text: content,
+                color: EntryStatic.colorSet.common.TEXT,
+                align: 'center',
+            }],
+            def: {
+                type: blockName,
+            },
+            isNotFor: [moduleName],
+            events: {},
+        };
+        return [blockName, block];
     }
 
     /**

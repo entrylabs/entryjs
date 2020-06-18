@@ -20,7 +20,7 @@ declare interface ISkeleton {
     dropdownHeight?: number; // for pebble
     path: (blockView: any) => string; // svg path string
     box: (
-        blockView: any
+        blockView: any,
     ) => {
         offsetX: number;
         offsetY: number;
@@ -31,7 +31,7 @@ declare interface ISkeleton {
     };
     contentPos: (blockView: any) => Point;
     magnets?: (
-        blockView: any
+        blockView: any,
     ) => {
         next?: Point;
         previous?: Point;
@@ -44,8 +44,11 @@ declare interface ISkeleton {
 
 declare interface MediaUtilsInterface {
     initialize(): void;
+
     reset(): void;
+
     destroy(): void;
+
     compatabilityChecker(): void; // throws error if failed
 }
 
@@ -66,7 +69,7 @@ declare interface EntryDom extends JQuery {
 
 declare type EntryDomConstructor = (
     tag: string | HTMLElement | JQuery,
-    options?: EntryDomOptions
+    options?: EntryDomOptions,
 ) => EntryDom;
 
 interface HardwareMessageData extends HardwareModuleId {
@@ -88,6 +91,7 @@ declare module IEntry {
     export interface Container {
         resizeEvent: any; // Entry.Event
         splitterEnable?: boolean;
+
         getAllObjects(): UnknownAny[];
     }
 
@@ -102,7 +106,9 @@ declare module IEntry {
 
     export interface Stage {
         loadDialog(dialog: any): void;
+
         unloadDialog(dialog: any): void;
+
         canvas: any;
         _app: any;
     }
@@ -144,30 +150,43 @@ declare module IEntry {
         dataHandler?: (data: HardwareMessageData) => void;
     }
 
-    export interface EntryBlock {
-        color: string;
-        outerLine?: string;
-        skeleton: string;
-        statements: any[];
-        params: {
-            type: string;
-            img?: string;
-            size: number;
-            value?: number;
-            fontSize?: number;
-            bgColor?: string;
-            arrowColor?: string;
-            position?: { x: number; y: number };
-        };
-    }
-
     export interface Intro {
         modes: any;
         selected: any;
+
         generateView(introView: any): void;
+
         setView(view: any): void;
+
         removeView(): void;
     }
 
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
+}
+
+declare interface EntryBlock {
+    color: string;
+    outerLine?: string;
+    skeleton: string;
+    statements?: any[];
+    template?: string;
+    params: { [key: string]: any; };
+    defs?: any; // legacy
+    def: { type: string; } & { [key: string]: any }
+    paramsKeyMap?: { [key: string]: number; }
+    class: string;
+    isFor?: string[];
+    isNotFor?: string[];
+    events: { [key: string]: any; }
+    type?: string;
+    category?: string;
+    pyHelpDef?: {
+        params: string[];
+        type: string;
+    }
+    func?: Function;
+    syntax?: {
+        js: any[];
+        py: any[];
+    }
 }

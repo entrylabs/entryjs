@@ -55,7 +55,7 @@ declare interface IEntry extends EntryOptions {
     TEXT_ALIGN_LEFT: number;
     TEXT_ALIGN_CENTER: number;
     TEXT_ALIGN_RIGHT: number;
-    block: { [blockName: string]: any };
+    block: { [blockName: string]: EntryBlock };
     hw: import('../src/class/hw').default; // HW instance
     interfaceState: { [key: string]: any };
 
