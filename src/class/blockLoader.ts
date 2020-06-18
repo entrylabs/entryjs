@@ -1,12 +1,7 @@
-// expansion blocks 의 스키마를 따름
-type EntryBlockModule = {
-    name: string;
-    title: { [key: string]: string };
-    description?: string;
-    getBlocks: () => { [blockName: string]: any };
-};
 
-class BlockLoader {
+type EntryBlockPair = [string, EntryBlock, boolean?];
+
+class EntryModuleLoader {
     private _moduleList: string[] = [];
 
     get moduleList() {
@@ -61,7 +56,7 @@ class BlockLoader {
      * 이 후 블록메뉴에 블록들을 실시간으로 추가한 뒤 reDraw 한다.
      * @param moduleObject 하드웨어 모듈. 여타 하드웨어 모듈 파일 참조
      */
-    registerHardwareModule(moduleObject: IEntry.HardwareModule) {
+    registerHardwareModule(moduleObject: EntryHardwareBlockModule) {
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
@@ -80,7 +75,7 @@ class BlockLoader {
 
         this.loadBlocks({
             categoryName: 'arduino',
-            blockEntries: Object.entries(blockObjects).map(([blockName, block]) =>
+            blockPairs: Object.entries(blockObjects).map(([blockName, block]) =>
                 [blockName, block, blockMenuBlocks.indexOf(blockName) > -1],
             ),
         });
@@ -97,29 +92,28 @@ class BlockLoader {
      */
     registerBlockModule(moduleObject: EntryBlockModule) {
         const { name, title, description, getBlocks } = moduleObject;
-        const blockEntries = [];
+        const blockPairs = [];
 
-        title && blockEntries.push(this.createTextBlock(name, title.ko));
-        description && blockEntries.push(this.createTextBlock(name, description));
-        getBlocks && blockEntries.push(...Object.entries(getBlocks()));
+        title && blockPairs.push(this.createTextBlock(name, title.ko));
+        description && blockPairs.push(this.createTextBlock(name, description));
+        getBlocks && blockPairs.push(...Object.entries(getBlocks()));
 
         this.loadBlocks({
             categoryName: 'expansion',
-            blockEntries,
+            blockPairs,
         });
         // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
     }
 
     loadBlocks({
         categoryName,
-        blockEntries,
-    }: { categoryName: string, blockEntries: [string, EntryBlock, boolean?][] }) {
+        blockPairs,
+    }: { categoryName: string, blockPairs: EntryBlockPair[] }) {
         const blockMenu = Entry.getMainWS().blockMenu;
 
-        blockEntries.forEach(([blockName, block, isBlockView = true]) => {
-            if (!block.type) {
-                block.type = blockName;
-            }
+        blockPairs.forEach((blockPair) => {
+            this.applyDefaultProperties(blockPair);
+            const [blockName, block, isBlockView] = blockPair;
 
             // 블록의 카테고리를 정의할때 사용
             if (!block.category) {
@@ -161,7 +155,7 @@ class BlockLoader {
     /**
      * TODO 리로드 되는 경우 다시 불러오지 않기 때문에 템플릿정보 저장이 필요함
      */
-    private setLanguageTemplates(moduleObject: IEntry.HardwareModule) {
+    private setLanguageTemplates(moduleObject: EntryHardwareBlockModule) {
         if (moduleObject.setLanguage) {
             const langTemplate = moduleObject.setLanguage();
             const data = langTemplate[Lang.type] || langTemplate[Lang.fallbackType];
@@ -170,9 +164,20 @@ class BlockLoader {
             }
         }
     }
+
+    private applyDefaultProperties([blockName, block]: EntryBlockPair) {
+        if (!block.color) {
+            block.color = EntryStatic.colorSet.block.default.EXPANSION;
+            block.outerLine = EntryStatic.colorSet.block.darken.EXPANSION;
+        }
+
+        if (!block.type) {
+            block.type = blockName;
+        }
+    }
 }
 
-const instance = new BlockLoader();
+const instance = new EntryModuleLoader();
 export default instance;
 Entry.moduleManager = instance;
 

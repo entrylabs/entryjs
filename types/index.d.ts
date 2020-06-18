@@ -125,31 +125,6 @@ declare module IEntry {
         isOpen: (target?: any) => boolean;
     }
 
-    /**
-     * 엔트리 워크스페이스에 존재하는 하드웨어 모듈
-     * 블록 및 하드웨어모니터 UI 정보, 통신 로직을 가지고있음
-     */
-    export interface HardwareModule {
-        id: HardwareModuleId;
-        name: string;
-        monitorTemplate?: UnknownAny;
-        communicationType?: string;
-        sendMessage?: (hw: import('../src/class/hw').default) => void;
-
-        // 필수 함수 목록
-        setZero: () => void;
-        getBlocks: () => { [blockName: string]: EntryBlock };
-        blockMenuBlocks: string[];
-        setLanguage: () => {
-            [langType: string]: { [type: string]: { [templateName: string]: string } };
-        };
-
-        //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
-        afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
-        afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
-        dataHandler?: (data: HardwareMessageData) => void;
-    }
-
     export interface Intro {
         modes: any;
         selected: any;
@@ -190,3 +165,35 @@ declare interface EntryBlock {
         py: any[];
     }
 }
+
+// expansion blocks 의 스키마를 따름
+declare type EntryBlockModule = {
+    name: string;
+    title: { [key: string]: string };
+    description?: string;
+    getBlocks: () => { [blockName: string]: EntryBlock };
+};
+
+declare type EntryHardwareBlockModule = {
+    // 홍보용
+    imageName: string;
+    url: string;
+
+    // 모듈 정의용
+    id: HardwareModuleId;
+    monitorTemplate?: UnknownAny;
+    communicationType?: string;
+    sendMessage?: (hw: import('../src/class/hw').default) => void;
+
+    // 필수 함수 목록
+    setZero: () => void;
+    blockMenuBlocks: string[];
+    setLanguage: () => {
+        [langType: string]: { [type: string]: { [templateName: string]: string } };
+    };
+
+    //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
+    afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
+    afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
+    dataHandler?: (data: HardwareMessageData) => void;
+} & EntryBlockModule
