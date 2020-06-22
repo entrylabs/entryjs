@@ -929,7 +929,7 @@ class BlockMenu {
         if (!keyCode) {
             return;
         }
-        if (e.ctrlKey && Entry.type === 'workspace' && Number(keyCode) != NaN) {
+        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
