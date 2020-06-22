@@ -919,15 +919,17 @@ class BlockMenu {
     }
 
     _captureKeyEvent(e) {
-        let keyCode = e.code;
-        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-            keyCode = keyCode.replace('Left', '');
-            keyCode = keyCode.replace('Right', '');
+        let keyCode = e.code == undefined ? e.key : e.code;
+        if (!keyCode) {
+            return;
         }
         keyCode = keyCode.replace('Digit', '');
         keyCode = keyCode.replace('Numpad', '');
-
-        if (e.ctrlKey && Entry.type === 'workspace' && Number(keyCode) != NaN) {
+        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        if (!keyCode) {
+            return;
+        }
+        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);

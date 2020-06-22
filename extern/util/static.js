@@ -401,8 +401,11 @@ EntryStatic.getAllBlocks = function() {
             blocks: [
                 'aiUtilizeBlockAddButton',
                 'aiUtilizeModelTrainButton',
-                'learning_title',
+                'learning_title_image',
+                'learning_title_speech',
+                'learning_title_text',
                 'insert_data_for_test',
+                'insert_text_block_for_test',
                 'test_result',
                 'accuracy_of_result',
                 'is_group',

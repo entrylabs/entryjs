@@ -735,15 +735,16 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
         document.addEventListener('keydown', (e) => {
-            let keyCode = event.code;
-
-            if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-                keyCode = keyCode.replace('Left', '');
-                keyCode = keyCode.replace('Right', '');
+            let keyCode = e.code == undefined ? e.key : e.code;
+            if (!keyCode) {
+                return;
             }
             keyCode = keyCode.replace('Digit', '');
             keyCode = keyCode.replace('Numpad', '');
             keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            if (!keyCode) {
+                return;
+            }
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -758,14 +759,16 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
-            let keyCode = event.code;
-            if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-                keyCode = keyCode.replace('Left', '');
-                keyCode = keyCode.replace('Right', '');
+            let keyCode = e.code == undefined ? e.key : e.code;
+            if (!keyCode) {
+                return;
             }
             keyCode = keyCode.replace('Digit', '');
             keyCode = keyCode.replace('Numpad', '');
             keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            if (!keyCode) {
+                return;
+            }
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
