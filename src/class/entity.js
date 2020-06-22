@@ -31,6 +31,9 @@ Entry.EntityObject = class EntityObject {
         this._rndPosX = 0;
         this._rndPosY = 0;
         this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
+        this.defaultLog = {
+            textEffect: {},
+        };
 
         if (this.type === 'sprite') {
             this._rndPosX = GEHelper.rndPosition();
@@ -534,6 +537,13 @@ Entry.EntityObject = class EntityObject {
         return this.height;
     }
 
+    setColorWithLog(colour) {
+        if (!this.defaultLog.textColor) {
+            this.defaultLog.textColor = this.colour || '#000000';
+        }
+        this.setColour(colour);
+    }
+
     /**
      * colour setter
      * @param {?string} colour
@@ -553,6 +563,17 @@ Entry.EntityObject = class EntityObject {
      */
     getColour() {
         return this.colour;
+    }
+
+    /**
+     * NT11576 BGcolor with log #3513
+     * @param {*} colour
+     */
+    setBGColourWithLog(colour = 'transparent') {
+        if (!this.defaultLog.textBGColor) {
+            this.defaultLog.textBGColor = this.bgColor || 'transparent';
+        }
+        this.setBGColour(colour);
     }
 
     /**
@@ -619,10 +640,17 @@ Entry.EntityObject = class EntityObject {
         return fontArray.join(' ');
     }
 
+    setFontWithLog(font, shouldUpdateWidth) {
+        if (!this.defaultLog.textFont) {
+            this.defaultLog.textFont = `${this.getFontSize()} ${this.fontType}`;
+        }
+        this.setFont(font, shouldUpdateWidth);
+    }
+
     /**
      * font setter
      */
-    setFont(font = '20px Nanum Gothic') {
+    setFont(font = '20 Nanum Gothic', shouldUpdateWidth = true) {
         if (this.parent.objectType !== 'textBox') {
             return;
         }
@@ -633,19 +661,37 @@ Entry.EntityObject = class EntityObject {
         const fontArray = font.split(' ');
         let i = 0;
 
+        // NT11576 wodnjs6512
+        // #3513 글씨체 변경시에 기존 bold 와 italic을 받아와서 사용하도록
         if ((i = fontArray.indexOf('bold') > -1)) {
             fontArray.splice(i - 1, 1);
+            this.setFontBold(true);
+        } else if (this.fontBold) {
             this.setFontBold(true);
         }
         if ((i = fontArray.indexOf('italic') > -1)) {
             fontArray.splice(i - 1, 1);
             this.setFontItalic(true);
+        } else if (this.fontItalic) {
+            this.setFontItalic(true);
         }
-        this.setFontSize(parseInt(fontArray.shift()));
+
+        if (this.getLineBreak()) {
+            this.setLineBreak(this.getLineBreak());
+        }
+
+        this.setFontSize(parseFloat(fontArray.shift()));
         this.setFontType(fontArray.join(' '));
 
         this._syncFontStyle();
-        this.setWidth(this.textObject.getMeasuredWidth());
+        Entry.stage.update();
+
+        // NT11576 wodnjs6512
+        // #3513 기존의 텍스트 상자 리사이즈가 필요없는 경우에는 disable 할수 있도록 옵션으로 실행 default = 실행
+        if (shouldUpdateWidth) {
+            this.setWidth(this.textObject.getMeasuredWidth());
+        }
+
         this.updateBG();
         Entry.stage.update();
         Entry.stage.updateObject();
@@ -769,6 +815,80 @@ Entry.EntityObject = class EntityObject {
     }
 
     /**
+     * NT11576 wodnjs6512
+     * #3513 text effect setter
+     * @param {string} effect
+     */
+    setTextEffect(effect, mode) {
+        if (this.parent.objectType !== 'textBox') {
+            return;
+        }
+        // remember default
+        if (this.defaultLog.textEffect[effect] == undefined) {
+            this.defaultLog.textEffect[effect] = this[effect];
+        }
+        this.textObject.text = this.text;
+        this.applyEffectByNameAndValue(effect, mode == 'on');
+    }
+
+    /**
+     * NT11576 wodnjs6512
+     * #3513 reset text effect accroding to the log left with setTextEffect()
+     */
+    resetTextEffect() {
+        for (const effect of Object.keys(this.defaultLog.textEffect)) {
+            const value = this.defaultLog.textEffect[effect];
+            this.applyEffectByNameAndValue(effect, value);
+        }
+        if (this.defaultLog.textColor) {
+            this.setColour(this.defaultLog.textColor);
+        }
+        if (this.defaultLog.textFont) {
+            this.setFont(this.defaultLog.textFont);
+        }
+        if (this.defaultLog.textBGColor) {
+            this.setBGColour(this.defaultLog.textBGColor);
+        }
+        this.defaultLog = {
+            textEffect: {},
+        };
+    }
+
+    /**
+     * NT11576 wodnjs6512
+     * #3513 change font style and update stage
+     * @param {*} effect
+     * @param {*} mode
+     */
+
+    applyEffectByNameAndValue(effect, mode) {
+        switch (effect) {
+            case 'fontBold':
+                this.toggleFontBold();
+                break;
+            case 'fontItalic':
+                this.toggleFontItalic();
+                break;
+            case 'underLine':
+                this.setUnderLine(mode);
+                break;
+            case 'strike':
+                this.setStrike(mode);
+                break;
+        }
+        this.updateTextbox();
+    }
+
+    updateTextbox() {
+        if (!this.lineBreak) {
+            this.setWidth(this.textObject.getMeasuredWidth());
+            this.parent.updateCoordinateView();
+        }
+        this.updateBG();
+        Entry.stage.updateObject();
+    }
+
+    /**
      * text setter
      * @param {string} text
      */
@@ -779,12 +899,7 @@ Entry.EntityObject = class EntityObject {
         /** @type {string} */
         this.text = text;
         this.textObject.text = this.text;
-        if (!this.lineBreak) {
-            this.setWidth(this.textObject.getMeasuredWidth());
-            this.parent.updateCoordinateView();
-        }
-        this.updateBG();
-        Entry.stage.updateObject();
+        this.updateTextbox();
     }
 
     /**
@@ -1502,8 +1617,10 @@ Entry.EntityObject = class EntityObject {
     }
 
     reset() {
+        this.resetTextEffect();
         this.loadSnapshot();
         this.resetFilter();
+
         _.result(this.dialog, 'remove');
         this.shapes.length && this.removeBrush();
     }
