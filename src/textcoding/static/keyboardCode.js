@@ -159,6 +159,11 @@ Entry.KeyboardCode = {};
         8: 56,
         9: 57,
         // for ie
+        Left: 37,
+        Up: 38,
+        Right: 39,
+        Down: 40,
+        Spacebar: 32,
         a: 65,
         b: 66,
         c: 67,

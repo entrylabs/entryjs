@@ -204,18 +204,14 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
         this.keyboardEvent.on('keyup.keyboard', this.keyboardControl);
     }
 
-    keyboardControl = (event) => {
-        event.stopPropagation && event.stopPropagation();
-        event.preventDefault && event.preventDefault();
+    keyboardControl = (e) => {
+        e.stopPropagation && e.stopPropagation();
+        e.preventDefault && e.preventDefault();
         // let value = event.key === ' ' ? event.code : event.key;
         // value = Entry.KeyboardCode.korKeyMap[value] || value;
-        let value = event.code || event.key;
+        let value = e.code == undefined ? e.key : e.code;
         if (!value) {
             return;
-        }
-        if (value.indexOf('Arrow') == -1 && value.indexOf('Bracket') == -1) {
-            value = value.replace('Left', '');
-            value = value.replace('Right', '');
         }
         value = value.replace('Digit', '');
         value = value.replace('Numpad', '');
