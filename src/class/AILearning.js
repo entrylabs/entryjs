@@ -1,4 +1,6 @@
-import PopupHelper from './popup_helper';
+
+import PopupHelper from "./popup_helper";
+import TextLearning from './learning/TextLearning';
 
 export default class AILearning {
     #playground;
@@ -13,7 +15,7 @@ export default class AILearning {
     isLoading = false;
     result = [];
     isEnable;
-
+    #module = null;
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
@@ -65,8 +67,16 @@ export default class AILearning {
 
     }
 
+    async predict(text) {
+        if(this.#module) {
+            const result = await this.#module.predict(text);
+            this.result = result;
+        }
+        return [];
+    }
+
     load(modelInfo) {
-        const { url, labels, type, classes = [], model, id, _id, isActive = true } = modelInfo || {};
+        const { url, labels, type, classes = [], model, id, _id, isActive = true, name } = modelInfo || {};
         if(!url ||  !this.isEnable || !isActive) {
             return ;
         }
@@ -74,11 +84,16 @@ export default class AILearning {
         this.#type = type;
         this.#url = url;
         this.#oid = _id;
+        this.name = name;
         this.#modelId = model || id;
         this.unbanBlocks();
         this.generatePopupView({url, labels: this.#labels, type});
         if(this.#playground) {
             this.#playground.reloadPlayground()
+        }
+        if(type === 'text') {
+            this.#module = new TextLearning();
+            this.#module.load(`/uploads/${this.#url}/model.json`)
         }
         this.isLoaded = true;
     }
@@ -91,6 +106,10 @@ export default class AILearning {
         const blockMenu =  this.getBlockMenu(this.#playground);
         if (blockMenu) {
             blockMenu.unbanClass(this.#categoryName);
+            blockMenu.banClass(`${this.#categoryName}_text`);
+            blockMenu.banClass(`${this.#categoryName}_image`);
+            blockMenu.banClass(`${this.#categoryName}_speech`);
+            blockMenu.unbanClass(`${this.#categoryName}_${this.#type}`);
         }
     }
 
@@ -98,6 +117,9 @@ export default class AILearning {
         const blockMenu =  this.getBlockMenu(this.#playground);
         if (blockMenu) {
             blockMenu.banClass(this.#categoryName);
+            blockMenu.banClass(`${this.#categoryName}_text`);
+            blockMenu.banClass(`${this.#categoryName}_image`);
+            blockMenu.banClass(`${this.#categoryName}_speech`);
         }
     }
 
@@ -181,7 +203,7 @@ export default class AILearning {
                     class: 'contentArea',
                 });
                 const iframe = Entry.Dom('iframe', {
-                    class: 'learningInputPopup',
+                    class: `learningInputPopup ${type}`,
                     src: `/learning/popup/${type}`
                 });
                 $(iframe).on('load', ({target}) => {
