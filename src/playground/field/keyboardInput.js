@@ -207,8 +207,6 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
     keyboardControl = (e) => {
         e?.stopPropagation();
         e?.preventDefault();
-        // let value = event.key === ' ' ? event.code : event.key;
-        // value = Entry.KeyboardCode.korKeyMap[value] || value;
         let value = Entry.Utils.inputToKeycode(e);
         if (!value) {
             return;

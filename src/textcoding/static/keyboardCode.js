@@ -8,6 +8,7 @@ Entry.KeyboardCode = {};
 (function(kc) {
     kc.map = {
         backspace: 8,
+        'back-space': 8,
         tab: 9,
         enter: 13,
         shift: 16,
@@ -107,6 +108,7 @@ Entry.KeyboardCode = {};
         '\\': 220,
         ']': 221,
         "'": 222,
+        backslash: 220,
     };
 
     kc.codeToKeyCode = {
