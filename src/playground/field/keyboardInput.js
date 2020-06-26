@@ -215,10 +215,15 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
         }
         value = value.replace('Digit', '');
         value = value.replace('Numpad', '');
+        console.log(value);
+        console.log(value);
+
         value = Entry.KeyboardCode.codeToKeyCode[value];
+        console.log(value);
         if (!value) {
             return;
         }
+
         const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.destroyOption();
