@@ -834,9 +834,7 @@ class BlockMenu {
     }
 
     onMouseMove = (e) => {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
+        e?.stopPropagation();
 
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0.8);
