@@ -145,6 +145,7 @@ export default class AILearning {
         this.isLoading = false;
         this.result = [];
         this.isLoaded = false;
+        this.#recordTime = 2000;
     }
 
     toJSON() {
@@ -157,6 +158,7 @@ export default class AILearning {
             type: this.#type,
             id: this.#modelId,
             _id: this.#oid,
+            recordTime: this.#recordTime,
         }
     }
 
