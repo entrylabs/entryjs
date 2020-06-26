@@ -213,13 +213,6 @@ Entry.KeyboardCode = {};
         BracketRight: 221,
         "'": 222,
         Quote: 222,
-
-        // Numpad special Characters to map
-        Add: 187,
-        Subtract: 189,
-        Divide: 191,
-        Multiply: 56,
-        Decimal: 190,
     };
     /*kc.keyCodeToChar = {
         8:"backspace",9:"tab",13:"enter",16:"shift",17:"ctrl",18:"alt",

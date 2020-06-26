@@ -919,13 +919,7 @@ class BlockMenu {
     }
 
     _captureKeyEvent(e) {
-        let keyCode = e.code == undefined ? e.key : e.code;
-        if (!keyCode) {
-            return;
-        }
-        keyCode = keyCode.replace('Digit', '');
-        keyCode = keyCode.replace('Numpad', '');
-        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        let keyCode = Entry.Utils.inputToKeycode(e);
         if (!keyCode) {
             return;
         }

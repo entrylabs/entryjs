@@ -735,13 +735,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
         document.addEventListener('keydown', (e) => {
-            let keyCode = e.code == undefined ? e.key : e.code;
-            if (!keyCode) {
-                return;
-            }
-            keyCode = keyCode.replace('Digit', '');
-            keyCode = keyCode.replace('Numpad', '');
-            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            let keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -759,13 +753,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
-            let keyCode = e.code == undefined ? e.key : e.code;
-            if (!keyCode) {
-                return;
-            }
-            keyCode = keyCode.replace('Digit', '');
-            keyCode = keyCode.replace('Numpad', '');
-            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            let keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -788,6 +776,19 @@ Entry.Utils.bindGlobalEvent = function(options) {
             });
         }
     }
+};
+Entry.Utils.inputToKeycode = (e) => {
+    let keyCode = e.code == undefined ? e.key : e.code;
+    if (!keyCode) {
+        return null;
+    }
+    keyCode = keyCode.replace('Digit', '');
+    keyCode = keyCode.replace('Numpad', '');
+    if (keyCode.indexOf('Shift') > -1) {
+        keyCode = keyCode.replace('Left', '');
+        keyCode = keyCode.replace('Right', '');
+    }
+    return Entry.KeyboardCode.codeToKeyCode[keyCode];
 };
 
 Entry.Utils.makeActivityReporter = function() {
