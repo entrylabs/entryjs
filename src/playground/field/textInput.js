@@ -152,7 +152,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         var { x, y } = this.getAbsolutePosFromDocument();
-        y -= this.box.height / 2;
+        x += 3;
+        y -= this.box.height / 2 - 1;
         this.optionGroup.css({
             height: this._CONTENT_HEIGHT,
             left: x,
