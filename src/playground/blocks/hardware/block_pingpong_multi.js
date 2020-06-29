@@ -333,7 +333,7 @@ class PingpongBase {
         this._fillPacketIntoArray(packet, OPCODE.SINGLE_STEPS, 0 /*cubeCnt*/, cubeNo, 19);
 
         const sps = this._calcSpsFromSpeed(speed);
-        let step = Math.round(Math.min(Math.max(degree, 0), 360) * 5.5);
+        let step = Math.round(Math.min(Math.max(degree, 0), 5000) * 5.5);
         if (step > 32768) {
             step = 32768;
         }

@@ -1,39 +1,31 @@
-/*
- *
- */
-'use strict';
+Entry.FieldLineBreak = class FieldLineBreak extends Entry.Field {
+    constructor(content, blockView, index) {
+        super();
+        this._block = blockView.block;
+        this._blockView = blockView;
+        this._index = index;
 
-/*
- *
- */
-Entry.FieldLineBreak = function(content, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
-    this._index = index;
+        const box = new Entry.BoxModel();
+        this.box = box;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
-
-    this.setValue(null);
-    this.renderStart();
-};
-
-Entry.Utils.inherit(Entry.Field, Entry.FieldLineBreak);
-
-(function(p) {
-    p.renderStart = function() {
+        this.setValue(null);
+        this.renderStart();
+    }
+    renderStart() {
         return;
-    };
+    }
 
-    p.align = function(targetStatementIndex) {
-        var blockView = this._blockView;
+    align(targetStatementIndex) {
+        const blockView = this._blockView;
 
-        if (blockView._statements.length === 0) return;
+        if (blockView._statements.length === 0) {
+            return;
+        }
 
         this.box.set({
             y:
                 (blockView._statements[targetStatementIndex].height || 20) +
                 Math.max(blockView.contentHeight % 1000, 30),
         });
-    };
-})(Entry.FieldLineBreak.prototype);
+    }
+};
