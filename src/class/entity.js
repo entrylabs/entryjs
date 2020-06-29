@@ -767,8 +767,9 @@ Entry.EntityObject = class EntityObject {
     /**
      * set font bold state
      */
-    setFontBold(isFontBold) {
+    setFontBold(isFontBold = false) {
         this.fontBold = isFontBold;
+        this.syncFont();
         Entry.requestUpdate = true;
     }
 
@@ -784,8 +785,9 @@ Entry.EntityObject = class EntityObject {
     /**
      * set font italic state
      */
-    setFontItalic(isFontItalic) {
+    setFontItalic(isFontItalic = false) {
         this.fontItalic = isFontItalic;
+        this.syncFont();
         Entry.requestUpdate = true;
     }
 
@@ -864,10 +866,10 @@ Entry.EntityObject = class EntityObject {
     applyEffectByNameAndValue(effect, mode) {
         switch (effect) {
             case 'fontBold':
-                this.toggleFontBold();
+                this.setFontBold(mode);
                 break;
             case 'fontItalic':
-                this.toggleFontItalic();
+                this.setFontItalic(mode);
                 break;
             case 'underLine':
                 this.setUnderLine(mode);
