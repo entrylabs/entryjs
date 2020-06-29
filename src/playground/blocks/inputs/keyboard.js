@@ -58,10 +58,4 @@ export const keyInputList = [
     ['backslash', '220'],
     [']', '221'],
     ["'", '222'],
-    ['Insert', '45'],
-    ['Delete', '46'],
-    ['Home', '36'],
-    ['End', '35'],
-    ['PageUp', '33'],
-    ['PageDown', '34'],
 ];
