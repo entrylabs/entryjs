@@ -121,9 +121,15 @@ Entry.BlockToPyParser = class {
         const _blockStatementRegex = /\$\d/gim;
 
         let isFirstCommentToken = true;
+
         _blockTokens.forEach((token) => {
-            const paramsTemplate = token.match(_blockParamRegex);
-            const statements = token.match(_blockStatementRegex);
+            let tokenProcessed = token;
+            // 이재원 #7994 관련하여 만약 token (text input) 에 시작하는 템플릿이 괄호라면, 그리고 하나의 Param만 가지고 있는 경우를 regex check 후에 slice해서 사용.
+            if (_blockTokens.length == 1 && /^\([\%[\d ]+\)/gim.test(tokenProcessed)) {
+                tokenProcessed = tokenProcessed.slice(1, -1);
+            }
+            const paramsTemplate = tokenProcessed.match(_blockParamRegex);
+            const statements = tokenProcessed.match(_blockStatementRegex);
             let resultTextCode = '';
 
             // %1 과 같은 템플릿 값이 있는 경우
@@ -137,7 +143,7 @@ Entry.BlockToPyParser = class {
                     }
                 });
 
-                resultTextCode += token.replace(
+                resultTextCode += tokenProcessed.replace(
                     /%(\d)/gim,
                     (_, groupMatch) => paramsValue[groupMatch]
                 );
@@ -155,7 +161,7 @@ Entry.BlockToPyParser = class {
 
             // 일반 블록 처리
             if (!statements && !paramsTemplate) {
-                resultTextCode += token;
+                resultTextCode += tokenProcessed;
             }
 
             // 특수 블록 처리
