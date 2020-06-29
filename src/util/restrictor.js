@@ -1,37 +1,38 @@
 'use strict';
 
-Entry.Restrictor = function(controller) {
-    this._controller = controller;
-    this.startEvent = new Entry.Event(this);
-    this.endEvent = new Entry.Event(this);
+Entry.Restrictor = class Restrictor {
+    constructor(controller) {
+        this._controller = controller;
+        this.startEvent = new Entry.Event(this);
+        this.endEvent = new Entry.Event(this);
 
-    Entry.Curtain.init(controller && controller.isRestrictorCloseable);
+        Entry.Curtain.init(controller && controller.isRestrictorCloseable);
 
-    this.currentTooltip = null;
-};
-
-(function(p) {
-    p.restrict = function(data, toolTipRender) {
+        this.currentTooltip = null;
+    }
+    restrict(data, toolTipRender) {
         this._data = data;
         Entry.expectedAction = data.content.concat();
         this.toolTipRender = toolTipRender;
 
         this.end();
 
-        var log = data.content.concat();
-        var commandType = log.shift();
-        var command = Entry.Command[commandType];
+        const log = data.content.concat();
+        const commandType = log.shift();
+        const command = Entry.Command[commandType];
 
-        var domQuery = command.dom;
+        let domQuery = command.dom;
         this.startEvent.notify();
-        if (domQuery instanceof Array)
+        if (domQuery instanceof Array) {
             domQuery = this.processDomQuery(domQuery);
+        }
 
-        if (!data.tooltip)
+        if (!data.tooltip) {
             data.tooltip = {
                 title: '액션',
                 content: '지시 사항을 따르시오',
             };
+        }
 
         if (command.restrict) {
             this.currentTooltip = command.restrict(
@@ -62,56 +63,69 @@ Entry.Restrictor = function(controller) {
         if (data.skip) {
             return this.end();
         }
-    };
+    }
 
-    p.end = function() {
+    end() {
         if (this.currentTooltip) {
             this.currentTooltip.dispose();
             this.currentTooltip = null;
         }
-    };
+    }
 
-    p.restrictEnd = function() {
+    restrictEnd() {
         this.endEvent.notify();
-    };
+    }
 
-    p.align = function() {
-        if (this.currentTooltip) this.currentTooltip.alignTooltips();
-    };
+    align() {
+        if (this.currentTooltip) {
+            this.currentTooltip.alignTooltips();
+        }
+    }
 
-    p.processDomQuery = function(domQuery, log) {
+    processDomQuery(domQuery, log) {
         log = log || this._data.content;
         log = log.concat();
         log.shift();
         if (domQuery instanceof Array) {
-            domQuery = domQuery.map(function(q) {
-                if (q[0] === '&') return log[Number(q.substr(1))][1];
-                else return q;
+            domQuery = domQuery.map((q) => {
+                if (q[0] === '&') {
+                    return log[Number(q.substr(1))][1];
+                } else {
+                    return q;
+                }
             });
         }
         return domQuery;
-    };
+    }
 
-    p.renderTooltip = function() {
-        if (this.currentTooltip) this.currentTooltip.render();
-    };
+    renderTooltip() {
+        if (this.currentTooltip) {
+            this.currentTooltip.render();
+        }
+    }
 
-    p.fadeOutTooltip = function() {
-        if (this.currentTooltip) this.currentTooltip.fadeOut();
-    };
+    fadeOutTooltip() {
+        if (this.currentTooltip) {
+            this.currentTooltip.fadeOut();
+        }
+    }
 
-    p.fadeInTooltip = function() {
-        if (this.currentTooltip) this.currentTooltip.fadeIn();
-    };
+    fadeInTooltip() {
+        if (this.currentTooltip) {
+            this.currentTooltip.fadeIn();
+        }
+    }
 
-    p.isTooltipFaded = function() {
-        if (this.currentTooltip) return this.currentTooltip.isFaded();
+    isTooltipFaded() {
+        if (this.currentTooltip) {
+            return this.currentTooltip.isFaded();
+        }
         return false;
-    };
+    }
 
-    p.requestNextData = function() {
+    requestNextData() {
         if (this._controller) {
             return this._controller.requestNextData();
         }
-    };
-})(Entry.Restrictor.prototype);
+    }
+};

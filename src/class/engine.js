@@ -904,13 +904,9 @@ Entry.Engine = class Engine {
      * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
-        let keyCode = e.code || e.key;
+        let keyCode = e.code == undefined ? e.key : e.code;
         if (!keyCode) {
             return;
-        }
-        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-            keyCode = keyCode.replace('Left', '');
-            keyCode = keyCode.replace('Right', '');
         }
         keyCode = keyCode.replace('Digit', '');
         keyCode = keyCode.replace('Numpad', '');

@@ -1,7 +1,7 @@
 declare interface Window {
     entrylms: any;
     Lang: any;
-    popupHelper?: any;
+    popupHelper?: import('../src/class/popup_helper').default;
     EntryStatic: any;
     ImageCapture: any;
 }
