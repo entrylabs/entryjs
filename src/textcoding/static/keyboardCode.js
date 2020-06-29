@@ -103,12 +103,19 @@ Entry.KeyboardCode = {};
         '-': 189,
         '.': 190,
         '/': 191,
-        '`': 192,
+        '~': 192,
         '[': 219,
         '\\': 220,
         ']': 221,
         "'": 222,
         backslash: 220,
+        Help: 45,
+        Insert: 45,
+        Delete: 46,
+        Home: 36,
+        End: 35,
+        PageUp: 33,
+        PageDown: 34,
     };
 
     kc.codeToKeyCode = {
@@ -215,6 +222,14 @@ Entry.KeyboardCode = {};
         BracketRight: 221,
         "'": 222,
         Quote: 222,
+        // 페이지 이동 키
+        Help: 45,
+        Insert: 45,
+        Delete: 46,
+        Home: 36,
+        End: 35,
+        PageUp: 33,
+        PageDown: 34,
     };
     /*kc.keyCodeToChar = {
         8:"backspace",9:"tab",13:"enter",16:"shift",17:"ctrl",18:"alt",
