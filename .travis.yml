@@ -6,7 +6,7 @@ stages:
 language:
   - node_js
 node_js:
-  - '8'
+  - "8"
 env:
   global:
     - GH_REF: github.com/entrylabs/entryjs.git
@@ -19,16 +19,14 @@ jobs:
   include:
     - stage: test
       install:
-        - npm prune
-        - npm install
+        - yarn
       script: npm run test
     - stage: deploy
       before_script:
         - chmod +x ./scripts/build.sh
         - chmod +x ./scripts/deploy.sh
       install:
-        - npm prune
-        - npm install
+        - yarn
       script:
         - ./scripts/build.sh
         - ./scripts/deploy.sh
