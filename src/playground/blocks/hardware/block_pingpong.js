@@ -511,7 +511,7 @@ Entry.PingpongG1 = new (class PingpongG1 {
                             speed *= -1;
                         }
 
-                        degree = Math.min(Math.max(degree, 0), 360);
+                        degree = Math.min(Math.max(degree, 0), 5000);
 
                         let step = Math.round(degree * 5.5);
                         if (step > 32768) {
