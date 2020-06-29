@@ -219,7 +219,6 @@ module.exports = {
             text_change_effect: {
                 color: EntryStatic.colorSet.block.default.TEXT,
                 outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                template: '텍스트에 %1 효과 %2 %3',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -227,10 +226,10 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             // display, actual value
-                            ['가로줄', 'strike'],
-                            ['밑줄', 'underLine'],
-                            ['이탤릭', 'fontItalic'],
-                            ['볼드', 'fontBold'],
+                            [Lang.Workspace.font_textblock_strikethrough, 'strike'],
+                            [Lang.Workspace.font_textblock_underline, 'underLine'],
+                            [Lang.Workspace.font_textblock_italic, 'fontItalic'],
+                            [Lang.Workspace.font_textblock_bold, 'fontBold'],
                         ],
                         value: 'strike',
                         fontSize: 10,
@@ -241,8 +240,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['켜기', 'on'],
-                            ['끄기', 'off'],
+                            [Lang.General.apply, 'on'],
+                            [Lang.General.clear, 'off'],
                         ],
                         value: 'on',
                         fontSize: 10,
@@ -278,7 +277,6 @@ module.exports = {
             text_change_font: {
                 color: EntryStatic.colorSet.block.default.TEXT,
                 outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                template: '글씨체를 %1 로 변경 %2',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -309,12 +307,11 @@ module.exports = {
                     sprite.setFontWithLog(`${sprite.getFontSize()} ${font}`, false);
                     return script.callReturn();
                 },
-                syntax: { js: [], py: ['Entry.addEffect(%1)'] },
+                syntax: { js: [], py: ['Entry.text_change_font(%1)'] },
             },
             text_change_font_color: {
                 color: EntryStatic.colorSet.block.default.TEXT,
                 outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                template: '글씨색을 %1 로 변경 %2',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -342,12 +339,11 @@ module.exports = {
                     sprite.setColorWithLog(color);
                     return script.callReturn();
                 },
-                syntax: { js: [], py: ['Entry.addEffect(%1)'] },
+                syntax: { js: [], py: ['Entry.text_change_font_color(%1)'] },
             },
             text_change_bg_color: {
                 color: EntryStatic.colorSet.block.default.TEXT,
                 outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                template: '배경색을 %1 로 변경 %2',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -375,7 +371,7 @@ module.exports = {
                     sprite.setBGColourWithLog(color);
                     return script.callReturn();
                 },
-                syntax: { js: [], py: ['Entry.addEffect(%1)'] },
+                syntax: { js: [], py: ['Entry.text_change_bg_color(%1)'] },
             },
             text_flush: {
                 color: EntryStatic.colorSet.block.default.TEXT,
