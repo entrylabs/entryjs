@@ -1113,6 +1113,86 @@ module.exports = {
                     ],
                 },
             },
+
+            calc_pow: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                template: '%1 의 %2 거듭 제곱',
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['10'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['10'],
+                        },
+                    ],
+                    type: 'calc_pow',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['A&value'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['A&value'],
+                        },
+                    ],
+                    type: 'calc_pow',
+                },
+                paramsKeyMap: {
+                    BASE: 0,
+                    EXPONENT: 1,
+                },
+                class: 'calc',
+                isNotFor: [],
+                func(sprite, script) {
+                    const base = script.getNumberValue('BASE');
+                    const exponent = script.getNumberValue('EXPONENT');
+                    return base ** exponent;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: ' (%1 ** %2)',
+                            template: '%1 ** %2',
+                            keyOption: 'calc_pow',
+                            blockType: 'param',
+                            textParams: [
+                                {
+                                    type: 'Block',
+                                    accept: 'string',
+                                },
+                                {
+                                    type: 'Block',
+                                    accept: 'string',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+
             get_project_timer_value: {
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,

@@ -607,13 +607,19 @@ Entry.PyToBlockParser = class {
                 ],
             };
         } else if (operator === '**') {
-            this.assert(
-                component.right.value === 2,
-                component.right.value,
-                component,
-                'DEFAULT',
-                'DEFAULT'
-            );
+            // this.assert(
+            //     component.right.value === 2,
+            //     component.right.value,
+            //     component,
+            //     'DEFAULT',
+            //     'DEFAULT'
+            // );
+            if (component.right.value != 2) {
+                return {
+                    type: 'calc_pow',
+                    params: [this.Node(component.left), this.Node(component.right)],
+                };
+            }
             return {
                 type: 'calc_operation',
                 params: [undefined, this.Node(component.left), undefined, 'square'],

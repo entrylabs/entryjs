@@ -337,6 +337,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_sound_volume',
                 'quotient_and_mod',
                 'calc_operation',
+                'calc_pow',
                 'get_project_timer_value',
                 'choose_project_timer_action',
                 'set_visible_project_timer',
