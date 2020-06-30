@@ -25,7 +25,7 @@ Entry.Toast = class Toast {
         toast.addClass('entryToast');
         toast.addClass('entryToastWarning');
         toast.bindOnClick(() => {
-            Entry.toast.body_.removeChild(this);
+            Entry.toast.body_.removeChild(toast);
         });
         const toastTitle = Entry.createElement('div', 'entryToast');
         toastTitle.addClass('entryToastTitle');
@@ -58,7 +58,7 @@ Entry.Toast = class Toast {
         toast.addClass('entryToast');
         toast.addClass('entryToastSuccess');
         toast.bindOnClick(() => {
-            Entry.toast.body_.removeChild(this);
+            Entry.toast.body_.removeChild(toast);
         });
         const toastTitle = Entry.createElement('div', 'entryToast');
         toastTitle.addClass('entryToastTitle');
@@ -92,7 +92,7 @@ Entry.Toast = class Toast {
         toast.addClass('entryToast');
         toast.addClass('entryToastAlert');
         toast.bindOnClick(() => {
-            Entry.toast.body_.removeChild(this);
+            Entry.toast.body_.removeChild(toast);
             if (timer) {
                 clearInterval(timer);
             }
