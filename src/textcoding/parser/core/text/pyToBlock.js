@@ -607,13 +607,7 @@ Entry.PyToBlockParser = class {
                 ],
             };
         } else if (operator === '**') {
-            // this.assert(
-            //     component.right.value === 2,
-            //     component.right.value,
-            //     component,
-            //     'DEFAULT',
-            //     'DEFAULT'
-            // );
+            // #7447 이재원, 거듭 제곱시와 기존의 제곱을 분리하여 ast 치환
             if (component.right.value != 2) {
                 return {
                     type: 'calc_pow',
