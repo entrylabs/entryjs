@@ -15,6 +15,7 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 Entry.StampEntity = class StampEntity extends Entry.EntityObject {
     constructor(object, entity) {
         /** @type {!string} */
+        super(object);
         this.parent = object;
         this.type = object.objectType;
         this.isClone = true;
