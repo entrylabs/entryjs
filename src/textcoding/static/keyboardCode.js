@@ -190,6 +190,13 @@ Entry.KeyboardCode = {};
         x: 88,
         y: 89,
         z: 90,
+        Help: 45,
+        Insert: 45,
+        Delete: 46,
+        Home: 36,
+        End: 35,
+        PageUp: 33,
+        PageDown: 34,
     };
     /*kc.keyCodeToChar = {
         8:"backspace",9:"tab",13:"enter",16:"shift",17:"ctrl",18:"alt",
