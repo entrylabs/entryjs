@@ -576,7 +576,10 @@ Entry.PyToBlockParser = class {
             operator = this.binaryOperator[operator];
         } else if (this.arithmeticOperator[operator]) {
             // nt11576 이슈 9429, 파이썬 변환시 Number add 와 String concat parsing 버그 수정
-            if (isNaN(component.left.value) || isNaN(component.right.value)) {
+            if (
+                typeof component.left.value === 'string' ||
+                typeof component.right.value === 'string'
+            ) {
                 return {
                     type: 'combine_something',
                     params: [

@@ -15,6 +15,7 @@ export default class AILearning {
     isLoading = false;
     result = [];
     isEnable;
+    #recordTime = 2000;
     #module = null;
     constructor(playground, isEnable = true) {
         this.#playground = playground;
@@ -76,7 +77,7 @@ export default class AILearning {
     }
 
     load(modelInfo) {
-        const { url, labels, type, classes = [], model, id, _id, isActive = true, name } = modelInfo || {};
+        const { url, labels, type, classes = [], model, id, _id, isActive = true, name, recordTime } = modelInfo || {};
         if(!url ||  !this.isEnable || !isActive) {
             return ;
         }
@@ -86,8 +87,9 @@ export default class AILearning {
         this.#oid = _id;
         this.name = name;
         this.#modelId = model || id;
+        this.#recordTime = recordTime;
         this.unbanBlocks();
-        this.generatePopupView({url, labels: this.#labels, type});
+        this.generatePopupView({url, labels: this.#labels, type, recordTime});
         if(this.#playground) {
             this.#playground.reloadPlayground()
         }
@@ -143,6 +145,7 @@ export default class AILearning {
         this.isLoading = false;
         this.result = [];
         this.isLoaded = false;
+        this.#recordTime = 2000;
     }
 
     toJSON() {
@@ -155,6 +158,7 @@ export default class AILearning {
             type: this.#type,
             id: this.#modelId,
             _id: this.#oid,
+            recordTime: this.#recordTime,
         }
     }
 
@@ -170,7 +174,7 @@ export default class AILearning {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.ai_utilize_train_pop_error, true);
     }
 
-    generatePopupView({url, labels, type}) {
+    generatePopupView({url, labels, type, recordTime}) {
         if (!this.popupHelper) {
             if (window.popupHelper) {
                 this.popupHelper = window.popupHelper;
@@ -185,7 +189,7 @@ export default class AILearning {
             onShow: () => {
                 this.popupHelper.addClass('learning_popup');
                 isPauseClicked = false;
-                localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type}));
+                localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type, recordTime}));
                 this.isLoading = true;
                 this.result = [];
                 if(Entry.engine.state == 'run') {
