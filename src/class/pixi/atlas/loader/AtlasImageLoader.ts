@@ -5,24 +5,22 @@ import { TimeoutTimer } from '../../utils/TimeoutTimer';
 import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
 import { clog } from '../../utils/logs';
+// @ts-ignore
+import each from 'lodash/each';
 
-var TIME_OUT_DELAY:number = 1000;
+const TIME_OUT_DELAY: number = 1000;
 
-type LoadingInfoMap = {[key:string]:AtlasImageLoadingInfo};
+type LoadingInfoMap = { [key: string]: AtlasImageLoadingInfo };
 
-export type ImageLoaderHandler = (info:AtlasImageLoadingInfo)=>void;
-
-declare let _:any;
-declare let Entry:any;
+export type ImageLoaderHandler = (info: AtlasImageLoadingInfo) => void;
+declare let Entry: any;
 
 export class AtlasImageLoader {
+    private _path_info_map: LoadingInfoMap = {};
+    private _timer: TimeoutTimer = new TimeoutTimer();
+    private _syncRequested: boolean;
 
-    private _path_info_map:LoadingInfoMap = {};
-    private _timer:TimeoutTimer = new TimeoutTimer();
-    private _syncRequested:boolean;
-
-    constructor(private _onLoadCallback:ImageLoaderHandler) {
-    }
+    constructor(private _onLoadCallback: ImageLoaderHandler) {}
 
     /**
      * model 의 이미지를 로드 후, rect.scaleFactor가 1이 아닐경우 rect 만큼 리사이즈한 canvas 를 소스로 설정하긔
@@ -30,18 +28,20 @@ export class AtlasImageLoader {
      * @param imgRect
      * @param subCallback
      */
-    load(model:IRawPicture, imgRect:ImageRect) {
-        var path = PIXIAtlasHelper.getRawPath(model);
-        var info:AtlasImageLoadingInfo = this._path_info_map[path];
+    load(model: IRawPicture, imgRect: ImageRect) {
+        const path = PIXIAtlasHelper.getRawPath(model);
+        let info: AtlasImageLoadingInfo = this._path_info_map[path];
 
-        if(info) return;
+        if (info) {
+            return;
+        }
 
         info = new AtlasImageLoadingInfo(model, imgRect, this._onLoadCallback);
         this._path_info_map[path] = info;
         info.load();
     }
 
-    getImageInfo(rawPath:string):AtlasImageLoadingInfo {
+    getImageInfo(rawPath: string): AtlasImageLoadingInfo {
         return this._path_info_map[rawPath];
     }
 
@@ -50,31 +50,35 @@ export class AtlasImageLoader {
      */
     private _syncWithEntryObjects() {
         this._syncRequested = false;
-        var arrObj:any[] = Entry.container.getAllObjects();
-        var allPathSet:PrimitiveSet = new PrimitiveSet();
+        const arrObj: any[] = Entry.container.getAllObjects();
+        const allPathSet: PrimitiveSet = new PrimitiveSet();
 
-        var LEN = arrObj.length;
-        var LEN2;
-        var pics:IRawPicture[];
-        var pic:IRawPicture;
-        for( var i = 0 ; i < LEN ; i++ ) {
+        const LEN = arrObj.length;
+        let LEN2;
+        let pics: IRawPicture[];
+        let pic: IRawPicture;
+        for (let i = 0; i < LEN; i++) {
             pics = arrObj[i].pictures;
-            if(!pics || !(LEN2 = pics.length)) continue;
-            for(var j = 0 ; j < LEN2 ; j++) {
+            if (!pics || !(LEN2 = pics.length)) {
+                continue;
+            }
+            for (let j = 0; j < LEN2; j++) {
                 pic = pics[j];
                 allPathSet.put(pic.filename || pic.fileurl);
             }
         }
 
         let deleteCnt = 0;
-        _.each(this._path_info_map, (info:AtlasImageLoadingInfo, path:string)=>{
-            if(allPathSet.hasValue(path)) return;
+        each(this._path_info_map, (info: AtlasImageLoadingInfo, path: string) => {
+            if (allPathSet.hasValue(path)) {
+                return;
+            }
             info.destroy();
             deleteCnt++;
             delete this._path_info_map[path];
         });
 
-        if(deleteCnt>0) {
+        if (deleteCnt > 0) {
             clog(`${deleteCnt} image item(s) deleted`);
         }
     }
@@ -85,17 +89,19 @@ export class AtlasImageLoader {
     empty() {
         this._timer.reset();
         this._syncRequested = false;
-        _.each(this._path_info_map, (info:AtlasImageLoadingInfo, path:string)=>{
+        each(this._path_info_map, (info: AtlasImageLoadingInfo, path: string) => {
             info.destroy();
         });
         this._path_info_map = {};
     }
 
     requestSync() {
-        if(this._syncRequested) return;
+        if (this._syncRequested) {
+            return;
+        }
         this._syncRequested = true;
 
-        this._timer.timeout(TIME_OUT_DELAY, ()=>{
+        this._timer.timeout(TIME_OUT_DELAY, () => {
             this._syncWithEntryObjects();
         });
     }

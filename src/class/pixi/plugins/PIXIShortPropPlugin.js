@@ -1,32 +1,57 @@
-export function PIXIShortPropPlugin() {
+import { DisplayObject, Container } from 'pixi.js';
 
-    Object.defineProperties(PIXI.DisplayObject.prototype, {
+export function PIXIShortPropPlugin() {
+    Object.defineProperties(DisplayObject.prototype, {
         scaleX: {
-            get: function(){ return this.scale.x; },
-            set: function(v){ this.scale.x = v; },
+            get() {
+                return this.scale.x;
+            },
+            set(v) {
+                this.scale.x = v;
+            },
         },
         scaleY: {
-            get: function() { return this.scale.y; },
-            set: function(v) { this.scale.y = v; },
+            get() {
+                return this.scale.y;
+            },
+            set(v) {
+                this.scale.y = v;
+            },
         },
         regX: {
-            get: function() { return this.pivot.x; },
-            set: function(v) { this.pivot.x = v; },
+            get() {
+                return this.pivot.x;
+            },
+            set(v) {
+                this.pivot.x = v;
+            },
         },
         regY: {
-            get: function() { return this.pivot.y; },
-            set: function(v) { this.pivot.y = v; },
+            get() {
+                return this.pivot.y;
+            },
+            set(v) {
+                this.pivot.y = v;
+            },
         },
         mouseEnabled: {
-            get: function() { return this.interactive; },
-            set: function(v) { this.interactive = v; }
+            get() {
+                return this.interactive;
+            },
+            set(v) {
+                this.interactive = v;
+            },
         },
     });
 
-    Object.defineProperties(PIXI.Container.prototype, {
+    Object.defineProperties(Container.prototype, {
         mouseChildren: {
-            get: function() { return this.interactiveChildren; },
-            set: function(v) { this.interactiveChildren = v; }
-        }
+            get() {
+                return this.interactiveChildren;
+            },
+            set(v) {
+                this.interactiveChildren = v;
+            },
+        },
     });
 }

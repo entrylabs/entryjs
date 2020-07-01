@@ -1,5 +1,6 @@
 'use strict';
 
+import * as PIXI from 'pixi.js';
 import { GEHelper } from '../graphicEngine/GEHelper';
 
 type EntryObjectEntity = any;

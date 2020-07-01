@@ -1,7 +1,7 @@
 import PIXIHelper from '../helper/PIXIHelper';
+import { Rectangle, SCALE_MODES, MIPMAP_MODES } from 'pixi.js';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { clog } from '../utils/logs';
-import Rectangle = PIXI.Rectangle;
 
 interface ITexOption {}
 
@@ -22,8 +22,8 @@ export class EntryTextureOption {
     /** 텍스쳐를 최대 몇으로 할지의 값을 Canvas.width , height 기준으로 몇배로 할 지에 대한 값. */
     private readonly _texStageRatio: number;
 
-    readonly scaleMode = PIXI.SCALE_MODES.LINEAR;
-    readonly mipmap: boolean = false;
+    readonly scaleMode = SCALE_MODES.LINEAR;
+    readonly mipmap: MIPMAP_MODES = MIPMAP_MODES.OFF;
     readonly atlasOption: IAtlasOption;
 
     /** 텍스쳐 1개의 최대 크기. 이 크기보다 크면 리사이즈 함. */
@@ -31,9 +31,7 @@ export class EntryTextureOption {
 
     constructor(stageWidth: number, stageHeight: number) {
         this._USE_ATLAS = this._isSpriteSheetEnabled();
-
         this.GPU_TEX_MAX_SIZE = this.computeMaxTextureSize(4096);
-
         this._texStageRatio = 1;
         this.texMaxRect = this.getTexRect(
             stageWidth,
@@ -41,7 +39,6 @@ export class EntryTextureOption {
             this._texStageRatio,
             this.GPU_TEX_MAX_SIZE
         );
-
         this.atlasOption = {
             extrudeSize: 2,
             atlasSize: this.GPU_TEX_MAX_SIZE,
@@ -63,17 +60,17 @@ export class EntryTextureOption {
     }
 
     private getTexRect(w: number, h: number, ratio: number, max: number): Rectangle {
-        return new Rectangle(
-            0,
-            0,
+        return new Rectangle(0, 0,
             Math.min(Math.round(w * ratio), max),
-            Math.min(Math.round(h * ratio), max)
+            Math.min(Math.round(h * ratio), max),
         );
     }
 
     private computeMaxTextureSize(LIMIT: number): number {
         const canvas: HTMLCanvasElement = PIXIHelper.getOffScreenCanvas(true);
-        const ctx: any = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        // @ts-ignore
+        const ctx: WebGLRenderingContext =
+            canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
         let size = ctx ? ctx.getParameter(ctx.MAX_TEXTURE_SIZE) : 2048;
         size = Math.min(size, LIMIT);
         clog(`Max texture size : ${size}`);
@@ -84,14 +81,10 @@ export class EntryTextureOption {
         const spriteSheetString = 'ss=1';
         const url = window.location.href;
         const query = url.split('?')[1];
-        if (!query) {
-            return false;
-        }
+        if (!query) return false;
         const arr = query.split('&');
         for (let i = 0; i < arr.length; i++) {
-            if (arr[i] == spriteSheetString) {
-                return true;
-            }
+            if (arr[i] == spriteSheetString) return true;
         }
         return false;
     }
