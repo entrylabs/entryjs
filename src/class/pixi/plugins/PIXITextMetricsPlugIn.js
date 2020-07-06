@@ -1,13 +1,13 @@
-export function PIXITextMetricsPlugIn() {
-    const TextMetrics = PIXI.TextMetrics;
+import { TextMetrics } from 'pixi.js';
 
-    const TextMetrics__orgWordWrap = PIXI.TextMetrics.wordWrap;
+export function PIXITextMetricsPlugIn() {
+    const WordWrap = TextMetrics.wordWrap;
     TextMetrics.__breakAllWordWrap = __breakAllWordWrap;
 
     TextMetrics.wordWrap = function(text, style, canvas = TextMetrics._canvas) {
         return style.wordBreakAll
             ? TextMetrics.__breakAllWordWrap(text, style, canvas)
-            : TextMetrics__orgWordWrap(text, style, canvas);
+            : WordWrap(text, style, canvas);
     };
 
     /**
@@ -175,7 +175,7 @@ export function PIXITextMetricsPlugIn() {
             maxLineWidth = Math.max(maxLineWidth, lineWidth);
         }
         const width = maxLineWidth + style.strokeThickness;
-        const lineHeight = style.lineHeight || getMeasuredWidth(font, 'M') * 1.2;
+        const lineHeight = style.lineHeight || _getMeasuredWidth(font, 'M') * 1.2;
         const height = lineHeight * lines.length;
 
         return new TextMetrics(

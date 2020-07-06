@@ -439,9 +439,8 @@ Entry.Utils.isNumber = function(num) {
     const reg = /^-?\d+\.?\d*$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 };
 
 Entry.Utils.generateId = function() {
