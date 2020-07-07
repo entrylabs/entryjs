@@ -57,6 +57,10 @@ Entry.Scroller = class Scroller {
     };
 
     onMouseUp = (e) => {
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         console.log('onMouseUp');
         this.removeEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove);
         this.removeEventListener(document, ['mouseup', 'touchend'], this.onMouseUp);
@@ -65,6 +69,10 @@ Entry.Scroller = class Scroller {
     };
 
     onMouseDown = (e) => {
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         console.log('onMouseDown', e.button, e);
         if (e.button === 0 || e instanceof window.TouchEvent) {
             console.log('go into add event');

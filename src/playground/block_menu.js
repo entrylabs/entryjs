@@ -851,6 +851,10 @@ class BlockMenu {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button != 1) {
             $(document).unbind('.blockMenu');
             delete this.dragInstance;
@@ -861,7 +865,10 @@ class BlockMenu {
         if (e.preventDefault) {
             e.preventDefault();
         }
-
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown) {
