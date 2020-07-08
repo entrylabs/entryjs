@@ -1499,7 +1499,6 @@ Entry.Playground = class Playground {
         if (!object) {
             return;
         }
-
         const entity = object.entity;
 
         const text = entity.getText();
@@ -1541,6 +1540,7 @@ Entry.Playground = class Playground {
         }
 
         this.setFontAlign(entity.getTextAlign());
+        Entry.stage.updateForce();
     }
 
     _setFontFontUI() {
@@ -1601,7 +1601,7 @@ Entry.Playground = class Playground {
     }
 
     setAiLearningBlock(url, info) {
-        Entry.aiLearning.load({url, ...info});
+        Entry.aiLearning.load({ url, ...info });
     }
 
     /**

@@ -176,9 +176,6 @@ Entry.LineCoding.blockMenuBlocks = [
     //    'LineCodingLineLost',
     //    'LineCodingCline',
     //    'LineCodingCline2',
-    //    'LineCodingFFmotor',
-    //    'LineCodingBBmotor',
-    //    'LineCodingMotorStop',
     //    'LineCodingPline',
     //    'LineCodingStart',
     //    'LineCodingTimer',
@@ -203,6 +200,9 @@ Entry.LineCoding.blockMenuBlocks = [
     'LineCodingBuzzerOnOff',
     'LineCodingLED',
     'LineCodingABSH',
+    'LineCodingFFmotor',
+    'LineCodingBBmotor',
+    'LineCodingMotorStop',
 ];
 
 Entry.LineCoding.setLanguage = function() {
@@ -238,6 +238,9 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingLED: 'led(%1, %2, %3, %4); %5',
                 LineCodingSetLcdString: 'lcd 세로%1줄,  가로%2줄 에  %3 표시하기 %4',
                 LineCodingSetLcdClear: 'lcd 지우기 %1',
+                LineCodingFFmotor: 'ffmotor(%1, %2); %3',
+                LineCodingBBmotor: 'bbmotor(%1, %2); %3',
+                LineCodingMotorStop: 'motorstop(%1, %2); %3',
             },
             Blocks: {
                 OnBlock: '켜짐(HIGH, 5V)',
@@ -288,6 +291,9 @@ Entry.LineCoding.setLanguage = function() {
                 LineCodingLED: 'led(%1, %2, %3, %4); %5',
                 LineCodingSetLcdString: 'lcd Display %3 on line %1 and line %2 %4',
                 LineCodingSetLcdClear: 'Clear lcd %1',
+                LineCodingFFmotor: 'ffmotor(%1, %2); %3',
+                LineCodingBBmotor: 'bbmotor(%1, %2); %3',
+                LineCodingMotorStop: 'motorstop(%1, %2); %3',
             },
             Blocks: {
                 OnBlock: 'On(HIGH, 5V)',
@@ -3130,6 +3136,216 @@ Entry.LineCoding.getBlocks = function() {
                     LineOneFlag = 1;
                     return script.callReturn();
                 }
+            },
+            syntax: { js: [], py: [] },
+        },
+        //DC 모터 직진편차보정 ffmotor
+        LineCodingFFmotor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'LineCodingFFmotor',
+            },
+            paramsKeyMap: {
+                LSPEED: 0,
+                RSPEED: 1,
+            },
+            class: 'LineCoding_LINE5',
+            isNotFor: ['LineCoding'],
+            func(sprite, script) {
+                let rspeed2 = script.getNumberValue('RSPEED', script);
+                let lspeed2 = script.getNumberValue('LSPEED', script);
+                ++LineNum;
+                
+                lspeed2 = Math.min(200, lspeed2);
+                lspeed2 = Math.max(0, lspeed2);
+                rspeed2 = Math.min(200, rspeed2);
+                rspeed2 = Math.max(0, rspeed2);
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                    type: Entry.LineCoding.sensorTypes.LINE_FFMOTOR,
+                    data: {
+                        lspeed: lspeed2,
+                        rspeed: rspeed2,
+                    },
+                    time: new Date().getTime(),
+                };
+                LmotorSpeed = lspeed2;
+                RmotorSpeed = rspeed2;
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        //DC 모터 후진편차보정 bbmotor
+        LineCodingBBmotor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'LineCodingBBmotor',
+            },
+            paramsKeyMap: {
+                LSPEED: 0,
+                RSPEED: 1,
+            },
+            class: 'LineCoding_LINE5',
+            isNotFor: ['LineCoding'],
+            func(sprite, script) {
+                let rspeed2 = script.getNumberValue('RSPEED', script);
+                let lspeed2 = script.getNumberValue('LSPEED', script);
+                ++LineNum;
+                
+                lspeed2 = Math.min(200, lspeed2);
+                lspeed2 = Math.max(0, lspeed2);
+                rspeed2 = Math.min(200, rspeed2);
+                rspeed2 = Math.max(0, rspeed2);
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                    type: Entry.LineCoding.sensorTypes.LINE_BBMOTOR,
+                    data: {
+                        lspeed: lspeed2,
+                        rspeed: rspeed2,
+                    },
+                    time: new Date().getTime(),
+                };
+                LmotorSpeed = lspeed2;
+                RmotorSpeed = rspeed2;
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        //DC 모터 정지보정 motorstop
+        LineCodingMotorStop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'LineCodingMotorStop',
+            },
+            paramsKeyMap: {
+                LSPEED: 0,
+                RSPEED: 1,
+            },
+            class: 'LineCoding_LINE5',
+            isNotFor: ['LineCoding'],
+            func(sprite, script) {
+                let rspeed2 = script.getNumberValue('RSPEED', script);
+                let lspeed2 = script.getNumberValue('LSPEED', script);
+                ++LineNum;
+                
+                lspeed2 = Math.min(200, lspeed2);
+                lspeed2 = Math.max(0, lspeed2);
+                rspeed2 = Math.min(200, rspeed2);
+                rspeed2 = Math.max(0, rspeed2);
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                    type: Entry.LineCoding.sensorTypes.LINE_MOTORSTOP,
+                    data: {
+                        lspeed: lspeed2,
+                        rspeed: rspeed2,
+                    },
+                    time: new Date().getTime(),
+                };
+                LmotorSpeed = lspeed2;
+                RmotorSpeed = rspeed2;
+                return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },

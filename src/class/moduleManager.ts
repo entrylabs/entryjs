@@ -103,5 +103,9 @@ Entry.moduleManager = new ModuleManager();
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
+    try {
+        await Promise.all(externalModules.map(Entry.moduleManager.loadExternalModule));
+    } catch (e){
+        // 모듈오류는 함수 내 onError 에서 처리하고, async-await 에서는 무시한다.
+    }
 };
