@@ -1,4 +1,4 @@
-class ModuleManager implements IEntry.ExternalModuleManager {
+class ModuleManager {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
@@ -93,6 +93,7 @@ class ModuleManager implements IEntry.ExternalModuleManager {
     }
 }
 
+export default ModuleManager;
 Entry.moduleManager = new ModuleManager();
 
 /**
