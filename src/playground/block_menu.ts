@@ -829,26 +829,6 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
-    _captureKeyEvent(e) {
-        let keyCode = e.code == undefined ? e.key : e.code;
-        if (!keyCode) {
-            return;
-        }
-        keyCode = keyCode.replace('Digit', '');
-        keyCode = keyCode.replace('Numpad', '');
-        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
-        if (!keyCode) {
-            return;
-        }
-        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
-            e.preventDefault();
-            setTimeout(() => {
-                this._cancelDynamic(true);
-                this._dSelectMenu(keyCode, true);
-            }, 200);
-        }
-    }
-
     enablePattern() {
         this.pattern.removeAttribute('style');
     }
@@ -1259,25 +1239,22 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     private _captureKeyEvent(e: KeyboardEvent) {
-        let keyCode = e.code || e.key;
+        let keyCode: number | string = e.code == undefined ? e.key : e.code;
         if (!keyCode) {
             return;
         }
-        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-            keyCode = keyCode.replace('Left', '');
-            keyCode = keyCode.replace('Right', '');
-        }
         keyCode = keyCode.replace('Digit', '');
         keyCode = keyCode.replace('Numpad', '');
-        const entryKeyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
-        if (!entryKeyCode) {
+        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        if (!keyCode) {
             return;
         }
-        if (e.ctrlKey && Entry.type === 'workspace' && !isNaN(Number(entryKeyCode))) {
+
+        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
-                this._dSelectMenu(entryKeyCode, true);
+                this._dSelectMenu(keyCode, true);
             }, 200);
         }
     }
