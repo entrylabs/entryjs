@@ -4,40 +4,40 @@
 /*
  *
  */
-Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
-    Entry.Model(this, false);
+Entry.FieldOutput = class FieldOutput extends Entry.Field {
+    constructor(content, blockView, index, mode, contentIndex) {
+        super(content, blockView, index);
+        Entry.Model(this, false);
 
-    this._blockView = blockView;
-    this._block = blockView.block;
-    this._valueBlock = null;
+        this._blockView = blockView;
+        this._block = blockView.block;
+        this._valueBlock = null;
 
-    this.box = new Entry.BoxModel();
-    this.changeEvent = new Entry.Event(this);
+        this.box = new Entry.BoxModel();
+        this.changeEvent = new Entry.Event(this);
 
-    this._index = index;
-    this.contentIndex = contentIndex;
-    this._content = content;
+        this._index = index;
+        this.contentIndex = contentIndex;
+        this._content = content;
 
-    this.acceptType = content.accept;
+        this.acceptType = content.accept;
 
-    this.view = this;
+        this.view = this;
 
-    this.svgGroup = null;
+        this.svgGroup = null;
 
-    this._position = content.position;
+        this._position = content.position;
 
-    this.box.observe(blockView, 'dAlignContent', ['width', 'height']);
-    this.observe(this, '_updateBG', ['magneting'], false);
+        this.box.observe(blockView, 'dAlignContent', ['width', 'height']);
+        this.observe(this, '_updateBG', ['magneting'], false);
 
-    this.renderStart(blockView.getBoard(), mode);
-};
+        this.renderStart(blockView.getBoard(), mode);
+        this.schema = { magneting: false };
+        this.isParamBlockType = _.constant(true);
+        this.calcHeight = this.calcWH;
+    }
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
-
-(function(p) {
-    p.schema = { magneting: false };
-
-    p.renderStart = function(board, mode) {
+    renderStart(board, mode) {
         if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
         }
@@ -57,9 +57,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (this._blockView.getBoard().constructor == Entry.BlockMenu && this._valueBlock) {
             this._valueBlock.view.removeControl();
         }
-    };
+    }
 
-    p.align = function(x, y, animate) {
+    align(x, y, animate) {
         animate = animate === undefined ? true : animate;
         const svgGroup = this.svgGroup;
         if (this._position) {
@@ -94,9 +94,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         }
 
         this.box.set({ x, y });
-    };
+    }
 
-    p.calcWH = function() {
+    calcWH() {
         const block = this._valueBlock;
         const blockView = block && block.view;
 
@@ -111,17 +111,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
                 height: 20,
             });
         }
-    };
+    }
 
-    p.calcHeight = p.calcWH;
-
-    p.destroy = function() {
+    destroy() {
         this._valueBlock && this._valueBlock.destroyView();
-    };
+    }
 
-    p._inspectBlock = function() {};
+    _inspectBlock() {}
 
-    p._setValueBlock = function(block) {
+    _setValueBlock(block) {
         if (block != this._valueBlock || !this._valueBlock) {
             this._valueBlock = block;
             this.setValue(block);
@@ -129,13 +127,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             block && block.setThread(this);
             return this._valueBlock;
         }
-    };
+    }
 
-    p.spliceBlock = function() {
+    spliceBlock() {
         this._updateValueBlock();
-    };
+    }
 
-    p._updateValueBlock = function(block) {
+    _updateValueBlock(block) {
         if (!(block instanceof Entry.Block)) {
             block = undefined;
         }
@@ -159,21 +157,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         }
 
         this._blockView.dAlignContent();
-    };
+    }
 
-    p.getPrevBlock = function(block) {
+    getPrevBlock(block) {
         if (this._valueBlock === block) {
             return this;
         } else {
             return null;
         }
-    };
+    }
 
-    p.getNextBlock = function() {
+    getNextBlock() {
         return null;
-    };
+    }
 
-    p.requestAbsoluteCoordinate = function(blockView) {
+    requestAbsoluteCoordinate(blockView) {
         const board = this.getBoard();
         const { scale = 1 } = board || {};
         var blockView = this._blockView;
@@ -182,36 +180,36 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         pos.x += (this.box.x + contentPos.x) * scale;
         pos.y += this.box.y + contentPos.y;
         return pos;
-    };
+    }
 
-    p.dominate = function() {
+    dominate() {
         this._blockView.dominate();
-    };
+    }
 
-    p.isGlobal = function() {
+    isGlobal() {
         return false;
-    };
+    }
 
-    p.separate = function(block) {
+    separate(block) {
         this.getCode().createThread([block]);
         this._updateValueBlock(null);
         this.changeEvent.notify();
-    };
+    }
 
-    p.getCode = function() {
+    getCode() {
         return this._block.thread.getCode();
-    };
+    }
 
-    p.cut = function(block) {
+    cut(block) {
         if (this._valueBlock === block) {
             delete this._valueBlock;
             return [block];
         } else {
             return null;
         }
-    };
+    }
 
-    p._updateBG = function() {
+    _updateBG() {
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
                 d: 'm -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ',
@@ -226,9 +224,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
                 delete this._bg;
             }
         }
-    };
+    }
 
-    p.replace = function(block) {
+    replace(block) {
         const valueBlock = this._valueBlock;
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
@@ -237,30 +235,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         this._updateValueBlock(block);
         block.view._toLocalCoordinate(this);
         this.calcWH();
-    };
+    }
 
-    p.setParent = function(parent) {
+    setParent(parent) {
         this._parent = parent;
-    };
+    }
 
-    p.getParent = function() {
+    getParent() {
         return this._parent;
-    };
+    }
 
-    p.getThread = function() {
+    getThread() {
         return this;
-    };
+    }
 
-    p.getValueBlock = function() {
+    getValueBlock() {
         return this._valueBlock;
-    };
+    }
 
-    p.pointer = function(pointer) {
+    pointer(pointer) {
         pointer = pointer || [];
         pointer.unshift(this._index);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);
-    };
-
-    p.isParamBlockType = _.constant(true);
-})(Entry.FieldOutput.prototype);
+    }
+};
