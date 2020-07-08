@@ -1,4 +1,3 @@
-
 type EntryBlockPair = [string, EntryBlock, boolean?];
 
 class EntryModuleLoader {
@@ -75,9 +74,11 @@ class EntryModuleLoader {
 
         this.loadBlocks({
             categoryName: 'arduino',
-            blockPairs: Object.entries(blockObjects).map(([blockName, block]) =>
-                [blockName, block, blockMenuBlocks.indexOf(blockName) > -1],
-            ),
+            blockPairs: Object.entries(blockObjects).map(([blockName, block]) => [
+                blockName,
+                block,
+                blockMenuBlocks.indexOf(blockName) > -1,
+            ]),
         });
 
         Entry.hw.setExternalModule(moduleObject);
@@ -108,7 +109,10 @@ class EntryModuleLoader {
     loadBlocks({
         categoryName,
         blockPairs,
-    }: { categoryName: string, blockPairs: EntryBlockPair[] }) {
+    }: {
+        categoryName: string;
+        blockPairs: EntryBlockPair[];
+    }) {
         const blockMenu = Entry.getMainWS().blockMenu;
 
         blockPairs.forEach((blockPair) => {
@@ -137,12 +141,14 @@ class EntryModuleLoader {
             skeleton: 'basic_text',
             class: moduleName,
             template: '%1',
-            params: [{
-                type: 'Text',
-                text: content,
-                color: EntryStatic.colorSet.common.TEXT,
-                align: 'center',
-            }],
+            params: [
+                {
+                    type: 'Text',
+                    text: content,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
             def: {
                 type: blockName,
             },
@@ -165,6 +171,9 @@ class EntryModuleLoader {
         }
     }
 
+    /**
+     * 블록 모델이 블록객체로서 구현되기 전에 불충분한 프로퍼티나 잘못된 값이 있는 경우 이쪽에서 수정한다.
+     */
     private applyDefaultProperties([blockName, block]: EntryBlockPair) {
         if (!block.color) {
             block.color = EntryStatic.colorSet.block.default.EXPANSION;

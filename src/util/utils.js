@@ -6,7 +6,7 @@ import _intersection from 'lodash/intersection';
 import _clamp from 'lodash/clamp';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
-import blockLoader from '../class/blockLoader';
+import blockLoader from '../class/entryModuleLoader';
 
 Entry.Utils = {};
 

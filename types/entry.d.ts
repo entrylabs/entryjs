@@ -19,7 +19,7 @@ declare interface IEntry extends EntryOptions {
     Dom: typeof import('../src/core/dom').default;
     Dialog: typeof import('../src/class/dialog').default;
     popupHelper: typeof import('../src/class/popup_helper').default;
-    moduleManager: typeof import('../src/class/blockLoader').default;
+    moduleManager: typeof import('../src/class/entryModuleLoader').default;
     Model: (target: any, isSeal: boolean) => void;
     BlockView: any;
     SVG: any;
