@@ -1,4 +1,8 @@
-type EntryBlockPair = [string, EntryBlock, boolean?];
+type EntryBlockRegisterSchema = {
+    blockName: string;
+    block: EntryBlock;
+    isBlockShowBlockMenu?: boolean;
+};
 
 class EntryModuleLoader {
     private _moduleList: string[] = [];
@@ -74,11 +78,11 @@ class EntryModuleLoader {
 
         this.loadBlocks({
             categoryName: 'arduino',
-            blockPairs: Object.entries(blockObjects).map(([blockName, block]) => [
+            blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
                 blockName,
                 block,
-                blockMenuBlocks.indexOf(blockName) > -1,
-            ]),
+                isBlockShowBlockMenu: blockMenuBlocks.indexOf(blockName) > -1,
+            })),
         });
 
         Entry.hw.setExternalModule(moduleObject);
@@ -93,31 +97,38 @@ class EntryModuleLoader {
      */
     registerBlockModule(moduleObject: EntryBlockModule) {
         const { name, title, description, getBlocks } = moduleObject;
-        const blockPairs = [];
+        const blockSchemas: EntryBlockRegisterSchema[] = [];
 
-        title && blockPairs.push(this.createTextBlock(name, title.ko));
-        description && blockPairs.push(this.createTextBlock(name, description));
-        getBlocks && blockPairs.push(...Object.entries(getBlocks()));
+        title && blockSchemas.push(this.createTextBlock(name, title.ko));
+        description && blockSchemas.push(this.createTextBlock(name, description));
+        getBlocks &&
+            blockSchemas.push(
+                ...Object.entries(getBlocks()).map(([blockName, block]) => ({
+                    blockName,
+                    block,
+                    isBlockShowBlockMenu: true,
+                }))
+            );
 
         this.loadBlocks({
             categoryName: 'expansion',
-            blockPairs,
+            blockSchemas,
         });
         // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
     }
 
     loadBlocks({
         categoryName,
-        blockPairs,
+        blockSchemas,
     }: {
         categoryName: string;
-        blockPairs: EntryBlockPair[];
+        blockSchemas: EntryBlockRegisterSchema[];
     }) {
         const blockMenu = Entry.getMainWS().blockMenu;
 
-        blockPairs.forEach((blockPair) => {
-            this.applyDefaultProperties(blockPair);
-            const [blockName, block, isBlockView] = blockPair;
+        blockSchemas.forEach((blockSchema) => {
+            this.applyDefaultProperties(blockSchema);
+            const { blockName, block, isBlockShowBlockMenu } = blockSchema;
 
             // 블록의 카테고리를 정의할때 사용
             if (!block.category) {
@@ -126,7 +137,7 @@ class EntryModuleLoader {
 
             Entry.block[blockName] = block;
 
-            if (isBlockView) {
+            if (isBlockShowBlockMenu) {
                 blockMenu.addCategoryData(categoryName, blockName);
             }
         });
@@ -134,7 +145,7 @@ class EntryModuleLoader {
         blockMenu.reDraw();
     }
 
-    private createTextBlock(moduleName: string, content: string): [string, EntryBlock] {
+    private createTextBlock(moduleName: string, content: string): EntryBlockRegisterSchema {
         const blockName = `${moduleName}_${Math.random()}`;
         const block: EntryBlock = {
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -155,7 +166,7 @@ class EntryModuleLoader {
             isNotFor: [moduleName],
             events: {},
         };
-        return [blockName, block];
+        return { blockName, block };
     }
 
     /**
@@ -174,7 +185,7 @@ class EntryModuleLoader {
     /**
      * 블록 모델이 블록객체로서 구현되기 전에 불충분한 프로퍼티나 잘못된 값이 있는 경우 이쪽에서 수정한다.
      */
-    private applyDefaultProperties([blockName, block]: EntryBlockPair) {
+    private applyDefaultProperties({ blockName, block }: EntryBlockRegisterSchema) {
         if (!block.color) {
             block.color = EntryStatic.colorSet.block.default.EXPANSION;
             block.outerLine = EntryStatic.colorSet.block.darken.EXPANSION;
