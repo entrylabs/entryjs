@@ -330,7 +330,59 @@ Entry.ArduinoCake.getBlocks = function() {
             },
         },
         
-        
+        arduino_cake_buz_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['pinBD', '8'],
+                    ],
+                    value: '8',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func(sprite, script) {
+                return script.getField('PORT');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['pinBD', '8'],
+                                ],
+                                value: '8',
+                                fontSize: 11,
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.arduino_cake_pwm_list[0]',
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        keyOption: 'arduino_cake_buz_list',
+                    },
+                ],
+            },
+        },
         
         
         arduino_cake_get_analog_value: {
@@ -459,7 +511,7 @@ Entry.ArduinoCake.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_cake_digital_list',
+                        type: 'arduino_cake_buz_list',
                         params: ['8'],
                     },
                     {
@@ -495,7 +547,7 @@ Entry.ArduinoCake.getBlocks = function() {
             isNotFor: ['ArduinoCake'],
             syntax: undefined,
         },
-        //endregion arduinoCake 아두이노 나노
+        //endregion arduinoCake 아두이노 케이크
     };
 };
 
