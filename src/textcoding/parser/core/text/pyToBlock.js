@@ -18,6 +18,7 @@ Entry.PyToBlockParser = class {
 
         this.binaryOperator = {
             '==': 'EQUAL',
+            '!=': 'NOT_EQUAL',
             '>': 'GREATER',
             '<': 'LESS',
             '>=': 'GREATER_OR_EQUAL',
