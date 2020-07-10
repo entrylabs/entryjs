@@ -501,7 +501,7 @@ module.exports = {
                         case 'EQUAL':
                             return leftValue === rightValue;
                         case 'NOT_EQUAL':
-                            return leftValue !== rightValue || leftValue != rightValue;
+                            return leftValue != rightValue;
                         case 'GREATER':
                             return leftValue > rightValue;
                         case 'LESS':
