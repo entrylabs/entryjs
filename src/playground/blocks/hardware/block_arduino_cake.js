@@ -131,7 +131,7 @@ Entry.ArduinoCake.getBlocks = function() {
                         ['pinSD', '4'],
                         ['pinSC', '5'],
                     ],
-                    value: '0',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -208,7 +208,7 @@ Entry.ArduinoCake.getBlocks = function() {
                         ['pinSD', '18'], 
                         ['pinSC', '19'],
                     ],
-                    value: '14',
+                    value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -252,7 +252,7 @@ Entry.ArduinoCake.getBlocks = function() {
                                     ['pinSD', '18'], 
                                     ['pinSC', '19'],
                                 ],
-                                value: '14',
+                                value: '3',
                                 fontSize: 11,
                                 converter: Entry.block.converters.returnStringKey,
                                 codeMap: 'Entry.CodeMap.Arduino.arduino_cake_digital_list[0]',
@@ -461,7 +461,6 @@ Entry.ArduinoCake.getBlocks = function() {
                     {
                         type: 'arduino_cake_digital_list',
                         params: ['8'],
-                        value: 8,
                     },
                     {
                         type: 'arduino_ext_tone_list',
@@ -487,6 +486,7 @@ Entry.ArduinoCake.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_cake_digital_list',
+                        params: ['9'],
                     },
                     null,
                 ],
