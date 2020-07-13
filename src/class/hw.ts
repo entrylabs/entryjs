@@ -5,7 +5,7 @@ import HardwareMonitor from './hardware/hardwareMonitor';
 import createHardwarePopup from './hardware/functions/createHardwarePopup';
 import ExternalProgramLauncher from './hardware/externalProgramLauncher';
 // eslint-disable-next-line prettier/prettier
-import type PopupHelper from './popup_helper';
+import PopupHelper from './popup_helper';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -54,7 +54,7 @@ export default class Hardware {
     public sendQueue: UnknownAny;
 
     // 현재 연결된 모듈 컨트롤용
-    public hwModule?: IEntry.HardwareModule;
+    public hwModule?: EntryHardwareBlockModule;
     public communicationType: string; // 'manual' || 'auto'
     private currentDeviceKey?: string;
     private hwModuleType: HardwareModuleType;
@@ -84,7 +84,7 @@ export default class Hardware {
 
     async _loadExternalHardwareBlock(moduleName: string) {
         try {
-            await Entry.moduleManager.loadExternalModule(moduleName);
+            await Entry.moduleManager.loadModule(moduleName);
         } catch (e) {
             // Entry.toast.alert(
             //     Lang.Hw.hw_module_load_fail_title,
@@ -119,7 +119,7 @@ export default class Hardware {
      * 현재 보여지고 있는 하드웨어 블록들을 전부 숨김처리한다.
      * @param moduleObject
      */
-    setExternalModule(moduleObject: IEntry.HardwareModule) {
+    setExternalModule(moduleObject: EntryHardwareBlockModule) {
         this.hwModule = moduleObject;
         this.hwModuleType = HardwareModuleType.module;
         this._banClassAllHardware();

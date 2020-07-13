@@ -753,6 +753,11 @@ class BlockMenu extends ModelClass<Schema> {
         if (selectedCategory?.blocks.indexOf(blockName) === -1) {
             selectedCategory.blocks.push(blockName);
         }
+
+        if (!this.getThreadByBlockKey(blockName)) {
+            const threadDatum = this._buildCategoryCodes([blockName], categoryName);
+            this._createThread(threadDatum[0]);
+        }
     }
 
     destroy() {
