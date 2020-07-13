@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'deploy2/**'
+      - deploy2/build_with_actions
 
 jobs:
   install-and-build:
