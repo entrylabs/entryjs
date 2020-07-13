@@ -431,7 +431,7 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                async func(sprite, script) {
+                func(sprite, script) {
                     const variableId = script.getField('VARIABLE', script);
                     let value = script.getValue('VALUE', script);
                     let fixed = 0;
@@ -441,7 +441,7 @@ module.exports = {
                     }
 
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    const { isCloud_ } = variable;
+                    const { isRealTime_ } = variable;
                     let variableValue = variable.getValue();
                     let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
@@ -455,7 +455,7 @@ module.exports = {
                     } else {
                         sumValue = `${variableValue}${value}`;
                     }
-                    if (!isCloud_) {
+                    if (!isRealTime_) {
                         variable.setValue(sumValue);
                         return script.callReturn();
                     } else {
@@ -584,9 +584,9 @@ module.exports = {
                     const variableId = script.getField('VARIABLE', script);
                     const value = script.getValue('VALUE', script);
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    const { isCloud_ } = variable;
+                    const { isRealTime_ } = variable;
 
-                    if (!isCloud_) {
+                    if (!isRealTime_) {
                         variable.setValue(value);
                         return script.callReturn();
                     } else {
@@ -1097,14 +1097,14 @@ module.exports = {
                         throw new Error('can not remove value from array');
                     }
 
-                    const { isCloud_ } = list;
-                    if (!isCloud_) {
-                        list.deleteValue(value - 1);
+                    const { isRealTime_ } = list;
+                    if (!isRealTime_) {
+                        list.deleteValue(+value);
                         return script.callReturn();
                     } else {
                         return new Promise(async (resolve, reject) => {
                             try {
-                                await list.deleteValue(value - 1);
+                                await list.deleteValue(+value);
                                 resolve();
                             } catch (e) {
                                 reject(e);
@@ -1235,8 +1235,9 @@ module.exports = {
                     ) {
                         throw new Error('can not insert value to array');
                     }
-                    const { isCloud_ } = list;
-                    if (!isCloud_) {
+
+                    const { isRealTime_ } = list;
+                    if (!isRealTime_) {
                         list.insertValue(index, data);
                         return script.callReturn();
                     } else {
@@ -1373,8 +1374,8 @@ module.exports = {
                         throw new Error('can not insert value to array');
                     }
 
-                    const { isCloud_ } = list;
-                    if (!isCloud_) {
+                    const { isRealTime_ } = list;
+                    if (!isRealTime_) {
                         list.replaceValue(index, data);
                         return script.callReturn();
                     } else {

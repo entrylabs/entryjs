@@ -3,6 +3,10 @@ import { GEHelper } from '../../graphicEngine/GEHelper';
 import { GEDragHelper } from '../../graphicEngine/GEDragHelper';
 
 class ListVariable extends Variable {
+    get LIST_MAX_LENGTH() {
+        return 5000;
+    }
+
     constructor(variable) {
         Entry.assert(variable.variableType === 'list', 'Invalid variable type given');
         super(variable);
@@ -154,7 +158,7 @@ class ListVariable extends Variable {
     }
 
     getArray() {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             return this.array_;
         } else {
             const { array } =
@@ -167,7 +171,7 @@ class ListVariable extends Variable {
     }
 
     setArray(array) {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             this.array_ = array;
             this.updateView();
             Entry.requestUpdateTwice = true;
@@ -189,7 +193,7 @@ class ListVariable extends Variable {
     }
 
     appendValue(value) {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             if (!this.array_) {
                 this.array_ = [];
             }
@@ -223,7 +227,7 @@ class ListVariable extends Variable {
     }
 
     deleteValue(index) {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             this.array_.splice(index - 1, 1);
             this.updateView();
         } else {
@@ -233,7 +237,7 @@ class ListVariable extends Variable {
                         variableType: this.type,
                         id: this.id_,
                     };
-                    await this.cloudVariable.delete(target, index);
+                    await this.cloudVariable.delete(target, index - 1);
                     const list = this.cloudVariable.get(target);
                     if (list) {
                         this.array_ = list.array;
@@ -250,7 +254,7 @@ class ListVariable extends Variable {
     }
 
     insertValue(index, data) {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             this.array_.splice(index - 1, 0, { data });
             this.updateView();
         } else {
@@ -277,7 +281,7 @@ class ListVariable extends Variable {
     }
 
     replaceValue(index, data) {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             this.array_[index - 1].data = data;
             this.updateView();
         } else {
@@ -479,7 +483,7 @@ class ListVariable extends Variable {
     }
 
     syncModel_(variableModel) {
-        if (!this.isCloud_) {
+        if (!this.isCloud_ && !this.isRealTime_) {
             this.array_ = variableModel.array;
         }
         this.setWidth(variableModel.width);

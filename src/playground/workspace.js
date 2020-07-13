@@ -1,8 +1,5 @@
-/*
- *
- */
-'use strict';
 import { Destroyer } from '../util/destroyer/Destroyer';
+import debounce from 'lodash/debounce';
 
 Entry.Workspace = class Workspace {
     schema = {
@@ -15,8 +12,8 @@ Entry.Workspace = class Workspace {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
         this.scale = 1;
-        this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
-        this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
+        this.dSetMode = debounce(this.setMode, 200);
+        this.dReDraw = debounce(this.reDraw, 150);
 
         this.observe(this, '_handleChangeBoard', ['selectedBoard'], false);
         this.trashcan = new Entry.FieldTrashcan();
@@ -181,7 +178,7 @@ Entry.Workspace = class Workspace {
                 const alertMessage =
                     Util.validateVariableAndListToPython() ||
                     Util.validateFunctionToPython() ||
-                    Util.hasExpansionBlocks();
+                    Util.hasNotSupportedBlocks();
 
                 const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
@@ -195,7 +192,10 @@ Entry.Workspace = class Workspace {
                     if (alertMessage.type === 'warning') {
                         entrylms.confirm(alertMessage.message).then((result) => {
                             if (result) {
-                                //Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
+                                Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
+                                Entry.playground.dataTable.removeAllBlocks();
+                                Entry.aiLearning.removeAllBlocks();
                                 changeToPythonMode();
                                 dispatchChangeBoardEvent();
                             } else {
@@ -323,15 +323,12 @@ Entry.Workspace = class Workspace {
 
         code.load(changedCode);
         this.changeBoardCode(code);
-        setTimeout(
-            function() {
-                if (code.view) {
-                    code.view.reDraw();
-                    this.board.alignThreads();
-                }
-            }.bind(this),
-            0
-        );
+        setTimeout(() => {
+            if (code.view) {
+                code.view.reDraw();
+                this.board.alignThreads();
+            }
+        }, 0);
     }
 
     codeToText(code, mode) {
@@ -373,9 +370,8 @@ Entry.Workspace = class Workspace {
         }
 
         this.setHoverBlockView();
-        const that = this;
-        this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(this, function() {
-            that.blockViewMouseUpEvent.notify(blockView);
+        this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(this, () => {
+            this.blockViewMouseUpEvent.notify(blockView);
         });
     }
 
@@ -443,7 +439,10 @@ Entry.Workspace = class Workspace {
                     break;
                 case 219: {
                     //setMode(block) for textcoding ( ctrl + [ )
-                    if (!Entry.options.textCodingEnable) {
+                    if (
+                        !Entry.options.textCodingEnable ||
+                        Entry.playground.getViewMode() === 'picture'
+                    ) {
                         return;
                     }
                     const oldMode = Entry.getMainWS().oldMode;
@@ -460,7 +459,10 @@ Entry.Workspace = class Workspace {
                 }
                 case 221: {
                     //setMode(python) for textcoding ( ctrl + ] )
-                    if (!Entry.options.textCodingEnable) {
+                    if (
+                        !Entry.options.textCodingEnable ||
+                        Entry.playground.getViewMode() === 'picture'
+                    ) {
                         return;
                     }
 
@@ -582,7 +584,7 @@ Entry.Workspace = class Workspace {
         }
 
         //delay for fields value applied
-        setTimeout(function() {
+        setTimeout(() => {
             Entry.disposeEvent && Entry.disposeEvent.notify(e);
         }, 0);
 

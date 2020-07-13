@@ -6,7 +6,7 @@ const _trim = require('lodash/trim');
 Entry.AI_UTILIZE_BLOCK.tts = {
     name: 'tts',
     imageName: 'tts.png',
-    sponserText: 'Sponsered by NAVER Clova',
+    sponserText: 'Powered by NAVER Clova',
     title: {
         ko: '읽어주기',
         en: 'read',
@@ -158,7 +158,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 setTimeout(callback, instance.duration);
             }
         } else {
-            const src = `${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
+            const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
                 text: message,
                 ...prop,
             })}`;

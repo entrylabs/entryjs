@@ -1,14 +1,11 @@
 import io from 'socket.io-client';
-import _uniq from 'lodash/uniq';
-import _uniqBy from 'lodash/uniqBy';
-import { dmet, dmetList, dmetVariable } from './dmet';
+import { dmet, dmetList, dmetTable, dmetVariable } from './dmet';
 import singleInstance from '../core/singleInstance';
 
 class CloudVariableExtension {
     #cvSocket = null;
     #data = null;
     #defaultData = null;
-    #disabled = {};
 
     get data() {
         return this.#data;
@@ -22,7 +19,6 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        this.setStatus('offline', target);
         this.#cvSocket.emit('changeMode', 'offline', target);
     }
 
@@ -30,27 +26,18 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        this.setStatus('online', target);
         this.#cvSocket.emit('changeMode', 'online', target);
-    }
-
-    setStatus(mode = 'offline', target) {
-        const isOffline = mode === 'offline';
-        if (target) {
-            this.#disabled[target] = isOffline;
-        } else {
-            Object.keys(this.#disabled).forEach(key => this.#disabled[key] = isOffline);
-        }
     }
 
     async connect(cvServer) {
         if (this.#cvSocket || !this.cvServer) {
             return;
         }
-        const { url, query } = this.cvServer;
+        const { url, query, type } = this.cvServer;
         const socket = io(url, {
             path: '/cv',
             query: {
+                type,
                 q: query,
             },
             transports: ['websocket'],
@@ -80,29 +67,31 @@ class CloudVariableExtension {
                     resolve();
                 }
             });
-            socket.on('welcome', (variables = []) => {
-                this.#convertToUniqList(variables).forEach((item) => {
-                    this.#disabled[item.id] = !!item.isOffline;
-                });
-                console.log('welcome', variables, this.#disabled);
+            socket.on('check', (id) => {
+                socket.emit('imAlive', id);
+            });
+            socket.on('welcome', ({ variables = [], isOffline }) => {
                 try {
                     this.#data = new dmet(variables);
                 } catch (e) {
                     console.warn(e);
                 }
+                if (isOffline) {
+                    socket.close();
+                }
                 resolve();
             });
             socket.on('disconnect', (reason) => {
                 console.log('disconnect', reason);
-                this.#data = new dmet(this.#defaultData);
+                if (!this.#data) {
+                    this.#data = new dmet(this.#defaultData);
+                }
                 resolve();
             });
             socket.on('changeMode', (mode, target) => {
-                const isOffline = mode == 'offline';
-                if (target) {
-                    this.#disabled[target] = isOffline;
-                } else {
-                    Object.keys(this.#disabled).forEach(key => this.#disabled[key] = isOffline);
+                const isOffline = mode === 'offline';
+                if (isOffline) {
+                    socket.close();
                 }
                 resolve();
             });
@@ -110,8 +99,7 @@ class CloudVariableExtension {
     }
 
     setDefaultData(defaultData) {
-        this.#defaultData = this.#convertToUniqList(defaultData);
-        console.log(this.#defaultData);
+        this.#defaultData = defaultData;
     }
 
     createDmet(object) {
@@ -127,20 +115,10 @@ class CloudVariableExtension {
             await this.#createVariable(name, id_);
         } else if (type === 'list') {
             await this.#createList(name, id_);
+        } else if (type === 'table') {
+            await this.#createTable(name, id_);
         }
         // Entry.dispatchEvent('saveVariable');
-    }
-
-    #convertToUniqList(data) {
-        return data.map((item) => {
-            if (item.list) {
-                item.list = _uniq(item.list);
-            }
-            if (item.array) {
-                item.array = _uniqBy(item.array, 'key');
-            }
-            return item;
-        });
     }
 
     #createVariable(name, id) {
@@ -183,9 +161,29 @@ class CloudVariableExtension {
         });
     }
 
+    #createTable(name, id) {
+        if (!this.#cvSocket) {
+            return;
+        }
+        const table = new dmetTable(
+            {
+                name,
+            },
+            id
+        );
+        return new Promise((resolve) => {
+            this.#cvSocket.emit('create', table, (isCreate, table) => {
+                if (isCreate) {
+                    this.createDmet(table);
+                }
+                resolve();
+            });
+        });
+    }
+
     #run(operation) {
         return new Promise((resolve) => {
-            if (this.#cvSocket.connected && !this.#disabled[operation.id]) {
+            if (this.#cvSocket.connected) {
                 this.#cvSocket.emit('action', operation, (isUpdate, operation) => {
                     if (isUpdate) {
                         this.#data.exec(operation);
@@ -206,10 +204,8 @@ class CloudVariableExtension {
     }
 
     #execDmet(operation) {
-        if (!this.#disabled[operation.id]) {
-            this.#data.exec(operation);
-            this.#applyValue(operation);
-        }
+        this.#data.exec(operation);
+        this.#applyValue(operation);
     }
 
     #applyValue(operation) {
@@ -235,7 +231,7 @@ class CloudVariableExtension {
         if (!this.#cvSocket) {
             return;
         }
-        const variable = this.#data.get(target);
+        const variable = this.#data && this.#data.get(target);
         if (!variable) {
             return;
         }
@@ -256,7 +252,7 @@ class CloudVariableExtension {
         if (!dmetList) {
             console.error('no target ', target);
         }
-        dmetList.from(array.map(({data}) => data));
+        dmetList.from(array.map(({ data }) => data));
     }
 
     append(target, data) {

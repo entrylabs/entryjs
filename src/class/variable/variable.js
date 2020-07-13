@@ -3,6 +3,11 @@
 import { GEHelper } from '../../graphicEngine/GEHelper';
 import { GEDragHelper } from '../../graphicEngine/GEDragHelper';
 import CloudVariable from '../../extensions/CloudVariable';
+import _throttle from 'lodash/throttle';
+import BinPacking from '../../util/binPacking';
+
+const VariableBP = new BinPacking(460, 250);
+const bpReplace = _throttle(VariableBP.replace.bind(VariableBP));
 
 /**
  * 기본 변수블록 객체
@@ -38,6 +43,7 @@ class Variable {
         this.object_ = variable.object || null;
         /** @type {boolean} */
         this.isCloud_ = variable.isCloud || false;
+        this.isRealTime_ = variable.isRealTime || false;
         this.cloudDate = variable.cloudDate || false;
         this.cloudVariable = CloudVariable.getInstance();
 
@@ -109,13 +115,29 @@ class Variable {
                 'alphabetic'
             );
             const variableLength = Entry.variableContainer.variables_.length;
+
+            const { x, y } = VariableBP.add(
+                this.id_,
+                this.x_,
+                this.y_,
+                this.getRealWidth(),
+                this.getRealHeight()
+            );
+
             if (this.getX() && this.getY()) {
                 this.setX(this.getX());
                 this.setY(this.getY());
             } else {
                 //TODO
-                this.setX(10 - 240 + Math.floor((variableLength % 66) / 11) * 80);
-                this.setY(variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264);
+                console.log(10 - 240 + Math.floor((variableLength % 66) / 11) * 80, x);
+                console.log(
+                    variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264,
+                    y
+                );
+                this.setX(x - 230);
+                this.setY(y - 105);
+                // this.setX(10 - 240 + Math.floor((variableLength % 66) / 11) * 80);
+                // this.setY(variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264);
             }
 
             this.view_.addChild(this.valueView_);
@@ -201,6 +223,7 @@ class Variable {
             this._adjustSingleViewBox(colorSet.variable || '#4f80ff');
         }
 
+        bpReplace(this.id_, this.x_, this.y_, this.getRealWidth(), this.getRealHeight());
         Entry.requestUpdate = true;
     }
 
@@ -279,7 +302,7 @@ class Variable {
      * @return {number}
      */
     getValue() {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             return this.value_;
         } else {
             const { value } =
@@ -304,7 +327,7 @@ class Variable {
      * @param {!string} variableValue
      */
     setValue(value) {
-        if (!this.isCloud_) {
+        if (!this.isRealTime_) {
             this.value_ = value;
             this._valueWidth = null;
             this.updateView();
@@ -407,6 +430,14 @@ class Variable {
         return this.width_;
     }
 
+    getRealWidth() {
+        return Math.ceil(
+            this.textView_.getMeasuredWidth(this.name_) +
+                this.textView_.getMeasuredWidth(this.getValue()) +
+                40
+        );
+    }
+
     /**
      * height setter
      * @param {number} height
@@ -423,6 +454,10 @@ class Variable {
      */
     getHeight() {
         return this.height_;
+    }
+
+    getRealHeight() {
+        return Math.ceil(this.textView_.getMeasuredHeight() + 12);
     }
 
     /**
@@ -446,7 +481,7 @@ class Variable {
      * @protected
      */
     syncModel_(variableModel) {
-        if (!this.isCloud_) {
+        if (!this.isCloud_ && !this.isRealTime_) {
             this.setValue(variableModel.value);
         }
 
@@ -455,6 +490,7 @@ class Variable {
         this.setY(variableModel.y);
         this.setVisible(variableModel.visible);
         this.isCloud_ = variableModel.isCloud;
+        this.isRealTime_ = variableModel.isRealTime;
         this.cloudDate = variableModel.cloudDate;
     }
 
@@ -470,6 +506,7 @@ class Variable {
         json.value = this.value_;
         json.variableType = this.type;
         json.isCloud = this.isCloud_;
+        json.isRealTime = this.isRealTime_;
         json.cloudDate = this.cloudDate;
         json.object = this.object_;
         json.x = this.x_;
@@ -482,6 +519,7 @@ class Variable {
      */
     remove() {
         //this.parent.dialog = null;
+        VariableBP.remove(this.id_);
         Entry.stage.removeVariable(this);
     }
 

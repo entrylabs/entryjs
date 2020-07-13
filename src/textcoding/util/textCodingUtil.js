@@ -495,18 +495,19 @@ class TextCodingUtil {
      * https://oss.navercorp.com/entry/Entry/issues/9155 링크 참조
      * @returns {{message: string, type: string} || undefined}
      */
-    hasExpansionBlocks() {
+    hasNotSupportedBlocks() {
         const vc = Entry.variableContainer;
         if (!vc) {
             return;
         }
 
         const activatedExpansionBlocks = Entry.expansionBlocks;
-
-        if (activatedExpansionBlocks.length > 0) {
+        const activatedUtilizeBlock = Entry.aiUtilizeBlocks;
+        const tables = Entry.playground.dataTable.tables;
+        if (activatedExpansionBlocks.length > 0 || activatedUtilizeBlock.length > 0 || Entry.aiLearning.isLoaded || tables.length > 0) {
             return {
                 message: Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
-                type: 'error',
+                type: 'warning',
             };
         }
     }
@@ -543,11 +544,11 @@ class TextCodingUtil {
 
             errorMessage = this.validateName(list.name_, errorSuffix);
             // 객체별 내부값 검사 후 문제가 없으면 리스트명에 대한 검사
-            for (let j = 0; j < list.array_.length; j++) {
+            for (let j = 0; j < list.getArray().length; j++) {
                 if (errorMessage) {
                     break;
                 }
-                const elem = list.array_[j];
+                const elem = list.getArray()[j];
                 errorMessage = this.validateTargetNotExceedMaxNumber(elem.data);
             }
 

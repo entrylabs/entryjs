@@ -235,37 +235,39 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
+                dropdownSync: 'translate',
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getTargetLang(targetIndex = 0, isPython = false) {
+        getTargetLang(isPython = false) {
             const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName(value) {
+                menuName() {
+                    const value = this.getTargetValue('translate');
+                    if (!value) {
+                        return [[Lang.Blocks.no_target, 'null']];
+                    }
                     const langCodeMap = getInitialCodeMap();
-                    if (value) {
-                        const convertedLangCode = replaceLanguageCode(value);
-                        return langCodeMap[convertedLangCode].sub.map((code) => [
-                            langCodeMap[code].lang,
-                            code,
-                        ]);
-                    }
-
-                    if (this._contents.options) {
-                        return this._contents.options;
-                    } else {
-                        return langCodeMap.ko.sub.map((code) => [langCodeMap[code].lang, code]);
-                    }
+                    const convertedLangCode = replaceLanguageCode(value);
+                    return langCodeMap[convertedLangCode].sub.map((code) => [
+                        langCodeMap[code].lang,
+                        code,
+                    ]);
                 },
-                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
+                defaultValue: (value, options) => {
+                    if(options.length) {
+                        return options[0][1]
+                    }
+                    return null;
+                },
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -340,8 +342,8 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
             return result;
         }
 
-        if (text.length > 20) {
-            result.message = Lang.Blocks.sentence_over_20_charactor;
+        if (text.length > 3000) {
+            result.message = Lang.Blocks.sentence_over_3000_charactor;
             return result;
         }
 
@@ -380,7 +382,7 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
                     type: 'Block',
                     accept: 'string',
                 },
-                params.getTargetLang(0),
+                params.getTargetLang(),
             ],
             events: {},
             def: {
@@ -436,7 +438,7 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
-                            params.getTargetLang(0, true),
+                            params.getTargetLang(true),
                         ],
                     },
                 ],

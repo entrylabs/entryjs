@@ -26,6 +26,7 @@ Entry.VariableContainer = class VariableContainer {
             info: {
                 object: null,
                 isCloud: false,
+                isRealTime: false,
             },
         };
         this.listAddPanel = {
@@ -33,6 +34,7 @@ Entry.VariableContainer = class VariableContainer {
             info: {
                 object: null,
                 isCloud: false,
+                isRealTime: false,
             },
         };
         this.messageAddPanel = {
@@ -50,6 +52,15 @@ Entry.VariableContainer = class VariableContainer {
         this.listView_ = null;
 
         Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
+    }
+
+    #removeChildrenClass({ children }, className) {
+        for (const index in children) {
+            const dom = children[index];
+            if (dom.removeClass) {
+                dom.removeClass(className);
+            }
+        }
     }
 
     createDom(view) {
@@ -185,15 +196,19 @@ Entry.VariableContainer = class VariableContainer {
 
     updateVariableAddView(type = 'variable') {
         const {
-            info: { isCloud, object },
+            info: { isCloud, object, isRealTime },
             view,
         } = this._getAddPanel(type);
         const { cloudCheck, globalCheck, localCheck, cloudWrapper } = view;
 
+        this.#removeChildrenClass(cloudCheck, 'on');
+        const [normal, cloud, realtime] = cloudCheck.children;
         if (isCloud) {
-            cloudCheck.addClass('on');
+            cloud.removeClass('on');
+        } else if (isRealTime) {
+            realtime.removeClass('on');
         } else {
-            cloudCheck.removeClass('on');
+            normal.addClass('on');
         }
 
         if (object) {
@@ -601,9 +616,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { globalV, localV } = _.groupBy(this.variables_, ({ object_ }) =>
+            object_ ? 'localV' : 'globalV'
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -683,9 +698,9 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('attr_box')
             .appendTo(localList);
 
-        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) => {
-            return object_ ? 'localV' : 'globalV';
-        });
+        const { localV, globalV } = _.groupBy(this.lists_, ({ object_ }) =>
+            object_ ? 'localV' : 'globalV'
+        );
 
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
@@ -1002,6 +1017,28 @@ Entry.VariableContainer = class VariableContainer {
         });
     }
 
+    removeBlocksInFunctionByType2(blockType) {
+        Object.values(this.functions_).forEach((func) => {
+            func.content.getBlockList(false, blockType).forEach((block, index) => {
+                block.destroy();
+            });
+        });
+    }
+
+    async removeBlocksInFunctionByTypeAsync(blockType) {
+        await Promise.all(
+            Object.values(this.functions_).map(async (func) => {
+                await Promise.all(
+                    func.content.getBlockList(false, blockType).map(
+                        Entry.Utils.runAsyncCurry((block) => {
+                            block.destroy();
+                        })
+                    )
+                );
+            })
+        );
+    }
+
     isUsedBlockTypeInFunction(blockType) {
         return Object.values(this.functions_).some(
             (func) => func.content.getBlockList(false, blockType).length
@@ -1164,16 +1201,15 @@ Entry.VariableContainer = class VariableContainer {
         func.listElement = view;
     }
 
-    destroyFunction(func) {
+    async destroyFunction(func) {
         if (Entry.Func.targetFunc) {
             Entry.do('funcEditEnd', 'cancel');
         }
         const currentObjectId = Entry.playground.object.id;
         Entry.do('selectObject', currentObjectId);
         const functionType = `func_${func.id}`;
-        Entry.Utils.removeBlockByType(functionType, () => {
-            Entry.do('funcRemove', func).isPass(true);
-        });
+        await Entry.Utils.removeBlockByTypeAsync(functionType);
+        Entry.do('funcRemove', func).isPass(true);
         Entry.do('selectObject', currentObjectId).isPass(true);
     }
 
@@ -1359,7 +1395,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!variable.object_) {
             if (variable.isCloud_) {
-                variableWrapper.addClass('global_val');
+                variableWrapper.addClass('cloud_list');
+            } else if (variable.isRealTime_) {
+                variableWrapper.addClass('real_time_list');
             } else {
                 variableWrapper.addClass('default_val');
             }
@@ -1621,7 +1659,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!list.object_) {
             if (list.isCloud_) {
-                listWrapper.addClass('global_list');
+                listWrapper.addClass('cloud_list');
+            } else if (list.isRealTime_) {
+                listWrapper.addClass('real_time_list');
             } else {
                 listWrapper.addClass('default_list');
             }
@@ -1768,6 +1808,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         const info = panel.info;
         info.isCloud = false;
+        info.isRealTime = false;
         info.object = null;
         panel.view.name.value = '';
         panel.isOpen = false;
@@ -1848,27 +1889,31 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick((e) => {
-                e.stopImmediatePropagation();
-                const { object, isCloud } = this.variableAddPanel.info;
-                !object && Entry.do('variableAddSetCloud', !isCloud);
-                if (isCloud) {
-                    addSpaceCloudWrapper.removeClass('on');
-                } else {
-                    addSpaceCloudWrapper.addClass('on');
-                }
-            })
             .appendTo(addSpaceGlobalWrapper);
         variableAddSpace.cloudWrapper = addSpaceCloudWrapper;
         this.variableAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.Variable_create_cloud;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceCloudWrapper);
+        ['normal', 'cloud', 'real_time'].forEach((type) => {
+            const wrapper = createElement('div')
+                .addClass('entryCloudTypeWrapper')
+                .appendTo(addSpaceCloudWrapper)
+                .bindOnClick((e) => {
+                    e.stopImmediatePropagation();
+                    const { object, isCloud, isRealTime } = this.variableAddPanel.info;
+                    !object && Entry.do('variableAddSetCloud', type);
+                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    wrapper.addClass('on');
+                });
+            if (type === 'normal') {
+                wrapper.addClass('on');
+            }
+            createElement('span')
+                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`variable_create_${type}`];
+            createElement('span')
+                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper);
+        });
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -2032,27 +2077,31 @@ Entry.VariableContainer = class VariableContainer {
         // 공유 리스트
         const addSpaceCloudWrapper = createElement('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .bindOnClick((e) => {
-                e.stopImmediatePropagation();
-                const { object, isCloud } = this.listAddPanel.info;
-                !object && Entry.do('listAddSetCloud', !isCloud);
-                if (isCloud) {
-                    addSpaceCloudWrapper.removeClass('on');
-                } else {
-                    addSpaceCloudWrapper.addClass('on');
-                }
-            })
             .appendTo(addSpaceGlobalWrapper);
         listAddSpace.cloudWrapper = addSpaceCloudWrapper;
         this.listAddPanel.view.cloudCheck = addSpaceCloudWrapper;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-            .appendTo(addSpaceCloudWrapper).textContent = Lang.Workspace.List_create_cloud;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceCloudWrapper);
+        ['normal', 'cloud', 'real_time'].forEach((type) => {
+            const wrapper = createElement('div')
+                .addClass('entryCloudTypeWrapper')
+                .appendTo(addSpaceCloudWrapper)
+                .bindOnClick((e) => {
+                    e.stopImmediatePropagation();
+                    const { object } = this.listAddPanel.info;
+                    !object && Entry.do('listAddSetCloud', type);
+                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    wrapper.addClass('on');
+                });
+            if (type === 'normal') {
+                wrapper.addClass('on');
+            }
+            createElement('span')
+                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`list_create_${type}`];
+            createElement('span')
+                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper);
+        });
 
         // 이 오브젝트에서 사용
         const addSpaceLocalWrapper = createElement('div')
@@ -2285,6 +2334,7 @@ Entry.VariableContainer = class VariableContainer {
         Entry.container.inputValue = answer;
         Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     }
+
     generateStt(answer) {
         answer =
             answer ||
@@ -2689,7 +2739,7 @@ Entry.VariableContainer = class VariableContainer {
                     const { target } = e;
                     const index = target.getAttribute('data-index');
                     data[index] = this.createListValueElement(index, target.value, startIndex);
-                    list.array_[index] = { data: target.value };
+                    list.getArray()[index] = { data: target.value };
                     list.updateView();
                 })
             );
@@ -2989,6 +3039,7 @@ Entry.VariableContainer = class VariableContainer {
         this._messageRefs = [];
         this._functionRefs = [];
 
+        Entry.Func.reset();
         playground.reloadPlayground();
         this.updateList();
     }
@@ -3098,7 +3149,7 @@ Entry.VariableContainer = class VariableContainer {
     _makeVariableData(type = 'variable') {
         const {
             view,
-            info: { isCloud, object },
+            info: { isCloud, object, isRealTime },
         } = this._getAddPanel(type);
 
         let name = view.name.value.trim();
@@ -3116,6 +3167,7 @@ Entry.VariableContainer = class VariableContainer {
         return {
             name,
             isCloud,
+            isRealTime,
             object,
             variableType: type,
         };
@@ -3148,7 +3200,7 @@ Entry.VariableContainer = class VariableContainer {
         const variables = this.variables_;
         const variableJSON = v.toJSON();
         variableJSON.variableType = type;
-        let newVariable = Entry.Variable.create(variableJSON);
+        const newVariable = Entry.Variable.create(variableJSON);
         variables.splice(variables.indexOf(v), 0, newVariable);
         if (value !== undefined) {
             variableJSON.value = value;

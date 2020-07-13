@@ -9,6 +9,7 @@ import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
 import { saveAs } from 'file-saver';
+import DataTable from './DataTable';
 
 const Entry = require('../entry');
 
@@ -50,7 +51,7 @@ Entry.Playground = class Playground {
         /** @type {!Element} */
         this.view_ = playgroundView;
         this.view_.addClass('entryPlayground');
-        if (option === 'workspace') {
+        if (option === 'workspace' || option === 'playground') {
             this.view_.addClass('entryPlaygroundWorkspace');
 
             const tabView = Entry.createElement('div', 'entryCategoryTab')
@@ -102,6 +103,14 @@ Entry.Playground = class Playground {
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
+            if (Entry.dataTableEnable) {
+                const tableView = Entry.createElement('div', 'dataTable')
+                    .addClass('entryPlaygroundTableWorkspace entryRemove')
+                    .appendTo(this.view_);
+                this.generateTableView(tableView);
+                this.tableView_ = tableView;
+            }
+
             const defaultView = Entry.createElement('div', 'entryDefault')
                 .addClass('entryPlaygroundDefaultWorkspace')
                 .appendTo(this.view_);
@@ -119,11 +128,11 @@ Entry.Playground = class Playground {
                 .addClass('entryPlaygroundBackPackView')
                 .appendTo(this.view_);
             this.backPackView = backPackView;
-            this.createPackPackView(backPackView);
+            this.createBackPackView(backPackView);
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
-                .appendTo(this.view_);
+                .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
             this.initializeResizeHandle(resizeHandle);
 
@@ -211,6 +220,18 @@ Entry.Playground = class Playground {
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
+
+        if (Entry.dataTableEnable) {
+            const tableTab = Entry.createElement('li', 'dataTableTab')
+                .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
+                .appendTo(tabList)
+                .bindOnClick(() => {
+                    Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
+                });
+            tableTab.innerHTML = Lang.Workspace.tab_table;
+            this.tabViewElements.table = tableTab;
+            this.tableTab = tableTab;
+        }
     }
 
     createButtonTabView(tabButtonView) {
@@ -245,7 +266,7 @@ Entry.Playground = class Playground {
         }
     }
 
-    createPackPackView(backPackView) {
+    createBackPackView(backPackView) {
         this.backPack = new Backpack({
             isShow: false,
             data: {
@@ -565,9 +586,10 @@ Entry.Playground = class Playground {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        // this.banExpansionBlock();
         Entry.expansion.banAllExpansionBlock();
         Entry.aiUtilize.banAllAIUtilizeBlock();
+        DataTable.banAllBlock();
+        Entry.aiLearning.banBlocks();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
@@ -642,12 +664,29 @@ Entry.Playground = class Playground {
         });
     }
 
+    updateTableView() {
+        const items = this._getSortableTableList();
+
+        if (this.tableSortableListWidget) {
+            this.tableSortableListWidget.setData({
+                items,
+            });
+        }
+
+        if (items.length) {
+            this.hideTableCurtain();
+        } else {
+            this.showTableCurtain();
+        }
+    }
+
     updatePictureView() {
         if (this.pictureSortableListWidget) {
             this.pictureSortableListWidget.setData({
                 items: this._getSortablePictureList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortablePictureList() {
@@ -659,6 +698,75 @@ Entry.Playground = class Playground {
             key: `${id}-${value.id}`,
             item: value.view,
         }));
+    }
+
+    generateTableView(tableView) {
+        if (Entry.type !== 'workspace') {
+            return;
+        }
+        const tableAdd = Entry.createElement('div', 'entryAddTable')
+            .addClass('entryPlaygroundAddTable')
+            .appendTo(tableView);
+
+        const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
+            .addClass('entryPlaygroundAddTableInner')
+            .bindOnClick(() => {
+                Entry.do('playgroundClickAddTable');
+            })
+            .appendTo(tableAdd);
+        innerTableAdd.innerHTML = Lang.Workspace.table_add;
+        this._tableAddButton = innerTableAdd;
+
+        this.tableListView_ = Entry.createElement('ul', 'dataTableList')
+            .addClass('entryPlaygroundTableList')
+            .appendTo(tableView);
+
+        const tableDom = Entry.createElement('div', 'dataTableEditor')
+            .addClass('entryPlaygroundTable')
+            .appendTo(tableView);
+        DataTable.view = tableDom;
+
+        const tableCurtainView = Entry.createElement('div', 'entryTableCurtain')
+            .addClass('entryPlaygroundTableCurtainWorkspace entryRemove')
+            .appendTo(tableDom);
+        this.tableCurtainView_ = tableCurtainView;
+
+        const tableCurtainText = Entry.createElement('span', 'entryTableCurtainText')
+            .addClass('entryPlaygroundTableCurtainWorkspaceText')
+            .appendTo(tableCurtainView);
+        tableCurtainText.innerHTML = Lang.Workspace.add_table_before_edit;
+
+        this.dataTable = DataTable;
+    }
+
+    initSortableTableWidget() {
+        if (this.tableSortableListWidget) {
+            return;
+        }
+
+        this.tableSortableListWidget = new Sortable({
+            container: this.tableListView_,
+            data: {
+                height: '100%',
+                sortableTarget: ['entryPlaygroundTableThumbnail'],
+                lockAxis: 'y',
+                items: this._getSortableTableList(),
+            },
+        });
+        this.tableSortableListWidget.on('change', ([newIndex, oldIndex]) => {
+            Entry.playground.moveTable(newIndex, oldIndex);
+        });
+    }
+
+    _getSortableTableList() {
+        const { tables = [] } = this.dataTable;
+        return tables.map((table) => {
+            const { id, view } = table;
+            return {
+                key: id,
+                item: view,
+            };
+        });
     }
 
     /**
@@ -1005,7 +1113,7 @@ Entry.Playground = class Playground {
      * @param soundView
      */
     generateSoundView(soundView) {
-        if (Entry.type == 'workspace') {
+        if (Entry.type === 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
@@ -1061,6 +1169,7 @@ Entry.Playground = class Playground {
                 items: this._getSortableSoundList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortableSoundList() {
@@ -1124,11 +1233,14 @@ Entry.Playground = class Playground {
             this.changeViewMode('picture');
         } else if (viewMode === 'sound') {
             this.changeViewMode('sound');
+        } else if (viewMode === 'table') {
+            this.changeViewMode('table');
         }
 
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
     }
+
     /**
      * Inject object
      * @param {?Entry.EntryObject} object
@@ -1160,6 +1272,22 @@ Entry.Playground = class Playground {
             object.script,
             engine && engine.isState('run') ? undefined : board.adjustThreadsPosition.bind(board)
         );
+    }
+
+    injectTable() {
+        const view = this.tableListView_;
+        if (!view) {
+            return;
+        }
+        const { tables, selected } = this.dataTable;
+        tables.forEach((table) => {
+            if (!table.view) {
+                this.generateTableElement(table);
+            } else {
+                table.view.name.value = table.name;
+            }
+        });
+        this.updateTableView();
     }
 
     /**
@@ -1252,9 +1380,9 @@ Entry.Playground = class Playground {
         const picture = Entry.playground.object.getPicture(pictureId);
         const { imageType = 'png' } = picture;
         /**
-            Logic in try phrase will be disregarded after renewal.
-            nt11576
-        */
+         Logic in try phrase will be disregarded after renewal.
+         nt11576
+         */
         try {
             if (picture.fileurl) {
                 saveAs(
@@ -1279,6 +1407,21 @@ Entry.Playground = class Playground {
     clonePicture(pictureId) {
         const sourcePicture = Entry.playground.object.getPicture(pictureId);
         this.addPicture(sourcePicture, true);
+    }
+
+    async selectTable(table = {}) {
+        const { tables } = this.dataTable;
+
+        if (await this.dataTable.selectTable(table)) {
+            tables.forEach(({ view, id }) => {
+                if (id === table.id) {
+                    view.addClass('entryTableSelected');
+                } else {
+                    view.removeClass('entryTableSelected');
+                }
+            });
+            Entry.dispatchEvent('tableSelected', table);
+        }
     }
 
     /**
@@ -1310,6 +1453,32 @@ Entry.Playground = class Playground {
         }
     }
 
+    moveTable(start, end) {
+        this.dataTable.changeItemPosition(start, end);
+        this.injectTable();
+    }
+
+    checkChangeTable() {
+        if (!this.dataTable || !this.dataTable.tempDataAnalytics) {
+            return;
+        }
+        return new Promise((resolve) => {
+            entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
+                if (result) {
+                    this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
+                }
+
+                if (this.dataTable.selected) {
+                    this.dataTable.dataAnalytics.setData({
+                        table: { ...this.dataTable.selected.toJSON() },
+                    });
+                }
+                delete this.dataTable.tempDataAnalytics;
+                resolve(result);
+            });
+        });
+    }
+
     /**
      * Move picture in this.object.pictures
      * this method is for sortable
@@ -1330,7 +1499,6 @@ Entry.Playground = class Playground {
         if (!object) {
             return;
         }
-
         const entity = object.entity;
 
         const text = entity.getText();
@@ -1372,6 +1540,7 @@ Entry.Playground = class Playground {
         }
 
         this.setFontAlign(entity.getTextAlign());
+        Entry.stage.updateForce();
     }
 
     _setFontFontUI() {
@@ -1429,6 +1598,10 @@ Entry.Playground = class Playground {
 
     removeAIUtilizeBlocks(items) {
         Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
+    setAiLearningBlock(url, info) {
+        Entry.aiLearning.load({ url, ...info });
     }
 
     /**
@@ -1539,6 +1712,13 @@ Entry.Playground = class Playground {
             }
         }
 
+        if (viewType === 'table') {
+            this.initSortableTableWidget();
+            this.injectTable();
+        } else {
+            this.checkChangeTable();
+        }
+
         if (
             (viewType === 'text' && this.object.objectType === 'textBox') ||
             this.textView_.object != this.object
@@ -1613,7 +1793,7 @@ Entry.Playground = class Playground {
     }
 
     hideTabs() {
-        ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
+        ['picture', 'text', 'sound', 'variable', 'table'].forEach(this.hideTab.bind(this));
     }
 
     hideTab(item) {
@@ -1624,7 +1804,7 @@ Entry.Playground = class Playground {
     }
 
     showTabs() {
-        ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
+        ['picture', 'text', 'sound', 'variable', 'table'].forEach(this.showTab.bind(this));
     }
 
     showTab(item) {
@@ -1688,9 +1868,13 @@ Entry.Playground = class Playground {
         if (Entry.playground && Entry.playground.view_) {
             this.injectPicture();
             this.injectSound();
-            const board = Entry.playground.mainWorkspace.getBoard();
-            board.clear();
-            board.changeCode(null);
+
+            const mainWS = Entry.getMainWS();
+            if (mainWS) {
+                const board = mainWS.getBoard();
+                board.clear();
+                board.changeCode(null);
+            }
         }
     }
 
@@ -1701,6 +1885,9 @@ Entry.Playground = class Playground {
             }
             if (this.getViewMode() === 'sound') {
                 this.injectSound();
+            }
+            if (this.getViewMode() === 'table') {
+                this.injectTable();
             }
         }
     }
@@ -1758,6 +1945,86 @@ Entry.Playground = class Playground {
         }
         Entry.dispatchEvent('pictureNameChanged', this.nameView.picture);
         Entry.playground.nameViewFocus = false;
+    }
+
+    generateTableElement(table) {
+        const element = Entry.createElement('li', table.id)
+            .addClass('entryPlaygroundTableElement')
+            .bindOnClick(() => {
+                this.selectTable(table);
+            });
+        table.view = element;
+        const thumbnailView = Entry.createElement('div', `t_${table.id}`).addClass(
+            'entryPlaygroundTableThumbnail'
+        );
+        thumbnailView.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+        thumbnailView.style.backgroundImage = '';
+        element.appendChild(thumbnailView);
+        const nameView = Entry.createElement('input')
+            .addClass('entryPlaygroundTableName')
+            .addClass('entryEllipsis');
+        nameView.value = table.name;
+        nameView.id = table.id;
+        table.view.name = nameView;
+        Entry.attachEventListener(nameView, 'blur', this.tableNameViewBlur(table.id));
+        Entry.attachEventListener(nameView, 'focus', (e) => {
+            this.nameView = e.target;
+            this.nameViewFocus = true;
+        });
+        nameView.onkeypress = Entry.Utils.blurWhenEnter;
+        element.appendChild(nameView);
+        const removeButton = Entry.createElement('div').addClass('entryPlaygroundTableRemove');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick((e) => {
+            e.stopPropagation();
+            this._removeTable(table, element);
+        });
+    }
+
+    isDuplicatedTableName(name, selectedIndex = -1) {
+        let nameViewArray = $('.entryPlaygroundTableName');
+        if (nameViewArray.length !== Entry.playground.dataTable.tables.length) {
+            nameViewArray = nameViewArray.slice(0, -1);
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (nameViewArray.eq(i).val() == name && i != selectedIndex) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    tableNameViewBlur = (tableId) => (event) => {
+        const { target = {} } = event;
+        const { value = '' } = target;
+        const selectedIndex = _.findIndex(this.dataTable.tables, (table) => table.id === tableId);
+        if (value.trim() === '') {
+            return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                target.focus();
+            });
+        }
+
+        if (this.isDuplicatedTableName(value, selectedIndex)) {
+            return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                target.focus();
+            });
+        }
+        if (DataTable.getSource(target.id).name === value) {
+            return;
+        }
+        DataTable.setTableName(target.id, value);
+        Entry.playground.reloadPlayground();
+        this.dataTable.selectTable(DataTable.tables[selectedIndex]);
+    };
+
+    _removeTable(table, element) {
+        Entry.playground.dataTable.removeSource(table);
     }
 
     generatePictureElement(picture) {
@@ -2243,6 +2510,14 @@ Entry.Playground = class Playground {
         this.pictureCurtainView_ && this.pictureCurtainView_.addClass('entryRemove');
     }
 
+    showTableCurtain() {
+        this.tableCurtainView_ && this.tableCurtainView_.removeClass('entryRemove');
+    }
+
+    hideTableCurtain() {
+        this.tableCurtainView_ && this.tableCurtainView_.addClass('entryRemove');
+    }
+
     hideBlockMenu() {
         this.mainWorkspace.getBlockMenu().hide();
     }
@@ -2265,6 +2540,8 @@ Entry.Playground = class Playground {
                     return this._pictureAddButton;
                 case 'soundAddButton':
                     return this._soundAddButton;
+                case 'tableAddButton':
+                    return this._tableAddButton;
             }
         } else {
         }

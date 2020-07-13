@@ -101,38 +101,37 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
+                dropdownSync: 'lifesafety',
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getSubCategory(targetIndex = 0, isPython = false) {
+        getSubCategory(isPython = false) {
             const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName(value) {
-                    if (value) {
-                        return categoryMap[value].sub.map((category) => [
-                            Lang.Blocks[`behaviorConduct${category}`],
-                            category,
-                        ]);
+                menuName() {
+                    const value = this.getTargetValue('lifesafety');
+                    if (!value) {
+                        return [[Lang.Blocks.no_target, 'null']];
                     }
-
-                    if (this._contents.options) {
-                        return this._contents.options;
-                    } else {
-                        return categoryMap[defaultCategory].sub.map((category) => [
-                            Lang.Blocks[`behaviorConduct${category}`],
-                            category,
-                        ]);
-                    }
+                    return categoryMap[value].sub.map((category) => [
+                        Lang.Blocks[`behaviorConduct${category}`],
+                        category,
+                    ]);
                 },
-                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.EXPANSION,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
+                defaultValue: (value, options) => {
+                    if (options.length) {
+                        return options[0][1];
+                    }
+                    return null;
+                },
             };
             if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -146,16 +145,14 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
         return new PromiseManager()
             .Promise((resolve) => {
                 callApi(key, {
-                    url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${
-                        params.category
-                        }/${params.subCategory}`,
+                    url: `${Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.api}/${params.category}/${params.subCategory}`,
                 })
                     .then((result) => {
                         if (result) {
                             const items = result.data.response.body.items.item.filter(
                                 (i) =>
                                     i.hasOwnProperty('actRmks') &&
-                                    i.safetyCate3 == params.subCategory2,
+                                    i.safetyCate3 == params.subCategory2
                             );
                             if (index) {
                                 return resolve(items[index - 1].actRmks);
@@ -193,7 +190,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.EXPANSION,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getCategory(), params.getSubCategory(0)],
+            params: [params.getCategory(), params.getSubCategory()],
             events: {},
             def: {
                 params: [params.getCategory().value, null],
@@ -230,7 +227,7 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
             statements: [],
             params: [
                 params.getCategory(),
-                params.getSubCategory(0),
+                params.getSubCategory(),
                 {
                     type: 'Block',
                     accept: 'string',

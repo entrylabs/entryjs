@@ -11,7 +11,12 @@ const STATUS_CODE = {
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
 };
 
-const VOICE_SERVER_ADDR = `${window.location.hostname}`;
+const getVoiceServerAddress = () => ({
+    hostname: Entry.baseUrl,
+    path: '/vc',
+});
+
+const DESIRED_SAMPLE_RATE = 16000;
 
 class AudioUtils {
     get currentVolume() {
@@ -26,6 +31,7 @@ class AudioUtils {
         this._currentVolume = -1;
         this._audioChunks = [];
         this.result = null;
+        this.startedRecording = false;
     }
 
     async checkUserMicAvailable() {
@@ -37,33 +43,53 @@ class AudioUtils {
         }
     }
 
-    async initUserMedia() {
+    async getMediaStream() {
+        try {
+            return await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err) {
+            // is MIC present in browser
+            this.isRecording = false;
+            this.stopRecord();
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_microphone_error,
+            ]);
+        }
+    }
+
+    incompatBrowserChecker() {
+        // IE/safari CHECKER
         if (!this.isAudioSupport) {
             this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
         }
+        if (!this.isAudioSupport) {
+            this.isRecording = false;
+            this.stopRecord();
+            throw new Entry.Utils.IncompatibleError();
+        }
+    }
+
+    async initUserMedia() {
+        this.incompatBrowserChecker();
+        const mediaStream = await this.getMediaStream();
 
         if (this.isAudioInitComplete) {
             return;
         }
-        if (!this.isAudioSupport) {
-            throw new Entry.Utils.IncompatibleError();
-        }
-
+        Entry.addEventListener('beforeStop', () => {
+            this.improperStop();
+        });
         try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
-                audio: true,
-            });
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
                     window.AudioContext = window.webkitAudioContext;
                 }
             }
-            const audioContext = new window.AudioContext({ sampleRate: 16000 });
+            const audioContext = new window.AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
             const biquadFilter = audioContext.createBiquadFilter();
             biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 20;
+            biquadFilter.frequency.value = 30;
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
@@ -88,24 +114,36 @@ class AudioUtils {
         }
     }
 
+    improperStop() {
+        this.stopRecord();
+        if (this.resolveFunc) {
+            this.resolveFunc('');
+        }
+    }
+
     async startRecord(recordMilliSecond, language) {
+        //getMediaStream 은 만약 stream 이 없는 경우
+        await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
+            this.resolveFunc = resolve;
             if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
-                resolve();
+                resolve(0);
                 return;
             }
-
             // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
                 await this.initUserMedia();
             }
 
             try {
-                const socketClient = await voiceApiConnect(VOICE_SERVER_ADDR, language, (data) => {
-                    this.result = data;
-                });
-                this._socketClient = socketClient;
+                this._socketClient = await voiceApiConnect(
+                    getVoiceServerAddress(),
+                    language,
+                    (data) => {
+                        this.result = data;
+                    }
+                );
             } catch (err) {
                 console.log(err);
             }
@@ -114,7 +152,7 @@ class AudioUtils {
 
             this._stopMediaRecorder();
             this._mediaRecorder.start();
-
+            this.startedRecording = true;
             Entry.engine.toggleAudioShadePanel();
             this._socketClient.on('message', (e) => {
                 switch (e) {
@@ -143,6 +181,7 @@ class AudioUtils {
             this._mediaRecorder.stop();
         }
     }
+
     /**
      * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
      * @param {object=} option
@@ -156,7 +195,11 @@ class AudioUtils {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
-        Entry.engine.toggleAudioProgressPanel();
+        if (this.startedRecording) {
+            Entry.engine.toggleAudioProgressPanel();
+        }
+        this.startedRecording = false;
+
         if (option.silent) {
             this._mediaRecorder.onstop = () => {
                 console.log('silent stop');
@@ -169,7 +212,7 @@ class AudioUtils {
             };
         }
         this._audioContext.suspend();
-        this._userMediaStream.getTracks().forEach((track) => {
+        this.stream.getTracks().forEach((track) => {
             track.stop();
         });
         clearTimeout(this._properStopCall);
@@ -221,13 +264,41 @@ class AudioUtils {
                 outputData[sample] = inputData[sample];
             }
         }
-        // console.log(this._currentVolume);
-        if (this.isRecording) {
-            // websocket 으로 서버 전송
-            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
-                this._socketClient.send(toWav(outputBuffer));
-            }
+        if (!this.isRecording) {
+            return;
         }
+
+        ///// RESAMPLE
+        // offline context 로 44100hz 에서 16000hz로 resample
+        const offlineCtx = new OfflineAudioContext(
+            outputBuffer.numberOfChannels,
+            outputBuffer.duration * DESIRED_SAMPLE_RATE,
+            DESIRED_SAMPLE_RATE
+        );
+        const cloneBuffer = offlineCtx.createBuffer(
+            outputBuffer.numberOfChannels,
+            outputBuffer.length,
+            outputBuffer.sampleRate
+        );
+        // Copy the source data into the offline AudioBuffer
+        for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
+            cloneBuffer.copyToChannel(outputBuffer.getChannelData(channel), channel);
+        }
+        // Play it from the beginning.
+        const source = offlineCtx.createBufferSource();
+        source.buffer = cloneBuffer;
+        source.connect(offlineCtx.destination);
+        offlineCtx.oncomplete = (e) => {
+            if (!this.isRecording) {
+                return;
+            }
+            // socket.io로 서버 전송
+            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+                this._socketClient.send(toWav(e.renderedBuffer));
+            }
+        };
+        offlineCtx.startRendering();
+        source.start(0);
     };
 }
 
