@@ -16,9 +16,10 @@ jobs:
           node-version: '10.x'
       - uses: bahmutov/npm-install@v1
       - name: entry build
+        env:
+          NODE_OPTIONS: '--max-old-space-size=4096'
+          TOOL_NODE_FLAGS: '--max-old-space-size=4096'
         run: |
-          export NODE_OPTIONS="--max-old-space-size=4096"
-          export TOOL_NODE_FLAGS="--max-old-space-size=4096"
           npm run prod
   execute-script:
     needs: install-and-build
