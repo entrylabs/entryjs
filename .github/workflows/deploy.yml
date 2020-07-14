@@ -38,7 +38,7 @@ jobs:
           if_false: dist/${{ steps.target_branch.outputs.branch }}
       - name: Execute build.sh
         env:
-          REPO_URL: https://github.com/${{ GITHUB_REPOSITORY }}
+          REPO_URL: https://github.com/${GITHUB_REPOSITORY}
         run: |
           sh ./scripts/build_action.sh
       - name: Execute deploy.sh
