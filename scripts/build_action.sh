@@ -5,7 +5,7 @@ git config --global user.name "Entry Dev";
 git config --global user.email "entrydev@nts-corp.com";
 
 export NODE_ENV=production
-git clone -b build "https://github.com/entrylabs/entry-hw" build
+git clone -b build "https://github.com/entrylabs/entryjs" build
 rm -rf build/**/* || exit 0
 npm run dist
 cp -r dist build/
