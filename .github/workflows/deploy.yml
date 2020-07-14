@@ -27,6 +27,9 @@ jobs:
   execute-script:
     needs: install-and-build
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: '.'
     steps:
       - name: Execute build.sh
         run: |
