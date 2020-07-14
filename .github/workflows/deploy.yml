@@ -3,7 +3,8 @@ name: Entry Build and Deploy
 on:
   push:
     branches:
-      - 'deploy2/**'
+      - 'deploy/**'
+      - master
 
 jobs:
   build-and-deploy:
