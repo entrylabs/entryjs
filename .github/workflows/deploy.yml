@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'deploy/**'
+      - deploy2/build_with_actions
       - master
 
 jobs:
