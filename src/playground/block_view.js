@@ -491,7 +491,10 @@ Entry.BlockView = class BlockView {
         if (e.preventDefault) {
             e.preventDefault();
         }
-
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button == 1) {
             return;
         }
@@ -684,6 +687,10 @@ Entry.BlockView = class BlockView {
     }
 
     onMouseUp(e) {
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button == 1) {
             return;
         }

@@ -853,6 +853,10 @@ class BlockMenu {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button != 1) {
             $(document).unbind('.blockMenu');
             delete this.dragInstance;
@@ -863,7 +867,10 @@ class BlockMenu {
         if (e.preventDefault) {
             e.preventDefault();
         }
-
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown) {
@@ -919,13 +926,9 @@ class BlockMenu {
     }
 
     _captureKeyEvent(e) {
-        let keyCode = e.code || e.key;
+        let keyCode = e.code == undefined ? e.key : e.code;
         if (!keyCode) {
             return;
-        }
-        if (keyCode.indexOf('Arrow') == -1 && keyCode.indexOf('Bracket') == -1) {
-            keyCode = keyCode.replace('Left', '');
-            keyCode = keyCode.replace('Right', '');
         }
         keyCode = keyCode.replace('Digit', '');
         keyCode = keyCode.replace('Numpad', '');
@@ -933,7 +936,7 @@ class BlockMenu {
         if (!keyCode) {
             return;
         }
-        if (e.ctrlKey && Entry.type === 'workspace' && Number(keyCode) != NaN) {
+        if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {
                 this._cancelDynamic(true);
