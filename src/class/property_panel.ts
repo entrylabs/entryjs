@@ -1,4 +1,4 @@
-class PropertyPanel implements IEntry.PropertyPanel {
+class PropertyPanel {
     public modes: any = {};
     public selected: string = undefined;
 
@@ -181,4 +181,5 @@ class PropertyPanel implements IEntry.PropertyPanel {
     }
 }
 
+export default PropertyPanel;
 Entry.PropertyPanel = PropertyPanel;

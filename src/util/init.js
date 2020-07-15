@@ -214,7 +214,7 @@ Entry.initialize_ = function() {
     this.aiUtilize = new AIUtilize(this.playground);
     this._destroyer.add(this.aiUtilize);
 
-    this.aiLearning = new AILearning(this.playground);
+    this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
     this._destroyer.add(this.aiLearning);
 
     this.intro = new Entry.Intro();
@@ -513,6 +513,11 @@ Entry.parseOptions = function(options) {
     this.dataTableEnable = options.dataTableEnable;
     if (this.dataTableEnable === undefined) {
         this.dataTableEnable = false;
+    }
+
+    this.aiLearningEnable = options.aiLearningEnable;
+    if (this.aiLearningEnable === undefined) {
+        this.aiLearningEnable = true;
     }
 
     this.hardwareEnable = options.hardwareEnable;

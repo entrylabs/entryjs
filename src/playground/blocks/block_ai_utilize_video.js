@@ -693,7 +693,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     return 0;
                 } catch (err) {
                     console.log(detected);
-                    debugger;
                 }
             },
             paramsKeyMap: {

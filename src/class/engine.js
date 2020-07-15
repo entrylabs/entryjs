@@ -904,7 +904,16 @@ Entry.Engine = class Engine {
      * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
-        const keyCode = e.keyCode;
+        let keyCode = e.code == undefined ? e.key : e.code;
+        if (!keyCode) {
+            return;
+        }
+        keyCode = keyCode.replace('Digit', '');
+        keyCode = keyCode.replace('Numpad', '');
+        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        if (!keyCode) {
+            return;
+        }
         const isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce) {
