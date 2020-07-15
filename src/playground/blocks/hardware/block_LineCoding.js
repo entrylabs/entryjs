@@ -2163,8 +2163,8 @@ Entry.LineCoding.getBlocks = function() {
                     if (note != 0) {
                         value2 = Entry.LineCoding.toneMap[note][octave];
                     }
-                    if (duration2 > 3000) {
-                        duration2 = 3000;
+                    if (duration2 > 30) {
+                        duration2 = 30;
                     }
                     duration2 = duration2 * 1000;
                     script.isStart = true;
