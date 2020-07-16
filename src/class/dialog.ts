@@ -6,7 +6,7 @@ type EntryObjectEntity = any;
 
 type NotchType = 'ne' | 'nw' | 'se' | 'sw';
 
-class EntryDialog implements IEntry.Dialog {
+class EntryDialog {
     private parent: EntryObjectEntity;
     private padding = 10;
     private border = 2;
@@ -16,7 +16,7 @@ class EntryDialog implements IEntry.Dialog {
     private _isNoContentTried: boolean;
     private readonly message_: string;
     private readonly mode_: 'speak' | 'ask';
-    public object: PIXI.Container | any;
+    public object: any;
 
     constructor(
         entity: EntryObjectEntity,
@@ -214,4 +214,5 @@ class EntryDialog implements IEntry.Dialog {
     }
 }
 
+export default EntryDialog;
 Entry.Dialog = EntryDialog;

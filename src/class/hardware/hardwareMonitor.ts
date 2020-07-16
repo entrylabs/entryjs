@@ -3,7 +3,7 @@ const hwMonitorSvgTemplate =
     'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>';
 
 export default class HardwareMonitor {
-    private _hwModule: IEntry.HardwareModule;
+    private _hwModule: EntryHardwareBlockModule;
     private snap: any;
     private _svgGroup: any;
     private _portMap: any;
@@ -22,7 +22,7 @@ export default class HardwareMonitor {
     private scale = 0.5;
     private _listPortViews: any = {};
 
-    constructor(hwModule: IEntry.HardwareModule) {
+    constructor(hwModule: EntryHardwareBlockModule) {
         this._hwModule = hwModule;
 
         Entry.addEventListener('windowResized', () => {
@@ -160,7 +160,7 @@ export default class HardwareMonitor {
         }
     }
 
-    setHwModule(hwModule: IEntry.HardwareModule) {
+    setHwModule(hwModule: EntryHardwareBlockModule) {
         this._hwModule = hwModule;
     }
 
