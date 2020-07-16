@@ -407,7 +407,7 @@ class LittleBits {
                     },
                     {
                         type: 'Dropdown',
-                        options: [[Lang.Blocks.littlebits_on, 'on'], [Lang.Blocks.littlebits_off, 'off']],
+                        options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                         value: 'on',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -456,8 +456,8 @@ class LittleBits {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [Lang.Blocks.littlebits_on, 'on'],
-                                        [Lang.Blocks.littlebits_off, 'off'],
+                                        [Lang.Blocks.ARDUINO_on, 'on'],
+                                        [Lang.Blocks.ARDUINO_off, 'off'],
                                     ],
                                     value: 'on',
                                     fontSize: 11,
