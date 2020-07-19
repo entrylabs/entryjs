@@ -195,6 +195,10 @@ class mechatro {
     afterReceive(pd) {
 
         if (!Entry.engine.isState('run')) {
+            // 정지시에도 이전값 저장으로 실행하는 순간 발생할 수 있는 이벤트 발생을 금지
+            Object.keys(this.prev_sensor_data).forEach((key) => {
+                this.prev_sensor_data[key] = pd[key];
+            });
             return;
         }
 
