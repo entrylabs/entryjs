@@ -8,6 +8,8 @@ import { Backpack, ColorPicker, Dropdown, Sortable } from '@entrylabs/tool';
 import Toast from '../playground/toast';
 import EntryEvent from '@entrylabs/event';
 import { Destroyer } from '../util/destroyer/Destroyer';
+import { saveAs } from 'file-saver';
+import DataTable from './DataTable';
 
 const Entry = require('../entry');
 
@@ -16,7 +18,7 @@ const Entry = require('../entry');
  * This manage all view related with block.
  * @constructor
  */
-Entry.Playground = class {
+Entry.Playground = class Playground {
     constructor() {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
@@ -30,9 +32,6 @@ Entry.Playground = class {
         this.viewMode_ = 'default';
         Entry.addEventListener('textEdited', () => {
             this.injectText();
-        });
-        Entry.addEventListener('hwChanged', () => {
-            this.updateHW();
         });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
 
@@ -52,7 +51,7 @@ Entry.Playground = class {
         /** @type {!Element} */
         this.view_ = playgroundView;
         this.view_.addClass('entryPlayground');
-        if (option === 'workspace') {
+        if (option === 'workspace' || option === 'playground') {
             this.view_.addClass('entryPlaygroundWorkspace');
 
             const tabView = Entry.createElement('div', 'entryCategoryTab')
@@ -82,6 +81,16 @@ Entry.Playground = class {
             this.generatePictureView(pictureView);
             this.pictureView_ = pictureView;
 
+            const pictureCurtainView = Entry.createElement('div', 'entryPictureCurtain')
+                .addClass('entryPlaygroundPictureCurtainWorkspace entryRemove')
+                .appendTo(pictureView);
+            this.pictureCurtainView_ = pictureCurtainView;
+
+            const pictureCurtainText = Entry.createElement('span', 'entryPictureCurtainText')
+                .addClass('entryPlaygroundPictureCurtainWorkspaceText')
+                .appendTo(pictureCurtainView);
+            pictureCurtainText.innerHTML = Lang.Workspace.add_object_before_edit;
+
             const textView = Entry.createElement('div', 'entryText')
                 .addClass('entryPlaygroundTextWorkspace entryRemove')
                 .appendTo(this.view_);
@@ -93,6 +102,14 @@ Entry.Playground = class {
                 .appendTo(this.view_);
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
+
+            if (Entry.dataTableEnable) {
+                const tableView = Entry.createElement('div', 'dataTable')
+                    .addClass('entryPlaygroundTableWorkspace entryRemove')
+                    .appendTo(this.view_);
+                this.generateTableView(tableView);
+                this.tableView_ = tableView;
+            }
 
             const defaultView = Entry.createElement('div', 'entryDefault')
                 .addClass('entryPlaygroundDefaultWorkspace')
@@ -111,11 +128,11 @@ Entry.Playground = class {
                 .addClass('entryPlaygroundBackPackView')
                 .appendTo(this.view_);
             this.backPackView = backPackView;
-            this.createPackPackView(backPackView);
+            this.createBackPackView(backPackView);
 
             const resizeHandle = Entry.createElement('div')
                 .addClass('entryPlaygroundResizeWorkspace', 'entryRemove')
-                .appendTo(this.view_);
+                .appendTo(codeView);
             this.resizeHandle_ = resizeHandle;
             this.initializeResizeHandle(resizeHandle);
 
@@ -203,6 +220,18 @@ Entry.Playground = class {
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
+
+        if (Entry.dataTableEnable) {
+            const tableTab = Entry.createElement('li', 'dataTableTab')
+                .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
+                .appendTo(tabList)
+                .bindOnClick(() => {
+                    Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
+                });
+            tableTab.innerHTML = Lang.Workspace.tab_table;
+            this.tabViewElements.table = tableTab;
+            this.tableTab = tableTab;
+        }
     }
 
     createButtonTabView(tabButtonView) {
@@ -227,8 +256,8 @@ Entry.Playground = class {
             const backPackButton = Entry.createElement('div')
                 .addClass('entryPlaygroundBackPackButtonWorkspace')
                 .appendTo(tabButtonView);
-            backPackButton.setAttribute('alt', Lang.Blocks.show_all_comment);
-            backPackButton.setAttribute('title', Lang.Blocks.show_all_comment);
+            backPackButton.setAttribute('alt', Lang.Workspace.my_storage);
+            backPackButton.setAttribute('title', Lang.Workspace.my_storage);
 
             this.backPackButton_ = backPackButton;
             backPackButton.bindOnClick(() => {
@@ -237,7 +266,7 @@ Entry.Playground = class {
         }
     }
 
-    createPackPackView(backPackView) {
+    createBackPackView(backPackView) {
         this.backPack = new Backpack({
             isShow: false,
             data: {
@@ -557,15 +586,17 @@ Entry.Playground = class {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        // this.banExpansionBlock();
         Entry.expansion.banAllExpansionBlock();
+        Entry.aiUtilize.banAllAIUtilizeBlock();
+        DataTable.banAllBlock();
+        Entry.aiLearning.banBlocks();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
         this._destroyer.add(this.toast);
 
         if (Entry.hw) {
-            this.updateHW();
+            Entry.hw.refreshHardwareBlockMenu();
         }
     }
 
@@ -600,11 +631,18 @@ Entry.Playground = class {
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
 
-            this.painter = new Entry.Painter(
-                Entry.createElement('div', 'entryPainter')
-                    .addClass('entryPlaygroundPainter')
-                    .appendTo(PictureView)
-            );
+            const painterDom = Entry.createElement('div', 'entryPainter')
+                .addClass('entryPlaygroundPainter')
+                .appendTo(PictureView);
+
+            switch (Entry.paintMode) {
+                case 'entry-paint':
+                    this.painter = new Entry.Painter(painterDom);
+                    break;
+                case 'literallycanvas':
+                    this.painter = new Entry.LiterallycanvasPainter(painterDom);
+                    break;
+            }
         }
     }
 
@@ -626,12 +664,29 @@ Entry.Playground = class {
         });
     }
 
+    updateTableView() {
+        const items = this._getSortableTableList();
+
+        if (this.tableSortableListWidget) {
+            this.tableSortableListWidget.setData({
+                items,
+            });
+        }
+
+        if (items.length) {
+            this.hideTableCurtain();
+        } else {
+            this.showTableCurtain();
+        }
+    }
+
     updatePictureView() {
         if (this.pictureSortableListWidget) {
             this.pictureSortableListWidget.setData({
                 items: this._getSortablePictureList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortablePictureList() {
@@ -643,6 +698,75 @@ Entry.Playground = class {
             key: `${id}-${value.id}`,
             item: value.view,
         }));
+    }
+
+    generateTableView(tableView) {
+        if (Entry.type !== 'workspace') {
+            return;
+        }
+        const tableAdd = Entry.createElement('div', 'entryAddTable')
+            .addClass('entryPlaygroundAddTable')
+            .appendTo(tableView);
+
+        const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
+            .addClass('entryPlaygroundAddTableInner')
+            .bindOnClick(() => {
+                Entry.do('playgroundClickAddTable');
+            })
+            .appendTo(tableAdd);
+        innerTableAdd.innerHTML = Lang.Workspace.table_add;
+        this._tableAddButton = innerTableAdd;
+
+        this.tableListView_ = Entry.createElement('ul', 'dataTableList')
+            .addClass('entryPlaygroundTableList')
+            .appendTo(tableView);
+
+        const tableDom = Entry.createElement('div', 'dataTableEditor')
+            .addClass('entryPlaygroundTable')
+            .appendTo(tableView);
+        DataTable.view = tableDom;
+
+        const tableCurtainView = Entry.createElement('div', 'entryTableCurtain')
+            .addClass('entryPlaygroundTableCurtainWorkspace entryRemove')
+            .appendTo(tableDom);
+        this.tableCurtainView_ = tableCurtainView;
+
+        const tableCurtainText = Entry.createElement('span', 'entryTableCurtainText')
+            .addClass('entryPlaygroundTableCurtainWorkspaceText')
+            .appendTo(tableCurtainView);
+        tableCurtainText.innerHTML = Lang.Workspace.add_table_before_edit;
+
+        this.dataTable = DataTable;
+    }
+
+    initSortableTableWidget() {
+        if (this.tableSortableListWidget) {
+            return;
+        }
+
+        this.tableSortableListWidget = new Sortable({
+            container: this.tableListView_,
+            data: {
+                height: '100%',
+                sortableTarget: ['entryPlaygroundTableThumbnail'],
+                lockAxis: 'y',
+                items: this._getSortableTableList(),
+            },
+        });
+        this.tableSortableListWidget.on('change', ([newIndex, oldIndex]) => {
+            Entry.playground.moveTable(newIndex, oldIndex);
+        });
+    }
+
+    _getSortableTableList() {
+        const { tables = [] } = this.dataTable;
+        return tables.map((table) => {
+            const { id, view } = table;
+            return {
+                key: id,
+                item: view,
+            };
+        });
     }
 
     /**
@@ -669,7 +793,7 @@ Entry.Playground = class {
         fontLink.bindOnClick(() => {
             const options = EntryStatic.fonts
                 .filter((font) => font.visible)
-                .map((font) => [font.name, font]);
+                .map((font) => [font.name, font, font.style]);
             fontLink.addClass('imico_pop_select_arr_up');
             fontLink.removeClass('imico_pop_select_arr_down');
             this.openDropDown(
@@ -681,12 +805,18 @@ Entry.Playground = class {
                     if (that.object.entity.getLineBreak()) {
                         textValue = textEditArea.value;
                     }
-
-                    if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
-                        font = options[0][1];
-                        entrylms.alert(Lang.Menus.not_supported_text);
+                    const { options = {} } = Entry;
+                    const { textOptions = {} } = options;
+                    const { hanjaEnable } = textOptions;
+                    if (!hanjaEnable) {
+                        if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
+                            font = options[0][1];
+                            entrylms.alert(Lang.Menus.not_supported_text);
+                        }
                     }
                     fontLink.innerText = font.name;
+                    this.textEditArea.style.fontFamily = font.family;
+                    this.textEditInput.style.fontFamily = font.family;
                     $('#entryTextBoxAttrFontName').data('font', font);
                     this.object.entity.setFontType(font.family);
                 },
@@ -885,7 +1015,13 @@ Entry.Playground = class {
             const entity = object.entity;
             const selected = $('#entryTextBoxAttrFontName').data('font');
             const defaultFont = EntryStatic.fonts[0];
-            if (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan') {
+            const { options = {} } = Entry;
+            const { textOptions = {} } = options;
+            const { hanjaEnable } = textOptions;
+            if (
+                !hanjaEnable &&
+                (selected.family === 'Nanum Pen Script' || selected.family === 'Jeju Hallasan')
+            ) {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     $('#entryTextBoxAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
@@ -977,7 +1113,7 @@ Entry.Playground = class {
      * @param soundView
      */
     generateSoundView(soundView) {
-        if (Entry.type == 'workspace') {
+        if (Entry.type === 'workspace') {
             const soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             const innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner').addClass(
@@ -1033,6 +1169,7 @@ Entry.Playground = class {
                 items: this._getSortableSoundList(),
             });
         }
+        this.reloadPlayground();
     }
 
     _getSortableSoundList() {
@@ -1096,11 +1233,14 @@ Entry.Playground = class {
             this.changeViewMode('picture');
         } else if (viewMode === 'sound') {
             this.changeViewMode('sound');
+        } else if (viewMode === 'table') {
+            this.changeViewMode('table');
         }
 
         _.result(this.blockMenu, 'clearRendered');
         this.reloadPlayground();
     }
+
     /**
      * Inject object
      * @param {?Entry.EntryObject} object
@@ -1134,10 +1274,26 @@ Entry.Playground = class {
         );
     }
 
+    injectTable() {
+        const view = this.tableListView_;
+        if (!view) {
+            return;
+        }
+        const { tables, selected } = this.dataTable;
+        tables.forEach((table) => {
+            if (!table.view) {
+                this.generateTableElement(table);
+            } else {
+                table.view.name.value = table.name;
+            }
+        });
+        this.updateTableView();
+    }
+
     /**
      * Inject picture
      */
-    injectPicture() {
+    injectPicture(isSelect = true) {
         const view = this.pictureListView_;
         if (!view) {
             return;
@@ -1154,7 +1310,7 @@ Entry.Playground = class {
                 element.orderHolder.innerHTML = i + 1;
             });
 
-            this.selectPicture(this.object.selectedPicture);
+            isSelect && this.selectPicture(this.object.selectedPicture);
         }
 
         this.updatePictureView();
@@ -1164,7 +1320,7 @@ Entry.Playground = class {
      * Add picture
      * @param {picture model} picture
      */
-    addPicture(picture, isNew) {
+    addPicture(picture, isNew, isSelect = true) {
         const tempPicture = _.clone(picture);
 
         if (isNew === true) {
@@ -1181,9 +1337,7 @@ Entry.Playground = class {
 
         this.generatePictureElement(picture);
 
-        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture);
-        this.injectPicture();
-        this.selectPicture(picture);
+        Entry.do('objectAddPicture', picture.objectId || this.object.id, picture, isSelect);
     }
 
     /**
@@ -1224,18 +1378,25 @@ Entry.Playground = class {
      */
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
-        if (picture.fileurl) {
-            window.open(
-                `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
-                    picture.name
-                )}.png`
-            );
-        } else {
-            window.open(
-                `/api/sprite/download/image/${btoa(picture.filename)}/${encodeURIComponent(
-                    picture.name
-                )}.png`
-            );
+        const { imageType = 'png' } = picture;
+        /**
+         Logic in try phrase will be disregarded after renewal.
+         nt11576
+         */
+        try {
+            if (picture.fileurl) {
+                saveAs(
+                    `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
+                        picture.name
+                    )}.png`,
+                    `${picture.name}.${imageType}`
+                );
+            } else {
+                const src = this.painter.getImageSrc(picture);
+                saveAs(src, `${picture.name}.${imageType}`);
+            }
+        } catch (e) {
+            Entry.dispatchEvent('downloadPicture', picture);
         }
     }
 
@@ -1248,11 +1409,26 @@ Entry.Playground = class {
         this.addPicture(sourcePicture, true);
     }
 
+    async selectTable(table = {}) {
+        const { tables } = this.dataTable;
+
+        if (await this.dataTable.selectTable(table)) {
+            tables.forEach(({ view, id }) => {
+                if (id === table.id) {
+                    view.addClass('entryTableSelected');
+                } else {
+                    view.removeClass('entryTableSelected');
+                }
+            });
+            Entry.dispatchEvent('tableSelected', table);
+        }
+    }
+
     /**
      * Select picture
      * @param {picture}
      */
-    selectPicture(picture) {
+    selectPicture(picture, removed) {
         const pictures = this.object.pictures;
         for (let i = 0, len = pictures.length; i < len; i++) {
             const target = pictures[i];
@@ -1273,8 +1449,34 @@ Entry.Playground = class {
             if (!picture.objectId) {
                 picture.objectId = this.object.id;
             }
-            Entry.dispatchEvent('pictureSelected', picture);
+            Entry.dispatchEvent('pictureSelected', picture, removed);
         }
+    }
+
+    moveTable(start, end) {
+        this.dataTable.changeItemPosition(start, end);
+        this.injectTable();
+    }
+
+    checkChangeTable() {
+        if (!this.dataTable || !this.dataTable.tempDataAnalytics) {
+            return;
+        }
+        return new Promise((resolve) => {
+            entrylms.confirm(Lang.Menus.save_modified_table).then((result) => {
+                if (result) {
+                    this.dataTable.saveTable(this.dataTable.tempDataAnalytics);
+                }
+
+                if (this.dataTable.selected) {
+                    this.dataTable.dataAnalytics.setData({
+                        table: { ...this.dataTable.selected.toJSON() },
+                    });
+                }
+                delete this.dataTable.tempDataAnalytics;
+                resolve(result);
+            });
+        });
     }
 
     /**
@@ -1297,7 +1499,6 @@ Entry.Playground = class {
         if (!object) {
             return;
         }
-
         const entity = object.entity;
 
         const text = entity.getText();
@@ -1339,6 +1540,7 @@ Entry.Playground = class {
         }
 
         this.setFontAlign(entity.getTextAlign());
+        Entry.stage.updateForce();
     }
 
     _setFontFontUI() {
@@ -1382,10 +1584,26 @@ Entry.Playground = class {
         }
     }
 
-    addExpansionBlock(item) {
-        const { name } = item;
-        Entry.expansion.addExpansionBlock(name);
+    addExpansionBlocks(items) {
+        Entry.expansion.addExpansionBlocks(items.map(({ name }) => name));
     }
+
+    removeExpansionBlocks(items) {
+        Entry.expansion.banExpansionBlocks(items.map(({ name }) => name));
+    }
+
+    addAIUtilizeBlocks(items) {
+        Entry.aiUtilize.addAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
+    removeAIUtilizeBlocks(items) {
+        Entry.aiUtilize.banAIUtilizeBlocks(items.map(({ name }) => name));
+    }
+
+    setAiLearningBlock(url, info) {
+        Entry.aiLearning.load({ url, ...info });
+    }
+
     /**
      * Add sound
      * @param {sound model} sound
@@ -1421,6 +1639,8 @@ Entry.Playground = class {
             } else {
                 window.open(sound.fileurl);
             }
+        } else if (sound.path.indexOf('sound') > -1) {
+            Entry.dispatchEvent('downloadSound', sound);
         } else {
             window.open(
                 `/api/sprite/download/sound/${encodeURIComponent(
@@ -1490,6 +1710,13 @@ Entry.Playground = class {
                     this.injectSound();
                 }
             }
+        }
+
+        if (viewType === 'table') {
+            this.initSortableTableWidget();
+            this.injectTable();
+        } else {
+            this.checkChangeTable();
         }
 
         if (
@@ -1566,7 +1793,7 @@ Entry.Playground = class {
     }
 
     hideTabs() {
-        ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
+        ['picture', 'text', 'sound', 'variable', 'table'].forEach(this.hideTab.bind(this));
     }
 
     hideTab(item) {
@@ -1577,7 +1804,7 @@ Entry.Playground = class {
     }
 
     showTabs() {
-        ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
+        ['picture', 'text', 'sound', 'variable', 'table'].forEach(this.showTab.bind(this));
     }
 
     showTab(item) {
@@ -1641,9 +1868,13 @@ Entry.Playground = class {
         if (Entry.playground && Entry.playground.view_) {
             this.injectPicture();
             this.injectSound();
-            const board = Entry.playground.mainWorkspace.getBoard();
-            board.clear();
-            board.changeCode(null);
+
+            const mainWS = Entry.getMainWS();
+            if (mainWS) {
+                const board = mainWS.getBoard();
+                board.clear();
+                board.changeCode(null);
+            }
         }
     }
 
@@ -1655,6 +1886,9 @@ Entry.Playground = class {
             if (this.getViewMode() === 'sound') {
                 this.injectSound();
             }
+            if (this.getViewMode() === 'table') {
+                this.injectTable();
+            }
         }
     }
 
@@ -1663,6 +1897,134 @@ Entry.Playground = class {
         if (this.painter) {
             this.painter.clear();
         }
+    }
+
+    nameViewBlur() {
+        if (!Entry.playground.nameViewFocus) {
+            return;
+        }
+        if (this.nameView.value.trim() === '') {
+            entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                this.nameView.focus();
+            });
+            return true;
+        }
+
+        let nameViewArray = $('.entryPlaygroundPictureName');
+        if (nameViewArray.length !== Entry.playground.object.pictures.length) {
+            nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (
+                nameViewArray.eq(i).val() == this.nameView.value &&
+                nameViewArray[i] != this.nameView
+            ) {
+                entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                    this.nameView.focus();
+                });
+                return true;
+            }
+        }
+        const newValue = this.nameView.value;
+        this.nameView.picture.name = newValue;
+        const playground = Entry.playground;
+        if (playground) {
+            if (playground.object) {
+                const pic = playground.object.getPicture(this.nameView.picture.id);
+                if (pic) {
+                    pic.name = newValue;
+                }
+            }
+            const painter = playground.painter;
+            if (painter && painter.file) {
+                painter.file.name = newValue;
+            }
+
+            playground.reloadPlayground();
+        }
+        Entry.dispatchEvent('pictureNameChanged', this.nameView.picture);
+        Entry.playground.nameViewFocus = false;
+    }
+
+    generateTableElement(table) {
+        const element = Entry.createElement('li', table.id)
+            .addClass('entryPlaygroundTableElement')
+            .bindOnClick(() => {
+                this.selectTable(table);
+            });
+        table.view = element;
+        const thumbnailView = Entry.createElement('div', `t_${table.id}`).addClass(
+            'entryPlaygroundTableThumbnail'
+        );
+        thumbnailView.addEventListener('touchmove', (e) => {
+            e.preventDefault();
+        });
+        thumbnailView.style.backgroundImage = '';
+        element.appendChild(thumbnailView);
+        const nameView = Entry.createElement('input')
+            .addClass('entryPlaygroundTableName')
+            .addClass('entryEllipsis');
+        nameView.value = table.name;
+        nameView.id = table.id;
+        table.view.name = nameView;
+        Entry.attachEventListener(nameView, 'blur', this.tableNameViewBlur(table.id));
+        Entry.attachEventListener(nameView, 'focus', (e) => {
+            this.nameView = e.target;
+            this.nameViewFocus = true;
+        });
+        nameView.onkeypress = Entry.Utils.blurWhenEnter;
+        element.appendChild(nameView);
+        const removeButton = Entry.createElement('div').addClass('entryPlaygroundTableRemove');
+        const { Buttons = {} } = Lang || {};
+        const { delete: delText = '삭제' } = Buttons;
+        removeButton.appendTo(element).innerText = delText;
+        removeButton.bindOnClick((e) => {
+            e.stopPropagation();
+            this._removeTable(table, element);
+        });
+    }
+
+    isDuplicatedTableName(name, selectedIndex = -1) {
+        let nameViewArray = $('.entryPlaygroundTableName');
+        if (nameViewArray.length !== Entry.playground.dataTable.tables.length) {
+            nameViewArray = nameViewArray.slice(0, -1);
+        }
+
+        for (let i = 0; i < nameViewArray.length; i++) {
+            if (nameViewArray.eq(i).val() == name && i != selectedIndex) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    tableNameViewBlur = (tableId) => (event) => {
+        const { target = {} } = event;
+        const { value = '' } = target;
+        const selectedIndex = _.findIndex(this.dataTable.tables, (table) => table.id === tableId);
+        if (value.trim() === '') {
+            return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                target.focus();
+            });
+        }
+
+        if (this.isDuplicatedTableName(value, selectedIndex)) {
+            return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                target.focus();
+            });
+        }
+        if (DataTable.getSource(target.id).name === value) {
+            return;
+        }
+        DataTable.setTableName(target.id, value);
+        Entry.playground.reloadPlayground();
+        this.dataTable.selectTable(DataTable.tables[selectedIndex]);
+    };
+
+    _removeTable(table, element) {
+        Entry.playground.dataTable.removeSource(table);
     }
 
     generatePictureElement(picture) {
@@ -1692,19 +2054,7 @@ Entry.Playground = class {
                 {
                     text: Lang.Workspace.context_remove,
                     callback() {
-                        if (Entry.playground.object.removePicture(picture.id)) {
-                            Entry.removeElement(element);
-                            Entry.dispatchEvent('removePicture', picture);
-                            Entry.toast.success(
-                                Lang.Workspace.shape_remove_ok,
-                                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-                            );
-                        } else {
-                            Entry.toast.alert(
-                                Lang.Workspace.shape_remove_fail,
-                                Lang.Workspace.shape_remove_fail_msg
-                            );
-                        }
+                        Entry.playground._removePicture(picture, element);
                     },
                 },
                 {
@@ -1747,74 +2097,28 @@ Entry.Playground = class {
             .addClass('entryEllipsis');
         nameView.picture = picture;
         nameView.value = picture.name;
-        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
-
-        function nameViewBlur() {
-            if (this.value.trim() === '') {
-                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
-                    nameView.focus();
-                });
-            }
-
-            let nameViewArray = $('.entryPlaygroundPictureName');
-            if (nameViewArray.length !== Entry.playground.object.pictures.length) {
-                nameViewArray = nameViewArray.slice(0, -1); // pop last element (드래그 시 발생하는 임시 엘리먼트임)
-            }
-
-            for (let i = 0; i < nameViewArray.length; i++) {
-                if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
-                        nameView.focus();
-                    });
-                }
-            }
-            const newValue = this.value;
-            this.picture.name = newValue;
-            const playground = Entry.playground;
-            if (playground) {
-                if (playground.object) {
-                    const pic = playground.object.getPicture(this.picture.id);
-                    if (pic) {
-                        pic.name = newValue;
-                    }
-                }
-                const painter = playground.painter;
-                if (painter && painter.file) {
-                    painter.file.name = newValue;
-                }
-
-                playground.reloadPlayground();
-            }
-            Entry.dispatchEvent('pictureNameChanged', this.picture);
-        }
+        Entry.attachEventListener(nameView, 'blur', this.nameViewBlur.bind(this));
+        Entry.attachEventListener(nameView, 'focus', (e) => {
+            this.nameView = e.target;
+            this.nameViewFocus = true;
+        });
 
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         element.appendChild(nameView);
         Entry.createElement('div', `s_${picture.id}`)
             .addClass('entryPlaygroundPictureSize')
-            .appendTo(element).innerHTML = `${picture.dimension.width} X ${
-            picture.dimension.height
-        }`;
+            .appendTo(
+                element
+            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
         removeButton.appendTo(element).innerText = delText;
-        removeButton.bindOnClick(() => {
+        removeButton.bindOnClick((e) => {
             try {
-                if (Entry.playground.object.removePicture(picture.id)) {
-                    Entry.removeElement(element);
-                    Entry.dispatchEvent('removePicture', picture);
-                    Entry.toast.success(
-                        Lang.Workspace.shape_remove_ok,
-                        `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
-                    );
-                } else {
-                    Entry.toast.alert(
-                        Lang.Workspace.shape_remove_fail,
-                        Lang.Workspace.shape_remove_fail_msg
-                    );
-                }
+                e.stopPropagation();
+                this._removePicture(picture, element);
             } catch (e) {
                 Entry.toast.alert(
                     Lang.Workspace.shape_remove_fail,
@@ -1822,6 +2126,22 @@ Entry.Playground = class {
                 );
             }
         });
+    }
+
+    _removePicture(picture, element) {
+        if (Entry.playground.object.pictures.length > 1) {
+            Entry.do('objectRemovePicture', picture.objectId, picture);
+            Entry.removeElement(element);
+            Entry.toast.success(
+                Lang.Workspace.shape_remove_ok,
+                `${picture.name} ${Lang.Workspace.shape_remove_ok_msg}`
+            );
+        } else {
+            Entry.toast.alert(
+                Lang.Workspace.shape_remove_fail,
+                Lang.Workspace.shape_remove_fail_msg
+            );
+        }
     }
 
     generateSoundElement(sound) {
@@ -1909,6 +2229,7 @@ Entry.Playground = class {
                 thumbnailView.removeClass('entryPlaygroundSoundPlay');
                 thumbnailView.addClass('entryPlaygroundSoundStop');
                 soundInstance = Entry.Utils.playSound(sound.id);
+                Entry.Utils.addSoundInstances(soundInstance);
             }
 
             soundInstance.addEventListener('complete', () => {
@@ -1960,6 +2281,7 @@ Entry.Playground = class {
         removeButton.appendTo(element).innerText = delText;
         removeButton.bindOnClick(() => {
             try {
+                Entry.Utils.forceStopSounds();
                 const result = Entry.do('objectRemoveSound', Entry.playground.object.id, sound);
                 if (result) {
                     Entry.dispatchEvent('removeSound', sound);
@@ -2015,17 +2337,22 @@ Entry.Playground = class {
     };
 
     openColourPicker = (target, color, canTransparent, callback) => {
+        const containers = $('.entry-color-picker');
+        if (containers.length > 0) {
+            $(target).removeClass('on');
+            return containers.remove();
+        }
         const container = Entry.Dom('div', {
             class: 'entry-color-picker',
             parent: $('body'),
         })[0];
-
         $(target).addClass('on');
         const colorPicker = new ColorPicker({
             data: {
                 color,
                 positionDom: target,
                 canTransparent,
+                outsideExcludeDom: [target],
                 onOutsideClick: (color) => {
                     if (colorPicker) {
                         $(target).removeClass('on');
@@ -2115,37 +2442,16 @@ Entry.Playground = class {
         });
     }
 
-    updateHW() {
+    banAIUtilizeBlock() {
         const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
         if (!blockMenu) {
             return;
         }
 
-        const hw = Entry.hw;
-        if (hw && hw.connected) {
-            blockMenu.banClass('arduinoDisconnected', true);
-
-            hw.banHW();
-
-            if (hw.hwModule) {
-                blockMenu.banClass('arduinoConnect', true);
-                blockMenu.unbanClass('arduinoConnected', true);
-                blockMenu.unbanClass(hw.hwModule.name);
-            } else {
-                blockMenu.banClass('arduinoConnected', true);
-                blockMenu.unbanClass('arduinoConnect', true);
-            }
-        } else {
-            blockMenu.banClass('arduinoConnected', true);
-            blockMenu.banClass('arduinoConnect', true);
-            blockMenu.unbanClass('arduinoDisconnected', true);
-
-            Entry.hw.banHW();
-        }
-
-        blockMenu.hwCodeOutdated = true;
-        blockMenu._generateHwCode(true);
-        blockMenu.reDraw();
+        Object.values(Entry.AI_UTILIZE_BLOCK_LIST).forEach((block) => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
+        });
     }
 
     toggleLineBreak(isLineBreak) {
@@ -2196,6 +2502,22 @@ Entry.Playground = class {
         this.object.entity.setTextAlign(fontAlign);
     }
 
+    showPictureCurtain() {
+        this.pictureCurtainView_ && this.pictureCurtainView_.removeClass('entryRemove');
+    }
+
+    hidePictureCurtain() {
+        this.pictureCurtainView_ && this.pictureCurtainView_.addClass('entryRemove');
+    }
+
+    showTableCurtain() {
+        this.tableCurtainView_ && this.tableCurtainView_.removeClass('entryRemove');
+    }
+
+    hideTableCurtain() {
+        this.tableCurtainView_ && this.tableCurtainView_.addClass('entryRemove');
+    }
+
     hideBlockMenu() {
         this.mainWorkspace.getBlockMenu().hide();
     }
@@ -2218,6 +2540,8 @@ Entry.Playground = class {
                     return this._pictureAddButton;
                 case 'soundAddButton':
                     return this._soundAddButton;
+                case 'tableAddButton':
+                    return this._tableAddButton;
             }
         } else {
         }

@@ -5,11 +5,8 @@
 const LOADED = 'fontLoaded';
 
 export class PIXIFontLoadHandler {
-
-    private _items:any[] = [];
-    private _fontLoaded:boolean;
-
-
+    private _items: any[] = [];
+    private _fontLoaded: boolean;
 
     constructor() {
         this._handleFontLoaded = this._handleFontLoaded.bind(this);
@@ -17,7 +14,7 @@ export class PIXIFontLoadHandler {
     }
 
     private _listen() {
-        if((window as any).fontLoaded) {
+        if ((window as any).fontLoaded) {
             this._fontLoaded = true;
         } else {
             Entry.addEventListener(LOADED, this._handleFontLoaded);
@@ -28,7 +25,7 @@ export class PIXIFontLoadHandler {
         this._fontLoaded = true;
         Entry.removeEventListener(LOADED, this._handleFontLoaded);
         PIXI.TextMetrics.clearMetrics(null);
-        this._items.forEach((text:any)=>{
+        this._items.forEach((text: any) => {
             //updateText() 는 private 함수이지만, override 했으므로, 호출하겠음.
             text.updateText(false);
         });
@@ -37,18 +34,23 @@ export class PIXIFontLoadHandler {
     }
 
     /** @param {PIXIText} text */
-    manage(text:any) {
-        if(this._fontLoaded) return;
+    manage(text: any) {
+        if (this._fontLoaded) {
+            return;
+        }
         this._items.push(text);
     }
 
     /** @param {PIXIText} text */
-    unmanage(text:any) {
-        if(this._fontLoaded) return;
+    unmanage(text: any) {
+        if (this._fontLoaded) {
+            return;
+        }
         const arr = this._items;
         const index = arr.indexOf(text);
-        if(index==-1) return;
+        if (index == -1) {
+            return;
+        }
         arr.splice(index, 1);
     }
-
 }

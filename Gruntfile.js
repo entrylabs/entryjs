@@ -1,50 +1,41 @@
 module.exports = function(grunt) {
     'use strict';
 
-    var ClosureCompiler = require('google-closure-compiler').compiler;
+    const ClosureCompiler = require('google-closure-compiler').compiler;
 
     grunt.initConfig({
         concurrent: {
             tasks: ['watch'],
             options: {
-                logConcurrentOutput: true
-            }
+                logConcurrentOutput: true,
+            },
         },
         watch: {
             test: {
                 files: ['test/**/*.js'],
-                tasks: [
-                    'karma'
-                ]
+                tasks: ['karma'],
             },
             js: {
                 files: ['src/**'],
-                tasks: [
-                    'closureCompiler:targetName',
-                    'karma',
-                    'jshint',
-                    'less'
-                ]
-            }
+                tasks: ['closureCompiler:targetName', 'karma', 'jshint', 'less'],
+            },
         },
         less: {
             options: {
-                compress: false
+                compress: false,
             },
             development: {
                 files: {
-                    "dist/entry.css": "src/css/*.less"
-                }
-            }
+                    'dist/entry.css': 'src/css/*.less',
+                },
+            },
         },
         jshint: {
-            all: [
-                'src/**/*.js'
-            ],
+            all: ['src/**/*.js'],
             options: {
                 jshintrc: true,
-                ignores: ['src/blocks/*.js']
-            }
+                ignores: ['src/blocks/*.js'],
+            },
         },
         karma: {
             options: {
@@ -62,15 +53,13 @@ module.exports = function(grunt) {
                     'node_modules/createjs-soundjs/lib/soundjs-0.6.2.min.js',
                     'node_modules/createjs-preloadjs/lib/preloadjs-0.6.2.min.js',
                     'dist/entry.js',
-                    'src/workspace/block_entry.js'
-                ]
+                    'src/workspace/block_entry.js',
+                ],
             },
             unit: {
                 configFile: 'karma.conf.js',
-                files: [
-                    { src : ['test/**/*.js'] }
-                ]
-            }
+                files: [{ src: ['test/**/*.js'] }],
+            },
         },
         closureCompiler: {
             options: {
@@ -81,27 +70,27 @@ module.exports = function(grunt) {
                     compilation_level: 'SIMPLE_OPTIMIZATIONS',
                     language_in: 'ECMASCRIPT5',
                     language_out: 'ECMASCRIPT5',
-                    formatting: 'pretty_print'
-                }
+                    formatting: 'pretty_print',
+                },
             },
             targetName: {
                 src: ['src/entry.js', 'src/**/*.js', '!src/workspace/block_entry.js'],
-                dest: 'dist/entry.js'
+                dest: 'dist/entry.js',
             },
             dist: {
                 options: {
                     compilerOpts: {
                         compilation_level: 'SIMPLE_OPTIMIZATIONS',
                         language_in: 'ECMASCRIPT5',
-                        language_out: 'ECMASCRIPT5'
-                    }
+                        language_out: 'ECMASCRIPT5',
+                    },
                 },
                 expand: false,
                 src: ['src/entry.js', 'src/**/*.js'],
                 dest: 'dist/entry.min.js',
-                ext: '.min.js'
-            }
-        }
+                ext: '.min.js',
+            },
+        },
     });
 
     // Load NPM tasks
@@ -115,28 +104,18 @@ module.exports = function(grunt) {
     grunt.option('force', true);
 
     // Default tasks.
-    grunt.registerTask('default', [
-        'closureCompiler',
-        'karma',
-        'jshint',
-        'less'
-    ]);
+    grunt.registerTask('default', ['closureCompiler', 'karma', 'jshint', 'less']);
 
     grunt.registerTask('development', [
         'watch',
         'closureCompiler:targetName',
         'karma',
-        'concurrent'
+        'concurrent',
     ]);
 
-    grunt.registerTask('test', [
-        'karma',
-    ]);
+    grunt.registerTask('test', ['karma']);
 
     grunt.registerTask('closure', ['closureCompiler']);
 
-    grunt.registerTask('build', [
-        'closureCompiler',
-        'less'
-    ]);
+    grunt.registerTask('build', ['closureCompiler', 'less']);
 };

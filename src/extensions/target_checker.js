@@ -40,8 +40,6 @@ Entry.TargetChecker = function(code, isForEdit, type) {
     Entry.targetChecker = this;
 };
 
-Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
-
 (function(p) {
     p.renderView = function() {
         this._view = Entry.Dom('li', {

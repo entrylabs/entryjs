@@ -1,12 +1,5 @@
-/*
- *
- */
-'use strict';
+import debounce from 'lodash/debounce';
 
-/*
- *
- * @param {object} board
- */
 Entry.Scroller = class Scroller {
     get SCROLL_WIDTH() {
         return 8;
@@ -40,7 +33,7 @@ Entry.Scroller = class Scroller {
 
         this._bindEvent();
 
-        this._scrollCommand = Entry.Utils.debounce(Entry.do, 200);
+        this._scrollCommand = debounce(Entry.do, 200);
     }
 
     onMouseMove = (e) => {
@@ -106,7 +99,7 @@ Entry.Scroller = class Scroller {
 
     createScrollBar() {
         const r = this.RADIUS;
-
+        const { common = {} } = EntryStatic.colorSet || {};
         this.svgGroup = this.board.svg.elem('g').attr({ class: 'boardScrollbar' });
 
         if (this._horizontal) {
@@ -114,7 +107,7 @@ Entry.Scroller = class Scroller {
                 height: this.SCROLL_WIDTH,
                 rx: r,
                 ry: r,
-                fill: '#aac5d5',
+                fill: common.SCROLL_BAR || '#aac5d5',
                 class: 'scrollbar horizontal',
             });
             this.hScrollbar.type = 'horizontal';
@@ -126,7 +119,7 @@ Entry.Scroller = class Scroller {
                 width: this.SCROLL_WIDTH,
                 rx: r,
                 ry: r,
-                fill: '#aac5d5',
+                fill: common.SCROLL_BAR || '#aac5d5',
                 class: 'scrollbar vertical',
             });
             this.vScrollbar.type = 'vertical';
@@ -304,7 +297,7 @@ Entry.Scroller = class Scroller {
     }
 
     _bindEvent() {
-        const dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 250);
+        const dResizeScrollBar = debounce(this.resizeScrollBar, 250);
         this.board.changeEvent.attach(this, dResizeScrollBar);
         if (Entry.windowResized) {
             Entry.windowResized.attach(this, dResizeScrollBar);

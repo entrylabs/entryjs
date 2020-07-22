@@ -10,11 +10,13 @@ import { Sortable } from '@entrylabs/tool';
  * This have view for scenes.
  * @constructor
  */
+const STATIC_SCENES_COUNT = 30;
+
 Entry.Scene = class {
     constructor() {
         this.scenes_ = [];
         this.selectedScene = null;
-        this.maxCount = 20;
+        this.maxCount = this.getMaxSceneCount() || 30;
         $(window).on('resize', this.resize.bind(this));
 
         this.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
@@ -33,7 +35,7 @@ Entry.Scene = class {
     generateView(sceneView, option) {
         this.view_ = sceneView;
         this.view_.addClass('entryScene');
-        if (!option || option == 'workspace') {
+        if (!option || option === 'workspace' || option === 'playground') {
             this.view_.addClass('entrySceneWorkspace');
 
             $(this.view_).on('mousedown touchstart', (e) => {
@@ -62,6 +64,20 @@ Entry.Scene = class {
                 const addButton = this.createAddButton();
                 this.view_.appendChild(addButton);
                 this.addButton_ = addButton;
+
+                const scenePrevButton = this.scenePrevButton();
+                const sceneNextButton = this.sceneNextButton();
+                this.view_.appendChild(scenePrevButton);
+                this.view_.appendChild(sceneNextButton);
+
+                this.scenePrevButton = scenePrevButton;
+                this.sceneNextButton = sceneNextButton;
+
+                this.prevButton_ = scenePrevButton;
+                this.nextButton_ = sceneNextButton;
+
+                this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+                this.updateView();
             }
         }
     }
@@ -79,6 +95,52 @@ Entry.Scene = class {
         });
 
         return addButton;
+    }
+    /**
+     * prev scene button
+     */
+    scenePrevButton() {
+        const prevButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entryScenePrevButtonWorkspace'
+        );
+
+        const prevBtn = document.createElement('span').addClass('prevBtn');
+        prevButton.bindOnClick((e) => {
+            this.selectScene(Entry.scene.getPrevScene());
+        });
+
+        prevButton.appendChild(prevBtn);
+
+        return prevButton;
+    }
+    /**
+     * next scene, add scene button
+     */
+    sceneNextButton() {
+        const nextButton = Entry.createElement('span').addClass(
+            'entrySceneElementWorkspace entrySceneNextButtonWorkspace'
+        );
+
+        const nextBtn = document.createElement('span').addClass('nextBtn');
+        nextBtn.bindOnClick((e) => {
+            this.selectScene(Entry.scene.getNextScene());
+        });
+
+        const addButton = document.createElement('span').addClass('addButton');
+        addButton.bindOnClick((e) => {
+            if (Entry.engine.isState('run')) {
+                return;
+            }
+            this.sceneListwidth = Entry.scene.listView_.offsetWidth;
+
+            Entry.do('sceneAdd', Entry.generateHash());
+        });
+
+        this.nextAddButton_ = addButton;
+        nextButton.appendChild(nextBtn);
+        nextButton.appendChild(addButton);
+
+        return nextButton;
     }
 
     createListView() {
@@ -172,6 +234,15 @@ Entry.Scene = class {
                 if (Entry.engine.isState('run')) {
                     return;
                 }
+                const isDeletable = Entry.scene.getScenes().length > 1;
+                if (!isDeletable) {
+                    Entry.toast.alert(
+                        Lang.Msgs.runtime_error,
+                        Lang.Workspace.Scene_delete_error,
+                        false
+                    );
+                    return;
+                }
                 Entry.do('sceneRemove', scene.id);
             })
             .appendTo(removeButtonCover);
@@ -259,12 +330,26 @@ Entry.Scene = class {
         if (!Entry.type || Entry.type === 'workspace') {
             // var parent = this.listView_;
             // this.getScenes().forEach(({ view }) => parent.appendChild(view));
-
+            const addBtnWidth = 44;
+            const sceneListWidth = this.sceneListWidth + addBtnWidth;
+            const browserWidth = Entry.view_.offsetWidth;
+            const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
-                if (!this.isMax()) {
-                    this.addButton_.removeClass('entryRemove');
-                } else {
+                if (maxSceneCount >= STATIC_SCENES_COUNT) {
                     this.addButton_.addClass('entryRemove');
+                    this.nextAddButton_.addClass('entryRemove');
+                } else {
+                    this.addButton_.removeClass('entryRemove');
+                    this.prevButton_.removeClass('entryRemove');
+                    this.nextButton_.removeClass('entryRemove');
+
+                    if (sceneListWidth > browserWidth) {
+                        this.addButton_.addClass('entryRemove');
+                        this.nextAddButton_.removeClass('entryRemove');
+                    } else {
+                        this.nextButton_.addClass('entryRemove');
+                        this.prevButton_.addClass('entryRemove');
+                    }
                 }
             }
         }
@@ -314,6 +399,11 @@ Entry.Scene = class {
         if (Entry.creationChangedEvent) {
             Entry.creationChangedEvent.notify();
         }
+        const { playground = {} } = Entry || {};
+        const { mainWorkspace } = playground;
+        if (mainWorkspace) {
+            mainWorkspace.reDraw();
+        }
         return scene;
     }
 
@@ -326,7 +416,7 @@ Entry.Scene = class {
             Entry.toast.alert(Lang.Msgs.runtime_error, Lang.Workspace.Scene_delete_error, false);
             return;
         }
-
+        Entry.Utils.forceStopSounds();
         scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
         this.getScenes().splice(this.getScenes().indexOf(scene), 1);
@@ -339,17 +429,20 @@ Entry.Scene = class {
         this.updateView();
     }
 
-    /**
-     * select scene
-     * @param {scene model} scene
-     */
     selectScene(scene) {
-        scene = scene || this.getScenes()[0];
+        const targetScene = scene || this.getScenes()[0];
         const container = Entry.container;
 
         container.resetSceneDuringRun();
 
-        if (this.selectedScene && this.selectedScene.id == scene.id) {
+        if (this.selectedScene && this.selectedScene.id === targetScene.id) {
+            return;
+        }
+        if (
+            Entry.playground.getViewMode() === 'picture' &&
+            Entry.playground.nameViewFocus &&
+            Entry.playground.nameViewBlur()
+        ) {
             return;
         }
 
@@ -361,15 +454,15 @@ Entry.Scene = class {
             elem === prevSelectedView.nameField && elem.blur();
         }
 
-        this.selectedScene = scene;
-        scene.view.addClass('selectedScene');
+        this.selectedScene = targetScene;
+        targetScene.view.addClass('selectedScene');
 
         const stage = Entry.stage;
         const playground = Entry.playground;
 
         container.setCurrentObjects();
 
-        stage.selectObjectContainer(scene);
+        stage.selectObjectContainer(targetScene);
 
         const targetObject = container.getCurrentObjects()[0];
 
@@ -385,7 +478,7 @@ Entry.Scene = class {
                     const sScene = vimBoard._currentScene;
                     const parser = vimBoard._parser;
                     try {
-                        if (scene.id != sScene.id) {
+                        if (targetScene.id != sScene.id) {
                             workspace._syncTextCode();
                         }
                     } catch (e) {}
@@ -400,11 +493,15 @@ Entry.Scene = class {
 
             stage.selectObject(null);
             playground.flushPlayground();
+            Entry.variableContainer.selected = null;
             Entry.variableContainer.updateList();
         }
         !container.listView_ && stage.sortZorder();
 
         container.updateListView();
+        if (Entry.type && Entry.type !== 'minimize' && Entry.scene.listView_) {
+            this.sceneListWidth = Entry.scene.listView_.offsetWidth;
+        }
         this.updateView();
         Entry.requestUpdate = true;
     }
@@ -597,13 +694,22 @@ Entry.Scene = class {
         }
     }
 
+    getPrevScene() {
+        const scenes = this.getScenes();
+        return scenes[scenes.indexOf(this.selectedScene) - 1];
+    }
+
     getNextScene() {
         const scenes = this.getScenes();
         return scenes[scenes.indexOf(this.selectedScene) + 1];
     }
 
+    getMaxSceneCount() {
+        return STATIC_SCENES_COUNT;
+    }
+
     isMax() {
-        return this.scenes_.length >= this.maxCount;
+        return Entry.scene.scenes_.length >= STATIC_SCENES_COUNT;
     }
 
     clear() {

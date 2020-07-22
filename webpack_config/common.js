@@ -1,6 +1,7 @@
-'use strict';
+/*eslint-env node*/
 
 const path = require('path');
+const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ManifestPlugin = require('webpack-manifest-plugin');
@@ -13,12 +14,25 @@ module.exports = {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
         filename: '[name].js',
+        jsonpFunction: 'entryJsonp',
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
     },
+    node: {
+        fs: 'empty',
+    },
     module: {
         rules: [
+            {
+                test: /\.worker\.ts$/,
+                use: {
+                    loader: 'worker-loader',
+                    options: {
+                        inline: true,
+                    },
+                },
+            },
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
@@ -36,6 +50,7 @@ module.exports = {
                 ],
             },
             {
+                // eslint-disable-next-line max-len
                 test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'url-loader',
                 options: {
@@ -45,7 +60,55 @@ module.exports = {
             },
             {
                 test: /\.tsx?$/,
-                loader: 'awesome-typescript-loader',
+                loader: 'ts-loader',
+                exclude: /node_modules/,
+                options: { transpileOnly: true },
+            },
+            {
+                test: /\.(css|less)$/,
+                use: [
+                    {
+                        loader: MiniCssExtractPlugin.loader,
+                        options: {
+                            // you can specify a publ icPath here
+                            // by default it use publicPath in webpackOptions.output
+                            publicPath: '../',
+                        },
+                    },
+                    {
+                        loader: 'css-loader',
+                        options: {
+                            url: false,
+                            sourceMap: false,
+                        },
+                    },
+                    {
+                        loader: require.resolve('postcss-loader'),
+                        options: {
+                            ident: 'postcss',
+                            plugins: () => [
+                                require('postcss-flexbugs-fixes'),
+                                require('cssnano')({ preset: 'default' }),
+                                autoprefixer({
+                                    overrideBrowserslist: [
+                                        '>1%',
+                                        'last 4 versions',
+                                        'Firefox ESR',
+                                        'not ie < 9', // React doesn't support IE8 anyway
+                                    ],
+                                    flexbox: 'no-2009',
+                                    remove: false,
+                                }),
+                            ],
+                        },
+                    },
+                    {
+                        loader: 'less-loader',
+                        options: {
+                            sourceMap: false,
+                        },
+                    },
+                ],
             },
         ],
     },
@@ -53,6 +116,7 @@ module.exports = {
         react: 'React',
         'react-dom': 'ReactDOM',
         '@entrylabs/tool': 'EntryTool',
+        'entry-paint': 'EntryPaint',
     },
     plugins: [
         new CleanWebpackPlugin(['dist'], {
@@ -66,16 +130,4 @@ module.exports = {
             chunkFilename: '[id].css',
         }),
     ],
-    // optimization: {
-    //     runtimeChunk: 'single',
-    //     // splitChunks: {
-    //     //     chunks: 'all',
-    //     //     // cacheGroups: {
-    //     //     //     vendor: {
-    //     //     //         name: 'vendors',
-    //     //     //         chunks: 'all',
-    //     //     //     },
-    //     //     // },
-    //     // },
-    // },
 };

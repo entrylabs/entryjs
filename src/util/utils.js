@@ -1,6 +1,12 @@
 'use strict';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
+import _uniq from 'lodash/uniq';
+import _intersection from 'lodash/intersection';
+import _clamp from 'lodash/clamp';
+import FontFaceOnload from 'fontfaceonload';
+import DataTable from '../class/DataTable';
+import blockLoader from '../class/entryModuleLoader';
 
 Entry.Utils = {};
 
@@ -16,32 +22,44 @@ Entry.clipboard = null;
 
 /**
  * Load project
- * @param {?Project} project
+ * @param {*} project
  */
 Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
-
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
-    Entry.variableContainer.setVariables(project.variables);
+    Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
+    Entry.variableContainer.setFunctions(project.functions);
+    this.dataTableEnable && DataTable.setTables(project.tables);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
+    Entry.aiLearning.load(project.learning);
+    Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
+    if (Entry.aiUtilizeBlocks.length > 0) {
+        for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
+            if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
+                Entry.AI_UTILIZE_BLOCK[type].init();
+                if (Entry.type === 'workspace' || Entry.type === 'playground') {
+                    Entry.playground.blockMenu.unbanClass(type);
+                }
+            }
+        }
+    }
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
         for (const type in Entry.EXPANSION_BLOCK_LIST) {
             if (Entry.expansionBlocks.indexOf(type) > -1) {
                 Entry.EXPANSION_BLOCK[type].init();
-                if (Entry.type === 'workspace') {
+                if (Entry.type === 'workspace' || Entry.type === 'playground') {
                     Entry.playground.blockMenu.unbanClass(type);
                 }
             }
@@ -100,14 +118,18 @@ Entry.loadProject = function(project) {
 Entry.clearProject = function() {
     Entry.stop();
     Entry.projectId = null;
-    Entry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
     Entry.stateManager.clear();
+    DataTable.clear();
     GEHelper.resManager.clearProject();
-    if (Entry.Loader) {
-        Entry.Loader.loaded = false;
+    Entry.Loader && (Entry.Loader.loaded = false);
+
+    if (Entry.type !== 'invisible') {
+        Entry.playground && Entry.playground.changeViewMode('code');
+    } else {
+        Entry.stateManager && Entry.stateManager.clear();
     }
 };
 
@@ -129,9 +151,13 @@ Entry.exportProject = function(project) {
     project.variables = Entry.variableContainer.getVariableJSON();
     project.messages = Entry.variableContainer.getMessageJSON();
     project.functions = Entry.variableContainer.getFunctionJSON();
+    project.tables = DataTable.getTableJSON();
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
+    project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
+    project.learning = Entry.aiLearning.toJSON();
+    project.externalModules = blockLoader.moduleList;
 
     if (!objects || !objects.length) {
         return false;
@@ -155,8 +181,8 @@ Entry.setBlock = function(objectType, XML) {
  * @param {event} e
  */
 Entry.beforeUnload = function(e) {
+    Entry.dispatchEvent('EntryBeforeUnload');
     Entry.hw.closeConnection();
-    Entry.variableContainer.updateCloudVariables();
     if (Entry.type === 'workspace') {
         if (localStorage && Entry.interfaceState) {
             localStorage.setItem(
@@ -250,25 +276,10 @@ Entry.cancelObjectEdit = function({ target, type }) {
     const objectView = object.view_;
     const isCurrent = $(objectView).find(target).length !== 0;
     const tagName = target.tagName.toUpperCase();
-    if (!object.isEditing || ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')) {
+    if (!object.isEditing || (tagName === 'INPUT' && isCurrent) || type === 'touchstart') {
         return;
     }
     object.editObjectValues(false);
-};
-
-Entry.generateFunctionSchema = function(functionId) {
-    functionId = `func_${functionId}`;
-    if (Entry.block[functionId]) {
-        return;
-    }
-    let BlockSchema = function() {};
-    const blockPrototype = Entry.block.function_general;
-    BlockSchema.prototype = blockPrototype;
-    BlockSchema = new BlockSchema();
-    BlockSchema.changeEvent = new Entry.Event();
-    BlockSchema.template = Lang.template.function_general;
-
-    Entry.block[functionId] = BlockSchema;
 };
 
 Entry.getMainWS = function() {
@@ -724,9 +735,17 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', (e) => {
-            const keyCode = e.keyCode;
-
+        document.addEventListener('keydown', (e) => {
+            let keyCode = e.code == undefined ? e.key : e.code;
+            if (!keyCode) {
+                return;
+            }
+            keyCode = keyCode.replace('Digit', '');
+            keyCode = keyCode.replace('Numpad', '');
+            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            if (!keyCode) {
+                return;
+            }
             if (Entry.pressedKeys.indexOf(keyCode) < 0) {
                 Entry.pressedKeys.push(keyCode);
             }
@@ -740,8 +759,17 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', (e) => {
-            const keyCode = e.keyCode;
+        document.addEventListener('keyup', (e) => {
+            let keyCode = e.code == undefined ? e.key : e.code;
+            if (!keyCode) {
+                return;
+            }
+            keyCode = keyCode.replace('Digit', '');
+            keyCode = keyCode.replace('Numpad', '');
+            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            if (!keyCode) {
+                return;
+            }
             const index = Entry.pressedKeys.indexOf(keyCode);
             if (index > -1) {
                 Entry.pressedKeys.splice(index, 1);
@@ -770,12 +798,6 @@ Entry.Utils.makeActivityReporter = function() {
     }
     return Entry.activityReporter;
 };
-
-/**
- * Sample color code for user select
- * @type {!Array<string>}
- */
-Entry.sampleColours = [];
 
 /**
  * Raise error when assert condition fail.
@@ -808,9 +830,6 @@ Entry.parseTexttoXML = function(xmlText) {
 
 /**
  * Create html element with some method
- * @param {!string} type
- * @param {string} [elementId=undefined]
- * @return {HTMLElement}
  */
 Entry.createElement = function(type, elementId) {
     const element = type instanceof HTMLElement ? type : document.createElement(type);
@@ -821,21 +840,6 @@ Entry.createElement = function(type, elementId) {
     return element;
 };
 
-Entry.makeAutolink = function(html) {
-    if (html) {
-        const regURL = new RegExp(
-            '(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\\]}]+)',
-            'gi'
-        );
-        const regEmail = new RegExp('([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)', 'gi');
-        return html
-            .replace(regURL, "<a href='$1://$2' target='_blank'>$1://$2</a>")
-            .replace(regEmail, "<a href='mailto:$1'>$1</a>");
-    } else {
-        return '';
-    }
-};
-
 /**
  * Generate random hash
  * @return {string}
@@ -844,68 +848,6 @@ Entry.generateHash = function(length = 4) {
     return Math.random()
         .toString(36)
         .substr(2, length);
-};
-
-/**
- * Add event listener
- * @param {!string} eventName
- * @param {function} fn
- */
-Entry.addEventListener = function(eventName, fn) {
-    if (!this.events_) {
-        this.events_ = {};
-    }
-
-    if (!this.events_[eventName]) {
-        this.events_[eventName] = [];
-    }
-    if (fn instanceof Function) {
-        this.events_[eventName].push(fn);
-    }
-
-    return true;
-};
-
-/**
- * Dispatch event
- * @param {!string} eventName
- * @param {?} params
- */
-Entry.dispatchEvent = function(eventName, ...args) {
-    if (!this.events_) {
-        this.events_ = {};
-        return;
-    }
-
-    const events = this.events_[eventName];
-    if (_.isEmpty(events)) {
-        return;
-    }
-
-    events.forEach((func) => func.apply(window, args));
-};
-
-/**
- * Remove event listener
- * @param {!string} eventName
- */
-Entry.removeEventListener = function(eventName, fn) {
-    const events = this.events_[eventName];
-    if (_.isEmpty(events)) {
-        return;
-    }
-    this.events_[eventName] = events.filter((a) => fn !== a);
-};
-
-/**
- * Remove event listener
- * @param {!string} eventName
- */
-Entry.removeAllEventListener = function(eventName) {
-    if (!this.events_ || !this.events_[eventName]) {
-        return;
-    }
-    delete this.events_[eventName];
 };
 
 /**
@@ -1326,7 +1268,7 @@ Entry.computeInputWidth = (function() {
 })();
 
 Entry.isArrowOrBackspace = function(keyCode) {
-    return !!~[37, 38, 39, 40, 8].indexOf(keyCode);
+    return !!~['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Backspace'].indexOf(keyCode);
 };
 
 Entry.hexStringToBin = function(hexString) {
@@ -1366,10 +1308,10 @@ Entry.getListRealIndex = function(index, list) {
                 index = 1;
                 break;
             case 'LAST':
-                index = list.array_.length;
+                index = list.getArray().length;
                 break;
             case 'RANDOM':
-                index = Math.floor(Math.random() * list.array_.length) + 1;
+                index = Math.floor(Math.random() * list.getArray().length) + 1;
                 break;
         }
     }
@@ -1394,6 +1336,7 @@ Entry.getPicturesJSON = function(pictures = [], isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
+        o.imageType = p.imageType || 'png';
         acc.push(o);
         return acc;
     }, []);
@@ -1506,6 +1449,9 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     }
 
     const shape = GEHelper.brushHelper.newShape(brush);
+    if (isWebGL) {
+        brush.setCurrentPath(parentBrush.getCurrentPath());
+    }
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
@@ -1663,6 +1609,7 @@ Entry.Utils.isTouchEvent = function({ type }) {
 
 Entry.Utils.inherit = function(parent, child) {
     function F() {}
+
     F.prototype = parent.prototype;
     child.prototype = new F();
     return child;
@@ -1827,8 +1774,27 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
     return { pattern };
 };
 
+function handleOptionalBlocksActive(item) {
+    const { expansionBlocks = [], aiUtilizeBlocks = [] } = item;
+    if (expansionBlocks.length > 0) {
+        Entry.expansion.addExpansionBlocks(expansionBlocks);
+    }
+    if (aiUtilizeBlocks.length > 0) {
+        Entry.aiUtilize.addAIUtilizeBlocks(aiUtilizeBlocks);
+    }
+}
+
 Entry.Utils.addNewBlock = function(item) {
-    const { script, functions, messages, variables, expansionBlocks = [] } = item;
+    const {
+        script,
+        functions,
+        messages,
+        variables,
+        learning = {},
+        tables = [],
+        expansionBlocks = [],
+        aiUtilizeBlocks = [],
+    } = item;
     const parseScript = JSON.parse(script);
     if (!parseScript) {
         return;
@@ -1849,9 +1815,10 @@ Entry.Utils.addNewBlock = function(item) {
             variable.object = _.get(Entry, ['container', 'selectedObject', 'id'], '');
         }
     });
-    expansionBlocks.forEach((blockName) => {
-        Entry.expansion.addExpansionBlock(blockName);
-    });
+    DataTable.setTables(tables);
+    Entry.aiLearning.load(learning);
+    handleOptionalBlocksActive(item);
+
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
@@ -1866,7 +1833,15 @@ Entry.Utils.addNewBlock = function(item) {
 
 Entry.Utils.addNewObject = function(sprite) {
     if (sprite) {
-        const { objects, functions, messages, variables, expansionBlocks = [] } = sprite;
+        const {
+            objects,
+            functions,
+            messages,
+            variables,
+            tables = [],
+            expansionBlocks = [],
+            aiUtilizeBlocks = [],
+        } = sprite;
 
         if (
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD &&
@@ -1876,9 +1851,8 @@ Entry.Utils.addNewObject = function(sprite) {
             return entrylms.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
-        expansionBlocks.forEach((blockName) => {
-            Entry.expansion.addExpansionBlock(blockName);
-        });
+        DataTable.setTables(tables);
+        handleOptionalBlocksActive(sprite);
         variables.forEach((variable) => {
             const { object } = variable;
             if (object) {
@@ -1956,12 +1930,11 @@ Entry.Utils.createMouseEvent = function(type, event) {
 
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
-    message = message || '런타임 에러 발생';
-
+    message = message || 'Runtime Error';
+    const toast = error.toast;
     const engine = Entry.engine;
 
     engine && engine.toggleStop();
-
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
@@ -1980,7 +1953,14 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         }
     }
 
-    if (Entry.toast) {
+    if (message === 'IncompatibleError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            toast || [Lang.Workspace.check_runtime_error, Lang.Workspace.check_browser_error],
+            true
+        );
+        Entry.engine.hideAllAudioPanel();
+    } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
 
@@ -1994,71 +1974,57 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
 
 Entry.Utils.AsyncError = function(message) {
     this.name = 'AsyncError';
-    this.message = message || '비동기 호출 대기';
+    this.message = message || 'Waiting for callback';
 };
 
 Entry.Utils.AsyncError.prototype = new Error();
 Entry.Utils.AsyncError.prototype.constructor = Entry.Utils.AsyncError;
 
+Entry.Utils.IncompatibleError = function(message, toast) {
+    this.name = 'IncompatibleError';
+    this.message = message || 'IncompatibleError';
+    this.toast = toast || null;
+};
+Entry.Utils.IncompatibleError.prototype = new Error();
+Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
+
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
 };
 
-Entry.Utils.waitForWebfonts = function(fonts, callback) {
-    let loadedFonts = 0;
-    if (fonts && fonts.length) {
-        for (let i = 0, l = fonts.length; i < l; ++i) {
-            let node = document.createElement('span');
-            // Characters that vary significantly among different fonts
-            node.innerHTML = 'giItT1WQy@!-/#';
-            // Visible - so we can measure it - but not on the screen
-            node.style.position = 'absolute';
-            node.style.left = '-10000px';
-            node.style.top = '-10000px';
-            // Large font size makes even subtle changes obvious
-            node.style.fontSize = '300px';
-            // Reset any font properties
-            node.style.fontFamily = 'sans-serif';
-            node.style.fontVariant = 'normal';
-            node.style.fontStyle = 'normal';
-            node.style.fontWeight = 'normal';
-            node.style.letterSpacing = '0';
-            document.body.appendChild(node);
-
-            // Remember width with no applied web font
-            const width = node.offsetWidth;
-
-            node.style.fontFamily = fonts[i];
-
-            let interval;
-            function checkFont() {
-                // Compare current width with original width
-                if (node && node.offsetWidth != width) {
-                    ++loadedFonts;
-                    node.parentNode.removeChild(node);
-                    node = null;
-                }
-
-                // If all fonts have been loaded
-                if (loadedFonts >= fonts.length) {
-                    if (interval) {
-                        clearInterval(interval);
-                    }
-                    if (loadedFonts == fonts.length) {
-                        callback();
-                        return true;
-                    }
-                }
-            }
-
-            if (!checkFont()) {
-                interval = setInterval(checkFont, 50);
-            }
-        }
-    } else {
-        callback && callback();
-        return true;
+Entry.Utils.getUsedFonts = function(project) {
+    if (!project) {
+        return;
     }
+    const getFamily = (x) =>
+        x.entity.font
+            .split(' ')
+            .filter((t) => t.indexOf('bold') < 0 && t.indexOf('italic') < 0 && t.indexOf('px') < 0)
+            .join(' ');
+    return _uniq(project.objects.filter((x) => x.objectType === 'textBox').map(getFamily));
+};
+
+Entry.Utils.waitForWebfonts = function(fonts, callback) {
+    return Promise.all(
+        fonts.map(
+            (font) =>
+                new Promise((resolve) => {
+                    FontFaceOnload(font, {
+                        success() {
+                            resolve();
+                        },
+                        error() {
+                            console.log('fail', font);
+                            resolve();
+                        },
+                        timeout: 5000,
+                    });
+                })
+        )
+    ).then(() => {
+        console.log('font loaded');
+        callback && callback();
+    });
 };
 
 window.requestAnimFrame = (function() {
@@ -2210,47 +2176,37 @@ Entry.Utils.convertMouseEvent = function(e) {
     }
 };
 
-Entry.Utils.convertIntToHex = function(num) {
-    return num.toString(16).toUpperCase();
-};
-
 Entry.Utils.hasSpecialCharacter = function(str) {
     const reg = /!|@|#|\$|%|\^|&|\*|\(|\)|\+|=|-|\[|\]|\\|\'|;|,|\.|\/|{|}|\||\"|:|<|>|\?/g;
     return reg.test(str);
 };
 
-Entry.Utils.debounce = _.debounce;
-
-Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
-    try {
-        if (old_version === '') {
-            return false;
+Entry.Utils.getBlockCategory = (function() {
+    const map = {};
+    let allBlocks;
+    return function(blockType) {
+        if (!blockType) {
+            return;
         }
-        old_version = old_version.replace('v', '');
-        new_version = new_version.replace('v', '');
-        const arrOld = old_version.split('.');
-        const arrNew = new_version.split('.');
-        const count = arrOld.length < arrNew.length ? arrOld.length : arrNew.length;
-        let isNew = false;
-        let isSame = true;
-        for (let i = 0; i < count; i++) {
-            if (Number(arrOld[i]) < Number(arrNew[i])) {
-                isNew = true;
-                isSame = false;
-            } else if (Number(arrOld[i]) > Number(arrNew[i])) {
-                isSame = false;
+
+        if (map[blockType]) {
+            return map[blockType];
+        }
+
+        if (!allBlocks) {
+            allBlocks = EntryStatic.getAllBlocks();
+        }
+
+        for (let i = 0; i < allBlocks.length; i++) {
+            const data = allBlocks[i];
+            const category = data.category;
+            if (data.blocks.indexOf(blockType) > -1) {
+                map[blockType] = category;
+                return category;
             }
         }
-
-        if (isSame && arrOld.length < arrNew.length) {
-            isNew = true;
-        }
-
-        return isNew;
-    } catch (e) {
-        return false;
-    }
-};
+    };
+})();
 
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');
@@ -2279,6 +2235,44 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
+};
+
+Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
+    if (!blockArr) {
+        return;
+    }
+    const that = this;
+
+    const data = EntryStatic.getAllBlocks();
+    const categoryIndexMap = {};
+    for (let i = 0; i < data.length; i++) {
+        const datum = data[i];
+        datum.blocks = [];
+        categoryIndexMap[datum.category] = i;
+    }
+
+    blockArr.forEach((b) => {
+        const category = that.getBlockCategory(b);
+        const index = categoryIndexMap[category];
+        if (index === undefined) {
+            return;
+        }
+        data[index].blocks.push(b);
+    });
+
+    const allBlocks = EntryStatic.getAllBlocks();
+    return allBlocks
+        .map((block) => {
+            const { category, blocks } = block;
+            if (category === 'func') {
+                return { blocks: [] };
+            }
+            return {
+                category,
+                blocks: _intersection(blockArr, blocks),
+            };
+        })
+        .filter(({ blocks }) => blocks.length);
 };
 
 Entry.Utils.blur = function() {
@@ -2405,9 +2399,8 @@ Entry.Utils.getScrollPos = function() {
     };
 };
 
-Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) => {
-    return _.inRange(x, left, right) && _.inRange(y, top, bottom);
-};
+Entry.Utils.isPointInRect = ({ x, y }, { top, bottom, left, right }) =>
+    _.inRange(x, left, right) && _.inRange(y, top, bottom);
 
 Entry.Utils.getBoundingClientRectMemo = _.memoize((target, offset = {}) => {
     const rect = target.getBoundingClientRect();
@@ -2473,7 +2466,13 @@ Entry.Utils.toFixed = function(value, len) {
 };
 
 Entry.Utils.setVolume = function(volume) {
-    this._volume = _.clamp(volume, 0, 1);
+    this._volume = _clamp(volume, 0, 1);
+
+    Entry.soundInstances
+        .filter(({ soundType }) => !soundType)
+        .forEach((instance) => {
+            instance.volume = this._volume;
+        });
 };
 
 Entry.Utils.getVolume = function() {
@@ -2483,11 +2482,20 @@ Entry.Utils.getVolume = function() {
     return 1;
 };
 
+Entry.Utils.forceStopSounds = function() {
+    _.each(Entry.soundInstances, (instance) => {
+        instance.dispatchEvent('complete');
+        instance.stop();
+    });
+    Entry.soundInstances = [];
+};
+
 Entry.Utils.playSound = function(id, option = {}) {
     return createjs.Sound.play(id, Object.assign({ volume: this._volume }, option));
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
+    console.log('add sound instance');
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);
@@ -2508,50 +2516,6 @@ Entry.Utils.recoverSoundInstances = function() {
         instance.paused = false;
     });
 };
-
-//add methods to HTMLElement prototype
-((p) => {
-    p.hasClass = function(className) {
-        return $(this).hasClass(className);
-    };
-
-    p.addClass = function(...classes) {
-        return _.head($(this).addClass(classes.filter(_.identity).join(' ')));
-    };
-
-    p.removeClass = function(...classes) {
-        return _.head($(this).removeClass(classes.join(' ')));
-    };
-
-    p.text = function(str) {
-        if (str) {
-            this.innerHTML = str;
-        }
-        return this;
-    };
-
-    p.bindOnClick = function(func) {
-        $(this).on('click tab', function(e) {
-            if (this.disabled) {
-                return;
-            }
-            func.call(this, e);
-        });
-        return this;
-    };
-
-    p.unBindOnClick = function() {
-        $(this).off('click tab');
-        return this;
-    };
-
-    p.appendTo = function(parent) {
-        if (parent) {
-            parent.appendChild(this);
-        }
-        return this;
-    };
-})(HTMLElement.prototype);
 
 Entry.Utils.hasClass = (elem, name) => ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
 
@@ -2725,4 +2689,100 @@ Entry.Utils.getMouseEvent = function(event) {
         mouseEvent = event;
     }
     return mouseEvent;
+};
+
+Entry.Utils.removeBlockByType = function(blockType, callback) {
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        Entry.do('selectObject', id).isPass(true);
+        script.getBlockList(false, blockType).forEach((b, index) => {
+            Entry.do('destroyBlock', b).isPass(true);
+        });
+    });
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.removeBlockByType2 = function(blockType, callback) {
+    Entry.variableContainer.removeBlocksInFunctionByType(blockType);
+    const objects = Entry.container.getAllObjects();
+    objects.forEach(({ id, script }) => {
+        script.getBlockList(false, blockType).forEach((block, index) => {
+            block.destroy();
+        });
+    });
+
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.sleep = (time = 0) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, time);
+    });
+};
+
+Entry.Utils.runAsync = async (func) => {
+    await Entry.Utils.sleep();
+    await func();
+};
+
+Entry.Utils.runAsyncCurry = (func, time = 0) => async (...args) => {
+    await Entry.Utils.sleep(time);
+    await func(...args);
+};
+
+Entry.Utils.removeBlockByTypeAsync = async (blockType, callback) => {
+    Entry.dispatchEvent('removeFunctionsStart');
+    await Entry.variableContainer.removeBlocksInFunctionByTypeAsync(blockType);
+    const objects = Entry.container.getAllObjects();
+    await Promise.all(
+        objects.map(async ({ script }) => {
+            await Promise.all(
+                script.getBlockList(false, blockType).map(
+                    Entry.Utils.runAsyncCurry(async (block) => {
+                        block.destroy();
+                    })
+                )
+            );
+        })
+    );
+    Entry.dispatchEvent('removeFunctionsEnd');
+    if (callback) {
+        callback();
+    }
+};
+
+Entry.Utils.isUsedBlockType = function(blockType) {
+    const objects = Entry.container.getAllObjects();
+    const usedInObject = objects.some(
+        ({ script }) => !!script.getBlockList(false, blockType).length
+    );
+    if (usedInObject) {
+        return true;
+    }
+    return Entry.variableContainer.isUsedBlockTypeInFunction(blockType);
+};
+
+Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
+    let items;
+    if (typeof cloudVariable === 'string') {
+        try {
+            items = JSON.parse(cloudVariable);
+        } catch (e) {}
+    }
+    if (!Array.isArray(items)) {
+        return variables;
+    }
+    return variables.map((variable) => {
+        const cloud = items.find(({ id }) => id === variable.id);
+        if (cloud) {
+            return { ...variable, ...cloud };
+        }
+        return variable;
+    });
 };

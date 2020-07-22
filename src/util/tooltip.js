@@ -1,4 +1,4 @@
-'use strict';
+import debounce from 'lodash/debounce';
 
 Entry.Tooltip = function(data, opts) {
     this.init(data, opts);
@@ -8,7 +8,9 @@ Entry.Tooltip = function(data, opts) {
     p.usedClasses = 'up down left right edge_up edge_down edge_left edge_right';
 
     p.init = function(data, opts) {
-        if (this._rendered) this.dispose();
+        if (this._rendered) {
+            this.dispose();
+        }
 
         this.data = Array.isArray(data) ? data : [data];
         this.opts = opts ||
@@ -22,42 +24,52 @@ Entry.Tooltip = function(data, opts) {
         this._tooltips = [];
         this._indicators = [];
 
-        if (data.length > 1 || opts.indicator) this.isIndicator = true;
+        if (data.length > 1 || opts.indicator) {
+            this.isIndicator = true;
+        }
 
-        if (opts.render !== false) this.render();
+        if (opts.render !== false) {
+            this.render();
+        }
 
-        this._resizeEventFunc = Entry.Utils.debounce(
-            this.alignTooltips.bind(this, 200)
-        );
+        this._resizeEventFunc = debounce(this.alignTooltips.bind(this, 200));
 
         Entry.addEventListener('windowResized', this._resizeEventFunc);
     };
 
     p.render = function() {
-        if (this._rendered) return;
+        if (this._rendered) {
+            return;
+        }
         this.fadeIn();
 
         this._convertDoms();
 
-        if (this.opts.dimmed) this.renderBG();
+        if (this.opts.dimmed) {
+            this.renderBG();
+        }
 
-        var datum = this.data[0].targetDom;
+        const datum = this.data[0].targetDom;
         if (datum && typeof datum !== 'string' && datum.length) {
-            this.opts.restrict &&
-                this.opts.dimmed &&
-                Entry.Curtain.show(datum.get(0));
+            this.opts.restrict && this.opts.dimmed && Entry.Curtain.show(datum.get(0));
             this.renderTooltips();
             this._rendered = true;
-            if (this.opts.restrict) this.restrictAction();
+            if (this.opts.restrict) {
+                this.restrictAction();
+            }
         }
     };
 
     p._convertDoms = function() {
-        this.data.map(function(d) {
-            var findedDom = d.target;
-            if (d.target instanceof Array) findedDom = Entry.getDom(d.target);
-            var targetDom = $(findedDom);
-            if (targetDom.length) d.targetDom = targetDom;
+        this.data.map((d) => {
+            let findedDom = d.target;
+            if (d.target instanceof Array) {
+                findedDom = Entry.getDom(d.target);
+            }
+            const targetDom = $(findedDom);
+            if (targetDom.length) {
+                d.targetDom = targetDom;
+            }
         });
     };
 
@@ -82,24 +94,30 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p.alignTooltips = function() {
-        if (!this._rendered) return;
+        if (!this._rendered) {
+            return;
+        }
 
         this.data.map(this._alignTooltip.bind(this));
         this.opts.dimmed && Entry.Curtain.align();
     };
 
     p._renderTooltip = function(data) {
-        if (!data.content) return;
-        var tooltipWrapper = Entry.Dom('div', {
+        if (!data.content) {
+            return;
+        }
+        const tooltipWrapper = Entry.Dom('div', {
             classes: ['entryTooltipWrapper'],
             parent: $(document.body),
         });
-        var tooltipDom = Entry.Dom('div', {
+        const tooltipDom = Entry.Dom('div', {
             classes: ['entryTooltip', data.direction, data.style],
             parent: tooltipWrapper,
         });
 
-        if (this.isIndicator) data.indicator = this.renderIndicator();
+        if (this.isIndicator) {
+            data.indicator = this.renderIndicator();
+        }
 
         tooltipDom.bind('mousedown', (e) => {
             e.stopPropagation();
@@ -117,13 +135,15 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p._alignTooltip = function(data) {
-        var rect;
-        if (data.targetDom instanceof $)
+        let rect;
+        if (data.targetDom instanceof $) {
             rect = data.targetDom.get(0).getBoundingClientRect();
-        else rect = data.targetDom.getBoundingClientRect();
-        var tooltipRect = data.dom[0].getBoundingClientRect();
+        } else {
+            rect = data.targetDom.getBoundingClientRect();
+        }
+        const tooltipRect = data.dom[0].getBoundingClientRect();
 
-        var { clientWidth, clientHeight } = document.body;
+        const { clientWidth, clientHeight } = document.body;
 
         if (this.isIndicator) {
             data.indicator.css({
@@ -132,15 +152,17 @@ Entry.Tooltip = function(data, opts) {
             });
         }
 
-        if (tooltipRect.width > 450) data.dom.addClass('shrink');
-        else data.dom.removeClass('shrink');
+        if (tooltipRect.width > 450) {
+            data.dom.addClass('shrink');
+        } else {
+            data.dom.removeClass('shrink');
+        }
 
-        var direction = data.direction;
+        let direction = data.direction;
 
         if (!direction) {
-            var margin = rect.left - tooltipRect.width,
-                newMargin =
-                    clientWidth - rect.left - rect.width - tooltipRect.width;
+            let margin = rect.left - tooltipRect.width;
+            let newMargin = clientWidth - rect.left - rect.width - tooltipRect.width;
             direction = 'left';
             if (margin < newMargin) {
                 margin = newMargin;
@@ -151,8 +173,7 @@ Entry.Tooltip = function(data, opts) {
                 margin = newMargin;
                 direction = 'up';
             }
-            newMargin =
-                clientHeight - rect.top - rect.height - tooltipRect.height;
+            newMargin = clientHeight - rect.top - rect.height - tooltipRect.height;
             if (margin < newMargin) {
                 margin = newMargin;
                 direction = 'down';
@@ -160,35 +181,43 @@ Entry.Tooltip = function(data, opts) {
         }
         data.dom.removeClass(this.usedClasses).addClass(direction);
 
-        var pos = { top: rect.top, left: rect.left };
-        var edgeStyle;
+        const pos = { top: rect.top, left: rect.left };
+        let edgeStyle;
         switch (direction) {
             case 'down':
                 pos.top += rect.height;
             case 'up':
                 pos.left += rect.width / 2;
-                if (pos.left < tooltipRect.width / 2) edgeStyle = 'edge_left';
-                if (clientWidth - pos.left < tooltipRect.width / 2)
+                if (pos.left < tooltipRect.width / 2) {
+                    edgeStyle = 'edge_left';
+                }
+                if (clientWidth - pos.left < tooltipRect.width / 2) {
                     edgeStyle = 'edge_right';
+                }
                 break;
             case 'right':
                 pos.left += rect.width;
             case 'left':
                 pos.top += rect.height / 2;
-                if (pos.top < tooltipRect.height / 2) edgeStyle = 'edge_up';
-                if (clientHeight - pos.top < tooltipRect.height / 2)
+                if (pos.top < tooltipRect.height / 2) {
+                    edgeStyle = 'edge_up';
+                }
+                if (clientHeight - pos.top < tooltipRect.height / 2) {
                     edgeStyle = 'edge_down';
+                }
                 break;
             default:
                 break;
         }
-        if (edgeStyle) data.dom.addClass(edgeStyle);
+        if (edgeStyle) {
+            data.dom.addClass(edgeStyle);
+        }
 
         data.wrapper.css(pos);
     };
 
     p.renderIndicator = function(left, top) {
-        var indicator = Entry.Dom('div', {
+        const indicator = Entry.Dom('div', {
             classes: ['entryTooltipIndicator'],
             parent: $(document.body),
         });
@@ -199,28 +228,31 @@ Entry.Tooltip = function(data, opts) {
 
     p.dispose = function(e) {
         // click event object when call from restrict
-        if (this._bg) this._bg.remove();
+        if (this._bg) {
+            this._bg.remove();
+        }
         if (this.opts.restrict) {
             Entry.Utils.allowAction();
             this.opts.dimmed && Entry.Curtain.hide();
         }
-        while (this._tooltips.length) this._tooltips.pop().remove();
-        while (this._indicators.length) this._indicators.pop().remove();
-        if (this.opts.callBack) this.opts.callBack.call(this, e);
+        while (this._tooltips.length) {
+            this._tooltips.pop().remove();
+        }
+        while (this._indicators.length) {
+            this._indicators.pop().remove();
+        }
+        if (this.opts.callBack) {
+            this.opts.callBack.call(this, e);
+        }
         Entry.removeEventListener('windowResized', this._resizeEventFunc);
     };
 
     p.restrictAction = function() {
-        var doms = this.data.map(function(d) {
-            return d.targetDom;
-        });
-        if (this._noDispose && this.opts.callBack)
+        const doms = this.data.map((d) => d.targetDom);
+        if (this._noDispose && this.opts.callBack) {
             this.opts.callBack.call(this);
-        Entry.Utils.restrictAction(
-            doms,
-            this.dispose.bind(this),
-            this._noDispose
-        );
+        }
+        Entry.Utils.restrictAction(doms, this.dispose.bind(this), this._noDispose);
     };
 
     p.fadeOut = function() {

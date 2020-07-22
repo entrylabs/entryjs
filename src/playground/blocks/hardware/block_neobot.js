@@ -61,23 +61,19 @@ Entry.Neobot.setLanguage = function() {
                 neobot_stop_right_motor: '오른쪽 모터를 정지 %1',
                 neobot_both_motor: '왼쪽 모터를 %1 %2 & 오른쪽 모터를 %3 %4 의 속도로 회전 %5',
                 neobot_all_motor: '양쪽 모터를 %1 %2의 속도로 %3 회전 %4',
-                // removed by cky 190423
-                //neobot_motor_with_sensor: '%1 센서의 %2 ~ %3 값을 모터 속도로 바꾸고 %4 모터 회전 %5',
                 neobot_stop_all_motor: '양쪽 모터를 정지 %1',
                 neobot_robot: '로봇 %1 %2',
 
                 neobot_output_led_type1: '%1 에 연결한 LED를 %2 밝기로 %3 켜기 %4',
                 neobot_output_led_on: '%1 에 연결한 LED 켜기 %2', 
                 neobot_output_led_off: '%1 에 연결한 LED 끄기 %2',
-                neobot_set_output: '%1 에 %2 값만큼 출력 %3',
+                neobot_set_output: '%1 에 %2값만큼 출력 %3',
 
-                neobot_servo_init: '%1에 연결한 Servo모터를 현재 위치로 초기화하기 %2',
-                neobot_servo_turn_type1: '%1에 연결한 Servo모터를 %2으로 %3도 회전하기 %4',
-                neobot_servo_turn_type2: '%1에 연결한 Servo모터를 %2도 회전하기 %3',
-                neobot_servo_turn_type4: '%1에 연결한 Servo모터의 회전속도를 %2로 정하기 %3',
-                neobot_servo_turn_type5: '%1에 연결한 Servo모터를 %2 %3 빠르기로 계속 회전하기 %4',
-                neobot_servo_mode_manual: '%1에 연결한 Servo모터를 수동 제어모드로 바꾸기 %2',
-                neobot_servo_stop: '%1에 연결한 Servo모터 멈추기 %2',
+                get_servo_degree: '%1',
+                neobot_servo_init: '%1 Servo모터 리셋 %2',
+                neobot_servo_change_degree: 'Servo모터 각도 바꾸기 : %1 %2 %3 %4 %5',
+                neobot_servo_rotate: 'Servo모터 회전하기 : %1 %2 %3 %4',
+                neobot_servo_stop: '%1 Servo모터 멈추기 %2',
 
                 neobot_play_note_for: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
                 neobot_play_note_with_sensor: '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
@@ -152,8 +148,58 @@ Entry.Neobot.setLanguage = function() {
                 neobot_motor_move_left: '좌회전',
                 neobot_motor_move_right: '우회전',
                 neobot_motor_move_stop: '정지',
-                neobot_servo_dir_1: '시계방향',
-                neobot_servo_dir_2: '반시계방향',
+                // modified string by cky 191205
+                neobot_servo_dir_1: '정방향', 
+                neobot_servo_dir_2: '역방향',
+                // added by cky 191205
+                neobot_percent_10: '10%속도',
+                neobot_percent_20: '20%속도',
+                neobot_percent_30: '30%속도',
+                neobot_percent_40: '40%속도',
+                neobot_percent_50: '50%속도',
+                neobot_percent_60: '60%속도',
+                neobot_percent_70: '70%속도',
+                neobot_percent_80: '80%속도',
+                neobot_percent_90: '90%속도',
+                neobot_percent_100: '100%속도',
+
+                neobot_degree_0: '0도',
+                neobot_degree_5: '5도',
+                neobot_degree_10: '10도',
+                neobot_degree_15: '15도',
+                neobot_degree_20: '20도',
+                neobot_degree_25: '25도',
+                neobot_degree_30: '30도',
+                neobot_degree_35: '35도',
+                neobot_degree_40: '40도',
+                neobot_degree_45: '45도',
+                neobot_degree_50: '50도',
+                neobot_degree_55: '55도',
+                neobot_degree_60: '60도',
+                neobot_degree_65: '65도',
+                neobot_degree_70: '70도',
+                neobot_degree_75: '75도',
+                neobot_degree_80: '80도',
+                neobot_degree_85: '85도',
+                neobot_degree_90: '90도',
+                neobot_degree_95: '95도',
+                neobot_degree_100: '100도',
+                neobot_degree_105: '105도',
+                neobot_degree_110: '110도',
+                neobot_degree_115: '115도',
+                neobot_degree_120: '120도',
+                neobot_degree_125: '125도',
+                neobot_degree_130: '130도',
+                neobot_degree_135: '135도',
+                neobot_degree_140: '140도',
+                neobot_degree_145: '145도',
+                neobot_degree_150: '150도',
+                neobot_degree_155: '155도',
+                neobot_degree_160: '160도',
+                neobot_degree_165: '165도',
+                neobot_degree_170: '170도',
+                neobot_degree_175: '175도',
+                neobot_degree_180: '180도',
             }
         },
         en: {
@@ -175,8 +221,6 @@ Entry.Neobot.setLanguage = function() {
                 neobot_stop_right_motor: 'Stop right motor %1',
                 neobot_both_motor: 'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
                 neobot_all_motor: 'Rotate both motors %2 speed %1 for %3 second(s) %4',
-                // removed by cky 190423
-                // neobot_motor_with_sensor: "Change %2 ~ %3 value of %1 sensor to speed and rotate %4 motor %5 ",
                 neobot_stop_all_motor: 'Stop both motors %1',
                 neobot_robot: 'Go %1 the robot %2',
 
@@ -185,13 +229,11 @@ Entry.Neobot.setLanguage = function() {
                 neobot_output_led_off: 'Turn off the LED connected %1 %2',
                 neobot_set_output: 'Output %1 port value to %2 %3',
 
-                neobot_servo_init: 'Initialize servo motor connected %1 to current place %2',
-                neobot_servo_turn_type1: 'Rotate servo motor connected %1 to %2 at %3 degrees %4',
-                neobot_servo_turn_type2: 'Rotate servo motor connected %1 at %2 degrees %3',
-                neobot_servo_turn_type4: 'Set to %2 the rotation speed of servo motor connected %1 %3',     //angle 단어 삭제
-                neobot_servo_turn_type5: 'Rotate servo motor connected %1 to %2 in %3 speed constantly',
-                neobot_servo_mode_manual: 'Change servo motor connected %1 to manual control mode %2',
-                neobot_servo_stop: 'Stop servo motor connected %1 %2',
+                get_servo_degree: '%1',
+                neobot_servo_init: 'Reset the %1 servo motor %2',
+                neobot_servo_change_degree: 'Change servo angle : %1 %2 %3 %4 %5',
+                neobot_servo_rotate: 'Rotate the servo motor : %1 %2 %3 %4',
+                neobot_servo_stop: 'Stop the %1 servo motor %2',
 
                 neobot_play_note_for: 'Make a sound the melody %1 to %2 octave(s) as %3 %4',
                 neobot_play_note_with_sensor: "Play the melody as %2 ~ %3 value of %1 sensor in the controller %4",
@@ -266,8 +308,58 @@ Entry.Neobot.setLanguage = function() {
                 neobot_motor_move_left: 'turn Left',
                 neobot_motor_move_right: 'turn Right',
                 neobot_motor_move_stop: 'stop',
-                neobot_servo_dir_1: 'clockwise',
-                neobot_servo_dir_2: 'counterclockwise',
+                // modified string by cky 191205
+                neobot_servo_dir_1: 'forward',
+                neobot_servo_dir_2: 'backward',
+                // added by cky 191205
+                neobot_percent_10: '10% speed',
+                neobot_percent_20: '20% speed',
+                neobot_percent_30: '30% speed',
+                neobot_percent_40: '40% speed',
+                neobot_percent_50: '50% speed',
+                neobot_percent_60: '60% speed',
+                neobot_percent_70: '70% speed',
+                neobot_percent_80: '80% speed',
+                neobot_percent_90: '90% speed',
+                neobot_percent_100: '100% speed',
+
+                neobot_degree_0: '0 degree',
+                neobot_degree_5: '5 degrees',
+                neobot_degree_10: '10 degrees',
+                neobot_degree_15: '15 degrees',
+                neobot_degree_20: '20 degrees',
+                neobot_degree_25: '25 degrees',
+                neobot_degree_30: '30 degrees',
+                neobot_degree_35: '35 degrees',
+                neobot_degree_40: '40 degrees',
+                neobot_degree_45: '45 degrees',
+                neobot_degree_50: '50 degrees',
+                neobot_degree_55: '55 degrees',
+                neobot_degree_60: '60 degrees',
+                neobot_degree_65: '65 degrees',
+                neobot_degree_70: '70 degrees',
+                neobot_degree_75: '75 degrees',
+                neobot_degree_80: '80 degrees',
+                neobot_degree_85: '85 degrees',
+                neobot_degree_90: '90 degrees',
+                neobot_degree_95: '95 degrees',
+                neobot_degree_100: '100 degrees',
+                neobot_degree_105: '105 degrees',
+                neobot_degree_110: '110 degrees',
+                neobot_degree_115: '115 degrees',
+                neobot_degree_120: '120 degrees',
+                neobot_degree_125: '125 degrees',
+                neobot_degree_130: '130 degrees',
+                neobot_degree_135: '135 degrees',
+                neobot_degree_140: '140 degrees',
+                neobot_degree_145: '145 degrees',
+                neobot_degree_150: '150 degrees',
+                neobot_degree_155: '155 degrees',
+                neobot_degree_160: '160 degrees',
+                neobot_degree_165: '165 degrees',
+                neobot_degree_170: '170 degrees',
+                neobot_degree_175: '175 degrees',
+                neobot_degree_180: '180degrees',
             },
         }, //
     };
@@ -301,11 +393,8 @@ Entry.Neobot.blockMenuBlocks = [
     'neobot_set_output',
     // class servo
     'neobot_servo_init',
-    'neobot_servo_turn_type1',
-    'neobot_servo_turn_type2',
-    'neobot_servo_turn_type4',
-    'neobot_servo_turn_type5',
-    'neobot_servo_mode_manual',
+    'neobot_servo_change_degree',
+    'neobot_servo_rotate',
     'neobot_servo_stop',
     // class note
     'neobot_play_note_for',
@@ -1788,6 +1877,71 @@ Entry.Neobot.getBlocks = function() {
         },
 
         // class servo
+        get_servo_degree: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.neobot_degree_0, '0'],
+                        [Lang.Blocks.neobot_degree_5, '5'],
+                        [Lang.Blocks.neobot_degree_10, '10'],
+                        [Lang.Blocks.neobot_degree_15, '15'],
+                        [Lang.Blocks.neobot_degree_20, '20'],
+                        [Lang.Blocks.neobot_degree_25, '25'],
+                        [Lang.Blocks.neobot_degree_30, '30'],
+                        [Lang.Blocks.neobot_degree_35, '35'],
+                        [Lang.Blocks.neobot_degree_40, '40'],
+                        [Lang.Blocks.neobot_degree_45, '45'],
+                        [Lang.Blocks.neobot_degree_50, '50'],
+                        [Lang.Blocks.neobot_degree_55, '55'],
+                        [Lang.Blocks.neobot_degree_60, '60'],
+                        [Lang.Blocks.neobot_degree_65, '65'],
+                        [Lang.Blocks.neobot_degree_70, '70'],
+                        [Lang.Blocks.neobot_degree_75, '75'],
+                        [Lang.Blocks.neobot_degree_80, '80'],
+                        [Lang.Blocks.neobot_degree_85, '85'],
+                        [Lang.Blocks.neobot_degree_90, '90'],
+                        [Lang.Blocks.neobot_degree_95, '95'],
+                        [Lang.Blocks.neobot_degree_100, '100'],
+                        [Lang.Blocks.neobot_degree_105, '105'],
+                        [Lang.Blocks.neobot_degree_110, '110'],
+                        [Lang.Blocks.neobot_degree_115, '115'],
+                        [Lang.Blocks.neobot_degree_120, '120'],
+                        [Lang.Blocks.neobot_degree_125, '125'],
+                        [Lang.Blocks.neobot_degree_130, '130'],
+                        [Lang.Blocks.neobot_degree_135, '135'],
+                        [Lang.Blocks.neobot_degree_140, '140'],
+                        [Lang.Blocks.neobot_degree_145, '145'],
+                        [Lang.Blocks.neobot_degree_150, '150'],
+                        [Lang.Blocks.neobot_degree_155, '155'],
+                        [Lang.Blocks.neobot_degree_160, '160'],
+                        [Lang.Blocks.neobot_degree_165, '165'],
+                        [Lang.Blocks.neobot_degree_170, '170'],
+                        [Lang.Blocks.neobot_degree_175, '175'],
+                        [Lang.Blocks.neobot_degree_180, '180'],
+                    ],
+                    value: '90',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('VALUE');
+            },
+            syntax: { js: [], py: ['%1get_servo_degree#'] },
+        },
         neobot_servo_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1796,7 +1950,7 @@ Entry.Neobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
+                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
                     value: 'OUT1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1824,16 +1978,27 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 if (!script.isStart) {
                     var port = script.getStringField('PORT', script);
-                    Entry.hw.sendQueue[port] = 0xBA;
-                    
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        Entry.hw.sendQueue[port] = 0x01;
+                    if (port == 'ALL') {
+                        Entry.hw.sendQueue['OUT1'] = 0xBA;
+                        Entry.hw.sendQueue['OUT2'] = 0xBA;
+                        
+                        script.isStart = true;
+                        script.timeFlag = 1;
                         setTimeout(function() {
+                            Entry.hw.sendQueue['OUT1'] = 0x01;
+                            Entry.hw.sendQueue['OUT2'] = 0x01;
                             script.timeFlag = 0;
                         }, 200);
-                    }, 200);
+                    } else {
+                        Entry.hw.sendQueue[port] = 0xBA;
+                        
+                        script.isStart = true;
+                        script.timeFlag = 1;
+                        setTimeout(function() {
+                            Entry.hw.sendQueue[port] = 0x01;
+                            script.timeFlag = 0;
+                        }, 200);
+                    }
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -1845,7 +2010,304 @@ Entry.Neobot.getBlocks = function() {
                 }
             },
         },
+        
+        // integrated by cky 191205 from neobot_servo_turn_typeX
+        neobot_servo_change_degree: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    value: 'OUT1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.neobot_servo_dir_1, '1'],
+                        [Lang.Blocks.neobot_servo_dir_2, '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.neobot_percent_10, '9'],
+                        [Lang.Blocks.neobot_percent_20, '8'],
+                        [Lang.Blocks.neobot_percent_30, '7'],
+                        [Lang.Blocks.neobot_percent_40, '6'],
+                        [Lang.Blocks.neobot_percent_50, '5'],
+                        [Lang.Blocks.neobot_percent_60, '4'],
+                        [Lang.Blocks.neobot_percent_70, '3'],
+                        [Lang.Blocks.neobot_percent_80, '2'],
+                        [Lang.Blocks.neobot_percent_90, '1'],
+                        [Lang.Blocks.neobot_percent_100, '0'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'get_servo_degree',
+                        id: 'm211',
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'neobot_servo_change_degree',
+            },
+            paramsKeyMap: {
+                DEGREE: 0,
+                PORT: 1,
+                DIRECTION: 2,
+                SPEED: 3
+            },
+            class: 'neobot_servo',
+            isNotFor: ['neobot'],
+            func: function(sprite, script) {
+                if (!script.isStart) {
+                    var degree = Entry.parseNumber(script.getStringValue('DEGREE'));
+                    var port = script.getStringField('PORT', script);
+                    var direction = script.getNumberField('DIRECTION');
+                    var speed = script.getNumberField('SPEED');
 
+                    if (port == 'ALL') {
+                        switch (direction) {
+                            case 1:
+                            Entry.hw.sendQueue['OUT1'] = 0xBC;
+                            Entry.hw.sendQueue['OUT2'] = 0xBC;
+                            break;
+                            case 2:
+                            Entry.hw.sendQueue['OUT1'] = 0xBD;
+                            Entry.hw.sendQueue['OUT2'] = 0xBD;
+                            break;
+                        }
+                        
+                        script.isStart = true;
+                        script.timeFlag = 1;
+                        setTimeout(function() { // for speed
+                            Entry.hw.sendQueue['OUT1'] = 0xFA - speed;
+                            Entry.hw.sendQueue['OUT2'] = 0xFA - speed;
+                            setTimeout(function() { // for degree
+                                if(degree > 180) {
+                                    degree = 180;
+                                }
+                                if (degree < 0){
+                                    degree = 0;
+                                }
+                                degree = degree + 0x01;
+                                degree *= 1;
+                                Entry.hw.sendQueue['OUT1'] = degree;
+                                Entry.hw.sendQueue['OUT2'] = degree;
+                                script.timeFlag = 0;
+                            }, 200);
+                        }, 200);
+                    } else {
+                        switch (direction) {
+                            case 1:
+                            Entry.hw.sendQueue[port] = 0xBC;
+                            break;
+                            case 2:
+                            Entry.hw.sendQueue[port] = 0xBD;
+                            break;
+                        }
+                        
+                        script.isStart = true;
+                        script.timeFlag = 1;
+                        setTimeout(function() { // for speed
+                            Entry.hw.sendQueue[port] = 0xFA - speed;
+                            setTimeout(function() { // for degree
+                                if(degree > 180) {
+                                    degree = 180;
+                                }
+                                if (degree < 0){
+                                    degree = 0;
+                                }
+                                degree = degree + 0x01;
+                                degree *= 1;
+                                Entry.hw.sendQueue[port] = degree;
+                                script.timeFlag = 0;
+                            }, 200);
+                        }, 200);    
+                    }
+                    
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        neobot_servo_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    value: 'OUT1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.neobot_servo_dir_1, '1'],
+                        [Lang.Blocks.neobot_servo_dir_2, '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.neobot_percent_10, '0'],
+                        [Lang.Blocks.neobot_percent_20, '1'],
+                        [Lang.Blocks.neobot_percent_30, '2'],
+                        [Lang.Blocks.neobot_percent_40, '3'],
+                        [Lang.Blocks.neobot_percent_50, '4'],
+                        [Lang.Blocks.neobot_percent_60, '5'],
+                        [Lang.Blocks.neobot_percent_70, '6'],
+                        [Lang.Blocks.neobot_percent_80, '7'],
+                        [Lang.Blocks.neobot_percent_90, '8'],
+                        [Lang.Blocks.neobot_percent_100, '9'],
+                    ],
+                    value: '9',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'neobot_servo_rotate',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                DIRECTION: 1,
+                SPEED: 2
+            },
+            class: 'neobot_servo',
+            isNotFor: ['neobot'],
+            func: function(sprite, script) {
+                var port = script.getStringField('PORT', script);
+                var direction = script.getNumberField('DIRECTION');
+                var speed = script.getNumberField('SPEED');
+                
+                if (port == 'ALL') {
+                    switch (direction) {
+                        case 1:
+                        Entry.hw.sendQueue['OUT1'] = 0xC0 + (speed + 0x01);
+                        Entry.hw.sendQueue['OUT2'] = 0xC0 + (speed + 0x01);
+                        break;
+                        case 2:
+                        Entry.hw.sendQueue['OUT1'] = 0xD0 + (speed + 0x01);
+                        Entry.hw.sendQueue['OUT2'] = 0xD0 + (speed + 0x01);
+                        break;
+                    }
+                } else {
+                    switch (direction) {
+                        case 1:
+                        Entry.hw.sendQueue[port] = 0xC0 + (speed + 0x01);
+                        break;
+                        case 2:
+                        Entry.hw.sendQueue[port] = 0xD0 + (speed + 0x01);
+                        break;
+                    }
+                }
+                return script.callReturn();
+            },
+        },
+        neobot_servo_stop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    value: 'OUT1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'neobot_servo_stop',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'neobot_servo',
+            isNotFor: ['neobot'],
+            func: function(sprite, script) {
+                var port = script.getStringField('PORT', script);
+                if (port == 'ALL') {
+                    Entry.hw.sendQueue['OUT1'] = 0xFE;
+                    Entry.hw.sendQueue['OUT2'] = 0xFE;
+                } else {
+                    Entry.hw.sendQueue[port] = 0xFE;
+                }
+                return script.callReturn();
+            },
+        },
+
+      /*   // deprecated by cky 191205
         neobot_servo_turn_type1: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1939,7 +2401,7 @@ Entry.Neobot.getBlocks = function() {
                 }
             },
         },
-
+        // deprecated by cky 191205
         neobot_servo_turn_type2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2009,6 +2471,7 @@ Entry.Neobot.getBlocks = function() {
             },
         },
 
+        // deprecated by cky 191205
         neobot_servo_turn_type4: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2085,6 +2548,7 @@ Entry.Neobot.getBlocks = function() {
             },
         },
 
+        // deprecated by cky 191205
         neobot_servo_turn_type5: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2184,6 +2648,7 @@ Entry.Neobot.getBlocks = function() {
             },
         },
 
+        // deprecated by cky 191205
         neobot_servo_mode_manual: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2237,62 +2702,8 @@ Entry.Neobot.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-        },
+        }, */
 
-        neobot_servo_stop: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                ],
-                type: 'neobot_servo_stop',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'neobot_servo',
-            isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    
-                    Entry.hw.sendQueue[port] = 0xFE;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        timeFlag = 0;
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        },
         //endregion neobot 네오봇
     };
 };

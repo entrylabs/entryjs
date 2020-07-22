@@ -6,6 +6,8 @@
 import DomUtils from '../../src/util/domUtils';
 import { GEHelper } from '../graphicEngine/GEHelper';
 
+const _findIndex = require('lodash/findIndex');
+
 /**
  * Class for entry object.
  * @param {?object model} model for object
@@ -229,10 +231,13 @@ Entry.EntryObject = class {
                     2
                 )}/${fileName.substring(2, 4)}/thumb/${fileName}.png`;
             }
+            thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
         } else if (objectType === 'textBox') {
-            this.thumbUrl = `${Entry.mediaFilePath}text_icon.png`;
+            const { type } = Lang || {};
+            const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
+            this.thumbUrl = `${Entry.mediaFilePath}${filename}`;
+            $(thumb).addClass('entryObjectTextBox');
         }
-        thumb.style.backgroundImage = `url(${encodeURI(this.thumbUrl)})`;
     }
 
     /**
@@ -313,7 +318,7 @@ Entry.EntryObject = class {
     removePicture(pictureId) {
         const pictures = this.pictures;
         if (pictures.length < 2) {
-            return false;
+            return;
         }
 
         const playground = Entry.playground;
@@ -321,12 +326,11 @@ Entry.EntryObject = class {
 
         pictures.splice(pictures.indexOf(picture), 1);
         if (picture === this.selectedPicture) {
-            playground.selectPicture(pictures[0]);
+            playground.selectPicture(pictures[0], true);
         }
         GEHelper.resManager.imageRemoved('EntityObject::removePicture');
         playground.injectPicture(this);
         playground.reloadPlayground();
-        return true;
     }
 
     /**
@@ -433,7 +437,7 @@ Entry.EntryObject = class {
      * @param {string} soundId
      */
     removeSound(soundId) {
-        const index = this.sounds.findIndex((sound) => sound.id === soundId);
+        const index = _findIndex(this.sounds, (sound) => sound.id === soundId);
         this.sounds.splice(index, 1);
         Entry.playground.reloadPlayground();
         Entry.playground.injectSound();
@@ -729,11 +733,15 @@ Entry.EntryObject = class {
             },
             {
                 text: Lang.Workspace.context_remove,
-                enable: !Entry.engine.isState('run'),
-                callback() {
+                enable: !Entry.engine.isState('run') && !this.getLock(),
+                callback: () => {
+                    if (this.getLock()) {
+                        return true;
+                    }
                     Entry.dispatchEvent('removeObject', object);
                     const { id } = object;
                     Entry.do('removeObject', id);
+                    Entry.Utils.forceStopSounds();
                 },
             },
             {
@@ -1134,7 +1142,7 @@ Entry.EntryObject = class {
         if (Entry.objectEditable && Entry.objectDeletable) {
             deleteView.bindOnClick((e) => {
                 e.stopPropagation();
-                if (Entry.engine.isState('run')) {
+                if (this.getLock() || Entry.engine.isState('run')) {
                     return;
                 }
                 Entry.do('removeObject', this.id);
@@ -1276,7 +1284,7 @@ Entry.EntryObject = class {
                 Entry.container.getObject(objectId) &&
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
-                Entry.do('containerSelectObject', objectId);
+                Entry.do('selectObject', objectId);
             }
         });
 

@@ -19,52 +19,38 @@
             <div id="workspace"></div>
         </section>
 
-        <!--Jquery -->
-        <script src="https://playentry.org/lib/jquery/jquery.min.js"></script>
-        <script src="https://playentry.org/lib/jquery-ui/ui/minified/jquery-ui.min.js"></script>
-
-        <!--underscore -->
-        <script src="https://playentry.org/lib/underscore/underscore.js"></script>
-
-        <!--canvas input-->
-        <script src="https://playentry.org/lib/entryjs/extern/util/CanvasInput.js"></script>
-
-        <!--Blockly-->
-        <script src="https://playentry.org/lib/entryjs/extern/blockly/blockly_compressed.js"></script>
-        <script src="https://playentry.org/lib/entryjs/extern/blockly/msg/js/ko.js"></script>
-
-        <!--react-->
-        <script crossorigin src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
-        <script
-            crossorigin
-            src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
-        ></script>
-
-        <!--createjs-->
-        <script src="https://playentry.org/lib/PreloadJS/lib/preloadjs-0.6.0.min.js"></script>
-        <script src="https://playentry.org/lib/EaselJS/lib/easeljs-0.8.0.min.js"></script>
-        <script src="https://playentry.org/lib/SoundJS/lib/soundjs-0.6.0.min.js"></script>
-        <script src="https://playentry.org/lib/SoundJS/lib/flashaudioplugin-0.6.0.min.js"></script>
-        <script src="https://playentry.org/lib/entryjs/extern/util/ndgmr.Collision.js"></script>
-        <script src="https://playentry.org/lib/entryjs/extern/util/handle.js"></script>
-
-        <!--bignumber-->
-        <script src="https://playentry.org/lib/entryjs/extern/util/bignumber.min.js"></script>
-
         <!--language-->
         <script src="../extern/lang/ko.js"></script>
 
-        <!--socket.io-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/1.4.5/socket.io.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/PreloadJS/lib/preloadjs-0.6.0.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/EaselJS/lib/easeljs-0.8.0.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/SoundJS/lib/soundjs-0.6.0.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/SoundJS/lib/flashaudioplugin-0.6.0.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/lodash/dist/lodash.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/jquery/jquery.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/jquery-ui/ui/minified/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/velocity/velocity.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/codemirror/lib/codemirror.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/codemirror/addon/hint/show-hint.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/codemirror/addon/lint/lint.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/codemirror/addon/selection/active-line.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/codemirror/mode/javascript/javascript.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/codemirror/addon/hint/javascript-hint.js"></script>
+        <script type="text/javascript" src="https://playentry.org/js/jshint.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/fuzzy/lib/fuzzy.js"></script>
+        <script type="text/javascript" src="https://playentry.org/js/textmode/python/python.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-js/extern/util/filbert.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-js/extern/util/CanvasInput.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-js/extern/util/ndgmr.Collision.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-js/extern/util/handle.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-js/extern/util/bignumber.min.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/socket.io-client/socket.io.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/react/react.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/react/react-dom.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-lms/dist/assets/app.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/literallycanvas-mobile/lib/js/literallycanvas.js"></script>
+        <script type="text/javascript" src="https://playentry.org/lib/entry-tool/dist/entry-tool.js"></script>
 
-        <!--codemirror-->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.23.0/codemirror.js"></script>
-
-        <!--entrytool-->
-        <script src="https://playentry.org/lib/entry-tool/dist/entry-tool.js"></script>
-
-        <!--entryjs-->
-        <script src="https://playentry.org/lib/components-webfontloader/webfont.js"></script>
         <script src="../extern/util/static_mini.js"></script>
         <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
         <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
@@ -85,12 +71,12 @@
 
                 Entry.addEventListener('hwChanged', function() {
                     if (
-                        (Entry.hw.connected && Entry.hw.hwModule && lastHwConnected) ||
+                        (Entry.hw.programConnected && Entry.hw.hwModule && lastHwConnected) ||
                         !isMiniMode
                     ) {
                         return;
                     }
-                    if (Entry.hw.connected && Entry.hw.hwModule) {
+                    if (Entry.hw.programConnected && Entry.hw.hwModule) {
                         if (EntryStatic.hwMiniSupportList.indexOf(Entry.hw.hwModule.name) > -1) {
                             hwCategoryList.forEach(function(categoryName) {
                                 Entry.playground.blockMenu.unbanCategory(categoryName);

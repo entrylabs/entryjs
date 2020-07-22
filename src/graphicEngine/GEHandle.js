@@ -7,7 +7,7 @@
 import { GEDragHelper } from './GEDragHelper';
 import { GEHelper } from './GEHelper';
 
-export var GEHandle = function(canvas) {
+export const GEHandle = function(canvas) {
     if (typeof createjs != 'object') {
         throw 'createjs is not founded';
     }
@@ -188,10 +188,15 @@ export var GEHandle = function(canvas) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(edge);
+        container.setChildIndex(edge, 1);
         this.edge = edge;
 
         //rotate knob
-        const rotateKnob = GEHelper.newGraphic();
+        const rotateKnob = GEHelper.newSpriteWithCallback(`${Entry.mediaFilePath}stage/rotate.png`);
+        rotateKnob.scaleX = 0.4;
+        rotateKnob.scaleY = 0.4;
+        rotateKnob.regX = 25;
+        rotateKnob.regY = 125;
         rotateKnob.mouseEnabled = true;
         GEDragHelper.handleDrag(rotateKnob);
         rotateKnob.cursor = 'crosshair';
@@ -254,14 +259,14 @@ export var GEHandle = function(canvas) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(directionArrow);
-        container.setChildIndex(directionArrow, 0);
         this.directionArrow = directionArrow;
 
         // center
         const centerPoint = GEHelper.newGraphic();
         centerPoint.mouseEnabled = true;
         GEDragHelper.handleDrag(centerPoint);
-
+        centerPoint.scaleX = 1.52;
+        centerPoint.scaleY = 1.52;
         centerPoint.graphics
             .ss(3.5, 2, 0)
             .s('#FFFFFF')
@@ -289,6 +294,8 @@ export var GEHandle = function(canvas) {
             const knob = GEHelper.newGraphic();
             knob.mouseEnabled = true;
             GEDragHelper.handleDrag(knob);
+            knob.scaleX = 1.52;
+            knob.scaleY = 1.52;
             knob.graphics
                 .ss(0.2, 0, 0)
                 .s('#d8d8d8')
@@ -320,6 +327,7 @@ export var GEHandle = function(canvas) {
                 handle.dispatchEditEndEvent();
             });
             container.addChild(knob);
+            container.setChildIndex(knob, 3);
             this.knobs.push(knob);
         }
 
@@ -363,8 +371,8 @@ export var GEHandle = function(canvas) {
         const res = Math.sqrt(x * x + y * y);
         if (res > standard && Entry.engine.isState('stop')) {
             Entry.toast.warning(
-                '이런! 조심하세요!',
-                '오브젝트의 중심이 이미지에서 크게 벗어나서 원위치로 되돌렸습니다.'
+                Lang.Workspace.toast_error_title_object_center,
+                Lang.Workspace.toast_error_contents_object_center
             );
             return true;
         }
@@ -395,20 +403,7 @@ export var GEHandle = function(canvas) {
     };
 
     p.renderRotateKnob = function() {
-        const width = this.width;
-        const height = this.height;
-        this.rotateKnob.graphics
-            .clear()
-            .ss(0.5, 2, 0)
-            .s('#d8d8d8')
-            .mt(0, -height / 2)
-            .lt(0, -height / 2)
-            .lt(0, -height / 2 - 20)
-            .cp()
-            .beginFill(this.rotateKnobColor)
-            .dc(0, -height / 2 - 20, 8)
-            .beginFill('#ffffff')
-            .dc(0, -height / 2 - 20, 4);
+        this.rotateKnob.y = -this.height / 2;
     };
 
     p.renderBorder = function() {
@@ -473,11 +468,11 @@ export var GEHandle = function(canvas) {
             Math.pow(newPoint.x - otherKnobPos.x, 2) + Math.pow(newPoint.y - otherKnobPos.y, 2)
         );
         if (knobIndex % 4 == 0) {
-            var ratio = newLength / this.height;
+            const ratio = newLength / this.height;
             this.height = newLength;
             this.setRegY(this.regY * ratio);
         } else if (knobIndex % 4 == 2) {
-            var ratio = newLength / this.width;
+            const ratio = newLength / this.width;
             this.width = newLength;
             this.setRegX(this.regX * ratio);
         } else {
@@ -487,7 +482,7 @@ export var GEHandle = function(canvas) {
                     Math.pow(this.x - otherKnobPos.x, 2) + Math.pow(this.y - otherKnobPos.y, 2)
                 );
             const newWidth = (this.width * newLength) / oldLength;
-            var ratio = newWidth / this.width;
+            let ratio = newWidth / this.width;
             this.setWidth(newWidth);
             this.setRegX(this.regX * ratio);
             const newHeight = (this.height * newLength) / oldLength;
@@ -506,10 +501,10 @@ export var GEHandle = function(canvas) {
         const rotation = this.rotation * GEHelper.rotateRead;
         const cursorList = ['ns-resize', 'nwse-resize', 'ew-resize', 'nesw-resize'];
         const iter = Math.round(rotation / 45);
-        for (var i = 0; i < iter; i++) {
+        for (let i = 0; i < iter; i++) {
             cursorList.unshift(cursorList.pop());
         }
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             this.knobs[i].cursor = cursorList[i % 4];
         }
     };

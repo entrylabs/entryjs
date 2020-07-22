@@ -9,15 +9,15 @@ Entry.ArduinoNano = {
         ko: '아두이노 Nano',
         en: 'Arduino Nano',
     },
-    setZero: function() {
+    setZero() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
                 SET: {},
             };
         } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function(key) {
+            const keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach((key) => {
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
