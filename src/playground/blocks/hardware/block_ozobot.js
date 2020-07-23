@@ -761,7 +761,6 @@ Entry.Ozobot.getBlocks = function () {
 			class: 'Ozobot_LED',
 			isNotFor: ['Ozobot Evo'],
 			func: function (sprite, script) {
-				var var1 = script.getStringField('COLOR', script);
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
 				if (!Entry.Ozobot.isStarted) {
