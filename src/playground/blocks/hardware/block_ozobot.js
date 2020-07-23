@@ -62,6 +62,7 @@ Entry.Ozobot.blockMenuBlocks = [
 	'Ozobot_LED_head_random',
 	'Ozobot_LED_head_off',
 	'Ozobot_LED_front',
+	'Ozobot_LED_front_floor',
 	'Ozobot_LED_front_random',
 	'Ozobot_LED_front_off',
 	'Ozobot_Sound_emotion',
@@ -978,6 +979,84 @@ Entry.Ozobot.getBlocks = function () {
 					sq.p4 = parseInt(parseInt(var3.substr(1, 6), 16));
 					sq.p5 = parseInt(parseInt(var2.substr(1, 6), 16));
 					sq.p6 = parseInt(parseInt(var1.substr(1, 6), 16));
+					Entry.Ozobot.isStarted = true;
+					Entry.Ozobot.state = OzobotState.STATE_READY;
+					return script;
+				} else {
+					switch (Entry.Ozobot.state) {
+						case OzobotState.STATE_READY:
+							var timer = setTimeout(() => {
+								Entry.Ozobot.state = OzobotState.STATE_DONE;
+							}, 100);
+							Entry.Ozobot.state = OzobotState.STATE_WAIT;
+							return script;
+							break;
+						case OzobotState.STATE_WAIT:
+							return script;
+							break;
+						case OzobotState.STATE_DONE:
+							Entry.Ozobot.isStarted = false;
+							return script.callReturn();
+							break;
+					}
+				}
+				return script;
+			},
+		},
+		Ozobot_LED_front_floor: {
+			color: EntryStatic.colorSet.block.default.HARDWARE,
+			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+			skeleton: 'basic',
+			fontColor: '#fff',
+			statements: [],
+			template: '정면 불빛 바닥 색상 가져오기 %1',
+			params: [
+				{
+					type: 'Indicator',
+					img: 'block_icon/hardware_icon.svg',
+					size: 12,
+				},
+			],
+			events: {},
+			def: {
+				params: [null],
+				type: 'Ozobot_LED_front_floor',
+			},
+			paramsKeyMap: {},
+			class: 'Ozobot_LED',
+			isNotFor: ['Ozobot Evo'],
+			func: function (sprite, script) {
+				var sq = Entry.hw.sendQueue;
+				var pd = Entry.hw.portData;
+				if (!Entry.Ozobot.isStarted) {
+					sq.seq = Entry.Ozobot.sequance++;
+					sq.cat = 2;
+					sq.act = 0;
+					sq.pcnt = 6;
+					sq.p1 = 0;
+					sq.p2 = 0;
+					sq.p3 = 0;
+					sq.p4 = 0;
+					sq.p5 = 0;
+					sq.p6 = 0;
+					if (pd.surface_color == 8) {
+						sq.p1 = 4;
+					}
+					if (pd.surface_color & 1) sq.p2 |= 16711680;
+					if (pd.surface_color & 2) sq.p2 |= 65280;
+					if (pd.surface_color & 4) sq.p2 |= 255;
+					if (pd.surface_color & 1) sq.p3 |= 16711680;
+					if (pd.surface_color & 2) sq.p3 |= 65280;
+					if (pd.surface_color & 4) sq.p3 |= 255;
+					if (pd.surface_color & 1) sq.p4 |= 16711680;
+					if (pd.surface_color & 2) sq.p4 |= 65280;
+					if (pd.surface_color & 4) sq.p4 |= 255;
+					if (pd.surface_color & 1) sq.p5 |= 16711680;
+					if (pd.surface_color & 2) sq.p5 |= 65280;
+					if (pd.surface_color & 4) sq.p5 |= 255;
+					if (pd.surface_color & 1) sq.p6 |= 16711680;
+					if (pd.surface_color & 2) sq.p6 |= 65280;
+					if (pd.surface_color & 4) sq.p6 |= 255;
 					Entry.Ozobot.isStarted = true;
 					Entry.Ozobot.state = OzobotState.STATE_READY;
 					return script;
