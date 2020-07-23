@@ -127,12 +127,12 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['앞 장애물', 0x00],
-						['오른쪽 앞 장애물', 0x01],
-						['왼쪽 앞 장애물', 0x02],
-						['뒤 장애물', 0x03],
-						['오른쪽 뒤 장애물', 0x04],
-						['왼쪽 뒤 장애물', 0x05],
+						['앞쪽 장애물', 0x00],
+						['앞쪽 오른편 장애물', 0x01],
+						['앞쪽 왼편 장애물', 0x02],
+						['뒤쪽 장애물', 0x03],
+						['뒤쪽 오른편 장애물', 0x04],
+						['뒤쪽 왼편 장애물', 0x05],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
