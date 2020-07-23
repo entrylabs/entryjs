@@ -126,8 +126,12 @@ Entry.Ozobot.getBlocks = function () {
 				{
 					type: 'Dropdown',
 					options: [
-						['앞쪽 장애물', 0x00],
-						['뒤쪽 장애물', 0x01],
+						['앞 장애물', 0x00],
+						['오른쪽 앞 장애물', 0x01],
+						['왼쪽 앞 장애물', 0x02],
+						['뒤 장애물', 0x03],
+						['오른쪽 뒤 장애물', 0x04],
+						['왼쪽 뒤 장애물', 0x05],
 					],
 					fontSize: 11,
 					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -152,7 +156,23 @@ Entry.Ozobot.getBlocks = function () {
 							return true;
 						break;
 					case 0x01:
+						if (pd.obstacle_front_right)
+							return true;
+						break;
+					case 0x02:
+						if (pd.obstacle_front_left)
+							return true;
+						break;
+					case 0x03:
 						if (pd.obstacle_rear_left || pd.obstacle_rear_right)
+							return true;
+						break;
+					case 0x04:
+						if (pd.obstacle_rear_right)
+							return true;
+						break;
+					case 0x05:
+						if (pd.obstacle_rear_left)
 							return true;
 						break;
 				}
