@@ -1561,7 +1561,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [5, 1],
+				params: [6, 1],
 				type: 'Ozobot_Sound_tone',
 			},
 			paramsKeyMap: {
@@ -1659,7 +1659,7 @@ Entry.Ozobot.getBlocks = function () {
 			],
 			events: {},
 			def: {
-				params: [5, 1, 1],
+				params: [6, 1, 1],
 				type: 'Ozobot_Sound_tone_time',
 			},
 			paramsKeyMap: {
@@ -1681,7 +1681,7 @@ Entry.Ozobot.getBlocks = function () {
 					sq.act = 2;
 					sq.pcnt = 3;
 					sq.p1 = var2;
-					sq.p2 = var1;
+					sq.p2 = var1 + 1;
 					sq.p3 = var3 * 1000;
 					Entry.Ozobot.isStarted = true;
 					Entry.Ozobot.state = OzobotState.STATE_READY;
