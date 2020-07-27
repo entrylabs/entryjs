@@ -758,7 +758,7 @@ class VideoUtils implements MediaUtilsInterface {
             object: false,
             warmup: null,
         };
-        if (this.isChrome) {
+        if (this.isChrome && this.isInitialized) {
             this.worker.postMessage({
                 type: 'handleOff',
             });
