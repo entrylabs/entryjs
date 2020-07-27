@@ -730,9 +730,12 @@ class VideoUtils implements MediaUtilsInterface {
         this.disableAllModels();
         this.turnOffWebcam();
         try {
-            this.stream.getTracks().forEach((track) => {
-                track.stop();
-            });
+            if (this.stream) {
+                this.stream.getTracks().forEach((track) => {
+                    track.stop();
+                });
+            }
+
             // this.worker.terminate();
         } catch (err) {
             console.log(err);
