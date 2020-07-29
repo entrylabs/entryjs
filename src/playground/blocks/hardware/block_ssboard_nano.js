@@ -387,6 +387,43 @@ Entry.ssboard_nano.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
+        ssboard_nano_digital_out_port_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['D3', '3'],
+                        ['D4', '4'],
+                        ['D5', '5'],
+                        ['D13', '13'],
+                        ['A0', '14'],
+                        ['A1', '15'],
+                        ['A2', '16'],
+                     ],
+                    value: '3',       // 기본 표시값
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: (sprite, script) => {
+                return script.getStringField('PORT');
+            },
+        },
 
         ssboard_nano_pwn_port_list: 
         {
@@ -660,11 +697,11 @@ Entry.ssboard_nano.getBlocks = function() {
             class: 'ssboard_nano_LV1',
             isNotFor: ['ssboard_nano'],
             func: (sprite, script) => {
-                var port = 10;
-                var duration = script.getNumberValue('VALUE');	// 길이	
-                var octave = 5;    // 옥타브
-                var value = 2400;//698;   // 음 주파수
-                var mode = 1;
+                const port = 10;
+                let duration = script.getNumberValue('VALUE');	// 길이	
+                //var octave = 5;    // 옥타브
+                const value = 2400;//698;   // 음 주파수
+                //var mode = 1;
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue.SET) {
@@ -680,7 +717,7 @@ Entry.ssboard_nano.getBlocks = function() {
                     }
                     if(duration > 300)
                         duration = 300;
-                    duration = duration * 1000;
+                    duration = duration * 100;
                     script.isStart = true;  // 출력 시작 플래그 셋
                     script.timeFlag = 1;    // 시간플래그 셋
 
@@ -689,7 +726,7 @@ Entry.ssboard_nano.getBlocks = function() {
                         data: 
                         {
                             value: value,
-                            duration: duration/10,
+                            duration: duration,
                         },
                         time: new Date().getTime(),
                     };
@@ -806,7 +843,7 @@ Entry.ssboard_nano.getBlocks = function() {
                     if (note != 0) value = Entry.ssboard_nano.toneMap[note][octave];
                     if(duration > 300)
                         duration = 300;
-                    duration = duration * 1000;
+                    duration = duration * 100;
                     script.isStart = true;
                     script.timeFlag = 1;
 
@@ -816,7 +853,7 @@ Entry.ssboard_nano.getBlocks = function() {
                         data: 
 						{
                             value: value,
-                            duration: duration/10,
+                            duration: duration,
                         },
                         time: new Date().getTime(),
                     };
@@ -1014,7 +1051,7 @@ Entry.ssboard_nano.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'ssboard_nano_digital_port_list',
+                        type: 'ssboard_nano_digital_out_port_list',
                     },
                     {
                         type: 'number',
@@ -1190,7 +1227,7 @@ Entry.ssboard_nano.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'ssboard_nano_digital_port_list', 
+                        type: 'ssboard_nano_digital_out_port_list', 
                         params: ['4'],
                     },
                     {
@@ -1410,7 +1447,7 @@ Entry.ssboard_nano.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'ssboard_nano_digital_port_list',      
+                        type: 'ssboard_nano_digital_out_port_list',      
                     },
                     {
                         type: 'ssboard_nano_digital_port_onoff_list',
@@ -1618,12 +1655,12 @@ Entry.ssboard_nano.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'ssboard_nano_ultrasonic_port_list',
-                        params: ['3'],
+                        type: 'ssboard_nano_digital_out_port_list',
+                        params: ['13'],
                     },			
                     {
-                        type: 'ssboard_nano_ultrasonic_port_list',
-                        params: ['4'],
+                        type: 'ssboard_nano_digital_out_port_list',
+                        params: ['5'],
                     },		
                     null,
                 ],
@@ -1710,7 +1747,7 @@ Entry.ssboard_nano.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'ssboard_nano_digital_port_list',
+                        type: 'ssboard_nano_digital_out_port_list',
                         params: ['14'],
                     },			
                     null,

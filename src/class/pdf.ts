@@ -2,7 +2,7 @@
  * 사용처: Entry#lecture 관련 로직 한군데
  */
 
-class EntryPDF implements IEntry.PDF {
+class EntryPDF {
     private _view: HTMLDivElement;
 
     constructor(filename: string) {
@@ -40,4 +40,5 @@ class EntryPDF implements IEntry.PDF {
     }
 }
 
+export default EntryPDF;
 Entry.Pdf = EntryPDF;
