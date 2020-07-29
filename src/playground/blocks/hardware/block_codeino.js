@@ -227,19 +227,6 @@ Entry.CODEino = {
     },
     customNeoPixelPin:50,
     customNeoPixelBrightness: 0,
-    // customNeoPixelValues : [
-    //     {r:0, g:0, b:0},
-    //     {r:0, g:0, b:0},
-    //     {r:0, g:0, b:0},
-
-    //     {r:0, g:0, b:0},
-    //     {r:0, g:0, b:0},
-    //     {r:0, g:0, b:0},
-        
-    //     {r:0, g:0, b:0},
-    //     {r:0, g:0, b:0},
-    //     {r:0, g:0, b:0}
-    // ],
     LED_VALUES:[0,0,0],
     LED_RED_VALUE: 0,
     LED_GREEN_VALUE: 0,
@@ -257,7 +244,6 @@ Entry.CODEino = {
 Entry.CODEino.setLanguage = function () {
     return {
         ko: {
-            // ko.js에 작성하던 내용
             template: {
                 CODEino_default_neopixel_on: "기본 네오픽셀을 %1(으)로 켜기 %2",
                 CODEino_default_neopixel_setBrightness: "기본 네오픽셀의 밝기를 %1(으)로 설정%2",
@@ -278,7 +264,6 @@ Entry.CODEino.setLanguage = function () {
             }
         },
         en: {
-            // en.js에 작성하던 내용
             template: {
                 CODEino_default_neopixel_on: "Default Neopixel ON %1 %2",
                 CODEino_default_neopixel_setBrightness: "Set Default Neopixel-brightness %1 %2",
@@ -307,17 +292,14 @@ Entry.CODEino.blockMenuBlocks = [
     'CODEino_is_button_pressed',
     'CODEino_get_accelerometer_direction',
     'CODEino_get_accelerometer_value',
-    //"CODEino_get_number_sensor_value",
-    //digital
+
     'CODEino_get_digital_value',
     'CODEino_set_digital_value',
     'CODEino_set_pwm_value',
-    //"CODEino_toggle_led",
-    //"CODEino_toggle_pwm",
-    //analog
+
     'CODEino_get_analog_value',
     'CODEino_convert_scale',
-    // 200528 기본블록 : 기본네오픽셀, 기본패시브부저
+
     'CODEino_default_neopixel_on',
     'CODEino_default_neopixel_setBrightness',
     'CODEino_default_neopixel_off',
@@ -343,7 +325,6 @@ Entry.CODEino.blockMenuBlocks = [
 ];
 Entry.CODEino.getBlocks = function() {
     return {
-        //region codeino 코드이노
         CODEino_get_sensor_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -379,7 +360,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_named_sensor_value: {
-            // Block UI : <아날로그센서> 센서값
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -446,7 +426,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_sound_status: {
-            // Block UI : 소리센서 <음량>
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -511,7 +490,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_light_status: {
-            // Block UI : 빛센서 <밝기>
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -576,7 +554,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_is_button_pressed: {
-            // Block UI : 보드의 <버튼누름/저항연결>
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -672,7 +649,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_accelerometer_direction: {
-            // Block UI : 3축 가속도센서 <기울기>
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -765,7 +741,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_accelerometer_value: {
-            // Block UI : 3축 가속도센서 <방향> 축의 센서값
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -833,7 +808,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_analog_value: {
-            // Block UI : 아날로그 <핀번호> 센서의 값
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -900,7 +874,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_digital_value: {
-            // Block UI : 디지털 <핀번호> 핀의 값
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -923,10 +896,6 @@ Entry.CODEino.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    // {
-                    //     type: 'arduino_get_port_number',
-                    //     params:['13'],
-                    // },
                     null
                 ],
                 type: 'CODEino_get_digital_value',
@@ -969,7 +938,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set_digital_value: {
-            // Block UI : 디지털 <핀번호> 핀의 <켜기/끄기>
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1059,7 +1027,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set_pwm_value: {
-            // Block UI : 디지털 <핀번호> 번 핀을 <숫자> (으)로 정하기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1141,7 +1108,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_convert_scale: {
-            // Block UI : 아날로그 <핀번호> 센서의 값 값의 범위를 0~1023에서 0~100 (으)로 바꾼 값
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1230,7 +1196,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set_rgb_value: {
-            // Block UI : 컬러 LED의 <색> 색상을 <숫자> (으)로 정하기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1280,7 +1245,6 @@ Entry.CODEino.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                //컬러 LED는 무조건 18로 보내야겠다
                 if(Entry.CODEino.LAST_ORDER_PORT === 18){
                     Entry.hw.update();
                 } else {
@@ -1317,7 +1281,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set_rgb_add_value: {
-            // Block UI : 컬러 LED의 <색> 색상에 <숫자> 만큼 더하기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1384,7 +1347,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_rgb_set_color: {
-            // Block UI : 컬러 LED의 색상을 <색상표> (으)로 정하기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1441,7 +1403,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set_rgb_off: {
-            // Block UI : 컬러 LED 끄기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1503,7 +1464,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set__led_by_rgb: {
-            // r값 g값 b값 수동으로 주는 블록
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1560,7 +1520,6 @@ Entry.CODEino.getBlocks = function() {
                     script.getNumberValue('gValue'), 
                     script.getNumberValue('bValue')
                 ];
-                // 0~255값이면 정상범위니까 넣어주고 아니면 갱신안해줄끼다
                 for(let i=0; i<values.length; ++i) {
                     if(values[i] >=0 && values[i] <=255) {
                         Entry.CODEino.LED_VALUES[i] = values[i]; 
@@ -1589,7 +1548,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_led_by_value: {
-            // Block UI : 컬러 LED 켜기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1685,7 +1643,6 @@ Entry.CODEino.getBlocks = function() {
         },
 
         CODEino_default_neopixel_on: {
-            // Block UI : 기본 네오픽셀을 <색상표>(으)로 켜기
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1733,7 +1690,6 @@ Entry.CODEino.getBlocks = function() {
                 }
                 
                 sq.SET[port] = {
-                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
                     type: Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL,
                     data: {
                         rValue:Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE,
@@ -1746,10 +1702,8 @@ Entry.CODEino.getBlocks = function() {
                 
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_default_neopixel_off: {
-            // Block UI : 기본 네오픽셀을 끄기 %1
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1786,7 +1740,6 @@ Entry.CODEino.getBlocks = function() {
                 }
                 
                 sq.SET[port] = {
-                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
                     type: Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL,
                     data: {
                         rValue:Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE,
@@ -1799,10 +1752,8 @@ Entry.CODEino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_default_neopixel_setBrightness: {
-            // Block UI : 기본 네오픽셀의 밝기를 %1(으)로 하기 %2
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1852,7 +1803,6 @@ Entry.CODEino.getBlocks = function() {
                 }
                 
                 sq.SET[port] = {
-                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
                     type: Entry.CODEino.sensorTypes.DEFAULT_NEOPIXEL,
                     data: {
                         rValue:Entry.CODEino.DEFAULT_NEOPIXEL_RED_VALUE,
@@ -1865,7 +1815,6 @@ Entry.CODEino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_default_buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2230,7 +2179,6 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_custom_neopixel_on: {
-            // Block UI : %1번핀에 커스텀 네오픽셀 등록
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2276,7 +2224,6 @@ Entry.CODEino.getBlocks = function() {
                 }
 
                 sq.SET[port] = {
-                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
                     type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
                     data: {
                         isOn:1,
@@ -2287,10 +2234,8 @@ Entry.CODEino.getBlocks = function() {
                 
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_custom_neopixel_off: {
-            // Block UI : 커스텀 네오픽셀 모두 끄기 %1
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2312,13 +2257,12 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                var port = Entry.CODEino.customNeoPixelPin+9;//59
+                var port = Entry.CODEino.customNeoPixelPin+9;
                 if (!sq.SET) {
                     sq.SET = {};
                 }
 
                 sq.SET[port] = {
-                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
                     type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
                     data: {
                         isOn:0,
@@ -2329,10 +2273,8 @@ Entry.CODEino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_custom_neopixel_setBrightness: {
-            // Block UI : 커스텀 네오픽셀의 밝기를 %1(으)로 하기 %2
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2368,13 +2310,12 @@ Entry.CODEino.getBlocks = function() {
                 var value = script.getNumberValue('VALUE', script);
                 var sq = Entry.hw.sendQueue;
 
-                var port = Entry.CODEino.customNeoPixelPin+10;//60
+                var port = Entry.CODEino.customNeoPixelPin+10;
                 if (!sq.SET) {
                     sq.SET = {};
                 }
                 Entry.CODEino.CUSTOM_NEOPIXEL_BRIGHTNESS_VALUE = value;
                 sq.SET[port] = {
-                    //type: Entry.CODEino.sensorTypes.NEOPIXEL,
                     type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
                     data: {
                         isOn:2,
@@ -2385,10 +2326,8 @@ Entry.CODEino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_custom_neopixel_set_led_color: {
-            // Block UI : 커스텀 네오픽셀 %1번째 LED를 <색상표>(으)로 설정
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2469,10 +2408,8 @@ Entry.CODEino.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_custom_neopixel_set_led_off: {
-            // Block UI : 커스텀 네오픽셀 %1번째 LED를 끄기%2
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2522,7 +2459,6 @@ Entry.CODEino.getBlocks = function() {
                     sq.SET = {};
                 }
 
-                // led 
                 sq.SET[port] = {
                     type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE,
                     data :{ 
@@ -2534,7 +2470,6 @@ Entry.CODEino.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            //syntax: { js: [], py: ['CODEino.toggle_pwm(%1, %2)'] },
         },
         CODEino_set_servo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2668,7 +2603,6 @@ Entry.CODEino.getBlocks = function() {
                     return Entry.hw.portData.ULTRASONIC || 0;
                 },
             },
-        //endregion codeino 코드이노
     };
 };
 
