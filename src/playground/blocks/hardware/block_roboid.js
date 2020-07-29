@@ -19,6 +19,9 @@ Entry.Roboid = {
     getTurtle(index) {
         return Entry.Robomation.getRobot('turtle', index);
     },
+    getCheese(index) {
+        return Entry.Robomation.getRobot('cheese', index);
+    },
     id: '2.FF',
     name: 'roboid',
     url: 'http://www.robomation.net',
@@ -29,7 +32,7 @@ Entry.Roboid = {
         jp: 'ロボイド',
         vn: 'Roboid',
     },
-    monitorTemplate: {
+    monitorTemplate: () => ({
         imgPath: 'hw/transparent.png',
         width: 2,
         height: 2,
@@ -120,9 +123,60 @@ Entry.Roboid = {
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
+            
+            cheese0inputSa: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_sa}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0inputSb: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_sb}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0inputSc: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_sc}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0inputLa: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_la}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0inputLb: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_lb}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0inputLc: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_lc}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0accelerationX: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_acceleration_x}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0accelerationY: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_acceleration_y}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0accelerationZ: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_acceleration_z}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cheese0stepCount: {
+                name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_step_count}`,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
         },
         mode: 'both',
-    },
+    }),
 };
 
 Entry.Roboid.setLanguage = () => ({
@@ -228,6 +282,108 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: '거북이 %1: %2',
             roboid_turtle_boolean: '거북이 %1: %2?',
             roboid_turtle_pick_head_led: '거북이 %1: 머리 LED를 %2로 정하기 %3',
+            
+            roboid_cheese_value: '치즈 스틱 %1: %2',
+            roboid_cheese_boolean: '치즈 스틱 %1: %2?',
+            roboid_cheese_play_sound_times: '치즈 스틱 %1: %2 소리 %3 번 재생하기 %4',
+            roboid_cheese_play_sound_times_until_done: '치즈 스틱 %1: %2 소리 %3 번 재생하고 기다리기 %4',
+            roboid_cheese_change_buzzer_by: '치즈 스틱 %1: 버저 음을 %2 Hz만큼 바꾸기 %3',
+            roboid_cheese_set_buzzer_to: '치즈 스틱 %1: 버저 음을 %2 Hz로 정하기 %3',
+            roboid_cheese_clear_sound: '치즈 스틱 %1: 소리 끄기 %2',
+            roboid_cheese_play_note: '치즈 스틱 %1: %2 %3 음을 연주하기 %4',
+            roboid_cheese_play_note_for: '치즈 스틱 %1: %2 %3 음을 %4 박자 연주하기 %5',
+            roboid_cheese_rest_for: '치즈 스틱 %1: %2 박자 쉬기 %3',
+            roboid_cheese_change_tempo_by: '치즈 스틱 %1: 연주 속도를 %2 BPM만큼 바꾸기 %3',
+            roboid_cheese_set_tempo_to: '치즈 스틱 %1: 연주 속도를 %2 BPM으로 정하기 %3',
+            roboid_cheese_set_sound_port_to: '치즈 스틱 %1: 소리 출력을 %2로 정하기 %3',
+            roboid_cheese_set_input_mode_to: '치즈 스틱 %1: 포트 %2를 %3 입력으로 정하기 %4',
+            roboid_cheese_set_input_range_to: '치즈 스틱 %1: 입력 %2의 범위 %3 ~ %4을(를) %5 ~ %6 소수점 %7으로 정하기 %8',
+            roboid_cheese_set_three_input_ranges_to: '치즈 스틱 %1: 입력 %2의 범위 %3 ~ %4 ~ %5을(를) %6 ~ %7 ~ %8 소수점 %9으로 정하기 %10',
+            roboid_cheese_analog_input: '치즈 스틱 %1: 입력 %2',
+            roboid_cheese_digital_input: '치즈 스틱 %1: 입력 %2 %3 ?',
+            roboid_cheese_button_state: '치즈 스틱 %1: 버튼 %2를 %3?',
+            roboid_cheese_set_pulse_mode_to: '치즈 스틱 %1: 포트 %2를 %3 입력으로 정하기 %4',
+            roboid_cheese_pulse_input: '치즈 스틱 %1: 포트 %2에서 펄스 감지?',
+            roboid_cheese_set_digital_output_to: '치즈 스틱 %1: 디지털 출력 %2를 %3(으)로 정하기 %4',
+            roboid_cheese_change_pwm_output_by: '치즈 스틱 %1: PWM 출력 %2를 %3%만큼 바꾸기 %4',
+            roboid_cheese_set_pwm_output_to: '치즈 스틱 %1: PWM 출력 %2를 %3%로 정하기 %4',
+            roboid_cheese_change_servo_motor_angle_by: '치즈 스틱 %1: 서보 모터 %2의 각도를 %3도만큼 바꾸기 %4',
+            roboid_cheese_set_servo_motor_angle_to: '치즈 스틱 %1: 서보 모터 %2의 각도를 %3도로 정하기 %4',
+            roboid_cheese_turn_off_servo_motor: '치즈 스틱 %1: 서보 모터 %2 전원 끄기 %3',
+            roboid_cheese_change_dc_motor_velocity_by: '치즈 스틱 %1: DC 모터 %2의 속도를 %3%만큼 바꾸기 %4',
+            roboid_cheese_set_dc_motor_velocity_to: '치즈 스틱 %1: DC 모터 %2의 속도를 %3%로 정하기 %4',
+            roboid_cheese_stop_dc_motor: '치즈 스틱 %1: DC 모터 %2 정지하기 %3',
+            roboid_cheese_rotate_step_motor: '치즈 스틱 %1: 스텝 모터 %2 스텝을 속도 %3 스텝/초로 회전하기 %4',
+            roboid_cheese_change_step_motor_velocity_by: '치즈 스틱 %1: 스텝 모터의 속도를 %2 스텝/초만큼 바꾸기 %3',
+            roboid_cheese_set_step_motor_velocity_to: '치즈 스틱 %1: 스텝 모터의 속도를 %2 스텝/초로 정하기 %3',
+            roboid_cheese_stop_off_step_motor: '치즈 스틱 %1: 스텝 모터 %2 %3',
+            roboid_cheese_set_step_motor_mode_to: '치즈 스틱 %1: 스텝 모터를 %2 모드로 정하기 %3',
+            roboid_cheese_step_count: '치즈 스틱 %1: 스텝 수',
+            roboid_cheese_set_led_to_color: '치즈 스틱 %1: RGB LED %2을(를) %3 %4으로 정하기 %5',
+            roboid_cheese_pick_led_to: '치즈 스틱 %1: RGB LED %2을(를) %3로 정하기 %4',
+            roboid_cheese_change_led_by_rgb: '치즈 스틱 %1: RGB LED %2을(를) R: %3 G: %4 B: %5만큼 바꾸기 %6',
+            roboid_cheese_setLed_to_rgb: '치즈 스틱 %1: RGB LED %2을(를) R: %3 G: %4 B: %5(으)로 정하기 %6',
+            roboid_cheese_clear_led: '치즈 스틱 %1: RGB LED %2 끄기 %3',
+            roboid_cheese_set_led_type_to: '치즈 스틱 %1: RGB LED %2을(를) %3형으로 정하기 %4',
+            roboid_cheese_neopixel_set_number_and_type_to: '치즈 스틱 %1: 네오픽셀 LED %2개, %3로 정하기 %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern: '치즈 스틱 %1: 네오픽셀 모든 LED를 %2 패턴으로 정하기 %3',
+            roboid_cheese_neopixel_set_all_leds_to_color: '치즈 스틱 %1: 네오픽셀 모든 LED를 %2으로 정하기 %3',
+            roboid_cheese_neopixel_pick_all_leds_to: '치즈 스틱 %1: 네오픽셀 모든 LED를 %2로 정하기 %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb: '치즈 스틱 %1: 네오픽셀 모든 LED를 R: %2 G: %3 B: %4만큼 바꾸기 %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb: '치즈 스틱 %1: 네오픽셀 모든 LED를 R: %2 G: %3 B: %4(으)로 정하기 %5',
+            roboid_cheese_neopixel_clear_all_leds: '치즈 스틱 %1: 네오픽셀 모든 LED 끄기 %2',
+            roboid_cheese_neopixel_set_led_to_color: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 %3으로 정하기 %4',
+            roboid_cheese_neopixel_pick_led_to: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 %3로 정하기 %4',
+            roboid_cheese_neopixel_change_led_by_rgb: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 R: %3 G: %4 B: %5만큼 바꾸기 %6',
+            roboid_cheese_neopixel_set_led_to_rgb: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 R: %3 G: %4 B: %5(으)로 정하기 %6',
+            roboid_cheese_neopixel_clear_led: '치즈 스틱 %1: 네오픽셀 %2번째 LED 끄기 %3',
+            roboid_cheese_neopixel_set_led_range_to_pattern: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지의 LED를 %4 패턴으로 정하기 %5',
+            roboid_cheese_neopixel_set_led_range_to_color: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 %5으로 정하기 %6',
+            roboid_cheese_neopixel_pick_led_range_to: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 %5로 정하기 %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 R: %5 G: %6 B: %7만큼 바꾸기 %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 R: %5 G: %6 B: %7(으)로 정하기 %8',
+            roboid_cheese_neopixel_clear_led_range: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED 끄기 %5',
+            roboid_cheese_neopixel_shift: '치즈 스틱 %1: 네오픽셀 %2칸 이동하기 %3',
+            roboid_cheese_neopixel_rotate: '치즈 스틱 %1: 네오픽셀 %2칸 회전하기 %3',
+            roboid_cheese_neopixel_change_brightness_by: '치즈 스틱 %1: 네오픽셀 밝기를 %2%만큼 바꾸기 %3',
+            roboid_cheese_neopixel_set_brightness_to: '치즈 스틱 %1: 네오픽셀 밝기를 %2%로 정하기 %3',
+            roboid_cheese_write_serial: '치즈 스틱 %1: 시리얼 %2 %3 쓰기 %4',
+            roboid_cheese_read_serial_until: '치즈 스틱 %1: 시리얼 %2 읽기 %3',
+            roboid_cheese_set_serial_port_to: '치즈 스틱 %1: 시리얼 포트를 %2로 정하기 %3',
+            roboid_cheese_set_serial_rate_to: '치즈 스틱 %1: 시리얼 속도를 %2Bd로 정하기 %3',
+            roboid_cheese_serial_input: '치즈 스틱 %1: 시리얼 입력',
+            roboid_cheese_pid_start: '치즈 스틱 %1: %2 시작하기 %3',
+            roboid_cheese_pid_set_range_to: '치즈 스틱 %1: PID %2의 범위 %3 ~ %4을(를) %5 ~ %6 소수점 %7으로 정하기 %8',
+            roboid_cheese_pid_set_three_ranges_to: '치즈 스틱 %1: PID %2의 범위 %3 ~ %4 ~ %5을(를) %6 ~ %7 ~ %8 소수점 %9으로 정하기 %10',
+            roboid_cheese_pid_reset_encoder: '치즈 스틱 %1: PID 엔코더 값 초기화하기 %2',
+            roboid_cheese_pid_input: '치즈 스틱 %1: PID %2',
+            roboid_cheese_pid_button_state: '치즈 스틱 %1: PID 버튼 %2을(를) %3?',
+            roboid_cheese_hat010_start: '치즈 스틱 %1: HAT-010 5x5 매트릭스 시작하기 %2',
+            roboid_cheese_hat010_button: '치즈 스틱 %1: HAT-010 버튼 %2',
+            roboid_cheese_hat010_button_state: '치즈 스틱 %1: HAT-010 버튼 %2를 %3?',
+            roboid_cheese_hat010_background_turn_on_xy: '치즈 스틱 %1: HAT-010 배경 x: %2 y: %3 %4으로 켜기 %5',
+            roboid_cheese_hat010_background_turn_off_xy: '치즈 스틱 %1: HAT-010 배경 x: %2 y: %3 끄기 %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy: '치즈 스틱 %1: HAT-010 배경 %2 %3을(를) x: %4 y: %5에 그리기 %6',
+            roboid_cheese_hat010_background_draw_string_at_xy: '치즈 스틱 %1: HAT-010 배경 %2 글자 %3을(를) x: %4 y: %5에 그리기 %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy: '치즈 스틱 %1: HAT-010 배경 %2 패턴 %3을(를) x: %4 y: %5에 그리기 %6',
+            roboid_cheese_hat010_clear: '치즈 스틱 %1: HAT-010 %2 지우기 %3',
+            roboid_cheese_hat010_scroll_by_xy: '치즈 스틱 %1: HAT-010 %2 x: %3 y: %4만큼 이동하기 %5',
+            roboid_cheese_hat010_sprite_set_to_shape: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_set_to_string: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 글자 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_set_to_pattern: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 패턴 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_clear_show_hide: '치즈 스틱 %1: HAT-010 그림 %2 %3 %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy: '치즈 스틱 %1: HAT-010 그림 %2의 위치를 x: %3 y: %4만큼 바꾸기 %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy: '치즈 스틱 %1: HAT-010 그림 %2의 위치를 x: %3 y: %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_change_position_by_value: '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치를 %4만큼 바꾸기 %5',
+            roboid_cheese_hat010_sprite_set_position_to_value: '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치를 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_rotate: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 방향으로 회전하기 %4',
+            roboid_cheese_hat010_sprite_flip_in_direction: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 방향으로 뒤집기 %4',
+            roboid_cheese_hat010_sprite_stamp_to_background: '치즈 스틱 %1: HAT-010 그림 %2을(를) 배경에 도장 찍기 %3',
+            roboid_cheese_hat010_sprite_position: '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치',
+            roboid_cheese_hat010_sprite_touching_sprite: '치즈 스틱 %1: HAT-010 그림 %2이(가) 그림 %3에 닿았는가?',
+            roboid_cheese_hat010_sprite_touching: '치즈 스틱 %1: HAT-010 그림 %2이(가) %3에 닿았는가?',
+            roboid_cheese_hat010_change_brightness_by: '치즈 스틱 %1: HAT-010 밝기를 %2%만큼 바꾸기 %3',
+            roboid_cheese_hat010_set_brightness_to: '치즈 스틱 %1: HAT-010 밝기를 %2%로 정하기 %3',
         },
         Helper: {
             roboid_hamster_gripper: '집게를 열거나 닫습니다.',
@@ -565,6 +721,208 @@ Entry.Roboid.setLanguage = () => ({
             turtle_battery_normal: '배터리 정상',
             turtle_battery_low: '배터리 부족',
             turtle_battery_empty: '배터리 없음',
+            ROBOID_cheese_stick: '치즈 스틱',
+            ROBOID_sensor_signal_strength: '신호 세기',
+            ROBOID_sensor_signal_strength_dbm: '신호 세기 (dBm)',
+            ROBOID_sensor_acceleration_x: 'x축 가속도',
+            ROBOID_sensor_acceleration_y: 'y축 가속도',
+            ROBOID_sensor_acceleration_z: 'z축 가속도',
+            ROBOID_sensor_input_sa: '입력 Sa',
+            ROBOID_sensor_input_sb: '입력 Sb',
+            ROBOID_sensor_input_sc: '입력 Sc',
+            ROBOID_sensor_input_la: '입력 La',
+            ROBOID_sensor_input_lb: '입력 Lb',
+            ROBOID_sensor_input_lc: '입력 Lc',
+            ROBOID_sensor_step_count: '스텝 수',
+            ROBOID_monitor_output_sa: '출력 Sa',
+            ROBOID_monitor_output_sb: '출력 Sb',
+            ROBOID_monitor_output_sc: '출력 Sc',
+            ROBOID_monitor_output_la: '출력 La',
+            ROBOID_monitor_output_lb: '출력 Lb',
+            ROBOID_monitor_output_lc: '출력 Lc',
+            ROBOID_monitor_output_mab: '출력 Mab',
+            ROBOID_monitor_output_mcd: '출력 Mcd',
+            ROBOID_monitor_buzzer: '버저',
+            ROBOID_monitor_note: '음표',
+            ROBOID_logo_sky_direction: '로고가 하늘 방향',
+            ROBOID_logo_earth_direction: '로고가 땅 방향',
+            ROBOID_power_switch_sky_direction: '전원 스위치가 하늘 방향',
+            ROBOID_power_switch_earth_direction: '전원 스위치가 땅 방향',
+            ROBOID_port_s_sky_direction: '포트 S가 하늘 방향',
+            ROBOID_port_s_earth_direction: '포트 S가 땅 방향',
+            ROBOID_tap: '두드림',
+            ROBOID_free_fall: '자유 낙하',
+            ROBOID_battery_normal: '배터리 정상',
+            ROBOID_battery_low: '배터리 부족',
+            ROBOID_battery_empty: '배터리 없음',
+            ROBOID_sound_beep: '삐',
+            ROBOID_sound_random_beep: '무작위 삐',
+            ROBOID_sound_noise: '지지직',
+            ROBOID_sound_siren: '사이렌',
+            ROBOID_sound_engine: '엔진',
+            ROBOID_sound_chop: '쩝',
+            ROBOID_sound_robot: '로봇',
+            ROBOID_sound_dibidibidip: '디비디비딥',
+            ROBOID_sound_good_job: '잘 했어요',
+            ROBOID_sound_happy: '행복',
+            ROBOID_sound_angry: '화남',
+            ROBOID_sound_sad: '슬픔',
+            ROBOID_sound_sleep: '졸림',
+            ROBOID_sound_march: '행진',
+            ROBOID_sound_birthday: '생일',
+            ROBOID_note_c: '도',
+            ROBOID_note_c_sharp: '도♯(레♭)',
+            ROBOID_note_d: '레',
+            ROBOID_note_d_sharp: '레♯(미♭)',
+            ROBOID_note_e: '미',
+            ROBOID_note_f: '파',
+            ROBOID_note_f_sharp: '파♯(솔♭)',
+            ROBOID_note_g: '솔',
+            ROBOID_note_g_sharp: '솔♯(라♭)',
+            ROBOID_note_a: '라',
+            ROBOID_note_a_sharp: '라♯(시♭)',
+            ROBOID_note_b: '시',
+            ROBOID_speaker_internal: '내부 스피커',
+            ROBOID_speaker_port_mab: '포트 Mab',
+            ROBOID_io_mode_makey: '메이키',
+            ROBOID_io_mode_button: '버튼',
+            ROBOID_io_mode_digital_pull_up: '디지털 (풀업)',
+            ROBOID_io_mode_digital_pull_down: '디지털 (풀다운)',
+            ROBOID_io_mode_analog: '아날로그',
+            ROBOID_io_mode_voltage: '전압',
+            ROBOID_io_mode_pulse: '펄스',
+            ROBOID_io_mode_pulse_pull_up: '펄스 (풀업)',
+            ROBOID_io_mode_pulse_pull_down: '펄스 (풀다운)',
+            ROBOID_io_mode_normal: '기본',
+            ROBOID_io_mode_power: '파워',
+            ROBOID_io_port_high_current_mab: '고전류 Ma(-)b',
+            ROBOID_io_port_high_current_mcd: '고전류 Mc(-)d',
+            ROBOID_io_action_stop: '정지하기',
+            ROBOID_io_action_turn_off: '전원 끄기',
+            ROBOID_range_integer: '없음',
+            ROBOID_range_real: '있음',
+            ROBOID_led_intensity_dark: '어두운',
+            ROBOID_led_intensity_normal: '기본',
+            ROBOID_led_intensity_bright: '밝은',
+            ROBOID_led_type_default: '기본',
+            ROBOID_led_type_crgb: '-RGB',
+            ROBOID_led_type_crbg: '-RBG',
+            ROBOID_led_type_cgrb: '-GRB',
+            ROBOID_led_type_cgbr: '-GBR',
+            ROBOID_led_type_cbrg: '-BRG',
+            ROBOID_led_type_cbgr: '-BGR',
+            ROBOID_led_type_argb: '+RGB',
+            ROBOID_led_type_arbg: '+RBG',
+            ROBOID_led_type_agrb: '+GRB',
+            ROBOID_led_type_agbr: '+GBR',
+            ROBOID_led_type_abrg: '+BRG',
+            ROBOID_led_type_abgr: '+BGR',
+            ROBOID_color_red: '빨간색',
+            ROBOID_color_orange: '주황색',
+            ROBOID_color_yellow: '노란색',
+            ROBOID_color_green: '초록색',
+            ROBOID_color_sky_blue: '하늘색',
+            ROBOID_color_blue: '파란색',
+            ROBOID_color_violet: '보라색',
+            ROBOID_color_purple: '자주색',
+            ROBOID_color_white: '하얀색',
+            ROBOID_neopixel_3_colors: '3색',
+            ROBOID_neopixel_6_colors: '6색',
+            ROBOID_neopixel_12_colors: '12색',
+            ROBOID_neopixel_red_green: '빨간색부터 초록색까지',
+            ROBOID_neopixel_red_blue: '빨간색부터 파란색까지',
+            ROBOID_neopixel_red_white: '빨간색부터 하얀색까지',
+            ROBOID_neopixel_green_red: '초록색부터 빨간색까지',
+            ROBOID_neopixel_green_blue: '초록색부터 파란색까지',
+            ROBOID_neopixel_green_white: '초록색부터 하얀색까지',
+            ROBOID_neopixel_blue_red: '파란색부터 빨간색까지',
+            ROBOID_neopixel_blue_green: '파란색부터 초록색까지',
+            ROBOID_neopixel_blue_white: '파란색부터 하얀색까지',
+            ROBOID_neopixel_white_red: '하얀색부터 빨간색까지',
+            ROBOID_neopixel_white_green: '하얀색부터 초록색까지',
+            ROBOID_neopixel_white_blue: '하얀색부터 파란색까지',
+            ROBOID_neopixel_red_black: '빨간색 점점 어둡게',
+            ROBOID_neopixel_green_black: '초록색 점점 어둡게',
+            ROBOID_neopixel_blue_black: '파란색 점점 어둡게',
+            ROBOID_neopixel_white_black: '하얀색 점점 어둡게',
+            ROBOID_neopixel_black_red: '빨간색 점점 밝게',
+            ROBOID_neopixel_black_green: '초록색 점점 밝게',
+            ROBOID_neopixel_black_blue: '파란색 점점 밝게',
+            ROBOID_neopixel_black_white: '하얀색 점점 밝게',
+            ROBOID_serial_string: '글자',
+            ROBOID_serial_string_line: '글자 한 줄',
+            ROBOID_serial_all: '모두',
+            ROBOID_serial_until_comma: ',(쉼표)까지',
+            ROBOID_serial_until_colon: ':(쌍점)까지',
+            ROBOID_serial_until_dollar: '$까지',
+            ROBOID_serial_until_sharp: '#까지',
+            ROBOID_serial_until_new_line: '줄 바꿈까지',
+            ROBOID_serial_port_wa_rb: 'La(쓰기) Lb(읽기)',
+            ROBOID_serial_port_ra_wb: 'La(읽기) Lb(쓰기)',
+            ROBOID_serial_port_wa: 'La(쓰기)',
+            ROBOID_serial_port_ra: 'La(읽기)',
+            ROBOID_pid_10: 'PID-10 초음파 센서(HC-SR04+)',
+            ROBOID_pid_11_1: 'PID-11-1 온습도 센서(DHT11)',
+            ROBOID_pid_11_2: 'PID-11-2 온습도 센서(DHT21)',
+            ROBOID_pid_11_3: 'PID-11-3 온습도 센서(DHT22)',
+            ROBOID_pid_12: 'PID-12 온도 센서(DS18B20)',
+            ROBOID_pid_13: 'PID-13 조이스틱과 버튼',
+            ROBOID_pid_14: 'PID-14 듀얼 조이스틱',
+            ROBOID_pid_15: 'PID-15 IR 송수신기',
+            ROBOID_pid_16: 'PID-16 엔코더',
+            ROBOID_pid_distance: '거리 (cm)',
+            ROBOID_pid_temperature: '온도 (℃)',
+            ROBOID_pid_humidity: '습도 (%RH)',
+            ROBOID_pid_x1: 'x1',
+            ROBOID_pid_y1: 'y1',
+            ROBOID_pid_x2: 'x2',
+            ROBOID_pid_y2: 'y2',
+            ROBOID_pid_button1: '버튼1',
+            ROBOID_pid_button2: '버튼2',
+            ROBOID_pid_encoder: '엔코더',
+            ROBOID_clicked: '클릭했는가',
+            ROBOID_double_clicked: '더블클릭했는가',
+            ROBOID_long_pressed: '오래 눌렀는가',
+            ROBOID_shape_square: '사각형',
+            ROBOID_shape_triangle: '삼각형',
+            ROBOID_shape_diamond: '다이아몬드',
+            ROBOID_shape_circle: '원',
+            ROBOID_shape_x: 'X',
+            ROBOID_shape_like: '좋음',
+            ROBOID_shape_dislike: '싫음',
+            ROBOID_shape_angry: '화남',
+            ROBOID_shape_open_mouth: '입 열기',
+            ROBOID_shape_close_mouth: '입 닫기',
+            ROBOID_shape_walk1: '걷기 1',
+            ROBOID_shape_walk2: '걷기 2',
+            ROBOID_shape_heart: '하트',
+            ROBOID_shape_star: '별',
+            ROBOID_shape_airplane: '비행기',
+            ROBOID_shape_puppy: '강아지',
+            ROBOID_shape_butterfly: '나비',
+            ROBOID_shape_quarter_note: '4분 음표',
+            ROBOID_shape_eighth_note: '8분 음표',
+            ROBOID_shape_left_arrow: '왼쪽 화살표',
+            ROBOID_shape_right_arrow: '오른쪽 화살표',
+            ROBOID_shape_up_arrow: '위쪽 화살표',
+            ROBOID_shape_down_arrow: '아래쪽 화살표',
+            ROBOID_hat_background: '배경',
+            ROBOID_hat_all: '모두',
+            ROBOID_hat_clear: '지우기',
+            ROBOID_hat_show: '보이기',
+            ROBOID_hat_hide: '숨기기',
+            ROBOID_hat_clockwise: '시계',
+            ROBOID_hat_counterclockwise: '반시계',
+            ROBOID_hat_left_right: '왼쪽-오른쪽',
+            ROBOID_hat_up_down: '위-아래',
+            ROBOID_hat_auto: '자동',
+            ROBOID_hat_manual: '수동',
+            ROBOID_hat_other_sprite: '다른 그림',
+            ROBOID_hat_left_wall: '왼쪽 벽',
+            ROBOID_hat_right_wall: '오른쪽 벽',
+            ROBOID_hat_top_wall: '위쪽 벽',
+            ROBOID_hat_bottom_wall: '아래쪽 벽',
+            ROBOID_hat_any_wall: '아무 벽',
         },
     },
     en: {
@@ -665,6 +1023,108 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: 'Turtle %1: %2',
             roboid_turtle_boolean: 'Turtle %1: %2?',
             roboid_turtle_pick_head_led: 'Turtle %1: set head led to %2 %3',
+            
+            roboid_cheese_value: 'Cheese Stick %1: %2',
+            roboid_cheese_boolean: 'Cheese Stick %1: %2?',
+            roboid_cheese_play_sound_times: 'Cheese Stick %1: play sound %2 %3 times %4',
+            roboid_cheese_play_sound_times_until_done: 'Cheese Stick %1: play sound %2 %3 times until done %4',
+            roboid_cheese_change_buzzer_by: 'Cheese Stick %1: change buzzer by %2 Hz %3',
+            roboid_cheese_set_buzzer_to: 'Cheese Stick %1: set buzzer to %2 Hz %3',
+            roboid_cheese_clear_sound: 'Cheese Stick %1: clear sound %2',
+            roboid_cheese_play_note: 'Cheese Stick %1: play note %2 %3 %4',
+            roboid_cheese_play_note_for: 'Cheese Stick %1: play note %2 %3 for %4 beats %5',
+            roboid_cheese_rest_for: 'Cheese Stick %1: rest for %2 beats %3',
+            roboid_cheese_change_tempo_by: 'Cheese Stick %1: change tempo by %2 BPM %3',
+            roboid_cheese_set_tempo_to: 'Cheese Stick %1: set tempo to %2 BPM %3',
+            roboid_cheese_set_sound_port_to: 'Cheese Stick %1: set sound output to %2 %3',
+            roboid_cheese_set_input_mode_to: 'Cheese Stick %1: set port %2 to %3 input %4',
+            roboid_cheese_set_input_range_to: 'Cheese Stick %1: set input %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_set_three_input_ranges_to: 'Cheese Stick %1: set input %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_analog_input: 'Cheese Stick %1: input %2',
+            roboid_cheese_digital_input: 'Cheese Stick %1: input %2 %3 ?',
+            roboid_cheese_button_state: 'Cheese Stick %1: button %2 %3 ?',
+            roboid_cheese_set_pulse_mode_to: 'Cheese Stick %1: set port %2 to %3 input %4',
+            roboid_cheese_pulse_input: 'Cheese Stick %1: pulse detected on port %2 ?',
+            roboid_cheese_set_digital_output_to: 'Cheese Stick %1: set digital output %2 to %3 %4',
+            roboid_cheese_change_pwm_output_by: 'Cheese Stick %1: change pwm output %2 by %3% %4',
+            roboid_cheese_set_pwm_output_to: 'Cheese Stick %1: set pwm output %2 to %3% %4',
+            roboid_cheese_change_servo_motor_angle_by: 'Cheese Stick %1: change servo motor %2 by %3 degrees %4',
+            roboid_cheese_set_servo_motor_angle_to: 'Cheese Stick %1: set servo motor %2 to %3 degrees %4',
+            roboid_cheese_turn_off_servo_motor: 'Cheese Stick %1: turn off servo motor %2 %3',
+            roboid_cheese_change_dc_motor_velocity_by: 'Cheese Stick %1: change dc motor %2 velocity by %3% %4',
+            roboid_cheese_set_dc_motor_velocity_to: 'Cheese Stick %1: set dc motor %2 velocity to %3% %4',
+            roboid_cheese_stop_dc_motor: 'Cheese Stick %1: stop dc motor %2 %3',
+            roboid_cheese_rotate_step_motor: 'Cheese Stick %1: rotate step motor %2 steps with velocity %3 step/sec %4',
+            roboid_cheese_change_step_motor_velocity_by: 'Cheese Stick %1: change step motor velocity by %2 step/sec %3',
+            roboid_cheese_set_step_motor_velocity_to: 'Cheese Stick %1: set step motor velocity to %2 step/sec %3',
+            roboid_cheese_stop_off_step_motor: 'Cheese Stick %1: %2 step motor %3',
+            roboid_cheese_set_step_motor_mode_to: 'Cheese Stick %1: set step motor to %2 mode %3',
+            roboid_cheese_step_count: 'Cheese Stick %1: step count',
+            roboid_cheese_set_led_to_color: 'Cheese Stick %1: set rgb led %2 to %3 %4 %5',
+            roboid_cheese_pick_led_to: 'Cheese Stick %1: set rgb led %2 to %3 %4',
+            roboid_cheese_change_led_by_rgb: 'Cheese Stick %1: change rgb led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_setLed_to_rgb: 'Cheese Stick %1: set rgb led %2 to r: %3 g: %4 b: %5 %6',
+            roboid_cheese_clear_led: 'Cheese Stick %1: clear rgb led %2 %3',
+            roboid_cheese_set_led_type_to: 'Cheese Stick %1: set rgb led %2 to %3 type %4',
+            roboid_cheese_neopixel_set_number_and_type_to: 'Cheese Stick %1 neopixel: set %2 leds as %3 %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern: 'Cheese Stick %1 neopixel: set all leds to pattern %2 %3',
+            roboid_cheese_neopixel_set_all_leds_to_color: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_pick_all_leds_to: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb: 'Cheese Stick %1 neopixel: change all leds by r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb: 'Cheese Stick %1 neopixel: set all leds to r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_clear_all_leds: 'Cheese Stick %1 neopixel: clear all leds %2',
+            roboid_cheese_neopixel_set_led_to_color: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
+            roboid_cheese_neopixel_pick_led_to: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
+            roboid_cheese_neopixel_change_led_by_rgb: 'Cheese Stick %1 neopixel: change led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_set_led_to_rgb: 'Cheese Stick %1 neopixel: set led %2 to r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_clear_led: 'Cheese Stick %1 neopixel: clear led %2 %3',
+            roboid_cheese_neopixel_set_led_range_to_pattern: 'Cheese Stick %1 neopixel: set leds (from %2 to %3) to pattern %4 %5',
+            roboid_cheese_neopixel_set_led_range_to_color: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_pick_led_range_to: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb: 'Cheese Stick %1 neopixel: change leds (from %2 to %3 with %4 increments) by r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_clear_led_range: 'Cheese Stick %1 neopixel: clear leds (from %2 to %3 with %4 increments) %5',
+            roboid_cheese_neopixel_shift: 'Cheese Stick %1 neopixel: shift %2 pixels %3',
+            roboid_cheese_neopixel_rotate: 'Cheese Stick %1 neopixel: rotate %2 pixels %3',
+            roboid_cheese_neopixel_change_brightness_by: 'Cheese Stick %1 neopixel: change brightness by %2% %3',
+            roboid_cheese_neopixel_set_brightness_to: 'Cheese Stick %1 neopixel: set brightness to %2% %3',
+            roboid_cheese_write_serial: 'Cheese Stick %1: write %2 %3 to serial %4',
+            roboid_cheese_read_serial_until: 'Cheese Stick %1: read serial %2 %3',
+            roboid_cheese_set_serial_port_to: 'Cheese Stick %1: set serial port to %2 %3',
+            roboid_cheese_set_serial_rate_to: 'Cheese Stick %1: set serial rate to %2Bd %3',
+            roboid_cheese_serial_input: 'Cheese Stick %1: serial input',
+            roboid_cheese_pid_start: 'Cheese Stick %1: start %2 %3',
+            roboid_cheese_pid_set_range_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_pid_set_three_ranges_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_pid_reset_encoder: 'Cheese Stick %1 PID: clear encoder %2',
+            roboid_cheese_pid_input: 'Cheese Stick %1 PID: %2',
+            roboid_cheese_pid_button_state: 'Cheese Stick %1 PID: button %2 %3?',
+            roboid_cheese_hat010_start: 'Cheese Stick %1: start HAT-010 5x5 matrix %2',
+            roboid_cheese_hat010_button: 'Cheese Stick %1 HAT-010: button %2',
+            roboid_cheese_hat010_button_state: 'Cheese Stick %1 HAT-010: button %2 %3?',
+            roboid_cheese_hat010_background_turn_on_xy: 'Cheese Stick %1 HAT-010 background: turn on x: %2 y: %3 in %4 %5',
+            roboid_cheese_hat010_background_turn_off_xy: 'Cheese Stick %1 HAT-010 background: turn off x: %2 y: %3 %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_string_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 string %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 pattern %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_clear: 'Cheese Stick %1 HAT-010: clear %2 %3',
+            roboid_cheese_hat010_scroll_by_xy: 'Cheese Stick %1 HAT-010: scroll %2 by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_to_shape: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 %4 %5',
+            roboid_cheese_hat010_sprite_set_to_string: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 string %4 %5',
+            roboid_cheese_hat010_sprite_set_to_pattern: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 pattern %4 %5',
+            roboid_cheese_hat010_sprite_clear_show_hide: 'Cheese Stick %1 HAT-010 sprite %2: %3 sprite %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy: 'Cheese Stick %1 HAT-010 sprite %2: change position by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy: 'Cheese Stick %1 HAT-010 sprite %2: set position to x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_change_position_by_value: 'Cheese Stick %1 HAT-010 sprite %2: change %3 position by %4 %5',
+            roboid_cheese_hat010_sprite_set_position_to_value: 'Cheese Stick %1 HAT-010 sprite %2: set %3 position to %4 %5',
+            roboid_cheese_hat010_sprite_rotate: 'Cheese Stick %1 HAT-010 sprite %2: rotate %3 %4',
+            roboid_cheese_hat010_sprite_flip_in_direction: 'Cheese Stick %1 HAT-010 sprite %2: flip in %3 direction %4',
+            roboid_cheese_hat010_sprite_stamp_to_background: 'Cheese Stick %1 HAT-010 sprite %2: stamp to background %3',
+            roboid_cheese_hat010_sprite_position: 'Cheese Stick %1 HAT-010 sprite %2: %3 position',
+            roboid_cheese_hat010_sprite_touching_sprite: 'Cheese Stick %1 HAT-010 sprite %2: touching sprite %3?',
+            roboid_cheese_hat010_sprite_touching: 'Cheese Stick %1 HAT-010 sprite %2: touching %3?',
+            roboid_cheese_hat010_change_brightness_by: 'Cheese Stick %1 HAT-010: change brightness by %2% %3',
+            roboid_cheese_hat010_set_brightness_to: 'Cheese Stick %1 HAT-010: set brightness to %2% %3',
         },
         Helper: {
             roboid_hamster_gripper: 'Opens or closes the gripper.',
@@ -1004,6 +1464,208 @@ Entry.Roboid.setLanguage = () => ({
             turtle_battery_normal: 'battery normal',
             turtle_battery_low: 'battery low',
             turtle_battery_empty: 'battery empty',
+            ROBOID_cheese_stick: 'Cheese Stick',
+            ROBOID_sensor_signal_strength: 'signal strength',
+            ROBOID_sensor_signal_strength_dbm: 'signal strength (dBm)',
+            ROBOID_sensor_acceleration_x: 'x acceleration',
+            ROBOID_sensor_acceleration_y: 'y acceleration',
+            ROBOID_sensor_acceleration_z: 'z acceleration',
+            ROBOID_sensor_input_sa: 'input Sa',
+            ROBOID_sensor_input_sb: 'input Sb',
+            ROBOID_sensor_input_sc: 'input Sc',
+            ROBOID_sensor_input_la: 'input La',
+            ROBOID_sensor_input_lb: 'input Lb',
+            ROBOID_sensor_input_lc: 'input Lc',
+            ROBOID_sensor_step_count: 'step count',
+            ROBOID_monitor_output_sa: 'output Sa',
+            ROBOID_monitor_output_sb: 'output Sb',
+            ROBOID_monitor_output_sc: 'output Sc',
+            ROBOID_monitor_output_la: 'output La',
+            ROBOID_monitor_output_lb: 'output Lb',
+            ROBOID_monitor_output_lc: 'output Lc',
+            ROBOID_monitor_output_mab: 'output Mab',
+            ROBOID_monitor_output_mcd: 'output Mcd',
+            ROBOID_monitor_buzzer: 'buzzer',
+            ROBOID_monitor_note: 'note',
+            ROBOID_logo_sky_direction: 'logo in sky direction',
+            ROBOID_logo_earth_direction: 'logo in earth direction',
+            ROBOID_power_switch_sky_direction: 'power switch in sky direction',
+            ROBOID_power_switch_earth_direction: 'power switch in earth direction',
+            ROBOID_port_s_sky_direction: 'port S in sky direction',
+            ROBOID_port_s_earth_direction: 'port S in earth direction',
+            ROBOID_tap: 'tap',
+            ROBOID_free_fall: 'free fall',
+            ROBOID_battery_normal: 'battery normal',
+            ROBOID_battery_low: 'battery low',
+            ROBOID_battery_empty: 'battery empty',
+            ROBOID_sound_beep: 'beep',
+            ROBOID_sound_random_beep: 'random beep',
+            ROBOID_sound_noise: 'noise',
+            ROBOID_sound_siren: 'siren',
+            ROBOID_sound_engine: 'engine',
+            ROBOID_sound_chop: 'chop',
+            ROBOID_sound_robot: 'robot',
+            ROBOID_sound_dibidibidip: 'dibidibidip',
+            ROBOID_sound_good_job: 'good job',
+            ROBOID_sound_happy: 'happy',
+            ROBOID_sound_angry: 'angry',
+            ROBOID_sound_sad: 'sad',
+            ROBOID_sound_sleep: 'sleep',
+            ROBOID_sound_march: 'march',
+            ROBOID_sound_birthday: 'birthday',
+            ROBOID_note_c: 'C',
+            ROBOID_note_c_sharp: 'C♯(D♭)',
+            ROBOID_note_d: 'D',
+            ROBOID_note_d_sharp: 'D♯(E♭)',
+            ROBOID_note_e: 'E',
+            ROBOID_note_f: 'F',
+            ROBOID_note_f_sharp: 'F♯(G♭)',
+            ROBOID_note_g: 'G',
+            ROBOID_note_g_sharp: 'G♯(A♭)',
+            ROBOID_note_a: 'A',
+            ROBOID_note_a_sharp: 'A♯(B♭)',
+            ROBOID_note_b: 'B',
+            ROBOID_speaker_internal: 'internal speaker',
+            ROBOID_speaker_port_mab: 'port Mab',
+            ROBOID_io_mode_makey: 'makey',
+            ROBOID_io_mode_button: 'button',
+            ROBOID_io_mode_digital_pull_up: 'digital (pull up)',
+            ROBOID_io_mode_digital_pull_down: 'digital (pull down)',
+            ROBOID_io_mode_analog: 'analog',
+            ROBOID_io_mode_voltage: 'voltage',
+            ROBOID_io_mode_pulse: 'pulse',
+            ROBOID_io_mode_pulse_pull_up: 'pulse (pull up)',
+            ROBOID_io_mode_pulse_pull_down: 'pulse (pull down)',
+            ROBOID_io_mode_normal: 'normal',
+            ROBOID_io_mode_power: 'power',
+            ROBOID_io_port_high_current_mab: 'high current Ma(-)b',
+            ROBOID_io_port_high_current_mcd: 'high current Mc(-)d',
+            ROBOID_io_action_stop: 'stop',
+            ROBOID_io_action_turn_off: 'turn off',
+            ROBOID_range_integer: 'without',
+            ROBOID_range_real: 'with',
+            ROBOID_led_intensity_dark: 'dark',
+            ROBOID_led_intensity_normal: 'normal',
+            ROBOID_led_intensity_bright: 'bright',
+            ROBOID_led_type_default: 'default',
+            ROBOID_led_type_crgb: '-rgb',
+            ROBOID_led_type_crbg: '-rbg',
+            ROBOID_led_type_cgrb: '-grb',
+            ROBOID_led_type_cgbr: '-gbr',
+            ROBOID_led_type_cbrg: '-brg',
+            ROBOID_led_type_cbgr: '-bgr',
+            ROBOID_led_type_argb: '+rgb',
+            ROBOID_led_type_arbg: '+rbg',
+            ROBOID_led_type_agrb: '+grb',
+            ROBOID_led_type_agbr: '+gbr',
+            ROBOID_led_type_abrg: '+brg',
+            ROBOID_led_type_abgr: '+bgr',
+            ROBOID_color_red: 'red',
+            ROBOID_color_orange: 'orange',
+            ROBOID_color_yellow: 'yellow',
+            ROBOID_color_green: 'green',
+            ROBOID_color_sky_blue: 'sky blue',
+            ROBOID_color_blue: 'blue',
+            ROBOID_color_violet: 'violet',
+            ROBOID_color_purple: 'purple',
+            ROBOID_color_white: 'white',
+            ROBOID_neopixel_3_colors: '3 colors',
+            ROBOID_neopixel_6_colors: '6 colors',
+            ROBOID_neopixel_12_colors: '12 colors',
+            ROBOID_neopixel_red_green: 'red to green',
+            ROBOID_neopixel_red_blue: 'red to blue',
+            ROBOID_neopixel_red_white: 'red to white',
+            ROBOID_neopixel_green_red: 'green to red',
+            ROBOID_neopixel_green_blue: 'green to blue',
+            ROBOID_neopixel_green_white: 'green to white',
+            ROBOID_neopixel_blue_red: 'blue to red',
+            ROBOID_neopixel_blue_green: 'blue to green',
+            ROBOID_neopixel_blue_white: 'blue to white',
+            ROBOID_neopixel_white_red: 'white to red',
+            ROBOID_neopixel_white_green: 'white to green',
+            ROBOID_neopixel_white_blue: 'white to blue',
+            ROBOID_neopixel_red_black: 'red getting darker',
+            ROBOID_neopixel_green_black: 'green getting darker',
+            ROBOID_neopixel_blue_black: 'blue getting darker',
+            ROBOID_neopixel_white_black: 'white getting darker',
+            ROBOID_neopixel_black_red: 'red getting brighter',
+            ROBOID_neopixel_black_green: 'green getting brighter',
+            ROBOID_neopixel_black_blue: 'blue getting brighter',
+            ROBOID_neopixel_black_white: 'white getting brighter',
+            ROBOID_serial_string: 'string',
+            ROBOID_serial_string_line: 'string line',
+            ROBOID_serial_all: 'all',
+            ROBOID_serial_until_comma: 'until ,(comma)',
+            ROBOID_serial_until_colon: 'until :(colon)',
+            ROBOID_serial_until_dollar: 'until $',
+            ROBOID_serial_until_sharp: 'until #',
+            ROBOID_serial_until_new_line: 'until new line',
+            ROBOID_serial_port_wa_rb: 'La(write) Lb(read)',
+            ROBOID_serial_port_ra_wb: 'La(read) Lb(write)',
+            ROBOID_serial_port_wa: 'La(write)',
+            ROBOID_serial_port_ra: 'La(read)',
+            ROBOID_pid_10: 'PID-10 ultrasonic sensor (HC-SR04+)',
+            ROBOID_pid_11_1: 'PID-11-1 humidity/temperature sensor (DHT11)',
+            ROBOID_pid_11_2: 'PID-11-2 humidity/temperature sensor (DHT21)',
+            ROBOID_pid_11_3: 'PID-11-3 humidity/temperature sensor (DHT22)',
+            ROBOID_pid_12: 'PID-12 temperature sensor (DS18B20)',
+            ROBOID_pid_13: 'PID-13 joystick and button',
+            ROBOID_pid_14: 'PID-14 dual joystick',
+            ROBOID_pid_15: 'PID-15 IR transceiver',
+            ROBOID_pid_16: 'PID-16 encoder',
+            ROBOID_pid_distance: 'distance (cm)',
+            ROBOID_pid_temperature: 'temperature (℃)',
+            ROBOID_pid_humidity: 'humidity (%RH)',
+            ROBOID_pid_x1: 'x1',
+            ROBOID_pid_y1: 'y1',
+            ROBOID_pid_x2: 'x2',
+            ROBOID_pid_y2: 'y2',
+            ROBOID_pid_button1: 'button1',
+            ROBOID_pid_button2: 'button2',
+            ROBOID_pid_encoder: 'encoder',
+            ROBOID_clicked: 'clicked',
+            ROBOID_double_clicked: 'double-clicked',
+            ROBOID_long_pressed: 'long-pressed',
+            ROBOID_shape_square: 'square',
+            ROBOID_shape_triangle: 'triangle',
+            ROBOID_shape_diamond: 'diamond',
+            ROBOID_shape_circle: 'circle',
+            ROBOID_shape_x: 'X',
+            ROBOID_shape_like: 'like',
+            ROBOID_shape_dislike: 'dislike',
+            ROBOID_shape_angry: 'angry',
+            ROBOID_shape_open_mouth: 'open mouth',
+            ROBOID_shape_close_mouth: 'close mouth',
+            ROBOID_shape_walk1: 'walk 1',
+            ROBOID_shape_walk2: 'walk 2',
+            ROBOID_shape_heart: 'heart',
+            ROBOID_shape_star: 'star',
+            ROBOID_shape_airplane: 'airplane',
+            ROBOID_shape_puppy: 'puppy',
+            ROBOID_shape_butterfly: 'butterfly',
+            ROBOID_shape_quarter_note: 'quarter note',
+            ROBOID_shape_eighth_note: 'eighth note',
+            ROBOID_shape_left_arrow: 'left arrow',
+            ROBOID_shape_right_arrow: 'right arrow',
+            ROBOID_shape_up_arrow: 'up arrow',
+            ROBOID_shape_down_arrow: 'down arrow',
+            ROBOID_hat_background: 'background',
+            ROBOID_hat_all: 'all',
+            ROBOID_hat_clear: 'clear',
+            ROBOID_hat_show: 'show',
+            ROBOID_hat_hide: 'hide',
+            ROBOID_hat_clockwise: 'clockwise',
+            ROBOID_hat_counterclockwise: 'counterclockwise',
+            ROBOID_hat_left_right: 'left-right',
+            ROBOID_hat_up_down: 'up-down',
+            ROBOID_hat_auto: 'auto',
+            ROBOID_hat_manual: 'manual',
+            ROBOID_hat_other_sprite: 'other sprite',
+            ROBOID_hat_left_wall: 'left wall',
+            ROBOID_hat_right_wall: 'right wall',
+            ROBOID_hat_top_wall: 'top wall',
+            ROBOID_hat_bottom_wall: 'bottom wall',
+            ROBOID_hat_any_wall: 'any wall',
         },
     },
     jp: {
@@ -1106,6 +1768,108 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: 'カメ %1: %2',
             roboid_turtle_boolean: 'カメ %1: %2?',
             roboid_turtle_pick_head_led: 'カメ %1: 頭のLEDの色を %2 にする %3',
+            
+            roboid_cheese_value: 'チーズスティック %1: %2',
+            roboid_cheese_boolean: 'チーズスティック %1: %2?',
+            roboid_cheese_play_sound_times: 'チーズスティック %1: %2 音を %3 回再生する %4',
+            roboid_cheese_play_sound_times_until_done: 'チーズスティック %1: %2 音を %3 回再生して待つ %4',
+            roboid_cheese_change_buzzer_by: 'チーズスティック %1: ブザー音を %2 Hzずつ変える %3',
+            roboid_cheese_set_buzzer_to: 'チーズスティック %1: ブザー音を %2 Hzにする %3',
+            roboid_cheese_clear_sound: 'チーズスティック %1: 音をオフにする %2',
+            roboid_cheese_play_note: 'チーズスティック %1: %2 %3 音をならす %4',
+            roboid_cheese_play_note_for: 'チーズスティック %1: %2 %3 音を %4 拍子ならす %5',
+            roboid_cheese_rest_for: 'チーズスティック %1: %2 拍子休む %3',
+            roboid_cheese_change_tempo_by: 'チーズスティック %1: 演奏のテンポを %2 BPMずつ変える %3',
+            roboid_cheese_set_tempo_to: 'チーズスティック %1: 演奏のテンポを %2 BPMにする %3',
+            roboid_cheese_set_sound_port_to: 'チーズスティック %1: 音出力を %2にする %3',
+            roboid_cheese_set_input_mode_to: 'チーズスティック %1: ポート %2を %3 入力にする %4',
+            roboid_cheese_set_input_range_to: 'チーズスティック %1: 入力 %2の範囲 %3 ~ %4を %5 ~ %6 小数点 %7にする %8',
+            roboid_cheese_set_three_input_ranges_to: 'チーズスティック %1: 入力 %2の範囲 %3 ~ %4 ~ %5を %6 ~ %7 ~ %8 小数点 %9にする %10',
+            roboid_cheese_analog_input: 'チーズスティック %1: 入力 %2',
+            roboid_cheese_digital_input: 'チーズスティック %1: 入力 %2 %3 ?',
+            roboid_cheese_button_state: 'チーズスティック %1: ボタン %2を %3?',
+            roboid_cheese_set_pulse_mode_to: 'チーズスティック %1: ポート %2を %3 入力にする %4',
+            roboid_cheese_pulse_input: 'チーズスティック %1: ポート %2でパルスが感知されたか?',
+            roboid_cheese_set_digital_output_to: 'チーズスティック %1: デジタル出力 %2を %3にする %4',
+            roboid_cheese_change_pwm_output_by: 'チーズスティック %1: PWM出力 %2を %3%ずつ変える %4',
+            roboid_cheese_set_pwm_output_to: 'チーズスティック %1: PWM出力 %2を %3%にする %4',
+            roboid_cheese_change_servo_motor_angle_by: 'チーズスティック %1: サーボモータ %2の角度を %3度ずつ変える %4',
+            roboid_cheese_set_servo_motor_angle_to: 'チーズスティック %1: サーボモータ %2の角度を %3度にする %4',
+            roboid_cheese_turn_off_servo_motor: 'チーズスティック %1: サーボモータ %2 の電源をオフにする %3',
+            roboid_cheese_change_dc_motor_velocity_by: 'チーズスティック %1: DCモータ %2の速度を %3%ずつ変える %4',
+            roboid_cheese_set_dc_motor_velocity_to: 'チーズスティック %1: DCモータ %2の速度を %3%にする %4',
+            roboid_cheese_stop_dc_motor: 'チーズスティック %1: DCモータ %2 を停止する %3',
+            roboid_cheese_rotate_step_motor: 'チーズスティック %1: ステップモータ %2 ステップを速度 %3 ステップ/秒に回る %4',
+            roboid_cheese_change_step_motor_velocity_by: 'チーズスティック %1: ステップモータの速度を %2 ステップ/秒ずつ変える %3',
+            roboid_cheese_set_step_motor_velocity_to: 'チーズスティック %1: ステップモータの速度を %2 ステップ/秒にする %3',
+            roboid_cheese_stop_off_step_motor: 'チーズスティック %1: ステップモータを %2 %3',
+            roboid_cheese_set_step_motor_mode_to: 'チーズスティック %1: ステップモータを %2 モードにする %3',
+            roboid_cheese_step_count: 'チーズスティック %1: ステップ数',
+            roboid_cheese_set_led_to_color: 'チーズスティック %1: RGBLED %2を %3 %4にする %5',
+            roboid_cheese_pick_led_to: 'チーズスティック %1: RGBLED %2を %3にする %4',
+            roboid_cheese_change_led_by_rgb: 'チーズスティック %1: RGBLED %2を R: %3 G: %4 B: %5ずつ変える %6',
+            roboid_cheese_setLed_to_rgb: 'チーズスティック %1: RGBLED %2を R: %3 G: %4 B: %5にする %6',
+            roboid_cheese_clear_led: 'チーズスティック %1: RGBLED %2 をオフにする %3',
+            roboid_cheese_set_led_type_to: 'チーズスティック %1: RGBLED %2を %3形にする %4',
+            roboid_cheese_neopixel_set_number_and_type_to: 'チーズスティック %1 ネオピクセル: LED %2個、%3にする %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern: 'チーズスティック %1 ネオピクセル: すべてのLEDを %2 パターンにする %3',
+            roboid_cheese_neopixel_set_all_leds_to_color: 'チーズスティック %1 ネオピクセル: すべてのLEDを %2にする %3',
+            roboid_cheese_neopixel_pick_all_leds_to: 'チーズスティック %1 ネオピクセル: すべてのLEDを %2にする %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb: 'チーズスティック %1 ネオピクセル: すべてのLEDを R: %2 G: %3 B: %4ずつ変える %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb: 'チーズスティック %1 ネオピクセル: すべてのLEDを R: %2 G: %3 B: %4にする %5',
+            roboid_cheese_neopixel_clear_all_leds: 'チーズスティック %1 ネオピクセル: すべてのLEDをオフにする %2',
+            roboid_cheese_neopixel_set_led_to_color: 'チーズスティック %1 ネオピクセル: %2番目のLEDを %3にする %4',
+            roboid_cheese_neopixel_pick_led_to: 'チーズスティック %1 ネオピクセル: %2番目のLEDを %3にする %4',
+            roboid_cheese_neopixel_change_led_by_rgb: 'チーズスティック %1 ネオピクセル: %2番目のLEDを R: %3 G: %4 B: %5ずつ変える %6',
+            roboid_cheese_neopixel_set_led_to_rgb: 'チーズスティック %1 ネオピクセル: %2番目のLEDを R: %3 G: %4 B: %5にする %6',
+            roboid_cheese_neopixel_clear_led: 'チーズスティック %1 ネオピクセル: %2番目のLEDをオフにする %3',
+            roboid_cheese_neopixel_set_led_range_to_pattern: 'チーズスティック %1 ネオピクセル: %2番目から %3番目までのLEDを %4 パターンにする %5',
+            roboid_cheese_neopixel_set_led_range_to_color: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを %5にする %6',
+            roboid_cheese_neopixel_pick_led_range_to: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを %5にする %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを R: %5 G: %6 B: %7ずつ変える %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを R: %5 G: %6 B: %7にする %8',
+            roboid_cheese_neopixel_clear_led_range: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDをオフにする %5',
+            roboid_cheese_neopixel_shift: 'チーズスティック %1 ネオピクセル: %2ピクセル移動する %3',
+            roboid_cheese_neopixel_rotate: 'チーズスティック %1 ネオピクセル: %2ピクセル回転する %3',
+            roboid_cheese_neopixel_change_brightness_by: 'チーズスティック %1 ネオピクセル: 明るさを %2%ずつ変える %3',
+            roboid_cheese_neopixel_set_brightness_to: 'チーズスティック %1 ネオピクセル: 明るさを %2%にする %3',
+            roboid_cheese_write_serial: 'チーズスティック %1: シリアルに %2 %3 を書き出す %4',
+            roboid_cheese_read_serial_until: 'チーズスティック %1: シリアルを %2 読み取る %3',
+            roboid_cheese_set_serial_port_to: 'チーズスティック %1: シリアルポートを %2にする %3',
+            roboid_cheese_set_serial_rate_to: 'チーズスティック %1: シリアル速度を %2Bdにする %3',
+            roboid_cheese_serial_input: 'チーズスティック %1: シリアル入力',
+            roboid_cheese_pid_start: 'チーズスティック %1: %2 を開始する %3',
+            roboid_cheese_pid_set_range_to: 'チーズスティック %1: PID %2の範囲 %3 ~ %4を %5 ~ %6 小数点 %7にする %8',
+            roboid_cheese_pid_set_three_ranges_to: 'チーズスティック %1: PID %2の範囲 %3 ~ %4 ~ %5を %6 ~ %7 ~ %8 小数点 %9にする %10',
+            roboid_cheese_pid_reset_encoder: 'チーズスティック %1: PID エンコーダ値を初期化する %2',
+            roboid_cheese_pid_input: 'チーズスティック %1: PID %2',
+            roboid_cheese_pid_button_state: 'チーズスティック %1: PID ボタン %2を %3?',
+            roboid_cheese_hat010_start: 'チーズスティック %1: HAT-010 5x5マトリックスを開始する %2',
+            roboid_cheese_hat010_button: 'チーズスティック %1: HAT-010 ボタン %2',
+            roboid_cheese_hat010_button_state: 'チーズスティック %1: HAT-010 ボタン %2を %3?',
+            roboid_cheese_hat010_background_turn_on_xy: 'チーズスティック %1: HAT-010 背景 x: %2 y: %3を %4に点灯する %5',
+            roboid_cheese_hat010_background_turn_off_xy: 'チーズスティック %1: HAT-010 背景 x: %2 y: %3をオフにする %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy: 'チーズスティック %1: HAT-010 背景 %2 %3を x: %4 y: %5に描画する %6',
+            roboid_cheese_hat010_background_draw_string_at_xy: 'チーズスティック %1: HAT-010 背景 %2 文字列 %3を x: %4 y: %5に描画する %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy: 'チーズスティック %1: HAT-010 背景 %2 パターン %3を x: %4 y: %5に描画する %6',
+            roboid_cheese_hat010_clear: 'チーズスティック %1: HAT-010 %2 を消す %3',
+            roboid_cheese_hat010_scroll_by_xy: 'チーズスティック %1: HAT-010 %2 x: %3 y: %4だけ移動する %5',
+            roboid_cheese_hat010_sprite_set_to_shape: 'チーズスティック %1: HAT-010 図 %2を %3 %4にする %5',
+            roboid_cheese_hat010_sprite_set_to_string: 'チーズスティック %1: HAT-010 図 %2を %3 文字列 %4にする %5',
+            roboid_cheese_hat010_sprite_set_to_pattern: 'チーズスティック %1: HAT-010 図 %2を %3 パターン %4にする %5',
+            roboid_cheese_hat010_sprite_clear_show_hide: 'チーズスティック %1: HAT-010 図 %2を %3 %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy: 'チーズスティック %1: HAT-010 図 %2の位置を x: %3 y: %4ずつ変える %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy: 'チーズスティック %1: HAT-010 図 %2の位置を x: %3 y: %4にする %5',
+            roboid_cheese_hat010_sprite_change_position_by_value: 'チーズスティック %1: HAT-010 図 %2の %3 位置を %4ずつ変える %5',
+            roboid_cheese_hat010_sprite_set_position_to_value: 'チーズスティック %1: HAT-010 図 %2の %3 位置を %4にする %5',
+            roboid_cheese_hat010_sprite_rotate: 'チーズスティック %1: HAT-010 図 %2を %3 方向に回転する %4',
+            roboid_cheese_hat010_sprite_flip_in_direction: 'チーズスティック %1: HAT-010 図 %2を %3 方向に反転する %4',
+            roboid_cheese_hat010_sprite_stamp_to_background: 'チーズスティック %1: HAT-010 図 %2を背景にスタンプする %3',
+            roboid_cheese_hat010_sprite_position: 'チーズスティック %1: HAT-010 図 %2の %3 位置',
+            roboid_cheese_hat010_sprite_touching_sprite: 'チーズスティック %1: HAT-010 図 %2が 図 %3に着いたか?',
+            roboid_cheese_hat010_sprite_touching: 'チーズスティック %1: HAT-010 図 %2が %3に着いたか?',
+            roboid_cheese_hat010_change_brightness_by: 'チーズスティック %1: HAT-010 明るさを %2%ずつ変える %3',
+            roboid_cheese_hat010_set_brightness_to: 'チーズスティック %1: HAT-010 明るさを %2%にする %3',
         },
         Helper: {
             roboid_hamster_gripper: 'Opens or closes the gripper.',
@@ -1444,6 +2208,208 @@ Entry.Roboid.setLanguage = () => ({
             turtle_battery_normal: '電池が正常か',
             turtle_battery_low: '電池が足りないか',
             turtle_battery_empty: '電池がないか',
+            ROBOID_cheese_stick: 'チーズスティック',
+            ROBOID_sensor_signal_strength: '信号の強さ',
+            ROBOID_sensor_signal_strength_dbm: '信号の強さ(dBm)',
+            ROBOID_sensor_acceleration_x: 'x軸の加速度',
+            ROBOID_sensor_acceleration_y: 'y軸の加速度',
+            ROBOID_sensor_acceleration_z: 'z軸の加速度',
+            ROBOID_sensor_input_sa: '入力Sa',
+            ROBOID_sensor_input_sb: '入力Sb',
+            ROBOID_sensor_input_sc: '入力Sc',
+            ROBOID_sensor_input_la: '入力La',
+            ROBOID_sensor_input_lb: '入力Lb',
+            ROBOID_sensor_input_lc: '入力Lc',
+            ROBOID_sensor_step_count: 'ステップ数',
+            ROBOID_monitor_output_sa: '出力Sa',
+            ROBOID_monitor_output_sb: '出力Sb',
+            ROBOID_monitor_output_sc: '出力Sc',
+            ROBOID_monitor_output_la: '出力La',
+            ROBOID_monitor_output_lb: '出力Lb',
+            ROBOID_monitor_output_lc: '出力Lc',
+            ROBOID_monitor_output_mab: '出力Mab',
+            ROBOID_monitor_output_mcd: '出力Mcd',
+            ROBOID_monitor_buzzer: 'ブザー',
+            ROBOID_monitor_note: '音符',
+            ROBOID_logo_sky_direction: 'ロゴが空の方向か',
+            ROBOID_logo_earth_direction: 'ロゴが地の方向か',
+            ROBOID_power_switch_sky_direction: '電源スイッチが空の方向か',
+            ROBOID_power_switch_earth_direction: '電源スイッチが地の方向か',
+            ROBOID_port_s_sky_direction: 'ポートSが空の方向か',
+            ROBOID_port_s_earth_direction: 'ポートSが地の方向か',
+            ROBOID_tap: '叩いたか',
+            ROBOID_free_fall: '落下したか',
+            ROBOID_battery_normal: '電池残量が充分か',
+            ROBOID_battery_low: '電池残量が足りないか',
+            ROBOID_battery_empty: '電池残量がなくなったか',
+            ROBOID_sound_beep: 'ビープ',
+            ROBOID_sound_random_beep: 'ランダムビープ',
+            ROBOID_sound_noise: 'ノイズ',
+            ROBOID_sound_siren: 'サイレン',
+            ROBOID_sound_engine: 'エンジン',
+            ROBOID_sound_chop: 'チョップ',
+            ROBOID_sound_robot: 'ロボット',
+            ROBOID_sound_dibidibidip: 'ディビディビディ',
+            ROBOID_sound_good_job: 'よくできました',
+            ROBOID_sound_happy: 'よろこび',
+            ROBOID_sound_angry: 'いかり',
+            ROBOID_sound_sad: 'かなしみ',
+            ROBOID_sound_sleep: 'ねむい',
+            ROBOID_sound_march: 'マーチ',
+            ROBOID_sound_birthday: 'たんじょうび',
+            ROBOID_note_c: 'ド',
+            ROBOID_note_c_sharp: 'ド♯(レ♭)',
+            ROBOID_note_d: 'レ',
+            ROBOID_note_d_sharp: 'レ♯(ミ♭)',
+            ROBOID_note_e: 'ミ',
+            ROBOID_note_f: 'ファ',
+            ROBOID_note_f_sharp: 'ファ♯(ソ♭)',
+            ROBOID_note_g: 'ソ',
+            ROBOID_note_g_sharp: 'ソ♯(ラ♭)',
+            ROBOID_note_a: 'ラ',
+            ROBOID_note_a_sharp: 'ラ♯(シ♭)',
+            ROBOID_note_b: 'シ',
+            ROBOID_speaker_internal: '内蔵スピーカー',
+            ROBOID_speaker_port_mab: 'ポートMab',
+            ROBOID_io_mode_makey: 'メイキー',
+            ROBOID_io_mode_button: 'ボタン',
+            ROBOID_io_mode_digital_pull_up: 'デジタル(プルアップ)',
+            ROBOID_io_mode_digital_pull_down: 'デジタル(プルダウン)',
+            ROBOID_io_mode_analog: 'アナログ',
+            ROBOID_io_mode_voltage: '電圧',
+            ROBOID_io_mode_pulse: 'パルス',
+            ROBOID_io_mode_pulse_pull_up: 'パルス(プルアップ)',
+            ROBOID_io_mode_pulse_pull_down: 'パルス(プルダウン)',
+            ROBOID_io_mode_normal: '基本',
+            ROBOID_io_mode_power: 'パワー',
+            ROBOID_io_port_high_current_mab: '大電流Ma(-)b',
+            ROBOID_io_port_high_current_mcd: '大電流Mc(-)d',
+            ROBOID_io_action_stop: '停止する',
+            ROBOID_io_action_turn_off: 'オフにする',
+            ROBOID_range_integer: 'なし',
+            ROBOID_range_real: 'あり',
+            ROBOID_led_intensity_dark: '暗い',
+            ROBOID_led_intensity_normal: '基本',
+            ROBOID_led_intensity_bright: '明るい',
+            ROBOID_led_type_default: '基本',
+            ROBOID_led_type_crgb: '-RGB',
+            ROBOID_led_type_crbg: '-RBG',
+            ROBOID_led_type_cgrb: '-GRB',
+            ROBOID_led_type_cgbr: '-GBR',
+            ROBOID_led_type_cbrg: '-BRG',
+            ROBOID_led_type_cbgr: '-BGR',
+            ROBOID_led_type_argb: '+RGB',
+            ROBOID_led_type_arbg: '+RBG',
+            ROBOID_led_type_agrb: '+GRB',
+            ROBOID_led_type_agbr: '+GBR',
+            ROBOID_led_type_abrg: '+BRG',
+            ROBOID_led_type_abgr: '+BGR',
+            ROBOID_color_red: '赤色',
+            ROBOID_color_orange: 'オレンジ色',
+            ROBOID_color_yellow: '黄色',
+            ROBOID_color_green: '緑色',
+            ROBOID_color_sky_blue: '水色',
+            ROBOID_color_blue: '青色',
+            ROBOID_color_violet: '青むらさき色',
+            ROBOID_color_purple: 'むらさき色',
+            ROBOID_color_white: '白色',
+            ROBOID_neopixel_3_colors: '3色',
+            ROBOID_neopixel_6_colors: '6色',
+            ROBOID_neopixel_12_colors: '12色',
+            ROBOID_neopixel_red_green: '赤色から緑色まで',
+            ROBOID_neopixel_red_blue: '赤色から青色まで',
+            ROBOID_neopixel_red_white: '赤色から白色まで',
+            ROBOID_neopixel_green_red: '緑色から赤色まで',
+            ROBOID_neopixel_green_blue: '緑色から青色まで',
+            ROBOID_neopixel_green_white: '緑色から白色まで',
+            ROBOID_neopixel_blue_red: '青色から赤色まで',
+            ROBOID_neopixel_blue_green: '青色から緑色まで',
+            ROBOID_neopixel_blue_white: '青色から白色まで',
+            ROBOID_neopixel_white_red: '白色から赤色まで',
+            ROBOID_neopixel_white_green: '白色から緑色まで',
+            ROBOID_neopixel_white_blue: '白色から青色まで',
+            ROBOID_neopixel_red_black: '赤色ますます暗く',
+            ROBOID_neopixel_green_black: '緑色ますます暗く',
+            ROBOID_neopixel_blue_black: '青色ますます暗く',
+            ROBOID_neopixel_white_black: '白色ますます暗く',
+            ROBOID_neopixel_black_red: '赤色ますます明るく',
+            ROBOID_neopixel_black_green: '緑色ますます明るく',
+            ROBOID_neopixel_black_blue: '青色ますます明るく',
+            ROBOID_neopixel_black_white: '白色ますます明るく',
+            ROBOID_serial_string: '文字列',
+            ROBOID_serial_string_line: '文字列1行',
+            ROBOID_serial_all: '全部',
+            ROBOID_serial_until_comma: '、(読点)まで',
+            ROBOID_serial_until_colon: '：(コロン)まで',
+            ROBOID_serial_until_dollar: '$まで',
+            ROBOID_serial_until_sharp: '#まで',
+            ROBOID_serial_until_new_line: '改行まで',
+            ROBOID_serial_port_wa_rb: 'La(書く)Lb(読む)',
+            ROBOID_serial_port_ra_wb: 'La(読む)Lb(書く)',
+            ROBOID_serial_port_wa: 'La(書く)',
+            ROBOID_serial_port_ra: 'La(読む)',
+            ROBOID_pid_10: 'PID-10 超音波センサー(HC-SR04+)',
+            ROBOID_pid_11_1: 'PID-11-1 温湿度センサー(DHT11)',
+            ROBOID_pid_11_2: 'PID-11-2 温湿度センサー(DHT21)',
+            ROBOID_pid_11_3: 'PID-11-3 温湿度センサー(DHT22)',
+            ROBOID_pid_12: 'PID-12 温度センサー(DS18B20)',
+            ROBOID_pid_13: 'PID-13 ジョイスティックとボタン',
+            ROBOID_pid_14: 'PID-14 デュアルジョイスティック',
+            ROBOID_pid_15: 'PID-15 IRトランシーバー',
+            ROBOID_pid_16: 'PID-16 エンコーダ',
+            ROBOID_pid_distance: '距離(cm)',
+            ROBOID_pid_temperature: '温度(℃)',
+            ROBOID_pid_humidity: '湿度(%RH)',
+            ROBOID_pid_x1: 'x1',
+            ROBOID_pid_y1: 'y1',
+            ROBOID_pid_x2: 'x2',
+            ROBOID_pid_y2: 'y2',
+            ROBOID_pid_button1: 'ボタン1',
+            ROBOID_pid_button2: 'ボタン2',
+            ROBOID_pid_encoder: 'エンコーダ',
+            ROBOID_clicked: 'クリックしたか',
+            ROBOID_double_clicked: 'ダブルクリックしたか',
+            ROBOID_long_pressed: '長く押したか',
+            ROBOID_shape_square: '四角形',
+            ROBOID_shape_triangle: '三角形',
+            ROBOID_shape_diamond: 'ダイヤモンド',
+            ROBOID_shape_circle: '円',
+            ROBOID_shape_x: 'X',
+            ROBOID_shape_like: 'すき',
+            ROBOID_shape_dislike: 'きらい',
+            ROBOID_shape_angry: 'いかり',
+            ROBOID_shape_open_mouth: '開けた口',
+            ROBOID_shape_close_mouth: '閉じた口',
+            ROBOID_shape_walk1: '歩く1',
+            ROBOID_shape_walk2: '歩く2',
+            ROBOID_shape_heart: 'ハート',
+            ROBOID_shape_star: '星',
+            ROBOID_shape_airplane: '飛行機',
+            ROBOID_shape_puppy: '子犬',
+            ROBOID_shape_butterfly: '蝶',
+            ROBOID_shape_quarter_note: '4分音符',
+            ROBOID_shape_eighth_note: '8分音符',
+            ROBOID_shape_left_arrow: '左矢印',
+            ROBOID_shape_right_arrow: '右矢印',
+            ROBOID_shape_up_arrow: '上矢印',
+            ROBOID_shape_down_arrow: '下矢印',
+            ROBOID_hat_background: '背景',
+            ROBOID_hat_all: '全部',
+            ROBOID_hat_clear: '消す',
+            ROBOID_hat_show: 'みせる',
+            ROBOID_hat_hide: 'かくす',
+            ROBOID_hat_clockwise: '時計',
+            ROBOID_hat_counterclockwise: '反時計',
+            ROBOID_hat_left_right: '左-右',
+            ROBOID_hat_up_down: '上-下',
+            ROBOID_hat_auto: '自動',
+            ROBOID_hat_manual: '手動',
+            ROBOID_hat_other_sprite: '他の図',
+            ROBOID_hat_left_wall: '左壁',
+            ROBOID_hat_right_wall: '右壁',
+            ROBOID_hat_top_wall: '上壁',
+            ROBOID_hat_bottom_wall: '下壁',
+            ROBOID_hat_any_wall: '全ての壁',
         },
     },
     vn: {
@@ -1544,6 +2510,108 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: 'Turtle %1: %2',
             roboid_turtle_boolean: 'Turtle %1: %2?',
             roboid_turtle_pick_head_led: 'Turtle %1: set head led to %2 %3',
+            
+            roboid_cheese_value: 'Cheese Stick %1: %2',
+            roboid_cheese_boolean: 'Cheese Stick %1: %2?',
+            roboid_cheese_play_sound_times: 'Cheese Stick %1: play sound %2 %3 times %4',
+            roboid_cheese_play_sound_times_until_done: 'Cheese Stick %1: play sound %2 %3 times until done %4',
+            roboid_cheese_change_buzzer_by: 'Cheese Stick %1: change buzzer by %2 Hz %3',
+            roboid_cheese_set_buzzer_to: 'Cheese Stick %1: set buzzer to %2 Hz %3',
+            roboid_cheese_clear_sound: 'Cheese Stick %1: clear sound %2',
+            roboid_cheese_play_note: 'Cheese Stick %1: play note %2 %3 %4',
+            roboid_cheese_play_note_for: 'Cheese Stick %1: play note %2 %3 for %4 beats %5',
+            roboid_cheese_rest_for: 'Cheese Stick %1: rest for %2 beats %3',
+            roboid_cheese_change_tempo_by: 'Cheese Stick %1: change tempo by %2 BPM %3',
+            roboid_cheese_set_tempo_to: 'Cheese Stick %1: set tempo to %2 BPM %3',
+            roboid_cheese_set_sound_port_to: 'Cheese Stick %1: set sound output to %2 %3',
+            roboid_cheese_set_input_mode_to: 'Cheese Stick %1: set port %2 to %3 input %4',
+            roboid_cheese_set_input_range_to: 'Cheese Stick %1: set input %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_set_three_input_ranges_to: 'Cheese Stick %1: set input %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_analog_input: 'Cheese Stick %1: input %2',
+            roboid_cheese_digital_input: 'Cheese Stick %1: input %2 %3 ?',
+            roboid_cheese_button_state: 'Cheese Stick %1: button %2 %3 ?',
+            roboid_cheese_set_pulse_mode_to: 'Cheese Stick %1: set port %2 to %3 input %4',
+            roboid_cheese_pulse_input: 'Cheese Stick %1: pulse detected on port %2 ?',
+            roboid_cheese_set_digital_output_to: 'Cheese Stick %1: set digital output %2 to %3 %4',
+            roboid_cheese_change_pwm_output_by: 'Cheese Stick %1: change pwm output %2 by %3% %4',
+            roboid_cheese_set_pwm_output_to: 'Cheese Stick %1: set pwm output %2 to %3% %4',
+            roboid_cheese_change_servo_motor_angle_by: 'Cheese Stick %1: change servo motor %2 by %3 degrees %4',
+            roboid_cheese_set_servo_motor_angle_to: 'Cheese Stick %1: set servo motor %2 to %3 degrees %4',
+            roboid_cheese_turn_off_servo_motor: 'Cheese Stick %1: turn off servo motor %2 %3',
+            roboid_cheese_change_dc_motor_velocity_by: 'Cheese Stick %1: change dc motor %2 velocity by %3% %4',
+            roboid_cheese_set_dc_motor_velocity_to: 'Cheese Stick %1: set dc motor %2 velocity to %3% %4',
+            roboid_cheese_stop_dc_motor: 'Cheese Stick %1: stop dc motor %2 %3',
+            roboid_cheese_rotate_step_motor: 'Cheese Stick %1: rotate step motor %2 steps with velocity %3 step/sec %4',
+            roboid_cheese_change_step_motor_velocity_by: 'Cheese Stick %1: change step motor velocity by %2 step/sec %3',
+            roboid_cheese_set_step_motor_velocity_to: 'Cheese Stick %1: set step motor velocity to %2 step/sec %3',
+            roboid_cheese_stop_off_step_motor: 'Cheese Stick %1: %2 step motor %3',
+            roboid_cheese_set_step_motor_mode_to: 'Cheese Stick %1: set step motor to %2 mode %3',
+            roboid_cheese_step_count: 'Cheese Stick %1: step count',
+            roboid_cheese_set_led_to_color: 'Cheese Stick %1: set rgb led %2 to %3 %4 %5',
+            roboid_cheese_pick_led_to: 'Cheese Stick %1: set rgb led %2 to %3 %4',
+            roboid_cheese_change_led_by_rgb: 'Cheese Stick %1: change rgb led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_setLed_to_rgb: 'Cheese Stick %1: set rgb led %2 to r: %3 g: %4 b: %5 %6',
+            roboid_cheese_clear_led: 'Cheese Stick %1: clear rgb led %2 %3',
+            roboid_cheese_set_led_type_to: 'Cheese Stick %1: set rgb led %2 to %3 type %4',
+            roboid_cheese_neopixel_set_number_and_type_to: 'Cheese Stick %1 neopixel: set %2 leds as %3 %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern: 'Cheese Stick %1 neopixel: set all leds to pattern %2 %3',
+            roboid_cheese_neopixel_set_all_leds_to_color: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_pick_all_leds_to: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb: 'Cheese Stick %1 neopixel: change all leds by r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb: 'Cheese Stick %1 neopixel: set all leds to r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_clear_all_leds: 'Cheese Stick %1 neopixel: clear all leds %2',
+            roboid_cheese_neopixel_set_led_to_color: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
+            roboid_cheese_neopixel_pick_led_to: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
+            roboid_cheese_neopixel_change_led_by_rgb: 'Cheese Stick %1 neopixel: change led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_set_led_to_rgb: 'Cheese Stick %1 neopixel: set led %2 to r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_clear_led: 'Cheese Stick %1 neopixel: clear led %2 %3',
+            roboid_cheese_neopixel_set_led_range_to_pattern: 'Cheese Stick %1 neopixel: set leds (from %2 to %3) to pattern %4 %5',
+            roboid_cheese_neopixel_set_led_range_to_color: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_pick_led_range_to: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb: 'Cheese Stick %1 neopixel: change leds (from %2 to %3 with %4 increments) by r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_clear_led_range: 'Cheese Stick %1 neopixel: clear leds (from %2 to %3 with %4 increments) %5',
+            roboid_cheese_neopixel_shift: 'Cheese Stick %1 neopixel: shift %2 pixels %3',
+            roboid_cheese_neopixel_rotate: 'Cheese Stick %1 neopixel: rotate %2 pixels %3',
+            roboid_cheese_neopixel_change_brightness_by: 'Cheese Stick %1 neopixel: change brightness by %2% %3',
+            roboid_cheese_neopixel_set_brightness_to: 'Cheese Stick %1 neopixel: set brightness to %2% %3',
+            roboid_cheese_write_serial: 'Cheese Stick %1: write %2 %3 to serial %4',
+            roboid_cheese_read_serial_until: 'Cheese Stick %1: read serial %2 %3',
+            roboid_cheese_set_serial_port_to: 'Cheese Stick %1: set serial port to %2 %3',
+            roboid_cheese_set_serial_rate_to: 'Cheese Stick %1: set serial rate to %2Bd %3',
+            roboid_cheese_serial_input: 'Cheese Stick %1: serial input',
+            roboid_cheese_pid_start: 'Cheese Stick %1: start %2 %3',
+            roboid_cheese_pid_set_range_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_pid_set_three_ranges_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_pid_reset_encoder: 'Cheese Stick %1 PID: clear encoder %2',
+            roboid_cheese_pid_input: 'Cheese Stick %1 PID: %2',
+            roboid_cheese_pid_button_state: 'Cheese Stick %1 PID: button %2 %3?',
+            roboid_cheese_hat010_start: 'Cheese Stick %1: start HAT-010 5x5 matrix %2',
+            roboid_cheese_hat010_button: 'Cheese Stick %1 HAT-010: button %2',
+            roboid_cheese_hat010_button_state: 'Cheese Stick %1 HAT-010: button %2 %3?',
+            roboid_cheese_hat010_background_turn_on_xy: 'Cheese Stick %1 HAT-010 background: turn on x: %2 y: %3 in %4 %5',
+            roboid_cheese_hat010_background_turn_off_xy: 'Cheese Stick %1 HAT-010 background: turn off x: %2 y: %3 %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_string_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 string %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 pattern %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_clear: 'Cheese Stick %1 HAT-010: clear %2 %3',
+            roboid_cheese_hat010_scroll_by_xy: 'Cheese Stick %1 HAT-010: scroll %2 by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_to_shape: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 %4 %5',
+            roboid_cheese_hat010_sprite_set_to_string: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 string %4 %5',
+            roboid_cheese_hat010_sprite_set_to_pattern: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 pattern %4 %5',
+            roboid_cheese_hat010_sprite_clear_show_hide: 'Cheese Stick %1 HAT-010 sprite %2: %3 sprite %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy: 'Cheese Stick %1 HAT-010 sprite %2: change position by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy: 'Cheese Stick %1 HAT-010 sprite %2: set position to x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_change_position_by_value: 'Cheese Stick %1 HAT-010 sprite %2: change %3 position by %4 %5',
+            roboid_cheese_hat010_sprite_set_position_to_value: 'Cheese Stick %1 HAT-010 sprite %2: set %3 position to %4 %5',
+            roboid_cheese_hat010_sprite_rotate: 'Cheese Stick %1 HAT-010 sprite %2: rotate %3 %4',
+            roboid_cheese_hat010_sprite_flip_in_direction: 'Cheese Stick %1 HAT-010 sprite %2: flip in %3 direction %4',
+            roboid_cheese_hat010_sprite_stamp_to_background: 'Cheese Stick %1 HAT-010 sprite %2: stamp to background %3',
+            roboid_cheese_hat010_sprite_position: 'Cheese Stick %1 HAT-010 sprite %2: %3 position',
+            roboid_cheese_hat010_sprite_touching_sprite: 'Cheese Stick %1 HAT-010 sprite %2: touching sprite %3?',
+            roboid_cheese_hat010_sprite_touching: 'Cheese Stick %1 HAT-010 sprite %2: touching %3?',
+            roboid_cheese_hat010_change_brightness_by: 'Cheese Stick %1 HAT-010: change brightness by %2% %3',
+            roboid_cheese_hat010_set_brightness_to: 'Cheese Stick %1 HAT-010: set brightness to %2% %3',
         },
         Helper: {
             roboid_hamster_gripper: 'Opens or closes the gripper.',
@@ -1883,6 +2951,208 @@ Entry.Roboid.setLanguage = () => ({
             turtle_battery_normal: 'battery normal',
             turtle_battery_low: 'battery low',
             turtle_battery_empty: 'battery empty',
+            ROBOID_cheese_stick: 'Cheese Stick',
+            ROBOID_sensor_signal_strength: 'signal strength',
+            ROBOID_sensor_signal_strength_dbm: 'signal strength (dBm)',
+            ROBOID_sensor_acceleration_x: 'x acceleration',
+            ROBOID_sensor_acceleration_y: 'y acceleration',
+            ROBOID_sensor_acceleration_z: 'z acceleration',
+            ROBOID_sensor_input_sa: 'input Sa',
+            ROBOID_sensor_input_sb: 'input Sb',
+            ROBOID_sensor_input_sc: 'input Sc',
+            ROBOID_sensor_input_la: 'input La',
+            ROBOID_sensor_input_lb: 'input Lb',
+            ROBOID_sensor_input_lc: 'input Lc',
+            ROBOID_sensor_step_count: 'step count',
+            ROBOID_monitor_output_sa: 'output Sa',
+            ROBOID_monitor_output_sb: 'output Sb',
+            ROBOID_monitor_output_sc: 'output Sc',
+            ROBOID_monitor_output_la: 'output La',
+            ROBOID_monitor_output_lb: 'output Lb',
+            ROBOID_monitor_output_lc: 'output Lc',
+            ROBOID_monitor_output_mab: 'output Mab',
+            ROBOID_monitor_output_mcd: 'output Mcd',
+            ROBOID_monitor_buzzer: 'buzzer',
+            ROBOID_monitor_note: 'note',
+            ROBOID_logo_sky_direction: 'logo in sky direction',
+            ROBOID_logo_earth_direction: 'logo in earth direction',
+            ROBOID_power_switch_sky_direction: 'power switch in sky direction',
+            ROBOID_power_switch_earth_direction: 'power switch in earth direction',
+            ROBOID_port_s_sky_direction: 'port S in sky direction',
+            ROBOID_port_s_earth_direction: 'port S in earth direction',
+            ROBOID_tap: 'tap',
+            ROBOID_free_fall: 'free fall',
+            ROBOID_battery_normal: 'battery normal',
+            ROBOID_battery_low: 'battery low',
+            ROBOID_battery_empty: 'battery empty',
+            ROBOID_sound_beep: 'beep',
+            ROBOID_sound_random_beep: 'random beep',
+            ROBOID_sound_noise: 'noise',
+            ROBOID_sound_siren: 'siren',
+            ROBOID_sound_engine: 'engine',
+            ROBOID_sound_chop: 'chop',
+            ROBOID_sound_robot: 'robot',
+            ROBOID_sound_dibidibidip: 'dibidibidip',
+            ROBOID_sound_good_job: 'good job',
+            ROBOID_sound_happy: 'happy',
+            ROBOID_sound_angry: 'angry',
+            ROBOID_sound_sad: 'sad',
+            ROBOID_sound_sleep: 'sleep',
+            ROBOID_sound_march: 'march',
+            ROBOID_sound_birthday: 'birthday',
+            ROBOID_note_c: 'C',
+            ROBOID_note_c_sharp: 'C♯(D♭)',
+            ROBOID_note_d: 'D',
+            ROBOID_note_d_sharp: 'D♯(E♭)',
+            ROBOID_note_e: 'E',
+            ROBOID_note_f: 'F',
+            ROBOID_note_f_sharp: 'F♯(G♭)',
+            ROBOID_note_g: 'G',
+            ROBOID_note_g_sharp: 'G♯(A♭)',
+            ROBOID_note_a: 'A',
+            ROBOID_note_a_sharp: 'A♯(B♭)',
+            ROBOID_note_b: 'B',
+            ROBOID_speaker_internal: 'internal speaker',
+            ROBOID_speaker_port_mab: 'port Mab',
+            ROBOID_io_mode_makey: 'makey',
+            ROBOID_io_mode_button: 'button',
+            ROBOID_io_mode_digital_pull_up: 'digital (pull up)',
+            ROBOID_io_mode_digital_pull_down: 'digital (pull down)',
+            ROBOID_io_mode_analog: 'analog',
+            ROBOID_io_mode_voltage: 'voltage',
+            ROBOID_io_mode_pulse: 'pulse',
+            ROBOID_io_mode_pulse_pull_up: 'pulse (pull up)',
+            ROBOID_io_mode_pulse_pull_down: 'pulse (pull down)',
+            ROBOID_io_mode_normal: 'normal',
+            ROBOID_io_mode_power: 'power',
+            ROBOID_io_port_high_current_mab: 'high current Ma(-)b',
+            ROBOID_io_port_high_current_mcd: 'high current Mc(-)d',
+            ROBOID_io_action_stop: 'stop',
+            ROBOID_io_action_turn_off: 'turn off',
+            ROBOID_range_integer: 'without',
+            ROBOID_range_real: 'with',
+            ROBOID_led_intensity_dark: 'dark',
+            ROBOID_led_intensity_normal: 'normal',
+            ROBOID_led_intensity_bright: 'bright',
+            ROBOID_led_type_default: 'default',
+            ROBOID_led_type_crgb: '-rgb',
+            ROBOID_led_type_crbg: '-rbg',
+            ROBOID_led_type_cgrb: '-grb',
+            ROBOID_led_type_cgbr: '-gbr',
+            ROBOID_led_type_cbrg: '-brg',
+            ROBOID_led_type_cbgr: '-bgr',
+            ROBOID_led_type_argb: '+rgb',
+            ROBOID_led_type_arbg: '+rbg',
+            ROBOID_led_type_agrb: '+grb',
+            ROBOID_led_type_agbr: '+gbr',
+            ROBOID_led_type_abrg: '+brg',
+            ROBOID_led_type_abgr: '+bgr',
+            ROBOID_color_red: 'red',
+            ROBOID_color_orange: 'orange',
+            ROBOID_color_yellow: 'yellow',
+            ROBOID_color_green: 'green',
+            ROBOID_color_sky_blue: 'sky blue',
+            ROBOID_color_blue: 'blue',
+            ROBOID_color_violet: 'violet',
+            ROBOID_color_purple: 'purple',
+            ROBOID_color_white: 'white',
+            ROBOID_neopixel_3_colors: '3 colors',
+            ROBOID_neopixel_6_colors: '6 colors',
+            ROBOID_neopixel_12_colors: '12 colors',
+            ROBOID_neopixel_red_green: 'red to green',
+            ROBOID_neopixel_red_blue: 'red to blue',
+            ROBOID_neopixel_red_white: 'red to white',
+            ROBOID_neopixel_green_red: 'green to red',
+            ROBOID_neopixel_green_blue: 'green to blue',
+            ROBOID_neopixel_green_white: 'green to white',
+            ROBOID_neopixel_blue_red: 'blue to red',
+            ROBOID_neopixel_blue_green: 'blue to green',
+            ROBOID_neopixel_blue_white: 'blue to white',
+            ROBOID_neopixel_white_red: 'white to red',
+            ROBOID_neopixel_white_green: 'white to green',
+            ROBOID_neopixel_white_blue: 'white to blue',
+            ROBOID_neopixel_red_black: 'red getting darker',
+            ROBOID_neopixel_green_black: 'green getting darker',
+            ROBOID_neopixel_blue_black: 'blue getting darker',
+            ROBOID_neopixel_white_black: 'white getting darker',
+            ROBOID_neopixel_black_red: 'red getting brighter',
+            ROBOID_neopixel_black_green: 'green getting brighter',
+            ROBOID_neopixel_black_blue: 'blue getting brighter',
+            ROBOID_neopixel_black_white: 'white getting brighter',
+            ROBOID_serial_string: 'string',
+            ROBOID_serial_string_line: 'string line',
+            ROBOID_serial_all: 'all',
+            ROBOID_serial_until_comma: 'until ,(comma)',
+            ROBOID_serial_until_colon: 'until :(colon)',
+            ROBOID_serial_until_dollar: 'until $',
+            ROBOID_serial_until_sharp: 'until #',
+            ROBOID_serial_until_new_line: 'until new line',
+            ROBOID_serial_port_wa_rb: 'La(write) Lb(read)',
+            ROBOID_serial_port_ra_wb: 'La(read) Lb(write)',
+            ROBOID_serial_port_wa: 'La(write)',
+            ROBOID_serial_port_ra: 'La(read)',
+            ROBOID_pid_10: 'PID-10 ultrasonic sensor (HC-SR04+)',
+            ROBOID_pid_11_1: 'PID-11-1 humidity/temperature sensor (DHT11)',
+            ROBOID_pid_11_2: 'PID-11-2 humidity/temperature sensor (DHT21)',
+            ROBOID_pid_11_3: 'PID-11-3 humidity/temperature sensor (DHT22)',
+            ROBOID_pid_12: 'PID-12 temperature sensor (DS18B20)',
+            ROBOID_pid_13: 'PID-13 joystick and button',
+            ROBOID_pid_14: 'PID-14 dual joystick',
+            ROBOID_pid_15: 'PID-15 IR transceiver',
+            ROBOID_pid_16: 'PID-16 encoder',
+            ROBOID_pid_distance: 'distance (cm)',
+            ROBOID_pid_temperature: 'temperature (℃)',
+            ROBOID_pid_humidity: 'humidity (%RH)',
+            ROBOID_pid_x1: 'x1',
+            ROBOID_pid_y1: 'y1',
+            ROBOID_pid_x2: 'x2',
+            ROBOID_pid_y2: 'y2',
+            ROBOID_pid_button1: 'button1',
+            ROBOID_pid_button2: 'button2',
+            ROBOID_pid_encoder: 'encoder',
+            ROBOID_clicked: 'clicked',
+            ROBOID_double_clicked: 'double-clicked',
+            ROBOID_long_pressed: 'long-pressed',
+            ROBOID_shape_square: 'square',
+            ROBOID_shape_triangle: 'triangle',
+            ROBOID_shape_diamond: 'diamond',
+            ROBOID_shape_circle: 'circle',
+            ROBOID_shape_x: 'X',
+            ROBOID_shape_like: 'like',
+            ROBOID_shape_dislike: 'dislike',
+            ROBOID_shape_angry: 'angry',
+            ROBOID_shape_open_mouth: 'open mouth',
+            ROBOID_shape_close_mouth: 'close mouth',
+            ROBOID_shape_walk1: 'walk 1',
+            ROBOID_shape_walk2: 'walk 2',
+            ROBOID_shape_heart: 'heart',
+            ROBOID_shape_star: 'star',
+            ROBOID_shape_airplane: 'airplane',
+            ROBOID_shape_puppy: 'puppy',
+            ROBOID_shape_butterfly: 'butterfly',
+            ROBOID_shape_quarter_note: 'quarter note',
+            ROBOID_shape_eighth_note: 'eighth note',
+            ROBOID_shape_left_arrow: 'left arrow',
+            ROBOID_shape_right_arrow: 'right arrow',
+            ROBOID_shape_up_arrow: 'up arrow',
+            ROBOID_shape_down_arrow: 'down arrow',
+            ROBOID_hat_background: 'background',
+            ROBOID_hat_all: 'all',
+            ROBOID_hat_clear: 'clear',
+            ROBOID_hat_show: 'show',
+            ROBOID_hat_hide: 'hide',
+            ROBOID_hat_clockwise: 'clockwise',
+            ROBOID_hat_counterclockwise: 'counterclockwise',
+            ROBOID_hat_left_right: 'left-right',
+            ROBOID_hat_up_down: 'up-down',
+            ROBOID_hat_auto: 'auto',
+            ROBOID_hat_manual: 'manual',
+            ROBOID_hat_other_sprite: 'other sprite',
+            ROBOID_hat_left_wall: 'left wall',
+            ROBOID_hat_right_wall: 'right wall',
+            ROBOID_hat_top_wall: 'top wall',
+            ROBOID_hat_bottom_wall: 'bottom wall',
+            ROBOID_hat_any_wall: 'any wall',
         },
     },
 });
@@ -1998,6 +3268,107 @@ Entry.Roboid.blockMenuBlocks = [
     'roboid_turtle_rest_for_beats',
     'roboid_turtle_change_tempo_by',
     'roboid_turtle_set_tempo_to',
+    'roboid_cheese_value',
+    'roboid_cheese_boolean',
+    'roboid_cheese_play_sound_times',
+    'roboid_cheese_play_sound_times_until_done',
+    'roboid_cheese_change_buzzer_by',
+    'roboid_cheese_set_buzzer_to',
+    'roboid_cheese_clear_sound',
+    'roboid_cheese_play_note',
+    'roboid_cheese_play_note_for',
+    'roboid_cheese_rest_for',
+    'roboid_cheese_change_tempo_by',
+    'roboid_cheese_set_tempo_to',
+    'roboid_cheese_set_sound_port_to',
+    'roboid_cheese_set_input_mode_to',
+    'roboid_cheese_set_input_range_to',
+    'roboid_cheese_set_three_input_ranges_to',
+    'roboid_cheese_analog_input',
+    'roboid_cheese_digital_input',
+    'roboid_cheese_button_state',
+    'roboid_cheese_set_pulse_mode_to',
+    'roboid_cheese_pulse_input',
+    'roboid_cheese_set_digital_output_to',
+    'roboid_cheese_change_pwm_output_by',
+    'roboid_cheese_set_pwm_output_to',
+    'roboid_cheese_change_servo_motor_angle_by',
+    'roboid_cheese_set_servo_motor_angle_to',
+    'roboid_cheese_turn_off_servo_motor',
+    'roboid_cheese_change_dc_motor_velocity_by',
+    'roboid_cheese_set_dc_motor_velocity_to',
+    'roboid_cheese_stop_dc_motor',
+    'roboid_cheese_rotate_step_motor',
+    'roboid_cheese_change_step_motor_velocity_by',
+    'roboid_cheese_set_step_motor_velocity_to',
+    'roboid_cheese_stop_off_step_motor',
+    'roboid_cheese_set_step_motor_mode_to',
+    'roboid_cheese_step_count',
+    'roboid_cheese_set_led_to_color',
+    'roboid_cheese_pick_led_to',
+    'roboid_cheese_change_led_by_rgb',
+    'roboid_cheese_setLed_to_rgb',
+    'roboid_cheese_clear_led',
+    'roboid_cheese_set_led_type_to',
+    'roboid_cheese_neopixel_set_number_and_type_to',
+    'roboid_cheese_neopixel_set_all_leds_to_pattern',
+    'roboid_cheese_neopixel_set_all_leds_to_color',
+    'roboid_cheese_neopixel_pick_all_leds_to',
+    'roboid_cheese_neopixel_change_all_leds_by_rgb',
+    'roboid_cheese_neopixel_set_all_leds_to_rgb',
+    'roboid_cheese_neopixel_clear_all_leds',
+    'roboid_cheese_neopixel_set_led_to_color',
+    'roboid_cheese_neopixel_pick_led_to',
+    'roboid_cheese_neopixel_change_led_by_rgb',
+    'roboid_cheese_neopixel_set_led_to_rgb',
+    'roboid_cheese_neopixel_clear_led',
+    'roboid_cheese_neopixel_set_led_range_to_pattern',
+    'roboid_cheese_neopixel_set_led_range_to_color',
+    'roboid_cheese_neopixel_pick_led_range_to',
+    'roboid_cheese_neopixel_change_led_range_by_rgb',
+    'roboid_cheese_neopixel_set_led_range_to_rgb',
+    'roboid_cheese_neopixel_clear_led_range',
+    'roboid_cheese_neopixel_shift',
+    'roboid_cheese_neopixel_rotate',
+    'roboid_cheese_neopixel_change_brightness_by',
+    'roboid_cheese_neopixel_set_brightness_to',
+    'roboid_cheese_write_serial',
+    'roboid_cheese_read_serial_until',
+    'roboid_cheese_set_serial_port_to',
+    'roboid_cheese_set_serial_rate_to',
+    'roboid_cheese_serial_input',
+    'roboid_cheese_pid_start',
+    'roboid_cheese_pid_set_range_to',
+    'roboid_cheese_pid_set_three_ranges_to',
+    'roboid_cheese_pid_reset_encoder',
+    'roboid_cheese_pid_input',
+    'roboid_cheese_pid_button_state',
+    'roboid_cheese_hat010_start',
+    'roboid_cheese_hat010_button',
+    'roboid_cheese_hat010_button_state',
+    'roboid_cheese_hat010_background_turn_on_xy',
+    'roboid_cheese_hat010_background_turn_off_xy',
+    'roboid_cheese_hat010_background_draw_shape_at_xy',
+    'roboid_cheese_hat010_background_draw_string_at_xy',
+    'roboid_cheese_hat010_background_draw_pattern_at_xy',
+    'roboid_cheese_hat010_clear',
+    'roboid_cheese_hat010_scroll_by_xy',
+    'roboid_cheese_hat010_sprite_set_to_shape',
+    'roboid_cheese_hat010_sprite_set_to_string',
+    'roboid_cheese_hat010_sprite_set_to_pattern',
+    'roboid_cheese_hat010_sprite_clear_show_hide',        
+    'roboid_cheese_hat010_sprite_change_positions_by_xy',
+    'roboid_cheese_hat010_sprite_set_positions_to_xy',
+    'roboid_cheese_hat010_sprite_change_position_by_value',
+    'roboid_cheese_hat010_sprite_set_position_to_value',
+    'roboid_cheese_hat010_sprite_rotate',
+    'roboid_cheese_hat010_sprite_flip_in_direction',
+    'roboid_cheese_hat010_sprite_stamp_to_background',
+    'roboid_cheese_hat010_sprite_position',
+    'roboid_cheese_hat010_sprite_touching_sprite',
+    'roboid_cheese_hat010_sprite_touching',
+    'roboid_cheese_hat010_change_brightness_by',
+    'roboid_cheese_hat010_set_brightness_to',
 ];
 
 Entry.Roboid.getBlocks = function() {
@@ -16379,6 +17750,9614 @@ Entry.Roboid.getBlocks = function() {
                 py: [
                     {
                         syntax: 'Roboid.turtle_set_tempo(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_sensor_acceleration_x, 'ACCELERATION_X'],
+                        [Lang.Blocks.ROBOID_sensor_acceleration_y, 'ACCELERATION_Y'],
+                        [Lang.Blocks.ROBOID_sensor_acceleration_z, 'ACCELERATION_Z'],
+                        [Lang.Blocks.ROBOID_sensor_signal_strength_dbm, 'SIGNAL_STRENGTH'],
+                    ],
+                    value: 'ACCELERATION_X',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'roboid_cheese_value',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                DEVICE: 1,
+            },
+            class: 'cheese_sensor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.getValue(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_sensor_value(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_sensor_acceleration_x, 'ACCELERATION_X'],
+                                    [Lang.Blocks.ROBOID_sensor_acceleration_y, 'ACCELERATION_Y'],
+                                    [Lang.Blocks.ROBOID_sensor_acceleration_z, 'ACCELERATION_Z'],
+                                    [Lang.Blocks.ROBOID_sensor_signal_strength_dbm, 'SIGNAL_STRENGTH'],
+                                ],
+                                value: 'ACCELERATION_X',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_boolean: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_logo_sky_direction, 'TILT_NOT'],
+                        [Lang.Blocks.ROBOID_logo_earth_direction, 'TILT_FLIP'],
+                        [Lang.Blocks.ROBOID_power_switch_sky_direction, 'TILT_LEFT'],
+                        [Lang.Blocks.ROBOID_power_switch_earth_direction, 'TILT_RIGHT'],
+                        [Lang.Blocks.ROBOID_port_s_sky_direction, 'TILT_FORWARD'],
+                        [Lang.Blocks.ROBOID_port_s_earth_direction, 'TILT_BACKWARD'],
+                        [Lang.Blocks.ROBOID_tap, 'TAP'],
+                        [Lang.Blocks.ROBOID_free_fall, 'FREE_FALL'],
+                        [Lang.Blocks.ROBOID_battery_normal, 'BATTERY_NORMAL'],
+                        [Lang.Blocks.ROBOID_battery_low, 'BATTERY_LOW'],
+                        [Lang.Blocks.ROBOID_battery_empty, 'BATTERY_EMPTY'],
+                    ],
+                    value: 'TILT_NOT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'roboid_cheese_boolean',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                DEVICE: 1,
+            },
+            class: 'cheese_sensor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.checkBoolean(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_boolean_value(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_logo_sky_direction, 'TILT_NOT'],
+                                    [Lang.Blocks.ROBOID_logo_earth_direction, 'TILT_FLIP'],
+                                    [Lang.Blocks.ROBOID_power_switch_sky_direction, 'TILT_LEFT'],
+                                    [Lang.Blocks.ROBOID_power_switch_earth_direction, 'TILT_RIGHT'],
+                                    [Lang.Blocks.ROBOID_port_s_sky_direction, 'TILT_FORWARD'],
+                                    [Lang.Blocks.ROBOID_port_s_earth_direction, 'TILT_BACKWARD'],
+                                    [Lang.Blocks.ROBOID_tap, 'TAP'],
+                                    [Lang.Blocks.ROBOID_free_fall, 'FREE_FALL'],
+                                    [Lang.Blocks.ROBOID_battery_normal, 'BATTERY_NORMAL'],
+                                    [Lang.Blocks.ROBOID_battery_low, 'BATTERY_LOW'],
+                                    [Lang.Blocks.ROBOID_battery_empty, 'BATTERY_EMPTY'],
+                                ],
+                                value: 'TILT_NOT',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_play_sound_times: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_sound_beep, 'BEEP'],
+                        [Lang.Blocks.ROBOID_sound_random_beep, 'RANDOM_BEEP'],
+                        [Lang.Blocks.ROBOID_sound_noise, 'NOISE'],
+                        [Lang.Blocks.ROBOID_sound_siren, 'SIREN'],
+                        [Lang.Blocks.ROBOID_sound_engine, 'ENGINE'],
+                        [Lang.Blocks.ROBOID_sound_chop, 'CHOP'],
+                        [Lang.Blocks.ROBOID_sound_robot, 'ROBOT'],
+                        [Lang.Blocks.ROBOID_sound_dibidibidip, 'DIBIDIBIDIP'],
+                        [Lang.Blocks.ROBOID_sound_good_job, 'GOOD_JOB'],
+                        [Lang.Blocks.ROBOID_sound_happy, 'HAPPY'],
+                        [Lang.Blocks.ROBOID_sound_angry, 'ANGRY'],
+                        [Lang.Blocks.ROBOID_sound_sad, 'SAD'],
+                        [Lang.Blocks.ROBOID_sound_sleep, 'SLEEP'],
+                        [Lang.Blocks.ROBOID_sound_march, 'MARCH'],
+                        [Lang.Blocks.ROBOID_sound_birthday, 'BIRTHDAY'],
+                    ],
+                    value: 'BEEP',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_play_sound_times',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SOUND: 1,
+                COUNT: 2,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.playSound(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_play_sound(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_sound_beep, 'BEEP'],
+                                    [Lang.Blocks.ROBOID_sound_random_beep, 'RANDOM_BEEP'],
+                                    [Lang.Blocks.ROBOID_sound_noise, 'NOISE'],
+                                    [Lang.Blocks.ROBOID_sound_siren, 'SIREN'],
+                                    [Lang.Blocks.ROBOID_sound_engine, 'ENGINE'],
+                                    [Lang.Blocks.ROBOID_sound_chop, 'CHOP'],
+                                    [Lang.Blocks.ROBOID_sound_robot, 'ROBOT'],
+                                    [Lang.Blocks.ROBOID_sound_dibidibidip, 'DIBIDIBIDIP'],
+                                    [Lang.Blocks.ROBOID_sound_good_job, 'GOOD_JOB'],
+                                    [Lang.Blocks.ROBOID_sound_happy, 'HAPPY'],
+                                    [Lang.Blocks.ROBOID_sound_angry, 'ANGRY'],
+                                    [Lang.Blocks.ROBOID_sound_sad, 'SAD'],
+                                    [Lang.Blocks.ROBOID_sound_sleep, 'SLEEP'],
+                                    [Lang.Blocks.ROBOID_sound_march, 'MARCH'],
+                                    [Lang.Blocks.ROBOID_sound_birthday, 'BIRTHDAY'],
+                                ],
+                                value: 'BEEP',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_play_sound_times_until_done: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_sound_beep, 'BEEP'],
+                        [Lang.Blocks.ROBOID_sound_random_beep, 'RANDOM_BEEP'],
+                        [Lang.Blocks.ROBOID_sound_noise, 'NOISE'],
+                        [Lang.Blocks.ROBOID_sound_siren, 'SIREN'],
+                        [Lang.Blocks.ROBOID_sound_engine, 'ENGINE'],
+                        [Lang.Blocks.ROBOID_sound_chop, 'CHOP'],
+                        [Lang.Blocks.ROBOID_sound_robot, 'ROBOT'],
+                        [Lang.Blocks.ROBOID_sound_dibidibidip, 'DIBIDIBIDIP'],
+                        [Lang.Blocks.ROBOID_sound_good_job, 'GOOD_JOB'],
+                        [Lang.Blocks.ROBOID_sound_happy, 'HAPPY'],
+                        [Lang.Blocks.ROBOID_sound_angry, 'ANGRY'],
+                        [Lang.Blocks.ROBOID_sound_sad, 'SAD'],
+                        [Lang.Blocks.ROBOID_sound_sleep, 'SLEEP'],
+                        [Lang.Blocks.ROBOID_sound_march, 'MARCH'],
+                        [Lang.Blocks.ROBOID_sound_birthday, 'BIRTHDAY'],
+                    ],
+                    value: 'BEEP',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_play_sound_times_until_done',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SOUND: 1,
+                COUNT: 2,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.playSoundUntil(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_play_sound_until_done(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_sound_beep, 'BEEP'],
+                                    [Lang.Blocks.ROBOID_sound_random_beep, 'RANDOM_BEEP'],
+                                    [Lang.Blocks.ROBOID_sound_noise, 'NOISE'],
+                                    [Lang.Blocks.ROBOID_sound_siren, 'SIREN'],
+                                    [Lang.Blocks.ROBOID_sound_engine, 'ENGINE'],
+                                    [Lang.Blocks.ROBOID_sound_chop, 'CHOP'],
+                                    [Lang.Blocks.ROBOID_sound_robot, 'ROBOT'],
+                                    [Lang.Blocks.ROBOID_sound_dibidibidip, 'DIBIDIBIDIP'],
+                                    [Lang.Blocks.ROBOID_sound_good_job, 'GOOD_JOB'],
+                                    [Lang.Blocks.ROBOID_sound_happy, 'HAPPY'],
+                                    [Lang.Blocks.ROBOID_sound_angry, 'ANGRY'],
+                                    [Lang.Blocks.ROBOID_sound_sad, 'SAD'],
+                                    [Lang.Blocks.ROBOID_sound_sleep, 'SLEEP'],
+                                    [Lang.Blocks.ROBOID_sound_march, 'MARCH'],
+                                    [Lang.Blocks.ROBOID_sound_birthday, 'BIRTHDAY'],
+                                ],
+                                value: 'BEEP',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_buzzer_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_buzzer_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                HZ: 1,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changeBuzzer(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_buzzer(%1, %2)',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_buzzer_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1000'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_set_buzzer_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                HZ: 1,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setBuzzer(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_buzzer(%1, %2)',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_clear_sound: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'roboid_cheese_clear_sound',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.clearSound(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_clear_sound(%1)',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_play_note: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_note_c, 'C'],
+                        [Lang.Blocks.ROBOID_note_c_sharp, 'C#'],
+                        [Lang.Blocks.ROBOID_note_d, 'D'],
+                        [Lang.Blocks.ROBOID_note_d_sharp, 'D#'],
+                        [Lang.Blocks.ROBOID_note_e, 'E'],
+                        [Lang.Blocks.ROBOID_note_f, 'F'],
+                        [Lang.Blocks.ROBOID_note_f_sharp, 'F#'],
+                        [Lang.Blocks.ROBOID_note_g, 'G'],
+                        [Lang.Blocks.ROBOID_note_g_sharp, 'G#'],
+                        [Lang.Blocks.ROBOID_note_a, 'A'],
+                        [Lang.Blocks.ROBOID_note_a_sharp, 'A#'],
+                        [Lang.Blocks.ROBOID_note_b, 'B'],
+                    ],
+                    value: 'C',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null, '4', null
+                ],
+                type: 'roboid_cheese_play_note',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                NOTE: 1,
+                OCTAVE: 2,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.playNote(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_play_pitch(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_note_c, 'C'],
+                                    [Lang.Blocks.ROBOID_note_c_sharp, 'C#'],
+                                    [Lang.Blocks.ROBOID_note_d, 'D'],
+                                    [Lang.Blocks.ROBOID_note_d_sharp, 'D#'],
+                                    [Lang.Blocks.ROBOID_note_e, 'E'],
+                                    [Lang.Blocks.ROBOID_note_f, 'F'],
+                                    [Lang.Blocks.ROBOID_note_f_sharp, 'F#'],
+                                    [Lang.Blocks.ROBOID_note_g, 'G'],
+                                    [Lang.Blocks.ROBOID_note_g_sharp, 'G#'],
+                                    [Lang.Blocks.ROBOID_note_a, 'A'],
+                                    [Lang.Blocks.ROBOID_note_a_sharp, 'A#'],
+                                    [Lang.Blocks.ROBOID_note_b, 'B'],
+                                ],
+                                value: 'C',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_play_note_for: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_note_c, 'C'],
+                        [Lang.Blocks.ROBOID_note_c_sharp, 'C#'],
+                        [Lang.Blocks.ROBOID_note_d, 'D'],
+                        [Lang.Blocks.ROBOID_note_d_sharp, 'D#'],
+                        [Lang.Blocks.ROBOID_note_e, 'E'],
+                        [Lang.Blocks.ROBOID_note_f, 'F'],
+                        [Lang.Blocks.ROBOID_note_f_sharp, 'F#'],
+                        [Lang.Blocks.ROBOID_note_g, 'G'],
+                        [Lang.Blocks.ROBOID_note_g_sharp, 'G#'],
+                        [Lang.Blocks.ROBOID_note_a, 'A'],
+                        [Lang.Blocks.ROBOID_note_a_sharp, 'A#'],
+                        [Lang.Blocks.ROBOID_note_b, 'B'],
+                    ],
+                    value: 'C',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    '4',
+                    {
+                        type: 'text',
+                        params: ['0.5'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_play_note_for',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                NOTE: 1,
+                OCTAVE: 2,
+                BEAT: 3,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.playNoteBeat(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_play_note(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_note_c, 'C'],
+                                    [Lang.Blocks.ROBOID_note_c_sharp, 'C#'],
+                                    [Lang.Blocks.ROBOID_note_d, 'D'],
+                                    [Lang.Blocks.ROBOID_note_d_sharp, 'D#'],
+                                    [Lang.Blocks.ROBOID_note_e, 'E'],
+                                    [Lang.Blocks.ROBOID_note_f, 'F'],
+                                    [Lang.Blocks.ROBOID_note_f_sharp, 'F#'],
+                                    [Lang.Blocks.ROBOID_note_g, 'G'],
+                                    [Lang.Blocks.ROBOID_note_g_sharp, 'G#'],
+                                    [Lang.Blocks.ROBOID_note_a, 'A'],
+                                    [Lang.Blocks.ROBOID_note_a_sharp, 'A#'],
+                                    [Lang.Blocks.ROBOID_note_b, 'B'],
+                                ],
+                                value: 'C',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                            { type: 'Block', accept: 'string' },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_rest_for: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0.25'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_rest_for',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BEAT: 1,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.restBeat(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_rest(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_tempo_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['20'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_tempo_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BPM: 1,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changeTempo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_tempo(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_tempo_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['60'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_set_tempo_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BPM: 1,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setTempo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_tempo(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_sound_port_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_speaker_internal, 'INTERNAL'],
+                        [Lang.Blocks.ROBOID_speaker_port_mab, 'MAB'],
+                    ],
+                    value: 'INTERNAL',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_sound_port_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_sound',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setSoundPort(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_sound_port(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_speaker_internal, 'INTERNAL'],
+                                    [Lang.Blocks.ROBOID_speaker_port_mab, 'MAB'],
+                                ],
+                                value: 'INTERNAL',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_input_mode_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_io_mode_makey, 'MAKEY'],
+                        [Lang.Blocks.ROBOID_io_mode_button, 'BUTTON'],
+                        [Lang.Blocks.ROBOID_io_mode_digital_pull_up, 'DIGITAL_PULL_UP'],
+                        [Lang.Blocks.ROBOID_io_mode_digital_pull_down, 'DIGITAL_PULL_DOWN'],
+                        [Lang.Blocks.ROBOID_io_mode_analog, 'ANALOG'],
+                        [Lang.Blocks.ROBOID_io_mode_voltage, 'VOLTAGE'],
+                    ],
+                    value: 'MAKEY',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_input_mode_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                MODE: 2,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setInputModeTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_input_mode(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_io_mode_makey, 'MAKEY'],
+                                    [Lang.Blocks.ROBOID_io_mode_button, 'BUTTON'],
+                                    [Lang.Blocks.ROBOID_io_mode_digital_pull_up, 'DIGITAL_PULL_UP'],
+                                    [Lang.Blocks.ROBOID_io_mode_digital_pull_down, 'DIGITAL_PULL_DOWN'],
+                                    [Lang.Blocks.ROBOID_io_mode_analog, 'ANALOG'],
+                                    [Lang.Blocks.ROBOID_io_mode_voltage, 'VOLTAGE'],
+                                ],
+                                value: 'MAKEY',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_input_range_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                        [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                    ],
+                    value: 'INTEGER',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_input_range_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                LOW1: 2,
+                HIGH1: 3,
+                LOW2: 4,
+                HIGH2: 5,
+                DECIMAL: 6,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setInputRangeTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_input_range(%1, %2, %3, %4, %5, %6, %7)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                                    [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                                ],
+                                value: 'INTEGER',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_three_input_ranges_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                        [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                    ],
+                    value: 'INTEGER',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['127'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['-100'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_three_input_ranges_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                LOW1: 2,
+                MIDDLE1: 3,
+                HIGH1: 4,
+                LOW2: 5,
+                MIDDLE2: 6,
+                HIGH2: 7,
+                DECIMAL: 8,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setThreeInputRangesTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_input_range_middle(%1, %2, %3, %4, %5, %6, %7, %8, %9)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                                    [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                                ],
+                                value: 'INTEGER',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_analog_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_analog_input',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.getAnalogInput(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_analog_input(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_digital_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_digital_input',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.checkDigitalInput(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_digital_input(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+                                    ['1', '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_button_state: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_clicked, 'CLICKED'],
+                        [Lang.Blocks.ROBOID_long_pressed, 'LONG_PRESSED'],
+                    ],
+                    value: 'CLICKED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_button_state',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                STATE: 2,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.checkButtonState(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_button_state(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_clicked, 'CLICKED'],
+                                    [Lang.Blocks.ROBOID_long_pressed, 'LONG_PRESSED'],
+                                ],
+                                value: 'CLICKED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_pulse_mode_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sc', 'SC'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SC',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_io_mode_pulse, 'PULSE'],
+                        [Lang.Blocks.ROBOID_io_mode_pulse_pull_up, 'PULSE_PULL_UP'],
+                        [Lang.Blocks.ROBOID_io_mode_pulse_pull_down, 'PULSE_PULL_DOWN'],
+                    ],
+                    value: 'PULSE',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_pulse_mode_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                MODE: 2,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setInputModeTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_pulse_mode(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sc', 'SC'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SC',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_io_mode_pulse, 'PULSE'],
+                                    [Lang.Blocks.ROBOID_io_mode_pulse_pull_up, 'PULSE_PULL_UP'],
+                                    [Lang.Blocks.ROBOID_io_mode_pulse_pull_down, 'PULSE_PULL_DOWN'],
+                                ],
+                                value: 'PULSE',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pulse_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sc', 'SC'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SC',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_pulse_input',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_input',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.checkPulseInput(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pulse_input(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sc', 'SC'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SC',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_digital_output_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                        [Lang.Blocks.ROBOID_io_port_high_current_mab, 'MAB'],
+                        [Lang.Blocks.ROBOID_io_port_high_current_mcd, 'MCD'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_digital_output_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_digital_output',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setDigitalOutput(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_digital_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                    [Lang.Blocks.ROBOID_io_port_high_current_mab, 'MAB'],
+                                    [Lang.Blocks.ROBOID_io_port_high_current_mcd, 'MCD'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+                                    ['1', '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_pwm_output_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_pwm_output_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_pwm_output',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changePwmOutput(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_pwm_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_pwm_output_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['50'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_set_pwm_output_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_pwm_output',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setPwmOutput(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_pwm_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_servo_motor_angle_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                        ['Ma(-)b(+)c', 'MABC'],
+                        ['Ma(-)b', 'MAB'],
+                        ['Mc(-)d', 'MCD'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_servo_motor_angle_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_servo_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changeServoMotorAngle(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_servo_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                    ['Ma(-)b(+)c', 'MABC'],
+                                    ['Ma(-)b', 'MAB'],
+                                    ['Mc(-)d', 'MCD'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_servo_motor_angle_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                        ['Ma(-)b(+)c', 'MABC'],
+                        ['Ma(-)b', 'MAB'],
+                        ['Mc(-)d', 'MCD'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_set_servo_motor_angle_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_servo_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setServoMotorAngle(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_servo_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                    ['Ma(-)b(+)c', 'MABC'],
+                                    ['Ma(-)b', 'MAB'],
+                                    ['Mc(-)d', 'MCD'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_turn_off_servo_motor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Sa', 'SA'],
+                        ['Sb', 'SB'],
+                        ['Sc', 'SC'],
+                        ['La', 'LA'],
+                        ['Lb', 'LB'],
+                        ['Lc', 'LC'],
+                        ['Ma(-)b(+)c', 'MABC'],
+                        ['Ma(-)b', 'MAB'],
+                        ['Mc(-)d', 'MCD'],
+                    ],
+                    value: 'SA',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_turn_off_servo_motor',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_servo_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.turnOffServoMotor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_release_servo(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Sa', 'SA'],
+                                    ['Sb', 'SB'],
+                                    ['Sc', 'SC'],
+                                    ['La', 'LA'],
+                                    ['Lb', 'LB'],
+                                    ['Lc', 'LC'],
+                                    ['Ma(-)b(+)c', 'MABC'],
+                                    ['Ma(-)b', 'MAB'],
+                                    ['Mc(-)d', 'MCD'],
+                                ],
+                                value: 'SA',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_dc_motor_velocity_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Mab', 'MAB'],
+                        ['Mcd', 'MCD'],
+                    ],
+                    value: 'MAB',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_dc_motor_velocity_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_dc_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changeDcMotorVelocity(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_dc_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Mab', 'MAB'],
+                                    ['Mcd', 'MCD'],
+                                ],
+                                value: 'MAB',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_dc_motor_velocity_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Mab', 'MAB'],
+                        ['Mcd', 'MCD'],
+                    ],
+                    value: 'MAB',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['50'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_set_dc_motor_velocity_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                VALUE: 2,
+            },
+            class: 'cheese_dc_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setDcMotorVelocity(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_dc_output(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Mab', 'MAB'],
+                                    ['Mcd', 'MCD'],
+                                ],
+                                value: 'MAB',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_stop_dc_motor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['Mab', 'MAB'],
+                        ['Mcd', 'MCD'],
+                    ],
+                    value: 'MAB',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_stop_dc_motor',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_dc_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.stopDcMotor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_stop_dc(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['Mab', 'MAB'],
+                                    ['Mcd', 'MCD'],
+                                ],
+                                value: 'MAB',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_rotate_step_motor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_rotate_step_motor',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                STEP: 1,
+                VELOCITY: 2,
+            },
+            class: 'cheese_step_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.rotateStepMotor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_rotate_step(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_step_motor_velocity_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['50'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_step_motor_velocity_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                VELOCITY: 1,
+            },
+            class: 'cheese_step_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changeStepMotorVelocity(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_step_velocity(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_step_motor_velocity_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['300'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_set_step_motor_velocity_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                VELOCITY: 1,
+            },
+            class: 'cheese_step_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setStepMotorVelocity(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_step_velocity(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_stop_off_step_motor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_io_action_stop, 'STOP'],
+                        [Lang.Blocks.ROBOID_io_action_turn_off, 'OFF'],
+                    ],
+                    value: 'STOP',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_stop_off_step_motor',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                ACTION: 1,
+            },
+            class: 'cheese_step_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.stopOffStepMotor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_step_motor(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_io_action_stop, 'STOP'],
+                                    [Lang.Blocks.ROBOID_io_action_turn_off, 'OFF'],
+                                ],
+                                value: 'STOP',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_step_motor_mode_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_io_mode_normal, 'NORMAL'],
+                        [Lang.Blocks.ROBOID_io_mode_power, 'POWER'],
+                    ],
+                    value: 'NORMAL',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_step_motor_mode_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                MODE: 1,
+            },
+            class: 'cheese_step_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setStepMotorMode(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_step_mode(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_io_mode_normal, 'NORMAL'],
+                                    [Lang.Blocks.ROBOID_io_mode_power, 'POWER'],
+                                ],
+                                value: 'NORMAL',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_step_count: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null
+                ],
+                type: 'roboid_cheese_step_count',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'cheese_step_motor',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.getStepCount(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_step_count(%1)',
+                        blockType: 'param',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_led_to_color: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['L', 'L'],
+                        ['S', 'S'],
+                    ],
+                    value: 'L',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_led_intensity_dark, 'DARK'],
+                        [Lang.Blocks.ROBOID_led_intensity_normal, 'NORMAL'],
+                        [Lang.Blocks.ROBOID_led_intensity_bright, 'BRIGHT'],
+                    ],
+                    value: 'NORMAL',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_led_to_color',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                INTENSITY: 2,
+                COLOR: 3,
+            },
+            class: 'cheese_led',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setLedColor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_led(%1, %2 %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['L', 'L'],
+                                    ['S', 'S'],
+                                ],
+                                value: 'L',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_led_intensity_dark, 'DARK'],
+                                    [Lang.Blocks.ROBOID_led_intensity_normal, 'NORMAL'],
+                                    [Lang.Blocks.ROBOID_led_intensity_bright, 'BRIGHT'],
+                                ],
+                                value: 'NORMAL',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pick_led_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['L', 'L'],
+                        ['S', 'S'],
+                    ],
+                    value: 'L',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_pick_led_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                COLOR: 2,
+            },
+            class: 'cheese_led',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setLedRgbArray(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pick_led(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['L', 'L'],
+                                    ['S', 'S'],
+                                ],
+                                value: 'L',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_change_led_by_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['L', 'L'],
+                        ['S', 'S'],
+                    ],
+                    value: 'L',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_change_led_by_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                RED: 2,
+                GREEN: 3,
+                BLUE: 4,
+            },
+            class: 'cheese_led',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.changeLedRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_rgb(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['L', 'L'],
+                                    ['S', 'S'],
+                                ],
+                                value: 'L',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_setLed_to_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['L', 'L'],
+                        ['S', 'S'],
+                    ],
+                    value: 'L',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_setLed_to_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                RED: 2,
+                GREEN: 3,
+                BLUE: 4,
+            },
+            class: 'cheese_led',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setLedRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_rgb(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['L', 'L'],
+                                    ['S', 'S'],
+                                ],
+                                value: 'L',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_clear_led: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['L', 'L'],
+                        ['S', 'S'],
+                    ],
+                    value: 'L',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_clear_led',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_led',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.clearLed(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_clear_led(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['L', 'L'],
+                                    ['S', 'S'],
+                                ],
+                                value: 'L',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_led_type_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['L', 'L'],
+                        ['S', 'S'],
+                    ],
+                    value: 'L',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_led_type_default, 'DEFAULT'],
+                        [Lang.Blocks.ROBOID_led_type_crgb, '-RGB'],
+                        [Lang.Blocks.ROBOID_led_type_crbg, '-RBG'],
+                        [Lang.Blocks.ROBOID_led_type_cgrb, '-GRB'],
+                        [Lang.Blocks.ROBOID_led_type_cgbr, '-GBR'],
+                        [Lang.Blocks.ROBOID_led_type_cbrg, '-BRG'],
+                        [Lang.Blocks.ROBOID_led_type_cbgr, '-BGR'],
+                        [Lang.Blocks.ROBOID_led_type_argb, '+RGB'],
+                        [Lang.Blocks.ROBOID_led_type_arbg, '+RBG'],
+                        [Lang.Blocks.ROBOID_led_type_agrb, '+GRB'],
+                        [Lang.Blocks.ROBOID_led_type_agbr, '+GBR'],
+                        [Lang.Blocks.ROBOID_led_type_abrg, '+BRG'],
+                        [Lang.Blocks.ROBOID_led_type_abgr, '+BGR'],
+                    ],
+                    value: 'DEFAULT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_led_type_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+                TYPE: 2,
+            },
+            class: 'cheese_led',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setLedType(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_led_type(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['L', 'L'],
+                                    ['S', 'S'],
+                                ],
+                                value: 'L',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_led_type_default, 'DEFAULT'],
+                                    [Lang.Blocks.ROBOID_led_type_crgb, '-RGB'],
+                                    [Lang.Blocks.ROBOID_led_type_crbg, '-RBG'],
+                                    [Lang.Blocks.ROBOID_led_type_cgrb, '-GRB'],
+                                    [Lang.Blocks.ROBOID_led_type_cgbr, '-GBR'],
+                                    [Lang.Blocks.ROBOID_led_type_cbrg, '-BRG'],
+                                    [Lang.Blocks.ROBOID_led_type_cbgr, '-BGR'],
+                                    [Lang.Blocks.ROBOID_led_type_argb, '+RGB'],
+                                    [Lang.Blocks.ROBOID_led_type_arbg, '+RBG'],
+                                    [Lang.Blocks.ROBOID_led_type_agrb, '+GRB'],
+                                    [Lang.Blocks.ROBOID_led_type_agbr, '+GBR'],
+                                    [Lang.Blocks.ROBOID_led_type_abrg, '+BRG'],
+                                    [Lang.Blocks.ROBOID_led_type_abgr, '+BGR'],
+                                ],
+                                value: 'DEFAULT',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_number_and_type_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['GRB', 'GRB'],
+                        ['GRBW', 'GRBW'],
+                    ],
+                    value: 'GRB',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_number_and_type_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                NUMBER: 1,
+                TYPE: 2,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetNumberAndType(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel_number_type(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['GRB', 'GRB'],
+                                    ['GRBW', 'GRBW'],
+                                ],
+                                value: 'GRB',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_all_leds_to_pattern: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_neopixel_3_colors, 'FILL_3_COLORS'],
+                        [Lang.Blocks.ROBOID_neopixel_6_colors, 'FILL_6_COLORS'],
+                        [Lang.Blocks.ROBOID_neopixel_12_colors, 'FILL_12_COLORS'],
+                        [Lang.Blocks.ROBOID_neopixel_red_green, 'GRADIENT_RED_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_red_blue, 'GRADIENT_RED_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_red_white, 'GRADIENT_RED_WHITE'],
+                        [Lang.Blocks.ROBOID_neopixel_green_red, 'GRADIENT_GREEN_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_green_blue, 'GRADIENT_GREEN_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_green_white, 'GRADIENT_GREEN_WHITE'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_red, 'GRADIENT_BLUE_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_green, 'GRADIENT_BLUE_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_white, 'GRADIENT_BLUE_WHITE'],
+                        [Lang.Blocks.ROBOID_neopixel_white_red, 'GRADIENT_WHITE_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_white_green, 'GRADIENT_WHITE_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_white_blue, 'GRADIENT_WHITE_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_red_black, 'GRADIENT_RED_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_green_black, 'GRADIENT_GREEN_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_black, 'GRADIENT_BLUE_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_white_black, 'GRADIENT_WHITE_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_black_red, 'GRADIENT_BLACK_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_black_green, 'GRADIENT_BLACK_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_black_blue, 'GRADIENT_BLACK_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_black_white, 'GRADIENT_BLACK_WHITE'],
+                    ],
+                    value: 'FILL_3_COLORS',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_all_leds_to_pattern',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PATTERN: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetAllPattern(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_all_neopixel_pattern(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_neopixel_3_colors, 'FILL_3_COLORS'],
+                                    [Lang.Blocks.ROBOID_neopixel_6_colors, 'FILL_6_COLORS'],
+                                    [Lang.Blocks.ROBOID_neopixel_12_colors, 'FILL_12_COLORS'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_green, 'GRADIENT_RED_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_blue, 'GRADIENT_RED_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_white, 'GRADIENT_RED_WHITE'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_red, 'GRADIENT_GREEN_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_blue, 'GRADIENT_GREEN_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_white, 'GRADIENT_GREEN_WHITE'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_red, 'GRADIENT_BLUE_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_green, 'GRADIENT_BLUE_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_white, 'GRADIENT_BLUE_WHITE'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_red, 'GRADIENT_WHITE_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_green, 'GRADIENT_WHITE_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_blue, 'GRADIENT_WHITE_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_black, 'GRADIENT_RED_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_black, 'GRADIENT_GREEN_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_black, 'GRADIENT_BLUE_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_black, 'GRADIENT_WHITE_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_red, 'GRADIENT_BLACK_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_green, 'GRADIENT_BLACK_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_blue, 'GRADIENT_BLACK_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_white, 'GRADIENT_BLACK_WHITE'],
+                                ],
+                                value: 'FILL_3_COLORS',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_all_leds_to_color: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_all_leds_to_color',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                COLOR: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetAllColor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_all_neopixel(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_pick_all_leds_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_pick_all_leds_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                COLOR: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetAllRgbArray(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pick_all_neopixel(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_change_all_leds_by_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_change_all_leds_by_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                RED: 1,
+                GREEN: 2,
+                BLUE: 3,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelChangeAllRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_all_neopixel_rgb(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_all_leds_to_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_all_leds_to_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                RED: 1,
+                GREEN: 2,
+                BLUE: 3,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetAllRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_all_neopixel_rgb(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_clear_all_leds: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_clear_all_leds',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelClearAll(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_clear_all_neopixel(%1)',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_led_to_color: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_led_to_color',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PIXEL: 1,
+                COLOR: 2,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetLedColor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_pick_led_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_pick_led_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PIXEL: 1,
+                COLOR: 2,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetLedRgbArray(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pick_neopixel(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_change_led_by_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_change_led_by_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PIXEL: 1,
+                RED: 2,
+                GREEN: 3,
+                BLUE: 4,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelChangeLedRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_neopixel_rgb(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_led_to_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_led_to_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PIXEL: 1,
+                RED: 2,
+                GREEN: 3,
+                BLUE: 4,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetLedRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel_rgb(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_clear_led: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_clear_led',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PIXEL: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelClearLed(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_clear_neopixel(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_led_range_to_pattern: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_neopixel_3_colors, 'FILL_3_COLORS'],
+                        [Lang.Blocks.ROBOID_neopixel_6_colors, 'FILL_6_COLORS'],
+                        [Lang.Blocks.ROBOID_neopixel_12_colors, 'FILL_12_COLORS'],
+                        [Lang.Blocks.ROBOID_neopixel_red_green, 'GRADIENT_RED_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_red_blue, 'GRADIENT_RED_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_red_white, 'GRADIENT_RED_WHITE'],
+                        [Lang.Blocks.ROBOID_neopixel_green_red, 'GRADIENT_GREEN_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_green_blue, 'GRADIENT_GREEN_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_green_white, 'GRADIENT_GREEN_WHITE'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_red, 'GRADIENT_BLUE_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_green, 'GRADIENT_BLUE_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_white, 'GRADIENT_BLUE_WHITE'],
+                        [Lang.Blocks.ROBOID_neopixel_white_red, 'GRADIENT_WHITE_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_white_green, 'GRADIENT_WHITE_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_white_blue, 'GRADIENT_WHITE_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_red_black, 'GRADIENT_RED_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_green_black, 'GRADIENT_GREEN_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_blue_black, 'GRADIENT_BLUE_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_white_black, 'GRADIENT_WHITE_BLACK'],
+                        [Lang.Blocks.ROBOID_neopixel_black_red, 'GRADIENT_BLACK_RED'],
+                        [Lang.Blocks.ROBOID_neopixel_black_green, 'GRADIENT_BLACK_GREEN'],
+                        [Lang.Blocks.ROBOID_neopixel_black_blue, 'GRADIENT_BLACK_BLUE'],
+                        [Lang.Blocks.ROBOID_neopixel_black_white, 'GRADIENT_BLACK_WHITE'],
+                    ],
+                    value: 'FILL_3_COLORS',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_led_range_to_pattern',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                START: 1,
+                END: 2,
+                PATTERN: 3,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetRangePattern(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel_range_pattern(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_neopixel_3_colors, 'FILL_3_COLORS'],
+                                    [Lang.Blocks.ROBOID_neopixel_6_colors, 'FILL_6_COLORS'],
+                                    [Lang.Blocks.ROBOID_neopixel_12_colors, 'FILL_12_COLORS'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_green, 'GRADIENT_RED_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_blue, 'GRADIENT_RED_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_white, 'GRADIENT_RED_WHITE'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_red, 'GRADIENT_GREEN_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_blue, 'GRADIENT_GREEN_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_white, 'GRADIENT_GREEN_WHITE'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_red, 'GRADIENT_BLUE_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_green, 'GRADIENT_BLUE_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_white, 'GRADIENT_BLUE_WHITE'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_red, 'GRADIENT_WHITE_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_green, 'GRADIENT_WHITE_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_blue, 'GRADIENT_WHITE_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_red_black, 'GRADIENT_RED_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_green_black, 'GRADIENT_GREEN_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_blue_black, 'GRADIENT_BLUE_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_white_black, 'GRADIENT_WHITE_BLACK'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_red, 'GRADIENT_BLACK_RED'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_green, 'GRADIENT_BLACK_GREEN'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_blue, 'GRADIENT_BLACK_BLUE'],
+                                    [Lang.Blocks.ROBOID_neopixel_black_white, 'GRADIENT_BLACK_WHITE'],
+                                ],
+                                value: 'FILL_3_COLORS',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_led_range_to_color: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_led_range_to_color',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                START: 1,
+                END: 2,
+                INCREMENT: 3,
+                COLOR: 4,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetRangeColor(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel_range(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_pick_led_range_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_pick_led_range_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                START: 1,
+                END: 2,
+                INCREMENT: 3,
+                COLOR: 4,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetRangeRgbArray(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pick_neopixel_range(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_change_led_range_by_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_change_led_range_by_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                START: 1,
+                END: 2,
+                INCREMENT: 3,
+                RED: 4,
+                GREEN: 5,
+                BLUE: 6,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelChangeRangeRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_neopixel_range_rgb(%1, %2, %3, %4, %5, %6, %7)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_led_range_to_rgb: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_led_range_to_rgb',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                START: 1,
+                END: 2,
+                INCREMENT: 3,
+                RED: 4,
+                GREEN: 5,
+                BLUE: 6,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetRangeRgb(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel_range_rgb(%1, %2, %3, %4, %5, %6, %7)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_clear_led_range: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_clear_led_range',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                START: 1,
+                END: 2,
+                INCREMENT: 3,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelClearRange(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_clear_neopixel_range(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_shift: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_shift',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BIT: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelShift(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_shift_neopixel(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_rotate',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BIT: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelRotate(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_rotate_neopixel(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_change_brightness_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['10'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_change_brightness_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                VALUE: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelChangeBrightness(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_add_neopixel_brightness(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_neopixel_set_brightness_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['50'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_neopixel_set_brightness_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                VALUE: 1,
+            },
+            class: 'cheese_neopixel',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.neopixelSetBrightness(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_neopixel_brightness(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_write_serial: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_serial_string, 'STRING'],
+                        [Lang.Blocks.ROBOID_serial_string_line, 'STRING_LINE'],
+                    ],
+                    value: 'STRING',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['abc123'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_write_serial',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                MODE: 1,
+                STRING: 2,
+            },
+            class: 'cheese_serial',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.writeSerial(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_write_serial(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_serial_string, 'STRING'],
+                                    [Lang.Blocks.ROBOID_serial_string_line, 'STRING_LINE'],
+                                ],
+                                value: 'STRING',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_read_serial_until: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_serial_all, 'ALL'],
+                        [Lang.Blocks.ROBOID_serial_until_comma, 'COMMA'],
+                        [Lang.Blocks.ROBOID_serial_until_colon, 'COLON'],
+                        [Lang.Blocks.ROBOID_serial_until_dollar, 'DOLLAR'],
+                        [Lang.Blocks.ROBOID_serial_until_sharp, 'SHARP'],
+                        [Lang.Blocks.ROBOID_serial_until_new_line, 'NEW_LINE'],
+                    ],
+                    value: 'ALL',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_read_serial_until',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                DELIMITER: 1,
+            },
+            class: 'cheese_serial',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.readSerialUntil(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_read_serial(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_serial_all, 'ALL'],
+                                    [Lang.Blocks.ROBOID_serial_until_comma, 'COMMA'],
+                                    [Lang.Blocks.ROBOID_serial_until_colon, 'COLON'],
+                                    [Lang.Blocks.ROBOID_serial_until_dollar, 'DOLLAR'],
+                                    [Lang.Blocks.ROBOID_serial_until_sharp, 'SHARP'],
+                                    [Lang.Blocks.ROBOID_serial_until_new_line, 'NEW_LINE'],
+                                ],
+                                value: 'ALL',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_serial_port_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_serial_port_wa_rb, 'WRITE_READ'],
+                        [Lang.Blocks.ROBOID_serial_port_ra_wb, 'READ_WRITE'],
+                        [Lang.Blocks.ROBOID_serial_port_wa, 'WRITE'],
+                        [Lang.Blocks.ROBOID_serial_port_ra, 'READ'],
+                    ],
+                    value: 'WRITE_READ',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_serial_port_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                PORT: 1,
+            },
+            class: 'cheese_serial',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setSerialPort(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_serial_port(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_serial_port_wa_rb, 'WRITE_READ'],
+                                    [Lang.Blocks.ROBOID_serial_port_ra_wb, 'READ_WRITE'],
+                                    [Lang.Blocks.ROBOID_serial_port_wa, 'WRITE'],
+                                    [Lang.Blocks.ROBOID_serial_port_ra, 'READ'],
+                                ],
+                                value: 'WRITE_READ',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_set_serial_rate_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['9600', '9600'],
+                        ['14400', '14400'],
+                        ['19200', '19200'],
+                        ['28800', '28800'],
+                        ['38400', '38400'],
+                        ['57600', '57600'],
+                        ['76800', '76800'],
+                        ['115200', '115200'],
+                    ],
+                    value: '9600',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_set_serial_rate_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BAUD: 1,
+            },
+            class: 'cheese_serial',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.setSerialRate(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_set_serial_rate(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['9600', '9600'],
+                                    ['14400', '14400'],
+                                    ['19200', '19200'],
+                                    ['28800', '28800'],
+                                    ['38400', '38400'],
+                                    ['57600', '57600'],
+                                    ['76800', '76800'],
+                                    ['115200', '115200'],
+                                ],
+                                value: '9600',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_serial_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                ],
+                type: 'roboid_cheese_serial_input',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'cheese_serial',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.getSerialInput(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_serial_input(%1)',
+                        blockType: 'param',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pid_start: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_pid_10, '10'],
+                        [Lang.Blocks.ROBOID_pid_11_1, '11-1'],
+                        [Lang.Blocks.ROBOID_pid_11_2, '11-2'],
+                        [Lang.Blocks.ROBOID_pid_11_3, '11-3'],
+                        [Lang.Blocks.ROBOID_pid_12, '12'],
+                        [Lang.Blocks.ROBOID_pid_13, '13'],
+                        [Lang.Blocks.ROBOID_pid_14, '14'],
+//                        [Lang.Blocks.ROBOID_pid_15, '15'],
+                        [Lang.Blocks.ROBOID_pid_16, '16'],
+                    ],
+                    value: '10',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_pid_start',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                DEVICE: 1,
+            },
+            class: 'cheese_pid',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.pidStart(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pid_start(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_pid_10, '10'],
+                                    [Lang.Blocks.ROBOID_pid_11_1, '11-1'],
+                                    [Lang.Blocks.ROBOID_pid_11_2, '11-2'],
+                                    [Lang.Blocks.ROBOID_pid_11_3, '11-3'],
+                                    [Lang.Blocks.ROBOID_pid_12, '12'],
+                                    [Lang.Blocks.ROBOID_pid_13, '13'],
+                                    [Lang.Blocks.ROBOID_pid_14, '14'],
+//                                    [Lang.Blocks.ROBOID_pid_15, '15'],
+                                    [Lang.Blocks.ROBOID_pid_16, '16'],
+                                ],
+                                value: '10',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pid_set_range_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_pid_x1, 'X1'],
+                        [Lang.Blocks.ROBOID_pid_y1, 'Y1'],
+                        [Lang.Blocks.ROBOID_pid_x2, 'X2'],
+                        [Lang.Blocks.ROBOID_pid_y2, 'Y2'],
+                    ],
+                    value: 'X1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                        [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                    ],
+                    value: 'INTEGER',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_pid_set_range_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                INPUT: 1,
+                LOW1: 2,
+                HIGH1: 3,
+                LOW2: 4,
+                HIGH2: 5,
+                DECIMAL: 6,
+            },
+            class: 'cheese_pid',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.pidSetRangeTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pid_set_input_range(%1, %2, %3, %4, %5, %6, %7)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_pid_x1, 'X1'],
+                                    [Lang.Blocks.ROBOID_pid_y1, 'Y1'],
+                                    [Lang.Blocks.ROBOID_pid_x2, 'X2'],
+                                    [Lang.Blocks.ROBOID_pid_y2, 'Y2'],
+                                ],
+                                value: 'X1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                                    [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                                ],
+                                value: 'INTEGER',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pid_set_three_ranges_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_pid_x1, 'X1'],
+                        [Lang.Blocks.ROBOID_pid_y1, 'Y1'],
+                        [Lang.Blocks.ROBOID_pid_x2, 'X2'],
+                        [Lang.Blocks.ROBOID_pid_y2, 'Y2'],
+                    ],
+                    value: 'X1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                        [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                    ],
+                    value: 'INTEGER',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['127'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['-100'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_pid_set_three_ranges_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                INPUT: 1,
+                LOW1: 2,
+                MIDDLE1: 3,
+                HIGH1: 4,
+                LOW2: 5,
+                MIDDLE2: 6,
+                HIGH2: 7,
+                DECIMAL: 8,
+            },
+            class: 'cheese_pid',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.pidSetThreeRangesTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pid_set_input_range_middle(%1, %2, %3, %4, %5, %6, %7, %8, %9)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_pid_x1, 'X1'],
+                                    [Lang.Blocks.ROBOID_pid_y1, 'Y1'],
+                                    [Lang.Blocks.ROBOID_pid_x2, 'X2'],
+                                    [Lang.Blocks.ROBOID_pid_y2, 'Y2'],
+                                ],
+                                value: 'X1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_range_integer, 'INTEGER'],
+                                    [Lang.Blocks.ROBOID_range_real, 'REAL'],
+                                ],
+                                value: 'INTEGER',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pid_reset_encoder: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_pid_reset_encoder',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'cheese_pid',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.pidResetEncoder(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pid_reset_encoder(%1)',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pid_input: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_pid_distance, 'DISTANCE'],
+                        [Lang.Blocks.ROBOID_pid_temperature, 'TEMPERATURE'],
+                        [Lang.Blocks.ROBOID_pid_humidity, 'HUMIDITY'],
+                        [Lang.Blocks.ROBOID_pid_x1, 'X1'],
+                        [Lang.Blocks.ROBOID_pid_y1, 'Y1'],
+                        [Lang.Blocks.ROBOID_pid_x2, 'X2'],
+                        [Lang.Blocks.ROBOID_pid_y2, 'Y2'],
+                        [Lang.Blocks.ROBOID_pid_button1, 'BUTTON1'],
+                        [Lang.Blocks.ROBOID_pid_button2, 'BUTTON2'],
+                        [Lang.Blocks.ROBOID_pid_encoder, 'ENCODER'],
+                    ],
+                    value: 'DISTANCE',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_pid_input',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                INPUT: 1,
+            },
+            class: 'cheese_pid',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.pidGetInput(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pid_input(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_pid_distance, 'DISTANCE'],
+                                    [Lang.Blocks.ROBOID_pid_temperature, 'TEMPERATURE'],
+                                    [Lang.Blocks.ROBOID_pid_humidity, 'HUMIDITY'],
+                                    [Lang.Blocks.ROBOID_pid_x1, 'X1'],
+                                    [Lang.Blocks.ROBOID_pid_y1, 'Y1'],
+                                    [Lang.Blocks.ROBOID_pid_x2, 'X2'],
+                                    [Lang.Blocks.ROBOID_pid_y2, 'Y2'],
+                                    [Lang.Blocks.ROBOID_pid_button1, 'BUTTON1'],
+                                    [Lang.Blocks.ROBOID_pid_button2, 'BUTTON2'],
+                                    [Lang.Blocks.ROBOID_pid_encoder, 'ENCODER'],
+                                ],
+                                value: 'DISTANCE',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_pid_button_state: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_clicked, 'CLICKED'],
+                        [Lang.Blocks.ROBOID_long_pressed, 'LONG_PRESSED'],
+                    ],
+                    value: 'CLICKED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_pid_button_state',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BUTTON: 1,
+                STATE: 2,
+            },
+            class: 'cheese_pid',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.pidCheckButtonState(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_pid_button_state(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_clicked, 'CLICKED'],
+                                    [Lang.Blocks.ROBOID_long_pressed, 'LONG_PRESSED'],
+                                ],
+                                value: 'CLICKED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_start: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_start',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010Start(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_start(%1)',
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_button: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['A', 'A'],
+                        ['B', 'B'],
+                    ],
+                    value: 'A',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_button',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BUTTON: 1,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.hat010GetButton(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_button(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['A', 'A'],
+                                    ['B', 'B'],
+                                ],
+                                value: 'A',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_button_state: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['A', 'A'],
+                        ['B', 'B'],
+                    ],
+                    value: 'A',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_clicked, 'CLICKED'],
+                        [Lang.Blocks.ROBOID_long_pressed, 'LONG_PRESSED'],
+                    ],
+                    value: 'CLICKED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_button_state',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BUTTON: 1,
+                STATE: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010CheckButtonState(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_button_state(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['A', 'A'],
+                                    ['B', 'B'],
+                                ],
+                                value: 'A',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_clicked, 'CLICKED'],
+                                    [Lang.Blocks.ROBOID_double_clicked, 'DOUBLE_CLICKED'],
+                                    [Lang.Blocks.ROBOID_long_pressed, 'LONG_PRESSED'],
+                                ],
+                                value: 'CLICKED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_background_turn_on_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_background_turn_on_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                X: 1,
+                Y: 2,
+                COLOR: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010BackgroundTurnOnXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_turn_on_background_pixel(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_background_turn_off_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_background_turn_off_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                X: 1,
+                Y: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010BackgroundTurnOffXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_turn_off_background_pixel(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_background_draw_shape_at_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_shape_square, 'SQUARE'],
+                        [Lang.Blocks.ROBOID_shape_triangle, 'TRIANGLE'],
+                        [Lang.Blocks.ROBOID_shape_diamond, 'DIAMOND'],
+                        [Lang.Blocks.ROBOID_shape_circle, 'CIRCLE'],
+                        [Lang.Blocks.ROBOID_shape_x, 'X'],
+                        [Lang.Blocks.ROBOID_shape_like, 'LIKE'],
+                        [Lang.Blocks.ROBOID_shape_dislike, 'DISLIKE'],
+                        [Lang.Blocks.ROBOID_shape_angry, 'ANGRY'],
+                        [Lang.Blocks.ROBOID_shape_open_mouth, 'OPEN_MOUTH'],
+                        [Lang.Blocks.ROBOID_shape_close_mouth, 'CLOSE_MOUTH'],
+                        [Lang.Blocks.ROBOID_shape_walk1, 'WALK1'],
+                        [Lang.Blocks.ROBOID_shape_walk2, 'WALK2'],
+                        [Lang.Blocks.ROBOID_shape_heart, 'HEART'],
+                        [Lang.Blocks.ROBOID_shape_star, 'STAR'],
+                        [Lang.Blocks.ROBOID_shape_airplane, 'AIRPLANE'],
+                        [Lang.Blocks.ROBOID_shape_puppy, 'PUPPY'],
+                        [Lang.Blocks.ROBOID_shape_butterfly, 'BUTTERFLY'],
+                        [Lang.Blocks.ROBOID_shape_quarter_note, 'QUARTER_NOTE'],
+                        [Lang.Blocks.ROBOID_shape_eighth_note, 'EIGHTH_NOTE'],
+                        [Lang.Blocks.ROBOID_shape_left_arrow, 'LEFT_ARROW'],
+                        [Lang.Blocks.ROBOID_shape_right_arrow, 'RIGHT_ARROW'],
+                        [Lang.Blocks.ROBOID_shape_up_arrow, 'UP_ARROW'],
+                        [Lang.Blocks.ROBOID_shape_down_arrow, 'DOWN_ARRAY'],
+                    ],
+                    value: 'SQUARE',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_background_draw_shape_at_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                COLOR: 1,
+                SHAPE: 2,
+                X: 3,
+                Y: 4,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010BackgroundDrawShapeAtXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_draw_background_shape(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_shape_square, 'SQUARE'],
+                                    [Lang.Blocks.ROBOID_shape_triangle, 'TRIANGLE'],
+                                    [Lang.Blocks.ROBOID_shape_diamond, 'DIAMOND'],
+                                    [Lang.Blocks.ROBOID_shape_circle, 'CIRCLE'],
+                                    [Lang.Blocks.ROBOID_shape_x, 'X'],
+                                    [Lang.Blocks.ROBOID_shape_like, 'LIKE'],
+                                    [Lang.Blocks.ROBOID_shape_dislike, 'DISLIKE'],
+                                    [Lang.Blocks.ROBOID_shape_angry, 'ANGRY'],
+                                    [Lang.Blocks.ROBOID_shape_open_mouth, 'OPEN_MOUTH'],
+                                    [Lang.Blocks.ROBOID_shape_close_mouth, 'CLOSE_MOUTH'],
+                                    [Lang.Blocks.ROBOID_shape_walk1, 'WALK1'],
+                                    [Lang.Blocks.ROBOID_shape_walk2, 'WALK2'],
+                                    [Lang.Blocks.ROBOID_shape_heart, 'HEART'],
+                                    [Lang.Blocks.ROBOID_shape_star, 'STAR'],
+                                    [Lang.Blocks.ROBOID_shape_airplane, 'AIRPLANE'],
+                                    [Lang.Blocks.ROBOID_shape_puppy, 'PUPPY'],
+                                    [Lang.Blocks.ROBOID_shape_butterfly, 'BUTTERFLY'],
+                                    [Lang.Blocks.ROBOID_shape_quarter_note, 'QUARTER_NOTE'],
+                                    [Lang.Blocks.ROBOID_shape_eighth_note, 'EIGHTH_NOTE'],
+                                    [Lang.Blocks.ROBOID_shape_left_arrow, 'LEFT_ARROW'],
+                                    [Lang.Blocks.ROBOID_shape_right_arrow, 'RIGHT_ARROW'],
+                                    [Lang.Blocks.ROBOID_shape_up_arrow, 'UP_ARROW'],
+                                    [Lang.Blocks.ROBOID_shape_down_arrow, 'DOWN_ARRAY'],
+                                ],
+                                value: 'SQUARE',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_background_draw_string_at_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['abc123'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_background_draw_string_at_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                COLOR: 1,
+                TEXT: 2,
+                X: 3,
+                Y: 4,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010BackgroundDrawStringAtXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_draw_background_string(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_background_draw_pattern_at_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['10010'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_background_draw_pattern_at_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                COLOR: 1,
+                PATTERN: 2,
+                X: 3,
+                Y: 4,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010BackgroundDrawPatternAtXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_draw_background_pattern(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_hat_background, 'BACKGROUND'],
+                        [Lang.Blocks.ROBOID_hat_all, 'ALL'],
+                    ],
+                    value: 'BACKGROUND',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_clear',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                TARGET: 1,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010Clear(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_clear(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_hat_background, 'BACKGROUND'],
+                                    [Lang.Blocks.ROBOID_hat_all, 'ALL'],
+                                ],
+                                value: 'BACKGROUND',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_scroll_by_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_hat_background, 'BACKGROUND'],
+                        [Lang.Blocks.ROBOID_hat_all, 'ALL'],
+                    ],
+                    value: 'BACKGROUND',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_scroll_by_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                TARGET: 1,
+                X: 2,
+                Y: 3,
+                
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010ScrollByXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_scroll(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_hat_background, 'BACKGROUND'],
+                                    [Lang.Blocks.ROBOID_hat_all, 'ALL'],
+                                ],
+                                value: 'BACKGROUND',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_set_to_shape: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_shape_square, 'SQUARE'],
+                        [Lang.Blocks.ROBOID_shape_triangle, 'TRIANGLE'],
+                        [Lang.Blocks.ROBOID_shape_diamond, 'DIAMOND'],
+                        [Lang.Blocks.ROBOID_shape_circle, 'CIRCLE'],
+                        [Lang.Blocks.ROBOID_shape_x, 'X'],
+                        [Lang.Blocks.ROBOID_shape_like, 'LIKE'],
+                        [Lang.Blocks.ROBOID_shape_dislike, 'DISLIKE'],
+                        [Lang.Blocks.ROBOID_shape_angry, 'ANGRY'],
+                        [Lang.Blocks.ROBOID_shape_open_mouth, 'OPEN_MOUTH'],
+                        [Lang.Blocks.ROBOID_shape_close_mouth, 'CLOSE_MOUTH'],
+                        [Lang.Blocks.ROBOID_shape_walk1, 'WALK1'],
+                        [Lang.Blocks.ROBOID_shape_walk2, 'WALK2'],
+                        [Lang.Blocks.ROBOID_shape_heart, 'HEART'],
+                        [Lang.Blocks.ROBOID_shape_star, 'STAR'],
+                        [Lang.Blocks.ROBOID_shape_airplane, 'AIRPLANE'],
+                        [Lang.Blocks.ROBOID_shape_puppy, 'PUPPY'],
+                        [Lang.Blocks.ROBOID_shape_butterfly, 'BUTTERFLY'],
+                        [Lang.Blocks.ROBOID_shape_quarter_note, 'QUARTER_NOTE'],
+                        [Lang.Blocks.ROBOID_shape_eighth_note, 'EIGHTH_NOTE'],
+                        [Lang.Blocks.ROBOID_shape_left_arrow, 'LEFT_ARROW'],
+                        [Lang.Blocks.ROBOID_shape_right_arrow, 'RIGHT_ARROW'],
+                        [Lang.Blocks.ROBOID_shape_up_arrow, 'UP_ARROW'],
+                        [Lang.Blocks.ROBOID_shape_down_arrow, 'DOWN_ARRAY'],
+                    ],
+                    value: 'SQUARE',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_set_to_shape',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                COLOR: 2,
+                SHAPE: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteSetToShape(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_set_sprite_shape(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_shape_square, 'SQUARE'],
+                                    [Lang.Blocks.ROBOID_shape_triangle, 'TRIANGLE'],
+                                    [Lang.Blocks.ROBOID_shape_diamond, 'DIAMOND'],
+                                    [Lang.Blocks.ROBOID_shape_circle, 'CIRCLE'],
+                                    [Lang.Blocks.ROBOID_shape_x, 'X'],
+                                    [Lang.Blocks.ROBOID_shape_like, 'LIKE'],
+                                    [Lang.Blocks.ROBOID_shape_dislike, 'DISLIKE'],
+                                    [Lang.Blocks.ROBOID_shape_angry, 'ANGRY'],
+                                    [Lang.Blocks.ROBOID_shape_open_mouth, 'OPEN_MOUTH'],
+                                    [Lang.Blocks.ROBOID_shape_close_mouth, 'CLOSE_MOUTH'],
+                                    [Lang.Blocks.ROBOID_shape_walk1, 'WALK1'],
+                                    [Lang.Blocks.ROBOID_shape_walk2, 'WALK2'],
+                                    [Lang.Blocks.ROBOID_shape_heart, 'HEART'],
+                                    [Lang.Blocks.ROBOID_shape_star, 'STAR'],
+                                    [Lang.Blocks.ROBOID_shape_airplane, 'AIRPLANE'],
+                                    [Lang.Blocks.ROBOID_shape_puppy, 'PUPPY'],
+                                    [Lang.Blocks.ROBOID_shape_butterfly, 'BUTTERFLY'],
+                                    [Lang.Blocks.ROBOID_shape_quarter_note, 'QUARTER_NOTE'],
+                                    [Lang.Blocks.ROBOID_shape_eighth_note, 'EIGHTH_NOTE'],
+                                    [Lang.Blocks.ROBOID_shape_left_arrow, 'LEFT_ARROW'],
+                                    [Lang.Blocks.ROBOID_shape_right_arrow, 'RIGHT_ARROW'],
+                                    [Lang.Blocks.ROBOID_shape_up_arrow, 'UP_ARROW'],
+                                    [Lang.Blocks.ROBOID_shape_down_arrow, 'DOWN_ARRAY'],
+                                ],
+                                value: 'SQUARE',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_set_to_string: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['abc123'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_set_to_string',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                COLOR: 2,
+                TEXT: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteSetToString(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_set_sprite_string(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_set_to_pattern: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_color_red, 'RED'],
+                        [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                        [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                        [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                        [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                        [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                        [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                        [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                        [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                    ],
+                    value: 'RED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['10010'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_set_to_pattern',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                COLOR: 2,
+                PATTERN: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteSetToPattern(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_set_sprite_pattern(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_color_red, 'RED'],
+                                    [Lang.Blocks.ROBOID_color_orange, 'ORANGE'],
+                                    [Lang.Blocks.ROBOID_color_yellow, 'YELLOW'],
+                                    [Lang.Blocks.ROBOID_color_green, 'GREEN'],
+                                    [Lang.Blocks.ROBOID_color_sky_blue, 'SKY_BLUE'],
+                                    [Lang.Blocks.ROBOID_color_blue, 'BLUE'],
+                                    [Lang.Blocks.ROBOID_color_violet, 'VIOLET'],
+                                    [Lang.Blocks.ROBOID_color_purple, 'PURPLE'],
+                                    [Lang.Blocks.ROBOID_color_white, 'WHITE'],
+                                ],
+                                value: 'RED',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_clear_show_hide: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_hat_clear, 'CLEAR'],
+                        [Lang.Blocks.ROBOID_hat_show, 'SHOW'],
+                        [Lang.Blocks.ROBOID_hat_hide, 'HIDE'],
+                    ],
+                    value: 'CLEAR',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_clear_show_hide',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                ACTION: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteClearShowHide(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_sprite(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_hat_clear, 'CLEAR'],
+                                    [Lang.Blocks.ROBOID_hat_show, 'SHOW'],
+                                    [Lang.Blocks.ROBOID_hat_hide, 'HIDE'],
+                                ],
+                                value: 'CLEAR',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_change_positions_by_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_change_positions_by_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                X: 2,
+                Y: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteChangePositionsByXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_add_sprite_positions(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_set_positions_to_xy: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_set_positions_to_xy',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                X: 2,
+                Y: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteSetPositionsToXY(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_set_sprite_positions(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_change_position_by_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['x', 'X'],
+                        ['y', 'Y'],
+                    ],
+                    value: 'X',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_change_position_by_value',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                POSITION: 2,
+                VALUE: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteChangePositionByValue(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_add_sprite_position(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['x', 'X'],
+                                    ['y', 'Y'],
+                                ],
+                                value: 'X',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_set_position_to_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['x', 'X'],
+                        ['y', 'Y'],
+                    ],
+                    value: 'X',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_set_position_to_value',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                POSITION: 2,
+                VALUE: 3,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteSetPositionToValue(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_set_sprite_position(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['x', 'X'],
+                                    ['y', 'Y'],
+                                ],
+                                value: 'X',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_hat_clockwise, 'CLOCKWISE'],
+                        [Lang.Blocks.ROBOID_hat_counterclockwise, 'COUNTERCLOCKWISE'],
+                    ],
+                    value: 'CLOCKWISE',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_rotate',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                DIRECTION: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteRotate(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_rotate_sprite(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_hat_clockwise, 'CLOCKWISE'],
+                                    [Lang.Blocks.ROBOID_hat_counterclockwise, 'COUNTERCLOCKWISE'],
+                                ],
+                                value: 'CLOCKWISE',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_flip_in_direction: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_hat_left_right, 'LEFT_RIGHT'],
+                        [Lang.Blocks.ROBOID_hat_up_down, 'UP_DOWN'],
+                    ],
+                    value: 'LEFT_RIGHT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_flip_in_direction',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                DIRECTION: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteFlipInDirection(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_flip_sprite(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_hat_left_right, 'LEFT_RIGHT'],
+                                    [Lang.Blocks.ROBOID_hat_up_down, 'UP_DOWN'],
+                                ],
+                                value: 'LEFT_RIGHT',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_stamp_to_background: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_stamp_to_background',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SpriteStampToBackground(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_stamp(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_position: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['x', 'X'],
+                        ['y', 'Y'],
+                    ],
+                    value: 'X',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_position',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                POSITION: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                if (robot) {
+                    return robot.hat010GetSpritePosition(script);
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_sprite_position(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['x', 'X'],
+                                    ['y', 'Y'],
+                                ],
+                                value: 'X',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_touching_sprite: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                ],
+                type: 'roboid_cheese_hat010_sprite_touching_sprite',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                TARGET: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010CheckCheckSpriteSpriteTouched(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_touching_sprite(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_sprite_touching: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_hat_background, 'BACKGROUND'],
+                        [Lang.Blocks.ROBOID_hat_other_sprite, 'OTHER_SPRITE'],
+                        [Lang.Blocks.ROBOID_hat_left_wall, 'LEFT_WALL'],
+                        [Lang.Blocks.ROBOID_hat_right_wall, 'RIGHT_WALL'],
+                        [Lang.Blocks.ROBOID_hat_top_wall, 'TOP_WALL'],
+                        [Lang.Blocks.ROBOID_hat_bottom_wall, 'BOTTOM_WALL'],
+                        [Lang.Blocks.ROBOID_hat_any_wall, 'ANY_WALL'],
+                    ],
+                    value: 'BACKGROUND',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_sprite_touching',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                SPRITE: 1,
+                TARGET: 2,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010CheckCheckSpriteTouched(script) : false;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_touching(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_hat_background, 'BACKGROUND'],
+                                    [Lang.Blocks.ROBOID_hat_other_sprite, 'OTHER_SPRITE'],
+                                    [Lang.Blocks.ROBOID_hat_left_wall, 'LEFT_WALL'],
+                                    [Lang.Blocks.ROBOID_hat_right_wall, 'RIGHT_WALL'],
+                                    [Lang.Blocks.ROBOID_hat_top_wall, 'TOP_WALL'],
+                                    [Lang.Blocks.ROBOID_hat_bottom_wall, 'BOTTOM_WALL'],
+                                    [Lang.Blocks.ROBOID_hat_any_wall, 'ANY_WALL'],
+                                ],
+                                value: 'BACKGROUND',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_change_brightness_by: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['5'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_change_brightness_by',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BRIGHTNESS: 1,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010ChangeBrightnessBy(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_add_brightness(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        roboid_cheese_hat010_set_brightness_to: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['20'],
+                    },
+                    null,
+                ],
+                type: 'roboid_cheese_hat010_set_brightness_to',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                BRIGHTNESS: 1,
+            },
+            class: 'cheese_hat010',
+            isNotFor: ['roboid'],
+            func(sprite, script) {
+                const index = script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getCheese(index);
+                return robot ? robot.hat010SetBrightnessTo(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.cheese_hat010_set_brightness(%1, %2)',
                         textParams: [
                             {
                                 type: 'Block',
