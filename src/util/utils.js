@@ -736,13 +736,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
         document.addEventListener('keydown', (e) => {
-            let keyCode = e.code == undefined ? e.key : e.code;
-            if (!keyCode) {
-                return;
-            }
-            keyCode = keyCode.replace('Digit', '');
-            keyCode = keyCode.replace('Numpad', '');
-            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            let keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -760,13 +754,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         document.addEventListener('keyup', (e) => {
-            let keyCode = e.code == undefined ? e.key : e.code;
-            if (!keyCode) {
-                return;
-            }
-            keyCode = keyCode.replace('Digit', '');
-            keyCode = keyCode.replace('Numpad', '');
-            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            let keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -789,6 +777,19 @@ Entry.Utils.bindGlobalEvent = function(options) {
             });
         }
     }
+};
+Entry.Utils.inputToKeycode = (e) => {
+    let keyCode = e.code == undefined ? e.key : e.code;
+    if (!keyCode) {
+        return null;
+    }
+    keyCode = keyCode.replace('Digit', '');
+    keyCode = keyCode.replace('Numpad', '');
+    if (keyCode.indexOf('Shift') > -1) {
+        keyCode = keyCode.replace('Left', '');
+        keyCode = keyCode.replace('Right', '');
+    }
+    return Entry.KeyboardCode.codeToKeyCode[keyCode];
 };
 
 Entry.Utils.makeActivityReporter = function() {
@@ -1213,6 +1214,25 @@ Entry.getKeyCodeMap = function() {
         '9': 'tab',
         '16': 'shift',
         '8': 'backspace',
+        //special Characters
+        '186': ';',
+        '187': '=',
+        '188': ',',
+        '189': '-',
+        '190': '.',
+        '191': '/',
+        '192': '~',
+        '219': '[',
+        '220': 'Backslash',
+        '221': ']',
+        '222': "'",
+        '45': 'Help',
+        '45': 'Insert',
+        '46': 'Delete',
+        '36': 'Home',
+        '35': 'End',
+        '33': 'PageUp',
+        '34': 'PageDown',
     };
 };
 

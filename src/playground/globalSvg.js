@@ -286,7 +286,8 @@ class GlobalSvg {
 
         if (
             mousePos.y > board.offset().top - 20 &&
-            (mousePos.x > bLeft + bWidth && mousePos.x < windowWidth - backPackWidth)
+            mousePos.x > bLeft + bWidth &&
+            mousePos.x < windowWidth - backPackWidth
         ) {
             return this.DONE;
         } else if (
@@ -314,6 +315,10 @@ class GlobalSvg {
         const that = this;
         e.stopPropagation();
         e.preventDefault();
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         const $doc = $(document);
         $doc.bind('mousemove.block', onMouseMove);
         $doc.bind('mouseup.block', onMouseUp);
@@ -337,6 +342,10 @@ class GlobalSvg {
         }
 
         function onMouseUp(e) {
+            if (e.which == 2) {
+                console.log('mouse wheel click disabled');
+                return;
+            }
             $(document).unbind('.block');
         }
     }
