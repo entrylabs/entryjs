@@ -87,11 +87,19 @@
 .entryPopup.learning_popup {
     z-index: 7001;
     .ai_learning {
-        width: 245px;
+        overflow: hidden;
         .learningInputPopup {
             height: 435px;
-            width: 100%;
+            width: 245px;
             background-color: white;
+        }
+        .learningInputPopup.text {
+            height: 200px;
+            width: 269px;
+        }
+        .learningInputPopup.speech {
+            width: 274px;
+            height: 310px;
         }
     }
 }

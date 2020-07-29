@@ -241,6 +241,7 @@ Entry.CODEino = {
 
     LAST_ORDER_PORT:0,
 };
+
 Entry.CODEino.setLanguage = function () {
     return {
         ko: {
@@ -296,9 +297,6 @@ Entry.CODEino.blockMenuBlocks = [
     'CODEino_get_digital_value',
     'CODEino_set_digital_value',
     'CODEino_set_pwm_value',
-
-    'CODEino_get_analog_value',
-    'CODEino_convert_scale',
 
     'CODEino_default_neopixel_on',
     'CODEino_default_neopixel_setBrightness',
@@ -896,6 +894,7 @@ Entry.CODEino.getBlocks = function() {
             events: {},
             def: {
                 params: [
+
                     null
                 ],
                 type: 'CODEino_get_digital_value',
@@ -972,7 +971,6 @@ Entry.CODEino.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    
                     null,
                     '255',
                     null,
@@ -1464,6 +1462,7 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_set__led_by_rgb: {
+            // r값 g값 b값 수동으로 주는 블록
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2256,8 +2255,6 @@ Entry.CODEino.getBlocks = function() {
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-
-                var port = Entry.CODEino.customNeoPixelPin+9;
                 if (!sq.SET) {
                     sq.SET = {};
                 }
@@ -2309,8 +2306,6 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var value = script.getNumberValue('VALUE', script);
                 var sq = Entry.hw.sendQueue;
-
-                var port = Entry.CODEino.customNeoPixelPin+10;
                 if (!sq.SET) {
                     sq.SET = {};
                 }
@@ -2396,7 +2391,6 @@ Entry.CODEino.getBlocks = function() {
                 if (!sq.SET) {
                     sq.SET = {};
                 }
-                
                 sq.SET[port] = {
                     type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_LED_HANDLE,
                     data :{ 

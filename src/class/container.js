@@ -773,6 +773,10 @@ Entry.Container = class Container {
                     result.push([(i + 1).toString(), i.toString()]);
                 }
                 break;
+            case 'fonts':
+                result = EntryStatic.fonts.map((font) => {
+                    return [font.name, font.family];
+                });
         }
         if (!result.length) {
             result = [[Lang.Blocks.no_target, 'null']];

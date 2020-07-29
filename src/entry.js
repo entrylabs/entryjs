@@ -1,4 +1,5 @@
 __webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
+import showConsoleBanner from './util/functions/showConsoleBanner';
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};
@@ -34,7 +35,7 @@ require('./class/popup');
 require('./class/popup_helper');
 require('./class/popup_list');
 require('./class/hw');
-require('./class/moduleManager');
+require('./class/entryModuleLoader');
 require('./class/project');
 require('./class/property_panel');
 require('./class/reporter');
@@ -92,10 +93,8 @@ require('./util/curtain');
 require('./util/fuzzy');
 require('./util/init');
 require('./util/loader');
-require('./util/popup');
 require('./util/restrictor');
 require('./util/static');
-require('./util/toast');
 require('./util/tooltip');
 require('./util/tvCast');
 require('./util/virtualScroll');
@@ -147,3 +146,4 @@ require('./textcoding/util/console');
 require('./textcoding/util/textCodingUtil');
 
 window.Entry = Entry;
+showConsoleBanner();
