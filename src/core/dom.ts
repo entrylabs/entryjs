@@ -58,4 +58,5 @@ const createEntryDom: EntryDomConstructor = function(tag, options) {
     return dom;
 };
 
+export default createEntryDom;
 Entry.Dom = createEntryDom;

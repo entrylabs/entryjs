@@ -218,6 +218,10 @@ Entry.Board = class Board {
         if (e.preventDefault) {
             e.preventDefault();
         }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
 
         if (this.workingEvent) {
             return;

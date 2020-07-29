@@ -119,6 +119,8 @@ function getConverters() {
             MINUS: '-',
             MULTI: '*',
             DIVIDE: '/',
+            NOT_EQUAL: '!=',
+            '!=': 'NOT_EQUAL',
             '==': 'EQUAL',
             '>': 'GREATER',
             '<': 'LESS',
