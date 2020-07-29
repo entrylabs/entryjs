@@ -187,7 +187,6 @@ Entry.CODEino = {
         TIMER: 8,
         
         SERVO_PIN: 10,
-        // 와 안쓰는 데이터도 같이 보내야겠네... 덮어버리네 구데긴가..
         DEFAULT_NEOPIXEL: 11,
         CUSTOM_NEOPIXEL_POWER:12,
         CUSTOM_NEOPIXEL_LED_HANDLE:13,
@@ -1612,9 +1611,6 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                // 기존값을 불러오는게 맞지 않을까 끄기상태일때 000 저장하지 말고
-                // 안된다고 한다..
-
                 Entry.CODEino.LED_VALUES = [100,100,100];
 
                 if (!sq['SET']) {
@@ -2453,8 +2449,6 @@ Entry.CODEino.getBlocks = function() {
 
                 var value = script.getStringField('COLOR');
                 var sq = Entry.hw.sendQueue;
-                // 등록부터 해서 핀값을 정해놔야함
-                // 200601 : port를 (가상디폴트포트50 + led 넘버로 정하자)
                 var port = Entry.CODEino.customNeoPixelPin+led;
 
                 let red = parseInt(value.substr(1, 2), 16);
