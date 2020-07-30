@@ -253,7 +253,9 @@ class BlockMenu extends ModelClass<Schema> {
             return console.error('You must inject code instance');
         }
 
-        this.codeListener?.destory();
+        // this.codeListener?.destory();
+        this.codeListener?.destroy?.();
+        
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             this.changeEvent.notify();
