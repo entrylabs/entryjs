@@ -35,7 +35,6 @@ Entry.Workspace = class Workspace {
                 option.align,
                 option.categoryData,
                 option.scroll,
-                this.readOnly
             );
             this._destroyer.add(this.blockMenu);
             this.blockMenu.workspace = this;

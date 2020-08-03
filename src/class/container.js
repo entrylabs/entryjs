@@ -710,7 +710,7 @@ Entry.Container = class Container {
                     if (
                         variable.object_ &&
                         object &&
-                        (variable.object_ != Entry.playground.object.id || Entry.Func.isEdit)
+                        (variable.object_ != object.id || Entry.Func.isEdit)
                     ) {
                         return;
                     }

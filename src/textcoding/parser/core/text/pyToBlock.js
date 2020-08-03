@@ -18,6 +18,7 @@ Entry.PyToBlockParser = class {
 
         this.binaryOperator = {
             '==': 'EQUAL',
+            '!=': 'NOT_EQUAL',
             '>': 'GREATER',
             '<': 'LESS',
             '>=': 'GREATER_OR_EQUAL',
@@ -642,9 +643,14 @@ Entry.PyToBlockParser = class {
             if (!component.arguments || !component.arguments[0]) {
                 startBlock.params = [null, null];
             } else {
+                const value = component.arguments[0].name;
                 startBlock.params = [
                     null,
-                    String(Entry.KeyboardCode.map[component.arguments[0].name]),
+                    `${
+                        Entry.KeyboardCode.map[
+                            typeof value === 'string' ? value.toLowerCase() : value
+                        ]
+                    }`,
                 ];
             }
         }

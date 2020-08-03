@@ -1,4 +1,5 @@
 import Bayes, { fromJson } from './bayes';
+
 const { callApi } = require('../../util/common');
 
 class TextNaiveBaye {
