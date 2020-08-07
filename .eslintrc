@@ -1,4 +1,5 @@
 {
+    "parser": "@babel/eslint-parser",
     "plugins": ["prettier"],
     "extends": ["plugin:prettier/recommended"],
     "overrides": [
