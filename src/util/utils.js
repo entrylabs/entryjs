@@ -2482,8 +2482,8 @@ Entry.Utils.getVolume = function() {
 
 Entry.Utils.forceStopSounds = function() {
     _.each(Entry.soundInstances, (instance) => {
-        instance.dispatchEvent('complete');
-        instance.stop();
+        instance?.dispatchEvent?.('complete');
+        instance?.stop?.();
     });
     Entry.soundInstances = [];
 };
