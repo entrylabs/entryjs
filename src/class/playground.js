@@ -1379,25 +1379,7 @@ Entry.Playground = class Playground {
     downloadPicture(pictureId) {
         const picture = Entry.playground.object.getPicture(pictureId);
         const { imageType = 'png' } = picture;
-        /**
-         Logic in try phrase will be disregarded after renewal.
-         nt11576
-         */
-        try {
-            if (picture.fileurl) {
-                saveAs(
-                    `/api/sprite/download/entryjs/${btoa(picture.fileurl)}/${encodeURIComponent(
-                        picture.name
-                    )}.png`,
-                    `${picture.name}.${imageType}`
-                );
-            } else {
-                const src = this.painter.getImageSrc(picture);
-                saveAs(src, `${picture.name}.${imageType}`);
-            }
-        } catch (e) {
-            Entry.dispatchEvent('downloadPicture', picture);
-        }
+        Entry.dispatchEvent('downloadPicture', picture);
     }
 
     /**
@@ -1629,25 +1611,7 @@ Entry.Playground = class Playground {
 
     downloadSound(soundId) {
         const sound = Entry.playground.object.getSound(soundId);
-        if (sound.fileurl) {
-            if (sound.fileurl.indexOf('bark.mp3') > -1) {
-                window.open(
-                    `/api/sprite/download/entryjs/${btoa(sound.fileurl)}/${encodeURIComponent(
-                        `${sound.name}.mp3`
-                    )}`
-                );
-            } else {
-                window.open(sound.fileurl);
-            }
-        } else if (sound.path.indexOf('sound') > -1) {
-            Entry.dispatchEvent('downloadSound', sound);
-        } else {
-            window.open(
-                `/api/sprite/download/sound/${encodeURIComponent(
-                    sound.filename
-                )}/${encodeURIComponent(sound.name)}`
-            );
-        }
+        Entry.dispatchEvent('downloadSound', sound);
     }
 
     /**
