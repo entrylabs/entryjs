@@ -186,7 +186,9 @@ Entry.etboard.getBlocks = function() {
                        ["3","3"],
                       ],
                       "value":"3",
-                      "fontSize":11
+                      "fontSize":11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                   },
               ],
               events: {},
@@ -548,7 +550,8 @@ Entry.etboard.getBlocks = function() {
                     ],
                     "value": "2",
                     "fontSize": 11,
-                    'arrowColor': EntryStatic.ARROW_COLOR_HW
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 }
             ],
             "events": {},
@@ -715,7 +718,9 @@ Entry.etboard.getBlocks = function() {
                    ["3","3"]
                   ],
                   "value":"1",
-                  "fontSize":11
+                  "fontSize":11,
+                  bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                  arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
               },
       		    {
                   "type": "Block",
