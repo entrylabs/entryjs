@@ -253,7 +253,9 @@ class BlockMenu extends ModelClass<Schema> {
             return console.error('You must inject code instance');
         }
 
-        this.codeListener?.destory();
+        // this.codeListener?.destory();
+        this.codeListener?.destroy?.();
+        
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             this.changeEvent.notify();
@@ -771,9 +773,7 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     onMouseMove(e: JQuery.MouseMoveEvent) {
-        if (e.stopPropagation) {
-            e.stopPropagation();
-        }
+        e?.stopPropagation();
 
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0.8);
@@ -790,6 +790,10 @@ class BlockMenu extends ModelClass<Schema> {
         if (Entry.isMobile()) {
             this._scroller.setOpacity(0);
         }
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button != 1) {
             $(document).unbind('.blockMenu');
             delete this.dragInstance;
@@ -800,7 +804,10 @@ class BlockMenu extends ModelClass<Schema> {
         if (e.preventDefault) {
             e.preventDefault();
         }
-
+        if (e.which == 2) {
+            console.log('mouse wheel click disabled');
+            return;
+        }
         if (e.button === 0 || e.originalEvent?.touches) {
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             if (Entry.documentMousedown) {
@@ -1239,17 +1246,10 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     private _captureKeyEvent(e: KeyboardEvent) {
-        let keyCode: number | string = e.code == undefined ? e.key : e.code;
+        let keyCode = Entry.Utils.inputToKeycode(e);
         if (!keyCode) {
             return;
         }
-        keyCode = keyCode.replace('Digit', '');
-        keyCode = keyCode.replace('Numpad', '');
-        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
-        if (!keyCode) {
-            return;
-        }
-
         if (e.ctrlKey && Entry.type === 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
             setTimeout(() => {

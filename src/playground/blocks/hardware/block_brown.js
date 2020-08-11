@@ -19,7 +19,7 @@ Entry.Brown = {
     },
     id: '2.10',
     name: 'brown',
-    url: 'http://lf.robomation.jp',
+    url: 'http://robomation.jp',
     imageName: 'brown.png',
     title: {
         en: 'Brown',
@@ -136,6 +136,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: '뒤로 %1 %2 이동하기 %3',
             brown_turn_unit_in_place: '%1 으로 %2 %3 제자리 돌기 %4',
             brown_pivot_around_wheel_unit_in_direction: '%1 바퀴 중심으로 %2 %3 %4 방향으로 돌기 %5',
+            brown_turn_unit_with_radius_in_direction: '%1 으로 %2 %3 반지름 %4 cm를 %5 방향으로 돌기 %6',
             brown_change_wheels_by_left_right: '왼쪽 바퀴 %1 오른쪽 바퀴 %2 만큼 바꾸기 %3',
             brown_set_wheels_to_left_right: '왼쪽 바퀴 %1 오른쪽 바퀴 %2 (으)로 정하기 %3',
             brown_change_wheel_by: '%1 바퀴 %2 만큼 바꾸기 %3',
@@ -173,6 +174,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 뒤로 이동합니다.',
             brown_turn_unit_in_place: '입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
             brown_pivot_around_wheel_unit_in_direction: '왼쪽/오른쪽 바퀴 중심으로 입력한 각도(도)/시간(초)/펄스만큼 앞쪽/뒤쪽 방향으로 회전합니다.',
+            brown_turn_unit_with_radius_in_direction: '입력한 반지름의 원을 그리면서 입력한 시간(초)/펄스만큼 왼쪽/오른쪽, 앞쪽/뒤쪽 방향으로 회전합니다.',
             brown_change_wheels_by_left_right: '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
             brown_set_wheels_to_left_right: '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
             brown_change_wheel_by: '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
@@ -292,6 +294,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: 'move backward %1 %2 %3',
             brown_turn_unit_in_place: 'turn %1 %2 %3 in place %4',
             brown_pivot_around_wheel_unit_in_direction: 'pivot around %1 wheel %2 %3 in %4 direction %5',
+            brown_turn_unit_with_radius_in_direction: 'turn %1 %2 %3 with radius %4 cm in %5 direction %6',
             brown_change_wheels_by_left_right: 'change wheels by left: %1 right: %2 %3',
             brown_set_wheels_to_left_right: 'set wheels to left: %1 right: %2 %3',
             brown_change_wheel_by: 'change %1 wheel by %2 %3',
@@ -329,6 +332,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: 'Moves backward for the number of cm/seconds/pulses entered.',
             brown_turn_unit_in_place: 'Turns left/right in place for the number of degrees/seconds/pulses entered.',
             brown_pivot_around_wheel_unit_in_direction: 'Pivots around the left/right wheel in the forward/backward direction for the number of degrees/seconds/pulses entered.',
+            brown_turn_unit_with_radius_in_direction: 'Turns left/right drawing the circle of the entered radius in the forward/backward direction for the number of seconds/pulses entered.',
             brown_change_wheels_by_left_right: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
             brown_set_wheels_to_left_right: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             brown_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
@@ -448,6 +452,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: '後ろへ %1 %2 移動する %3',
             brown_turn_unit_in_place: '%1 へ %2 %3 その場で回る %4',
             brown_pivot_around_wheel_unit_in_direction: '%1 車輪を中心に %2 %3 %4 方向に回る %5',
+            brown_turn_unit_with_radius_in_direction: '%1 へ %2 %3 半径 %4 cmを %5 方向に回る %6',
             brown_change_wheels_by_left_right: '左車輪を %1 右車輪を %2 ずつ変える %3',
             brown_set_wheels_to_left_right: '左車輪を %1 右車輪を %2 にする %3',
             brown_change_wheel_by: '%1 車輪を %2 ずつ変える %3',
@@ -485,6 +490,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: '入力された距離(cm)/時間(秒)/パルスだけ後方に移動します。',
             brown_turn_unit_in_place: '入力した角度(度)/時間(秒)/パルスだけ左/右方向にその場で回転します。',
             brown_pivot_around_wheel_unit_in_direction: '左/右の車輪中心に入力した角度(度)/時間(秒)/パルスだけ前方/後方の方向に回転します。',
+            brown_turn_unit_with_radius_in_direction: '入力された半径の円形を描きながら入力した時間(秒)/パルスだけ左/右、前方/後方の方向に回転します。',
             brown_change_wheels_by_left_right: '左と右の車輪の現在の速度値(％)で入力した値をそれぞれ加算します。加算した結果が正の値であれば、車輪が前方に回転し、負の値であれば後ろに回転します。',
             brown_set_wheels_to_left_right: '左と右の車輪の速度を入力した値(-100〜100％)でそれぞれ設定します。正の値を入力すると車輪が前方に回転し、負の値を入力すると後ろに回転します。「0」を入力すると停止します。',
             brown_change_wheel_by: '左/右/両方車輪の現在速度値(％)で入力した値を加算します。加算した結果が正の値であれば車輪が前方に回転し、負の値であれば後ろに回転します。',
@@ -604,6 +610,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: 'move backward %1 %2 %3',
             brown_turn_unit_in_place: 'turn %1 %2 %3 in place %4',
             brown_pivot_around_wheel_unit_in_direction: 'pivot around %1 wheel %2 %3 in %4 direction %5',
+            brown_turn_unit_with_radius_in_direction: 'turn %1 %2 %3 with radius %4 cm in %5 direction %6',
             brown_change_wheels_by_left_right: 'change wheels by left: %1 right: %2 %3',
             brown_set_wheels_to_left_right: 'set wheels to left: %1 right: %2 %3',
             brown_change_wheel_by: 'change %1 wheel by %2 %3',
@@ -641,6 +648,7 @@ Entry.Brown.setLanguage = () => ({
             brown_move_backward_unit: 'Moves backward for the number of cm/seconds/pulses entered.',
             brown_turn_unit_in_place: 'Turns left/right in place for the number of degrees/seconds/pulses entered.',
             brown_pivot_around_wheel_unit_in_direction: 'Pivots around the left/right wheel in the forward/backward direction for the number of degrees/seconds/pulses entered.',
+            brown_turn_unit_with_radius_in_direction: 'Turns left/right drawing the circle of the entered radius in the forward/backward direction for the number of seconds/pulses entered.',
             brown_change_wheels_by_left_right: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
             brown_set_wheels_to_left_right: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             brown_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
@@ -761,6 +769,7 @@ Entry.Brown.blockMenuBlocks = [
     'brown_move_backward_unit',
     'brown_turn_unit_in_place',
     'brown_pivot_around_wheel_unit_in_direction',
+    'brown_turn_unit_with_radius_in_direction',
     'brown_change_wheels_by_left_right',
     'brown_set_wheels_to_left_right',
     'brown_change_wheel_by',
@@ -1545,6 +1554,145 @@ Entry.Brown.getBlocks = function() {
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_forward, 'FORWARD'],
+                                    [Lang.Blocks.ROBOID_backward, 'BACKWARD']
+                                ],
+                                value: 'FORWARD',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        brown_turn_unit_with_radius_in_direction: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_left, 'LEFT'],
+                        [Lang.Blocks.ROBOID_right, 'RIGHT'],
+                    ],
+                    value: 'LEFT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_unit_sec, 'SEC'],
+                        [Lang.Blocks.ROBOID_unit_pulse, 'PULSE'],
+                    ],
+                    value: 'SEC',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_forward, 'FORWARD'],
+                        [Lang.Blocks.ROBOID_backward, 'BACKWARD']
+                    ],
+                    value: 'FORWARD',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                    {
+                        type: 'text',
+                        params: ['3'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'brown_turn_unit_with_radius_in_direction',
+            },
+            paramsKeyMap: {
+                DIRECTION: 0,
+                VALUE: 1,
+                UNIT: 2,
+                RADIUS: 3,
+                TOWARD: 4,
+            },
+            class: 'brown_wheel',
+            isNotFor: ['brown'],
+            func(sprite, script) {
+                const robot = Entry.Brown.getRobot();
+                return robot ? robot.circleUnit(script) : script;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Brown.circle(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_left, 'LEFT'],
+                                    [Lang.Blocks.ROBOID_right, 'RIGHT'],
+                                ],
+                                value: 'LEFT',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_unit_sec, 'SEC'],
+                                    [Lang.Blocks.ROBOID_unit_pulse, 'PULSE'],
+                                ],
+                                value: 'SEC',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
                             },
                             {
                                 type: 'Dropdown',

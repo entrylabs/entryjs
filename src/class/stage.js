@@ -69,6 +69,10 @@ Entry.Stage = class Stage {
         } else {
             const downFunc = (e) => {
                 Entry.dispatchEvent('canvasClick', e);
+                if (e.which == 2) {
+                    console.log('mouse wheel click disabled');
+                    return;
+                }
                 Entry.stage.isClick = true;
             };
 
