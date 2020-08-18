@@ -124,7 +124,7 @@ Entry.BlockToPyParser = class {
 
         _blockTokens.forEach((token) => {
             let tokenProcessed = token;
-            // 이재원 #7994 관련하여 만약 token (text input) 에 시작하는 템플릿이 괄호라면, 
+            // 이재원 #7994 관련하여 만약 token (text input) 에 시작하는 템플릿이 괄호라면,
             // 그리고 하나의 Param만 가지고 있는 경우를 regex check 후에 slice해서 사용.
             if (_blockTokens.length == 1 && /^\([%[\d ]+\)/gim.test(tokenProcessed)) {
                 tokenProcessed = tokenProcessed.slice(1, -1);
@@ -292,7 +292,7 @@ Entry.BlockToPyParser = class {
                             textParam
                         );
                     }
-                    const isTypeNumber = typeof param === 'number';
+                    const isTypeNumber = Number(param) !== NaN;
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
                     if (
                         (!Entry.Utils.isNumber(param) &&
