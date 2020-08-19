@@ -124,7 +124,7 @@ Entry.BlockToPyParser = class {
 
         _blockTokens.forEach((token) => {
             let tokenProcessed = token;
-            // 이재원 #7994 관련하여 만약 token (text input) 에 시작하는 템플릿이 괄호라면, 
+            // 이재원 #7994 관련하여 만약 token (text input) 에 시작하는 템플릿이 괄호라면,
             // 그리고 하나의 Param만 가지고 있는 경우를 regex check 후에 slice해서 사용.
             if (_blockTokens.length == 1 && /^\([%[\d ]+\)/gim.test(tokenProcessed)) {
                 tokenProcessed = tokenProcessed.slice(1, -1);
@@ -293,14 +293,27 @@ Entry.BlockToPyParser = class {
                         );
                     }
                     const isTypeNumber = typeof param === 'number';
+
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
                     if (
-                        (!Entry.Utils.isNumber(param) &&
-                            (block.type === 'when_some_key_pressed' ||
-                                block.type === 'is_press_some_key')) ||
-                        (!isTypeNumber &&
-                            Entry.Utils.isNumber(param) &&
-                            (block.type === 'number' || block.type === 'string'))
+                        !Entry.Utils.isNumber(param) &&
+                        (block.type === 'when_some_key_pressed' ||
+                            block.type === 'is_press_some_key')
+                    ) {
+                        if (
+                            !Entry.KeyboardCode.map[
+                                typeof param === 'string' ? param.toLowerCase() : param
+                            ]
+                        ) {
+                            Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.parameter_can_not_space);
+                            throw Error('');
+                        }
+
+                        result += `"${param}"`;
+                    } else if (
+                        !isTypeNumber &&
+                        Entry.Utils.isNumber(param) &&
+                        (block.type === 'number' || block.type === 'string')
                     ) {
                         result += `"${param}"`;
                     } else {

@@ -157,7 +157,13 @@ Entry.PyToBlockParser = class {
         }
 
         if (obj.type === 'is_press_some_key') {
+            if (!component.arguments[0]) {
+                throw new Error(`keyboard input is empty`);
+            }
             const value = component.arguments[0].value;
+            if (!Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value]) {
+                throw new Error(`${value} is not supported key name`);
+            }
             obj.params = [
                 `${
                     Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value]
@@ -641,9 +647,15 @@ Entry.PyToBlockParser = class {
 
         if (funcName === 'when_press_key') {
             if (!component.arguments || !component.arguments[0]) {
-                startBlock.params = [null, null];
+                throw new Error(`keyboard input is empty`);
+                // startBlock.params = [null, null];
             } else {
                 const value = component.arguments[0].name;
+                if (
+                    !Entry.KeyboardCode.map[typeof value === 'string' ? value.toLowerCase() : value]
+                ) {
+                    throw new Error(`${value} is not supported key name`);
+                }
                 startBlock.params = [
                     null,
                     `${
