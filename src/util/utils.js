@@ -6,7 +6,7 @@ import _intersection from 'lodash/intersection';
 import _clamp from 'lodash/clamp';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
-import blockLoader from '../class/entryModuleLoader';
+import entryModuleLoader from '../class/entryModuleLoader';
 
 Entry.Utils = {};
 
@@ -157,7 +157,7 @@ Entry.exportProject = function(project) {
     project.expansionBlocks = Entry.expansionBlocks;
     project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
     project.learning = Entry.aiLearning.toJSON();
-    project.externalModules = blockLoader.moduleList;
+    project.externalModules = entryModuleLoader.moduleList;
 
     if (!objects || !objects.length) {
         return false;
