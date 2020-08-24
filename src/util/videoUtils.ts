@@ -715,8 +715,9 @@ class VideoUtils implements MediaUtilsInterface {
         if (this.flipStatus.vertical) {
             this.setOptions('vflip', null);
         }
-
-        GEHelper.setVideoAlpha(this.canvasVideo, 50);
+        if (this.canvasVideo) {
+            GEHelper.setVideoAlpha(this.canvasVideo, 50);
+        }
 
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
