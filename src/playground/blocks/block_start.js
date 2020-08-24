@@ -58,7 +58,7 @@ module.exports = {
                     {
                         type: 'Keyboard',
                         options: keyInputList,
-                        value: 'next',
+                        value: 'q',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.START,
                         arrowColor: EntryStatic.colorSet.arrow.default.START,
@@ -93,7 +93,7 @@ module.exports = {
                                 undefined,
                                 {
                                     type: 'Dropdown',
-                                    value: 'next',
+                                    value: 'q',
                                     options: keyInputList,
                                     arrowColor: EntryStatic.colorSet.arrow.default.START,
                                     converter: Entry.block.converters.keyboardCode,

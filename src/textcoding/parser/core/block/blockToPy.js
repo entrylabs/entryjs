@@ -293,14 +293,27 @@ Entry.BlockToPyParser = class {
                         );
                     }
                     const isTypeNumber = Entry.Utils.isNumber(param);
+
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
                     if (
-                        (!Entry.Utils.isNumber(param) &&
-                            (block.type === 'when_some_key_pressed' ||
-                                block.type === 'is_press_some_key')) ||
-                        (!isTypeNumber &&
-                            Entry.Utils.isNumber(param) &&
-                            (block.type === 'number' || block.type === 'string'))
+                        !Entry.Utils.isNumber(param) &&
+                        (block.type === 'when_some_key_pressed' ||
+                            block.type === 'is_press_some_key')
+                    ) {
+                        if (
+                            !Entry.KeyboardCode.map[
+                                typeof param === 'string' ? param.toLowerCase() : param
+                            ]
+                        ) {
+                            Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.parameter_can_not_space);
+                            throw Error('');
+                        }
+
+                        result += `"${param}"`;
+                    } else if (
+                        !isTypeNumber &&
+                        Entry.Utils.isNumber(param) &&
+                        (block.type === 'number' || block.type === 'string')
                     ) {
                         result += `"${param}"`;
                     } else {
