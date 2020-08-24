@@ -292,7 +292,7 @@ Entry.BlockToPyParser = class {
                             textParam
                         );
                     }
-                    const isTypeNumber = typeof param === 'number';
+                    const isTypeNumber = Entry.Utils.isNumber(param);
 
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
                     if (
