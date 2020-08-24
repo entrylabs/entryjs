@@ -391,7 +391,8 @@ Entry.overridePrototype = function() {
                 .mod(right)
                 .add(right)
                 .mod(right)
-                .value();
+                .value
+                .toNumber();
         } catch (e) {
             return ((this % n) + n) % n;
         }
