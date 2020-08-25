@@ -7,6 +7,7 @@ import _clamp from 'lodash/clamp';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 import blockLoader from '../class/entryModuleLoader';
+import { chain, bignumber } from 'mathjs';
 
 Entry.Utils = {};
 
@@ -381,7 +382,20 @@ Entry.resizeElement = function(interfaceModel) {
 Entry.overridePrototype = function() {
     /** modulo include negative number */
     Number.prototype.mod = function(n) {
-        return ((this % n) + n) % n;
+        try {
+            // 음수 보정을 위해서 존재하는 기능
+            // INFO : https://stackoverflow.com/questions/4467539/javascript-modulo-gives-a-negative-result-for-negative-numbers
+            const left = bignumber(this);
+            const right = bignumber(n);
+            return chain(left)
+                .mod(right)
+                .add(right)
+                .mod(right)
+                .value
+                .toNumber();
+        } catch (e) {
+            return ((this % n) + n) % n;
+        }
     };
 
     //polyfill
