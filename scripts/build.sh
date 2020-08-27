@@ -7,7 +7,6 @@ git config --global user.email "entrydev@nts-corp.com";
 export NODE_ENV=production
 git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
 rm -rf build/**/* || exit 0
-npm run dist
 cp -r dist build/
 cp -r extern build/
 cp -r images build/
