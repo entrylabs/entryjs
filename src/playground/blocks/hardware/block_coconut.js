@@ -1997,7 +1997,7 @@ Entry.coconut.getBlocks = function() {
                 },
                 {
                     type: 'Block',
-                    acce기t: 'string',
+                    accept: 'string',
                 },
                 {
                     type: 'Indicator',
