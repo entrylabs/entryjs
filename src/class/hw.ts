@@ -1,6 +1,4 @@
-﻿'use strict';
-
-import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
+﻿import HardwareSocketMessageHandler from './hardware/hardwareSocketMessageHandler';
 import HardwareMonitor from './hardware/hardwareMonitor';
 import createHardwarePopup from './hardware/functions/createHardwarePopup';
 import ExternalProgramLauncher from './hardware/externalProgramLauncher';

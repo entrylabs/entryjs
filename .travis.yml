@@ -1,8 +1,6 @@
 stages:
     - name: test
       if: type = pull_request
-    - name: deploy
-      if: (type = push) AND ((branch =~ /^deploy\/.*$/) OR (branch = master))
 language:
     - node_js
 node_js:
@@ -21,18 +19,3 @@ jobs:
           install:
               - yarn --ignore-engines
           script: yarn test
-        - stage: deploy
-          before_script:
-              - chmod +x ./scripts/build.sh
-              - chmod +x ./scripts/deploy.sh
-          install:
-              - yarn --ignore-engines
-          script:
-              - export NODE_OPTIONS="--max-old-space-size=4096"
-              - export TOOL_NODE_FLAGS="--max-old-space-size=4096"
-              - ./scripts/build.sh
-              - ./scripts/deploy.sh
-          notifications:
-              email: false
-              slack:
-                  secure: YiNtTPgO0groTXNqVfYsxTWwu8/zeAllZsZaR2G5rRfMsDDUAei4qUMgX5lCPkcMIKh+zHuZa+D7hUb3dxno2ZnU0IGF1wlaiRFy6bOsUIgy/LhEtPBNxyE39ZpNaYsIByuz45PfAHrOH1mm/UgcTlLwZTAwaOj+6W+C0v0oE3ZG1RCTMVCilDgSj1ZWU2RRX5Wx43iX8RV9TOpXTLAuLiG13q9dkJ0vAF+UQ+XETTmKhe1KY6JvKfbnYiX+0H5fYWkoTrCqojbjR6yvG1q1qOXapVBlv9BHnXEMqdxfUbfOc7YlcKntABYqkqOoi3jM3u6wES+5ZYbESSa1HlT9SlbtZLk/OzONTlxg2CrRTtjAzxWaf9QCE8hB64qWS3uriWUjsI90zTUJVkflZK79cLuZl/Y6hb8Td/H00AFxo89TrDGM6aAIx6pLx+HQNo46Sw5NNVYnCRsGitB2TlVVYSFJYbsNkmSk0oGGRUJHkd5JWmz7pmk281Q1QxaN2qtAOMhpZHHuedP6kHEaHOuiOdorNnKqmgjXEGIeH5UyqpqTJ0UB5jQTTRvnIzstsK5M8WNDoqSXZ7v4rCw8uFKIbCW7sbZhKuGzm6jeJhlwN8AI7LWe7mw3Bu+UAcTvuE8UZYj2HZg+8NfhwwPuIy0/GmHhEXddxTMxuz9g1eQwdis=
