@@ -139,7 +139,7 @@ declare module IEntry {
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
 
-declare interface EntryBlock {
+declare type EntryBlock = {
     color: string;
     outerLine?: string;
     skeleton: string;
@@ -161,26 +161,26 @@ declare interface EntryBlock {
     }
     func?: Function;
     syntax?: {
-        js: any[];
+        js?: any[];
         py: any[];
     }
 }
 
 // expansion blocks 의 스키마를 따름
-declare type EntryBlockModule = {
+declare interface EntryBlockModule {
     name: string;
     title: { [key: string]: string };
     description?: string;
     getBlocks: () => { [blockName: string]: EntryBlock };
-};
+}
 
-declare type EntryHardwareBlockModule = {
+declare interface EntryHardwareBlockModule extends EntryBlockModule {
     // 홍보용
     imageName: string;
     url: string;
 
     // 모듈 정의용
-    id: HardwareModuleId;
+    id: string | string[];
     monitorTemplate?: UnknownAny;
     communicationType?: string;
     sendMessage?: (hw: import('../src/class/hw').default) => void;
@@ -196,4 +196,4 @@ declare type EntryHardwareBlockModule = {
     afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
     afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
     dataHandler?: (data: HardwareMessageData) => void;
-} & EntryBlockModule
+}

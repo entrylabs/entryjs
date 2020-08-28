@@ -5,11 +5,7 @@ type EntryBlockRegisterSchema = {
 };
 
 class EntryModuleLoader {
-    private _moduleList: string[] = [];
-
-    get moduleList() {
-        return this._moduleList;
-    }
+    public moduleList: string[] = [];
 
     /**
      * 해당 url 을 동적으로 로드한다.
@@ -18,7 +14,7 @@ class EntryModuleLoader {
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
     loadModule(moduleName: string): Promise<void> {
         // 이미 로드된 모듈은 다시 로드하지 않는다.
-        if (this._moduleList.includes(moduleName)) {
+        if (this.moduleList.includes(moduleName)) {
             return Promise.resolve();
         }
 
@@ -32,7 +28,7 @@ class EntryModuleLoader {
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                this._moduleList.push(moduleName);
+                !this.moduleList.includes(moduleName) && this.moduleList.push(moduleName);
                 scriptElement.remove();
                 resolve();
             };
@@ -208,5 +204,5 @@ Entry.moduleManager = instance;
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(instance.loadModule));
+    await Promise.all(externalModules.map(instance.loadModule.bind(instance)));
 };
