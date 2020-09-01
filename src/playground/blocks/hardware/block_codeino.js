@@ -295,8 +295,8 @@ Entry.CODEino.blockMenuBlocks = [
 
     'CODEino_get_digital_value',
     'CODEino_set_digital_value',
-    'CODEino_set_pwm_value',
 
+    'CODEino_set_pwm_value',
     'CODEino_get_analog_value',
     'CODEino_convert_scale',
 
