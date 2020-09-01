@@ -201,7 +201,16 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'text',
-            blocks: ['text_write', 'text_append', 'text_prepend', 'text_flush'],
+            blocks: [
+                'text_write',
+                'text_append',
+                'text_prepend',
+                'text_change_effect',
+                'text_change_font',
+                'text_change_font_color',
+                'text_change_bg_color',
+                'text_flush',
+            ],
         },
         {
             category: 'sound',

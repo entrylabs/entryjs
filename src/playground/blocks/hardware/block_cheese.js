@@ -4106,7 +4106,7 @@ Entry.Cheese.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['50'],
+                        params: ['300'],
                     },
                     null,
                 ],
@@ -9044,7 +9044,7 @@ Entry.Cheese.getBlocks = function() {
                     null,
                     {
                         type: 'text',
-                        params: ['0'],
+                        params: ['1'],
                     },
                     null,
                 ],

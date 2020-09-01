@@ -290,7 +290,17 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'text',
-            blocks: ['text_read', 'text_write', 'text_append', 'text_prepend', 'text_flush'],
+            blocks: [
+                'text_read',
+                'text_write',
+                'text_append',
+                'text_prepend',
+                'text_change_effect',
+                'text_change_font',
+                'text_change_font_color',
+                'text_change_bg_color',
+                'text_flush',
+            ],
         },
         {
             category: 'sound',
@@ -391,8 +401,11 @@ EntryStatic.getAllBlocks = function() {
             blocks: [
                 'aiUtilizeBlockAddButton',
                 'aiUtilizeModelTrainButton',
-                'learning_title',
+                'learning_title_image',
+                'learning_title_speech',
+                'learning_title_text',
                 'insert_data_for_test',
+                'insert_text_block_for_test',
                 'test_result',
                 'accuracy_of_result',
                 'is_group',

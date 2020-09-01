@@ -15,3 +15,8 @@ declare module '*.worker.ts' {
     var value: new () => Worker;
     export = value;
 }
+
+declare module '@egjs/*' {
+    const value: any;
+    export default value;
+}
