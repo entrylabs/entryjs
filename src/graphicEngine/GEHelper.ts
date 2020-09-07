@@ -178,7 +178,15 @@ class _GEHelper extends GEHelperBase {
         if (this._isWebGL) {
             Entry.stage._app.ticker.start();
         } else {
-            createjs.Ticker.on('tick', Entry.stage.canvas);
+            createjs.Ticker.addEventListener('tick', Entry.stage.canvas);
+        }
+    }
+    // for createJS ONLY issue, #12012
+    disableTickByEngine() {
+        if (this._isWebGL) {
+            return;
+        } else {
+            createjs.Ticker.removeEventListener('tick', Entry.stage.canvas);
         }
     }
 

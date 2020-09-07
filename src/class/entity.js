@@ -297,8 +297,8 @@ Entry.EntityObject = class EntityObject {
      * @param {number} direction
      * @param {boolean} flippable
      */
-    setDirection(direction = 0, flippable) {
-        direction = direction % 360;
+    setDirection(dir = 0, flippable) {
+        const direction = dir.mod(360);
         const parent = this.parent;
 
         if (parent.getRotateMethod() === 'vertical' && !flippable) {
@@ -311,7 +311,7 @@ Entry.EntityObject = class EntityObject {
             }
         }
         /** @type {number} */
-        this.direction = direction.mod(360);
+        this.direction = direction;
         this.object.direction = this.direction * GEHelper.rotateWrite;
         !this.isClone && parent.updateRotationView();
         Entry.dispatchEvent('updateObject');

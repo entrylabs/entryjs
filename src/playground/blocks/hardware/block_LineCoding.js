@@ -3,6 +3,7 @@
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 let LineNum = 20;
+let WheelNum = 18;
 let LineInit = 0;
 let LineSaveFlag = 0;
 let LineOneFlag = 1;
@@ -605,7 +606,7 @@ Entry.LineCoding.getBlocks = function() {
                         ['6', '3'],
                         ['7', '4'],
                     ],
-                    value: '0',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1521,7 +1522,7 @@ Entry.LineCoding.getBlocks = function() {
                 if (LineOneFlag == 1) {
                     LineInit = Entry.hw.portData.DIGITAL[0];
                     time2 = Math.min(10000, time2);
-                    time2 = Math.max(0, time2);
+                    time2 = Math.max(-10000, time2);
                     speed2 = Math.min(20, speed2);
                     speed2 = Math.max(0, speed2);
 
@@ -1802,9 +1803,9 @@ Entry.LineCoding.getBlocks = function() {
                     mode2 = Math.min(2, mode2);
                     mode2 = Math.max(1, mode2);
                     lspeed2 = Math.min(20, lspeed2);
-                    lspeed2 = Math.max(-0, lspeed2);
+                    lspeed2 = Math.max(-20, lspeed2);
                     rspeed2 = Math.min(20, rspeed2);
-                    rspeed2 = Math.max(-0, rspeed2);
+                    rspeed2 = Math.max(-20, rspeed2);
                     sensor2 = Math.min(8, sensor2);
                     sensor2 = Math.max(1, sensor2);
 
@@ -1823,7 +1824,7 @@ Entry.LineCoding.getBlocks = function() {
                             time: new Date().getTime(),
                         };
                     } else {
-                        Entry.hw.sendQueue.SET[20] = {
+                        Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                             type: Entry.LineCoding.sensorTypes.LINE_BWMOTOR,
                             data: {
                                 mode: mode2,
@@ -1903,7 +1904,12 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                    if (WheelNum == 18) {
+                        WheelNum = 19;
+                    } else {
+                        WheelNum = 18;
+                    }
+                    Entry.hw.sendQueue.SET[parseInt(WheelNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_WHEEL,
                         data: {
                             lspeed: lspeed2,
@@ -1958,7 +1964,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['100'],
+                        params: ['0'],
                     },
                     null,
                 ],
@@ -1992,15 +1998,27 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    Entry.hw.sendQueue.SET[parseInt(sport2 + 10, 10)] = {
-                        type: Entry.LineCoding.sensorTypes.LINE_SERVO,
-                        data: {
-                            sport: sport2,
-                            angle: angle2,
-                            speed: speed2,
-                        },
-                        time: new Date().getTime(),
-                    };
+                    if (LineSaveFlag == 1) {
+                        Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                            type: Entry.LineCoding.sensorTypes.LINE_SERVO,
+                            data: {
+                                sport: sport2,
+                                angle: angle2,
+                                speed: speed2,
+                            },
+                            time: new Date().getTime(),
+                        };
+                    } else {
+                        Entry.hw.sendQueue.SET[parseInt(sport2, 10)] = {
+                            type: Entry.LineCoding.sensorTypes.LINE_SERVO,
+                            data: {
+                                sport: sport2,
+                                angle: angle2,
+                                speed: speed2,
+                            },
+                            time: new Date().getTime(),
+                        };
+                    }
                     return script.callReturn();
                 } else {
                     return script.callReturn();
@@ -2057,15 +2075,29 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    Entry.hw.sendQueue.SET[18] = {
-                        type: Entry.LineCoding.sensorTypes.LINE_PORT,
-                        /// 출력 디바이스
-                        data: {
-                            dport: dport2,
-                            value: value2,
-                        },
-                        time: new Date().getTime(),
-                    };
+                    if (LineSaveFlag == 1) {
+                        ++LineNum;
+                        Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {  //18
+                            type: Entry.LineCoding.sensorTypes.LINE_PORT,
+                            /// 출력 디바이스
+                            data: {
+                                dport: dport2,
+                                value: value2,
+                            },
+                            time: new Date().getTime(),
+                        };
+                    }
+                    else {
+                        Entry.hw.sendQueue.SET[parseInt(dport2, 10)] = {  //18
+                            type: Entry.LineCoding.sensorTypes.LINE_PORT,
+                            /// 출력 디바이스
+                            data: {
+                                dport: dport2,
+                                value: value2,
+                            },
+                            time: new Date().getTime(),
+                        };
+                    }
                     return script.callReturn();
                 } else {
                     return script.callReturn();
@@ -2326,7 +2358,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'text', 
-                        params: ['Hello, Linecoding'],
+                        params: ['Hi, LineCoding'],
                     },
                     null,
                 ],
@@ -2387,10 +2419,10 @@ Entry.LineCoding.getBlocks = function() {
                             text13: text[13],
                             text14: text[14],
                             text15: text[15],
-                            text15: text[16],
-                            text15: text[17],
-                            text15: text[18],
-                            text15: text[19],
+                            text16: text[16],
+                            text17: text[17],
+                            text18: text[18],
+                            text19: text[19],
                         },
                         time: new Date().getTime(),
                     };
@@ -2879,8 +2911,8 @@ Entry.LineCoding.getBlocks = function() {
             },
             paramsKeyMap: {
                 COUNT: 0,
-                OFFTIME: 1,
-                ONTIME: 2,
+                ONTIME: 1,
+                OFFTIME: 2,
             },
             class: 'LineCoding_LINE5',
             isNotFor: ['LineCoding'],
@@ -3062,11 +3094,11 @@ Entry.LineCoding.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['10'],
+                        params: ['6'],
                     },
                     {
                         type: 'text',
-                        params: ['-8'],
+                        params: ['-4'],
                     },
                     {
                         type: 'text',
@@ -3187,9 +3219,9 @@ Entry.LineCoding.getBlocks = function() {
                 let lspeed2 = script.getNumberValue('LSPEED', script);
                 ++LineNum;
                 
-                lspeed2 = Math.min(200, lspeed2);
+                lspeed2 = Math.min(255, lspeed2);
                 lspeed2 = Math.max(0, lspeed2);
-                rspeed2 = Math.min(200, rspeed2);
+                rspeed2 = Math.min(255, rspeed2);
                 rspeed2 = Math.max(0, rspeed2);
 
                 if (!Entry.hw.sendQueue.SET) {
@@ -3203,6 +3235,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     time: new Date().getTime(),
                 };
+                ++LineNum;
                 LmotorSpeed = lspeed2;
                 RmotorSpeed = rspeed2;
                 return script.callReturn();
@@ -3257,9 +3290,9 @@ Entry.LineCoding.getBlocks = function() {
                 let lspeed2 = script.getNumberValue('LSPEED', script);
                 ++LineNum;
                 
-                lspeed2 = Math.min(200, lspeed2);
+                lspeed2 = Math.min(255, lspeed2);
                 lspeed2 = Math.max(0, lspeed2);
-                rspeed2 = Math.min(200, rspeed2);
+                rspeed2 = Math.min(255, rspeed2);
                 rspeed2 = Math.max(0, rspeed2);
 
                 if (!Entry.hw.sendQueue.SET) {
@@ -3273,6 +3306,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     time: new Date().getTime(),
                 };
+                ++LineNum;
                 LmotorSpeed = lspeed2;
                 RmotorSpeed = rspeed2;
                 return script.callReturn();
@@ -3306,11 +3340,11 @@ Entry.LineCoding.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['255'],
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['255'],
                     },
                     null,
                 ],
@@ -3325,16 +3359,17 @@ Entry.LineCoding.getBlocks = function() {
             func(sprite, script) {
                 let rspeed2 = script.getNumberValue('RSPEED', script);
                 let lspeed2 = script.getNumberValue('LSPEED', script);
-                ++LineNum;
                 
-                lspeed2 = Math.min(200, lspeed2);
+                lspeed2 = Math.min(255, lspeed2);
                 lspeed2 = Math.max(0, lspeed2);
-                rspeed2 = Math.min(200, rspeed2);
+                rspeed2 = Math.min(255, rspeed2);
                 rspeed2 = Math.max(0, rspeed2);
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
+
+                ++LineNum;
                 Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                     type: Entry.LineCoding.sensorTypes.LINE_MOTORSTOP,
                     data: {
@@ -3343,6 +3378,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     time: new Date().getTime(),
                 };
+                ++LineNum;
                 LmotorSpeed = lspeed2;
                 RmotorSpeed = rspeed2;
                 return script.callReturn();
