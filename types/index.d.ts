@@ -20,7 +20,7 @@ declare interface ISkeleton {
     dropdownHeight?: number; // for pebble
     path: (blockView: any) => string; // svg path string
     box: (
-        blockView: any
+        blockView: any,
     ) => {
         offsetX: number;
         offsetY: number;
@@ -31,7 +31,7 @@ declare interface ISkeleton {
     };
     contentPos: (blockView: any) => Point;
     magnets?: (
-        blockView: any
+        blockView: any,
     ) => {
         next?: Point;
         previous?: Point;
@@ -44,8 +44,11 @@ declare interface ISkeleton {
 
 declare interface MediaUtilsInterface {
     initialize(): void;
+
     reset(): void;
+
     destroy(): void;
+
     compatabilityChecker(): void; // throws error if failed
 }
 
@@ -60,12 +63,13 @@ declare interface EntryDomOptions {
 }
 
 declare interface EntryDom extends JQuery {
+    innerHTML?: string;
     bindOnClick?: (e: any) => this;
 }
 
 declare type EntryDomConstructor = (
     tag: string | HTMLElement | JQuery,
-    options?: EntryDomOptions
+    options?: EntryDomOptions,
 ) => EntryDom;
 
 interface HardwareMessageData extends HardwareModuleId {
@@ -84,35 +88,29 @@ type WebSocketMessage = {
 };
 
 declare module IEntry {
-    export const Dom: EntryDomConstructor;
-
     export interface Container {
         resizeEvent: any; // Entry.Event
         splitterEnable?: boolean;
+
         getAllObjects(): UnknownAny[];
     }
 
     export interface Playground {
         object?: UnknownAny;
         setMenu?: UnknownFunction;
-    }
-
-    /**
-     * 오브젝트, 도움말, 하드웨어등의 정보를 가지고있는 좌측하단 패널
-     */
-    export interface PropertyPanel {
-        select(modeName: string): void;
-        resize(canvasSize: number): void;
-        removeMode(mode: string): void;
-        addMode(modeKey: string, element: UnknownAny): void;
-        selected: string;
+        resizing: boolean;
+        checkVariables: () => void;
+        hideTabs: () => void;
+        showTabs: () => void;
     }
 
     export interface Stage {
         loadDialog(dialog: any): void;
+
         unloadDialog(dialog: any): void;
-        canvas: PIXI.Container | any;
-        _app: PIXI.Application | any;
+
+        canvas: any;
+        _app: any;
     }
 
     /**
@@ -124,97 +122,78 @@ declare module IEntry {
         alert: WSToastFunction;
         warning: WSToastFunction;
         success: WSToastFunction;
-    }
-
-    /**
-     * 최초 엔트리 Init 시 받는 옵션들. 여기저기서 사용된다
-     */
-    export interface EntryOptions {
-        hardwareEnable?: boolean;
-    }
-
-    export interface ExternalModuleManager {
-        loadExternalModule(moduleName: string): Promise<void>;
-        registerHardwareModule(moduleObject: HardwareModule): void;
-    }
-
-    /**
-     * 외부에 노출될 수 있는 하드웨어 클래스 내 변수 및 함수 정의
-     */
-    export interface Hardware {
-        portData: UnknownAny;
-        sendQueue: UnknownAny;
-        update: () => void;
-        closeConnection: () => void;
-        downloadConnector: () => void;
-        downloadGuide: () => void;
-        downloadSource: () => void;
-        setZero: () => void;
-        checkDevice: (data: HardwareMessageData) => void;
-        openHardwareDownloadPopup: () => void;
-        setExternalModule: (moduleObject: IEntry.HardwareModule) => void;
-        onReceiveData?: (portData: any) => void;
-    }
-
-    /**
-     * 엔트리 워크스페이스에 존재하는 하드웨어 모듈
-     * 블록 및 하드웨어모니터 UI 정보, 통신 로직을 가지고있음
-     */
-    export interface HardwareModule {
-        id: HardwareModuleId;
-        name: string;
-        monitorTemplate?: UnknownAny;
-        communicationType?: string;
-        sendMessage?: (hw: Hardware) => void;
-
-        // 필수 함수 목록
-        setZero: () => void;
-        getBlocks: () => { [blockName: string]: EntryBlock };
-        blockMenuBlocks: string[];
-        setLanguage: () => {
-            [langType: string]: { [type: string]: { [templateName: string]: string } };
-        };
-
-        //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
-        afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
-        afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
-        dataHandler?: (data: HardwareMessageData) => void;
-    }
-
-    export interface EntryBlock {
-        color: string;
-        outerLine?: string;
-        skeleton: string;
-        statements: any[];
-        params: {
-            type: string;
-            img?: string;
-            size: number;
-            value?: number;
-            fontSize?: number;
-            bgColor?: string;
-            arrowColor?: string;
-            position?: { x: number; y: number };
-        };
+        isOpen: (target?: any) => boolean;
     }
 
     export interface Intro {
         modes: any;
         selected: any;
+
         generateView(introView: any): void;
+
         setView(view: any): void;
+
         removeView(): void;
     }
 
-    export interface PDF {
-        getView(): HTMLDivElement;
-        resize(): void;
-        // generateView
-    }
-
-    export interface Dialog {
-        update(): void;
-        remove(): void;
-    }
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
+}
+
+declare type EntryBlock = {
+    color: string;
+    outerLine?: string;
+    skeleton: string;
+    statements?: any[];
+    template?: string;
+    params: { [key: string]: any; };
+    defs?: any; // legacy
+    def: { type: string; } & { [key: string]: any }
+    paramsKeyMap?: { [key: string]: number; }
+    class: string;
+    isFor?: string[];
+    isNotFor?: string[];
+    events: { [key: string]: any; }
+    type?: string;
+    category?: string;
+    pyHelpDef?: {
+        params: string[];
+        type: string;
+    }
+    func?: Function;
+    syntax?: {
+        js?: any[];
+        py: any[];
+    }
+}
+
+// expansion blocks 의 스키마를 따름
+declare interface EntryBlockModule {
+    name: string;
+    title: { [key: string]: string };
+    description?: string;
+    getBlocks: () => { [blockName: string]: EntryBlock };
+}
+
+declare interface EntryHardwareBlockModule extends EntryBlockModule {
+    // 홍보용
+    imageName: string;
+    url: string;
+
+    // 모듈 정의용
+    id: string | string[];
+    monitorTemplate?: UnknownAny;
+    communicationType?: string;
+    sendMessage?: (hw: import('../src/class/hw').default) => void;
+
+    // 필수 함수 목록
+    setZero: () => void;
+    blockMenuBlocks: string[];
+    setLanguage: () => {
+        [langType: string]: { [type: string]: { [templateName: string]: string } };
+    };
+
+    //TODO afterSend, dataHandler 의 목적이 모호하므로 추후 개선 필요
+    afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
+    afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
+    dataHandler?: (data: HardwareMessageData) => void;
 }

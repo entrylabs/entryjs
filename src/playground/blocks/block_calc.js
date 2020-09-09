@@ -659,9 +659,6 @@ module.exports = {
                 func(sprite, script) {
                     const left = script.getNumberValue('LEFTHAND', script);
                     const right = script.getNumberValue('RIGHTHAND', script);
-                    if (isNaN(left) || isNaN(right)) {
-                        throw new Error();
-                    }
                     const operator = script.getField('OPERATOR', script);
                     if (operator === 'QUOTIENT') {
                         return Math.floor(left / right);

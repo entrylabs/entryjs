@@ -1,5 +1,4 @@
-
-import PopupHelper from "./popup_helper";
+import PopupHelper from './popup_helper';
 import TextLearning from './learning/TextLearning';
 
 export default class AILearning {

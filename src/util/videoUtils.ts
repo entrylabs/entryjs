@@ -715,8 +715,9 @@ class VideoUtils implements MediaUtilsInterface {
         if (this.flipStatus.vertical) {
             this.setOptions('vflip', null);
         }
-
-        GEHelper.setVideoAlpha(this.canvasVideo, 50);
+        if (this.canvasVideo) {
+            GEHelper.setVideoAlpha(this.canvasVideo, 50);
+        }
 
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
@@ -730,9 +731,12 @@ class VideoUtils implements MediaUtilsInterface {
         this.disableAllModels();
         this.turnOffWebcam();
         try {
-            this.stream.getTracks().forEach((track) => {
-                track.stop();
-            });
+            if (this.stream) {
+                this.stream.getTracks().forEach((track) => {
+                    track.stop();
+                });
+            }
+
             // this.worker.terminate();
         } catch (err) {
             console.log(err);
@@ -758,7 +762,7 @@ class VideoUtils implements MediaUtilsInterface {
             object: false,
             warmup: null,
         };
-        if (this.isChrome) {
+        if (this.isChrome && this.isInitialized) {
             this.worker.postMessage({
                 type: 'handleOff',
             });
