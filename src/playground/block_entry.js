@@ -7876,7 +7876,7 @@ function applySetLanguage(hasSetLanguageObj) {
 }
 
 Entry.reloadBlock = function() {
-    Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
+    Object.values(Entry.HARDWARE_LIST || {}).forEach(applySetLanguage);
     assignBlocks();
     inheritBlockSchema();
 };
