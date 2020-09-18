@@ -36,8 +36,11 @@ class EntryModuleLoader {
                 scriptElement.remove();
                 reject(e);
             };
-
-            scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
+            if (Entry.offlineModulePath) {
+                scriptElement.src = `${Entry.offlineModulePath}/${moduleName}/block`;
+            } else {
+                scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
+            }
 
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);

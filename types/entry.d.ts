@@ -5,6 +5,7 @@ declare interface EntryOptions {
     dataTableEnable?: boolean;
     mediaFilePath?: string;
     moduleBaseUrl?: string;
+    offlineModulePath?: string;
 }
 
 /**
