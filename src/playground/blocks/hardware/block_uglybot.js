@@ -19,6 +19,7 @@ Entry.UglyBot = {
         CMD_ROT_HIGH: 14,
         CMD_SERVO1: 15,
         CMD_SERVO2: 16,
+        CMD_IRPIN: 17,
     },
     Sensor: {
         ENSOR_GOLDENKEY0: 0,
@@ -191,6 +192,7 @@ Entry.UglyBot.setLanguage = function() {
                 uglybot_move: '%1(으)로 %2cm 이동 %3',
                 uglybot_rotation: '%1방향으로 %2도 회전 %3',
                 uglybot_servo: '%1번 서보모터를 %2도 회전 %3',
+                uglybot_irpin: '%1 적외선 센서 %2 %3',
                 uglybot_button: '버튼 값',
                 uglybot_ir: '%1 적외선센서 값',
                 uglybot_ultrasonic: '초음파센서 값',
@@ -240,6 +242,7 @@ Entry.UglyBot.setLanguage = function() {
                 uglybot_move: '%1(으)로 %2cm 이동 %3',
                 uglybot_rotation: '%1(으)로 %2도 회전 %3',
                 uglybot_servo: '%1번 서보모터를 %2도 회전 %3',
+                uglybot_irpin: '%1 적외선 센서 %2 %3',
                 uglybot_button: '버튼 값',
                 uglybot_ir: '%1 적외선센서 값',
                 uglybot_ultrasonic: '초음파센서 값',
@@ -291,6 +294,7 @@ Entry.UglyBot.blockMenuBlocks = [
     'uglybot_move',
     'uglybot_rotation',
     'uglybot_servo',
+    'uglybot_irpin',
     'uglybot_button',
     'uglybot_ir',
     'uglybot_ultrasonic',
@@ -812,6 +816,92 @@ Entry.UglyBot.getBlocks = function() {
                 degree = degree > 90 ? 90 : degree;
                 cmd[Entry.UglyBot.Cmd.CMD_SERVO1 + what] = degree & 0xff;
                 //console.log("servo what:%d degree:%d", 	what, degree);
+                Entry.hw.update();
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+
+        uglybot_irpin: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.uglybot_left, 0],
+                        [Lang.template.uglybot_mid, 1],
+                        [Lang.template.uglybot_right, 2],
+                    ],
+                    value: 0,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.uglybot_on, 0],
+                        [Lang.template.uglybot_off, 1],
+                    ],
+                    value: 0,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'uglybot_irpin',
+            },
+            paramsKeyMap: {
+                IRPIN_WHAT: 0,
+                IRPIN_ACT: 1,
+            },
+            class: 'UglyBot_Command',
+            isNotFor: ['UglyBot'],
+
+            func(sprite, script) {
+                if (typeof Entry.hw.sendQueue.CMD == 'undefined') {
+                    Entry.hw.sendQueue.CMD = [
+                        0x26,
+                        0xa8,
+                        0x14,
+                        0xe1,
+                        0x14,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                        0x00,
+                    ];
+                }
+                const cmd = Entry.hw.sendQueue.CMD;
+                const what = script.getNumberValue('IRPIN_WHAT', script);
+                const act = script.getNumberValue('IRPIN_ACT', script);
+                if (act == 0) {
+                    cmd[Entry.UglyBot.Cmd.CMD_IRPIN] |= 0x01 << what;
+                } else {
+                    cmd[Entry.UglyBot.Cmd.CMD_IRPIN] &= ~(0x01 << what);
+                }
                 Entry.hw.update();
                 return script.callReturn();
             },
