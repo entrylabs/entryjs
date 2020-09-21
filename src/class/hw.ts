@@ -570,7 +570,7 @@ export default class Hardware {
             return;
         }
 
-        Object.values(Entry.HARDWARE_LIST || {}).forEach((hardware) => {
+        Object.values(Entry.HARDWARE_LIST).forEach((hardware) => {
             blockMenu.banClass(hardware.name, true);
         });
     }
