@@ -255,7 +255,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         // this.codeListener?.destory();
         this.codeListener?.destroy?.();
-        
+
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             this.changeEvent.notify();
@@ -309,13 +309,14 @@ class BlockMenu extends ModelClass<Schema> {
             blockView.attach();
             blockView.set({ display: true });
             shouldReDraw && blockView.reDraw();
-
-            const className = Entry.block[type].class;
-            if (pastClass && pastClass !== className) {
-                this._createSplitter(marginFromTop);
-                marginFromTop += vPadding;
+            if (Entry.block[type]) {
+                const className = Entry.block[type].class;
+                if (pastClass && pastClass !== className) {
+                    this._createSplitter(marginFromTop);
+                    marginFromTop += vPadding;
+                }
+                pastClass = className;
             }
-            pastClass = className;
 
             let left = hPadding - blockView.offsetX;
             if (this._align === 'CENTER') {

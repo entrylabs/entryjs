@@ -12,23 +12,22 @@ class EntryModuleLoader {
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
-    loadModule(moduleName: string): Promise<void> {
+    loadModule(moduleInfo: { name: string; file: any }): Promise<void> {
         // 이미 로드된 모듈은 다시 로드하지 않는다.
-        if (this.moduleList.includes(moduleName)) {
-            return Promise.resolve();
-        }
-
+        // if (this.moduleList.includes(moduleInfo.name)) {
+        //     return Promise.resolve();
+        // }
         return new Promise((resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
 
-            if (!moduleName) {
+            if (!moduleInfo) {
                 return;
             }
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                !this.moduleList.includes(moduleName) && this.moduleList.push(moduleName);
+                !this.moduleList.includes(moduleInfo.name) && this.moduleList.push(moduleInfo.name);
                 scriptElement.remove();
                 resolve();
             };
@@ -36,14 +35,16 @@ class EntryModuleLoader {
                 scriptElement.remove();
                 reject(e);
             };
-            if (Entry.offlineModulePath) {
-                scriptElement.src = `${Entry.offlineModulePath}/${moduleName}/block`;
-            } else {
-                scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
-            }
 
+            const blobedBlock = new Blob([moduleInfo.file], {
+                type: 'text/javascript',
+            });
+            const blobUrl = URL.createObjectURL(blobedBlock);
+
+            scriptElement.src = blobUrl;
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
+            URL.revokeObjectURL(blobUrl);
         });
     }
 
@@ -62,19 +63,29 @@ class EntryModuleLoader {
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
+        const prevModuleBlocks = Entry.HARDWARE_LIST[`${moduleObject.id}`].blockMenuBlocks;
+        let removedCnt = 0;
+        for (const key of Object.keys(Entry.block)) {
+            if (prevModuleBlocks.indexOf(key) > -1) {
+                delete Entry.block[`${key}`];
+                removedCnt++;
+            }
+            if (removedCnt == prevModuleBlocks.length) {
+                break;
+            }
+        }
 
         if (typeof moduleObject.id === 'string') {
-            Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
+            Entry.HARDWARE_LIST[`${moduleObject.id}`] = moduleObject;
         } else if (moduleObject.id instanceof Array) {
             moduleObject.id.forEach((id) => {
-                Entry.HARDWARE_LIST[id] = moduleObject;
+                Entry.HARDWARE_LIST[`${id}`] = moduleObject;
             });
         }
 
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
-
         this.loadBlocks({
             categoryName: 'arduino',
             blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({

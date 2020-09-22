@@ -80,9 +80,10 @@ export default class Hardware {
         this._addEntryEventListener();
     }
 
-    async _loadExternalHardwareBlock(moduleName: string) {
+    async _loadExternalHardwareBlock(moduleinfo: { name: string; file: any }) {
+        console.log;
         try {
-            await Entry.moduleManager.loadModule(moduleName);
+            await Entry.moduleManager.loadModule(moduleinfo);
         } catch (e) {
             // Entry.toast.alert(
             //     Lang.Hw.hw_module_load_fail_title,
@@ -90,7 +91,7 @@ export default class Hardware {
             // );
             Entry.toast.alert(
                 '모듈 로드 실패',
-                `${moduleName} 로드에 실패했습니다. 관리자에게 문의하세요`
+                `${moduleinfo.name} 로드에 실패했습니다. 관리자에게 문의하세요`
             );
         }
     }
