@@ -3,7 +3,7 @@
 const PromiseManager = require('../../../core/promiseManager');
 
 Entry.CodeWiz = {
-    id: 'DF.DF',
+    id: '01.12',
     name: 'CodeWiz',
     url: 'http://codable.co.kr',
     imageName: 'codeino.png',
