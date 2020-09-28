@@ -17,6 +17,9 @@ class EntryModuleLoader {
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
     loadModule(moduleInfo: { name: string; file: string; key: string }): Promise<void> {
+        if (!moduleInfo.file || !moduleInfo.key || !moduleInfo.name) {
+            return;
+        }
         // sha1 key를 이용한 블럭 파일 검증.
         return new Promise(async (resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
