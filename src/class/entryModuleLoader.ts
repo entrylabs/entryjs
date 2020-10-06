@@ -18,7 +18,6 @@ class EntryModuleLoader {
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
     loadModule(moduleInfo: { name: string; file: string }): Promise<void> {
-        debugger;
         if (!moduleInfo.file || !moduleInfo.name) {
             return;
         }
