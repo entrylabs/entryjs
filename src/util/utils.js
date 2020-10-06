@@ -1962,13 +1962,15 @@ Entry.Utils.createMouseEvent = function(type, event) {
     return e;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, error) {
+Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
     let block = scope.block;
     message = message || 'Runtime Error';
     const toast = error.toast;
     const engine = Entry.engine;
 
-    engine && engine.toggleStop();
+    if(engine) {
+        await engine.toggleStop();
+    }
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
