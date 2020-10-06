@@ -3,7 +3,6 @@
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 let LineNum = 20;
-let WheelNum = 18;
 let LineInit = 0;
 let LineSaveFlag = 0;
 let LineOneFlag = 1;
@@ -606,7 +605,7 @@ Entry.LineCoding.getBlocks = function() {
                         ['6', '3'],
                         ['7', '4'],
                     ],
-                    value: '2',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1824,7 +1823,7 @@ Entry.LineCoding.getBlocks = function() {
                             time: new Date().getTime(),
                         };
                     } else {
-                        Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                        Entry.hw.sendQueue.SET[20] = {
                             type: Entry.LineCoding.sensorTypes.LINE_BWMOTOR,
                             data: {
                                 mode: mode2,
@@ -1904,12 +1903,7 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    if (WheelNum == 18) {
-                        WheelNum = 19;
-                    } else {
-                        WheelNum = 18;
-                    }
-                    Entry.hw.sendQueue.SET[parseInt(WheelNum, 10)] = {
+                    Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_WHEEL,
                         data: {
                             lspeed: lspeed2,
@@ -1964,7 +1958,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['100'],
                     },
                     null,
                 ],
@@ -2358,7 +2352,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'text', 
-                        params: ['Hi, LineCoding'],
+                        params: ['Hello, Linecoding'],
                     },
                     null,
                 ],
@@ -2419,10 +2413,10 @@ Entry.LineCoding.getBlocks = function() {
                             text13: text[13],
                             text14: text[14],
                             text15: text[15],
-                            text16: text[16],
-                            text17: text[17],
-                            text18: text[18],
-                            text19: text[19],
+                            text15: text[16],
+                            text15: text[17],
+                            text15: text[18],
+                            text15: text[19],
                         },
                         time: new Date().getTime(),
                     };
@@ -3094,11 +3088,11 @@ Entry.LineCoding.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['6'],
+                        params: ['10'],
                     },
                     {
                         type: 'text',
-                        params: ['-4'],
+                        params: ['-8'],
                     },
                     {
                         type: 'text',
