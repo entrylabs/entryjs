@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import path from 'path';
+import cryptojs from 'crypto-js';
 type EntryBlockRegisterSchema = {
     blockName: string;
     block: EntryBlock;
@@ -16,17 +17,19 @@ class EntryModuleLoader {
      * 오프라인의 경우, 오픈소스임으로, 로컬상태에서의 비정상적인 사용에 대한 제약이 힘든 부분이 있음. 다만, 온라인이 되는 경우 서버 검증을 사용 할 수 있음
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
-    loadModule(moduleInfo: { name: string; file: string; key: string }): Promise<void> {
-        if (!moduleInfo.file || !moduleInfo.key || !moduleInfo.name) {
+    loadModule(moduleInfo: { name: string; file: string }): Promise<void> {
+        debugger;
+        if (!moduleInfo.file || !moduleInfo.name) {
             return;
         }
+        const key = cryptojs.SHA1(moduleInfo.file);
         // sha1 key를 이용한 블럭 파일 검증.
         return new Promise(async (resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
             if (window.navigator.onLine) {
                 try {
                     const sha1Result = await fetch(
-                        `${Entry.moduleBaseUrl}key/${moduleInfo.name}/${moduleInfo.key}`
+                        `${Entry.moduleBaseUrl}key/${moduleInfo.name}/${key}`
                     );
                     if (sha1Result.status != 200) {
                         throw new Error('MODULE NOT VERIFIED');
