@@ -80,15 +80,20 @@ class EntryModuleLoader {
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
-        const prevModuleBlocks = Entry.HARDWARE_LIST[`${moduleObject.id}`].blockMenuBlocks;
-        let removedCnt = 0;
-        for (const key of Object.keys(Entry.block)) {
-            if (prevModuleBlocks.indexOf(key) > -1) {
-                delete Entry.block[`${key}`];
-                removedCnt++;
-            }
-            if (removedCnt == prevModuleBlocks.length) {
-                break;
+        const prevModuleBlocks =
+            Entry.HARDWARE_LIST[`${moduleObject.id}`] &&
+            Entry.HARDWARE_LIST[`${moduleObject.id}`].blockMenuBlocks;
+        // clear prevModule if present
+        if (prevModuleBlocks) {
+            let removedCnt = 0;
+            for (const key of Object.keys(Entry.block)) {
+                if (prevModuleBlocks.indexOf(key) > -1) {
+                    delete Entry.block[`${key}`];
+                    removedCnt++;
+                }
+                if (removedCnt == prevModuleBlocks.length) {
+                    break;
+                }
             }
         }
 
