@@ -1,7 +1,8 @@
 'use strict';
 
-const _clamp = require('lodash/clamp');
-const _get = require('lodash/get');
+const _ = require('lodash');
+const _clamp = _.clamp;
+const _get = _.get;
 
 const functionKeys = {
     TEST_MESSAGE: 0xfa,
@@ -1341,7 +1342,10 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['0', 0], ['1', 1]],
+                        options: [
+                            ['0', 0],
+                            ['1', 1],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1435,7 +1439,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['A', 1], ['B', 2], ['A+B', 3]],
+                        options: [
+                            ['A', 1],
+                            ['B', 2],
+                            ['A+B', 3],
+                        ],
                         value: 1,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1770,7 +1778,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1818,7 +1830,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
