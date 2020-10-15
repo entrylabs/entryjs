@@ -8,7 +8,7 @@ import AIUtilize from '../class/AIUtilize';
 import AILearning from '../class/AILearning';
 import Extension from '../extensions/extension';
 import CloudVariable from '../extensions/CloudVariable';
-
+import EntryModuleLoader from '../class/entryModuleLoader';
 import './utils';
 
 /**
@@ -16,7 +16,7 @@ import './utils';
  * @param {HTMLElement} container for entry workspace or others.
  * @param {Object} options for initialize.
  */
-Entry.init = function(container, options) {
+Entry.init = async function(container, options, project) {
     Entry.assert(typeof options === 'object', 'Init option is not object');
     Entry.assert(!!container, 'root container must be provided');
 
@@ -37,6 +37,7 @@ Entry.init = function(container, options) {
     this.options = options;
     this.parseOptions(options);
     setDefaultPathsFromOptions(options);
+
     this.cloudVariable = CloudVariable.getInstance();
 
     if (this.type === 'workspace' && this.isPhone()) {
@@ -59,6 +60,7 @@ Entry.init = function(container, options) {
     container && this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
+
     this.maxCloneLimit = 360;
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
@@ -110,6 +112,68 @@ Entry.init = function(container, options) {
     createjs.Sound.stop();
     BigNumber.config({ ERRORS: false });
 };
+
+// Entry.loadHardwareIfNeeded = async (project) => {
+//     if (!project) {
+//         return;
+//     }
+//     const moduleList = new Set();
+//     project.externalModules.map((extModule) => {
+//         moduleList.add(extModule);
+//     });
+//     // 개발 테스트용 코드...
+//     Object.flatten = function(data) {
+//         const result = {};
+//         function recurse(cur, prop) {
+//             if (Object(cur) !== cur) {
+//                 result[prop] = cur;
+//             } else if (Array.isArray(cur)) {
+//                 for (let i = 0; i < cur.length; i++) {
+//                     recurse(cur[i], `${prop}[${i}]`);
+//                 }
+//                 if (cur.length == 0) {
+//                     result[prop] = [];
+//                 }
+//             } else {
+//                 let isEmpty = true;
+//                 for (const prop in cur) {
+//                     isEmpty = false;
+//                     recurse(cur[prop], prop ? `prop.${prop}` : prop);
+//                 }
+//                 if (isEmpty && prop) {
+//                     result[prop] = {};
+//                 }
+//             }
+//         }
+//         recurse(data, '');
+//         return result;
+//     };
+//     await Promise.all(
+//         project.objects.map(async (object) => {
+//             if (!object || typeof object.script == 'object') {
+//                 return;
+//             }
+//             const flattened = Object.flatten(await JSON.parse(object.script));
+//             for (const key of Object.keys(flattened)) {
+//                 if (key.indexOf('type') > -1 && !Entry.block[flattened[key]]) {
+//                     const splitted = flattened[key].split('_');
+//                     moduleList.add(splitted[0]);
+//                 }
+//             }
+//         })
+//     );
+//     /////// 실제 코드에서는 project.externalModules에 저장하는 방식.
+
+//     if (moduleList.size == 0) {
+//         return;
+//     }
+
+//     await Promise.all(
+//         Array.from(moduleList).map(async (module) => {
+//             await EntryModuleLoader.loadModuleFromOnline(module);
+//         })
+//     );
+// };
 
 const setDefaultPathsFromOptions = function(options) {
     const {
