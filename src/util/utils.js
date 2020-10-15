@@ -25,13 +25,15 @@ Entry.clipboard = null;
  * Load project
  * @param {*} project
  */
-Entry.loadProject = function(project) {
+Entry.loadProject = async function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
+    await Entry.loadHardwareIfNeeded(project);
     if (this.type === 'workspace') {
         Entry.stateManager.startIgnore();
     }
+
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
@@ -391,8 +393,7 @@ Entry.overridePrototype = function() {
                 .mod(right)
                 .add(right)
                 .mod(right)
-                .value
-                .toNumber();
+                .value.toNumber();
         } catch (e) {
             return ((this % n) + n) % n;
         }

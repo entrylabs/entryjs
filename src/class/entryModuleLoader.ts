@@ -40,11 +40,33 @@ class EntryModuleLoader {
             if (!moduleInfo) {
                 return;
             }
+            await this.loadScript(moduleInfo.name, moduleInfo.file);
+        });
+    }
+
+    async loadModuleFromOnline(name: string) {
+        const lowerCaseName = name.toLowerCase();
+        await fetch(`${Entry.moduleBaseUrl}${lowerCaseName}/files/block`)
+            .then(async (response) => {
+                if (response.status != 200) {
+                    throw new Error('MODULE NOT EXIST');
+                }
+                const result = await response.text();
+                await this.loadScript(name, result);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    }
+
+    async loadScript(name: string, code: string) {
+        return await new Promise(async (resolve, reject) => {
+            const scriptElementId = `entryModuleScript${Date.now()}`;
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                !this.moduleList.includes(moduleInfo.name) && this.moduleList.push(moduleInfo.name);
+                !this.moduleList.includes(name) && this.moduleList.push(name);
                 scriptElement.remove();
                 resolve();
             };
@@ -53,7 +75,7 @@ class EntryModuleLoader {
                 reject(e);
             };
 
-            const blobedBlock = new Blob([moduleInfo.file], {
+            const blobedBlock = new Blob([code], {
                 type: 'text/javascript',
             });
             const blobUrl = URL.createObjectURL(blobedBlock);
