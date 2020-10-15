@@ -265,5 +265,5 @@ Entry.moduleManager = instance;
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(instance.loadModuleFromLocal.bind(instance)));
+    await Promise.all(externalModules.map(instance.loadModuleFromLocalOrOnline.bind(instance)));
 };
