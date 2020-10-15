@@ -1,5 +1,4 @@
 import fetch from 'isomorphic-fetch';
-import path from 'path';
 import cryptojs from 'crypto-js';
 type EntryBlockRegisterSchema = {
     blockName: string;
@@ -44,19 +43,23 @@ class EntryModuleLoader {
         });
     }
 
-    async loadModuleFromOnline(name: string) {
+    async loadModuleFromLocalOrOnline(name: string) {
         const lowerCaseName = name.toLowerCase();
-        await fetch(`${Entry.moduleBaseUrl}${lowerCaseName}/files/block`)
-            .then(async (response) => {
-                if (response.status != 200) {
-                    throw new Error('MODULE NOT EXIST');
-                }
-                const result = await response.text();
-                await this.loadScript(name, result);
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        let path = `${Entry.moduleBaseUrl}${lowerCaseName}/files/block`;
+        if (Entry.offlineModulePath) {
+            path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
+        }
+
+        await fetch(path).then(async (response) => {
+            if (response.status != 200) {
+                throw new Error('MODULE NOT EXIST');
+            }
+            let result = await response.text();
+            if (Entry.offlineModulePath) {
+                result = cryptojs.AES.decrypt(result, 'TEST_KEY').toString(cryptojs.enc.Utf8);
+            }
+            await this.loadScript(name, result);
+        });
     }
 
     async loadScript(name: string, code: string) {
@@ -262,5 +265,5 @@ Entry.moduleManager = instance;
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(instance.loadModuleFromOnline.bind(instance)));
+    await Promise.all(externalModules.map(instance.loadModuleFromLocal.bind(instance)));
 };
