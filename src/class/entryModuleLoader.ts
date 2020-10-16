@@ -20,7 +20,15 @@ class EntryModuleLoader {
         if (!moduleInfo.file || !moduleInfo.name) {
             return;
         }
-        const key = cryptojs.SHA1(moduleInfo.file);
+
+        let blockFile = moduleInfo.file;
+        if (Entry.offlineModulePath) {
+            if (window.sendSync) {
+                blockFile = window.sendSync('decryptBlock', blockFile);
+            }
+        }
+
+        const key = cryptojs.SHA1(blockFile);
         // sha1 key를 이용한 블럭 파일 검증.
         return new Promise(async (resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
@@ -39,7 +47,7 @@ class EntryModuleLoader {
             if (!moduleInfo) {
                 return;
             }
-            await this.loadScript(moduleInfo.name, moduleInfo.file);
+            await this.loadScript(moduleInfo.name, blockFile);
         });
     }
 
@@ -49,14 +57,16 @@ class EntryModuleLoader {
         if (Entry.offlineModulePath) {
             path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
         }
-
+        console.log(window, Entry.offlineModulePath);
         await fetch(path).then(async (response) => {
             if (response.status != 200) {
                 throw new Error('MODULE NOT EXIST');
             }
             let result = await response.text();
             if (Entry.offlineModulePath) {
-                result = cryptojs.AES.decrypt(result, 'TEST_KEY').toString(cryptojs.enc.Utf8);
+                if (window.sendSync) {
+                    result = window.sendSync('decryptBlock', result);
+                }
             }
             await this.loadScript(name, result);
         });
