@@ -6,7 +6,7 @@ Entry.CodeWiz = {
     id: '1.12',
     name: 'CodeWiz',
     url: 'http://codable.co.kr',
-    imageName: 'codeino.png',
+    imageName: 'codewiz.png',
     title: {
         ko: '코드위즈',
         en: 'CodeWiz',
