@@ -58,18 +58,17 @@ class EntryModuleLoader {
             path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
         }
         console.log(window, Entry.offlineModulePath);
-        await fetch(path).then(async (response) => {
-            if (response.status != 200) {
-                throw new Error('MODULE NOT EXIST');
+        const response = await fetch(path);
+        if (response.status != 200) {
+            throw new Error('MODULE NOT EXIST');
+        }
+        let result = await response.text();
+        if (Entry.offlineModulePath) {
+            if (window.sendSync) {
+                result = window.sendSync('decryptBlock', result);
             }
-            let result = await response.text();
-            if (Entry.offlineModulePath) {
-                if (window.sendSync) {
-                    result = window.sendSync('decryptBlock', result);
-                }
-            }
-            await this.loadScript(name, result);
-        });
+        }
+        await this.loadScript(name, result);
     }
 
     async loadScript(name: string, code: string) {
