@@ -1,0 +1,12 @@
+{
+  "0.js": "/dist/0.js",
+  "0.js.map": "/dist/0.js.map",
+  "entry.css": "/dist/entry.css",
+  "entry.js": "/dist/entry.js",
+  "entry.css.map": "/dist/entry.css.map",
+  "entry.js.map": "/dist/entry.js.map",
+  "0fdba14b7ef837e911e6.worker.js": "/dist/0fdba14b7ef837e911e6.worker.js",
+  "0fdba14b7ef837e911e6.worker.js.map": "/dist/0fdba14b7ef837e911e6.worker.js.map",
+  "1116d5d3e0d7be83d78d.worker.js": "/dist/1116d5d3e0d7be83d78d.worker.js",
+  "1116d5d3e0d7be83d78d.worker.js.map": "/dist/1116d5d3e0d7be83d78d.worker.js.map"
+}
