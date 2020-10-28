@@ -29,6 +29,19 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 size: 11,
             };
         },
+        getCameraOrder() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['front', 0],
+                    ['back', 1],
+                ],
+                value: 0,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
         getNumbers() {
             return {
                 type: 'Dropdown',
@@ -283,12 +296,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             events: {},
         },
         video_test: {
-            template: '소스변경',
+            template: '소스변경 앞뒤 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
             statements: [],
-            params: [],
+            params: [params.getCameraOrder(), params.getCommonIndicator()],
             events: {},
             def: {
                 type: 'video_test',
@@ -299,7 +312,49 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                return await VideoUtils.changeSource();
+                const VALUE = script.getField('VALUE');
+                return await VideoUtils.changeSource(VALUE);
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        video_test2: {
+            template: '소스변경 다이내믹 %1 %2',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'DropdownDynamic',
+                    value: null,
+                    menuName: 'videoinputs',
+                    fontSize: 10,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    defaultValue: (value, options) => {
+                        if (options.length) {
+                            return options[0][1];
+                        }
+                        return null;
+                    },
+                },
+                params.getCommonIndicator(),
+            ],
+            events: {},
+            def: {
+                type: 'video_test2',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const deviceID = script.getField('VALUE');
+                return await VideoUtils.changeSource(deviceID);
             },
             syntax: {
                 js: [],

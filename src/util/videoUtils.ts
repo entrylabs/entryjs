@@ -12,6 +12,7 @@ import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import * as faceapi from 'face-api.js';
 
 import clamp from 'lodash/clamp';
+import { type } from 'os';
 
 type FlipStatus = {
     horizontal: boolean;
@@ -139,16 +140,23 @@ class VideoUtils implements MediaUtilsInterface {
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
     private isFront = true;
+    public videoInputList: string[][] = [];
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
-    async initialize() {
+
+    async initialize(list: string[][]) {
         if (this.isInitialized) {
             return;
         }
-        await this.compatabilityChecker();
+        this.videoInputList = list;
 
+        const inputList = await navigator.mediaDevices.enumerateDevices();
+        this.videoInputList = inputList
+            .filter((input) => input.kind === 'videoinput')
+            .map((item) => [item.label, item.deviceId]);
+        await this.compatabilityChecker();
         // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
@@ -178,7 +186,7 @@ class VideoUtils implements MediaUtilsInterface {
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    facingMode: 'user',
+                    deviceId: { exact: this.videoInputList[0][1] },
                     width: this._VIDEO_WIDTH,
                     height: this._VIDEO_HEIGHT,
                 },
@@ -316,12 +324,12 @@ class VideoUtils implements MediaUtilsInterface {
 
             const video = document.createElement('video');
             video.id = 'webCamElement';
+            video.autoplay = true;
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
             video.height = this.CANVAS_HEIGHT;
-            video.autoplay = true;
-            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
 
+            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
@@ -331,31 +339,35 @@ class VideoUtils implements MediaUtilsInterface {
             this.isInitialized = false;
         }
     }
-    async changeSource() {
+    async changeSource(target: string | number) {
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    facingMode: this.isFront ? 'environment' : 'user',
+                    deviceId: {
+                        exact: typeof target === 'number' ? this.videoInputList[target][1] : target,
+                    },
                     width: this._VIDEO_WIDTH,
                     height: this._VIDEO_HEIGHT,
                 },
             });
             this.isFront = !this.isFront;
-            this.video.srcObject = stream;
+            this.stream = stream;
+            this.video.srcObject = this.stream;
             this.video.width = this.CANVAS_WIDTH;
             this.video.height = this.CANVAS_HEIGHT;
-            this.video.autoplay = true;
-            this.stream = stream;
-            const [track] = this.stream.getVideoTracks();
-            this.imageCapture = new ImageCapture(track);
+            try {
+                const [track] = this.stream.getVideoTracks();
+                this.imageCapture = new ImageCapture(track);
+            } catch (err) {
+                console.log(err);
+            }
         } catch (err) {
             console.log(err);
         }
     }
 
     videoOnLoadHandler() {
-        this.video.play();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -448,8 +460,16 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         if (this.isChrome) {
-            const captured = await this.imageCapture.grabFrame();
-            this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+            if (
+                !(
+                    this.imageCapture.track.readyState != 'live' ||
+                    !this.imageCapture.track.enabled ||
+                    this.imageCapture.track.muted
+                )
+            ) {
+                const captured = await this.imageCapture.grabFrame();
+                this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+            }
         } else {
             const context = this.inMemoryCanvas.getContext('2d');
             context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
@@ -794,7 +814,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async compatabilityChecker() {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (this.videoInputList.length < 1) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_browser_error_video,
             ]);
@@ -812,7 +832,7 @@ class VideoUtils implements MediaUtilsInterface {
             await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    facingMode: 'user',
+                    deviceId: { exact: this.videoInputList[0][1] },
                     width: this._VIDEO_WIDTH,
                     height: this._VIDEO_HEIGHT,
                 },
