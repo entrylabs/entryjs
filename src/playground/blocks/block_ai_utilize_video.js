@@ -557,7 +557,14 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     await VideoUtils.initialize();
                     return false;
                 }
-                return VideoUtils.modelMountStatus[target];
+                switch (target) {
+                    case 'face':
+                        return VideoUtils.faces.length > 0;
+                    case 'pose':
+                        return VideoUtils.poses.predictions.length > 0;
+                    case 'object':
+                        return VideoUtils.objects.length > 0;
+                }
             },
             paramsKeyMap: {
                 TARGET: 0,
