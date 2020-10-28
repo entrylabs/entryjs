@@ -339,13 +339,16 @@ class VideoUtils implements MediaUtilsInterface {
             this.isInitialized = false;
         }
     }
-    async changeSource(target: string | number) {
+    async changeSource(target: number) {
+        if (!this.videoInputList[target]) {
+            return;
+        }
         try {
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
                     deviceId: {
-                        exact: typeof target === 'number' ? this.videoInputList[target][1] : target,
+                        exact: this.videoInputList[target][1],
                     },
                     width: this._VIDEO_WIDTH,
                     height: this._VIDEO_HEIGHT,

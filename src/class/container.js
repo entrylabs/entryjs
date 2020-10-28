@@ -7,7 +7,6 @@
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import DataTable from './DataTable';
-import VideoUtils from '../util/videoUtils';
 
 /**
  * Class for a container.
@@ -778,9 +777,6 @@ Entry.Container = class Container {
                 result = EntryStatic.fonts.map((font) => {
                     return [font.name, font.family];
                 });
-            case 'videoinputs':
-                result = VideoUtils.videoInputList;
-                break;
         }
         if (!result.length) {
             result = [[Lang.Blocks.no_target, 'null']];
