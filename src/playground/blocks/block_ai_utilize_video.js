@@ -282,6 +282,30 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             events: {},
         },
+        video_test: {
+            template: '소스변경',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'video_test',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                return await VideoUtils.changeSource();
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
         video_check_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,

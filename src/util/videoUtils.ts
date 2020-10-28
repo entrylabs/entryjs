@@ -138,6 +138,7 @@ class VideoUtils implements MediaUtilsInterface {
     public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
+    private isFront = true;
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
@@ -330,6 +331,29 @@ class VideoUtils implements MediaUtilsInterface {
             this.isInitialized = false;
         }
     }
+    async changeSource() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    facingMode: this.isFront ? 'environment' : 'user',
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+            this.isFront = !this.isFront;
+            this.video.srcObject = stream;
+            this.video.width = this.CANVAS_WIDTH;
+            this.video.height = this.CANVAS_HEIGHT;
+            this.video.autoplay = true;
+            this.stream = stream;
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     videoOnLoadHandler() {
         this.video.play();
         if (!this.flipStatus.horizontal) {
