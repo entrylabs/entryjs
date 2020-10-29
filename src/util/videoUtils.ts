@@ -12,7 +12,6 @@ import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import * as faceapi from 'face-api.js';
 
 import clamp from 'lodash/clamp';
-import { type } from 'os';
 
 type FlipStatus = {
     horizontal: boolean;
@@ -94,10 +93,6 @@ class VideoUtils implements MediaUtilsInterface {
         object: false,
         warmup: false,
     };
-
-    // motion test
-    // private tempCanvas: any;
-    // motion test
 
     // 감지된 요소들
     public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
@@ -223,11 +218,11 @@ class VideoUtils implements MediaUtilsInterface {
                     if (Entry.engine.state !== 'run' && type !== 'init') {
                         return;
                     }
+                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                    const modelLang = Lang.Blocks[`video_${name}_model`];
+
                     switch (type) {
                         case 'init':
-                            const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-                            const modelLang = Lang.Blocks[`video_${name}_model`];
-
                             if (message === 'warmup') {
                                 Entry.toast.success(
                                     Lang.Msgs.video_model_load_success,
@@ -284,13 +279,12 @@ class VideoUtils implements MediaUtilsInterface {
                         })
                         .then((cocoLoaded: any) => {
                             this.coco = cocoLoaded;
-                            // console.log('coco model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
+                                // eslint-disable-next-line
                                 `${Lang.Blocks.video_object_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
-                            // this.postMessage({ type: 'init', message: 'object' });
                             console.timeEnd('test');
                         }),
                     posenet
@@ -305,9 +299,9 @@ class VideoUtils implements MediaUtilsInterface {
                         })
                         .then((mobileNetLoaded: any) => {
                             this.mobileNet = mobileNetLoaded;
-                            // console.log('posenet model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
+                                // eslint-disable-next-line
                                 `${Lang.Blocks.video_pose_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
@@ -359,12 +353,8 @@ class VideoUtils implements MediaUtilsInterface {
             this.video.srcObject = this.stream;
             this.video.width = this.CANVAS_WIDTH;
             this.video.height = this.CANVAS_HEIGHT;
-            try {
-                const [track] = this.stream.getVideoTracks();
-                this.imageCapture = new ImageCapture(track);
-            } catch (err) {
-                console.log(err);
-            }
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
         } catch (err) {
             console.log(err);
         }
@@ -464,11 +454,9 @@ class VideoUtils implements MediaUtilsInterface {
         }
         if (this.isChrome) {
             if (
-                !(
-                    this.imageCapture.track.readyState != 'live' ||
-                    !this.imageCapture.track.enabled ||
-                    this.imageCapture.track.muted
-                )
+                this.imageCapture.track.readyState === 'live' &&
+                this.imageCapture.track.enabled &&
+                !this.imageCapture.track.muted
             ) {
                 const captured = await this.imageCapture.grabFrame();
                 this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
@@ -652,13 +640,10 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     cameraSwitch(mode: String) {
-        switch (mode) {
-            case 'on':
-                this.turnOnWebcam();
-                break;
-            default:
-                this.turnOffWebcam();
-                break;
+        if (mode === 'on') {
+            this.turnOnWebcam();
+        } else {
+            this.turnOffWebcam();
         }
     }
     turnOffWebcam() {
@@ -783,8 +768,6 @@ class VideoUtils implements MediaUtilsInterface {
                     track.stop();
                 });
             }
-
-            // this.worker.terminate();
         } catch (err) {
             console.log(err);
         }
