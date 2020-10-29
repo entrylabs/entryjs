@@ -36,3 +36,5 @@ extern/closure-library
 
 .vscode/*
 .idea/
+dist/
+
