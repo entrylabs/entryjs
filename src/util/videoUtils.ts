@@ -817,7 +817,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async compatabilityChecker() {
-        if (this.videoInputList.length < 1) {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_browser_error_video,
             ]);
@@ -835,7 +835,7 @@ class VideoUtils implements MediaUtilsInterface {
             await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    deviceId: { exact: this.videoInputList[0][1] },
+                    facingMode: 'user',
                     width: this._VIDEO_WIDTH,
                     height: this._VIDEO_HEIGHT,
                 },
