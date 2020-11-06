@@ -5332,12 +5332,12 @@ const block = {
     maze_cony_flower_throw: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#D8617D',
+a        color: '#2EB0E8',
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/cony_icon.png',
+                img: '/img/assets/maze/sprite/moon_icon.png',
                 size: 24,
             },
         ],
@@ -5373,7 +5373,7 @@ const block = {
                 }
 
                 const particle = Ntry.entityManager.addEntity();
-                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK2, function() {
                     $.each(components, function(type, component) {
                         if (+type === Ntry.STATIC.SPRITE) {
                             const cloneComponent = $.extend({}, component);
