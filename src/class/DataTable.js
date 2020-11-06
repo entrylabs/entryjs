@@ -211,6 +211,10 @@ class DataTable {
     showChart(tableId) {
         this.closeChart();
         const source = this.getSource(tableId);
+        if (!source) {
+            console.log(`not exist souce, table id: ${tableId}`);
+            return;
+        }
         if (!source.modal) {
             source.modal = this.createChart(source);
         }
