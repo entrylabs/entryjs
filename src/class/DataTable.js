@@ -12,7 +12,9 @@ class DataTable {
     selected;
 
     removeAllBlocks() {
-        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'analysis');
+        const { blocks } = EntryStatic.getAllBlocks().find(
+            ({ category }) => category === 'analysis'
+        );
         blocks.forEach((blockType) => {
             Entry.Utils.removeBlockByType(blockType);
         });
@@ -170,7 +172,9 @@ class DataTable {
     #generateView() {
         this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
             .on('submit', this.saveTable)
-            .on('alert', (({ message, title = Lang.DataAnalytics.max_row_count_error_title }) => entrylms.alert(message, title)))
+            .on('alert', ({ message, title = Lang.DataAnalytics.max_row_count_error_title }) =>
+                entrylms.alert(message, title)
+            )
             .on('toast', (message) => {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
@@ -207,6 +211,10 @@ class DataTable {
     showChart(tableId) {
         this.closeChart();
         const source = this.getSource(tableId);
+        if (!source) {
+            console.log(`not exist souce, table id: ${tableId}`);
+            return;
+        }
         if (!source.modal) {
             source.modal = this.createChart(source);
         }
@@ -231,7 +239,7 @@ class DataTable {
             data: {
                 source: { fields, origin: rows, chart },
                 togglePause: () => Entry.engine.togglePause(),
-                stop: () => Entry.engine.toggleStop()
+                stop: () => Entry.engine.toggleStop(),
             },
             container,
         });
