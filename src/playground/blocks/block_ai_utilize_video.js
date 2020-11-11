@@ -335,8 +335,8 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
-                return videoInputList.length > 0;
+            func(sprite, script) {
+                return VideoUtils.videoInputList.length > 0;
             },
             syntax: {
                 js: [],

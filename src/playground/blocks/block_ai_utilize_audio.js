@@ -56,7 +56,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             isNotFor: ['audio'],
             func(sprite, script) {
                 AudioUtils.incompatBrowserChecker();
-                return AudioUtils.audioInputList > 0;
+                return AudioUtils.audioInputList.length > 0;
             },
             syntax: {
                 js: [],
