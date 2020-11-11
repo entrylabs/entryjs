@@ -36,7 +36,7 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
-    this.dataTableEnable && DataTable.setTables(project.tables);
+    DataTable.setTables(project.tables);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
@@ -391,8 +391,7 @@ Entry.overridePrototype = function() {
                 .mod(right)
                 .add(right)
                 .mod(right)
-                .value
-                .toNumber();
+                .value.toNumber();
         } catch (e) {
             return ((this % n) + n) % n;
         }
@@ -1968,7 +1967,7 @@ Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
     const toast = error.toast;
     const engine = Entry.engine;
 
-    if(engine) {
+    if (engine) {
         await engine.toggleStop();
     }
     if (Entry.type === 'workspace') {
