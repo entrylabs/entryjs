@@ -336,7 +336,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             async func(sprite, script) {
-                return await VideoUtils.checkUserCamAvailable();
+                return videoInputList.length > 0;
             },
             syntax: {
                 js: [],
@@ -358,11 +358,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const value = script.getField('VALUE');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 VideoUtils.cameraSwitch(value);
                 return script.callReturn();
             },
@@ -394,14 +392,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const value = clamp(script.getNumberValue('VALUE'), 0, 100);
                 try {
-                    if (!VideoUtils.isInitialized) {
-                        await VideoUtils.initialize();
-                    }
                     VideoUtils.setOptions('transparency', value);
-
                     return script.callReturn();
                 } catch (err) {
                     console.log(err);
@@ -428,11 +422,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const target = script.getField('TARGET');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 VideoUtils.setOptions(target);
                 return script.callReturn();
             },
@@ -461,12 +453,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const target = script.getField('TARGET');
                 const mode = script.getField('MODE');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 VideoUtils.manageModel(target, mode);
             },
             syntax: {
@@ -490,12 +480,10 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const criteria = script.getField('CRITERIA');
                 const option = script.getField('OPTION');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 if (option === 'on') {
                     VideoUtils.showIndicator(criteria);
                 } else {
@@ -519,16 +507,14 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const target = script.getField('TARGET');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 switch (target) {
                     case 'face':
                         return VideoUtils.faces.length || 0;
                     case 'pose':
-                        return VideoUtils.poses.predictions.length || 0;
+                        return (VideoUtils.poses && VideoUtils.poses.predictions.length) || 0;
                     case 'object':
                         return VideoUtils.objects.length || 0;
                 }
@@ -553,11 +539,9 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const target = script.getField('TARGET');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 let result = false;
                 VideoUtils.objects.forEach((detected) => {
                     if (detected.class === target) {
@@ -576,7 +560,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-
+        // 원래는 video_is_model_detected 로 나가야 하나, 해당 부분에 있어서 기존 하위 호환성때문에... 이름을 못바꿈...
         video_is_model_loaded: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -589,17 +573,13 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const target = script.getField('TARGET');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                    return false;
-                }
                 switch (target) {
                     case 'face':
                         return VideoUtils.faces.length > 0;
                     case 'pose':
-                        return VideoUtils.poses.predictions.length > 0;
+                        return VideoUtils.poses && VideoUtils.poses.predictions.length > 0;
                     case 'object':
                         return VideoUtils.objects.length > 0;
                 }
@@ -624,13 +604,11 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const index = script.getField('INDEX');
                 const info = script.getField('INFO');
                 const faces = VideoUtils.faces;
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 if (faces.length <= index) {
                     return 0;
                 }
@@ -702,13 +680,11 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const target = script.getField('TARGET');
                 const type = script.getField('TYPE');
                 let detected = VideoUtils.totalMotions;
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 if (target === 'self') {
                     detected = VideoUtils.motionDetect(sprite);
                 }
@@ -766,13 +742,11 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const index = script.getField('INDEX');
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 if (!VideoUtils.faces) {
                     return 0;
                 }
@@ -825,13 +799,11 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const index = script.getField('INDEX');
                 const part = script.getField('PART');
                 const coord = script.getField('COORD');
-                if (!VideoUtils.isInitialized) {
-                    await VideoUtils.initialize();
-                }
+
                 if (!VideoUtils.poses || !VideoUtils.poses.predictions) {
                     return 0;
                 }

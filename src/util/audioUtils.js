@@ -32,15 +32,7 @@ class AudioUtils {
         this._audioChunks = [];
         this.result = null;
         this.startedRecording = false;
-    }
-
-    async checkUserMicAvailable() {
-        try {
-            await navigator.mediaDevices.getUserMedia({ audio: true });
-            return true;
-        } catch (err) {
-            return false;
-        }
+        this.audioInputList = [];
     }
 
     async getMediaStream() {
@@ -78,6 +70,12 @@ class AudioUtils {
         Entry.addEventListener('beforeStop', () => {
             this.improperStop();
         });
+
+        const inputList = await navigator.mediaDevices.enumerateDevices();
+        this.audioInputList = inputList
+            .filter((input) => input.kind === 'audioinput')
+            .map((item) => [item.label, item.deviceId]);
+
         try {
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {

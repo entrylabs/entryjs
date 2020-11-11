@@ -54,9 +54,9 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             },
             class: 'audio',
             isNotFor: ['audio'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 AudioUtils.incompatBrowserChecker();
-                return await AudioUtils.checkUserMicAvailable();
+                return AudioUtils.audioInputList > 0;
             },
             syntax: {
                 js: [],
