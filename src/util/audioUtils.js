@@ -24,7 +24,7 @@ class AudioUtils {
     }
 
     constructor() {
-        this.isAudioInitComplete = false; // 유저 인풋 연결 확인
+        this.isInitialized = false; // 유저 인풋 연결 확인
         this.isRecording = false;
         this._userMediaStream = undefined;
         this._mediaRecorder = undefined;
@@ -66,20 +66,16 @@ class AudioUtils {
         }
         this.incompatBrowserChecker();
         const mediaStream = await this.getMediaStream();
-
-        if (this.isAudioInitComplete) {
-            return;
-        }
-        Entry.addEventListener('beforeStop', () => {
-            this.improperStop();
-        });
-
-        const inputList = await navigator.mediaDevices.enumerateDevices();
-        this.audioInputList = inputList
-            .filter((input) => input.kind === 'audioinput')
-            .map((item) => [item.label, item.deviceId]);
-
         try {
+            Entry.addEventListener('beforeStop', () => {
+                this.improperStop();
+            });
+
+            const inputList = await navigator.mediaDevices.enumerateDevices();
+            this.audioInputList = inputList
+                .filter((input) => input.kind === 'audioinput')
+                .map((item) => [item.label, item.deviceId]);
+
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
                     window.AudioContext = window.webkitAudioContext;
@@ -101,7 +97,6 @@ class AudioUtils {
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
             this._mediaRecorder = mediaRecorder;
-            this.isAudioInitComplete = true;
 
             // 음성 인식 api 를 사용하기 위함
             // 음성 인식은 websocket 을 통해서 WAV로 전송하게 되어있음.
@@ -111,7 +106,6 @@ class AudioUtils {
             return;
         } catch (e) {
             console.error('error occurred while init audio input', e);
-            this.isAudioInitComplete = false;
             this.isInitialized = false;
             return;
         }
@@ -129,7 +123,7 @@ class AudioUtils {
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
             this.resolveFunc = resolve;
-            if (!this.isAudioInitComplete) {
+            if (!this.isInitialized) {
                 console.log('audio not initialized');
                 resolve(0);
                 return;
@@ -195,7 +189,7 @@ class AudioUtils {
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
-        if (!this.isAudioInitComplete || !this.isRecording) {
+        if (!this.isInitialized || !this.isRecording) {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
@@ -224,7 +218,7 @@ class AudioUtils {
     }
 
     isAudioConnected() {
-        if (!this._isBrowserSupportAudio() || !this.isAudioInitComplete || !this._userMediaStream) {
+        if (!this._isBrowserSupportAudio() || !this.isInitialized || !this._userMediaStream) {
             return false;
         }
         const tracks = this._userMediaStream.getAudioTracks();
