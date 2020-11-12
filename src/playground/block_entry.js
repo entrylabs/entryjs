@@ -23,8 +23,8 @@ if (!Entry.block.converters) {
 }
 
 if (Entry && Entry.block) {
-    (function(c) {
-        c.keyboardCode = function(key, value) {
+    (function (c) {
+        c.keyboardCode = function (key, value) {
             let code;
 
             if (key) {
@@ -48,7 +48,7 @@ if (Entry && Entry.block) {
             }
         };
 
-        c.returnStringKey = function(key, value) {
+        c.returnStringKey = function (key, value) {
             if ((!value && typeof value !== 'number') || value === 'null') {
                 return 'None';
             }
@@ -79,7 +79,7 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()', key);
         };
 
-        c.returnRawStringKey = function(key, value) {
+        c.returnRawStringKey = function (key, value) {
             if ((!value && typeof value !== 'number') || value === 'null') {
                 return 'None';
             }
@@ -98,7 +98,7 @@ if (Entry && Entry.block) {
             return '"()"'.replace('"()"', key);
         };
 
-        c.returnStringValue = function(key, value) {
+        c.returnStringValue = function (key, value) {
             if ((!value && typeof value !== 'number') || value === 'null') {
                 return 'None';
             }
@@ -116,7 +116,7 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()', value);
         };
 
-        c.returnOperator = function(key, value) {
+        c.returnOperator = function (key, value) {
             const map = {
                 EQUAL: '==',
                 GREATER: '>',
@@ -142,12 +142,12 @@ if (Entry && Entry.block) {
             return map[value];
         };
 
-        c.returnRawNumberValueByKey = function(key, value) {
+        c.returnRawNumberValueByKey = function (key, value) {
             //return String(key).replace(/\D/, '');
             return key;
         };
 
-        c.returnStringOrNumberByValue = function(key, value) {
+        c.returnStringOrNumberByValue = function (key, value) {
             if (!Entry.Utils.isNumber(value)) {
                 value = value.replace(/\"/gi, '');
                 return '"()"'.replace('()', value);
@@ -156,7 +156,7 @@ if (Entry && Entry.block) {
             }
         };
 
-        c.returnObjectOrStringValue = function(key, value) {
+        c.returnObjectOrStringValue = function (key, value) {
             if (Entry.container && Entry.container.getObject(value)) {
                 const objectName = Entry.container.getObject(value).name;
                 return '"()"'.replace('()', objectName);
@@ -176,7 +176,7 @@ if (Entry && Entry.block) {
             }
         };
 
-        c.returnStringValueUpperCase = function(key, value) {
+        c.returnStringValueUpperCase = function (key, value) {
             if (this.codeMap) {
                 var codeMap = eval(this.codeMap);
             }
@@ -190,7 +190,7 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()', value).toUpperCase();
         };
 
-        c.returnValueUpperCase = function(key, value) {
+        c.returnValueUpperCase = function (key, value) {
             if (this.codeMap) {
                 var codeMap = eval(this.codeMap);
             }
@@ -204,7 +204,7 @@ if (Entry && Entry.block) {
             return value.toUpperCase();
         };
 
-        c.returnStringValueLowerCase = function(key, value) {
+        c.returnStringValueLowerCase = function (key, value) {
             if (this.codeMap) {
                 var codeMap = eval(this.codeMap);
             }
@@ -218,7 +218,7 @@ if (Entry && Entry.block) {
             return '"()"'.replace('()', value).toLowerCase();
         };
 
-        c.returnValuePartialUpperCase = function(key, value) {
+        c.returnValuePartialUpperCase = function (key, value) {
             if (this.codeMap) {
                 var codeMap = eval(this.codeMap);
             }
@@ -263,7 +263,7 @@ const block = {
         },
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.do('playgroundClickAddExpansionBlock');
                 },
             ],
@@ -286,7 +286,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.downloadConnector();
                 },
             ],
@@ -306,7 +306,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.downloadGuide();
                 },
             ],
@@ -326,7 +326,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.downloadSource();
                 },
             ],
@@ -374,7 +374,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.retryConnect();
                 },
             ],
@@ -395,7 +395,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.retryConnect();
                 },
             ],
@@ -416,7 +416,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.openHardwareProgram();
                 },
             ],
@@ -437,7 +437,7 @@ const block = {
         ],
         events: {
             mousedown: [
-                function() {
+                function () {
                     Entry.hw.openHardwareProgram();
                 },
             ],
@@ -982,14 +982,14 @@ const block = {
         ],
         events: {
             viewAdd: [
-                function() {
+                function () {
                     if (Entry.engine) {
                         Entry.engine.showProjectTimer();
                     }
                 },
             ],
             viewDestroy: [
-                function(block, notIncludeSelf) {
+                function (block, notIncludeSelf) {
                     if (Entry.engine) {
                         Entry.engine.hideProjectTimer(block, notIncludeSelf);
                     }
@@ -1041,14 +1041,14 @@ const block = {
         ],
         events: {
             viewAdd: [
-                function() {
+                function () {
                     if (Entry.engine) {
                         Entry.engine.showProjectTimer();
                     }
                 },
             ],
             viewDestroy: [
-                function(block, notIncludeSelf) {
+                function (block, notIncludeSelf) {
                     if (Entry.engine) {
                         Entry.engine.hideProjectTimer(block, notIncludeSelf);
                     }
@@ -1251,7 +1251,7 @@ const block = {
         template: '%1 %2',
         events: {
             viewAdd: [
-                function() {
+                function () {
                     if (Entry.Func.isEdit) {
                         Entry.Func.refreshMenuCode();
                     }
@@ -1269,7 +1269,7 @@ const block = {
         template: '%1 %2',
         events: {
             viewAdd: [
-                function() {
+                function () {
                     if (Entry.Func.isEdit) {
                         Entry.Func.refreshMenuCode();
                     }
@@ -1327,7 +1327,7 @@ const block = {
         ],
         events: {
             dataAdd: [
-                function(block) {
+                function (block) {
                     const vc = Entry.variableContainer;
                     if (vc) {
                         vc.addRef('_functionRefs', block);
@@ -1335,7 +1335,7 @@ const block = {
                 },
             ],
             dataDestroy: [
-                function(block) {
+                function (block) {
                     const vc = Entry.variableContainer;
                     if (vc) {
                         vc.removeRef('_functionRefs', block);
@@ -1343,7 +1343,7 @@ const block = {
                 },
             ],
             dblclick: [
-                function(blockView) {
+                function (blockView) {
                     const mode = blockView.getBoard().workspace.getMode();
                     if (mode !== Entry.Workspace.MODE_BOARD) {
                         return;
@@ -1891,7 +1891,12 @@ const block = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['45', '45'], ['90', '90'], ['135', '135'], ['180', '180']],
+                options: [
+                    ['45', '45'],
+                    ['90', '90'],
+                    ['135', '135'],
+                    ['180', '180'],
+                ],
                 value: '45',
                 fontSize: 11,
             },
@@ -1986,9 +1991,9 @@ const block = {
             const deltaX = targetEntity.getX() - sprite.getX();
             const deltaY = targetEntity.getY() - sprite.getY();
             if (deltaX >= 0) {
-                sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 90);
+                sprite.setRotation((Math.atan(deltaY / deltaX) / Math.PI) * 180 + 90);
             } else {
-                sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);
+                sprite.setRotation((Math.atan(deltaY / deltaX) / Math.PI) * 180 + 270);
             }
             return script.callReturn();
         },
@@ -2257,7 +2262,7 @@ const block = {
             if (isExist) {
                 const instance = createjs.Sound.play(soundId);
                 Entry.Utils.addSoundInstances(instance);
-                setTimeout(function() {
+                setTimeout(function () {
                     instance.stop();
                 }, timeValue * 1000);
             }
@@ -2303,7 +2308,7 @@ const block = {
                 if (isExist) {
                     const instance = createjs.Sound.play(soundId);
                     Entry.Utils.addSoundInstances(instance);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.playState = 0;
                     }, sound.duration * 1000);
                 }
@@ -2368,11 +2373,11 @@ const block = {
                     const instance = createjs.Sound.play(soundId);
                     const timeValue = script.getNumberValue('SECOND', script);
                     Entry.Utils.addSoundInstances(instance);
-                    setTimeout(function() {
+                    setTimeout(function () {
                         instance.stop();
                         script.playState = 0;
                     }, timeValue * 1000);
-                    instance.addEventListener('complete', function(e) {});
+                    instance.addEventListener('complete', function (e) {});
                 }
                 return script;
             } else if (script.playState == 1) {
@@ -2440,7 +2445,11 @@ const block = {
             },
             {
                 type: 'Dropdown',
-                options: [['=', 'EQUAL'], ['<', 'SMALLER'], ['>', 'BIGGER']],
+                options: [
+                    ['=', 'EQUAL'],
+                    ['<', 'SMALLER'],
+                    ['>', 'BIGGER'],
+                ],
                 value: 'EQUAL',
                 fontSize: 11,
             },
@@ -2938,7 +2947,11 @@ const block = {
         params: [
             {
                 type: 'Dropdown',
-                options: [['첫번째', 'FIRST'], ['마지막', 'LAST'], ['무작위', 'RANDOM']],
+                options: [
+                    ['첫번째', 'FIRST'],
+                    ['마지막', 'LAST'],
+                    ['무작위', 'RANDOM'],
+                ],
                 value: 'FIRST',
                 fontSize: 11,
             },
@@ -3062,7 +3075,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     Ntry.dispatchEvent('getItem');
                     self.isAction = false;
                 };
@@ -3096,7 +3109,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     Ntry.dispatchEvent('getItem');
                     self.isAction = false;
                 };
@@ -3130,9 +3143,9 @@ const block = {
                 this.isAction = true;
                 const STATIC = Ntry.STATIC;
                 const self = this;
-                const callBack = function() {
-                    window.setTimeout(function() {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function() {
+                const callBack = function () {
+                    window.setTimeout(function () {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function () {
                             self.isAction = false;
                         });
                     }, 3);
@@ -3185,9 +3198,9 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
-                    window.setTimeout(function() {
-                        Ntry.dispatchEvent('unitAction', STATIC.WALK, function() {
+                const callBack = function () {
+                    window.setTimeout(function () {
+                        Ntry.dispatchEvent('unitAction', STATIC.WALK, function () {
                             self.isAction = false;
                         });
                     }, 3);
@@ -3241,9 +3254,9 @@ const block = {
                 this.isAction = true;
                 const STATIC = Ntry.STATIC;
                 const self = this;
-                const callBack = function() {
-                    window.setTimeout(function() {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function() {
+                const callBack = function () {
+                    window.setTimeout(function () {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function () {
                             self.isAction = false;
                         });
                     }, 3);
@@ -3297,9 +3310,9 @@ const block = {
                 this.isAction = true;
                 const STATIC = Ntry.STATIC;
                 const self = this;
-                const callBack = function() {
-                    window.setTimeout(function() {
-                        Ntry.dispatchEvent('unitAction', STATIC.WALK, function() {
+                const callBack = function () {
+                    window.setTimeout(function () {
+                        Ntry.dispatchEvent('unitAction', STATIC.WALK, function () {
                             self.isAction = false;
                         });
                     }, 3);
@@ -3379,7 +3392,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
                 // turn direction
@@ -3410,7 +3423,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -3442,7 +3455,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -3474,7 +3487,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -3685,7 +3698,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/week/blocks/jump.png',
+                img: '/legacy_img/assets/week/blocks/jump.png',
                 size: 24,
             },
         ],
@@ -3695,7 +3708,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -3717,13 +3730,13 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
 
@@ -3764,7 +3777,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
                 const unit = Ntry.getUnit();
@@ -4288,7 +4301,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
                 // turn direction
@@ -4320,7 +4333,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -4353,7 +4366,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -4386,7 +4399,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
                 // turn direction
@@ -4417,7 +4430,7 @@ const block = {
             if (this.isDead) {
                 return Entry.STATIC.BREAK;
             } else if (this.executor.register.isTurned) {
-                Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                 this.isDead = true;
                 return Entry.STATIC.BREAK;
             } else {
@@ -4442,7 +4455,7 @@ const block = {
             if (this.isDead) {
                 return Entry.STATIC.BREAK;
             } else if (this.executor.register.isTurned) {
-                Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                 this.isDead = true;
                 return Entry.STATIC.BREAK;
             } else {
@@ -4491,7 +4504,7 @@ const block = {
                     x: grid.x,
                     y: grid.y,
                 })
-                .filter(function(e) {
+                .filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 });
             this.isContinue = true;
@@ -4542,7 +4555,7 @@ const block = {
                     x: grid.x,
                     y: grid.y,
                 })
-                .filter(function(e) {
+                .filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 });
             this.isContinue = true;
@@ -4641,7 +4654,7 @@ const block = {
                 script.isAction = true;
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
                 const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -4650,7 +4663,7 @@ const block = {
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                 );
                 script.direction = unitComp.direction;
-                const callBack = function() {
+                const callBack = function () {
                     unitComp.direction = script.direction;
                     script.isAction = false;
                 };
@@ -4706,7 +4719,7 @@ const block = {
             if (!script.isContinue) {
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
                 const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -4735,9 +4748,13 @@ const block = {
                     }
                 }
                 if (isFoundMushroom) {
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, function() {
-                        script.isAction = false;
-                    });
+                    Ntry.dispatchEvent(
+                        'unitAction',
+                        Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
+                        function () {
+                            script.isAction = false;
+                        }
+                    );
                     return Entry.STATIC.BREAK;
                 }
                 const unitGrid = $.extend(
@@ -4754,15 +4771,15 @@ const block = {
                     Ntry.dispatchEvent(
                         'unitAction',
                         Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT,
-                        function() {
+                        function () {
                             script.isAction = false;
                         }
                     );
                     return Entry.STATIC.BREAK;
                 }
-                const callBack = function() {
+                const callBack = function () {
                     Ntry.dispatchEvent('playSound', 'dieLupin');
-                    Ntry.dispatchEvent('destroyObstacle', 2, function(state) {
+                    Ntry.dispatchEvent('destroyObstacle', 2, function (state) {
                         script.isAction = false;
                     });
                 };
@@ -4805,22 +4822,22 @@ const block = {
                 );
                 Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
                 Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                const frontExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                const frontExist = !!Ntry.entityManager.find(grid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 }).length;
-                const backExist = !!Ntry.entityManager.find(backGrid).filter(function(e) {
+                const backExist = !!Ntry.entityManager.find(backGrid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 }).length;
                 if (!frontExist || !backExist) {
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.BOTH_SIDE_FAIL, function() {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.BOTH_SIDE_FAIL, function () {
                         script.isAction = false;
                     });
                     return Entry.STATIC.BREAK;
                 }
-                Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                Ntry.dispatchEvent('destroyObstacle', -1, function(state) {});
-                const callBack = function() {
-                    Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                Ntry.dispatchEvent('destroyObstacle', -1, function (state) {});
+                const callBack = function () {
+                    Ntry.dispatchEvent('startEnemyWalk', true, function () {
                         script.isAction = false;
                     });
                 };
@@ -4871,42 +4888,42 @@ const block = {
                     tileType: Ntry.STATIC.OBSTACLE_PEPE,
                 });
                 Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                const findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
+                const findBackTile = Ntry.entityManager.find(backGrid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 });
-                const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 }).length;
                 const frontEnemyValid = !!findTile.length;
                 const backEnemyExist = !!findBackTile.length;
                 if (frontEnemyValid && !backEnemyExist) {
                     // success
-                    var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                        Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                    var callBack = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                        Ntry.dispatchEvent('startEnemyWalk', true, function () {
                             script.isAction = false;
                         });
                     };
                     Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
-                    var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                    var callBack = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                     };
                     Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (backEnemyExist) {
                     // dead
                     if (frontEnemyExist) {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function () {
                             script.isAction = false;
                         });
                     } else {
-                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                     }
                 } else {
                     // music time
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function() {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function () {
                         script.isAction = false;
                     });
                 }
@@ -4956,42 +4973,42 @@ const block = {
                     tileType: Ntry.STATIC.OBSTACLE_YETI,
                 });
                 Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                const findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
+                const findBackTile = Ntry.entityManager.find(backGrid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 });
-                const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 }).length;
                 const frontEnemyValid = !!findTile.length;
                 const backEnemyExist = !!findBackTile.length;
                 if (frontEnemyValid && !backEnemyExist) {
                     // success
-                    var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                        Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                    var callBack = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                        Ntry.dispatchEvent('startEnemyWalk', true, function () {
                             script.isAction = false;
                         });
                     };
                     Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
-                    var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                    var callBack = function () {
+                        Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                     };
                     Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (backEnemyExist) {
                     // dead
                     if (frontEnemyExist) {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function () {
                             script.isAction = false;
                         });
                     } else {
-                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                     }
                 } else {
                     // music time
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function() {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function () {
                         script.isAction = false;
                     });
                 }
@@ -5026,7 +5043,7 @@ const block = {
             if (!script.isContinue) {
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
                 const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5046,15 +5063,15 @@ const block = {
                     Ntry.dispatchEvent(
                         'unitAction',
                         Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT,
-                        function() {
+                        function () {
                             script.isAction = false;
                         }
                     );
                     // Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
                     return Entry.STATIC.BREAK;
                 }
-                const callBack = function() {
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {
+                const callBack = function () {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
                         script.isAction = false;
                     });
                 };
@@ -5106,42 +5123,42 @@ const block = {
                     tileType: Ntry.STATIC.OBSTACLE_PETI,
                 });
                 Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
-                const findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
+                const findBackTile = Ntry.entityManager.find(backGrid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 });
-                const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                const frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function (e) {
                     return e.components[Ntry.STATIC.ENEMY];
                 }).length;
                 const frontEnemyValid = !!findTile.length;
                 const backEnemyExist = !!findBackTile.length;
                 if (frontEnemyValid && !backEnemyExist) {
                     // success
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                    var callBack = function() {
-                        Ntry.dispatchEvent('startEnemyWalk', true, function() {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                    var callBack = function () {
+                        Ntry.dispatchEvent('startEnemyWalk', true, function () {
                             script.isAction = false;
                         });
                     };
                     Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
-                    var callBack = function() {
-                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {});
+                    var callBack = function () {
+                        Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                     };
                     Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
                 } else if (backEnemyExist) {
                     // dead
                     if (frontEnemyExist) {
-                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function() {
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function () {
                             script.isAction = false;
                         });
                     } else {
-                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function () {});
                     }
                 } else {
                     // music time
-                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function() {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function () {
                         script.isAction = false;
                     });
                 }
@@ -5173,10 +5190,10 @@ const block = {
                 script.isAction = true;
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
-                const callBack = function() {
+                const callBack = function () {
                     script.isAction = false;
                 };
                 const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5217,7 +5234,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -5250,7 +5267,7 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callBack = function() {
+                const callBack = function () {
                     self.isAction = false;
                 };
 
@@ -5274,7 +5291,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/moon_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5284,7 +5301,7 @@ const block = {
             if (!this.isContinue) {
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
                 const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5307,8 +5324,8 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
                 const self = this;
-                const callback = function() {
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {
+                const callback = function () {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
                         switch (state) {
                             case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
                                 self.isAction = false;
@@ -5332,12 +5349,12 @@ const block = {
     maze_cony_flower_throw: {
         skeleton: 'basic',
         mode: 'maze',
-a        color: '#2EB0E8',
+        color: '#2EB0E8',
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/moon_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5349,7 +5366,7 @@ a        color: '#2EB0E8',
 
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId, components;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                     components = entity.components;
                 });
@@ -5373,8 +5390,8 @@ a        color: '#2EB0E8',
                 }
 
                 const particle = Ntry.entityManager.addEntity();
-                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK2, function() {
-                    $.each(components, function(type, component) {
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK2, function () {
+                    $.each(components, function (type, component) {
                         if (+type === Ntry.STATIC.SPRITE) {
                             const cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
@@ -5410,13 +5427,13 @@ a        color: '#2EB0E8',
     maze_cony_flower_throw2: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#D8617D',
+        color: '#2EB0E8',
         template: Lang.template.maze_cony_flower_throw,
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/cony_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5426,7 +5443,7 @@ a        color: '#2EB0E8',
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 let unitId, components;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                     components = entity.components;
                 });
@@ -5457,8 +5474,8 @@ a        color: '#2EB0E8',
 
                 const particle = Ntry.entityManager.addEntity();
 
-                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                    $.each(components, function(type, component) {
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function () {
+                    $.each(components, function (type, component) {
                         if (+type === Ntry.STATIC.SPRITE) {
                             const cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
@@ -5470,7 +5487,8 @@ a        color: '#2EB0E8',
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
                                 collisionList: [
-                                    Ntry.STATIC.OBSTACLE_ENERMY5,,                                    
+                                    Ntry.STATIC.OBSTACLE_ENERMY5,
+                                    ,
                                     Ntry.STATIC.OBSTACLE_ENERMY4,
                                 ],
                                 penetrationList: [Ntry.STATIC.WALL],
@@ -5499,12 +5517,12 @@ a        color: '#2EB0E8',
     maze_james_heart: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#D39D18',
+        color: '#2EB0E8',
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/james_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5514,7 +5532,7 @@ a        color: '#2EB0E8',
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 let unitId, components;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                     components = entity.components;
                 });
@@ -5545,8 +5563,8 @@ a        color: '#2EB0E8',
 
                 const particle = Ntry.entityManager.addEntity();
 
-                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                    $.each(components, function(type, component) {
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK3, function () {
+                    $.each(components, function (type, component) {
                         if (+type === Ntry.STATIC.SPRITE) {
                             const cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
@@ -5588,13 +5606,13 @@ a        color: '#2EB0E8',
     maze_james_heart2: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#D39D18',
-        template: Lang.template.maze_james_heart,
+        color: '#2EB0E8',
+        template: Lang.template.maze_cony_flower_throw,
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/james_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5604,7 +5622,7 @@ a        color: '#2EB0E8',
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 let unitId, components;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                     components = entity.components;
                 });
@@ -5635,8 +5653,8 @@ a        color: '#2EB0E8',
 
                 const particle = Ntry.entityManager.addEntity();
 
-                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
-                    $.each(components, function(type, component) {
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK2, function () {
+                    $.each(components, function (type, component) {
                         if (+type === Ntry.STATIC.SPRITE) {
                             const cloneComponent = $.extend({}, component);
                             cloneComponent.zIndex = particleZIndex;
@@ -5659,7 +5677,7 @@ a        color: '#2EB0E8',
 
                     Ntry.dispatchEvent('particleAction', {
                         entityId: particle.id,
-                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        actionType: Ntry.STATIC.FLOWER_ATTACK,
                         callback() {
                             Ntry.entityManager.removeEntity(particle.id);
                             self.isAction = false;
@@ -5678,12 +5696,12 @@ a        color: '#2EB0E8',
     maze_iron_switch: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#748d69',
+        color: '#2EB0E8',
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/iron_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5739,7 +5757,7 @@ a        color: '#2EB0E8',
                             targetPos.minY = obstacleGrid.y * tileSize + tileSize / 2;
                         }
 
-                        (function(_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
+                        (function (_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
                             const comp = Ntry.entityManager.getComponent(_id, Ntry.STATIC.ANIMATE);
                             if (comp) {
                                 if (eventCount === 0) {
@@ -5822,12 +5840,12 @@ a        color: '#2EB0E8',
     maze_brown_punch: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#6C483A',
+        color: '#2EB0E8',
         syntax: ['Scope', 'right'],
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/sprite/brown_icon.png',
+                img: '/legacy_img/assets/maze/sprite/entry_icon.png',
                 size: 24,
             },
         ],
@@ -5836,7 +5854,7 @@ a        color: '#2EB0E8',
                 const self = this;
                 const entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 let unitId;
-                $.each(entities, function(id, entity) {
+                $.each(entities, function (id, entity) {
                     unitId = id;
                 });
                 const unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -5859,8 +5877,8 @@ a        color: '#2EB0E8',
                 this.isContinue = true;
                 this.isAction = true;
 
-                const callback = function() {
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {
+                const callback = function () {
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
                         switch (state) {
                             case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
                                 self.isAction = false;
@@ -5870,7 +5888,7 @@ a        color: '#2EB0E8',
                 };
 
                 // turn direction
-                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, callback);
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK4, callback);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -5951,12 +5969,12 @@ a        color: '#2EB0E8',
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/maze/bitmap/ws/tile_goal_02.png',
+                img: '/legacy_img/assets/maze/bitmap/ws/tile_goal_02.png',
                 size: 18,
             },
             {
                 type: 'Image',
-                img: '/img/assets/week/blocks/for.png',
+                img: '/legacy_img/assets/week/blocks/for.png',
                 size: 24,
             },
         ],
@@ -6151,7 +6169,10 @@ a        color: '#2EB0E8',
         params: [
             {
                 type: 'Dropdown',
-                options: [[Lang.Menus.maze_distance1, '1'], [Lang.Menus.maze_distance2, '2']],
+                options: [
+                    [Lang.Menus.maze_distance1, '1'],
+                    [Lang.Menus.maze_distance2, '2'],
+                ],
                 value: '1',
                 fontSize: 11,
             },
@@ -6284,7 +6305,7 @@ a        color: '#2EB0E8',
             },
             {
                 type: 'Image',
-                img: '/img/assets/week/blocks/if.png',
+                img: '/legacy_img/assets/week/blocks/if.png',
                 size: 24,
             },
         ],
@@ -6350,7 +6371,7 @@ a        color: '#2EB0E8',
             },
             {
                 type: 'Image',
-                img: '/img/assets/week/blocks/if.png',
+                img: '/legacy_img/assets/week/blocks/if.png',
                 size: 24,
             },
         ],
@@ -6871,7 +6892,7 @@ a        color: '#2EB0E8',
             if (!script.isStart) {
                 script.isStart = true;
                 script.isAction = true;
-                Ntry.dispatchEvent('gridChange', function() {
+                Ntry.dispatchEvent('gridChange', function () {
                     script.isAction = false;
                 });
                 const spaceShipComp = Ntry.entityManager.getComponent(
@@ -6912,7 +6933,7 @@ a        color: '#2EB0E8',
             if (!script.isStart) {
                 script.isStart = true;
                 script.isAction = true;
-                Ntry.dispatchEvent('gridChange', function() {
+                Ntry.dispatchEvent('gridChange', function () {
                     script.isAction = false;
                 });
                 const spaceShipComp = Ntry.entityManager.getComponent(
@@ -6954,7 +6975,7 @@ a        color: '#2EB0E8',
             if (!script.isStart) {
                 script.isStart = true;
                 script.isAction = true;
-                Ntry.dispatchEvent('gridChange', function() {
+                Ntry.dispatchEvent('gridChange', function () {
                     script.isAction = false;
                 });
                 const spaceShipComp = Ntry.entityManager.getComponent(
@@ -7233,7 +7254,7 @@ a        color: '#2EB0E8',
                 Ntry.dispatchEvent('triggerWeapon');
                 script.isStart = true;
                 script.isAction = true;
-                Ntry.dispatchEvent('gridChange', function() {
+                Ntry.dispatchEvent('gridChange', function () {
                     script.isAction = false;
                 });
                 const spaceShipComp = Ntry.entityManager.getComponent(
@@ -7628,7 +7649,7 @@ a        color: '#2EB0E8',
 setHardwareLanguage();
 Object.assign(Entry.block, block, blocks.getBlocks());
 
-(function() {
+(function () {
     // console.log('hw', Entry.HW, Entry.Arduino);
 
     for (const type in Entry.block) {
@@ -7637,7 +7658,7 @@ Object.assign(Entry.block, block, blocks.getBlocks());
             block.isNotFor = [];
         }
         if (block.parent) {
-            const f = function() {};
+            const f = function () {};
             f.prototype = Entry.block[block.parent];
             const schema = new f();
             schema.syntax = undefined;
