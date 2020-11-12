@@ -60,7 +60,10 @@ class AudioUtils {
         }
     }
 
-    async initUserMedia() {
+    async initialize() {
+        if (this.isInitialized) {
+            return;
+        }
         this.incompatBrowserChecker();
         const mediaStream = await this.getMediaStream();
 
@@ -104,11 +107,13 @@ class AudioUtils {
             // 음성 인식은 websocket 을 통해서 WAV로 전송하게 되어있음.
             // 첫번째 파라미터는 프로토콜을 제외한 hostname+port 조합
             // ex)'localhost:4001'
-            return true;
+            this.isInitialized = true;
+            return;
         } catch (e) {
             console.error('error occurred while init audio input', e);
             this.isAudioInitComplete = false;
-            return false;
+            this.isInitialized = false;
+            return;
         }
     }
 
@@ -131,7 +136,8 @@ class AudioUtils {
             }
             // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
-                await this.initUserMedia();
+                this.isInitialized = false;
+                await this.initialize();
             }
 
             try {
