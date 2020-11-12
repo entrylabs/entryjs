@@ -3,13 +3,13 @@ module.exports = {
         return {
             functionAddButton: {
                 skeleton: 'basic_button',
-                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+                color: '#eee',
                 isNotFor: ['functionInit'],
                 params: [
                     {
                         type: 'Text',
                         text: Lang.Workspace.function_create,
-                        color: EntryStatic.colorSet.common.BUTTON,
+                        color: '#333',
                         align: 'center',
                     },
                 ],
@@ -19,7 +19,7 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            Entry.do('funcEditStart', Entry.generateHash());
+                            Entry.variableContainer.createFunction();
                         },
                     ],
                 },

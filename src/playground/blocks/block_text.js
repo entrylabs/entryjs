@@ -1,12 +1,9 @@
-const { type } = Lang || {};
-const filename = type === 'ko' ? 'text_icon_ko.svg' : 'text_icon.svg';
 module.exports = {
     getBlocks() {
         return {
             text_read: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                fontColor: EntryStatic.colorSet.common.WHITE,
+                color: '#FFCA36',
+                fontColor: '#FFFFFF',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -14,9 +11,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'textBoxWithSelf',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.TEXT,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_TEXT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -60,8 +61,9 @@ module.exports = {
                                     value: null,
                                     menuName: 'textBoxWithSelf',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.TEXT,
-                                    converter: Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_TEXT,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.text_read[0]',
                                 },
                             ],
@@ -70,8 +72,7 @@ module.exports = {
                 },
             },
             text_write: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -81,8 +82,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -119,8 +120,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.write_text(%1)'] },
             },
             text_append: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -130,8 +130,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -162,14 +162,13 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const text = script.getStringValue('VALUE', script);
-                    sprite.setText(`${sprite.getText()}${text}`);
+                    sprite.setText(`${sprite.getText()  }${  text}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
             },
             text_prepend: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -179,8 +178,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -211,178 +210,20 @@ module.exports = {
                 isNotFor: ['sprite'],
                 func(sprite, script) {
                     const text = script.getStringValue('VALUE', script);
-                    sprite.setText(`${text}${sprite.getText()}`);
+                    sprite.setText(`${text  }${  sprite.getText()}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
             },
-            text_change_effect: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            // display, actual value
-                            [Lang.Workspace.font_textblock_strikethrough, 'strike'],
-                            [Lang.Workspace.font_textblock_underline, 'underLine'],
-                            [Lang.Workspace.font_textblock_italic, 'fontItalic'],
-                            [Lang.Workspace.font_textblock_bold, 'fontBold'],
-                        ],
-                        value: 'strike',
-                        fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.General.apply, 'on'],
-                            [Lang.General.clear, 'off'],
-                        ],
-                        value: 'on',
-                        fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'text_change_effect',
-                },
-                paramsKeyMap: {
-                    EFFECT: 0,
-                    MODE: 1,
-                },
-                class: 'text',
-                isNotFor: ['sprite'],
-                func(sprite, script) {
-                    const effect = script.getField('EFFECT');
-                    const mode = script.getField('MODE');
-                    sprite.setTextEffect(effect, mode);
-                    return script.callReturn();
-                },
-                syntax: { js: [], py: ['Entry.changeTextEffect(%1, %2)'] },
-            },
-            text_change_font: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'DropdownDynamic',
-                        value: null,
-                        menuName: 'fonts',
-                        fontSize: 11,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'text_change_font',
-                },
-                paramsKeyMap: {
-                    FONT: 0,
-                },
-                class: 'text',
-                isNotFor: ['sprite'],
-                func(sprite, script) {
-                    const font = script.getField('FONT');
-                    sprite.setFontWithLog(`${sprite.getFontSize()} ${font}`, false);
-                    return script.callReturn();
-                },
-                syntax: { js: [], py: ['Entry.text_change_font(%1)'] },
-            },
-            text_change_font_color: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Color',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'text_change_font_color',
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'text',
-                isNotFor: ['sprite'],
-                func(sprite, script) {
-                    const color = script.getField('VALUE', script);
-                    sprite.setColorWithLog(color);
-                    return script.callReturn();
-                },
-                syntax: { js: [], py: ['Entry.text_change_font_color(%1)'] },
-            },
-            text_change_bg_color: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Color',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'text_change_bg_color',
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'text',
-                isNotFor: ['sprite'],
-                func(sprite, script) {
-                    const color = script.getField('VALUE', script);
-                    sprite.setBGColourWithLog(color);
-                    return script.callReturn();
-                },
-                syntax: { js: [], py: ['Entry.text_change_bg_color(%1)'] },
-            },
             text_flush: {
-                color: EntryStatic.colorSet.block.default.TEXT,
-                outerLine: EntryStatic.colorSet.block.darken.TEXT,
+                color: '#FFCA36',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: `block_icon/${filename}`,
-                        size: 11,
+                        img: 'block_icon/text.png',
+                        size: 12,
                     },
                 ],
                 events: {},

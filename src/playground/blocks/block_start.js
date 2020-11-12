@@ -1,18 +1,15 @@
-import { keyInputList } from './inputs/keyboard';
-
 module.exports = {
     getBlocks() {
         return {
             when_run_button_click: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_play.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_play.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -41,15 +38,14 @@ module.exports = {
                 },
             },
             when_some_key_pressed: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_keyboard.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_keyboard.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -57,11 +53,7 @@ module.exports = {
                     },
                     {
                         type: 'Keyboard',
-                        options: keyInputList,
-                        value: 'q',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.START,
-                        arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        value: '81',
                     },
                 ],
                 events: {},
@@ -92,11 +84,10 @@ module.exports = {
                             textParams: [
                                 undefined,
                                 {
-                                    type: 'Dropdown',
-                                    value: 'q',
-                                    options: keyInputList,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter: Entry.block.converters.keyboardCode,
+                                    type: 'Keyboard',
+                                    value: '81',
+                                    converter:
+                                        Entry.block.converters.keyboardCode1,
                                 },
                             ],
                         },
@@ -104,15 +95,14 @@ module.exports = {
                 },
             },
             mouse_clicked: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -141,15 +131,14 @@ module.exports = {
                 },
             },
             mouse_click_cancled: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -178,15 +167,14 @@ module.exports = {
                 },
             },
             when_object_click: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -215,15 +203,14 @@ module.exports = {
                 },
             },
             when_object_click_canceled: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -252,15 +239,14 @@ module.exports = {
                 },
             },
             when_message_cast: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_signal.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_signal.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -270,10 +256,8 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 10,
-                        textColor: '#FFFFFF',
-                        bgColor: EntryStatic.colorSet.block.darken.START,
-                        arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                 ],
                 events: {
@@ -327,8 +311,9 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter: Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -336,8 +321,7 @@ module.exports = {
                 },
             },
             message_cast: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -345,15 +329,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.START,
-                        arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon.svg',
-                        size: 11,
+                        img: 'block_icon/start_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -397,7 +379,7 @@ module.exports = {
                         throw new Error('value can not be null or undefined');
                     }
 
-                    setTimeout(() => {
+                    setTimeout(function() {
                         Entry.engine.raiseMessage(value);
                     });
                 },
@@ -412,8 +394,9 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter: Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
                                     paramType: 'signal',
                                 },
                                 undefined,
@@ -423,8 +406,7 @@ module.exports = {
                 },
             },
             message_cast_wait: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -432,15 +414,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.START,
-                        arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon.svg',
-                        size: 11,
+                        img: 'block_icon/start_03.png',
+                        size: 12,
                     },
                 ],
                 events: {
@@ -494,7 +474,9 @@ module.exports = {
                         const arr = Entry.variableContainer.messages_;
                         const isExist = Entry.isExist(value, 'id', arr);
                         if (value == 'null' || !isExist) {
-                            throw new Error('value can not be null or undefined');
+                            throw new Error(
+                                'value can not be null or undefined'
+                            );
                         }
                         const data = Entry.engine.raiseMessage(value);
                         let runningScript = [];
@@ -520,8 +502,9 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter: Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -529,15 +512,14 @@ module.exports = {
                 },
             },
             when_scene_start: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_scene.svg',
-                        size: 14,
+                        img: 'block_icon/start_icon_scene_1_2.png',
+                        size: 17,
                         position: {
                             x: 0,
                             y: -2,
@@ -566,8 +548,7 @@ module.exports = {
                 },
             },
             start_scene: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -575,15 +556,13 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'scenes',
-                        fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.START,
-                        arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon.svg',
-                        size: 11,
+                        img: 'block_icon/start_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -621,8 +600,9 @@ module.exports = {
                                     value: null,
                                     menuName: 'scenes',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter: Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -630,8 +610,7 @@ module.exports = {
                 },
             },
             start_neighbor_scene: {
-                color: EntryStatic.colorSet.block.default.START,
-                outerLine: EntryStatic.colorSet.block.darken.START,
+                color: '#3BBD70',
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -639,18 +618,16 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.SCENE_start_scene_next, 'next'],
-                            [Lang.Blocks.SCENE_start_scene_pre, 'prev'],
+                            [Lang.Blocks.SCENE_start_scene_pre, 'pre'],
                         ],
                         value: 'next',
-                        fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.colorSet.block.darken.START,
-                        arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon.svg',
-                        size: 11,
+                        img: 'block_icon/start_03.png',
+                        size: 12,
                     },
                 ],
                 events: {},
@@ -674,7 +651,9 @@ module.exports = {
                     const o = script.getField('OPERATOR', script);
                     if (o == 'next') {
                         if (index + 1 < scenes.length) {
-                            const nextScene = Entry.scene.getSceneById(scenes[index + 1].id);
+                            const nextScene = Entry.scene.getSceneById(
+                                scenes[index + 1].id
+                            );
                             if (nextScene) {
                                 Entry.scene.selectScene(nextScene);
                                 Entry.engine.fireEvent('when_scene_start');
@@ -682,7 +661,9 @@ module.exports = {
                         }
                     } else {
                         if (index > 0) {
-                            const nextScene = Entry.scene.getSceneById(scenes[index - 1].id);
+                            const nextScene = Entry.scene.getSceneById(
+                                scenes[index - 1].id
+                            );
                             if (nextScene) {
                                 Entry.scene.selectScene(nextScene);
                                 Entry.engine.fireEvent('when_scene_start');
@@ -701,14 +682,23 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [Lang.Blocks.SCENE_start_scene_next, 'next'],
-                                        [Lang.Blocks.SCENE_start_scene_pre, 'prev'],
+                                        [
+                                            Lang.Blocks.SCENE_start_scene_next,
+                                            'next',
+                                        ],
+                                        [
+                                            Lang.Blocks.SCENE_start_scene_pre,
+                                            'pre',
+                                        ],
                                     ],
                                     value: 'next',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
-                                    converter: Entry.block.converters.returnStringValue,
-                                    codeMap: 'Entry.CodeMap.Entry.start_neighbor_scene[0]',
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters
+                                            .returnStringValue,
+                                    codeMap:
+                                        'Entry.CodeMap.Entry.start_neighbor_scene[0]',
                                 },
                             ],
                         },
@@ -729,10 +719,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['언젠가', 0],
-                            ['지금', 1],
-                        ],
+                        options: [['언젠가', 0], ['지금', 1]],
                         value: '0',
                         fontSize: 11,
                     },
@@ -787,8 +774,11 @@ module.exports = {
                     const flow = this.block.params[1];
                     let propertyKey = this.block.params[2];
                     const rightValue = this.getParam(4);
-                    propertyKey = propertyKey[0].toUpperCase() + propertyKey.substr(1);
-                    const leftValue = obj.entity[`get${propertyKey}`].call(obj.entity);
+                    propertyKey =
+                        propertyKey[0].toUpperCase() + propertyKey.substr(1);
+                    const leftValue = obj.entity[`get${  propertyKey}`].call(
+                        obj.entity
+                    );
                     let returnVal;
 
                     switch (this.block.params[3]) {
@@ -835,10 +825,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['비슷하게', 0],
-                            ['똑같이', 1],
-                        ],
+                        options: [['비슷하게', 0], ['똑같이', 1]],
                         value: '16',
                         fontSize: 11,
                     },
@@ -854,7 +841,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, 0, '1'],
+                    params: [null, 0],
                     type: 'check_block_execution',
                 },
                 paramsKeyMap: {
@@ -875,37 +862,47 @@ module.exports = {
                             return Entry.STATIC.BREAK;
                         }
                     }
-                    const code = Entry.container.getObject(this.block.params[0]).script;
+                    const code = Entry.container.getObject(this.block.params[0])
+                        .script;
                     const accuracy = this.block.params[1];
                     const statements = this.block.statements[0].getBlocks();
                     let lastBlock = null;
                     this.remainCheck = Number(this.block.params[2]);
                     let index = 0;
-                    this.entity.listener[id] = code.watchEvent.attach(this, (blocks) => {
-                        //dangerous
-                        blocks = blocks.concat();
-                        let block;
-                        let isFirst = true;
-                        while (blocks.length && index < statements.length) {
-                            block = blocks.shift();
-                            if (isFirst && block === lastBlock) {
-                                continue;
+                    this.entity.listener[id] = code.watchEvent.attach(
+                        this,
+                        (blocks) => {
+                            //dangerous
+                            blocks = blocks.concat();
+                            let block;
+                            let isFirst = true;
+                            while (blocks.length && index < statements.length) {
+                                block = blocks.shift();
+                                if (isFirst && block === lastBlock) {
+                                    continue;
+                                }
+                                if (
+                                    accuracy === 0 &&
+                                    statements[index].type === block.type
+                                ) {
+                                    index++;
+                                } else if (
+                                    accuracy === 1 &&
+                                    statements[index].isSameParamWith(block)
+                                ) {
+                                    index++;
+                                } else {
+                                    index = 0;
+                                }
+                                isFirst = false;
                             }
-                            if (accuracy === 0 && statements[index].type === block.type) {
-                                index++;
-                            } else if (accuracy === 1 && statements[index].isSameParamWith(block)) {
-                                index++;
-                            } else {
+                            lastBlock = block;
+                            if (index === statements.length) {
+                                this.remainCheck = this.remainCheck - 1;
                                 index = 0;
                             }
-                            isFirst = false;
                         }
-                        lastBlock = block;
-                        if (index === statements.length) {
-                            this.remainCheck = this.remainCheck - 1;
-                            index = 0;
-                        }
-                    });
+                    );
                     return Entry.STATIC.BREAK;
                 },
             },
@@ -992,18 +989,12 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['달성', 1],
-                            ['실패', 0],
-                        ],
+                        options: [['달성', 1], ['실패', 0]],
                         fontSize: 11,
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['공식', 1],
-                            ['비공식', 0],
-                        ],
+                        options: [['공식', 1], ['비공식', 0]],
                         value: 1,
                         fontSize: 11,
                     },
@@ -1032,7 +1023,7 @@ module.exports = {
                 func(sprite, script) {
                     Entry.targetChecker.achieveCheck(
                         this.block.params[1],
-                        `${this.block.params[0]}`
+                        `${this.block.params[0]  }`
                     );
                 },
             },
@@ -1058,8 +1049,10 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const variableName = `${this.block.params[0]}`;
-                    const variable = Entry.variableContainer.getVariableByName(variableName);
+                    const variableName = `${this.block.params[0]  }`;
+                    const variable = Entry.variableContainer.getVariableByName(
+                        variableName
+                    );
                     if (variable) {
                         return variable.getValue();
                     } else {
@@ -1095,7 +1088,9 @@ module.exports = {
                 isNotFor: ['checker'],
                 func(sprite, script) {
                     if (Entry.targetChecker) {
-                        Entry.targetChecker.showStatusMessage(this.block.params[0]);
+                        Entry.targetChecker.showStatusMessage(
+                            this.block.params[0]
+                        );
                     }
                 },
             },
@@ -1121,7 +1116,7 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func(sprite, script) {
-                    const goalName = `${this.block.params[0]}`;
+                    const goalName = `${this.block.params[0]  }`;
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },

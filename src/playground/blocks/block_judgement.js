@@ -1,19 +1,15 @@
-import { GEHelper } from '../../graphicEngine/GEHelper';
-import { keyInputList } from './inputs/keyboard';
-
 module.exports = {
     getBlocks() {
         return {
             is_clicked: {
-                color: EntryStatic.colorSet.block.default.JUDGE,
-                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                color: '#AEB8FF',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_is_clicked,
-                        color: '#FFF',
+                        color: '#3D3D3D',
                     },
                 ],
                 events: {},
@@ -37,28 +33,23 @@ module.exports = {
                 },
             },
             is_press_some_key: {
-                color: EntryStatic.colorSet.block.default.JUDGE,
-                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                color: '#AEB8FF',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
                     {
                         type: 'Keyboard',
-                        options: keyInputList,
-                        value: 'next',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        value: 81,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_is_press_some_key_2,
-                        color: '#FFF',
+                        color: '#3D3D3D',
                     },
                 ],
                 events: {},
                 def: {
-                    params: ['81', null],
+                    params: [null, null],
                     type: 'is_press_some_key',
                 },
                 pyHelpDef: {
@@ -82,10 +73,8 @@ module.exports = {
                             blockType: 'param',
                             textParams: [
                                 {
-                                    type: 'Dropdown',
-                                    value: 'next',
-                                    options: keyInputList,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
+                                    type: 'Keyboard',
+                                    value: '81',
                                     converter: Entry.block.converters.keyboardCode,
                                 },
                             ],
@@ -94,28 +83,26 @@ module.exports = {
                 },
             },
             reach_something: {
-                color: EntryStatic.colorSet.block.default.JUDGE,
-                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                color: '#AEB8FF',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_reach_something_1,
-                        color: '#FFF',
+                        color: '#3D3D3D',
                     },
                     {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'collision',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_reach_something_2,
-                        color: '#FFF',
+                        color: '#3D3D3D',
                     },
                 ],
                 events: {},
@@ -147,27 +134,29 @@ module.exports = {
                         switch (targetSpriteId) {
                             case 'wall':
                                 return !!(
-                                    collision(object, wall.up, ath, false) ||
-                                    collision(object, wall.down, ath, false) ||
-                                    collision(object, wall.left, ath, false) ||
-                                    collision(object, wall.right, ath, false)
+                                    collision(object, wall.up, ath, true) ||
+                                    collision(object, wall.down, ath, true) ||
+                                    collision(object, wall.left, ath, true) ||
+                                    collision(object, wall.right, ath, true)
                                 );
                             case 'wall_up':
-                                return !!collision(object, wall.up, ath, false);
+                                return !!collision(object, wall.up, ath, true);
                             case 'wall_down':
-                                return !!collision(object, wall.down, ath, false);
+                                return !!collision(object, wall.down, ath, true);
                             case 'wall_right':
-                                return !!collision(object, wall.right, ath, false);
+                                return !!collision(object, wall.right, ath, true);
                             case 'wall_left':
-                                return !!collision(object, wall.left, ath, false);
+                                return !!collision(object, wall.left, ath, true);
                         }
                     } else if (targetSpriteId === 'mouse') {
-                        return GEHelper.hitTestMouse(object);
+                        const stage = Entry.stage.canvas;
+                        const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+                        return object.hitTest(pt.x, pt.y);
                     } else {
                         const targetSprite = Entry.container.getEntity(targetSpriteId);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
-                            const targetBound = GEHelper.getTransformedBounds(targetSprite.object);
-                            const bound = GEHelper.getTransformedBounds(object);
+                            const targetBound = targetSprite.object.getTransformedBounds();
+                            const bound = object.getTransformedBounds();
                             if (Entry.checkCollisionRect(bound, targetBound)) {
                                 return true;
                             }
@@ -180,7 +169,7 @@ module.exports = {
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
-                                        GEHelper.getTransformedBounds(entity.object)
+                                        entity.object.getTransformedBounds()
                                     )
                                 ) {
                                     return true;
@@ -189,7 +178,7 @@ module.exports = {
                         } else {
                             if (
                                 targetSprite.getVisible() &&
-                                collision(object, targetSprite.object, ath, false)
+                                collision(object, targetSprite.object, ath, true)
                             ) {
                                 return true;
                             }
@@ -199,7 +188,7 @@ module.exports = {
                                 if (entity.isStamp || !entity.getVisible()) {
                                     continue;
                                 }
-                                if (collision(object, entity.object, ath, false)) {
+                                if (collision(object, entity.object, ath, true)) {
                                     return true;
                                 }
                             }
@@ -220,7 +209,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'collision',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
+                                    arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
                                     converter: Entry.block.converters.returnObjectOrStringValue,
                                     codeMap: 'Entry.CodeMap.Entry.reach_something[1]',
                                 },
@@ -230,8 +219,7 @@ module.exports = {
                 },
             },
             boolean_basic_operator: {
-                color: EntryStatic.colorSet.block.default.JUDGE,
-                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                color: '#AEB8FF',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -243,15 +231,13 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             ['=', 'EQUAL'],
-                            ['!=', 'NOT_EQUAL'],
                             ['>', 'GREATER'],
                             ['<', 'LESS'],
                             ['≥', 'GREATER_OR_EQUAL'],
                             ['≤', 'LESS_OR_EQUAL'],
                         ],
                         value: 'EQUAL',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        fontSize: 11,
                         noArrow: true,
                     },
                     {
@@ -296,20 +282,6 @@ module.exports = {
                                 params: ['10'],
                             },
                             'EQUAL',
-                            {
-                                type: 'text',
-                                params: ['10'],
-                            },
-                        ],
-                        type: 'boolean_basic_operator',
-                    },
-                    {
-                        params: [
-                            {
-                                type: 'text',
-                                params: ['10'],
-                            },
-                            'NOT_EQUAL',
                             {
                                 type: 'text',
                                 params: ['10'],
@@ -383,36 +355,22 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const operator = script.getField('OPERATOR', script);
-                    let [leftValue, rightValue] = script.getValues(
+                    const [leftValue, rightValue] = script.getValues(
                         ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
-                    if (typeof leftValue === 'string' && leftValue.length) {
-                        const leftNumber = Number(leftValue);
-                        if (!isNaN(leftNumber)) {
-                            leftValue = leftNumber;
-                        }
-                    }
-                    if (typeof rightValue === 'string' && rightValue.length) {
-                        const rightNumber = Number(rightValue);
-                        if (!isNaN(rightNumber)) {
-                            rightValue = rightNumber;
-                        }
-                    }
 
                     switch (operator) {
                         case 'EQUAL':
-                            return leftValue === rightValue;
-                        case 'NOT_EQUAL':
-                            return leftValue != rightValue;
+                            return leftValue == rightValue;
                         case 'GREATER':
-                            return leftValue > rightValue;
+                            return Number(leftValue) > Number(rightValue);
                         case 'LESS':
-                            return leftValue < rightValue;
+                            return Number(leftValue) < Number(rightValue);
                         case 'GREATER_OR_EQUAL':
-                            return leftValue >= rightValue;
+                            return Number(leftValue) >= Number(rightValue);
                         case 'LESS_OR_EQUAL':
-                            return leftValue <= rightValue;
+                            return Number(leftValue) <= Number(rightValue);
                     }
                 },
                 syntax: {
@@ -432,7 +390,6 @@ module.exports = {
                                     type: 'Dropdown',
                                     options: [
                                         ['=', 'EQUAL'],
-                                        ['!=', 'NOT_EQUAL'],
                                         ['>', 'GREATER'],
                                         ['<', 'LESS'],
                                         ['≥', 'GREATER_OR_EQUAL'],
@@ -453,8 +410,7 @@ module.exports = {
                 },
             },
             boolean_and_or: {
-                color: EntryStatic.colorSet.block.default.JUDGE,
-                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                color: '#AEB8FF',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -469,9 +425,7 @@ module.exports = {
                             [Lang.Blocks.JUDGEMENT_boolean_or, 'OR'],
                         ],
                         value: 'AND',
-                        fontSize: 10,
-                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        fontSize: 11,
                     },
                     {
                         type: 'Block',
@@ -559,15 +513,14 @@ module.exports = {
                 },
             },
             boolean_not: {
-                color: EntryStatic.colorSet.block.default.JUDGE,
-                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                color: '#AEB8FF',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_boolean_not_1,
-                        color: '#FFF',
+                        color: '#3D3D3D',
                     },
                     {
                         type: 'Block',
@@ -576,7 +529,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_boolean_not_2,
-                        color: '#FFF',
+                        color: '#3D3D3D',
                     },
                 ],
                 events: {},
