@@ -748,7 +748,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        document.addEventListener('keydown', (e) => {
+        doc.on('keydown', (e) => {
             let keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
@@ -766,7 +766,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        document.addEventListener('keyup', (e) => {
+        doc.on('keyup', (e) => {
             let keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
