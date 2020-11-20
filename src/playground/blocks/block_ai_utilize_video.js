@@ -29,6 +29,19 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 size: 11,
             };
         },
+        getCameraOrder() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['front', 0],
+                    ['back', 1],
+                ],
+                value: 0,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
         getNumbers() {
             return {
                 type: 'Dropdown',
@@ -281,6 +294,31 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             class: 'video',
             isNotFor: ['video'],
             events: {},
+        },
+        video_test: {
+            template: '%1 카메라로 바꾸기 %2',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [params.getCameraOrder(), params.getCommonIndicator()],
+            events: {},
+            def: {
+                type: 'video_test',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'video',
+            isNotFor: ['video'],
+            async func(sprite, script) {
+                const VALUE = script.getField('VALUE');
+                return await VideoUtils.changeSource(VALUE);
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
         },
         video_check_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
@@ -557,7 +595,14 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     await VideoUtils.initialize();
                     return false;
                 }
-                return VideoUtils.modelMountStatus[target];
+                switch (target) {
+                    case 'face':
+                        return VideoUtils.faces.length > 0;
+                    case 'pose':
+                        return VideoUtils.poses.predictions.length > 0;
+                    case 'object':
+                        return VideoUtils.objects.length > 0;
+                }
             },
             paramsKeyMap: {
                 TARGET: 0,

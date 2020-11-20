@@ -172,6 +172,10 @@ class BlockMenuScroller {
             if (e.preventDefault) {
                 e.preventDefault();
             }
+            if (e.which == 2) {
+                console.log('mouse wheel click disabled');
+                return;
+            }
 
             let mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {

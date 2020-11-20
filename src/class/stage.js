@@ -69,6 +69,10 @@ Entry.Stage = class Stage {
         } else {
             const downFunc = (e) => {
                 Entry.dispatchEvent('canvasClick', e);
+                if (e.which == 2) {
+                    console.log('mouse wheel click disabled');
+                    return;
+                }
                 Entry.stage.isClick = true;
             };
 
@@ -556,7 +560,7 @@ Entry.Stage = class Stage {
     showInputField() {
         const THIS = this;
         const isWebGL = GEHelper.isWebGL;
-
+        GEHelper.disableTickByEngine();
         if (!this.inputField) {
             this.inputField = _createInputField();
             this.inputSubmitButton = _createSubmitButton();
@@ -641,7 +645,7 @@ Entry.Stage = class Stage {
         if (!this.inputField) {
             return;
         }
-
+        GEHelper.tickByEngine();
         if (GEHelper.isWebGL) {
             this.canvas.removeChild(this.inputField.getPixiView());
         }

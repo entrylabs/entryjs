@@ -28,4 +28,5 @@ class EntryIntro implements IEntry.Intro {
     }
 }
 
+export default EntryIntro;
 Entry.Intro = EntryIntro;

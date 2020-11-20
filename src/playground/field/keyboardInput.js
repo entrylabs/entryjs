@@ -205,20 +205,13 @@ Entry.FieldKeyboard = class FieldDropdown extends Entry.Field {
     }
 
     keyboardControl = (e) => {
-        e.stopPropagation && e.stopPropagation();
-        e.preventDefault && e.preventDefault();
-        // let value = event.key === ' ' ? event.code : event.key;
-        // value = Entry.KeyboardCode.korKeyMap[value] || value;
-        let value = e.code == undefined ? e.key : e.code;
+        e?.stopPropagation();
+        e?.preventDefault();
+        let value = Entry.Utils.inputToKeycode(e);
         if (!value) {
             return;
         }
-        value = value.replace('Digit', '');
-        value = value.replace('Numpad', '');
-        value = Entry.KeyboardCode.codeToKeyCode[value];
-        if (!value) {
-            return;
-        }
+
         const text = Entry.getKeyCodeMap()[value];
         if (text !== undefined) {
             this.destroyOption();

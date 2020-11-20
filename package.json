@@ -53,6 +53,7 @@
         "jest": "^24.9.0",
         "lodash": "^4.17.15",
         "pixi.js": "^5.2.1",
+        "mathjs": "^7.1.0",
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "uid": "^0.0.2",
