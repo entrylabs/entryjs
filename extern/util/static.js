@@ -423,7 +423,7 @@ EntryStatic.getAllBlocks = function() {
                 'check_language',
                 'video_title',
                 'video_draw_webcam',
-                'video_test',
+                'video_change_cam',
                 'video_check_webcam',
                 'video_flip_camera',
                 'video_set_camera_opacity_option',
