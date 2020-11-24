@@ -31,8 +31,12 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
         },
         getCameraOrder() {
             return {
-                type: 'DropdownDynamic',
-                menuName: 'connectedCameras',
+                type: 'Dropdown',
+                options: [
+                    ['front', 0],
+                    ['back', 1],
+                ],
+                value: 0,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -291,7 +295,8 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             events: {},
         },
-        video_change_cam: {
+        video_test: {
+            template: '%1 카메라로 바꾸기 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -299,7 +304,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             params: [params.getCameraOrder(), params.getCommonIndicator()],
             events: {},
             def: {
-                type: 'video_change_cam',
+                type: 'video_test',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -556,6 +561,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 let result = false;
                 VideoUtils.objects.forEach((detected) => {
                     if (detected.class === target) {
+                        console.log(detected.class, target, detected.class === target);
                         result = true;
                     }
                 });

@@ -74,19 +74,12 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         return super.getTextByValue(value);
     }
 
-    async _updateValue(reDraw) {
+    _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
         if (Entry.container) {
             if (this._menuName) {
-                if (this._menuName === 'connectedCameras') {
-                    const inputList = await navigator.mediaDevices.enumerateDevices();
-                    options = inputList
-                        .filter((input) => input.kind === 'videoinput')
-                        .map((item, index) => [item.label, index]);
-                } else {
-                    options = Entry.container.getDropdownList(this._menuName, object);
-                }
+                options = Entry.container.getDropdownList(this._menuName, object);
             } else {
                 options = this._menuGenerator();
             }
