@@ -330,8 +330,8 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            async func(sprite, script) {
-                return await VideoUtils.checkUserCamAvailable();
+            func(sprite, script) {
+                return VideoUtils.videoInputList.length > 0;
             },
             syntax: {
                 js: [],
@@ -523,7 +523,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     case 'face':
                         return VideoUtils.faces.length || 0;
                     case 'pose':
-                        return VideoUtils.poses.predictions.length || 0;
+                        return (VideoUtils.poses && VideoUtils.poses.predictions.length) || 0;
                     case 'object':
                         return VideoUtils.objects.length || 0;
                 }
@@ -570,7 +570,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-
+        // 원래는 video_is_model_detected 로 나가야 하나, 해당 부분에 있어서 기존 하위 호환성때문에... 이름을 못바꿈...
         video_is_model_loaded: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -593,7 +593,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     case 'face':
                         return VideoUtils.faces.length > 0;
                     case 'pose':
-                        return VideoUtils.poses.predictions.length > 0;
+                        return VideoUtils.poses && VideoUtils.poses.predictions.length > 0;
                     case 'object':
                         return VideoUtils.objects.length > 0;
                 }
