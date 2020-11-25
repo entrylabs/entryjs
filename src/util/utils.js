@@ -54,6 +54,7 @@ Entry.loadProject = function(project) {
             }
         }
     }
+    Entry.isIframe = project.isIframe;
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
