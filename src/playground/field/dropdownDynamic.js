@@ -74,14 +74,14 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         return super.getTextByValue(value);
     }
 
-    _updateValue(reDraw) {
+    async _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
         if (Entry.container) {
             if (this._menuName) {
-                options = Entry.container.getDropdownList(this._menuName, object);
+                options = await Entry.container.getDropdownList(this._menuName, object);
             } else {
-                options = this._menuGenerator();
+                options = await this._menuGenerator();
             }
         }
 
@@ -110,7 +110,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         let value = this.getValue();
 
         if (this._blockView.isInBlockMenu || !value || value == 'null') {
-            value = options.length !== 0 ? options[0][1] : null;
+            value = options.length !== 0 && options[0] ? options[0][1] : null;
         }
         const matched = _.find(options, ([, cValue]) => cValue === value);
         if (!matched && defaultValue) {
