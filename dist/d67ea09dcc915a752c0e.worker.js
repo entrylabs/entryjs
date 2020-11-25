@@ -12612,7 +12612,7 @@ function processImage(repeat) {
         return video_worker_generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 13, , 14]);
+                    _a.trys.push([0, 6, , 7]);
                     if (!!repeat) return [3 /*break*/, 4];
                     return [4 /*yield*/, objectDetect(true)];
                 case 1:
@@ -12625,32 +12625,27 @@ function processImage(repeat) {
                     _a.sent();
                     return [2 /*return*/];
                 case 4:
-                    if (!isRunning) return [3 /*break*/, 11];
-                    if (!modelStatus.object) return [3 /*break*/, 6];
-                    return [4 /*yield*/, objectDetect(false)];
-                case 5:
-                    _a.sent();
-                    _a.label = 6;
+                    if (isRunning) {
+                        if (modelStatus.object) {
+                            objectDetect(false);
+                        }
+                        if (modelStatus.pose) {
+                            poseDetect(false);
+                        }
+                        if (modelStatus.face) {
+                            faceDetect(false);
+                        }
+                    }
+                    else {
+                        return [2 /*return*/];
+                    }
+                    _a.label = 5;
+                case 5: return [3 /*break*/, 7];
                 case 6:
-                    if (!modelStatus.pose) return [3 /*break*/, 8];
-                    return [4 /*yield*/, poseDetect(false)];
-                case 7:
-                    _a.sent();
-                    _a.label = 8;
-                case 8:
-                    if (!modelStatus.face) return [3 /*break*/, 10];
-                    return [4 /*yield*/, faceDetect(false)];
-                case 9:
-                    _a.sent();
-                    _a.label = 10;
-                case 10: return [3 /*break*/, 12];
-                case 11: return [2 /*return*/];
-                case 12: return [3 /*break*/, 14];
-                case 13:
                     err_1 = _a.sent();
                     console.log('estimation error', err_1);
-                    return [3 /*break*/, 14];
-                case 14:
+                    return [3 /*break*/, 7];
+                case 7:
                     setTimeout(function () {
                         processImage(true);
                     }, 50);
@@ -12781,14 +12776,14 @@ ctx.onmessage = function (e) {
                     _a = type;
                     switch (_a) {
                         case 'init': return [3 /*break*/, 1];
-                        case 'estimate': return [3 /*break*/, 3];
-                        case 'option': return [3 /*break*/, 4];
-                        case 'handle': return [3 /*break*/, 5];
-                        case 'pause': return [3 /*break*/, 6];
-                        case 'run': return [3 /*break*/, 7];
-                        case 'handleOff': return [3 /*break*/, 8];
+                        case 'estimate': return [3 /*break*/, 4];
+                        case 'option': return [3 /*break*/, 5];
+                        case 'handle': return [3 /*break*/, 6];
+                        case 'pause': return [3 /*break*/, 7];
+                        case 'run': return [3 /*break*/, 8];
+                        case 'handleOff': return [3 /*break*/, 9];
                     }
-                    return [3 /*break*/, 9];
+                    return [3 /*break*/, 10];
                 case 1:
                     dimension.width = e.data.width;
                     dimension.height = e.data.height;
@@ -12833,38 +12828,41 @@ ctx.onmessage = function (e) {
                 case 2:
                     // 각각의 모델 pre-load
                     _c.sent();
+                    return [4 /*yield*/, warmup()];
+                case 3:
+                    _c.sent();
                     this.postMessage({ type: 'init', message: 'warmup' });
                     // console.log('video worker loaded');
-                    return [3 /*break*/, 9];
-                case 3:
+                    return [3 /*break*/, 10];
+                case 4:
                     image = e.data.image;
                     ctx_1 = offCanvas.getContext('2d');
                     ctx_1.drawImage(image, 0, 0, dimension.width, dimension.height);
-                    return [3 /*break*/, 9];
-                case 4:
-                    options = e.data.option;
-                    return [3 /*break*/, 9];
+                    return [3 /*break*/, 10];
                 case 5:
+                    options = e.data.option;
+                    return [3 /*break*/, 10];
+                case 6:
                     _b = e.data, target = _b.target, mode = _b.mode;
                     targetMode = mode === 'on';
                     modelStatus[target] = targetMode;
-                    return [3 /*break*/, 9];
-                case 6:
-                    isRunning = false;
-                    return [3 /*break*/, 9];
+                    return [3 /*break*/, 10];
                 case 7:
+                    isRunning = false;
+                    return [3 /*break*/, 10];
+                case 8:
                     isRunning = true;
                     processImage(true);
-                    return [3 /*break*/, 9];
-                case 8:
+                    return [3 /*break*/, 10];
+                case 9:
                     modelStatus = {
                         pose: false,
                         object: false,
                         face: false,
                     };
                     isRunning = false;
-                    return [3 /*break*/, 9];
-                case 9: return [2 /*return*/];
+                    return [3 /*break*/, 10];
+                case 10: return [2 /*return*/];
             }
         });
     });
