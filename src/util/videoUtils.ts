@@ -141,12 +141,26 @@ class VideoUtils implements MediaUtilsInterface {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
 
-    async initialize(list: string[][]) {
+    // issue 12160 bug , 강제로 usermedia를 가져오도록 하기 위함 enumerateDevices자체로는 권한 요청을 하지 않음
+    async checkPermission() {
+        await navigator.permissions
+            .query({ name: 'camera' })
+            .then(async (permission) => {
+                console.log('camera state', permission.state);
+                if (permission.state !== 'granted') {
+                    await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+                }
+            })
+            .catch(async (error) => {
+                console.log('Got error :', error);
+            });
+    }
+
+    async initialize() {
         if (this.isInitialized) {
             return;
         }
-        this.videoInputList = list;
-
+        await this.checkPermission();
         const inputList = await navigator.mediaDevices.enumerateDevices();
         this.videoInputList = inputList
             .filter((input) => input.kind === 'videoinput')
