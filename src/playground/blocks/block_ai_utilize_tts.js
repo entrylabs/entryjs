@@ -3,7 +3,7 @@
 const { toQueryString } = require('../../util/common');
 const _trim = require('lodash/trim');
 /**
- * 이재원: 로드를 새로 할때는 queue를 다시 만든다고 하네요 기존 코드는 제거 처리 하였습니다.
+ * wodnjs6512: 로드를 새로 할때는 queue를 다시 만든다고 하네요 기존 코드는 제거 처리 하였습니다.
  * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
  *  */
 Entry.AI_UTILIZE_BLOCK.tts = {
