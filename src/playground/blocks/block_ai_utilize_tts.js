@@ -2,10 +2,7 @@
 
 const { toQueryString } = require('../../util/common');
 const _trim = require('lodash/trim');
-/**
- * wodnjs6512: 로드를 새로 할때는 queue를 다시 만든다고 하네요 기존 코드는 제거 처리 하였습니다.
- * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
- *  */
+
 Entry.AI_UTILIZE_BLOCK.tts = {
     name: 'tts',
     imageName: 'tts.png',
@@ -19,12 +16,38 @@ Entry.AI_UTILIZE_BLOCK.tts = {
     description: Lang.Msgs.ai_utilize_tts_description,
     descriptionKey: 'Msgs.ai_utilize_tts_description',
     isInitialized: false,
+    init() {
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
+        if (tts.isInitialized) {
+            return;
+        }
+        tts.soundQueue = new createjs.LoadQueue();
+        tts.soundQueue.installPlugin(createjs.Sound);
+        tts.soundQueue.on('complete', ({ currentTarget }) => {
+            const items = currentTarget.getItems().map(({ item }) => item);
+            tts.loadQueue = tts.loadQueue.filter((id) => {
+                const filtered = items.find((item) => item.id === id);
+                if (filtered) {
+                    const instance = Entry.Utils.playSound(id, filtered.prop);
+                    instance.soundType = 'tts';
+                    Entry.Utils.addSoundInstances(instance);
+                    if (filtered.callback) {
+                        const duration =
+                            instance.duration > 0 ? instance.duration : filtered.duration * 300;
+                        setTimeout(filtered.callback, duration);
+                    }
+                    return false;
+                }
+                return true;
+            });
+        });
+        tts.isInitialized = true;
+    },
     api: '/api/expansionBlock/tts/read',
     sponsor: 'clovaNaver',
     sponsorLink: 'https://www.ncloud.com/product/aiService/css',
     sponsorText: 'Powered by NAVER Clova',
     loadQueue: [],
-    init() {},
 };
 
 Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
@@ -121,22 +144,51 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
             hash: hashCode(text),
         };
     };
+
     const read = function({ message, hash, prop, callback }) {
+        checkError();
         const tts = Entry.AI_UTILIZE_BLOCK.tts;
         const id = `tts-${hash}-${JSON.stringify(prop)}`;
+        const sound = tts.soundQueue.getItem(id);
+        if (sound) {
+            const instance = Entry.Utils.playSound(id, prop);
+            instance.soundType = 'tts';
+            Entry.Utils.addSoundInstances(instance);
+            if (callback) {
+                setTimeout(callback, instance.duration);
+            }
+        } else {
+            const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
+                text: message,
+                ...prop,
+            })}`;
+            const type = createjs.LoadQueue.SOUND;
+            tts.soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
+            tts.loadQueue.push(id);
+        }
+        return id;
+    };
+    /**
+     * wodnjs6512: 로드를 새로 할때는 queue를 다시 만든다고 하네요
+     * 기존 코드에서 하나의 로더로 로드를 2개를 콜하면 하나는 정상 로드가 되지 않는 이슈가 있다고 합니다
+     * 읽어주고 기다리기 블럭이 아니라면 한번에 로드가 가능하도록 로더를 따로 만들어서 사용하도록 수정
+     * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
+     *  */
+    const readForNoWait = function(args) {
+        const { message, hash, prop, callback } = args;
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
+        const id = `tts-${hash}-${JSON.stringify(prop)}`;
+        const type = createjs.LoadQueue.SOUND;
 
         const soundQueue = new createjs.LoadQueue(true);
         soundQueue.installPlugin(createjs.Sound);
-        soundQueue.setMaxConnections(8);
         soundQueue.maintainScriptOrder = true;
         const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
             text: message,
             ...prop,
         })}`;
-        const type = createjs.LoadQueue.SOUND;
-        soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
-        tts.loadQueue.push(id);
-        soundQueue.on('complete', ({ currentTarget }) => {
+
+        const loadHandler = ({ currentTarget }) => {
             const items = currentTarget.getItems().map(({ item }) => item);
             tts.loadQueue = tts.loadQueue.filter((id) => {
                 const filtered = items.find((item) => item.id === id);
@@ -153,7 +205,30 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 }
                 return true;
             });
-        });
+        };
+        // if Error, retry
+        const errorHandler = (error) => {
+            soundQueue.removeEventListener('complete', loadHandler);
+            soundQueue.removeEventListener('error', errorHandler);
+            soundQueue.destroy();
+            read(args);
+        };
+        soundQueue.on('complete', loadHandler);
+        soundQueue.on('error', errorHandler);
+        soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
+        tts.loadQueue.push(id);
+    };
+
+    const checkError = function() {
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
+        if (tts.isInitialized) {
+            const hasError = tts.soundQueue.getItems().find((item) => !item.result);
+            if (hasError) {
+                tts.soundQueue.destroy();
+                tts.isInitialized = false;
+            }
+        }
+        tts.init();
     };
 
     return {
@@ -215,7 +290,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
                 if (result) {
                     const prop = sprite.getVoiceProp();
-                    read({
+                    readForNoWait({
                         message,
                         hash,
                         prop,
