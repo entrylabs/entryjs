@@ -168,6 +168,56 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
         }
         return id;
     };
+    /**
+     * wodnjs6512: 로드를 새로 할때는 queue를 다시 만든다고 하네요
+     * 기존 코드에서 하나의 로더로 로드를 2개를 콜하면 하나는 정상 로드가 되지 않는 이슈가 있다고 합니다
+     * 읽어주고 기다리기 블럭이 아니라면 한번에 로드가 가능하도록 로더를 따로 만들어서 사용하도록 수정
+     * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
+     *  */
+    const readForNoWait = function(args) {
+        const { message, hash, prop, callback } = args;
+        const tts = Entry.AI_UTILIZE_BLOCK.tts;
+        const id = `tts-${hash}-${JSON.stringify(prop)}`;
+        const type = createjs.LoadQueue.SOUND;
+
+        const soundQueue = new createjs.LoadQueue(true);
+        soundQueue.installPlugin(createjs.Sound);
+        soundQueue.maintainScriptOrder = true;
+        const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
+            text: message,
+            ...prop,
+        })}`;
+
+        const loadHandler = ({ currentTarget }) => {
+            const items = currentTarget.getItems().map(({ item }) => item);
+            tts.loadQueue = tts.loadQueue.filter((id) => {
+                const filtered = items.find((item) => item.id === id);
+                if (filtered) {
+                    const instance = Entry.Utils.playSound(id, filtered.prop);
+                    instance.soundType = 'tts';
+                    Entry.Utils.addSoundInstances(instance);
+                    if (filtered.callback) {
+                        const duration =
+                            instance.duration > 0 ? instance.duration : filtered.duration * 300;
+                        setTimeout(filtered.callback, duration);
+                    }
+                    return false;
+                }
+                return true;
+            });
+        };
+        // if Error, retry
+        const errorHandler = (error) => {
+            soundQueue.removeEventListener('complete', loadHandler);
+            soundQueue.removeEventListener('error', errorHandler);
+            soundQueue.destroy();
+            read(args);
+        };
+        soundQueue.on('complete', loadHandler);
+        soundQueue.on('error', errorHandler);
+        soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
+        tts.loadQueue.push(id);
+    };
 
     const checkError = function() {
         const tts = Entry.AI_UTILIZE_BLOCK.tts;
@@ -240,7 +290,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
                 if (result) {
                     const prop = sprite.getVoiceProp();
-                    read({
+                    readForNoWait({
                         message,
                         hash,
                         prop,
