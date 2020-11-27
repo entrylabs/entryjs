@@ -181,11 +181,9 @@ class AudioUtils {
     }
 
     /**
-     * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
-     * @param {object=} option
-     * @param {boolean} [option.silent=false]
+     * 녹음을 종료한다.
      */
-    async stopRecord(option = { silent: false }) {
+    async stopRecord() {
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
@@ -198,17 +196,9 @@ class AudioUtils {
         }
         this.startedRecording = false;
 
-        if (option.silent) {
-            this._mediaRecorder.onstop = () => {
-                console.log('silent stop');
-            };
-            this._stopMediaRecorder();
-        } else {
-            this._stopMediaRecorder();
-            this._mediaRecorder.onstop = () => {
-                console.log('proper stop');
-            };
-        }
+        this._mediaRecorder.onstop = null;
+
+        this._stopMediaRecorder();
         this._audioContext.suspend();
         this.stream.getTracks().forEach((track) => {
             track.stop();
