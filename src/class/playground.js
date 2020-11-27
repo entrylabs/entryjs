@@ -23,6 +23,7 @@ Entry.Playground = class Playground {
         this._destroyer = this._destroyer || new Destroyer();
         this._destroyer.destroy();
         this.isTextBGMode_ = false;
+        this.dataTable = DataTable;
 
         /**
          * playground's current view type
@@ -103,11 +104,11 @@ Entry.Playground = class Playground {
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
-            const tableView = Entry.createElement('div', 'dataTable')
-                .addClass('entryPlaygroundTableWorkspace entryRemove')
-                .appendTo(this.view_);
-            this.generateTableView(tableView);
-            this.tableView_ = tableView;
+            // const tableView = Entry.createElement('div', 'dataTable')
+            //     .addClass('entryPlaygroundTableWorkspace entryRemove')
+            //     .appendTo(this.view_);
+            // this.generateTableView(tableView);
+            // this.tableView_ = tableView;
 
             const defaultView = Entry.createElement('div', 'entryDefault')
                 .addClass('entryPlaygroundDefaultWorkspace')
@@ -219,15 +220,15 @@ Entry.Playground = class Playground {
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
 
-        const tableTab = Entry.createElement('li', 'dataTableTab')
-            .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
-            .appendTo(tabList)
-            .bindOnClick(() => {
-                Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
-            });
-        tableTab.innerHTML = Lang.Workspace.tab_table;
-        this.tabViewElements.table = tableTab;
-        this.tableTab = tableTab;
+        // const tableTab = Entry.createElement('li', 'dataTableTab')
+        //     .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
+        //     .appendTo(tabList)
+        //     .bindOnClick(() => {
+        //         Entry.do('playgroundChangeViewMode', 'table', this.selectedViewMode);
+        //     });
+        // tableTab.innerHTML = Lang.Workspace.tab_table;
+        // this.tabViewElements.table = tableTab;
+        // this.tableTab = tableTab;
     }
 
     createButtonTabView(tabButtonView) {
@@ -696,44 +697,44 @@ Entry.Playground = class Playground {
         }));
     }
 
-    generateTableView(tableView) {
-        if (Entry.type !== 'workspace') {
-            return;
-        }
-        const tableAdd = Entry.createElement('div', 'entryAddTable')
-            .addClass('entryPlaygroundAddTable')
-            .appendTo(tableView);
+    // generateTableView(tableView) {
+    //     if (Entry.type !== 'workspace') {
+    //         return;
+    //     }
+    //     const tableAdd = Entry.createElement('div', 'entryAddTable')
+    //         .addClass('entryPlaygroundAddTable')
+    //         .appendTo(tableView);
 
-        const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
-            .addClass('entryPlaygroundAddTableInner')
-            .bindOnClick(() => {
-                Entry.do('playgroundClickAddTable');
-            })
-            .appendTo(tableAdd);
-        innerTableAdd.innerHTML = Lang.Workspace.table_add;
-        this._tableAddButton = innerTableAdd;
+    //     const innerTableAdd = Entry.createElement('div', 'entryAddTableInner')
+    //         .addClass('entryPlaygroundAddTableInner')
+    //         .bindOnClick(() => {
+    //             Entry.do('playgroundClickAddTable');
+    //         })
+    //         .appendTo(tableAdd);
+    //     innerTableAdd.innerHTML = Lang.Workspace.table_add;
+    //     this._tableAddButton = innerTableAdd;
 
-        this.tableListView_ = Entry.createElement('ul', 'dataTableList')
-            .addClass('entryPlaygroundTableList')
-            .appendTo(tableView);
+    //     this.tableListView_ = Entry.createElement('ul', 'dataTableList')
+    //         .addClass('entryPlaygroundTableList')
+    //         .appendTo(tableView);
 
-        const tableDom = Entry.createElement('div', 'dataTableEditor')
-            .addClass('entryPlaygroundTable')
-            .appendTo(tableView);
-        DataTable.view = tableDom;
+    //     const tableDom = Entry.createElement('div', 'dataTableEditor')
+    //         .addClass('entryPlaygroundTable')
+    //         .appendTo(tableView);
+    //     DataTable.view = tableDom;
 
-        const tableCurtainView = Entry.createElement('div', 'entryTableCurtain')
-            .addClass('entryPlaygroundTableCurtainWorkspace entryRemove')
-            .appendTo(tableDom);
-        this.tableCurtainView_ = tableCurtainView;
+    //     const tableCurtainView = Entry.createElement('div', 'entryTableCurtain')
+    //         .addClass('entryPlaygroundTableCurtainWorkspace entryRemove')
+    //         .appendTo(tableDom);
+    //     this.tableCurtainView_ = tableCurtainView;
 
-        const tableCurtainText = Entry.createElement('span', 'entryTableCurtainText')
-            .addClass('entryPlaygroundTableCurtainWorkspaceText')
-            .appendTo(tableCurtainView);
-        tableCurtainText.innerHTML = Lang.Workspace.add_table_before_edit;
+    //     const tableCurtainText = Entry.createElement('span', 'entryTableCurtainText')
+    //         .addClass('entryPlaygroundTableCurtainWorkspaceText')
+    //         .appendTo(tableCurtainView);
+    //     tableCurtainText.innerHTML = Lang.Workspace.add_table_before_edit;
 
-        this.dataTable = DataTable;
-    }
+    //     this.dataTable = DataTable;
+    // }
 
     initSortableTableWidget() {
         if (this.tableSortableListWidget) {
@@ -1708,12 +1709,12 @@ Entry.Playground = class Playground {
             }
         }
 
-        if (viewType === 'table') {
-            this.initSortableTableWidget();
-            this.injectTable();
-        } else {
-            this.checkChangeTable();
-        }
+        // if (viewType === 'table') {
+        //     this.initSortableTableWidget();
+        //     this.injectTable();
+        // } else {
+        //     this.checkChangeTable();
+        // }
 
         if (
             (viewType === 'text' && this.object.objectType === 'textBox') ||

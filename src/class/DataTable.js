@@ -11,6 +11,10 @@ class DataTable {
     modal;
     selected;
 
+    constructor() {
+        this.#generateView();
+    }
+
     removeAllBlocks() {
         const { blocks } = EntryStatic.getAllBlocks().find(
             ({ category }) => category === 'analysis'
@@ -28,11 +32,6 @@ class DataTable {
 
     unbanBlock() {
         Entry.playground.blockMenu.unbanClass('analysis');
-    }
-
-    set view(view) {
-        this.#view = view;
-        this.#generateView();
     }
 
     get tables() {
@@ -85,10 +84,10 @@ class DataTable {
     }
 
     addSource(table, shouldTableMode = true) {
-        const isWorkspace = Entry.type === 'workspace';
-        if (shouldTableMode && isWorkspace) {
-            Entry.do('playgroundChangeViewMode', 'table');
-        }
+        // const isWorkspace = Entry.type === 'workspace';
+        // if (shouldTableMode && isWorkspace) {
+        //     Entry.do('playgroundChangeViewMode', 'table');
+        // }
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
         const isDataTableSource = data instanceof DataTableSource;
@@ -169,8 +168,22 @@ class DataTable {
         return true;
     };
 
+    show() {
+        if (!this.dataAnalytics) {
+            this.#generateView();
+        }
+        this.dataAnalytics.show({ data: this.#tables });
+    }
+
+    hide() {
+        this.dataAnalytics && this.dataAnalytics.hide();
+    }
+
     #generateView() {
-        this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
+        const view = document.createElement('div');
+        view.className = 'table-modal';
+        document.body.appendChild(view);
+        this.dataAnalytics = new DataAnalytics({ container: view, data: {}, isShow: false })
             .on('submit', this.saveTable)
             .on('alert', ({ message, title = Lang.DataAnalytics.max_row_count_error_title }) =>
                 entrylms.alert(message, title)
@@ -181,6 +194,9 @@ class DataTable {
             })
             .on('change', (dataAnalytics) => {
                 this.tempDataAnalytics = dataAnalytics;
+            })
+            .on('close', () => {
+                this.hide();
             });
     }
 
