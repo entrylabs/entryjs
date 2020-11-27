@@ -4,6 +4,7 @@ declare interface EntryOptions {
     hardwareEnable?: boolean;
     mediaFilePath?: string;
     moduleBaseUrl?: string;
+    dataTableDisable?: boolean;
 }
 
 /**
