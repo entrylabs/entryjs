@@ -7,7 +7,7 @@
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import DataTable from './DataTable';
-
+import { getInputList } from '../util/videoUtils';
 /**
  * Class for a container.
  * This have view for objects.
@@ -779,7 +779,7 @@ Entry.Container = class Container {
                 });
                 break;
             case 'connectedCameras':
-                const inputList = (await navigator.mediaDevices.enumerateDevices()) || [];
+                const inputList = await getInputList();
                 result = [].concat(
                     inputList
                         .filter((input) => input.kind === 'videoinput')
