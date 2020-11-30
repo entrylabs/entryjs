@@ -138,7 +138,7 @@ module.exports = {
                 async func(sprite, script) {
                     const text = script.getStringValue('TEXT', script);
                     await Entry.aiLearning.predict(text);
-                    return script;
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
