@@ -26,7 +26,7 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            Entry.do('playgroundClickAddTable');
+                            Entry.do('playgroundClickLoadTable');
                         },
                     ],
                 },

@@ -1407,18 +1407,18 @@ Entry.Playground = class Playground {
     }
 
     async selectTable(table = {}) {
-        const { tables } = this.dataTable;
-
-        if (await this.dataTable.selectTable(table)) {
-            tables.forEach(({ view, id }) => {
-                if (id === table.id) {
-                    view.addClass('entryTableSelected');
-                } else {
-                    view.removeClass('entryTableSelected');
-                }
-            });
-            Entry.dispatchEvent('tableSelected', table);
-        }
+        await this.dataTable.selectTable(table);
+        // if (await this.dataTable.selectTable(table)) {
+        //     const { tables } = this.dataTable;
+        //     tables.forEach(({ view, id }) => {
+        //         if (id === table.id) {
+        //             view.addClass('entryTableSelected');
+        //         } else {
+        //             view.removeClass('entryTableSelected');
+        //         }
+        //     });
+        //     Entry.dispatchEvent('tableSelected', table);
+        // }
     }
 
     /**

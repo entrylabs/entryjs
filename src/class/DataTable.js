@@ -119,8 +119,12 @@ class DataTable {
         const { tab } = table;
         this.selected = table;
         this.dataAnalytics.setData({
-            table: { ...json, tab },
+            list: this.tables,
+            selectedIndex: 0,
+            selected: this.tables[0],
         });
+        this.hide();
+        this.show();
         delete table.tab;
         delete this.tempDataAnalytics;
         return table;
@@ -197,6 +201,9 @@ class DataTable {
             })
             .on('close', () => {
                 this.hide();
+            })
+            .on('addTable', () => {
+                Entry.do('playgroundClickAddTable');
             });
     }
 
