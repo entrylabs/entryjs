@@ -1,6 +1,7 @@
 import _find from 'lodash/find';
 import _findIndex from 'lodash/findIndex';
 import _uniq from 'lodash/uniq';
+import _map from 'lodash/map';
 import _flatten from 'lodash/flatten';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
@@ -119,9 +120,9 @@ class DataTable {
         const { tab } = table;
         this.selected = table;
         this.dataAnalytics.setData({
-            list: this.tables,
+            list: _map(this.tables, (table) => table.toJSON()),
             selectedIndex: 0,
-            selected: this.tables[0],
+            selected: this.tables[0]?.toJSON(),
         });
         this.hide();
         this.show();
@@ -181,6 +182,10 @@ class DataTable {
 
     hide() {
         this.dataAnalytics && this.dataAnalytics.hide();
+        this.unbanBlock();
+        Entry.playground.reloadPlayground();
+        Entry.playground.refreshPlayground();
+        Entry.dispatchEvent('dismissModal');
     }
 
     #generateView() {
