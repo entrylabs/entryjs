@@ -41,7 +41,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         this.renderStart();
     }
 
-    async renderStart() {
+    renderStart() {
         const blockView = this._blockView;
         const X_PADDING = 20;
         const X_PADDING_SUBT = 10;
@@ -99,9 +99,9 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 stroke: arrowInfo.color,
             });
         }
-
+        let promise;
         if (this instanceof Entry.FieldDropdownDynamic) {
-            await this._updateValue();
+            promise = this._updateValue();
         }
 
         this._setTextValue();
@@ -134,6 +134,8 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
             width,
             height: CONTENT_HEIGHT,
         });
+
+        return promise;
     }
 
     resize() {
