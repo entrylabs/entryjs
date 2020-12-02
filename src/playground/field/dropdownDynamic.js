@@ -48,7 +48,11 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._font_size = this.getFontSize(content.fontSize);
 
         this._ROUND = content.roundValue || 3;
-        this.renderStart(blockView);
+        this.initialize(blockView);
+    }
+
+    async initialize(blockView) {
+        await this.renderStart(blockView);
         if (
             blockView &&
             blockView.getBoard() &&
