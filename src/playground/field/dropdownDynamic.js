@@ -48,7 +48,11 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._font_size = this.getFontSize(content.fontSize);
 
         this._ROUND = content.roundValue || 3;
-        this.renderStart(blockView);
+        this.initialize(blockView);
+    }
+
+    initialize(blockView) {
+        const promise = this.renderStart(blockView);
         if (
             blockView &&
             blockView.getBoard() &&
@@ -57,6 +61,11 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         ) {
             blockView.getBoard().workspace.changeEvent.attach(this, () => {
                 this._updateValue(true);
+            });
+        }
+        if (promise instanceof Promise) {
+            promise.then(() => {
+                blockView.alignContent(false);
             });
         }
     }
