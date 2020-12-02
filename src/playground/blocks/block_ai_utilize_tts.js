@@ -115,7 +115,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
         return {
             result: true,
             message: _trim(text),
-            hash: hashCode(text),
+            hash: hashCode(text + new Date().getTime()),
         };
     };
 
@@ -125,49 +125,56 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
      * 한번에 로드가 가능하도록 매번 로더를 따로 만들어서 사용하도록 수정
      * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
      *  */
-    const read = function(args) {
-        const { message, hash, prop, callback } = args;
-        const tts = Entry.AI_UTILIZE_BLOCK.tts;
-        const id = `tts-${hash}-${JSON.stringify(prop)}`;
-        const type = createjs.LoadQueue.SOUND;
+    const read = async function(args, isWait) {
+        const currentInstance = new Promise((resolve, reject) => {
+            const { message, hash, prop } = args;
+            const tts = Entry.AI_UTILIZE_BLOCK.tts;
+            const id = `tts-${hash}-${JSON.stringify(prop)}`;
+            const type = createjs.LoadQueue.SOUND;
 
-        const soundQueue = new createjs.LoadQueue(true);
-        soundQueue.installPlugin(createjs.Sound);
-        soundQueue.maintainScriptOrder = true;
-        const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
-            text: message,
-            ...prop,
-        })}`;
-
-        const loadHandler = ({ currentTarget }) => {
-            const items = currentTarget.getItems().map(({ item }) => item);
-            tts.loadQueue = tts.loadQueue.filter((id) => {
-                const filtered = items.find((item) => item.id === id);
-                if (filtered) {
-                    const instance = Entry.Utils.playSound(id, filtered.prop);
-                    instance.soundType = 'tts';
-                    Entry.Utils.addSoundInstances(instance);
-                    if (filtered.callback) {
+            const soundQueue = new createjs.LoadQueue(true);
+            soundQueue.installPlugin(createjs.Sound);
+            soundQueue.maintainScriptOrder = true;
+            const src = `${Entry.baseUrl}${Entry.AI_UTILIZE_BLOCK.tts.api}.mp3?${toQueryString({
+                text: message,
+                ...prop,
+            })}`;
+            const loadHandler = ({ currentTarget }) => {
+                const items = currentTarget.getItems().map(({ item }) => item);
+                tts.loadQueue = tts.loadQueue.filter((id) => {
+                    const filtered = items.find((item) => item.id === id);
+                    if (filtered) {
+                        const instance = Entry.Utils.playSound(id, filtered.prop);
+                        instance.soundType = 'tts';
+                        Entry.Utils.addSoundInstances(instance);
                         const duration =
                             instance.duration > 0 ? instance.duration : filtered.duration * 300;
-                        setTimeout(filtered.callback, duration);
+                        setTimeout(() => {
+                            resolve();
+                        }, duration);
                     }
-                    return false;
+                    return true;
+                });
+            };
+            // if Error, retry
+            const errorHandler = async (error) => {
+                soundQueue.removeEventListener('complete', loadHandler);
+                soundQueue.removeEventListener('error', errorHandler);
+                soundQueue.destroy();
+                if (isWait) {
+                    await read(args, true);
+                } else {
+                    read(args);
                 }
-                return true;
-            });
-        };
-        // if Error, retry
-        const errorHandler = (error) => {
-            soundQueue.removeEventListener('complete', loadHandler);
-            soundQueue.removeEventListener('error', errorHandler);
-            soundQueue.destroy();
-            read(args);
-        };
-        soundQueue.on('complete', loadHandler);
-        soundQueue.on('error', errorHandler);
-        soundQueue.loadFile({ id, src, type, prop, callback, duration: message.length });
-        tts.loadQueue.push(id);
+            };
+            soundQueue.on('complete', loadHandler);
+            soundQueue.on('error', errorHandler);
+            soundQueue.loadFile({ id, src, type, prop, duration: message.length });
+            tts.loadQueue.push(id);
+        });
+        if (isWait) {
+            return await currentInstance;
+        }
     };
 
     return {
@@ -289,29 +296,19 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
             },
             class: 'tts',
             isNotFor: ['tts'],
-            func(sprite, script) {
+            async func(sprite, script) {
                 const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
                 const prop = sprite.getVoiceProp();
                 if (result) {
-                    if (!script.isPlay) {
-                        script.isPlay = true;
-                        script.playState = 1;
-                        read({
+                    await read(
+                        {
                             message,
                             hash,
                             prop,
-                            callback: () => {
-                                script.playState = 0;
-                            },
-                        });
-                        return script;
-                    } else if (script.playState == 1) {
-                        return script;
-                    } else {
-                        delete script.playState;
-                        delete script.isPlay;
-                        return script.callReturn();
-                    }
+                        },
+                        true
+                    );
+                    return script.callReturn();
                 }
             },
             syntax: {
