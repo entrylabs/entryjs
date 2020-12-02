@@ -41,7 +41,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         this.renderStart();
     }
 
-    renderStart() {
+    async renderStart() {
         const blockView = this._blockView;
         const X_PADDING = 20;
         const X_PADDING_SUBT = 10;
@@ -101,7 +101,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         }
 
         if (this instanceof Entry.FieldDropdownDynamic) {
-            this._updateValue(true);
+            await this._updateValue();
         }
 
         this._setTextValue();
