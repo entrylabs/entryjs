@@ -53,25 +53,20 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
 
     initialize(blockView) {
         const promise = this.renderStart(blockView);
-        const update = () => {
-            if (
-                blockView &&
-                blockView.getBoard() &&
-                blockView.getBoard().workspace &&
-                blockView.getBoard().workspace.changeEvent
-            ) {
-                blockView.getBoard().workspace.changeEvent.attach(this, () => {
-                    this._updateValue(true);
-                });
-            }
-        };
+        if (
+            blockView &&
+            blockView.getBoard() &&
+            blockView.getBoard().workspace &&
+            blockView.getBoard().workspace.changeEvent
+        ) {
+            blockView.getBoard().workspace.changeEvent.attach(this, () => {
+                this._updateValue(true);
+            });
+        }
         if (promise instanceof Promise) {
             promise.then(() => {
                 blockView.alignContent(false);
-                update();
             });
-        } else {
-            update();
         }
     }
 
