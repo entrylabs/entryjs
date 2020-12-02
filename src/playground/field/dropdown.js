@@ -101,7 +101,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         }
 
         if (this instanceof Entry.FieldDropdownDynamic) {
-            this._updateValue();
+            this._updateValue(true);
         }
 
         this._setTextValue();
