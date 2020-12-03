@@ -317,4 +317,8 @@ Entry.Thread = class Thread {
     isGlobal() {
         return this._code === this.parent;
     }
+
+    hasData() {
+        return Boolean(this._data.length);
+    }
 };
