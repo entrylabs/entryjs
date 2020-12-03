@@ -117,6 +117,10 @@ Entry.loadProject = function(project) {
 };
 
 Entry.clearProject = function() {
+    if (Entry.type !== 'invisible') {
+        Entry.playground && Entry.playground.changeViewMode('code');
+    }
+
     Entry.stop();
     Entry.projectId = null;
     Entry.variableContainer.clear();
@@ -126,12 +130,6 @@ Entry.clearProject = function() {
     DataTable.clear();
     GEHelper.resManager.clearProject();
     Entry.Loader && (Entry.Loader.loaded = false);
-
-    if (Entry.type !== 'invisible') {
-        Entry.playground && Entry.playground.changeViewMode('code');
-    } else {
-        Entry.stateManager && Entry.stateManager.clear();
-    }
 };
 
 /**
