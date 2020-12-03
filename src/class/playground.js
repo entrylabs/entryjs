@@ -1615,6 +1615,9 @@ Entry.Playground = class Playground {
      * @param {string} viewType
      */
     changeViewMode(viewType) {
+        if (!this.tabViewElements) {
+            return;
+        }
         for (const i in this.tabViewElements) {
             this.tabViewElements[i].removeClass('entryTabSelected');
         }
