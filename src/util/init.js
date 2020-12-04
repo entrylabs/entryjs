@@ -440,7 +440,7 @@ Entry.stop = function() {
         return;
     }
     this.FPS = null;
-    Entry.engine.stop();
+    Entry?.engine?.stop();
 };
 
 /**
