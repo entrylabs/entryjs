@@ -125,8 +125,8 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
      * 한번에 로드가 가능하도록 매번 로더를 따로 만들어서 사용하도록 수정
      * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
      *  */
-    const read = async function(args, isWait) {
-        const currentInstance = new Promise((resolve, reject) => {
+    const read = function(args) {
+        return new Promise((resolve, reject) => {
             const { message, hash, prop } = args;
             const tts = Entry.AI_UTILIZE_BLOCK.tts;
             const id = `tts-${hash}-${JSON.stringify(prop)}`;
@@ -172,9 +172,6 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
             soundQueue.loadFile({ id, src, type, prop, duration: message.length });
             tts.loadQueue.push(id);
         });
-        if (isWait) {
-            return await currentInstance;
-        }
     };
 
     return {
@@ -300,14 +297,11 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                 const { result, message, hash } = checkText(script.getStringValue('TEXT', script));
                 const prop = sprite.getVoiceProp();
                 if (result) {
-                    await read(
-                        {
-                            message,
-                            hash,
-                            prop,
-                        },
-                        true
-                    );
+                    await read({
+                        message,
+                        hash,
+                        prop,
+                    });
                     return script.callReturn();
                 }
             },
