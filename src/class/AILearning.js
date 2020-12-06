@@ -1,5 +1,7 @@
 import PopupHelper from './popup_helper';
 import TextLearning from './learning/TextLearning';
+import Cluster from './learning/Cluster';
+import Regression from './learning/Regression';
 
 export default class AILearning {
     #playground;
@@ -16,10 +18,27 @@ export default class AILearning {
     isEnable;
     #recordTime = 2000;
     #module = null;
+    #tableData = null;
+
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
     }
+
+    setTable(classes) {
+        try {
+            const [{samples}] = classes;
+            const [{data}] = samples;
+            if(typeof data === 'string') {
+                return JSON.parse(data);
+            }else {
+                return data;
+            }
+        } catch(e) {
+            console.log('set table error', e);
+        }
+    }
+
 
     removeAllBlocks() {
         const utilizeBlock  = Object.values(Entry.AI_UTILIZE_BLOCK_LIST).map(x => Object.keys(x.getBlocks())).flatten();
@@ -67,19 +86,34 @@ export default class AILearning {
 
     }
 
-    async predict(text) {
-        if(this.#module) {
-            const result = await this.#module.predict(text);
+    async predict(obj) {
+        if(this.#module && this.#module.predict) {
+            const result = await this.#module.predict(obj);
             this.result = result;
         }
         return [];
     }
 
     load(modelInfo) {
-        const { url, labels, type, classes = [], model, id, _id, isActive = true, name, recordTime } = modelInfo || {};
+        const { 
+            url, 
+            labels, 
+            type, 
+            classes = [], 
+            model, 
+            id, 
+            _id, 
+            isActive = true, 
+            name, 
+            recordTime,
+            trainParam,
+            tableData,
+            result,
+        } = modelInfo || {};
         if(!url ||  !this.isEnable || !isActive) {
             return ;
         }
+        this.destroy();
         this.#labels = labels || classes.map(({name}) => name);
         this.#type = type;
         this.#url = url;
@@ -87,30 +121,87 @@ export default class AILearning {
         this.name = name;
         this.#modelId = model || id;
         this.#recordTime = recordTime;
-        this.unbanBlocks();
+  
+        if(!tableData && classes.length) {
+            this.#tableData = this.setTable(classes);
+        } else {
+            this.#tableData = tableData;
+        }
         this.generatePopupView({url, labels: this.#labels, type, recordTime});
-        if(this.#playground) {
+        if (this.#playground) {
             this.#playground.reloadPlayground()
         }
-        if(type === 'text') {
+        if (type === 'text') {
+            this.unbanBlocks();
             this.#module = new TextLearning();
-            this.#module.load(`/uploads/${this.#url}/model.json`)
+            this.#module.load(`/uploads/${this.#url}/model.json`);
+        } else if (type === 'cluster') {
+            this.unbanBlocks(['train']);
+            this.#module = new Cluster({ result, trainParam, table: this.#tableData });
+        } else if (type === 'regression') {
+            this.unbanBlocks(['train']);
+            this.#module = new Regression({ result, trainParam, table: this.#tableData });
+            this.#module.load(`/uploads/${this.#url}/model.json`);
+        } else {
+            this.unbanBlocks();
         }
         this.isLoaded = true;
+    }
+
+    train() {
+        if(this.#module && this.#module.train) {
+            this.#module.train();
+        }
+    }
+
+    isTrained() {
+        if(this.#module && this.#module.isTrained) {
+            return this.#module.isTrained;
+        }
+        return false;
+    }
+
+    setTrainOption(type, value) {
+        if(this.#module && this.#module.setTrainOption) {
+            this.#module.setTrainOption(type, value);
+        }
+    }
+
+    getTrainOption() {
+        if(this.#module && this.#module.getTrainOption) {
+            return this.#module.getTrainOption();
+        }
+    }
+
+    getTrainResult() {
+        if(this.#module && this.#module.result) {
+            return this.#module.result;
+        }
+    }
+
+    getTableData() {
+        return this.#tableData;
+    }
+
+    getResult() {
+        if(this.#module && this.#module.result) {
+            return this.#module.result;
+        } 
     }
 
     getId() {
         return this.#modelId;
     }
 
-    unbanBlocks() {
+    unbanBlocks(categories = ['classification']) {
+        this.banBlocks();
         const blockMenu =  this.getBlockMenu(this.#playground);
         if (blockMenu) {
             blockMenu.unbanClass(this.#categoryName);
-            blockMenu.banClass(`${this.#categoryName}_text`);
-            blockMenu.banClass(`${this.#categoryName}_image`);
-            blockMenu.banClass(`${this.#categoryName}_speech`);
             blockMenu.unbanClass(`${this.#categoryName}_${this.#type}`);
+            categories.forEach((category) => {
+                blockMenu.unbanClass(`${this.#categoryName}_${category}`);
+            });
         }
     }
 
@@ -118,9 +209,13 @@ export default class AILearning {
         const blockMenu =  this.getBlockMenu(this.#playground);
         if (blockMenu) {
             blockMenu.banClass(this.#categoryName);
+            blockMenu.banClass('ai_learning_classification');
+            blockMenu.banClass('ai_learning_train');
             blockMenu.banClass(`${this.#categoryName}_text`);
             blockMenu.banClass(`${this.#categoryName}_image`);
             blockMenu.banClass(`${this.#categoryName}_speech`);
+            blockMenu.banClass(`${this.#categoryName}_cluster`);
+            blockMenu.banClass(`${this.#categoryName}_regression`);
         }
     }
 
@@ -145,6 +240,8 @@ export default class AILearning {
         this.result = [];
         this.isLoaded = false;
         this.#recordTime = 2000;
+        this.#module = null;
+        this.#tableData = null;
     }
 
     toJSON() {
@@ -158,6 +255,9 @@ export default class AILearning {
             id: this.#modelId,
             _id: this.#oid,
             recordTime: this.#recordTime,
+            trainParam: this.getTrainOption(),
+            result: this.getTrainResult(),
+            tableData: this.#tableData,
         }
     }
 
