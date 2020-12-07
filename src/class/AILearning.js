@@ -2,6 +2,7 @@ import PopupHelper from './popup_helper';
 import TextLearning from './learning/TextLearning';
 import Cluster from './learning/Cluster';
 import Regression from './learning/Regression';
+import LearningView from './learning/LearningView';
 
 export default class AILearning {
     #playground;
@@ -19,10 +20,26 @@ export default class AILearning {
     #recordTime = 2000;
     #module = null;
     #tableData = null;
+    #dynamicAttrClass = ['cluster', 'regression'];
+    #variableAttrLength = 0;
+    #chartEnable = false;
 
+    getModule () {
+        return this.#module;
+    }
+    
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
+
+        this.id = Entry.generateHash();
+        
+        this.visible_ = true;
+
+        const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
+        this.BORDER = 6;
+        this.FONT = `10pt ${fontFamily}`;
+        this.VALUE_FONT = `9pt ${fontFamily}`;
     }
 
     setTable(classes) {
@@ -38,7 +55,6 @@ export default class AILearning {
             console.log('set table error', e);
         }
     }
-
 
     removeAllBlocks() {
         const utilizeBlock  = Object.values(Entry.AI_UTILIZE_BLOCK_LIST).map(x => Object.keys(x.getBlocks())).flatten();
@@ -59,6 +75,12 @@ export default class AILearning {
             throw new Error('ai learning model load error');
         }
         return true;
+    }
+
+    setVisible(visible) {
+        if(this.view) {
+            this.view.setVisible(visible);
+        }
     }
 
     openManager() {
@@ -113,6 +135,11 @@ export default class AILearning {
         if(!url ||  !this.isEnable || !isActive) {
             return ;
         }
+        if(this.view) {
+            this.view.destroy();
+            this.view = null;
+        }
+        this.#chartEnable = false;
         this.destroy();
         this.#labels = labels || classes.map(({name}) => name);
         this.#type = type;
@@ -121,7 +148,7 @@ export default class AILearning {
         this.name = name;
         this.#modelId = model || id;
         this.#recordTime = recordTime;
-  
+        this.result = result;
         if(!tableData && classes.length) {
             this.#tableData = this.setTable(classes);
         } else {
@@ -132,16 +159,40 @@ export default class AILearning {
             this.#playground.reloadPlayground()
         }
         if (type === 'text') {
-            this.unbanBlocks();
             this.#module = new TextLearning();
             this.#module.load(`/uploads/${this.#url}/model.json`);
+            this.unbanBlocks();
         } else if (type === 'cluster') {
+            this.view = new LearningView({ name: this.name, status: 0 });
+            this.#module = new Cluster({ 
+                result, 
+                trainParam, 
+                table: this.#tableData,
+                trainCallback: (value) => {
+                    this.view.setValue(value)
+                },
+            });
+            this.#variableAttrLength = this.#tableData?.select?.[0]?.length || 0;
+            if(this.#variableAttrLength === 2) {
+                this.#chartEnable = true;
+            }
             this.unbanBlocks(['train']);
-            this.#module = new Cluster({ result, trainParam, table: this.#tableData });
         } else if (type === 'regression') {
-            this.unbanBlocks(['train']);
-            this.#module = new Regression({ result, trainParam, table: this.#tableData });
+            this.view = new LearningView({ name: this.name, status: 0 });
+            this.#module = new Regression({ 
+                result,
+                trainParam, 
+                table: this.#tableData,
+                trainCallback: (value) => {
+                    this.view.setValue(value)
+                },
+             });
+            this.#variableAttrLength = this.#tableData?.select?.[0]?.length || 0;
+            if(this.#variableAttrLength === 1) {
+                this.#chartEnable = true;
+            }
             this.#module.load(`/uploads/${this.#url}/model.json`);
+            this.unbanBlocks(['train']);
         } else {
             this.unbanBlocks();
         }
@@ -202,6 +253,12 @@ export default class AILearning {
             categories.forEach((category) => {
                 blockMenu.unbanClass(`${this.#categoryName}_${category}`);
             });
+            if(this.#dynamicAttrClass.includes(this.#type)) {
+                blockMenu.unbanClass(`${this.#type}_attr_${this.#variableAttrLength}`);
+            }
+            if(this.#chartEnable) {
+                blockMenu.unbanClass('ai_learning_train_chart');
+            }
         }
     }
 
@@ -214,8 +271,14 @@ export default class AILearning {
             blockMenu.banClass(`${this.#categoryName}_text`);
             blockMenu.banClass(`${this.#categoryName}_image`);
             blockMenu.banClass(`${this.#categoryName}_speech`);
-            blockMenu.banClass(`${this.#categoryName}_cluster`);
-            blockMenu.banClass(`${this.#categoryName}_regression`);
+            blockMenu.banClass('ai_learning_train_chart');
+            this.#dynamicAttrClass.forEach((type) => {
+                blockMenu.banClass(`${this.#categoryName}_${type}`);
+                for(let i = 1 ; i <= 3 ; i++) {
+                    blockMenu.banClass(`${type}_attr_${i}`);
+                }
+            })
+            
         }
     }
 

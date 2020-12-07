@@ -1,3 +1,5 @@
+import _floor from 'lodash/floor';
+
 module.exports = {
     getBlocks() {
         return {
@@ -371,8 +373,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['show', 'show'],
-                            ['hide', 'hide'],
+                            [Lang.AiLearning.show, 'show'],
+                            [Lang.AiLearning.hide, 'hide'],
                         ],
                         value: 'show',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -397,12 +399,13 @@ module.exports = {
                     type: 'set_train_visible',
                 },
                 paramsKeyMap: {
-                    TEXT: 0,
+                    VISIBLE: 0,
                 },
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_train'],
                 async func(sprite, script) {
-                    console.log('set_train_visible');
+                    const visible = script.getField('VISIBLE');
+                    Entry.aiLearning.setVisible(visible === 'show' ? true : false);
                     return script.callReturn();
                 },
                 syntax: {
@@ -419,10 +422,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['show', 'show'],
-                            ['hide', 'hide'],
+                            [Lang.AiLearning.open, 'open'],
+                            [Lang.AiLearning.close, 'close'],
                         ],
-                        value: 'show',
+                        value: 'open',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
@@ -435,7 +438,7 @@ module.exports = {
                 events: {},
                 def: {
                     params: [
-                        'show',
+                        'open',
                         null,
                     ],
                     type: 'set_train_chart',
@@ -445,12 +448,13 @@ module.exports = {
                     type: 'set_train_chart',
                 },
                 paramsKeyMap: {
-                    TEXT: 0,
+                    VISIBLE: 0,
                 },
                 class: 'ai_learning',
-                isNotFor: ['ai_learning_train'],
+                isNotFor: ['ai_learning_train_chart'],
                 async func(sprite, script) {
-                    console.log('set_train_chart');
+                    const visible = script.getField('VISIBLE');
+                    console.log('set_train_chart', visible);
                     return script.callReturn();
                 },
                 syntax: {
@@ -461,59 +465,27 @@ module.exports = {
             set_regression_option: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                skeleton: 'basic_string_field',
+                skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Dropdown',
                         options: [
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
+                            [Lang.AiLearning.train_param_learningRate, 'learningRate'],
+                            [Lang.AiLearning.train_param_epochs, 'epochs'],
+                            [Lang.AiLearning.train_param_validationRate, 'validationRate'],
                         ],
-                        value: '15',
+                        value: 'learningRate',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
                     {
-                        type: 'Dropdown',
-                        options: [
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
-                        ],
-                        value: '15',
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        type: 'Block',
+                        accept: 'number',
                     },
                 ],
                 events: {},
                 def: {
-                    params: [0, 0],
                     type: 'set_regression_option',
                 },
                 pyHelpDef: {
@@ -521,11 +493,15 @@ module.exports = {
                     type: 'set_regression_option',
                 },
                 paramsKeyMap: {
-                    GROUP: 0,
+                    OPTION: 0,
+                    VALUE: 1,
                 },
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_regression'],
                 func(sprite, script) {
+                    const option = script.getField('OPTION', script);
+                    const value = script.getNumberValue('VALUE', script);
+                    Entry.aiLearning.setTrainOption(option, parseInt(value));
                     return 0;
                 },
                 syntax: {
@@ -533,121 +509,211 @@ module.exports = {
                     py: [],
                 },
             },
-            get_regression_predict: {
+            get_regression_predict_1: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
-                        ],
-                        value: '15',
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
                     },
                     {
-                        type: 'Dropdown',
-                        options: [
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
-                        ],
-                        value: '15',
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
-                        ],
-                        value: '15',
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                            ['7', '7'],
-                            ['8', '8'],
-                            ['9', '9'],
-                            ['10', '10'],
-                            ['11', '11'],
-                            ['12', '12'],
-                            ['13', '13'],
-                            ['14', '14'],
-                            ['15', '15'],
-                        ],
-                        value: '15',
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                        type: 'Block',
+                        accept: 'number',
                     },
                 ],
                 events: {},
                 def: {
-                    params: [0,0,0,0],
-                    type: 'get_regression_predict',
+                    type: 'get_regression_predict_1',
                 },
                 pyHelpDef: {
                     params: [],
-                    type: 'get_regression_predict',
+                    type: 'get_regression_predict_1',
                 },
                 paramsKeyMap: {
-                    GROUP: 0,
+                    ATTR1: 1
                 },
                 class: 'ai_learning',
+                isNotFor: ['regression_attr_1'],
+                async func(sprite, script) {
+                    const x = script.getNumberValue('ATTR1', script);
+                    await Entry.aiLearning.predict(x);
+                    return Entry.aiLearning.result;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_regression_predict_2: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    type: 'get_regression_predict_2',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'get_regression_predict_2',
+                },
+                paramsKeyMap: {
+                    ATTR1: 1,
+                    ATTR2: 3
+                },
+                class: 'ai_learning',
+                isNotFor: ['regression_attr_2'],
+                async func(sprite, script) {
+                    const x = script.getNumberValue('ATTR1', script);
+                    const y = script.getNumberValue('ATTR2', script);
+                    await Entry.aiLearning.predict([x, y]);
+                    return Entry.aiLearning.result;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_regression_predict_3: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[2]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    type: 'get_regression_predict_3',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'get_regression_predict_3',
+                },
+                paramsKeyMap: {
+                    ATTR1: 1,
+                    ATTR2: 3,
+                    ATTR3: 5
+                },
+                class: 'ai_learning',
+                isNotFor: ['regression_attr_3'],
+                async func(sprite, script) {
+                    const x = script.getNumberValue('ATTR1', script);
+                    const y = script.getNumberValue('ATTR2', script);
+                    const z = script.getNumberValue('ATTR3', script);
+                    await Entry.aiLearning.predict([x, y, z]);
+                    return Entry.aiLearning.result;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_regression_accuracy: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    type: 'get_regression_accuracy',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'get_regression_accuracy',
+                },
+                paramsKeyMap: {},
+                class: 'ai_learning',
                 isNotFor: ['ai_learning_regression'],
-                func(sprite, script) {
-                    return 0;
+                async func(sprite, script) {
+                    return _floor(Entry.aiLearning?.result?.accuracy || 0, 3);
                 },
                 syntax: {
                     js: [],
@@ -706,8 +772,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['kmpp', 'kmpp'],
-                            ['random', 'random'],
+                            [Lang.AiLearning.cluster_option_centroids_kmpp, 'kmpp'],
+                            [Lang.AiLearning.cluster_option_centroids_random, 'random'],
                         ],
                         value: 'kmpp',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -790,7 +856,7 @@ module.exports = {
                             const table = Entry.aiLearning?.getTableData?.();
                             if(table) {
                                 const { select = [], fields } = table || {};
-                                const attr = select?.[0];
+                                const attr = select?.[0] || [];
                                 return attr.map((fieldIndex, idx) => [fields[fieldIndex], idx]);
                             } else {
                                 return [[Lang.Blocks.no_target, 'null']];
@@ -834,7 +900,7 @@ module.exports = {
                     py: [],
                 },
             },
-            get_cluster_centriod_index: {
+            get_cluster_centriod_index_1: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
                 skeleton: 'basic_string_field',
@@ -843,8 +909,57 @@ module.exports = {
                     {
                         type: 'TextDynamic',
                         setValue: () => {
-                            const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
-                            return fields[select?.[0]?.[0]] || Lang.template.model_attr_str;
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                ],
+                def: {
+                    type: 'get_cluster_centriod_index_1',
+                },
+                events: {},
+                pyHelpDef: {
+                    params: [],
+                    type: 'get_cluster_centriod_index_1',
+                },
+                paramsKeyMap: {
+                    ATTR1: 1
+                },
+                class: 'ai_learning',
+                isNotFor: ['cluster_attr_1'],
+                async func(sprite, script) {
+                    const x = script.getNumberValue('ATTR1', script);
+                    await Entry.aiLearning.predict({x});
+                    return Entry.aiLearning.result;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_cluster_centriod_index_2: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
                         }
                     },
                     {
@@ -854,9 +969,12 @@ module.exports = {
                     {
                         type: 'TextDynamic',
                         setValue: () => {
-                            const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
-                            const attr = select?.[0];
-                            return fields[select?.[0]?.[1]] || Lang.template.model_attr_str;
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
                         }
                     },
                     {
@@ -865,23 +983,102 @@ module.exports = {
                     },
                 ],
                 def: {
-                    type: 'get_cluster_centriod_index',
+                    type: 'get_cluster_centriod_index_2',
                 },
                 events: {},
                 pyHelpDef: {
                     params: [],
-                    type: 'get_cluster_centriod_index',
+                    type: 'get_cluster_centriod_index_2',
                 },
                 paramsKeyMap: {
                     ATTR1: 1,
                     ATTR2: 3,
                 },
                 class: 'ai_learning',
-                isNotFor: ['ai_learning_cluster'],
+                isNotFor: ['cluster_attr_2'],
                 async func(sprite, script) {
                     const x = script.getNumberValue('ATTR1', script);
                     const y = script.getNumberValue('ATTR2', script);
                     await Entry.aiLearning.predict({x, y});
+                    return Entry.aiLearning.result;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_cluster_centriod_index_3: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                    {
+                        type: 'TextDynamic',
+                        setValue: () => {
+                            const table = Entry.aiLearning?.getTableData?.();
+                            if(table) {
+                                const {select = [], fields = []} = Entry.aiLearning?.getTableData?.();
+                                return fields[select?.[0]?.[2]] || Lang.AiLearning.model_attr_str;
+                            }
+                            return Lang.AiLearning.model_attr_str;
+                        }
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'number',
+                    },
+                ],
+                def: {
+                    type: 'get_cluster_centriod_index_3',
+                },
+                events: {},
+                pyHelpDef: {
+                    params: [],
+                    type: 'get_cluster_centriod_index_3',
+                },
+                paramsKeyMap: {
+                    ATTR1: 1,
+                    ATTR2: 3,
+                    ATTR3: 5,
+                },
+                class: 'ai_learning',
+                isNotFor: ['cluster_attr_3'],
+                async func(sprite, script) {
+                    const x = script.getNumberValue('ATTR1', script);
+                    const y = script.getNumberValue('ATTR2', script);
+                    const z = script.getNumberValue('ATTR3', script);
+                    await Entry.aiLearning.predict({x, y, z});
                     return Entry.aiLearning.result;
                 },
                 syntax: {

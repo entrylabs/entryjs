@@ -3,10 +3,11 @@ import { kmpp } from 'skmeans/kinit';
 import floor from 'lodash/floor';
 
 class Cluster {
-    constructor({ result, table, trainParam }) {
+    constructor({ result, table, trainParam, trainCallback }) {
         this.trainParam = trainParam;
         this.result = result;
         this.table = table;
+        this.trainCallback = trainCallback;
         this.isTrained = true;
     }
 
@@ -19,6 +20,7 @@ class Cluster {
     }
 
     train() {
+        this.trainCallback(0);
         this.isTrained = false;
         const { data, select } = this.table;
         const [attr] = select;
@@ -31,6 +33,7 @@ class Cluster {
             graphData: convertGraphData(data, centroids, indexes),
             centroids
         };
+        this.trainCallback(100);
     }
 
     predict({ x, y }) {
