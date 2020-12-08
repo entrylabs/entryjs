@@ -48,7 +48,11 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._font_size = this.getFontSize(content.fontSize);
 
         this._ROUND = content.roundValue || 3;
-        this.renderStart(blockView);
+        this.initialize(blockView);
+    }
+
+    initialize(blockView) {
+        const promise = this.renderStart(blockView);
         if (
             blockView &&
             blockView.getBoard() &&
@@ -57,6 +61,11 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         ) {
             blockView.getBoard().workspace.changeEvent.attach(this, () => {
                 this._updateValue(true);
+            });
+        }
+        if (promise instanceof Promise) {
+            promise.then(() => {
+                blockView.alignContent(false);
             });
         }
     }
@@ -74,14 +83,14 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         return super.getTextByValue(value);
     }
 
-    _updateValue(reDraw) {
+    async _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
         if (Entry.container) {
             if (this._menuName) {
-                options = Entry.container.getDropdownList(this._menuName, object);
+                options = await Entry.container.getDropdownList(this._menuName, object);
             } else {
-                options = this._menuGenerator();
+                options = await this._menuGenerator();
             }
         }
 
@@ -110,7 +119,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         let value = this.getValue();
 
         if (this._blockView.isInBlockMenu || !value || value == 'null') {
-            value = options.length !== 0 ? options[0][1] : null;
+            value = options.length !== 0 && options[0] ? options[0][1] : null;
         }
         const matched = _.find(options, ([, cValue]) => cValue === value);
         if (!matched && defaultValue) {

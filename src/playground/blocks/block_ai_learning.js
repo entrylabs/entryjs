@@ -69,17 +69,14 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        null,
-                    ],
+                    params: [null],
                     type: 'insert_data_for_test',
                 },
                 pyHelpDef: {
                     params: [],
                     type: 'insert_data_for_test',
                 },
-                paramsKeyMap: {
-                },
+                paramsKeyMap: {},
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
                 func(sprite, script) {
@@ -138,7 +135,7 @@ module.exports = {
                 async func(sprite, script) {
                     const text = script.getStringValue('TEXT', script);
                     await Entry.aiLearning.predict(text);
-                    return script;
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -160,8 +157,7 @@ module.exports = {
                     params: [],
                     type: 'test_result',
                 },
-                paramsKeyMap: {
-                },
+                paramsKeyMap: {},
                 class: 'ai_learning',
                 isNotFor: ['ai_learning'],
                 func(sprite, script) {
@@ -181,18 +177,24 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: () => Entry.aiLearning.labels.map((name, index) => [name, index]),
+                        menuName: () => {
+                            if (Entry?.aiLearning?.labels?.length) {
+                                return Entry.aiLearning.labels.map((name, index) => [name, index]);
+                            } else {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
+                        },
                         needDeepCopy: true,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                         defaultValue: (value, options) => {
-                            if(options[0] && options[0][1]){
+                            if (options[0] && options[0][1]) {
                                 return options[0][1];
                             }
                             return value || 0;
-                        }
-                    }
+                        },
+                    },
                 ],
                 events: {},
                 def: {
@@ -226,18 +228,24 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: () => Entry.aiLearning.labels.map((name, index) => [name, index]),
+                        menuName: () => {
+                            if (Entry?.aiLearning?.labels?.length) {
+                                return Entry.aiLearning.labels.map((name, index) => [name, index]);
+                            } else {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
+                        },
                         needDeepCopy: true,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                         defaultValue: (value, options) => {
-                            if(options[0] && options[0][1]){
+                            if (options[0] && options[0][1]) {
                                 return options[0][1];
                             }
                             return value || 0;
-                        }
-                    }
+                        },
+                    },
                 ],
                 events: {},
                 def: {
@@ -250,8 +258,8 @@ module.exports = {
                     GROUP: 0,
                 },
                 func(sprite, script) {
-                    const group = script.getNumberValue('GROUP', script)
-                    const {labels} = Entry.aiLearning;
+                    const group = script.getNumberValue('GROUP', script);
+                    const { labels } = Entry.aiLearning;
                     const result = Entry.aiLearning.getResult().className;
                     return result === labels[group];
                 },
@@ -259,7 +267,7 @@ module.exports = {
                     js: [],
                     py: [],
                 },
-            }
+            },
         };
     },
 };

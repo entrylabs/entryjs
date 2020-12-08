@@ -240,6 +240,7 @@ class DataTable {
                 source: { fields, origin: rows, chart },
                 togglePause: () => Entry.engine.togglePause(),
                 stop: () => Entry.engine.toggleStop(),
+                isIframe: self !== top,
             },
             container,
         });

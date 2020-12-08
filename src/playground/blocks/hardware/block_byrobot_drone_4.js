@@ -2977,10 +2977,10 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
                 const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-				
-				let x = 0;
-				let y = 0;
-				let z = 0;
+                
+                let x = 0;
+                let y = 0;
+                let z = 0;
 
                 switch( controlDirection )
                 {
@@ -3043,7 +3043,7 @@ Entry.byrobot_drone_4.getBlocks = function()
 
                 const time          = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
 
-                Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
             },
         },
 
@@ -3242,9 +3242,10 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
                 const timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                const timeRotation = Math.abs(degree / speedYaw) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                const timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                const time         = Math.max(timePosition, timeRotation);
 
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, Math.max(timePosition, timeRotation), true);
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
             },
         },
     };
