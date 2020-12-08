@@ -199,7 +199,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_classification'],
                 func(sprite, script) {
-                    return Entry.aiLearning.getResult().className;
+                    return Entry.aiLearning.getPredictResult().className;
                 },
                 syntax: {
                     js: [],
@@ -250,7 +250,7 @@ module.exports = {
                 isNotFor: ['ai_learning_classification'],
                 func(sprite, script) {
                     const group = script.getNumberValue('GROUP', script);
-                    return Entry.aiLearning.getResult(group).probability;
+                    return Entry.aiLearning.getPredictResult(group).probability;
                 },
                 syntax: {
                     js: [],
@@ -298,7 +298,7 @@ module.exports = {
                 func(sprite, script) {
                     const group = script.getNumberValue('GROUP', script);
                     const { labels } = Entry.aiLearning;
-                    const result = Entry.aiLearning.getResult().className;
+                    const result = Entry.aiLearning.getPredictResult().className;
                     return result === labels[group];
                 },
                 syntax: {
@@ -454,7 +454,7 @@ module.exports = {
                 isNotFor: ['ai_learning_train_chart'],
                 async func(sprite, script) {
                     const visible = script.getField('VISIBLE');
-                    console.log('set_train_chart', visible);
+                    Entry.aiLearning.setChartVisible(visible === 'open' ? true : false);
                     return script.callReturn();
                 },
                 syntax: {
@@ -547,7 +547,7 @@ module.exports = {
                 async func(sprite, script) {
                     const x = script.getNumberValue('ATTR1', script);
                     await Entry.aiLearning.predict(x);
-                    return Entry.aiLearning.result;
+                    return Entry.aiLearning.getPredictResult();
                 },
                 syntax: {
                     js: [],
@@ -609,7 +609,7 @@ module.exports = {
                     const x = script.getNumberValue('ATTR1', script);
                     const y = script.getNumberValue('ATTR2', script);
                     await Entry.aiLearning.predict([x, y]);
-                    return Entry.aiLearning.result;
+                    return Entry.aiLearning.getPredictResult();
                 },
                 syntax: {
                     js: [],
@@ -688,7 +688,7 @@ module.exports = {
                     const y = script.getNumberValue('ATTR2', script);
                     const z = script.getNumberValue('ATTR3', script);
                     await Entry.aiLearning.predict([x, y, z]);
-                    return Entry.aiLearning.result;
+                    return Entry.aiLearning.getPredictResult();
                 },
                 syntax: {
                     js: [],
@@ -713,7 +713,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_regression'],
                 async func(sprite, script) {
-                    return _floor(Entry.aiLearning?.result?.accuracy || 0, 3);
+                    return _floor(Entry.aiLearning?.getTrainResult()?.accuracy || 0, 3);
                 },
                 syntax: {
                     js: [],
@@ -892,8 +892,8 @@ module.exports = {
                 func(sprite, script) {
                     const k = script.getNumberValue('K');
                     const attr = script.getField('ATTR');
-                    const { centroids } = Entry.aiLearning.getResult();
-                    return centroids[k + 1][attr];
+                    const { centroids } = Entry.aiLearning.getTrainResult();
+                    return centroids[k - 1][attr];
                 },
                 syntax: {
                     js: [],
@@ -938,7 +938,7 @@ module.exports = {
                 async func(sprite, script) {
                     const x = script.getNumberValue('ATTR1', script);
                     await Entry.aiLearning.predict({x});
-                    return Entry.aiLearning.result;
+                    return Entry.aiLearning.getPredictResult();
                 },
                 syntax: {
                     js: [],
@@ -1000,7 +1000,7 @@ module.exports = {
                     const x = script.getNumberValue('ATTR1', script);
                     const y = script.getNumberValue('ATTR2', script);
                     await Entry.aiLearning.predict({x, y});
-                    return Entry.aiLearning.result;
+                    return Entry.aiLearning.getPredictResult();
                 },
                 syntax: {
                     js: [],
@@ -1079,7 +1079,7 @@ module.exports = {
                     const y = script.getNumberValue('ATTR2', script);
                     const z = script.getNumberValue('ATTR3', script);
                     await Entry.aiLearning.predict({x, y, z});
-                    return Entry.aiLearning.result;
+                    return Entry.aiLearning.getPredictResult();
                 },
                 syntax: {
                     js: [],

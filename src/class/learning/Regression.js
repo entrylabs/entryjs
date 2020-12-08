@@ -2,54 +2,126 @@ import * as tf from '@tensorflow/tfjs';
 const { callApi } = require('../../util/common');
 import _floor from 'lodash/floor';
 import _max from 'lodash/max';
+import LearningView from './LearningView';
+import Chart from './Chart';
+
+export const classes = [
+    'ai_learning_train',
+    'ai_learning_regression',
+    'regression_attr_1',
+    'regression_attr_2',
+    'regression_attr_3',
+    'ai_learning_train_chart'
+];
 
 class Regression {
-    constructor({ result, table, trainParam, trainCallback }) {
-        this.trainParam = trainParam;
-        this.result = result;
-        this.table = table;
-        this.trainCallback = trainCallback;
-        this.isTrained = true;
+    #attrLength = 0;
+    #trainParam = null;
+    #result = {};
+    #table = {};
+    #trainCallback;
+    #chart = null;
+    #isTrained = false;
+    #chartEnable = false;
+    #view = null;
+    #model = null;
+    #predictResult = null;
+
+    constructor({ name, url, result, table, trainParam }) {
+        this.#view = new LearningView({ name, status: 0 });
+        this.#trainParam = trainParam;
+        this.#result = result;
+        this.#table = table;
+        this.#trainCallback = (value) => {
+            this.#view.setValue(value)
+        };;
+        this.#isTrained = true;
+
+        this.#attrLength = table?.select?.[0]?.length || 0;
+        if (this.#attrLength === 1) {
+            this.#chartEnable = true;
+        }
+        this.load(`/uploads/${url}/model.json`);
     }
     
-    setTrainOption(type, value) {
-        this.trainParam[type] = value;
+    setVisible(visible) {
+        this.#view.setVisible(visible);
     }
 
-    getTrainOption() {
-        return this.trainParam;
-    }
-
-    async train() {
-        this.isTrained = false;
-        this.percent = 0;
-        const { inputs, outputs, totalDataSize } = convertToTfData(this.table, this.trainParam);
-        const { model, trainHistory, a, b, graphData = [] } = await train(
-            inputs,
-            outputs,
-            this.trainParam,
-            () => {
-                this.percent = this.percent + 1;
-                const percent = _floor((this.percent / totalDataSize) * 100);
-                this.trainCallback(percent);
-            }
-        );
-        this.model = model;
-        const { acc = [] } = trainHistory?.history || {};
-        const accuracy = _max(acc) || 0;
-        this.result = {
-            graphData: (graphData.originalPoints || []).slice(0, 1000),
-            accuracy,
-            equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${this.addSign(a)}X^${i + 1}`).join('')} ${this.addSign(b)}`
+    unbanBlocks(blockMenu) {
+        blockMenu.unbanClass(`ai_learning_train`);
+        blockMenu.unbanClass(`ai_learning_regression`);
+        blockMenu.unbanClass(`regression_attr_${this.#attrLength}`);
+        if (this.#chartEnable) {
+            blockMenu.unbanClass('ai_learning_train_chart');
         }
     }
 
-    addSign(x) {
-        return x < 0 ? x : `+${x}`;
+    isTrained() {
+        return this.#isTrained;
+    }
+
+    openChart() {
+        if (!this.#chartEnable) {
+            return ;
+        }
+        if (!this.#chart) {
+            this.#chart = new Chart(this.chartData);
+        } else {
+            this.#chart.show();
+        }
+    }
+
+    closeChart() {
+        if (this.#chart) {
+            this.#chart.hide();
+        }
+    }
+
+    setTrainOption(type, value) {
+        this.#trainParam[type] = value;
+    }
+
+    getTrainOption() {
+        return this.#trainParam;
+    }
+
+    getTrainResult() {
+        return this.#result;
+    }
+
+    getResult() {
+        return this.#predictResult;
+    }
+
+    async train() {
+        this.#isTrained = false;
+        this.percent = 0;
+        this.#chart = null;
+        const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
+        const { model, trainHistory, a, b, graphData = [] } = await train(
+            inputs,
+            outputs,
+            this.#trainParam,
+            () => {
+                this.percent = this.percent + 1;
+                const percent = _floor((this.percent / totalDataSize) * 100);
+                this.#trainCallback(percent);
+            }
+        );
+        this.#model = model;
+        const { acc = [] } = trainHistory?.history || {};
+        const accuracy = _max(acc) || 0;
+        this.#result = {
+            graphData: (graphData.originalPoints || []).slice(0, 1000),
+            accuracy,
+            equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
+        }
+        this.#isTrained = true;
     }
 
     async load(url) {
-        this.model = await tf.loadLayersModel(url);
+        this.#model = await tf.loadLayersModel(url);
     }
 
     async predict(data) {
@@ -60,14 +132,60 @@ class Regression {
             } else {
                 convertedData = tf.tensor1d([data]);
             }
-            const preds = this.model.predict(convertedData);
+            const preds = this.#model.predict(convertedData);
             const [result] = preds.dataSync();
-            return _floor(result, 2);
+            this.#predictResult = _floor(result, 2);
+            return this.#predictResult;
         });
+    }
+
+    get chartData() {
+        return {
+            data: {
+                json: this.#result.graphData,
+                keys: { value: ['equation', 'y'], x: 'x' },
+                types: {
+                    y: 'scatter',
+                    equation: 'line'
+                },
+            },
+            options: {
+                legend: {
+                    show: false
+                },
+                line: {
+                    connectNull: true,
+                    point: false,
+                },
+                tooltip: {
+                    show: false
+                },
+                axis: {
+                    x: {
+                        tick: {
+                            fit: false,
+                            count: 5
+                        },
+                    }
+                },
+                grid: {
+                    x: {
+                        show: true
+                    },
+                    y: {
+                        show: true
+                    }
+                }
+            }
+        };
     }
 }
 
 export default Regression;
+
+function addSign(x) {
+    return x < 0 ? x : `+${x}`;
+}
 
 function convertToTfData(data, trainParam) {
     const { select = [[0], [1]], data: table } = data;
