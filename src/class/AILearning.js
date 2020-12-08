@@ -2,12 +2,14 @@ import TextLearning, { classes as TextClasses } from './learning/TextLearning';
 import Cluster, { classes as ClusterClasses } from './learning/Cluster';
 import Regression, { classes as RegressionClasses } from './learning/Regression';
 import Classification, { classes as ClassificationClasses } from './learning/Classification';
+import NumberClassification, { classes as NumberClassificationClasses } from './learning/NumberClassification';
 
 const banClasses = [
     ...ClusterClasses,
     ...RegressionClasses,
     ...TextClasses,
-    ...ClassificationClasses
+    ...ClassificationClasses,
+    ...NumberClassificationClasses,
 ];
 
 export default class AILearning {
@@ -88,6 +90,14 @@ export default class AILearning {
         
         if (type === 'text') {
             this.#module = new TextLearning({url, labels, type, recordTime});
+        } else if(type === 'number'){
+            this.#module = new NumberClassification({ 
+                name,
+                result,
+                url,
+                trainParam, 
+                table: this.#tableData,
+            });
         } else if (type === 'cluster') {
             this.#module = new Cluster({ 
                 name,
