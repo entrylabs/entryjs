@@ -91,8 +91,23 @@ class DataTable {
         // }
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
-        const isDataTableSource = data instanceof DataTableSource;
-        Entry.do('dataTableAddSource', isDataTableSource ? data : new DataTableSource(data));
+        this.hide();
+        this.show({
+            list: [
+                ...this.#tables,
+                (table instanceof DataTableSource ? table : new DataTableSource(table)).toJSON(),
+            ],
+            selectedIndex: this.#tables.length,
+        });
+    }
+
+    addSources(tables = []) {
+        const dataTableSources = _map(tables, (table) =>
+            (table instanceof DataTableSource ? table : new DataTableSource(table)).toJSON()
+        );
+
+        this.hide();
+        this.show({ list: [...this.#tables, ...dataTableSources], selectedIndex: 0 });
     }
 
     removeSource(table) {
@@ -116,14 +131,7 @@ class DataTable {
                 }
             }
         }
-        const json = table.toJSON && table.toJSON();
-        const { tab } = table;
         this.selected = table;
-        this.dataAnalytics.setData({
-            list: _map(this.tables, (table) => table.toJSON()),
-            selectedIndex: 0,
-            selected: this.tables[0]?.toJSON(),
-        });
         this.hide();
         this.show();
         delete table.tab;
@@ -173,11 +181,11 @@ class DataTable {
         return true;
     };
 
-    show() {
+    show(data) {
         if (!this.dataAnalytics) {
             this.#generateView();
         }
-        this.dataAnalytics.show({ data: this.#tables });
+        this.dataAnalytics.show(data || { list: this.#table });
     }
 
     hide() {

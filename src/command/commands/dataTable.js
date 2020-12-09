@@ -9,7 +9,7 @@ import DataTable from '../../class/DataTable';
 
     c[COMMAND_TYPES.dataTableAddSource] = {
         do(table) {
-            DataTable.tables.push(table);
+            // DataTable.tables.push(table);
             Entry.playground.selectTable(table);
             // const isWorkspace = Entry.type === 'workspace';
             // if (isWorkspace) {
