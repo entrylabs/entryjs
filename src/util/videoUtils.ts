@@ -48,6 +48,13 @@ type DetectedObject = {
 };
 type IndicatorType = 'pose' | 'face' | 'object';
 
+export const getInputList = async () => {
+    if(navigator.mediaDevices) {
+        return (await navigator.mediaDevices.enumerateDevices()) || [];
+    }
+    return [];
+}
+
 class VideoUtils implements MediaUtilsInterface {
     // 비디오 캔버스 크기에 쓰이는 공통 밸류
     public CANVAS_WIDTH: number = 480;
@@ -141,13 +148,27 @@ class VideoUtils implements MediaUtilsInterface {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
 
-    async initialize(list: string[][]) {
+    // issue 12160 bug , 강제로 usermedia를 가져오도록 하기 위함 enumerateDevices자체로는 권한 요청을 하지 않음
+    async checkPermission() {
+        await navigator.permissions
+            .query({ name: 'camera' })
+            .then(async (permission) => {
+                console.log('camera state', permission.state);
+                if (permission.state !== 'granted') {
+                    await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+                }
+            })
+            .catch(async (error) => {
+                console.log('Got error :', error);
+            });
+    }
+
+    async initialize() {
         if (this.isInitialized) {
             return;
         }
-        this.videoInputList = list;
-
-        const inputList = await navigator.mediaDevices.enumerateDevices();
+        await this.checkPermission();
+        const inputList = await getInputList();
         this.videoInputList = inputList
             .filter((input) => input.kind === 'videoinput')
             .map((item) => [item.label, item.deviceId]);
@@ -805,27 +826,10 @@ class VideoUtils implements MediaUtilsInterface {
                 Lang.Workspace.check_browser_error_video,
             ]);
         }
-        if (!this.stream) {
-            if (!this.checkUserCamAvailable()) {
-                throw new Entry.Utils.IncompatibleError('IncompatibleError', [
-                    Lang.Workspace.check_webcam_error,
-                ]);
-            }
-        }
-    }
-    async checkUserCamAvailable() {
-        try {
-            await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: {
-                    facingMode: 'user',
-                    width: this._VIDEO_WIDTH,
-                    height: this._VIDEO_HEIGHT,
-                },
-            });
-            return true;
-        } catch (err) {
-            return false;
+        if (!this.stream && this.videoInputList.length == 0) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
         }
     }
 }

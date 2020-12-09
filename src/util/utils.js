@@ -2530,7 +2530,6 @@ Entry.Utils.playSound = function(id, option = {}) {
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
-    console.log('add sound instance');
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);

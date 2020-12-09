@@ -50,12 +50,12 @@ module.exports = {
                         script.timeFlag = 1;
                         let timeValue = script.getNumberValue('SECOND', script);
                         const fps = Entry.FPS || 60;
-                        timeValue = 60 / fps * timeValue * 1000;
+                        timeValue = (60 / fps) * timeValue * 1000;
 
                         const blockId = script.block.id;
                         Entry.TimeWaitManager.add(
                             blockId,
-                            function() {
+                            () => {
                                 script.timeFlag = 0;
                             },
                             timeValue
