@@ -462,6 +462,15 @@ Entry.Utils.generateId = function() {
     return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(36)}`.substr(-4);
 };
 
+Entry.Utils.randomColor = function() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+};
+
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
     offset = offset === undefined ? 0 : offset;
     const x = matrix.offsetX ? matrix.x + matrix.offsetX : matrix.x;

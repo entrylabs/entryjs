@@ -46,7 +46,8 @@ class Cluster {
     destroy() {
         this.#view.destroy();
         if(this.#chart) {
-            this.#chart.destroy();;
+            this.#chart.destroy();
+            this.#chart = null;
         }
     }
 
@@ -72,7 +73,9 @@ class Cluster {
             return ;
         }
         if (!this.#chart) {
-            this.#chart = new Chart(this.chartData);
+            this.#chart = new Chart({
+                source: this.chartData
+            });
         } else {
             this.#chart.show();
         }

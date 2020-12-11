@@ -1127,7 +1127,7 @@ module.exports = {
                 isNotFor: ['ai_learning_number'],
                 async func(sprite, script) {
                     const value = script.getNumberValue('VALUE', script);
-                    Entry.aiLearning.setTrainOption('k', parseInt(value));
+                    Entry.aiLearning.setTrainOption('neighbors', parseInt(value));
                     return script.callReturn();
                 },
                 syntax: {

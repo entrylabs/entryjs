@@ -6,8 +6,6 @@ import _floor from 'lodash/floor';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
 
-const GRAPH_COLOR = ['#6e5ae6', '#f16670', '#556670', '#00b6b1'];
-
 export const classes = [
     'ai_learning_train',
     'ai_learning_number',
@@ -26,9 +24,10 @@ class NumberClassification {
     #chartEnable = false;
     #view = null;
     #predictResult = null;
-
+    #name = ''
     constructor({ name, url, table, trainParam }) {
         this.#view = new LearningView({ name, status: 0 });
+        this.#name = name;
         this.#trainParam = trainParam;
         this.#table = table;
         this.#trainCallback = (value) => {
@@ -46,8 +45,18 @@ class NumberClassification {
     destroy() {
         this.#view.destroy();
         if(this.#chart) {
-            this.#chart.destroy();;
+            this.#chart.destroy();
+            this.#chart = null;
         }
+    }
+
+    createColor() {
+        return this.#trainParam.labels.reduce((acc, cur, idx, arr) => {
+            return {
+                ...acc,
+                [cur]: Entry.Utils.randomColor(),
+            }
+        }, {}); 
     }
 
     setVisible(visible) {
@@ -72,7 +81,10 @@ class NumberClassification {
             return ;
         }
         if (!this.#chart) {
-            this.#chart = new Chart(this.chartData);
+            this.#chart = new Chart({
+                title: this.#name,
+                source: this.chartData,
+            });
         } else {
             this.#chart.show();
         }
@@ -128,6 +140,7 @@ class NumberClassification {
         };
         this.#trainCallback(100);
         this.#isTrained = true;
+        this.colors = this.createColor();
     }
 
     async load(url) {
@@ -140,6 +153,7 @@ class NumberClassification {
         this.#trainParam.numLabels = savedData.numLabels;
         this.#trainParam.neighbors = savedData.neighbors;
         this.#trainParam.isLoaded = true;
+        this.colors = this.createColor();
     }
 
     normalize(data = []) {
@@ -192,17 +206,23 @@ class NumberClassification {
     
     findColor(id, a, b) {
         if (id === 'y') {
-            const type = this.#trainParam.trainData.findIndex((row) => row[0] === a && row[1] === b);
-            return GRAPH_COLOR[type];
+            const index = this.#trainParam.trainData.findIndex((row) => row[0] === a && row[1] === b);
+            const type = this.#trainParam.trainLabels[index];
+            return this.colors[type];
         }
         return undefined;
     }
 
     get chartData() {
+        const json = this.#trainParam.trainData.map((row, idx) => ({
+            x: row[0], 
+            y: row[1],
+            index: this.#trainParam.trainLabels[idx],
+        }));
         return {
             data: {
                 type: 'scatter',
-                json: this.#trainParam.trainData.slice(0, 1000).map((row) => ({x: row[0], y: row[1]})),
+                json,
                 keys: { value: ['y'], x: 'x', },
                 color: (color, d) => this.findColor(d.id, d.x, d.value) || color,
                 labels: false,

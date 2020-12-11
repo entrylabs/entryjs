@@ -47,6 +47,18 @@ export default class AILearning {
         this.destroy();
     }
 
+    removeLearningBlocks() {
+        if (!this.isLoaded) {
+            return ;
+        }
+        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
+        blocks.filter(x => Entry.block[x].class === 'ai_learning').forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
+        this.banBlocks();
+        this.destroy();
+    }
+
     load(modelInfo) {
         const { 
             url, 
