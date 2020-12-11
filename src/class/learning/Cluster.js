@@ -43,6 +43,13 @@ class Cluster {
         }
     }
 
+    destroy() {
+        this.#view.destroy();
+        if(this.#chart) {
+            this.#chart.destroy();;
+        }
+    }
+
     setVisible(visible) {
         this.#view.setVisible(visible);
     }

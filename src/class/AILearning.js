@@ -212,8 +212,11 @@ export default class AILearning {
         this.result = [];
         this.isLoaded = false;
         this.#recordTime = 2000;
-        this.#module = null;
-        this.#tableData = null;
+        this.#tableData  = null;
+        if (this.#module) {
+            this.#module.destroy();
+            this.#module = null;
+        }
     }
 
     toJSON() {

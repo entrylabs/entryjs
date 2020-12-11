@@ -14,6 +14,10 @@ export default class LearningChart {
         this.modal.hide();
     }
 
+    destroy() {
+        console.log('chart destroy');
+    }
+    
     createChart(source) {
         const container = Entry.Dom('div', {
             class: 'entry-learning-chart',

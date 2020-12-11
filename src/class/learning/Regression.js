@@ -44,6 +44,13 @@ class Regression {
         this.load(`/uploads/${url}/model.json`);
     }
     
+    destroy() {
+        this.#view.destroy();
+        if(this.#chart) {
+            this.#chart.destroy();;
+        }
+    }
+
     setVisible(visible) {
         this.#view.setVisible(visible);
     }
