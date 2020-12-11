@@ -131,7 +131,7 @@ class NumberClassification {
         this.#trainParam.maxVector = savedData.maxVector;
         this.#trainParam.minVector = savedData.minVector;
         this.#trainParam.numLabels = savedData.numLabels;
-        this.#trainParam.k = savedData.k;
+        this.#trainParam.neighbors = savedData.neighbors;
         this.#trainParam.isLoaded = true;
     }
 
@@ -146,7 +146,7 @@ class NumberClassification {
 
     predict(data) {
         let distData = [];
-        const { trainData, trainLabels, k } = this.#trainParam;
+        const { trainData, trainLabels, neighbors } = this.#trainParam;
 
         for (let i = 0; i < trainData.length; i++) {
             let dist = eudist(this.normalize(data), this.normalize(trainData[i]));
@@ -160,7 +160,7 @@ class NumberClassification {
         distData.sort((a, b) => a.dist - b.dist);
        
         let counts = {};
-        for (let i = 0; i < k; i++) {
+        for (let i = 0; i < neighbors; i++) {
             const { label, dist } = distData[i];
             if (!counts[label]) {
                 counts[label] = []
@@ -173,7 +173,7 @@ class NumberClassification {
             const dist = _mean(counts[className]);
             const count = counts[className].length;
             const distProbability = totalDistance === 0 ? 1 : (totalDistance - dist) / totalDistance;
-            const probability = (count / k) * 99 + distProbability;
+            const probability = (count / neighbors) * 99 + distProbability;
             return {
                 className,
                 count,

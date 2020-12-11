@@ -15,6 +15,7 @@ class DataTableSource {
     #source;
     summary;
     modal;
+    updated = new Date();
     tab = 'summary';
 
     constructor(source = {}) {
@@ -27,6 +28,7 @@ class DataTableSource {
             tab = 'summary',
             fields = [],
             summary,
+            updatedAt,
         } = source;
         this.#name = name;
         this.#id = id;
@@ -36,6 +38,7 @@ class DataTableSource {
         this.#chart = chart || [];
         this.summary = summary;
         this.tab = tab;
+        this.updated = new Date(updatedAt);
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
             this.modal = null;
@@ -224,6 +227,7 @@ class DataTableSource {
             isCloud: this.#isCloud,
             cloudDate: this.#cloudDate,
             summary: this.summary,
+            updated: this.updated,
         };
     }
 
