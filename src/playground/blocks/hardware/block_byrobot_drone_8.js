@@ -80,9 +80,9 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 monitor_motion_gyroRoll                             : '자이로 Roll',
                 monitor_motion_gyroPitch                            : '자이로 Pitch',
                 monitor_motion_gyroYaw                              : '자이로 Yaw',
-                monitor_motion_angleRoll                            : 'Roll',
-                monitor_motion_anglePitch                           : 'Pitch',
-                monitor_motion_angleYaw                             : 'Yaw',
+                monitor_motion_angleRoll                            : '자세 Roll',
+                monitor_motion_anglePitch                           : '자세 Pitch',
+                monitor_motion_angleYaw                             : '자세 Yaw',
                 monitor_range_front                                 : '정면 거리 센서',
                 monitor_range_bottom                                : '바닥 거리 센서',
                 monitor_cardColor_frontHue                          : '카드 위 색상',
@@ -788,7 +788,7 @@ Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_drone_control_drone_landing',
     'byrobot_drone_8_drone_control_drone_stop',
     'byrobot_drone_8_drone_control_headless',
-    'byrobot_drone_8_drone_control_drone_reset_heading',
+    //'byrobot_drone_8_drone_control_drone_reset_heading',
     'byrobot_drone_8_drone_control_quad_one',
     'byrobot_drone_8_drone_control_quad_one_delay',
     'byrobot_drone_8_drone_control_quad',
@@ -3021,6 +3021,11 @@ Entry.byrobot_drone_8.getBlocks = function()
             },
         },
 
+        /*
+        // 2020.12.11
+        // E-Drone, 코딩 드론은 비행 중 헤딩 리셋을 막아둔 상태여서
+        // 헤딩 리셋 버튼을 사용할 수 없음
+        // 헤드리스 모드 시 이륙 방향이 0도로 결정됨
         byrobot_drone_8_drone_control_drone_reset_heading: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3040,6 +3045,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
+        // */
 
         byrobot_drone_8_drone_control_quad_one: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
