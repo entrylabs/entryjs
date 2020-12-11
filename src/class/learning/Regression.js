@@ -167,14 +167,11 @@ class Regression {
                     connectNull: true,
                     point: false,
                 },
-                tooltip: {
-                    show: false
-                },
                 axis: {
                     x: {
                         tick: {
                             fit: false,
-                            count: 5
+                            count: 15
                         },
                     }
                 },

@@ -204,11 +204,14 @@ class NumberClassification {
         return this.#predictResult;
     }
     
+    findLabel(x, y) {
+        const index = this.#trainParam.trainData.findIndex((row) => row[0] === x && row[1] === y);
+        return this.#trainParam.trainLabels[index];
+    }
+
     findColor(id, a, b) {
         if (id === 'y') {
-            const index = this.#trainParam.trainData.findIndex((row) => row[0] === a && row[1] === b);
-            const type = this.#trainParam.trainLabels[index];
-            return this.colors[type];
+            return this.colors[this.findLabel(a, b)];
         }
         return undefined;
     }
@@ -230,21 +233,26 @@ class NumberClassification {
             options: {
                 point: {
                     pattern: [
-                        "circle",
-                        "<g><circle cx='10' cy='10' r='10'></circle><rect x='5' y='5' width='10' height='10' style='fill:#fff'></rect></g>"
+                        "circle"
                     ]
                 },
                 legend: {
                     show: false
                 },
                 tooltip: {
-                    show: false
+                    contents: (data, b, c, d, e) =>{
+                        console.log(data, b, c,d,e);
+                        const [{ x, value }] = data;
+                        const label = this.findLabel(x, value);
+                        
+                        return `${label}, ${x}, ${value}`;
+                    }
                 },
                 axis: {
                     x: {
                         tick: {
                             fit: false,
-                            count: 5
+                            count: 10
                         },
                     }
                 },
