@@ -3,7 +3,7 @@
 Entry.CODEino = {
     id: '1.3',
     name: 'CODEino',
-    url: 'http://www.kcsi.co.kr/ko/bbs/content.php?co_id=CODEino1',
+    url: 'http://www.codable.co.kr/page/?pid=codeino',
     imageName: 'codeino.png',
     title: {
         ko: '코드이노',

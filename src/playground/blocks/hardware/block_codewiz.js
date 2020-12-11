@@ -5,7 +5,7 @@ const PromiseManager = require('../../../core/promiseManager');
 Entry.CodeWiz = {
     id: '1.12',
     name: 'CodeWiz',
-    url: 'http://codable.co.kr',
+    url: 'http://codable.co.kr/page/?pid=codewiz',
     imageName: 'codewiz.png',
     title: {
         ko: '코드위즈',
@@ -39,7 +39,6 @@ Entry.CodeWiz = {
             RESET: 1,
         };
         Entry.hw.update();
-        //console.log(Entry.hw.sendQueue);
         Entry.hw.update();
 
         delete Entry.hw.sendQueue.RESET;
@@ -60,14 +59,11 @@ Entry.CodeWiz = {
     },
     BlockState: {},
     defaultWaitTime: 90,
-    //LAST_ORDER_TYPE:-1,
-    //TIMEOUT_ID:null,
 };
 
 Entry.CodeWiz.setLanguage = function() {
     return {
         ko: {
-            // ko.js에 작성하던 내용
             template: {
                 CodeWiz_get_sensor: '%1센서 값',
                 CodeWiz_get_gyroSensor: '자이로 센서 %1값',
@@ -106,26 +102,10 @@ Entry.CodeWiz.setLanguage = function() {
                     'OLED에 점1(%1,%2) 점2(%3,%4) 점3(%5,%6)으로 삼각형 그리기(채우기%7)색%8%9',
 
                 CodeWiz_DIGITAL_OUTPUT_setup: '터치센서 출력으로 사용%1',
-                CodeWiz_DIGITAL_OUTPUT_digitalWrite: '디지털 %1(으)로 %2내보내기%3',
-                CodeWiz_DIGITAL_OUTPUT_pwmWrite: 'PWM %1(으)로 %2내보내기(0~255)%3',
+                CodeWiz_DIGITAL_OUTPUT_digitalWrite: '터치센서 디지털 %1으로 %2내보내기%3',
+                CodeWiz_DIGITAL_OUTPUT_pwmWrite: '터치센서 PWM %1으로 %2내보내기(0~255)%3',
             },
         },
-        // en: {
-        //     // en.js에 작성하던 내용
-        //     template: {
-        //         CodeWiz_get_sensor:"%1 Sensor value",
-        //         CodeWiz_get_gyroSensor:"Gyro Sensor %1 value",
-        //         CodeWiz_isPushedButton:"%1 Switch Button value",
-        //         CodeWiz_touchPin:"TouchPin %1 value",
-        //         CodeWiz_default_buzzer:"play buzzer %1octave, %2note, %3beat %4",
-        //         CodeWiz_neopixel_brightness:"set neopixel-brightness to %1(0~255)%2",
-        //         CodeWiz_neopixel_setColor_one: "set neopixel-color at %1 to %2 %3",
-        //         CodeWiz_neopixel_off_one: "set neopixel at %1 off%2",
-        //         CodeWiz_neopixel_setColor_all: "set color of all-neopixel to %1 %2",
-        //         CodeWiz_neopixel_off_all: "set all-neopixel off%1",
-
-        //     }
-        // }
     };
 };
 Entry.CodeWiz.blockMenuBlocks = [
@@ -166,18 +146,9 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_DIGITAL_OUTPUT_digitalWrite',
     'CodeWiz_DIGITAL_OUTPUT_pwmWrite',
 ];
-// Entry.CodeWiz.sleep = function(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }
+
 Entry.CodeWiz.getBlocks = function() {
     const promiseManager = new PromiseManager();
-    // let f = function() {
-    //     while (Entry.hw.portData.ISRUN == 0) {
-    //         promiseManager.sleep(10);
-    //         Entry.hw.update();
-    //         console.log("sleep", Entry.hw.portData.ISRUN);
-    //     }
-    // }
     return {
         //region codeino 코드위즈
         CodeWiz_get_sensor: {
@@ -214,8 +185,6 @@ Entry.CodeWiz.getBlocks = function() {
             func: function(sprite, script) {
                 var sensor = script.getField('SENSOR', script);
                 var hw_sensorData = Entry.hw.portData;
-                // console.log('hw_sensorData:',hw_sensorData);
-                // console.log('sensor:',sensor);
                 return hw_sensorData ? hw_sensorData[sensor] : 0;
             },
         },
@@ -251,8 +220,6 @@ Entry.CodeWiz.getBlocks = function() {
             func: function(sprite, script) {
                 var sensor = script.getField('GYRO_TYPE', script);
                 var hw_sensorData = Entry.hw.portData;
-                //console.log('hw_sensorData:',hw_sensorData);
-                //console.log('sensor:',sensor);
                 return hw_sensorData ? hw_sensorData[sensor] : 0;
             },
         },
@@ -409,61 +376,13 @@ Entry.CodeWiz.getBlocks = function() {
             class: 'CodeWiz_buzzer',
             isNotFor: ['CodeWiz'],
             func(sprite, script) {
-                // if(Entry.hw.portData['ISRUN']==0) {
-                //     console.log("isRun")
-                //     return script;
-                // }
-                //f.bind(this);
-                // while(Entry.hw.portData.ISRUN == 0) {
-                //     promiseManager.sleep(10);
-                //     Entry.hw.update();
-                //     console.log("sleep",Entry.hw.portData.ISRUN);
-                // }
+                
                 const sq = Entry.hw.sendQueue;
                 const port = 0xdf;
                 let octave = Number.parseInt(script.getValue('OCTAVE', script));
                 let note = Number.parseInt(script.getValue('NOTE', script));
                 let beat = Number.parseInt(script.getValue('BEAT', script));
-                // console.log("octave:", octave);
-                // console.log("note:", note);
-                // console.log("beat:", beat);
-                // if(!script.isStart)
-                // {
-                //     script.isStart = true;
-                //     script.timeFlag = 1;
-                //     if (!sq['SET']) {
-                //         sq['SET'] = {};
-                //     }
-                //     sq['SET'][port] = {
-                //         type: Entry.CodeWiz.sensorTypes.BUZZER,
-                //         value: {
-                //             octave: octave,
-                //             note: note,
-                //             beat: beat
-                //         }
-                //     }
-                //     Entry.hw.update();
-                //     console.log("sq:", sq);
-                //     sq['SET'] = {};
-                //     var timer = setTimeout(function() {
-                //         script.timeFlag = 0;
-                //         Entry.CodeWiz.removeTimeout(timer);
-                //     }, (1000 / beat) * 1.3 + Entry.CodeWiz.defaultWaitTime);
-                //     Entry.CodeWiz.timeOutList.push(timer);
-
-                //     return script;
-                // }
-                // else if(script.timeFlag == 1)
-                // {
-                //     return script;
-                // }
-                // else
-                // {
-                //     delete script.timeFlag;
-                //     delete script.isStart;
-
-                //     return script.callReturn();
-                // }
+                
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
@@ -475,16 +394,9 @@ Entry.CodeWiz.getBlocks = function() {
                         beat: beat,
                     },
                 };
-                console.log('sq:', sq);
-                // Entry.hw.portData['ISRUN']=0;
                 Entry.hw.update();
-                console.log('script', script);
                 sq['SET'] = {};
-                //return script.callReturn();
                 return promiseManager.sleep((1000 / beat) * 1.3 + Entry.CodeWiz.defaultWaitTime);
-                // return promiseManager.Promise((resolve) =>{
-
-                // });
             },
         },
         CodeWiz_neopixel_brightness: {
@@ -521,7 +433,6 @@ Entry.CodeWiz.getBlocks = function() {
                 const sq = Entry.hw.sendQueue;
                 const port = 0xff;
                 let value = script.getNumberValue('BRIGHTNESS', script);
-                console.log('value_bf:', value);
 
                 value = Math.round(value);
                 if (value < 0) {
@@ -529,7 +440,6 @@ Entry.CodeWiz.getBlocks = function() {
                 } else if (value > 255) {
                     value = 255;
                 }
-                console.log('value_at:', value);
 
                 if (!sq['SET']) {
                     sq['SET'] = {};
@@ -541,18 +451,9 @@ Entry.CodeWiz.getBlocks = function() {
                         value: value,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
-                // if()
-                // Entry.CodeWiz.LAST_ORDER_TYPE = Entry.CodeWiz.sensorTypes.NEOPIXEL;
-                // Entry.CodeWiz.TIMEOUT_ID = setTimeout(()=> {
-                //     Entry.CodeWiz.LAST_ORDER_TYPE= -1;
-                //     Entry.CodeWiz.TIMEOUT_ID=null;
-                // }, Entry.CodeWiz.defaultWaitTime);
-                // if(Entry.CodeWiz.LAST_ORDER_TYPE = Entry.CodeWiz.sensorTypes.NEOPIXEL)
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_neopixel_setColor_one: {
@@ -562,21 +463,6 @@ Entry.CodeWiz.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
-                // {
-                //     accept:'Block',
-                //     type: 'Dropdown',
-                //     options: [
-                //         ['1', '0'],
-                //         ['2', '1'],
-                //         ['3', '2'],
-                //         ['4', '3'],
-                //         ['5', '4'],
-                //     ],
-                //     value: '1',
-                //     fontSize: 11,
-                //     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                //     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                // },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -627,11 +513,9 @@ Entry.CodeWiz.getBlocks = function() {
                         },
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_neopixel_setColor_one2: {
@@ -705,11 +589,9 @@ Entry.CodeWiz.getBlocks = function() {
                         }
                     }
                 }
-                console.log("sq:",sq)
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_neopixel_off_one: {
@@ -754,11 +636,9 @@ Entry.CodeWiz.getBlocks = function() {
                         num: num,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_neopixel_setColor_all: {
@@ -811,11 +691,9 @@ Entry.CodeWiz.getBlocks = function() {
                         },
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_neopixel_setColor_all2: {
@@ -855,8 +733,8 @@ Entry.CodeWiz.getBlocks = function() {
             },
             paramsKeyMap: {
                 R:0,
-                G:0,
-                B:0,
+                G:1,
+                B:2,
             },
             class: 'CodeWiz_neopixel',
             isNotFor: ['CodeWiz'],
@@ -881,11 +759,9 @@ Entry.CodeWiz.getBlocks = function() {
                         }
                     }
                 }
-                console.log("sq:",sq)
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_neopixel_off_all: {
@@ -922,11 +798,9 @@ Entry.CodeWiz.getBlocks = function() {
                         opcode: 4,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
-                //return script.callReturn();
             },
         },
         CodeWiz_OLED_clear: {
@@ -963,7 +837,6 @@ Entry.CodeWiz.getBlocks = function() {
                         opcode: 0,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1017,7 +890,6 @@ Entry.CodeWiz.getBlocks = function() {
                         isTrue: _value,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1070,7 +942,6 @@ Entry.CodeWiz.getBlocks = function() {
                         size: _value,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1138,7 +1009,6 @@ Entry.CodeWiz.getBlocks = function() {
                         y: _y,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1178,8 +1048,7 @@ Entry.CodeWiz.getBlocks = function() {
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
-                console.log('script:', script);
-                console.log('text:', _value);
+                
                 sq['SET'][port] = {
                     type: Entry.CodeWiz.sensorTypes.OLED,
                     value: {
@@ -1187,7 +1056,6 @@ Entry.CodeWiz.getBlocks = function() {
                         text: _value,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1241,7 +1109,6 @@ Entry.CodeWiz.getBlocks = function() {
                         isTrue: _value,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1300,7 +1167,6 @@ Entry.CodeWiz.getBlocks = function() {
                         c: _value,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1370,7 +1236,6 @@ Entry.CodeWiz.getBlocks = function() {
                         size: _size,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1453,7 +1318,6 @@ Entry.CodeWiz.getBlocks = function() {
                         end: _ed,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1493,7 +1357,7 @@ Entry.CodeWiz.getBlocks = function() {
                         opcode: 9,
                     },
                 };
-                console.log('sq:', sq);
+                
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1577,7 +1441,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1683,7 +1546,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1776,7 +1638,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1869,7 +1730,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -1989,7 +1849,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -2096,7 +1955,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -2242,7 +2100,6 @@ Entry.CodeWiz.getBlocks = function() {
                         color: _color,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -2283,14 +2140,13 @@ Entry.CodeWiz.getBlocks = function() {
                         opcode: 0,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
             },
         },
         CodeWiz_DIGITAL_OUTPUT_digitalWrite: {
-            // Block UI : "디지털 %1(으)로 %2내보내기%3",
+            // Block UI : "터치센서 디지털 %1(으)로 %2내보내기%3",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2299,14 +2155,14 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['13', '0'],
-                        ['14', '1'],
-                        ['15', '2'],
-                        ['27', '3'],
-                        ['32', '4'],
-                        ['33', '5'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                        ['27', '27'],
+                        ['32', '32'],
+                        ['33', '33'],
                     ],
-                    value: '0',
+                    value: '13',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2355,14 +2211,13 @@ Entry.CodeWiz.getBlocks = function() {
                         output: _val,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
             },
         },
         CodeWiz_DIGITAL_OUTPUT_pwmWrite: {
-            // Block UI : "PWM %1(으)로 %2내보내기(0~255)%3",
+            // Block UI : "터치센서 PWM %1(으)로 %2내보내기(0~255)%3",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2371,14 +2226,14 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['13', '0'],
-                        ['14', '1'],
-                        ['15', '2'],
-                        ['27', '3'],
-                        ['32', '4'],
-                        ['33', '5'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                        ['27', '27'],
+                        ['32', '32'],
+                        ['33', '33'],
                     ],
-                    value: '0',
+                    value: '13',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2429,7 +2284,6 @@ Entry.CodeWiz.getBlocks = function() {
                         writeVal: _val,
                     },
                 };
-                console.log('sq:', sq);
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
