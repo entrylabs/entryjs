@@ -3,6 +3,7 @@ import _findIndex from 'lodash/findIndex';
 import _uniq from 'lodash/uniq';
 import _map from 'lodash/map';
 import _flatten from 'lodash/flatten';
+import _cloneDeep from 'lodash/cloneDeep';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -11,6 +12,18 @@ class DataTable {
     #view;
     modal;
     selected;
+
+    get tables() {
+        return this.#tables;
+    }
+
+    get dataTables() {
+        return _map(this.#tables, ({ fields, chart, name, origin }) => ({
+            name,
+            chart: _cloneDeep(chart),
+            table: [[...fields], ..._cloneDeep(origin)],
+        }));
+    }
 
     constructor() {
         this.#generateView();
@@ -33,10 +46,6 @@ class DataTable {
 
     unbanBlock() {
         Entry.playground.blockMenu.unbanClass('analysis');
-    }
-
-    get tables() {
-        return this.#tables;
     }
 
     getTables(blockList = []) {
@@ -84,34 +93,25 @@ class DataTable {
         return _findIndex(this.#tables, { id });
     }
 
-    addSource(table, shouldTableMode = true) {
-        // const isWorkspace = Entry.type === 'workspace';
-        // if (shouldTableMode && isWorkspace) {
-        //     Entry.do('playgroundChangeViewMode', 'table');
-        // }
+    addSource(table) {
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
+
+        this.#tables.push(table instanceof DataTableSource ? table : new DataTableSource(table));
         this.hide();
         this.show({
-            list: [
-                ...this.#tables,
-                (table instanceof DataTableSource ? table : new DataTableSource(table)).toJSON(),
-            ],
-            selectedIndex: this.#tables.length,
+            list: this.dataTables,
+            selectedIndex: this.#tables.length - 1,
         });
     }
 
     addSources(tables = []) {
         const dataTableSources = _map(tables, (table) =>
-            (table instanceof DataTableSource ? table : new DataTableSource(table)).toJSON()
+            table instanceof DataTableSource ? table : new DataTableSource(table)
         );
-
+        this.#tables.push(...dataTableSources);
         this.hide();
-        this.show({ list: [...this.#tables, ...dataTableSources], selectedIndex: 0 });
-    }
-
-    removeSource(table) {
-        Entry.do('dataTableRemoveSource', table);
+        this.show({ list: this.dataTables, selectedIndex: this.dataTables.length - 1 });
     }
 
     changeItemPosition(start, end) {
@@ -120,72 +120,20 @@ class DataTable {
         }
     }
 
-    async selectTable(table = {}) {
-        if (this.tempDataAnalytics) {
-            const temp = { ...this.tempDataAnalytics };
-            const confirm = await entrylms.confirm(Lang.Menus.save_modified_table);
-            if (confirm) {
-                const result = this.saveTable(temp);
-                if (!result) {
-                    return;
-                }
-            }
-        }
-        this.selected = table;
-        this.hide();
-        this.show();
-        delete table.tab;
-        delete this.tempDataAnalytics;
-        return table;
-    }
-
-    saveTable = (dataAnalytics) => {
-        const { id, table = [[]], charts = [], title } = dataAnalytics;
-        if (!title) {
-            Entry.toast.alert(
-                Lang.DataAnalytics.fail_save_table,
-                Lang.DataAnalytics.empty_table_name_content
-            );
-            return;
-        }
-        if (
-            Entry.playground.isDuplicatedTableName(
-                title,
-                _.findIndex(this.tables, (table) => table.id === id)
-            )
-        ) {
-            Entry.toast.alert(
-                Lang.DataAnalytics.fail_save_table,
-                Lang.DataAnalytics.duplicate_table_name_content
-            );
-            return;
-        }
-        const source = this.getSource(id);
-        const data = ((this.tempDataAnalytics && this.tempDataAnalytics.table) || table).slice(1);
-        if (source) {
-            source.modal = null;
-            source.setArray({
-                data,
-                chart: charts,
-                fields: table[0],
-                name: title,
-            });
-            Entry.playground.injectTable();
-        }
-        Entry.toast.success(
-            Lang.DataAnalytics.saved_table_title,
-            Lang.DataAnalytics.saved_table_content
-        );
-        delete this.tempDataAnalytics;
+    saveTable = async ({ selected, index }) => {
+        const { table } = selected;
+        const [field, ...data] = table;
+        this.#tables[index] = new DataTableSource({ ...selected, field, data });
         Entry.playground.reloadPlayground();
-        return true;
     };
 
     show(data) {
         if (!this.dataAnalytics) {
             this.#generateView();
         }
-        this.dataAnalytics.show(data || { list: this.#table });
+        this.dataAnalytics.show(
+            data || { selectedIndex: this.dataTables.legnth - 1, list: this.dataTables }
+        );
     }
 
     hide() {
@@ -209,10 +157,7 @@ class DataTable {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
             })
-            .on('change', (dataAnalytics) => {
-                this.tempDataAnalytics = dataAnalytics;
-            })
-            .on('close', () => {
+            .on('close', async () => {
                 this.hide();
             })
             .on('addTable', () => {
@@ -226,22 +171,22 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            this.addSource(table, false);
+            let data = table || { name: Lang.Workspace.data_table };
+            data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
+            const isDataTableSource = data instanceof DataTableSource;
+            this.#tables.push(isDataTableSource ? data : new DataTableSource(data));
         });
+
+        tables.length && this.refreshPlayground();
     }
 
-    setTableName(id, name) {
-        if (!name) {
-            return;
+    refreshPlayground() {
+        const isWorkspace = Entry.type === 'workspace';
+        if (isWorkspace) {
+            this.unbanBlock();
+            Entry.playground.reloadPlayground();
+            Entry.playground.refreshPlayground();
         }
-
-        const source = this.getSource(id);
-        if (!source) {
-            return;
-        }
-
-        const { chart, array, fields } = source;
-        source.setArray({ chart, data: array, fields, name });
     }
 
     showChart(tableId) {

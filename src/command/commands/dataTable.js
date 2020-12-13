@@ -9,16 +9,7 @@ import DataTable from '../../class/DataTable';
 
     c[COMMAND_TYPES.dataTableAddSource] = {
         do(table) {
-            // DataTable.tables.push(table);
             Entry.playground.selectTable(table);
-            // const isWorkspace = Entry.type === 'workspace';
-            // if (isWorkspace) {
-            //     const isTableMode = Entry.playground.getViewMode() === 'table';
-            //     DataTable.unbanBlock();
-            //     Entry.playground.reloadPlayground();
-            //     Entry.playground.refreshPlayground();
-            //     isTableMode && Entry.playground.selectTable(table);
-            // }
         },
         state(table) {
             return [table];
@@ -42,12 +33,8 @@ import DataTable from '../../class/DataTable';
             DataTable.tables.splice(index, 1);
             const isWorkspace = Entry.type === 'workspace';
             if (isWorkspace) {
-                const isTableMode = Entry.playground.getViewMode() === 'table';
                 Entry.playground.reloadPlayground();
                 Entry.playground.refreshPlayground();
-                if (isTableMode && table === DataTable.selected) {
-                    Entry.playground.selectTable(DataTable.tables[0]);
-                }
                 !DataTable.tables.length && DataTable.banAllBlock();
             }
         },
