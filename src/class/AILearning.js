@@ -1,10 +1,18 @@
-import PopupHelper from './popup_helper';
-import TextLearning from './learning/TextLearning';
+import TextLearning, { classes as TextClasses } from './learning/TextLearning';
+import Cluster, { classes as ClusterClasses } from './learning/Cluster';
+import Regression, { classes as RegressionClasses } from './learning/Regression';
+import Classification, { classes as ClassificationClasses } from './learning/Classification';
+
+const banClasses = [
+    ...ClusterClasses,
+    ...RegressionClasses,
+    ...TextClasses,
+    ...ClassificationClasses
+];
 
 export default class AILearning {
     #playground;
     #categoryName = 'ai_learning';
-    #popupKey = 'ai_learning';
     #labels = [];
     #url;
     #type;
@@ -16,9 +24,15 @@ export default class AILearning {
     isEnable;
     #recordTime = 2000;
     #module = null;
+    #tableData = null;
+    
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
+    }
+
+    get labels() {
+        return this.#labels;
     }
 
     removeAllBlocks() {
@@ -31,55 +45,28 @@ export default class AILearning {
         this.destroy();
     }
 
-    isAvailable() {
-        if (!this.isEnable) {
-            return false;
-        }
-        if (!this.isLoaded) {
-            this.toastError();
-            throw new Error('ai learning model load error');
-        }
-        return true;
-    }
-
-    openManager() {
-        if(this.isEnable) {
-            Entry.dispatchEvent('openAIUtilizeTrainManager');
-        } else {
-            console.log('Disabled learning for offline');
-        }
-    }
-
-    get labels() {
-        return this.#labels;
-    }
-
-    getResult(index) {
-        const defaultResult = {probability: 0, className: ''};
-        const isAvailable = this.isAvailable();
-        if (!isAvailable) {
-            return defaultResult;
-        }
-        if(index !== undefined && index > -1) {
-            return this.result.find(({className}) => className === this.labels[index]) || defaultResult;
-        }
-        return this.result[0] || defaultResult;
-
-    }
-
-    async predict(text) {
-        if(this.#module) {
-            const result = await this.#module.predict(text);
-            this.result = result;
-        }
-        return [];
-    }
-
     load(modelInfo) {
-        const { url, labels, type, classes = [], model, id, _id, isActive = true, name, recordTime } = modelInfo || {};
+        const { 
+            url, 
+            labels, 
+            type, 
+            classes = [], 
+            model, 
+            id, 
+            _id, 
+            isActive = true, 
+            name, 
+            recordTime,
+            trainParam,
+            tableData,
+            result,
+        } = modelInfo || {};
+
         if(!url ||  !this.isEnable || !isActive) {
             return ;
         }
+        this.destroy();
+
         this.#labels = labels || classes.map(({name}) => name);
         this.#type = type;
         this.#url = url;
@@ -87,54 +74,124 @@ export default class AILearning {
         this.name = name;
         this.#modelId = model || id;
         this.#recordTime = recordTime;
-        this.unbanBlocks();
-        this.generatePopupView({url, labels: this.#labels, type, recordTime});
-        if(this.#playground) {
+        this.result = result;
+
+        if (!tableData && classes.length) {
+            this.#tableData = createDataTable(classes);
+        } else {
+            this.#tableData = tableData;
+        }
+        
+        if (this.#playground) {
             this.#playground.reloadPlayground()
         }
-        if(type === 'text') {
-            this.#module = new TextLearning();
-            this.#module.load(`/uploads/${this.#url}/model.json`)
+        
+        if (type === 'text') {
+            this.#module = new TextLearning({url, labels, type, recordTime});
+        } else if (type === 'cluster') {
+            this.#module = new Cluster({ 
+                name,
+                result, 
+                trainParam, 
+                table: this.#tableData,
+            });
+        } else if (type === 'regression') {
+            this.#module = new Regression({ 
+                name,
+                result,
+                url,
+                trainParam, 
+                table: this.#tableData,
+             });
+        } else if (type === 'image' || type === 'speech') {
+            this.#module = new Classification({url, labels, type, recordTime});
         }
-        this.isLoaded = true;
+
+        if (this.#module) {
+            this.unbanBlocks();
+            this.isLoaded = true;
+        }
+    }
+
+    openInputPopup() {
+        this.#module?.openInputPopup?.();
+    }
+    
+    train() {
+        this.#module?.train?.();
+    }
+
+    isTrained() {
+        return this.#module?.isTrained;
+    }
+
+    setTrainOption(type, value) {
+        this.#module?.setTrainOption?.(type, value);
+    }
+
+    getTrainOption() {
+        return this.#module?.getTrainOption?.();   
+    }
+
+    getTableData() {
+        return this.#tableData;
+    }
+
+    getTrainResult() {
+        return this.#module?.getTrainResult?.()
+    }
+
+    getPredictResult(index) {
+        return this.#module?.getResult?.(index)
     }
 
     getId() {
         return this.#modelId;
     }
 
+    setVisible(visible) {
+        this.#module?.setVisible?.(visible);
+    }
+
+    setChartVisible(visible) {
+        if (visible) {
+            this.#module?.openChart?.();
+        } else {
+            this.#module?.closeChart?.();
+        }
+    }
+
+    openManager() {
+        if (this.isEnable) {
+            Entry.dispatchEvent('openAIUtilizeTrainManager');
+        } else {
+            console.log('Disabled learning for offline');
+        }
+    }
+
+    async predict(obj) {
+        if(this.#module && this.#module.predict) {
+            this.result = await this.#module.predict(obj);
+        }
+        return [];
+    }
+
+
     unbanBlocks() {
-        const blockMenu =  this.getBlockMenu(this.#playground);
+        this.banBlocks();
+        const blockMenu =  getBlockMenu(this.#playground);
         if (blockMenu) {
-            blockMenu.unbanClass(this.#categoryName);
-            blockMenu.banClass(`${this.#categoryName}_text`);
-            blockMenu.banClass(`${this.#categoryName}_image`);
-            blockMenu.banClass(`${this.#categoryName}_speech`);
-            blockMenu.unbanClass(`${this.#categoryName}_${this.#type}`);
+            this.#module?.unbanBlocks?.(blockMenu);
         }
     }
 
     banBlocks() {
-        const blockMenu =  this.getBlockMenu(this.#playground);
-        if (blockMenu) {
-            blockMenu.banClass(this.#categoryName);
-            blockMenu.banClass(`${this.#categoryName}_text`);
-            blockMenu.banClass(`${this.#categoryName}_image`);
-            blockMenu.banClass(`${this.#categoryName}_speech`);
+        const blockMenu =  getBlockMenu(this.#playground);
+        if (blockMenu) {       
+            banClasses.forEach((clazz) => {
+                blockMenu.banClass(clazz); 
+            })
         }
-    }
-
-    getBlockMenu = (playground) => {
-        const { mainWorkspace } = playground;
-        if (!mainWorkspace) {
-            return;
-        }
-
-        const blockMenu = _.result(mainWorkspace, 'blockMenu');
-        if (!blockMenu) {
-            return;
-        }
-        return blockMenu;
     }
 
     destroy() {
@@ -145,10 +202,12 @@ export default class AILearning {
         this.result = [];
         this.isLoaded = false;
         this.#recordTime = 2000;
+        this.#module = null;
+        this.#tableData = null;
     }
 
     toJSON() {
-        if(!this.isLoaded) {
+        if (!this.isLoaded) {
             return;
         }
         return {
@@ -158,84 +217,36 @@ export default class AILearning {
             id: this.#modelId,
             _id: this.#oid,
             recordTime: this.#recordTime,
+            trainParam: this.getTrainOption(),
+            result: this.getTrainResult(),
+            tableData: this.#tableData,
         }
     }
+}
 
-    openInputPopup() {
-        const isAvailable = this.isAvailable();
-        if (!isAvailable) {
-            return;
-        }
-        this.popupHelper.show(this.#popupKey);
+function getBlockMenu(playground) {
+    const { mainWorkspace } = playground;
+    if (!mainWorkspace) {
+        return;
     }
 
-    toastError() {
-        Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.ai_utilize_train_pop_error, true);
+    const blockMenu = _.result(mainWorkspace, 'blockMenu');
+    if (!blockMenu) {
+        return;
     }
+    return blockMenu;
+}
 
-    generatePopupView({url, labels, type, recordTime}) {
-        if (!this.popupHelper) {
-            if (window.popupHelper) {
-                this.popupHelper = window.popupHelper;
-            } else {
-                this.popupHelper = new PopupHelper(true);
-            }
+function createDataTable(classes) {
+    try {
+        const [{samples}] = classes;
+        const [{data}] = samples;
+        if(typeof data === 'string') {
+            return JSON.parse(data);
+        }else {
+            return data;
         }
-        let isPauseClicked = false;
-        this.popupHelper.addPopup(this.#popupKey, {
-            type: 'confirm',
-            title: Lang.Blocks.learn_popup_title,
-            onShow: () => {
-                this.popupHelper.addClass('learning_popup');
-                isPauseClicked = false;
-                localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type, recordTime}));
-                this.isLoading = true;
-                this.result = [];
-                if(Entry.engine.state == 'run') {
-                    Entry.engine.togglePause({visible:false});
-                }
-            },
-            closeEvent: () => {
-                this.isLoading = false;
-                if(Entry.engine.state == 'pause' && !isPauseClicked) {
-                    Entry.engine.togglePause({visible:false});
-                }
-            },
-            setPopupLayout: (popup) => {
-                const content = Entry.Dom('div', {
-                    class: 'contentArea',
-                });
-                const iframe = Entry.Dom('iframe', {
-                    class: `learningInputPopup ${type}`,
-                    src: `/learning/popup/${type}`
-                });
-                $(iframe).on('load', ({target}) => {
-                    target.contentWindow.addEventListener("message", ({data:eventData = {}}) => {
-                        const { key, data } = JSON.parse(eventData);
-                        if(key === 'predict') {
-                            this.result = data;
-                            this.popupHelper.hide();
-                        }
-                        if(key === 'stop') {
-                            this.popupHelper.hide();
-                            Entry.engine.toggleStop()
-                        }
-                        if(key === 'pause') {
-                            if(!isPauseClicked) {
-                                isPauseClicked = true;
-                                Entry.engine.togglePause({visible:false});
-                            }
-                            Entry.engine.togglePause();
-                        }
-                        if(key === 'error') {
-                            this.popupHelper.hide();
-                            this.toastError();
-                        }
-                    }, false);
-                });
-                content.append(iframe);
-                popup.append(content);
-            },
-        });
+    } catch(e) {
+        console.log('set table error', e);
     }
 }

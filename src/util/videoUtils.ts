@@ -48,6 +48,13 @@ type DetectedObject = {
 };
 type IndicatorType = 'pose' | 'face' | 'object';
 
+export const getInputList = async () => {
+    if(navigator.mediaDevices) {
+        return (await navigator.mediaDevices.enumerateDevices()) || [];
+    }
+    return [];
+}
+
 class VideoUtils implements MediaUtilsInterface {
     // 비디오 캔버스 크기에 쓰이는 공통 밸류
     public CANVAS_WIDTH: number = 480;
@@ -161,7 +168,7 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         await this.checkPermission();
-        const inputList = await navigator.mediaDevices.enumerateDevices();
+        const inputList = await getInputList();
         this.videoInputList = inputList
             .filter((input) => input.kind === 'videoinput')
             .map((item) => [item.label, item.deviceId]);
