@@ -122,8 +122,8 @@ class DataTable {
 
     saveTable = async ({ selected, index }) => {
         const { table } = selected;
-        const [field, ...data] = table;
-        this.#tables[index] = new DataTableSource({ ...selected, field, data });
+        const [fields, ...data] = table;
+        this.#tables[index] = new DataTableSource({ ...selected, fields, data });
         Entry.playground.reloadPlayground();
     };
 
