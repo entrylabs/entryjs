@@ -498,6 +498,11 @@ module.exports = {
                         type: 'Block',
                         accept: 'number',
                     },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    },
                 ],
                 events: {},
                 def: {
@@ -899,7 +904,7 @@ module.exports = {
                     const k = script.getNumberValue('K');
                     const attr = script.getField('ATTR');
                     const { centroids } = Entry.aiLearning.getTrainResult();
-                    return centroids[k - 1][attr];
+                    return centroids?.[k - 1]?.[attr] || NaN;
                 },
                 syntax: {
                     js: [],
@@ -1363,8 +1368,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['probability', 'probability'],
-                            ['count', 'count'],
+                            [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.neighbor_count, 'count'],
                         ],
                         value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -1454,8 +1459,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['probability', 'probability'],
-                            ['count', 'count'],
+                            [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.neighbor_count, 'count'],
                         ],
                         value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -1562,8 +1567,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            ['probability', 'probability'],
-                            ['count', 'count'],
+                            [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.neighbor_count, 'count'],
                         ],
                         value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,

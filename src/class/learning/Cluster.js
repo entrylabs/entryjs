@@ -1,4 +1,3 @@
-import { eudist } from 'skmeans/distance';
 import { kmpp } from 'skmeans/kinit';
 import floor from 'lodash/floor';
 import LearningView from './LearningView';
@@ -28,6 +27,7 @@ class Cluster {
     #predictResult = null;
     #fields = [];
     #name = '';
+    
     constructor({ name, result, table, trainParam }) {
         this.#name  = name;
         this.#view = new LearningView({ name, status: 0 });
@@ -136,7 +136,8 @@ class Cluster {
         }
         const { k } = this.#trainParam;
         const { centroids } = this.#result;
-        this.#predictResult = predictCluster(x, y, k, centroids);
+       
+        this.#predictResult = predictCluster(x, y, k, centroids) + 1;
         return this.#predictResult;
     }
 
@@ -229,6 +230,17 @@ function convertGraphData(data, centroids, indexes, attr) {
         }))
     )
 }
+
+function eudist(a, b) {
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+        let d = (a[i] || 0) - (b[i] || 0);
+        sum += d * d;
+    }
+
+    return sum;
+}
+
 
 function predictCluster(x, y, k, centroids) {
     let min = Infinity;
