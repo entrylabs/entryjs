@@ -1438,6 +1438,7 @@ Entry.Playground = class Playground {
     }
 
     setAiLearningBlock(url, info) {
+        Entry.aiLearning.removeLearningBlocks();
         Entry.aiLearning.load({ url, ...info });
     }
 

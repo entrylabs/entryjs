@@ -2,12 +2,14 @@ import TextLearning, { classes as TextClasses } from './learning/TextLearning';
 import Cluster, { classes as ClusterClasses } from './learning/Cluster';
 import Regression, { classes as RegressionClasses } from './learning/Regression';
 import Classification, { classes as ClassificationClasses } from './learning/Classification';
+import NumberClassification, { classes as NumberClassificationClasses } from './learning/NumberClassification';
 
 const banClasses = [
     ...ClusterClasses,
     ...RegressionClasses,
     ...TextClasses,
-    ...ClassificationClasses
+    ...ClassificationClasses,
+    ...NumberClassificationClasses,
 ];
 
 export default class AILearning {
@@ -39,6 +41,18 @@ export default class AILearning {
         const utilizeBlock  = Object.values(Entry.AI_UTILIZE_BLOCK_LIST).map(x => Object.keys(x.getBlocks())).flatten();
         const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
         blocks.filter(x => !utilizeBlock.includes(x)).forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
+        this.banBlocks();
+        this.destroy();
+    }
+
+    removeLearningBlocks() {
+        if (!this.isLoaded) {
+            return ;
+        }
+        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
+        blocks.filter(x => Entry.block[x].class === 'ai_learning').forEach((blockType) => {
             Entry.Utils.removeBlockByType(blockType);
         });
         this.banBlocks();
@@ -88,6 +102,14 @@ export default class AILearning {
         
         if (type === 'text') {
             this.#module = new TextLearning({url, labels, type, recordTime});
+        } else if(type === 'number'){
+            this.#module = new NumberClassification({ 
+                name,
+                result,
+                url,
+                trainParam, 
+                table: this.#tableData,
+            });
         } else if (type === 'cluster') {
             this.#module = new Cluster({ 
                 name,
@@ -202,8 +224,11 @@ export default class AILearning {
         this.result = [];
         this.isLoaded = false;
         this.#recordTime = 2000;
-        this.#module = null;
-        this.#tableData = null;
+        this.#tableData  = null;
+        if (this.#module) {
+            this.#module.destroy();
+            this.#module = null;
+        }
     }
 
     toJSON() {

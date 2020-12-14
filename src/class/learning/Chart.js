@@ -1,8 +1,8 @@
 import { BillBoard } from '@entrylabs/tool';
 
 export default class LearningChart {
-    constructor(source) {
-        this.modal = this.createChart(source);
+    constructor(modalData) {
+        this.modal = this.createChart(modalData);
         this.modal.show();
     }
 
@@ -14,7 +14,12 @@ export default class LearningChart {
         this.modal.hide();
     }
 
-    createChart(source) {
+    destroy() {
+        this.modal.hide();
+        this.modal = null;
+    }
+    
+    createChart({ title = '', description = '', source }) {
         const container = Entry.Dom('div', {
             class: 'entry-learning-chart',
             parent: $('body'),
@@ -23,8 +28,8 @@ export default class LearningChart {
         return new BillBoard({
             data: {
                 source,
-                title: 'title',
-                description: 'description',
+                title,
+                description,
                 togglePause: () => Entry.engine.togglePause(),
                 stop: () => Entry.engine.toggleStop(),
                 isIframe: self !== top,

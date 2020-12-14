@@ -44,6 +44,14 @@ class Regression {
         this.load(`/uploads/${url}/model.json`);
     }
     
+    destroy() {
+        this.#view.destroy();
+        if(this.#chart) {
+            this.#chart.destroy();
+            this.#chart = null;
+        }
+    }
+
     setVisible(visible) {
         this.#view.setVisible(visible);
     }
@@ -66,7 +74,9 @@ class Regression {
             return ;
         }
         if (!this.#chart) {
-            this.#chart = new Chart(this.chartData);
+            this.#chart = new Chart({
+                source: this.chartData
+            });
         } else {
             this.#chart.show();
         }
@@ -106,7 +116,7 @@ class Regression {
             () => {
                 this.percent = this.percent + 1;
                 const percent = _floor((this.percent / totalDataSize) * 100);
-                this.#trainCallback(percent);
+                this.#trainCallback(Math.max(percent, 100));
             }
         );
         this.#model = model;
@@ -157,14 +167,11 @@ class Regression {
                     connectNull: true,
                     point: false,
                 },
-                tooltip: {
-                    show: false
-                },
                 axis: {
                     x: {
                         tick: {
                             fit: false,
-                            count: 5
+                            count: 15
                         },
                     }
                 },
