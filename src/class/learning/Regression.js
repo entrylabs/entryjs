@@ -116,7 +116,7 @@ class Regression {
             () => {
                 this.percent = this.percent + 1;
                 const percent = _floor((this.percent / totalDataSize) * 100);
-                this.#trainCallback(percent);
+                this.#trainCallback(Math.max(percent, 100));
             }
         );
         this.#model = model;
