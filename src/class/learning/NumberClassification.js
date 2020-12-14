@@ -98,9 +98,7 @@ class NumberClassification {
     }
 
     closeChart() {
-        if (this.#chart) {
-            this.#chart.hide();
-        }
+        this.#chart?.hide();
     }
 
     setTrainOption(type, value) {
@@ -116,9 +114,8 @@ class NumberClassification {
     }
 
     train() {
-        this.#trainCallback(0);
+        this.#trainCallback(1);
         this.#isTrained = false;
-        this.#chart = null;
         const { data: trainData, labels } = convertTableToKnnData(this.#table);
         const trainLabels = labels[0];
         const uniqLabels = _uniq(labels[0]).sort((a, b) => String(a).localeCompare(String(b)));
@@ -145,9 +142,12 @@ class NumberClassification {
             maxVector,
             minVector,
         };
-        this.#trainCallback(100);
         this.#isTrained = true;
         this.colors = this.createColor();
+        this.#chart?.load({
+            source: this.chartData,
+        });
+        this.#trainCallback(100);
     }
 
     async load(url) {

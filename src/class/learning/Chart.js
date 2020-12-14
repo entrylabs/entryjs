@@ -18,6 +18,10 @@ export default class LearningChart {
         this.modal.hide();
         this.modal = null;
     }
+
+    load(data) {
+        this.modal.setData(data);
+    }
     
     createChart({ title = '', description = '', source }) {
         const container = Entry.Dom('div', {

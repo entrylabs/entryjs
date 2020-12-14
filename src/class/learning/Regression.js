@@ -26,9 +26,13 @@ class Regression {
     #view = null;
     #model = null;
     #predictResult = null;
+    #name = '';
+    #fields = [];
+    #predictFields = [];
 
     constructor({ name, url, result, table, trainParam }) {
         this.#view = new LearningView({ name, status: 0 });
+        this.#name = name;
         this.#trainParam = trainParam;
         this.#result = result;
         this.#table = table;
@@ -42,11 +46,18 @@ class Regression {
             this.#chartEnable = true;
         }
         this.load(`/uploads/${url}/model.json`);
+
+        this.#fields = table?.select?.[0]?.map((index) => {
+            return table?.fields[index];
+        });
+        this.#predictFields = table?.select?.[1]?.map((index) => {
+            return table?.fields[index];
+        });
     }
     
     destroy() {
         this.#view.destroy();
-        if(this.#chart) {
+        if (this.#chart) {
             this.#chart.destroy();
             this.#chart = null;
         }
@@ -75,7 +86,12 @@ class Regression {
         }
         if (!this.#chart) {
             this.#chart = new Chart({
-                source: this.chartData
+                source: this.chartData,
+                title: this.#name,
+                description: `
+                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
+                    | <em>${Lang.AiLearning.predict}</em>: ${this.#predictFields[0]},
+                `,
             });
         } else {
             this.#chart.show();
@@ -83,9 +99,7 @@ class Regression {
     }
 
     closeChart() {
-        if (this.#chart) {
-            this.#chart.hide();
-        }
+        this.#chart?.hide();
     }
 
     setTrainOption(type, value) {
@@ -107,7 +121,7 @@ class Regression {
     async train() {
         this.#isTrained = false;
         this.percent = 0;
-        this.#chart = null;
+        this.#trainCallback(1);
         const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
         const { model, trainHistory, a, b, graphData = [] } = await train(
             inputs,
@@ -122,12 +136,27 @@ class Regression {
         this.#model = model;
         const { acc = [] } = trainHistory?.history || {};
         const accuracy = _max(acc) || 0;
+        if (inputs.length == 1) {
+            graphData.predictedPoints.map(({ x, y }) => {
+                const index = graphData.originalPoints.findIndex((p) => _floor(p.x, 1) === _floor(x, 1));
+                if (graphData.originalPoints[index]) {
+                    graphData.originalPoints[index].equation = y;
+                }
+            })
+        }
+   
         this.#result = {
             graphData: (graphData.originalPoints || []).slice(0, 1000),
             accuracy,
             equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
         }
         this.#isTrained = true;
+
+     
+        this.#chart?.load({
+            source: this.chartData,
+        });
+        this.#trainCallback(100);
     }
 
     async load(url) {
@@ -162,6 +191,16 @@ class Regression {
             options: {
                 legend: {
                     show: false
+                },
+                tooltip: {
+                    contents: (data) =>{
+                        const [{ x, value, id }] = data;
+                        return `
+                            <div class="chart_handle_wrapper">
+                                ${this.#fields[0]}: ${x}, ${this.#predictFields[0]}: ${value}
+                            <div>
+                        `;
+                    }
                 },
                 line: {
                     connectNull: true,

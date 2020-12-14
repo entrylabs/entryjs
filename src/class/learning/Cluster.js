@@ -82,7 +82,10 @@ class Cluster {
             this.#chart = new Chart({
                 source: this.chartData,
                 title: this.#name,
-                description: `<em>${Lang.AiLearning.cluster_number}</em>: ${k}, <em>${Lang.AiLearning.model_attr_str} 1</em>: ${this.#fields[0]}, <em>${Lang.AiLearning.model_attr_str} 2</em>: ${this.#fields[1]}`,
+                description: `
+                    <em>${Lang.AiLearning.cluster_number}</em>: ${k},
+                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
+                `,
             });
         } else {
             this.#chart.show();
@@ -90,9 +93,7 @@ class Cluster {
     }
 
     closeChart() {
-        if (this.#chart) {
-            this.#chart.hide();
-        }
+        this.#chart?.hide();
     }
 
     setTrainOption(type, value) {
@@ -112,9 +113,8 @@ class Cluster {
     }
 
     train() {
-        this.#trainCallback(0);
+        this.#trainCallback(1);
         this.#isTrained = false;
-        this.#chart = null;
         const { data, select } = this.#table;
         const [attr] = select;
         
@@ -126,8 +126,11 @@ class Cluster {
             graphData: convertGraphData(data, centroids, indexes, attr),
             centroids
         };
-        this.#trainCallback(100);
         this.#isTrained = true;
+        this.#chart?.load({
+            source: this.chartData,
+        });
+        this.#trainCallback(100);
     }
 
     predict({ x, y }) {
@@ -176,9 +179,11 @@ class Cluster {
                     contents: (data) =>{
                         const [{ x, value, id }] = data;
                         if (id === 'centroid' && value) {
+                            const { centroids } = this.#result;
+                            const type = centroids?.findIndex(([a, b]) => x === a && value === b);
                             return `
                                 <div class="chart_handle_wrapper">
-                                    ${Lang.AiLearning.centriod} | ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                                    ${Lang.AiLearning.centriod} ${type + 1}| ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
                                 <div>
                             `
                         }
