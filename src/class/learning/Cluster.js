@@ -26,8 +26,10 @@ class Cluster {
     #chartEnable = false;
     #view = null;
     #predictResult = null;
-
+    #fields = [];
+    #name = '';
     constructor({ name, result, table, trainParam }) {
+        this.#name  = name;
         this.#view = new LearningView({ name, status: 0 });
         this.#trainParam = trainParam;
         this.#result = result;
@@ -41,6 +43,9 @@ class Cluster {
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
         }
+        this.#fields = table?.select?.[0]?.map((index) => {
+            return table?.fields[index];
+        });
     }
 
     destroy() {
@@ -73,8 +78,11 @@ class Cluster {
             return ;
         }
         if (!this.#chart) {
+            const { k } = this.#trainParam;
             this.#chart = new Chart({
-                source: this.chartData
+                source: this.chartData,
+                title: this.#name,
+                description: `<em>${Lang.AiLearning.cluster_number}</em>: ${k}, <em>${Lang.AiLearning.model_attr_str} 1</em>: ${this.#fields[0]}, <em>${Lang.AiLearning.model_attr_str} 2</em>: ${this.#fields[1]}`,
             });
         } else {
             this.#chart.show();
@@ -164,7 +172,21 @@ class Cluster {
                     show: false
                 },
                 tooltip: {
-                    show: false
+                    contents: (data) =>{
+                        const [{ x, value, id }] = data;
+                        if (id === 'centroid' && value) {
+                            return `
+                                <div class="chart_handle_wrapper">
+                                    ${Lang.AiLearning.centriod} | ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                                <div>
+                            `
+                        }
+                        return `
+                            <div class="chart_handle_wrapper">
+                                ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                            <div>
+                        `;
+                    }
                 },
                 axis: {
                     x: {
