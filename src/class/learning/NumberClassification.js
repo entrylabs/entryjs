@@ -24,7 +24,9 @@ class NumberClassification {
     #chartEnable = false;
     #view = null;
     #predictResult = null;
-    #name = ''
+    #name = '';
+    #fields = [];
+
     constructor({ name, url, table, trainParam }) {
         this.#view = new LearningView({ name, status: 0 });
         this.#name = name;
@@ -36,6 +38,9 @@ class NumberClassification {
         this.#isTrained = true;
 
         this.#attrLength = table?.select?.[0]?.length || 0;
+        this.#fields = table?.select?.[0]?.map((index) => {
+            return table?.fields[index];
+        })
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
         }
@@ -81,8 +86,10 @@ class NumberClassification {
             return ;
         }
         if (!this.#chart) {
+            const { numLabels } = this.#trainParam;
             this.#chart = new Chart({
                 title: this.#name,
+                description: `<em>${Lang.AiLearning.class}</em>: ${numLabels}, <em>${Lang.AiLearning.model_attr_str} 1</em>: ${this.#fields[0]}, <em>${Lang.AiLearning.model_attr_str} 2</em>: ${this.#fields[1]}`,
                 source: this.chartData,
             });
         } else {
@@ -240,12 +247,13 @@ class NumberClassification {
                     show: false
                 },
                 tooltip: {
-                    contents: (data, b, c, d, e) =>{
-                        console.log(data, b, c,d,e);
+                    contents: (data) =>{
                         const [{ x, value }] = data;
                         const label = this.findLabel(x, value);
-                        
-                        return `${label}, ${x}, ${value}`;
+                        return `
+                        <div class="chart_handle_wrapper">
+                            ${Lang.AiLearning.class}: ${label}, ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                        <div>`;
                     }
                 },
                 axis: {
