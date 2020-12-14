@@ -74,10 +74,11 @@ Entry.CodeWiz.setLanguage = function() {
 
                 CodeWiz_neopixel_brightness: '네오픽셀 밝기를 %1로 설정(0~255)%2',
                 CodeWiz_neopixel_setColor_one: '네오픽셀 %1번 LED를 %2(으)로 켜기%3',
-                CodeWiz_neopixel_setColor_one2: "네오픽셀 %1번 LED를 빨강%2초록%3파랑%4(으)로 켜기%5",
+                CodeWiz_neopixel_setColor_one2:
+                    '네오픽셀 %1번 LED를 빨강%2초록%3파랑%4(으)로 켜기%5',
                 CodeWiz_neopixel_off_one: '네오픽셀 %1번 LED 끄기%2',
                 CodeWiz_neopixel_setColor_all: '네오픽셀 %1(으)로 모두 켜기%2',
-                CodeWiz_neopixel_setColor_all2: "네오픽셀 빨강%1초록%2파랑%3(으)로 모두 켜기%4",
+                CodeWiz_neopixel_setColor_all2: '네오픽셀 빨강%1초록%2파랑%3(으)로 모두 켜기%4',
                 CodeWiz_neopixel_off_all: '네오픽셀 모두 끄기%1',
 
                 CodeWiz_OLED_clear: 'OLED 클리어%1',
@@ -376,13 +377,12 @@ Entry.CodeWiz.getBlocks = function() {
             class: 'CodeWiz_buzzer',
             isNotFor: ['CodeWiz'],
             func(sprite, script) {
-                
                 const sq = Entry.hw.sendQueue;
                 const port = 0xdf;
                 let octave = Number.parseInt(script.getValue('OCTAVE', script));
                 let note = Number.parseInt(script.getValue('NOTE', script));
                 let beat = Number.parseInt(script.getValue('BEAT', script));
-                
+              
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
@@ -394,6 +394,7 @@ Entry.CodeWiz.getBlocks = function() {
                         beat: beat,
                     },
                 };
+
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep((1000 / beat) * 1.3 + Entry.CodeWiz.defaultWaitTime);
@@ -478,7 +479,7 @@ Entry.CodeWiz.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['1', null,null],
+                params: ['1', null, null],
                 type: 'CodeWiz_neopixel_setColor_one',
             },
             paramsKeyMap: {
@@ -490,7 +491,7 @@ Entry.CodeWiz.getBlocks = function() {
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = 0xfe;
-                let num = script.getNumberValue('NUM', script)-1;
+                let num = script.getNumberValue('NUM', script) - 1;
                 let value = script.getStringField('COLOR', script);
 
                 let colorValue = [
@@ -524,7 +525,7 @@ Entry.CodeWiz.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [                
+            params: [
                 {
                     type: 'Block',
                     accept: 'string',
@@ -549,31 +550,25 @@ Entry.CodeWiz.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    '1',
-                    '255',
-                    '255',
-                    '255',
-                    null,
-                ],
+                params: ['1', '255', '255', '255', null],
                 type: 'CodeWiz_neopixel_setColor_one2',
             },
             paramsKeyMap: {
                 NUM: 0,
-                R:1,
-                G:2,
-                B:3,
+                R: 1,
+                G: 2,
+                B: 3,
             },
             class: 'CodeWiz_neopixel',
             isNotFor: ['CodeWiz'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = 0xe6;
-                let num = script.getNumberValue('NUM', script)-1;
+                let num = script.getNumberValue('NUM', script) - 1;
                 let r = script.getNumberValue('R', script);
                 let g = script.getNumberValue('G', script);
-                let b = script.getNumberValue('B', script);                
-                
+                let b = script.getNumberValue('B', script);
+
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
@@ -589,6 +584,7 @@ Entry.CodeWiz.getBlocks = function() {
                         }
                     }
                 }
+
                 Entry.hw.update();
                 sq['SET'] = {};
                 return promiseManager.sleep(Entry.CodeWiz.defaultWaitTime);
@@ -624,7 +620,7 @@ Entry.CodeWiz.getBlocks = function() {
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = 0xfd;
-                let num = script.getNumberValue('NUM', script)-1;
+                let num = script.getNumberValue('NUM', script) - 1;
 
                 if (!sq['SET']) {
                     sq['SET'] = {};
@@ -723,12 +719,7 @@ Entry.CodeWiz.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    '255',
-                    '255',
-                    '255',
-                    null
-                ],
+                params: ['255', '255', '255', null],
                 type: 'CodeWiz_neopixel_setColor_all2',
             },
             paramsKeyMap: {
@@ -744,7 +735,7 @@ Entry.CodeWiz.getBlocks = function() {
                 let r = script.getNumberValue('R', script);
                 let g = script.getNumberValue('G', script);
                 let b = script.getNumberValue('B', script);
-               
+
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
