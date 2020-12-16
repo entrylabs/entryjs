@@ -1689,7 +1689,7 @@ Lang.Blocks = {
     "modi_enviroment_humidity": "Humidity",
     "modi_enviroment_illuminance": "Illuminance",
     "modi_enviroment_red": "Red",
-    "modi_enviroment_temperature": "Temparature",
+    "modi_enviroment_temperature": "Temperature",
     "modi_gyroscope_xAcceleratior": "X-axis acceleration",
     "modi_gyroscope_yAcceleratior": "Y-axis acceleration",
     "modi_gyroscope_zAcceleratior": "Z-axis acceleration",
