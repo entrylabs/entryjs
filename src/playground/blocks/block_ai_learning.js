@@ -84,6 +84,24 @@ module.exports = {
                 isNotFor: ['ai_learning_text'],
                 events: {},
             },
+            learning_title_number: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.learning_title_number_str,
+                        color: EntryStatic.colorSet.common.TEXT,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'learning_title_number',
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_number'],
+                events: {},
+            },
             learning_title_regression: {
                 skeleton: 'basic_text',
                 color: EntryStatic.colorSet.common.TRANSPARENT,
