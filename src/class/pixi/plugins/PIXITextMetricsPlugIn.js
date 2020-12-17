@@ -143,7 +143,7 @@ export function PIXITextMetricsPlugIn() {
      * @return {number}
      * @private
      */
-    function getMeasuredWidth(font, text) {
+    function _getMeasuredWidth(font, text) {
         const ctx = TextMetrics._context;
         ctx.save();
         ctx.font = font;
