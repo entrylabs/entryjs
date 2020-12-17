@@ -226,7 +226,7 @@ export default class AILearning {
         this.#recordTime = 2000;
         this.#tableData  = null;
         if (this.#module) {
-            this.#module.destroy();
+            this.#module?.destroy?.();
             this.#module = null;
         }
     }
