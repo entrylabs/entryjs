@@ -404,6 +404,7 @@ EntryStatic.getAllBlocks = function() {
                 'learning_title_image',
                 'learning_title_speech',
                 'learning_title_text',
+                'learning_title_number',
                 'learning_title_regression',
                 'learning_title_cluster',
                 'retrain_model',
