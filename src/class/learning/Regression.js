@@ -90,8 +90,7 @@ class Regression {
                 title: this.#name,
                 description: `
                     ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
-                    | <em>${Lang.AiLearning.predict}</em>: ${this.#predictFields[0]},
-                    <div class="chart_info">${this.#result.equation}</div>
+                    | <em>${Lang.AiLearning.predict}</em>: ${this.#predictFields[0]} | <em>${Lang.AiLearning.equation}</em>${this.#result.equation}
                 `,
             });
         } else {
@@ -158,8 +157,7 @@ class Regression {
             source: this.chartData,
             description: `
                 ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
-                | <em>${Lang.AiLearning.predict}</em>: ${this.#predictFields[0]},
-                <div class="chart_info">${this.#result.equation}</div>
+                | <em>${Lang.AiLearning.predict}</em>: ${this.#predictFields[0]} | <em>${Lang.AiLearning.equation}</em>${this.#result.equation}
             `
         });
         this.#trainCallback(100);
