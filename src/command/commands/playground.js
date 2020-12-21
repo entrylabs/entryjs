@@ -164,37 +164,6 @@
         dom: ['playground', 'tableAddButton'],
     };
 
-    c[COMMAND_TYPES.playgroundClickLoadTable] = {
-        do() {
-            Entry.playground.dataTable.show();
-        },
-        state() {
-            return [];
-        },
-        log() {
-            return [];
-        },
-        validate: false,
-        undo: 'playgroundClickLoadTableCancel',
-        dom: ['playground', 'tableLoadButton'],
-    };
-
-    c[COMMAND_TYPES.playgroundClickLoadTableCancel] = {
-        do() {
-            Entry.playground.dataTable.hide();
-        },
-        state() {
-            return [];
-        },
-        log() {
-            return [];
-        },
-        validate: false,
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: 'playgroundClickLoadTable',
-        dom: ['playground', 'tableLoadButton'],
-    };
-
     c[COMMAND_TYPES.playgroundClickAddExpansionBlock] = {
         do() {
             Entry.dispatchEvent('openExpansionBlockManager');
