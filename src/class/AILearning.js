@@ -110,6 +110,7 @@ export default class AILearning {
                 trainParam, 
                 table: this.#tableData,
             });
+            this.#labels = this.#module.getLabels();
         } else if (type === 'cluster') {
             this.#module = new Cluster({ 
                 name,
