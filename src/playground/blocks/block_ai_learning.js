@@ -19,9 +19,8 @@ const DropDownDynamicGenerator = {
         }
     },
     tablePredictDataDistinct: () => {
-        const { labels } = Entry.aiLearning?.getTrainOption?.() || {};
-        if (labels) {
-            return labels.map((item) => [item, item]);
+        if (Entry.aiLearning.labels) {
+            return Entry.aiLearning.labels.map((item) => [item, item]);
         } else {
             return [[Lang.Blocks.no_target, 'null']];
         }

@@ -113,6 +113,11 @@ class NumberClassification {
         return this.#predictResult;
     }
 
+    getLabels() {
+        const { data: trainData, labels } = convertTableToKnnData(this.#table);
+        return _uniq(labels[0]).sort((a, b) => String(a).localeCompare(String(b)));
+    }
+
     train() {
         this.#trainCallback(1);
         this.#isTrained = false;
