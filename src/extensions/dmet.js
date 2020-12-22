@@ -65,7 +65,15 @@ class dmetTable {
     }
 
     from(data) {
-        const { list = [], data: array = [], value, _id, id = this.#id, fields, ...info } = data;
+        const {
+            list = [],
+            data: array = [],
+            value,
+            _id,
+            id = this.#id,
+            fields = [],
+            ...info
+        } = data;
         this.#object = {};
         this.#array = [];
         this.#origin = [];
@@ -81,7 +89,7 @@ class dmetTable {
                 } else if (typeof row === 'object' && row.key) {
                     const newRow = {
                         key: row.key,
-                        value: row.value.map(toNumber)
+                        value: row.value.map(toNumber),
                     };
                     this.#array.push(newRow);
                     this.#object[row.key] = newRow.value;
@@ -136,14 +144,14 @@ class dmetTable {
             const [rowKey, ...keys] = key;
             const { value: row } = this.#array[rowKey - 1] || {};
             if (keys.length && row) {
-                return get(row, `[${keys.map(x => x - 1).join('][')}]`);
+                return get(row, `[${keys.map((x) => x - 1).join('][')}]`);
             } else {
                 return row;
             }
         } else if (typeof key === 'string') {
             const [rowKey, ...keys] = key.split(this.#keyDelimter);
             if (keys.length) {
-                return get(this.#object[rowKey], `[${keys.map(x => x - 1).join('][')}]`);
+                return get(this.#object[rowKey], `[${keys.map((x) => x - 1).join('][')}]`);
             }
             return this.#object[rowKey];
         }
@@ -163,7 +171,7 @@ class dmetTable {
         return [];
     }
 
-    #skipOperation =  ['appendRow', 'appendCol', 'insertRow', 'insertCol'];
+    #skipOperation = ['appendRow', 'appendCol', 'insertRow', 'insertCol'];
 
     getOperation({ type, key, index, data, newKey } = {}) {
         if (this.#skipOperation.indexOf(type) === -1 && typeof index === 'number') {
@@ -260,7 +268,7 @@ class dmetTable {
     }
 
     #deleteCol({ index }) {
-        if(!index) {
+        if (!index) {
             throw { message: `error: deleteCol : ${index}` };
         }
         this.fields.splice(index - 1, 1);
@@ -268,10 +276,9 @@ class dmetTable {
             value.splice(index - 1, 1);
         });
         return this.getOperation({ type: 'deleteCol', index });
-
     }
 
-    #appendRow({ key = CommonUtils.generateId(), data = this.#getDefaultData()} = {}) {
+    #appendRow({ key = CommonUtils.generateId(), data = this.#getDefaultData() } = {}) {
         const index = this.#array.length + 1;
         if (Array.isArray(data)) {
             this.#object[key] = data;

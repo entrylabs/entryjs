@@ -138,8 +138,6 @@ Entry.STATIC = {
         playgroundClickAddSoundCancel: 705,
         playgroundClickAddTable: 706,
         playgroundClickAddTableCancel: 707,
-        playgroundClickLoadTable: 708,
-        playgroundClickLoadTableCancel: 709,
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,

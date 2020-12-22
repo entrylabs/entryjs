@@ -99,10 +99,7 @@ class DataTable {
 
         this.#tables.push(table instanceof DataTableSource ? table : new DataTableSource(table));
         this.hide();
-        this.show({
-            list: this.dataTables,
-            selectedIndex: this.#tables.length - 1,
-        });
+        this.show({ list: this.dataTables, selectedIndex: this.dataTables.length - 1 });
     }
 
     addSources(tables = []) {
@@ -120,10 +117,14 @@ class DataTable {
         }
     }
 
-    saveTable = async ({ selected, index }) => {
-        const { table } = selected;
-        const [fields, ...data] = table;
-        this.#tables[index] = new DataTableSource({ ...selected, fields, data });
+    saveTable = async ({ selected, index, list }) => {
+        if (list) {
+            this.#tables = [];
+        } else {
+            const { table } = selected;
+            const [fields, ...data] = table;
+            this.#tables[index] = new DataTableSource({ ...selected, fields, data });
+        }
         Entry.playground.reloadPlayground();
     };
 
@@ -132,13 +133,18 @@ class DataTable {
             this.#generateView();
         }
         this.dataAnalytics.show(
-            data || { selectedIndex: this.dataTables.legnth - 1, list: this.dataTables }
+            data || { selectedIndex: this.#tables.legnth - 1, list: this.dataTables }
         );
     }
 
     hide() {
+        console.log({ hihi: this.dataAnalytics });
         this.dataAnalytics && this.dataAnalytics.hide();
-        this.unbanBlock();
+        if (this.#tables.length) {
+            this.unbanBlock();
+        } else {
+            this.banAllBlock();
+        }
         Entry.playground.reloadPlayground();
         Entry.playground.refreshPlayground();
         Entry.dispatchEvent('dismissModal');
@@ -161,7 +167,7 @@ class DataTable {
                 this.hide();
             })
             .on('addTable', () => {
-                Entry.do('playgroundClickAddTable');
+                Entry.dispatchEvent('openTableManager');
             });
     }
 
