@@ -637,6 +637,26 @@ module.exports = {
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName() {
+                            const value = this.getTargetValue('dataTables');
+                            const source = DataTable.getSource(value);
+                            const { chart: charts = [] } = source || {};
+                            return charts.map(({ title }, index) => [title, index]);
+                        },
+                        needDeepCopy: true,
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (value, options) => {
+                            if (options.length) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
+                    },
+                    {
                         type: 'Indicator',
                         img: 'block_icon/block_analysis.svg',
                         size: 11,
@@ -644,14 +664,14 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, null],
+                    params: [null, null, null],
                     type: 'open_table_chart',
                 },
                 pyHelpDef: {
                     params: [
                         {
                             type: 'text',
-                            params: ['A&value'],
+                            params: ['A&value', 'B&value'],
                         },
                         null,
                     ],
@@ -659,12 +679,14 @@ module.exports = {
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
+                    CHART_INDEX: 1,
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    DataTable.showChart(tableId);
+                    const chartIndex = script.getField('CHART_INDEX', script);
+                    DataTable.showChart(tableId, chartIndex);
                     return script.callReturn();
                 },
                 syntax: {

@@ -138,7 +138,6 @@ class DataTable {
     }
 
     hide() {
-        console.log({ hihi: this.dataAnalytics });
         this.dataAnalytics && this.dataAnalytics.hide();
         if (this.#tables.length) {
             this.unbanBlock();
@@ -195,7 +194,7 @@ class DataTable {
         }
     }
 
-    showChart(tableId) {
+    showChart(tableId, chartIndex = 0) {
         this.closeChart();
         const source = this.getSource(tableId);
         if (!source) {
@@ -203,10 +202,10 @@ class DataTable {
             return;
         }
         if (!source.modal) {
-            source.modal = this.createChart(source);
+            source.modal = this.createChart(source, chartIndex);
         }
         source.forceApply();
-        source.modal.show();
+        source.modal.show({ chartIndex });
         this.modal = source.modal;
     }
 
@@ -216,7 +215,7 @@ class DataTable {
         }
     }
 
-    createChart(source) {
+    createChart(source, chartIndex = 0) {
         const { chart = [], fields, rows } = source;
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
@@ -224,6 +223,7 @@ class DataTable {
         })[0];
         return new ModalChart({
             data: {
+                chartIndex,
                 source: { fields, origin: rows, chart },
                 togglePause: () => Entry.engine.togglePause(),
                 stop: () => Entry.engine.toggleStop(),
