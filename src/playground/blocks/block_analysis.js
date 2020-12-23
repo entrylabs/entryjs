@@ -1,3 +1,4 @@
+import _chain from 'lodash/chain';
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
 
@@ -6,6 +7,20 @@ module.exports = {
         const getSubMenus = (value) => {
             const { fields = [] } = DataTable.getSource(value) || {};
             return fields.map((label, index) => [label, index + 1]);
+        };
+
+        const getColumnNumber = (str) => {
+            if (/\d/.test(str)) {
+                return -1;
+            }
+            return (
+                // _chain(str)
+                // did not work..
+                _.chain(str)
+                    .toUpper()
+                    .reduce((prev, curr) => prev * 26 + curr.charCodeAt() - 64, 0)
+                    .value()
+            );
         };
 
         return {
@@ -376,9 +391,14 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('NUMBER', script);
-                    const col = script.getNumberValue('FIELD', script);
+                    let col = script.getValue('FIELD', script);
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
+                    if (isNaN(col)) {
+                        col = getColumnNumber(col);
+                    } else {
+                        col = Number.parseInt(col, 10);
+                    }
                     if (table.isExist([row])) {
                         table.replaceValue([row, col], value);
                     } else {
