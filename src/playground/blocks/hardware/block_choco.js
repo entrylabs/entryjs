@@ -1,20 +1,5 @@
 'use strict';
 
-
-const COMMAND_TYPE = {
-    MOVE_FORWARD: 0x01,
-    MOVE_BACKWARD: 0x02,
-    TURN_LEFT: 0x03,
-    TURN_RIGHT: 0x04,
-    MOVE_LEFT_RIGHT: 0x05,
-    ONOFF_REAR_LED: 0x06,
-    SET_LED_COLOR: 0x07,
-    PLAY_SOUND: 0x08,
-    GET_FORWARD_SENSOR: 0x09,
-    GET_BOTTOM_SENSOR: 0x0A,
-    GET_LIGHT_SENSOR: 0x0B,
-};
-
 Entry.Choco = {
     id: '45.1',
     name: 'choco',
@@ -46,7 +31,7 @@ Entry.Choco.setLanguage = function () {
                 choco_move_backward: "뒤로 %1 %2 이동 %3",
                 choco_turn_left: "왼쪽으로 %1 %2 돌기 %3",
                 choco_turn_right: "오른쪽으로 %1 %2 돌기 %3",
-                choco_move_left_right: "오른쪽으로 %1 %2,왼쪽 %3 %4 이동 %5",
+                choco_move_right_left: "오른쪽으로 %1 %2,왼쪽 %3 %4 이동 %5",
                 choco_onoff_led_rear: "뒤쪽 LED %1 %2",
                 choco_set_led_color: "%1 LED %2 %3",
                 choco_play_sound: "%1 소리내기 %2",
@@ -96,6 +81,7 @@ Entry.Choco.setLanguage = function () {
                 choco_sound_ttiyong: '띠용(효과음)',
                 choco_sound_hello_parrot: '헬로(앵무새)',
                 choco_sound_hello_manga: '헬로(만화)',
+                choco_sound_hello_man: '헬로(남자)',
                 choco_sound_ppong: '뽕(효과음)',
                 choco_sound_buzzer: '부저(효과음)',
                 choco_sound_ttalilalan: '따라리라란~(효과음)',
@@ -104,6 +90,7 @@ Entry.Choco.setLanguage = function () {
                 choco_sound_magic: '마술(효과음)',
                 choco_sound_woodpecker: '딱다구리',
                 choco_sound_bird: '새',
+                choco_sound_burp: '트름',
                 choco_sound_hiccup: '딱국질',
                 choco_sound_doridori: '도리도리',
                 choco_sound_firetruck: '소방차',
@@ -130,7 +117,7 @@ Entry.Choco.setLanguage = function () {
                 choco_move_backward: "move backward %1 %2 block %3",
                 choco_turn_left: "%1 %2 to the left %3",
                 choco_turn_right: "%1 %2 to the right %3",
-                choco_move_left_right: "move right %1 %2,left %3 %4 %5",
+                choco_move_right_left: "move right %1 %2,left %3 %4 %5",
                 choco_onoff_led_rear: "Rear LED %1 %2",
                 choco_set_led_color: "%1 LED %2 %3",
                 choco_play_sound: "play %1 %2",
@@ -180,6 +167,7 @@ Entry.Choco.setLanguage = function () {
                 choco_sound_ttiyong: 'ttiyong(effect)',
                 choco_sound_hello_parrot: 'hello(parrot)',
                 choco_sound_hello_manga: 'hello(manga)',
+                choco_sound_hello_man: 'hello(man)',
                 choco_sound_ppong: 'ppong(effect)',
                 choco_sound_buzzer: 'buzzer(effect)',
                 choco_sound_ttalilalan: 'ttalilalan(effect)',
@@ -188,6 +176,7 @@ Entry.Choco.setLanguage = function () {
                 choco_sound_magic: 'magic(effect)',
                 choco_sound_woodpecker: 'woodpecker',
                 choco_sound_bird: 'bird',
+                choco_sound_burp: 'burp',
                 choco_sound_hiccup: 'hiccup',
                 choco_sound_doridori: 'doridori',
                 choco_sound_firetruck: 'fire truck',
@@ -216,7 +205,7 @@ Entry.Choco.blockMenuBlocks = [
     'choco_move_backward',
     'choco_turn_left',
     'choco_turn_right',
-    'choco_move_left_right',
+    'choco_move_right_left',
     'choco_onoff_led_rear',
     'choco_set_led_color',
     'choco_play_sound',
@@ -244,10 +233,10 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_move_step, '칸'],
+                        [Lang.Blocks.choco_move_step, 'step'],
                         [Lang.Blocks.choco_move_cm, 'cm'],
                     ],
-                    value: '칸',
+                    value: 'step',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -260,7 +249,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [1, '칸', null],
+                params: [1, 'step', null],
                 type: 'choco_move_forward',
             },
             paramsKeyMap: {
@@ -271,9 +260,11 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                
                 const move_cnt = parseInt(script.getValue('MOVE_CNT'));
                 let move_unit = script.getValue('MOVE_UNIT');
-                if (move_unit === '칸') move_unit = 'step';
+                if(move_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -282,7 +273,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.MOVE_FORWARD,
+                        type: "move_forward",
                         data: {
                             param1: move_cnt,
                             param2: move_unit,
@@ -293,10 +284,15 @@ Entry.Choco.getBlocks = function () {
                     return script;
                 }
 
+                console.log("choco_move_forward")    
+                console.log(pd.msg_id)
+
                 if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
+                    
+                    console.log("Done", pd.msg_id);
                     return script.callReturn();
                 }
                 return script;
@@ -315,10 +311,10 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_move_step, '칸'],
+                        [Lang.Blocks.choco_move_step, 'step'],
                         [Lang.Blocks.choco_move_cm, 'cm'],
                     ],
-                    value: '칸',
+                    value: 'step',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -331,7 +327,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [1, '칸', null],
+                params: [1, 'step', null],
                 type: 'choco_move_backward',
             },
             paramsKeyMap: {
@@ -342,9 +338,11 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+
                 const move_cnt = parseInt(script.getValue('MOVE_CNT'));
                 let move_unit = script.getValue('MOVE_UNIT');
-                if (move_unit === '칸') move_unit = 'step';
+                if(move_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -353,7 +351,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.MOVE_BACKWARD,
+                        type: "move_backward",
                         data: {
                             param1: move_cnt,
                             param2: move_unit,
@@ -386,10 +384,10 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_trun_drgree, '도'],
-                        [Lang.Blocks.choco_trun_round, '바퀴'],
+                        [Lang.Blocks.choco_trun_drgree, 'degree'],
+                        [Lang.Blocks.choco_trun_round, 'turns'],
                     ],
-                    value: '도',
+                    value: 'degree',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -402,7 +400,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [90, '도', null],
+                params: [90, 'degree', null],
                 type: 'choco_turn_left',
             },
             paramsKeyMap: {
@@ -413,14 +411,12 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+
                 const turn_cnt = parseInt(script.getValue('TURN_CNT'));
                 let turn_unit = script.getValue('TURN_UNIT');
-                if (turn_unit === '도') turn_unit = 'degree';
-                else if (turn_unit === '바퀴') turn_unit = 'turns';
-                if (turn_unit === 'degree') {
-                    if (turn_cnt < 0) turn_cnt = 0;
-                    else if (turn_cnt > 180) turn_cnt = 180;
-                }
+                if (turn_cnt < 0) turn_cnt = 0;                    
+                if(turn_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -429,7 +425,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.TURN_LEFT,
+                        type: "turn_left",
                         data: {
                             param1: turn_cnt,
                             param2: turn_unit,
@@ -462,10 +458,10 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_trun_drgree, '도'],
-                        [Lang.Blocks.choco_trun_round, '바퀴'],
+                        [Lang.Blocks.choco_trun_drgree, 'degree'],
+                        [Lang.Blocks.choco_trun_round, 'turns'],
                     ],
-                    value: '도',
+                    value: 'degree',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -478,7 +474,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [90, '도', null],
+                params: [90, 'degree', null],
                 type: 'choco_turn_right',
             },
             paramsKeyMap: {
@@ -489,13 +485,12 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+
                 const turn_cnt = parseInt(script.getValue('TURN_CNT'));
-                if (turn_unit === '도') turn_unit = 'degree';
-                else if (turn_unit === '바퀴') turn_unit = 'turns';
-                if (turn_unit === 'degree') {
-                    if (turn_cnt < 0) turn_cnt = 0;
-                    else if (turn_cnt > 180) turn_cnt = 180;
-                }
+                let turn_unit = script.getValue('TURN_UNIT');
+                if (turn_cnt < 0) turn_cnt = 0;                                
+                if(turn_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -504,7 +499,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.TURN_RIGHT,
+                        type: "turn_right",
                         data: {
                             param1: turn_cnt,
                             param2: turn_unit,
@@ -524,7 +519,7 @@ Entry.Choco.getBlocks = function () {
                 return script;
             },
         },
-        choco_move_left_right: {
+        choco_move_right_left: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -537,10 +532,10 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_move_step, '칸'],
+                        [Lang.Blocks.choco_move_step, 'step'],
                         [Lang.Blocks.choco_move_cm, 'cm'],
                     ],
-                    value: '칸',
+                    value: 'step',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -553,10 +548,10 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_move_step, '칸'],
+                        [Lang.Blocks.choco_move_step, 'step'],
                         [Lang.Blocks.choco_move_cm, 'cm'],
                     ],
-                    value: '칸',
+                    value: 'step',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -569,8 +564,8 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [1, '칸', 1, '칸', null],
-                type: 'choco_move_left_right',
+                params: [1, 'step', 1, 'step', null],
+                type: 'choco_move_right_left',
             },
             paramsKeyMap: {
                 MOVE_RIGHT_CNT: 0,
@@ -582,13 +577,12 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
-                const turn_right_cnt = parseInt(script.getValue('MOVE_RIGHT_CNT'));
-                const turn_left_cnt = parseInt(script.getValue('MOVE_LEFT_CNT'));
+                const pd = Entry.hw.portData;
+
+                const move_right_cnt = parseInt(script.getValue('MOVE_RIGHT_CNT'));
+                const move_left_cnt = parseInt(script.getValue('MOVE_LEFT_CNT'));
                 let move_right_unit = script.getValue('MOVE_RIGHT_UNIT');
                 let move_left_unit = script.getValue('MOVE_LEFT_UNIT');
-
-                if (move_right_unit === '칸') move_right_unit = 'step';
-                if (move_left_unit === '칸') move_left_unit = 'step';
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -597,11 +591,11 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.MOVE_LEFT_RIGHT,
+                        type: "move_right_left",
                         data: {
-                            param1: turn_right_cnt,
+                            param1: move_right_cnt,
                             param2: move_right_unit,
-                            param3: turn_left_cnt,
+                            param3: move_left_cnt,
                             param4: move_left_unit,
                         },
                         time: Date.now()
@@ -627,10 +621,10 @@ Entry.Choco.getBlocks = function () {
             params: [{
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_toggle_on, '켜기'],
-                        [Lang.Blocks.choco_toggle_off, '끄기'],
+                        [Lang.Blocks.choco_toggle_on, 'On'],
+                        [Lang.Blocks.choco_toggle_off, 'Off'],
                     ],
-                    value: '켜기',
+                    value: 'On',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -643,7 +637,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: ['켜기', null],
+                params: ['On', null],
                 type: 'choco_onoff_led_rear',
             },
             paramsKeyMap: {
@@ -653,6 +647,7 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
                 const led_onoff = script.getValue('VALUE');
 
                 if (!script.is_started) {
@@ -662,7 +657,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.ONOFF_REAR_LED,
+                        type: "onoff_led_rear",
                         data: {
                             param1: led_onoff,
                         },
@@ -689,11 +684,11 @@ Entry.Choco.getBlocks = function () {
             params: [{
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_direction_right, '오른쪽'],
-                        [Lang.Blocks.choco_direction_left, '왼쪽'],
-                        [Lang.Blocks.choco_direction_dual, '왼쪽'],
+                        [Lang.Blocks.choco_direction_right, 'right'],
+                        [Lang.Blocks.choco_direction_left, 'left'],
+                        [Lang.Blocks.choco_direction_dual, 'dual'],
                     ],
-                    value: '오른쪽',
+                    value: 'right',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -701,16 +696,16 @@ Entry.Choco.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_color_off, '끄기'],
-                        [Lang.Blocks.choco_color_blue, '파란색'],
-                        [Lang.Blocks.choco_color_red, '빨간색'],
-                        [Lang.Blocks.choco_color_green, '초록색'],
-                        [Lang.Blocks.choco_color_yellow, '노랑색'],
-                        [Lang.Blocks.choco_color_pink, '분홍색'],
-                        [Lang.Blocks.choco_color_bluegreen, '청록색'],
-                        [Lang.Blocks.choco_color_white, '흰색'],
+                        [Lang.Blocks.choco_color_off, 0],
+                        [Lang.Blocks.choco_color_blue, 1],
+                        [Lang.Blocks.choco_color_red, 2],
+                        [Lang.Blocks.choco_color_green, 3],
+                        [Lang.Blocks.choco_color_yellow, 4],
+                        [Lang.Blocks.choco_color_pink, 5],
+                        [Lang.Blocks.choco_color_bluegreen, 6],
+                        [Lang.Blocks.choco_color_white, 7],
                     ],
-                    value: '파란색',
+                    value: 1,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -723,7 +718,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: ['오른쪽', '파란색', null],
+                params: ['right', 1, null],
                 type: 'choco_set_led_color',
             },
             paramsKeyMap: {
@@ -734,6 +729,7 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
                 const led_dir = script.getValue('DIRECTION');
                 const led_color = script.getValue('COLOR');
 
@@ -744,7 +740,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.SET_LED_COLOR,
+                        type: 'set_led_color',
                         data: {
                             param1: led_dir,
                             param2: led_color,
@@ -772,52 +768,54 @@ Entry.Choco.getBlocks = function () {
             params: [{
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.choco_sound_car, '자동차'],
-                        [Lang.Blocks.choco_sound_robot, '로봇'],
-                        [Lang.Blocks.choco_sound_dog, '강아지'],
-                        [Lang.Blocks.choco_sound_cat, '고양이'],
-                        [Lang.Blocks.choco_sound_chicken, '닭'],
-                        [Lang.Blocks.choco_sound_tiger, '호랑이'],
-                        [Lang.Blocks.choco_sound_lion, '사자'],
-                        [Lang.Blocks.choco_sound_fart, '방귀소리'],
-                        [Lang.Blocks.choco_sound_helicopter, '헬리콥터'],
-                        [Lang.Blocks.choco_sound_train, '기차'],
-                        [Lang.Blocks.choco_sound_frog, '개구리'],
-                        [Lang.Blocks.choco_sound_jjajan, '짜잔(효과음)'],
-                        [Lang.Blocks.choco_sound_sheep, '양'],
-                        [Lang.Blocks.choco_sound_elephant, '코끼리'],
-                        [Lang.Blocks.choco_sound_camel, '낙타'],
-                        [Lang.Blocks.choco_sound_dolphin, '고래'],
-                        [Lang.Blocks.choco_sound_ttiyong, '띠용(효과음)'],
-                        [Lang.Blocks.choco_sound_hello_parrot, '헬로(앵무새)'],
-                        [Lang.Blocks.choco_sound_hello_manga, '헬로(만화)'],
-                        [Lang.Blocks.choco_sound_ppong, '뽕(효과음)'],
-                        [Lang.Blocks.choco_sound_buzzer, '부저(효과음)'],
-                        [Lang.Blocks.choco_sound_ttalilalan, '따라리라란~(효과음)'],
-                        [Lang.Blocks.choco_sound_ttattattatta, '따따따따~(효과음)'],
-                        [Lang.Blocks.choco_sound_laughter, '웃음소리'],
-                        [Lang.Blocks.choco_sound_magic, '마술(효과음)'],
-                        [Lang.Blocks.choco_sound_woodpecker, '딱다구리'],
-                        [Lang.Blocks.choco_sound_bird, '새'],
-                        [Lang.Blocks.choco_sound_hiccup, '딱국질'],
-                        [Lang.Blocks.choco_sound_doridori, '도리도리'],
-                        [Lang.Blocks.choco_sound_firetruck, '소방차'],
-                        [Lang.Blocks.choco_sound_police_car, '경찰차'],
-                        [Lang.Blocks.choco_sound_applause, '박수환호'],
-                        [Lang.Blocks.choco_sound_kiss, '뽀뽀'],
-                        [Lang.Blocks.choco_sound_missile, '미사일'],
-                        [Lang.Blocks.choco_sound_angry_duck, '화난오리'],
-                        [Lang.Blocks.choco_sound_fly, '파리'],
-                        [Lang.Blocks.choco_sound_ufo, 'UFO'],
-                        [Lang.Blocks.choco_sound_fanfare, '팡파레'],
-                        [Lang.Blocks.choco_sound_sigh, '한숨소리'],
-                        [Lang.Blocks.choco_sound_alright, '올라잇~'],
-                        [Lang.Blocks.choco_sound_genius, '지니어스~'],
-                        [Lang.Blocks.choco_sound_no, '노우~'],
-                        [Lang.Blocks.choco_sound_wow, '오우~'],
-                        [Lang.Blocks.choco_sound_yahoo, '야호~'],
+                        [Lang.Blocks.choco_sound_car, 1],
+                        [Lang.Blocks.choco_sound_robot, 2],
+                        [Lang.Blocks.choco_sound_dog, 3],
+                        [Lang.Blocks.choco_sound_cat, 4],
+                        [Lang.Blocks.choco_sound_chicken, 5],
+                        [Lang.Blocks.choco_sound_tiger, 6],
+                        [Lang.Blocks.choco_sound_lion, 7],
+                        [Lang.Blocks.choco_sound_fart, 8],
+                        [Lang.Blocks.choco_sound_helicopter, 9],
+                        [Lang.Blocks.choco_sound_train, 10],
+                        [Lang.Blocks.choco_sound_frog, 11],
+                        [Lang.Blocks.choco_sound_jjajan, 12],
+                        [Lang.Blocks.choco_sound_sheep, 13],
+                        [Lang.Blocks.choco_sound_elephant, 14],
+                        [Lang.Blocks.choco_sound_camel, 15],
+                        [Lang.Blocks.choco_sound_dolphin, 16],
+                        [Lang.Blocks.choco_sound_ttiyong, 17],
+                        [Lang.Blocks.choco_sound_hello_parrot, 18],
+                        [Lang.Blocks.choco_sound_hello_manga, 19],
+                        [Lang.Blocks.choco_sound_hello_man, 20],
+                        [Lang.Blocks.choco_sound_ppong, 21],
+                        [Lang.Blocks.choco_sound_buzzer, 22],
+                        [Lang.Blocks.choco_sound_ttalilalan, 23],
+                        [Lang.Blocks.choco_sound_ttattattatta, 24],
+                        [Lang.Blocks.choco_sound_laughter, 25],
+                        [Lang.Blocks.choco_sound_magic, 26],
+                        [Lang.Blocks.choco_sound_woodpecker, 27],
+                        [Lang.Blocks.choco_sound_bird, 28],
+                        [Lang.Blocks.choco_sound_burp, 29],
+                        [Lang.Blocks.choco_sound_hiccup, 30],
+                        [Lang.Blocks.choco_sound_doridori, 31],
+                        [Lang.Blocks.choco_sound_firetruck, 32],
+                        [Lang.Blocks.choco_sound_police_car, 33],
+                        [Lang.Blocks.choco_sound_applause, 34],
+                        [Lang.Blocks.choco_sound_kiss, 35],
+                        [Lang.Blocks.choco_sound_missile, 36],
+                        [Lang.Blocks.choco_sound_angry_duck, 37],
+                        [Lang.Blocks.choco_sound_fly, 38],
+                        [Lang.Blocks.choco_sound_ufo, 39],
+                        [Lang.Blocks.choco_sound_fanfare, 40],
+                        [Lang.Blocks.choco_sound_sigh, 41],
+                        [Lang.Blocks.choco_sound_alright, 42],
+                        [Lang.Blocks.choco_sound_genius, 43],
+                        [Lang.Blocks.choco_sound_no, 44],
+                        [Lang.Blocks.choco_sound_wow, 45],
+                        [Lang.Blocks.choco_sound_yahoo, 46],
                     ],
-                    value: '자동차',
+                    value: 1,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -830,7 +828,7 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: ['자동차', null],
+                params: [1, null],
                 type: 'choco_play_sound',
             },
             paramsKeyMap: {
@@ -840,6 +838,7 @@ Entry.Choco.getBlocks = function () {
             isNotFor: ['choco'],
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
                 const sound = script.getValue('SOUND');
 
                 if (!script.is_started) {
@@ -849,7 +848,7 @@ Entry.Choco.getBlocks = function () {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: COMMAND_TYPE.PLAY_SOUND,
+                        type: 'play_sound',
                         data: {
                             param1: sound,
                         },
