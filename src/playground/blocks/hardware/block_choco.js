@@ -284,15 +284,11 @@ Entry.Choco.getBlocks = function () {
                     return script;
                 }
 
-                console.log("choco_move_forward")    
-                console.log(pd.msg_id)
-
                 if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
                     
-                    console.log("Done", pd.msg_id);
                     return script.callReturn();
                 }
                 return script;
@@ -892,7 +888,7 @@ Entry.Choco.getBlocks = function () {
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
-                let retVal = 0;
+                let retVal = false;
                 if (pd.sensorData) {
                     retVal = pd.sensorData.is_front_sensor;
                 }
@@ -924,7 +920,7 @@ Entry.Choco.getBlocks = function () {
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
-                let retVal = 0;
+                let retVal = false
                 if (pd.sensorData) {
                     retVal = pd.sensorData.is_bottom_sensor;
                 }
@@ -956,7 +952,7 @@ Entry.Choco.getBlocks = function () {
             func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
-                let retVal = 0;
+                let retVal = false;
                 if (pd.sensorData) {
                     retVal = pd.sensorData.is_light_sensor;
                 }
