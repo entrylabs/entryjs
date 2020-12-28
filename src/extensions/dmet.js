@@ -300,6 +300,11 @@ class dmetTable {
     }
 
     #deleteRow({ key, index }) {
+        if (index === 0) {
+            index = 1;
+            const { value: row } = this.getRow(index);
+            this.#fields = [...row];
+        }
         if (!key) {
             key = index;
         }

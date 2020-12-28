@@ -51,7 +51,7 @@ class DataTableSource {
 
         const apply = (force = false) => {
             if (this.modal && (force || this.modal.isShow)) {
-                const find = (x) => this.fields.findIndex((y) => y === this.#data.originFields[x]);
+                const find = (x) => this.fields.findIndex((y) => y === this.#data.fields[x]);
                 const chart = this.#chart.map(({ xIndex, yIndex, categoryIndexes, ...infos }) => ({
                     xIndex: find(xIndex),
                     yIndex: find(yIndex),
