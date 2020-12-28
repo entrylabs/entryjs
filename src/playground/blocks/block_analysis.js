@@ -196,11 +196,11 @@ module.exports = {
                 isNotFor: ['analysis'],
                 async func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const number = script.getNumberValue('NUMBER', script) - 1;
+                    const number = script.getNumberValue('NUMBER', script);
                     const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        await table.insertRow(number);
+                        await table.insertRow(number - 1);
                     } else {
                         await table.insertCol(number);
                     }
@@ -288,11 +288,11 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const number = script.getNumberValue('NUMBER', script) - 1;
+                    const number = script.getNumberValue('NUMBER', script);
                     const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        table.deleteRow(number);
+                        table.deleteRow(number - 1);
                     } else {
                         table.deleteCol(number);
                     }
