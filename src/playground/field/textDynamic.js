@@ -37,7 +37,7 @@ Entry.FieldTextDynamic = class FieldTextDynamic extends Entry.Field {
 
     renderStart() {
         const { contentSvgGroup } = this._blockView;
-
+        this._updateValue();
         if (!this.textElement) {
             this.svgGroup = this.textElement = contentSvgGroup.elem('text').attr({
                 style: 'white-space: pre;',
@@ -59,7 +59,7 @@ Entry.FieldTextDynamic = class FieldTextDynamic extends Entry.Field {
                     dy: `${i ? 14 : 0}px`,
                 }).textContent = text;
             });
-            // this.textElement.textContent = this._text;
+            this.textElement.textContent = this._text;
         }
 
         const { width, height } = this.getTextBBox();
@@ -85,7 +85,6 @@ Entry.FieldTextDynamic = class FieldTextDynamic extends Entry.Field {
             width,
             height,
         });
-        this._updateValue();
     }
 
     getTextValue() {

@@ -1,4 +1,3 @@
-import { eudist } from 'skmeans/distance';
 import { kmpp } from 'skmeans/kinit';
 import floor from 'lodash/floor';
 import LearningView from './LearningView';
@@ -26,8 +25,11 @@ class Cluster {
     #chartEnable = false;
     #view = null;
     #predictResult = null;
-
+    #fields = [];
+    #name = '';
+    
     constructor({ name, result, table, trainParam }) {
+        this.#name  = name;
         this.#view = new LearningView({ name, status: 0 });
         this.#trainParam = trainParam;
         this.#result = result;
@@ -40,6 +42,17 @@ class Cluster {
         this.#attrLength = table?.select?.[0]?.length || 0;
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
+        }
+        this.#fields = table?.select?.[0]?.map((index) => {
+            return table?.fields[index];
+        });
+    }
+
+    destroy() {
+        this.#view.destroy();
+        if(this.#chart) {
+            this.#chart.destroy();
+            this.#chart = null;
         }
     }
 
@@ -65,16 +78,22 @@ class Cluster {
             return ;
         }
         if (!this.#chart) {
-            this.#chart = new Chart(this.chartData);
+            const { k } = this.#trainParam;
+            this.#chart = new Chart({
+                source: this.chartData,
+                title: this.#name,
+                description: `
+                    <em>${Lang.AiLearning.cluster_number}</em>: ${k},
+                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
+                `,
+            });
         } else {
             this.#chart.show();
         }
     }
 
     closeChart() {
-        if (this.#chart) {
-            this.#chart.hide();
-        }
+        this.#chart?.hide();
     }
 
     setTrainOption(type, value) {
@@ -94,9 +113,8 @@ class Cluster {
     }
 
     train() {
-        this.#trainCallback(0);
+        this.#trainCallback(1);
         this.#isTrained = false;
-        this.#chart = null;
         const { data, select } = this.#table;
         const [attr] = select;
         
@@ -108,8 +126,11 @@ class Cluster {
             graphData: convertGraphData(data, centroids, indexes, attr),
             centroids
         };
-        this.#trainCallback(100);
         this.#isTrained = true;
+        this.#chart?.load({
+            source: this.chartData,
+        });
+        this.#trainCallback(100);
     }
 
     predict({ x, y }) {
@@ -118,7 +139,8 @@ class Cluster {
         }
         const { k } = this.#trainParam;
         const { centroids } = this.#result;
-        this.#predictResult = predictCluster(x, y, k, centroids);
+       
+        this.#predictResult = predictCluster(x, y, k, centroids) + 1;
         return this.#predictResult;
     }
 
@@ -154,7 +176,23 @@ class Cluster {
                     show: false
                 },
                 tooltip: {
-                    show: false
+                    contents: (data) =>{
+                        const [{ x, value, id }] = data;
+                        if (id === 'centroid' && value) {
+                            const { centroids } = this.#result;
+                            const type = centroids?.findIndex(([a, b]) => x === a && value === b);
+                            return `
+                                <div class="chart_handle_wrapper">
+                                    ${Lang.AiLearning.centriod} ${type + 1}| ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                                <div>
+                            `
+                        }
+                        return `
+                            <div class="chart_handle_wrapper">
+                                ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                            <div>
+                        `;
+                    }
                 },
                 axis: {
                     x: {
@@ -197,6 +235,17 @@ function convertGraphData(data, centroids, indexes, attr) {
         }))
     )
 }
+
+function eudist(a, b) {
+    let sum = 0;
+    for (let i = 0; i < a.length; i++) {
+        let d = (a[i] || 0) - (b[i] || 0);
+        sum += d * d;
+    }
+
+    return sum;
+}
+
 
 function predictCluster(x, y, k, centroids) {
     let min = Infinity;
