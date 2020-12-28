@@ -1,9 +1,10 @@
-import _find from 'lodash/find';
-import _findIndex from 'lodash/findIndex';
-import _uniq from 'lodash/uniq';
 import _map from 'lodash/map';
+import _find from 'lodash/find';
+import _uniq from 'lodash/uniq';
+import _filter from 'lodash/filter';
 import _flatten from 'lodash/flatten';
 import _cloneDeep from 'lodash/cloneDeep';
+import _findIndex from 'lodash/findIndex';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -18,7 +19,8 @@ class DataTable {
     }
 
     get dataTables() {
-        return _map(this.#tables, ({ fields, chart, name, origin }) => ({
+        return _map(this.#tables, ({ id, fields, chart, name, origin }) => ({
+            id,
             name,
             chart: _cloneDeep(chart),
             table: [[...fields], ..._cloneDeep(origin)],
@@ -117,15 +119,26 @@ class DataTable {
         }
     }
 
-    saveTable = async ({ selected, index, list }) => {
-        if (list) {
-            this.#tables = [];
-        } else {
-            const { table } = selected;
-            const [fields, ...data] = table;
-            this.#tables[index] = new DataTableSource({ ...selected, fields, data });
+    setSource({ chart, table, name, id }) {
+        const source = this.getSource(id);
+        if (source) {
+            source.modal = null;
+            source.setArray({
+                name,
+                chart,
+                fields: table[0],
+                data: table.slice(1),
+            });
         }
+    }
+
+    saveTable = ({ selected }) => {
+        this.setSource(selected);
         Entry.playground.reloadPlayground();
+    };
+
+    removeTable = (index) => {
+        this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
     };
 
     show(data) {
@@ -167,7 +180,8 @@ class DataTable {
             })
             .on('addTable', () => {
                 Entry.dispatchEvent('openTableManager');
-            });
+            })
+            .on('removeTable', this.removeTable);
     }
 
     getTableJSON() {
