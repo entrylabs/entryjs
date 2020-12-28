@@ -1,7 +1,6 @@
 import isPlainObject from 'lodash/isPlainObject';
 import mapValues from 'lodash/mapValues';
-import get from 'lodash/get';
-import set from 'lodash/set';
+import _get from 'lodash/get';
 import cloneDeep from 'lodash/cloneDeep';
 import CommonUtils, { toNumber } from '../util/common';
 
@@ -144,14 +143,14 @@ class dmetTable {
             const [rowKey, ...keys] = key;
             const { value: row } = this.#array[rowKey - 1] || {};
             if (keys.length && row) {
-                return get(row, `[${keys.map((x) => x - 1).join('][')}]`);
+                return _get(row, `[${keys.map((x) => x - 1).join('][')}]`);
             } else {
                 return row;
             }
         } else if (typeof key === 'string') {
             const [rowKey, ...keys] = key.split(this.#keyDelimter);
             if (keys.length) {
-                return get(this.#object[rowKey], `[${keys.map((x) => x - 1).join('][')}]`);
+                return _get(this.#object[rowKey], `[${keys.map((x) => x - 1).join('][')}]`);
             }
             return this.#object[rowKey];
         }

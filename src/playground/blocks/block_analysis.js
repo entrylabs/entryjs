@@ -1,3 +1,4 @@
+import _chain from 'lodash/chain';
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
 
@@ -6,6 +7,20 @@ module.exports = {
         const getSubMenus = (value) => {
             const { fields = [] } = DataTable.getSource(value) || {};
             return fields.map((label, index) => [label, index + 1]);
+        };
+
+        const getColumnNumber = (str) => {
+            if (/\d/.test(str)) {
+                return -1;
+            }
+            return (
+                // _chain(str)
+                // did not work..
+                _.chain(str)
+                    .toUpper()
+                    .reduce((prev, curr) => prev * 26 + curr.charCodeAt() - 64, 0)
+                    .value()
+            );
         };
 
         return {
@@ -376,9 +391,14 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('NUMBER', script);
-                    const col = script.getNumberValue('FIELD', script);
+                    let col = script.getValue('FIELD', script);
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
+                    if (isNaN(col)) {
+                        col = getColumnNumber(col);
+                    } else {
+                        col = Number.parseInt(col, 10);
+                    }
                     if (table.isExist([row])) {
                         table.replaceValue([row, col], value);
                     } else {
@@ -617,6 +637,26 @@ module.exports = {
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName() {
+                            const value = this.getTargetValue('dataTables');
+                            const source = DataTable.getSource(value);
+                            const { chart: charts = [] } = source || {};
+                            return charts.map(({ title }, index) => [title, index]);
+                        },
+                        needDeepCopy: true,
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (value, options) => {
+                            if (options.length) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
+                    },
+                    {
                         type: 'Indicator',
                         img: 'block_icon/block_analysis.svg',
                         size: 11,
@@ -624,14 +664,14 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null, null],
+                    params: [null, null, null],
                     type: 'open_table_chart',
                 },
                 pyHelpDef: {
                     params: [
                         {
                             type: 'text',
-                            params: ['A&value'],
+                            params: ['A&value', 'B&value'],
                         },
                         null,
                     ],
@@ -639,12 +679,14 @@ module.exports = {
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
+                    CHART_INDEX: 1,
                 },
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    DataTable.showChart(tableId);
+                    const chartIndex = script.getField('CHART_INDEX', script);
+                    DataTable.showChart(tableId, chartIndex);
                     return script.callReturn();
                 },
                 syntax: {

@@ -1,9 +1,10 @@
-import _find from 'lodash/find';
-import _findIndex from 'lodash/findIndex';
-import _uniq from 'lodash/uniq';
 import _map from 'lodash/map';
+import _find from 'lodash/find';
+import _uniq from 'lodash/uniq';
+import _filter from 'lodash/filter';
 import _flatten from 'lodash/flatten';
 import _cloneDeep from 'lodash/cloneDeep';
+import _findIndex from 'lodash/findIndex';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -18,7 +19,8 @@ class DataTable {
     }
 
     get dataTables() {
-        return _map(this.#tables, ({ fields, chart, name, origin }) => ({
+        return _map(this.#tables, ({ id, fields, chart, name, origin }) => ({
+            id,
             name,
             chart: _cloneDeep(chart),
             table: [[...fields], ..._cloneDeep(origin)],
@@ -117,15 +119,26 @@ class DataTable {
         }
     }
 
-    saveTable = async ({ selected, index, list }) => {
-        if (list) {
-            this.#tables = [];
-        } else {
-            const { table } = selected;
-            const [fields, ...data] = table;
-            this.#tables[index] = new DataTableSource({ ...selected, fields, data });
+    setSource({ chart, table, name, id }) {
+        const source = this.getSource(id);
+        if (source) {
+            source.modal = null;
+            source.setArray({
+                name,
+                chart,
+                fields: table[0],
+                data: table.slice(1),
+            });
         }
+    }
+
+    saveTable = ({ selected }) => {
+        this.setSource(selected);
         Entry.playground.reloadPlayground();
+    };
+
+    removeTable = (index) => {
+        this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
     };
 
     show(data) {
@@ -138,7 +151,6 @@ class DataTable {
     }
 
     hide() {
-        console.log({ hihi: this.dataAnalytics });
         this.dataAnalytics && this.dataAnalytics.hide();
         if (this.#tables.length) {
             this.unbanBlock();
@@ -168,7 +180,8 @@ class DataTable {
             })
             .on('addTable', () => {
                 Entry.dispatchEvent('openTableManager');
-            });
+            })
+            .on('removeTable', this.removeTable);
     }
 
     getTableJSON() {
@@ -195,7 +208,7 @@ class DataTable {
         }
     }
 
-    showChart(tableId) {
+    showChart(tableId, chartIndex = 0) {
         this.closeChart();
         const source = this.getSource(tableId);
         if (!source) {
@@ -203,10 +216,10 @@ class DataTable {
             return;
         }
         if (!source.modal) {
-            source.modal = this.createChart(source);
+            source.modal = this.createChart(source, chartIndex);
         }
         source.forceApply();
-        source.modal.show();
+        source.modal.show({ chartIndex });
         this.modal = source.modal;
     }
 
@@ -216,7 +229,7 @@ class DataTable {
         }
     }
 
-    createChart(source) {
+    createChart(source, chartIndex = 0) {
         const { chart = [], fields, rows } = source;
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
@@ -224,6 +237,7 @@ class DataTable {
         })[0];
         return new ModalChart({
             data: {
+                chartIndex,
                 source: { fields, origin: rows, chart },
                 togglePause: () => Entry.engine.togglePause(),
                 stop: () => Entry.engine.toggleStop(),
