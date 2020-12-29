@@ -4,6 +4,8 @@ import _floor from 'lodash/floor';
 import _max from 'lodash/max';
 import LearningView from './LearningView';
 import Chart from './Chart';
+import _sum from 'lodash/sum';
+import _mean from 'lodash/mean';
 
 export const classes = [
     'ai_learning_train',
@@ -144,15 +146,14 @@ class Regression {
                 }
             })
         }
-   
+        
         this.#result = {
             graphData: (graphData.originalPoints || []).slice(0, 1000),
             accuracy,
+            rsquared: graphData.rsquared || 0,
             equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
         }
         this.#isTrained = true;
-
-     
         this.#chart?.load({
             source: this.chartData,
             description: `
@@ -317,7 +318,7 @@ async function trainModel(
     });
 }
 
-const TEST_POINT_COUNT = 2;
+const TEST_POINT_COUNT = 100;
 function testModel(model, normalizationData) {
     const { inputMin, inputMax, outputMin, outputMax } = normalizationData;
 
@@ -329,14 +330,27 @@ function testModel(model, normalizationData) {
         const unNormXs = xs.mul(inputMax.sub(inputMin)).add(inputMin);
         // @ts-ignore
         const unNormPreds = preds.mul(outputMax.sub(outputMin)).add(outputMin);
-
         return [unNormXs.dataSync(), unNormPreds.dataSync()];
     });
+    const rsquared = calculateRsquare(xs, preds);
+    return {
+        rsquared,
+        predictedPoints: Array.from(xs).map((val, i) => ({
+            x: val,
+            y: preds[i]
+        }))
+    };
+}
 
-    return Array.from(xs).map((val, i) => ({
-        x: val,
-        y: preds[i]
-    }));
+function square(n) {
+    return n * n;
+}
+
+function calculateRsquare(y, pred) {
+    const meanY = _mean(y);
+    const total = _sum(y.map(x => square(x-meanY)));
+    const residual = _sum(pred.map(x => square(x - meanY))); 
+    return _floor(residual/total, 3);
 }
 
 async function train(
@@ -374,8 +388,9 @@ async function train(
             x: e,
             y: outputs[0][i]
         }));
-
-        graphData.predictedPoints = testModel(model, normResult);
+        const { rsquared, predictedPoints } = testModel(model, normResult);
+        graphData.predictedPoints = predictedPoints;
+        graphData.rsquared = rsquared;
     }
 
     return {

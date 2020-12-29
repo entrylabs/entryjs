@@ -538,8 +538,8 @@ module.exports = {
                 func(sprite, script) {
                     const option = script.getField('OPTION', script);
                     const value = script.getNumberValue('VALUE', script);
-                    Entry.aiLearning.setTrainOption(option, parseInt(value));
-                    return 0;
+                    Entry.aiLearning.setTrainOption(option, parseFloat(value));
+                    return script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -750,7 +750,7 @@ module.exports = {
                 class: 'ai_learning',
                 isNotFor: ['ai_learning_regression'],
                 async func(sprite, script) {
-                    return _floor(Entry.aiLearning?.getTrainResult()?.accuracy || 0, 3);
+                    return Entry.aiLearning?.getTrainResult()?.rsquared;
                 },
                 syntax: {
                     js: [],
