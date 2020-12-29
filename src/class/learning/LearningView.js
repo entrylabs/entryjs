@@ -3,7 +3,8 @@ import { GEDragHelper } from '../../graphicEngine/GEDragHelper';
 
 const GL_VAR_POS = {
     VALUE_Y: -8.5,
-    LABEL_Y: -9.5,
+    LABEL_Y: -8,
+    STATUS_Y: 8,
 };
 const STATUS = {
     READY: 0,
@@ -102,7 +103,7 @@ export default class LearningView {
         );
         this.statusView.x = 4;
         if (GEHelper.isWebGL) {
-            this.statusView.y = GL_VAR_POS.LABEL_Y * 2;
+            this.statusView.y = GL_VAR_POS.STATUS_Y;
         } else {
             this.statusView.y = 15;
         }
@@ -140,13 +141,14 @@ export default class LearningView {
         this.view_.addChild(this.slideBar_);
         const visibleValue = (this.value / 100) * this.maxWidth;
         this.valueBar = GEHelper.newGraphic();
-        this.valueBar.graphics
-            .beginFill('#4f80ff')
-            .s('#4f80ff')
-            .ss(1)
-            .rr(6, 28, visibleValue, 5, 2);
+        if(visibleValue > 0 ) {
+            this.valueBar.graphics
+                .beginFill('#4f80ff')
+                .s('#4f80ff')
+                .ss(1)
+                .rr(6, 28, visibleValue, 5, 2);
+        }
         this.view_.addChild(this.valueBar);
-
         const variableLength = Entry.variableContainer.variables_.length;
         if (this.getX() && this.getY()) {
             this.setX(this.getX());
@@ -195,13 +197,7 @@ export default class LearningView {
                 .ss(1, 2, 0)
                 .s(colorSet.border || '#aac5d5')
                 .rr(0, -14, width, 54, 4);
-            this.wrapper_.graphics
-                .clear()
-                .f(colorSet.slideVariable || '#4f80ff')
-                .ss(1, 2, 0)
-                .s(colorSet.slideVariable || '#4f80ff')
-                .rr(this._nameWidth + 14, -10, 15, 16, this.RECT_RADIUS);
-
+            
             width = this._nameWidth + 26;
             width = Math.max(width, 90);
             this.maxWidth = width - 16;
@@ -212,12 +208,15 @@ export default class LearningView {
                 .s('#d8d8d8')
                 .ss(1)
                 .rr(6, 28, this.maxWidth + 4, 5, 2);
-            this.valueBar.graphics
-                .clear()
-                .beginFill('#4f80ff')
-                .s('#4f80ff')
-                .ss(1)
-                .rr(6, 28, visibleValue, 5, 2);
+            if (visibleValue > 0) {
+                this.valueBar.graphics
+                    .clear()
+                    .beginFill('#4f80ff')
+                    .s('#4f80ff')
+                    .ss(1)
+                    .rr(6, 28, visibleValue, 5, 2);
+            }
+            
 
         }
         Entry.requestUpdate = true;

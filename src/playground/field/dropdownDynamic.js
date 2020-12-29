@@ -115,7 +115,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
     }
 
     getOptionCheckedValue() {
-        const { options, defaultValue } = this._contents;
+        const { options = [], defaultValue } = this._contents;
         let value = this.getValue();
 
         if (this._blockView.isInBlockMenu || !value || value == 'null') {

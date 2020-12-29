@@ -122,17 +122,19 @@ class Regression {
 
     async train() {
         this.#isTrained = false;
-        this.percent = 0;
+        let currentEpoch = 0;
+        let percent = 0;
         this.#trainCallback(1);
         const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
-        const { model, trainHistory, a, b, graphData = [] } = await train(
+        const { model, trainHistory, a, b, graphData = [], rsquared } = await train(
             inputs,
             outputs,
             this.#trainParam,
+            undefined,
             () => {
-                this.percent = this.percent + 1;
-                const percent = _floor((this.percent / totalDataSize) * 100);
-                this.#trainCallback(Math.max(percent, 100));
+                currentEpoch = currentEpoch + 1;
+                percent = _floor(currentEpoch/this.#trainParam.epochs * 100);
+                this.#trainCallback(Math.min(percent, 100));
             }
         );
         this.#model = model;
@@ -150,7 +152,7 @@ class Regression {
         this.#result = {
             graphData: (graphData.originalPoints || []).slice(0, 1000),
             accuracy,
-            rsquared: graphData.rsquared || 0,
+            rsquared,
             equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
         }
         this.#isTrained = true;
@@ -161,7 +163,6 @@ class Regression {
                 <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}
             `
         });
-        this.#trainCallback(100);
     }
 
     async load(url) {
@@ -332,25 +333,22 @@ function testModel(model, normalizationData) {
         const unNormPreds = preds.mul(outputMax.sub(outputMin)).add(outputMin);
         return [unNormXs.dataSync(), unNormPreds.dataSync()];
     });
-    const rsquared = calculateRsquare(xs, preds);
-    return {
-        rsquared,
-        predictedPoints: Array.from(xs).map((val, i) => ({
-            x: val,
-            y: preds[i]
-        }))
-    };
+    return Array.from(xs).map((val, i) => ({
+        x: val,
+        y: preds[i]
+    }));
 }
 
-function square(n) {
-    return n * n;
-}
+function getR2Score(model, normResult, y) {
+    const yData = y[0];
+    const yHat = model.predict(normResult.inputs).mul(normResult.outputMax.sub(normResult.outputMin)).add(normResult.outputMin).dataSync();
+    const yMean = yData.reduce((acc, cur) => acc + cur) / yData.length;
 
-function calculateRsquare(y, pred) {
-    const meanY = _mean(y);
-    const total = _sum(y.map(x => square(x-meanY)));
-    const residual = _sum(pred.map(x => square(x - meanY))); 
-    return _floor(residual/total, 3);
+    const ssr = yHat.map((e, index) => (e - yData[index]) * (e - yData[index])).reduce((acc, cur) => acc + cur);
+    const sst = yData.map(e => (e - yMean) * (e - yMean)).reduce((acc, cur) => acc + cur);
+    const r2 = 1 - (ssr / sst);
+
+    return Math.max(r2, 0);
 }
 
 async function train(
@@ -379,6 +377,7 @@ async function train(
 
     const a = oi.mul(weight.transpose());
     const b = bias.mul(o).add(outputMin).sub(a.matMul(inputMin.expandDims(0).transpose()));
+    const r2 = getR2Score(model, normResult, outputs);
     let graphData = {
         originalPoints: [],
         predictedPoints: []
@@ -388,9 +387,7 @@ async function train(
             x: e,
             y: outputs[0][i]
         }));
-        const { rsquared, predictedPoints } = testModel(model, normResult);
-        graphData.predictedPoints = predictedPoints;
-        graphData.rsquared = rsquared;
+        graphData.predictedPoints = testModel(model, normResult);
     }
 
     return {
@@ -398,6 +395,7 @@ async function train(
         trainHistory: history,
         a: Array.from(a.dataSync()).map(x => _floor(x, 2)),
         b: _floor(b.dataSync()[0], 2),
+        rsquared: _floor(r2, 2),
         graphData
     };
 }
