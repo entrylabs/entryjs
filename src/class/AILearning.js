@@ -101,7 +101,12 @@ export default class AILearning {
         }
         
         if (type === 'text') {
-            this.#module = new TextLearning({url, labels, type, recordTime});
+            this.#module = new TextLearning({
+                url, 
+                labels: this.#labels, 
+                type, 
+                recordTime
+            });
         } else if(type === 'number'){
             this.#module = new NumberClassification({ 
                 name,
@@ -127,7 +132,12 @@ export default class AILearning {
                 table: this.#tableData,
              });
         } else if (type === 'image' || type === 'speech') {
-            this.#module = new Classification({url, labels, type, recordTime});
+            this.#module = new Classification({
+                url, 
+                labels: this.#labels, 
+                type, 
+                recordTime
+            });
         }
 
         if (this.#module) {
