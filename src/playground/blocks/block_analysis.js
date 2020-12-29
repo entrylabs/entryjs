@@ -1,4 +1,4 @@
-import _chain from 'lodash/chain';
+// import _chain from 'lodash/chain';
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
 
@@ -162,7 +162,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['1'],
+                            params: ['2'],
                         },
                         null,
                         null,
@@ -200,7 +200,7 @@ module.exports = {
                     const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        await table.insertRow(number);
+                        await table.insertRow(number - 1);
                     } else {
                         await table.insertCol(number);
                     }
@@ -254,7 +254,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['1'],
+                            params: ['2'],
                         },
                         null,
                         null,
@@ -292,7 +292,7 @@ module.exports = {
                     const property = script.getStringValue('PROPERTY', script);
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
-                        table.deleteRow(number);
+                        table.deleteRow(number - 1);
                     } else {
                         table.deleteCol(number);
                     }
@@ -345,7 +345,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['1'],
+                            params: ['2'],
                         },
                         {
                             type: 'get_table_fields',
@@ -390,7 +390,7 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const row = script.getNumberValue('NUMBER', script);
+                    const row = script.getNumberValue('NUMBER', script) - 1;
                     let col = script.getValue('FIELD', script);
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
@@ -501,7 +501,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['1'],
+                            params: ['2'],
                         },
                         {
                             type: 'get_table_fields',
@@ -518,9 +518,61 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const row = script.getNumberValue('ROW', script);
+                    const row = script.getNumberValue('ROW', script) - 1;
                     const col = script.getNumberValue('COL', script);
                     const table = DataTable.getSource(tableId, sprite);
+                    if (table.isExist([row, col])) {
+                        return table.getValue([row, col]);
+                    }
+                    throw new Error('data not exist');
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_value_from_last_row: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'get_table_fields',
+                        },
+                    ],
+                    type: 'get_value_from_last_row',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    COL: 1,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const col = script.getNumberValue('COL', script);
+                    const table = DataTable.getSource(tableId, sprite);
+                    const row = table && table.array.length;
                     if (table.isExist([row, col])) {
                         return table.getValue([row, col]);
                     }
@@ -608,10 +660,11 @@ module.exports = {
                             return array.reduce((x, y) => Math.min(x, y));
                         case 'AVG':
                             return array.reduce(sum) / total;
-                        case 'STDEV':
+                        case 'STDEV': {
                             const avg = array.reduce(sum) / total;
                             const deviations = array.map((x) => x - avg);
                             return Math.sqrt(deviations.map(square).reduce(sum) / (total - 1));
+                        }
                         default:
                             return 0;
                     }

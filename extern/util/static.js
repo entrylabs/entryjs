@@ -391,6 +391,7 @@ EntryStatic.getAllBlocks = function() {
                 'set_value_from_table',
                 'get_table_count',
                 'get_value_from_table',
+                'get_value_from_last_row',
                 'calc_values_from_table',
                 'open_table_chart',
                 'close_table_chart',

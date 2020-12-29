@@ -13,6 +13,7 @@ class DataTableSource {
     #chart = [];
     #cloudVariable = CloudVariable.getInstance();
     #source;
+    #copiedChart;
     summary;
     modal;
     updated = new Date();
@@ -47,20 +48,14 @@ class DataTableSource {
                 data: this.#data.origin,
                 fields: this.#data.originFields,
             });
+            this.#copiedChart = undefined;
         });
 
         const apply = (force = false) => {
             if (this.modal && (force || this.modal.isShow)) {
-                const find = (x) => this.fields.findIndex((y) => y === this.#data.originFields[x]);
-                const chart = this.#chart.map(({ xIndex, yIndex, categoryIndexes, ...infos }) => ({
-                    xIndex: find(xIndex),
-                    yIndex: find(yIndex),
-                    categoryIndexes: categoryIndexes.map((x) => find(x)).filter((x) => x !== -1),
-                    ...infos,
-                }));
                 this.modal.setData({
                     source: {
-                        chart,
+                        chart: this.copiedChart,
                         fields: this.fields,
                         origin: this.rows,
                         tab: this.tab,
@@ -104,6 +99,13 @@ class DataTableSource {
 
     get origin() {
         return this.#data.origin;
+    }
+
+    get copiedChart() {
+        if (!this.#copiedChart) {
+            this.#copiedChart = _cloneDeep(this.#chart);
+        }
+        return this.#copiedChart;
     }
 
     setArray({ chart, data, fields, name }) {
@@ -166,6 +168,21 @@ class DataTableSource {
             try {
                 const insertOp = this.#data.getOperation({ type: 'insertCol', index, data });
                 this.#data.exec(insertOp);
+
+                this.#copiedChart = this.copiedChart.map((chart) => {
+                    if (chart.xIndex >= index) {
+                        chart.xIndex++;
+                    }
+                    if (chart.yIndex >= index) {
+                        chart.yIndex++;
+                    }
+                    for (let i = 0; i < chart.categoryIndexes.length; i++) {
+                        if (chart.categoryIndexes[i] >= index) {
+                            chart.categoryIndexes[i]++;
+                        }
+                    }
+                    return chart;
+                });
                 resolve();
                 this.applyChart();
             } catch (e) {
@@ -179,6 +196,30 @@ class DataTableSource {
             try {
                 const deleteOp = this.#data.getOperation({ type: 'deleteCol', index });
                 this.#data.exec(deleteOp);
+                this.#copiedChart = this.copiedChart.map((chart) => {
+                    if (chart.xIndex == index) {
+                        chart.xIndex = -1;
+                        chart.yIndex = -1;
+                        chart.categoryIndexes = [];
+                    } else if (chart.xIndex > index) {
+                        chart.xIndex--;
+                    }
+                    if (chart.yIndex == index) {
+                        chart.yIndex = -1;
+                        chart.categoryIndexes = [];
+                    } else if (chart.yIndex > index) {
+                        chart.yIndex--;
+                    }
+                    for (let i = 0; i < chart.categoryIndexes.length; i++) {
+                        if (chart.categoryIndexes[i] == index) {
+                            chart.categoryIndexes.splice(i, 1);
+                            i--;
+                        } else if (chart.categoryIndexes[i] > index) {
+                            chart.categoryIndexes[i]--;
+                        }
+                    }
+                    return chart;
+                });
                 resolve();
                 this.applyChart();
             } catch (e) {

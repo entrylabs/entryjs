@@ -291,6 +291,12 @@ class dmetTable {
     #insertRow({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
         let value = toNumber(data);
         if (Array.isArray(data) || index > this.#array.length + 1 || index < 0) {
+            if (index === 0) {
+                const fields = [...data];
+                data = [...this.#fields];
+                this.#fields = fields;
+                index = 1;
+            }
             this.#object[key] = Array.isArray(data) ? data : [value];
             this.#array.splice(index - 1, 0, { key, value: this.#object[key] });
         } else {
@@ -300,6 +306,11 @@ class dmetTable {
     }
 
     #deleteRow({ key, index }) {
+        if (index === 0) {
+            index = 1;
+            const { value: row } = this.getRow(index);
+            this.#fields = [...row];
+        }
         if (!key) {
             key = index;
         }
