@@ -122,17 +122,19 @@ class Regression {
 
     async train() {
         this.#isTrained = false;
-        this.percent = 0;
+        let currentEpoch = 0;
+        let percent = 0;
         this.#trainCallback(1);
         const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
         const { model, trainHistory, a, b, graphData = [], rsquared } = await train(
             inputs,
             outputs,
             this.#trainParam,
+            undefined,
             () => {
-                this.percent = this.percent + 1;
-                const percent = _floor((this.percent / totalDataSize) * 100);
-                this.#trainCallback(Math.max(percent, 100));
+                currentEpoch = currentEpoch + 1;
+                percent = _floor(currentEpoch/this.#trainParam.epochs * 100);
+                this.#trainCallback(Math.min(percent, 100));
             }
         );
         this.#model = model;
@@ -161,7 +163,6 @@ class Regression {
                 <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}
             `
         });
-        this.#trainCallback(100);
     }
 
     async load(url) {
