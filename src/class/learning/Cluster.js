@@ -83,8 +83,8 @@ class Cluster {
                 source: this.chartData,
                 title: this.#name,
                 description: `
-                    <em>${Lang.AiLearning.cluster_number}</em>: ${k},
-                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
+                    <em>${Lang.AiLearning.cluster_number}</em>${k}
+                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`)}
                 `,
             });
         } else {
