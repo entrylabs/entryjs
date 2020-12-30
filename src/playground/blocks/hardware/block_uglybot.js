@@ -1109,7 +1109,7 @@ Entry.UglyBot.getBlocks = function() {
                 oldSensorData = sensorData;
                 //console.log("%d", sensorData[16]);
                 const aa = sensorData[Entry.UglyBot.Sensor.SENSOR_SOUND];
-                return aa < 127 ? aa : aa - 256;
+                return aa < 128 ? aa : aa - 256;
             },
             syntax: { js: [], py: [] },
         },
