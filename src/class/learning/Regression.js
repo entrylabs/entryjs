@@ -89,7 +89,7 @@ class Regression {
         if (!this.#chart) {
             this.#chart = new Chart({
                 source: this.chartData,
-                title: this.#name,
+                title: Lang.AiLearning.chart_title,
                 description: `
                     ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
                     <em>${Lang.AiLearning.predict}</em>${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}

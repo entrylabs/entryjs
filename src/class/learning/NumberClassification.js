@@ -88,8 +88,8 @@ class NumberClassification {
         if (!this.#chart) {
             const { numLabels } = this.#trainParam;
             this.#chart = new Chart({
-                title: this.#name,
-                description: `<em>${Lang.AiLearning.class}</em>${numLabels}<em>${Lang.AiLearning.model_attr_str} 1</em>${this.#fields[0]}<em>${Lang.AiLearning.model_attr_str} 2</em>${this.#fields[1]}`,
+                title: Lang.AiLearning.chart_title,
+                description: `<em>${Lang.AiLearning.class}</em>   ${numLabels}<em>${Lang.AiLearning.model_attr_str} 1</em>${this.#fields[0]}<em>${Lang.AiLearning.model_attr_str} 2</em>${this.#fields[1]}`,
                 source: this.chartData,
             });
         } else {
