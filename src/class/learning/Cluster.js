@@ -82,7 +82,7 @@ class Cluster {
             const { k } = this.#trainParam;
             this.#chart = new Chart({
                 source: this.chartData,
-                title: this.#name,
+                title: Lang.AiLearning.chart_title,
                 description: `
                     <em>${Lang.AiLearning.cluster_number}</em>${k}
                     ${this.#fields.map(
