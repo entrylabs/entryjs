@@ -1,7 +1,7 @@
 import isPlainObject from 'lodash/isPlainObject';
-import mapValues from 'lodash/mapValues';
+import _mapValues from 'lodash/mapValues';
 import _get from 'lodash/get';
-import cloneDeep from 'lodash/cloneDeep';
+import _cloneDeep from 'lodash/cloneDeep';
 import CommonUtils, { toNumber } from '../util/common';
 
 class dmetTable {
@@ -84,7 +84,7 @@ class dmetTable {
                     this.#fillArray(value, fields.length);
                     this.#array.push({ key, value });
                     this.#object[key] = value;
-                    this.#origin.push(cloneDeep(value));
+                    this.#origin.push(_cloneDeep(row));
                 } else if (typeof row === 'object' && row.key) {
                     const newRow = {
                         key: row.key,
@@ -92,7 +92,7 @@ class dmetTable {
                     };
                     this.#array.push(newRow);
                     this.#object[row.key] = newRow.value;
-                    this.#origin.push(cloneDeep(newRow.value));
+                    this.#origin.push(_cloneDeep(row.value));
                 }
             });
         }
@@ -750,13 +750,13 @@ class dmet {
                 }
             });
         } else if (isPlainObject(variables) && variables.isDmet) {
-            this.#list = mapValues(variables.list, (list) => {
+            this.#list = _mapValues(variables.list, (list) => {
                 return new dmetList(list);
             });
-            this.#variable = mapValues(variables.variable, (variable) => {
+            this.#variable = _mapValues(variables.variable, (variable) => {
                 return new dmetVariable(variable);
             });
-            this.#table = mapValues(variables.table, (list) => {
+            this.#table = _mapValues(variables.table, (list) => {
                 return new dmetTable(list);
             });
             this.#id = variables.id;
