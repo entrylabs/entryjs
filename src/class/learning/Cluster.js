@@ -1,4 +1,5 @@
 import { kmpp } from 'skmeans/kinit';
+// import { kmpp } from 'skmeans/dist/node/kinit';
 import floor from 'lodash/floor';
 import LearningView from './LearningView';
 import Chart from './Chart';
@@ -11,7 +12,7 @@ export const classes = [
     'cluster_attr_1',
     'cluster_attr_2',
     'cluster_attr_3',
-    'ai_learning_train_chart'
+    'ai_learning_train_chart',
 ];
 
 class Cluster {
@@ -27,15 +28,15 @@ class Cluster {
     #predictResult = null;
     #fields = [];
     #name = '';
-    
+
     constructor({ name, result, table, trainParam }) {
-        this.#name  = name;
+        this.#name = name;
         this.#view = new LearningView({ name, status: 0 });
         this.#trainParam = trainParam;
         this.#result = result;
         this.#table = table;
         this.#trainCallback = (value) => {
-            this.#view.setValue(value)
+            this.#view.setValue(value);
         };
         this.#isTrained = true;
 
@@ -50,7 +51,7 @@ class Cluster {
 
     destroy() {
         this.#view.destroy();
-        if(this.#chart) {
+        if (this.#chart) {
             this.#chart.destroy();
             this.#chart = null;
         }
@@ -75,7 +76,7 @@ class Cluster {
 
     openChart() {
         if (!this.#chartEnable) {
-            return ;
+            return;
         }
         if (!this.#chart) {
             const { k } = this.#trainParam;
@@ -84,7 +85,10 @@ class Cluster {
                 title: this.#name,
                 description: `
                     <em>${Lang.AiLearning.cluster_number}</em>${k}
-                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`)}
+                    ${this.#fields.map(
+                        (field, index) =>
+                            `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`
+                    )}
                 `,
             });
         } else {
@@ -117,14 +121,14 @@ class Cluster {
         this.#isTrained = false;
         const { data, select } = this.#table;
         const [attr] = select;
-        
+
         const { centroids, indexes } = kmeans(
-            data.map((row) => attr.map((i) => parseFloat(row[i]) || 0)), 
+            data.map((row) => attr.map((i) => parseFloat(row[i]) || 0)),
             this.#trainParam
         );
         this.#result = {
             graphData: convertGraphData(data, centroids, indexes, attr),
-            centroids
+            centroids,
         };
         this.#isTrained = true;
         this.#chart?.load({
@@ -135,11 +139,11 @@ class Cluster {
 
     predict({ x, y }) {
         if (!this.isTrained) {
-            return ;
+            return;
         }
         const { k } = this.#trainParam;
         const { centroids } = this.#result;
-       
+
         this.#predictResult = predictCluster(x, y, k, centroids) + 1;
         return this.#predictResult;
     }
@@ -161,79 +165,86 @@ class Cluster {
             data: {
                 type: 'scatter',
                 json: this.#result.graphData,
-                keys: { value: ['y', 'centroid'], x: 'x', },
+                keys: { value: ['y', 'centroid'], x: 'x' },
                 color: (color, d) => this.findColor(d.id, d.x, d.value) || color,
                 labels: false,
             },
             options: {
                 point: {
                     pattern: [
-                        "circle",
-                        "<g><circle cx='10' cy='10' r='10'></circle><rect x='5' y='5' width='10' height='10' style='fill:#fff'></rect></g>"
-                    ]
+                        'circle',
+                        "<g><circle cx='10' cy='10' r='10'></circle><rect x='5' y='5' width='10' height='10' style='fill:#fff'></rect></g>",
+                    ],
                 },
                 legend: {
-                    show: false
+                    show: false,
                 },
                 tooltip: {
-                    contents: (data) =>{
+                    contents: (data) => {
                         const [{ x, value, id }] = data;
                         if (id === 'centroid' && value) {
                             const { centroids } = this.#result;
                             const type = centroids?.findIndex(([a, b]) => x === a && value === b);
                             return `
                                 <div class="chart_handle_wrapper">
-                                    ${Lang.AiLearning.centriod} ${type + 1}| ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                                    ${Lang.AiLearning.centriod} ${type + 1}| ${
+                                this.#fields[0]
+                            }: ${x}, ${this.#fields[1]}: ${value}
                                 <div>
-                            `
+                            `;
                         }
                         return `
                             <div class="chart_handle_wrapper">
                                 ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
                             <div>
                         `;
-                    }
+                    },
                 },
                 axis: {
                     x: {
                         tick: {
                             fit: false,
-                            count: 5
+                            count: 5,
                         },
-                    }
+                    },
                 },
                 grid: {
                     x: {
-                        show: true
+                        show: true,
                     },
                     y: {
-                        show: true
-                    }
-                }
-            }
-        }
+                        show: true,
+                    },
+                },
+            },
+        };
     }
 }
 
 export default Cluster;
 
 function convertGraphData(data, centroids, indexes, attr) {
-    return data.map((cur, index) => {
-        return cur.reduce((acc, cur, idx, arr) => {
-            if (idx === attr[0]) {
-                acc['x'] = cur;
-            } else if (idx === attr[1]) {
-                acc['y'] = cur;
-            }
-            return acc;
-        }, { index, type: indexes[index] });
-    }).concat(
-        centroids.map(([x = 0, centroid = 0], type) => ({
-            x,
-            centroid,
-            type
-        }))
-    )
+    return data
+        .map((cur, index) => {
+            return cur.reduce(
+                (acc, cur, idx, arr) => {
+                    if (idx === attr[0]) {
+                        acc['x'] = cur;
+                    } else if (idx === attr[1]) {
+                        acc['y'] = cur;
+                    }
+                    return acc;
+                },
+                { index, type: indexes[index] }
+            );
+        })
+        .concat(
+            centroids.map(([x = 0, centroid = 0], type) => ({
+                x,
+                centroid,
+                type,
+            }))
+        );
 }
 
 function eudist(a, b) {
@@ -246,11 +257,10 @@ function eudist(a, b) {
     return sum;
 }
 
-
 function predictCluster(x, y, k, centroids) {
     let min = Infinity;
     let closestCentroidIndex = 0;
-    for(let i = 0 ; i < k ; i ++) {
+    for (let i = 0; i < k; i++) {
         let dist = eudist([x, y], centroids[i]);
         if (dist < min) {
             min = dist;
@@ -275,7 +285,7 @@ function kmeans(inputs, trainParam) {
                 centroids.push(inputs[idx].slice());
             }
         }
-    } else if (trainParam.initialCentroids === "random") {
+    } else if (trainParam.initialCentroids === 'random') {
         let maxs = new Array(dim).fill(-Infinity);
         let mins = new Array(dim).fill(Infinity);
         for (let i = 0; i < dim; i++) {
@@ -296,8 +306,11 @@ function kmeans(inputs, trainParam) {
             }
             centroids.push(temp);
         }
-    } else if (trainParam.initialCentroids === "kmpp") {
-        centroids = kmpp(inputs.map(e => e.slice()), trainParam.k);
+    } else if (trainParam.initialCentroids === 'kmpp') {
+        centroids = kmpp(
+            inputs.map((e) => e.slice()),
+            trainParam.k
+        );
     } else {
         centroids = trainParam.initialCentroids;
     }
@@ -345,7 +358,10 @@ function kmeans(inputs, trainParam) {
         }
 
         if (trainParam.onIterEnd) {
-            trainParam.onIterEnd(oldCentroids.map((e) => e.slice()), centroids.map((e) => e.slice()));
+            trainParam.onIterEnd(
+                oldCentroids.map((e) => e.slice()),
+                centroids.map((e) => e.slice())
+            );
         }
 
         iter++;
@@ -357,4 +373,3 @@ function kmeans(inputs, trainParam) {
         centroids,
     };
 }
-
