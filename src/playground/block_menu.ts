@@ -141,7 +141,7 @@ class BlockMenu extends ModelClass<Schema> {
             },
             false
         );
-        const { hardwareEnable, dataTableDisable } = Entry;
+        const { hardwareEnable } = Entry;
 
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
