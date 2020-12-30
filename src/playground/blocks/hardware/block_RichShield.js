@@ -1052,9 +1052,6 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_FND',
             isNotFor: ['RichShield'],
             func: function(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 let device = script.getNumberValue("fnd_device", script);       
                 let display_str = script.getNumberValue("display_value", script); 
                 let onoff = script.getNumberValue("onoff", script);
