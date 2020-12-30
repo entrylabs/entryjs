@@ -88,7 +88,7 @@ class Cluster {
                     ${this.#fields.map(
                         (field, index) =>
                             `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`
-                    )}
+                    ).join(' ')}
                 `,
             });
         } else {
