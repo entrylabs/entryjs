@@ -141,7 +141,7 @@ class BlockMenu extends ModelClass<Schema> {
             },
             false
         );
-        const { hardwareEnable, dataTableEnable } = Entry;
+        const { hardwareEnable, dataTableDisable } = Entry;
 
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
@@ -164,16 +164,11 @@ class BlockMenu extends ModelClass<Schema> {
         this._clearCategory();
 
         // hardwareEnable 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
-        // dataTableEnable 이 false 인 경우, anlaysis 카테고리를 제외한다.
-        this._categoryData = remove(categoryData, ({ category }) => {
-            if (!dataTableEnable && category === 'analysis') {
-                return false;
-            }
-
-            return !(
-                !hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1
-            );
-        });
+        this._categoryData = remove(
+            categoryData,
+            ({ category }) =>
+                hardwareEnable || [...practicalCourseCategoryList, HW].indexOf(category) <= -1
+        );
 
         this._generateView(this._categoryData);
 
@@ -255,7 +250,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         // this.codeListener?.destory();
         this.codeListener?.destroy?.();
-        
+
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             this.changeEvent.notify();

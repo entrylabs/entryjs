@@ -103,7 +103,7 @@ Entry.Playground = class Playground {
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
-            if (Entry.dataTableEnable) {
+            if (!Entry.dataTableDisable) {
                 const tableView = Entry.createElement('div', 'dataTable')
                     .addClass('entryPlaygroundTableWorkspace entryRemove')
                     .appendTo(this.view_);
@@ -221,7 +221,7 @@ Entry.Playground = class Playground {
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
 
-        if (Entry.dataTableEnable) {
+        if (!Entry.dataTableDisable) {
             const tableTab = Entry.createElement('li', 'dataTableTab')
                 .addClass('entryTabListItemWorkspace dataTableTabWorkspace')
                 .appendTo(tabList)
