@@ -84,7 +84,7 @@ class Cluster {
                 source: this.chartData,
                 title: Lang.AiLearning.chart_title,
                 description: `
-                    <em>${Lang.AiLearning.cluster_number}</em>${k}
+                    <em>${Lang.AiLearning.cluster_number}</em>   ${k}
                     ${this.#fields.map(
                         (field, index) =>
                             `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`
