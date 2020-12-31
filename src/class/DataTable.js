@@ -19,9 +19,10 @@ class DataTable {
     }
 
     get dataTables() {
-        return _map(this.#tables, ({ id, fields, chart, name, origin }) => ({
+        return _map(this.#tables, ({ id, fields, chart, name, origin, summary }) => ({
             id,
             name,
+            summary,
             chart: _cloneDeep(chart),
             table: [[...fields], ..._cloneDeep(origin)],
         }));
