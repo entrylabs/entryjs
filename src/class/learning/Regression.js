@@ -336,7 +336,7 @@ async function trainModel(
     });
 }
 
-const TEST_POINT_COUNT = 100;
+const TEST_POINT_COUNT = 2;
 function testModel(model, normalizationData) {
     const { inputMin, inputMax, outputMin, outputMax } = normalizationData;
 
