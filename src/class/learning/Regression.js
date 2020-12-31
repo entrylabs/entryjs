@@ -55,6 +55,10 @@ class Regression {
         this.#predictFields = table?.select?.[1]?.map((index) => {
             return table?.fields[index];
         });
+
+        if (!isWebGlSupport()) {
+            tf.setBackend('cpu');
+        }
     }
     
     destroy() {
@@ -121,48 +125,53 @@ class Regression {
     }
 
     async train() {
-        this.#isTrained = false;
-        let currentEpoch = 0;
-        let percent = 0;
-        this.#trainCallback(1);
-        const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
-        const { model, trainHistory, a, b, graphData = [], rsquared } = await train(
-            inputs,
-            outputs,
-            this.#trainParam,
-            undefined,
-            () => {
-                currentEpoch = currentEpoch + 1;
-                percent = _floor(currentEpoch/this.#trainParam.epochs * 100);
-                this.#trainCallback(Math.min(percent, 100));
-            }
-        );
-        this.#model = model;
-        const { acc = [] } = trainHistory?.history || {};
-        const accuracy = _max(acc) || 0;
-        if (inputs.length == 1) {
-            graphData.predictedPoints.map(({ x, y }) => {
-                const index = graphData.originalPoints.findIndex((p) => _floor(p.x, 1) === _floor(x, 1));
-                if (graphData.originalPoints[index]) {
-                    graphData.originalPoints[index].equation = y;
+        try {
+            this.#isTrained = false;
+            let currentEpoch = 0;
+            let percent = 0;
+            this.#trainCallback(1);
+            const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
+            const { model, trainHistory, a, b, graphData = [], rsquared } = await train(
+                inputs,
+                outputs,
+                this.#trainParam,
+                undefined,
+                () => {
+                    currentEpoch = currentEpoch + 1;
+                    percent = _floor(currentEpoch/this.#trainParam.epochs * 100);
+                    this.#trainCallback(Math.min(percent, 100));
                 }
-            })
+            );
+            this.#model = model;
+            const { acc = [] } = trainHistory?.history || {};
+            const accuracy = _max(acc) || 0;
+            if (inputs.length == 1) {
+                graphData.predictedPoints.map(({ x, y }) => {
+                    const index = graphData.originalPoints.findIndex((p) => _floor(p.x, 1) === _floor(x, 1));
+                    if (graphData.originalPoints[index]) {
+                        graphData.originalPoints[index].equation = y;
+                    }
+                })
+            }
+            
+            this.#result = {
+                graphData: (graphData.originalPoints || []).slice(0, 1000),
+                accuracy,
+                rsquared,
+                equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
+            }
+            this.#isTrained = true;
+            this.#chart?.load({
+                source: this.chartData,
+                description: `
+                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em> ${field}`)}
+                    <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}
+                `
+            });
+        } catch(e) {
+            console.log('train error', e);
         }
         
-        this.#result = {
-            graphData: (graphData.originalPoints || []).slice(0, 1000),
-            accuracy,
-            rsquared,
-            equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
-        }
-        this.#isTrained = true;
-        this.#chart?.load({
-            source: this.chartData,
-            description: `
-                ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em> ${field}`)}
-                <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}
-            `
-        });
     }
 
     async load(url) {
@@ -293,6 +302,17 @@ function createModel(inputShape) {
 
     return model;
 }
+
+function isWebGlSupport() {
+    try {
+        const currentCanvas = document.createElement('canvas');
+        return !!currentCanvas.getContext('webgl', { premultipliedalpha: false });
+    } catch (e) {
+        console.log('error', e);
+        return false;
+    }
+}
+
 
 async function trainModel(
     model,
