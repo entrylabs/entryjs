@@ -129,6 +129,7 @@ class DataTable {
                 fields: table[0],
                 data: table.slice(1),
             });
+            source.updated = new Date();
         }
     }
 
