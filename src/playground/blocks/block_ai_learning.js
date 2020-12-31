@@ -513,7 +513,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -565,7 +566,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -610,7 +612,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -625,7 +628,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -672,7 +676,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -687,7 +692,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -702,7 +708,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -765,7 +772,8 @@ module.exports = {
                 params: [
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -884,7 +892,8 @@ module.exports = {
                 params: [
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -947,7 +956,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 def: {
@@ -992,7 +1002,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1007,7 +1018,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 def: {
@@ -1054,7 +1066,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1069,7 +1082,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1084,7 +1098,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 def: {
@@ -1122,7 +1137,8 @@ module.exports = {
                 params: [
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -1176,7 +1192,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -1222,7 +1239,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1237,7 +1255,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -1285,7 +1304,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1300,7 +1320,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1315,7 +1336,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                 ],
                 events: {},
@@ -1365,7 +1387,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -1441,7 +1464,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1456,7 +1480,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -1534,7 +1559,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1549,7 +1575,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1564,7 +1591,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -1644,7 +1672,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -1708,7 +1737,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1723,7 +1753,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -1789,7 +1820,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1804,7 +1836,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'TextDynamic',
@@ -1819,7 +1852,8 @@ module.exports = {
                     },
                     {
                         type: 'Block',
-                        accept: 'number',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
