@@ -296,10 +296,7 @@ function convertToTensor(inputs, outputs) {
 
 function createModel(inputShape) {
     const model = tf.sequential();
-
     model.add(tf.layers.dense({ inputShape: [inputShape], units: 1 }));
-    model.summary();
-
     return model;
 }
 
