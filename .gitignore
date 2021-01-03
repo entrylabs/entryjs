@@ -39,3 +39,4 @@ extern/closure-library
 dist
 dist/entry.js
 .idea/
+build/
