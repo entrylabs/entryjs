@@ -7,7 +7,7 @@
 import { Draggable } from '@entrylabs/tool';
 import { GEHelper } from '../graphicEngine/GEHelper';
 import DataTable from './DataTable';
-
+import { getInputList } from '../util/videoUtils';
 /**
  * Class for a container.
  * This have view for objects.
@@ -647,7 +647,7 @@ Entry.Container = class Container {
      * @param {string} menuName
      * @param {string} obj
      */
-    getDropdownList(menuName, obj) {
+    async getDropdownList(menuName, obj) {
         let result = [];
         switch (menuName) {
             case 'sprites':
@@ -777,6 +777,17 @@ Entry.Container = class Container {
                 result = EntryStatic.fonts.map((font) => {
                     return [font.name, font.family];
                 });
+                break;
+            case 'connectedCameras':
+                const inputList = await getInputList();
+                result = [].concat(
+                    inputList
+                        .filter((input) => input.kind === 'videoinput')
+                        .map((item, index) => [
+                            item.label || `Unspecified Device-${index + 1}`,
+                            index,
+                        ])
+                );
         }
         if (!result.length) {
             result = [[Lang.Blocks.no_target, 'null']];
