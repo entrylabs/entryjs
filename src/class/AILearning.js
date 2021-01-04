@@ -155,7 +155,7 @@ export default class AILearning {
     }
 
     isTrained() {
-        return this.#module?.isTrained;
+        return this.#module?.isTrained?.();
     }
 
     setTrainOption(type, value) {
