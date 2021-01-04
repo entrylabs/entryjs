@@ -26,6 +26,7 @@ class NumberClassification {
     #predictResult = null;
     #name = '';
     #fields = [];
+    #predictField = [];
 
     constructor({ name, url, table, trainParam }) {
         this.#view = new LearningView({ name, status: 0 });
@@ -39,6 +40,9 @@ class NumberClassification {
 
         this.#attrLength = table?.select?.[0]?.length || 0;
         this.#fields = table?.select?.[0]?.map((index) => {
+            return table?.fields[index];
+        });
+        this.#predictField = table?.select?.[1]?.map((index) => {
             return table?.fields[index];
         })
         if (this.#attrLength === 2) {
@@ -86,10 +90,9 @@ class NumberClassification {
             return ;
         }
         if (!this.#chart) {
-            const { numLabels } = this.#trainParam;
             this.#chart = new Chart({
                 title: Lang.AiLearning.chart_title,
-                description: `<em>${Lang.AiLearning.class}</em>   ${numLabels}<em>${Lang.AiLearning.model_attr_str} 1</em>${this.#fields[0]}<em>${Lang.AiLearning.model_attr_str} 2</em>${this.#fields[1]}`,
+                description: `<em>${Lang.AiLearning.class}</em>   ${this.#predictField[0]}<em>${Lang.AiLearning.model_attr_str} 1</em>${this.#fields[0]}<em>${Lang.AiLearning.model_attr_str} 2</em>${this.#fields[1]}`,
                 source: this.chartData,
             });
         } else {
@@ -217,7 +220,9 @@ class NumberClassification {
     }
     
     findLabel(x, y) {
-        const index = this.#trainParam.trainData.findIndex((row) => row[0] === x && row[1] === y);
+        const strX = String(x);
+        const strY = String(y);
+        const index = this.#trainParam.trainData.findIndex((row) => String(row[0]) === strX && String(row[1]) === strY);
         return this.#trainParam.trainLabels[index];
     }
 
