@@ -6320,6 +6320,7 @@ Lang.template = {
     "robotis_openCM70_cm_buzzer_melody": "제어기 멜로디 %1 번 연주 %2",
     "robotis_openCM70_cm_sound_detected_clear": "최종소리감지횟수 초기화 %1",
     "robotis_openCM70_cm_led": "제어기 %1 LED %2 %3",
+    "robotis_openCM70_cm_screen": "제어기 화면 배경을 %1 로 선택",
     "robotis_openCM70_cm_motion": "모션 %1 번 실행 %2",
     "robotis_openCM70_aux_motor_speed": "%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4",
     "robotis_openCM70_aux_servo_mode": "%1 서보모터 모드를 %2 (으)로 정하기 %3",
