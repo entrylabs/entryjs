@@ -146,7 +146,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                    ],
                     value: '1',
                     fontSize: 11,
                 },
@@ -160,7 +163,10 @@ Entry.iboard.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['A0', '0'], ['A1', '1']],
+                                options: [
+                                    ['A0', '0'],
+                                    ['A1', '1'],
+                                ],
                                 value: '1',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -179,7 +185,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A2', '2'], ['A3', '3']],
+                    options: [
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
                     value: '2',
                     fontSize: 11,
                 },
@@ -193,7 +202,10 @@ Entry.iboard.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['A2', '2'], ['A3', '3']],
+                                options: [
+                                    ['A2', '2'],
+                                    ['A3', '3'],
+                                ],
                                 value: '2',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -212,7 +224,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A3', '3'], ['A4', '4']],
+                    options: [
+                        ['A3', '3'],
+                        ['A4', '4'],
+                    ],
                     value: '3',
                     fontSize: 11,
                 },
@@ -226,7 +241,10 @@ Entry.iboard.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['A3', '3'], ['A4', '4']],
+                                options: [
+                                    ['A3', '3'],
+                                    ['A4', '4'],
+                                ],
                                 value: '3',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -249,7 +267,11 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D2', '2'], ['D3', '3'], ['D4', '4']],
+                    options: [
+                        ['D2', '2'],
+                        ['D3', '3'],
+                        ['D4', '4'],
+                    ],
                     value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -276,7 +298,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D5', '5'], ['D6', '6']],
+                    options: [
+                        ['D5', '5'],
+                        ['D6', '6'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -303,7 +328,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D10', '10'], ['D11', '11']],
+                    options: [
+                        ['D10', '10'],
+                        ['D11', '11'],
+                    ],
                     value: '10',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -330,7 +358,11 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨간', '5'], ['초록', '6'], ['파란', '9']],
+                    options: [
+                        ['빨간', '5'],
+                        ['초록', '6'],
+                        ['파란', '9'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -381,7 +413,12 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['정지', '0'], ['미풍', '100'], ['약풍', '170'], ['강풍', '255']],
+                    options: [
+                        ['정지', '0'],
+                        ['미풍', '100'],
+                        ['약풍', '170'],
+                        ['강풍', '255'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -435,7 +472,7 @@ Entry.iboard.getBlocks = function() {
                 var value3 = 1024;
                 var value4 = 100;
                 var value5 = 50;
-                var result = value1 * value2 / value3 * value4 - value5;
+                var result = ((value1 * value2) / value3) * value4 - value5;
                 return result;
             },
         },
@@ -547,7 +584,7 @@ Entry.iboard.getBlocks = function() {
         },
         iboard_motor: {
             template: '모터를 %2 으로 동작하기 %3',
-            parent: 'arduino_ext_digital_pwm',
+            parent: 'jikko_digital_pwm',
             def: {
                 params: [
                     {
