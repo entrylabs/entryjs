@@ -189,6 +189,8 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 21, 2, 20],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 12, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 40, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 66, 2, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
@@ -1021,11 +1023,15 @@ Entry.Robotis_carCont.getBlocks = function () {
 Entry.Robotis_openCM70.blockMenuBlocks = [
     //robotis_openCM70
     // 'robotis_openCM70_sensor_value',
+    'robotis_openCM70_cm_ir_value',
+    'robotis_openCM70_cm_btn_value',
+    'robotis_openCM70_cm_joystick_value',
     'robotis_openCM70_cm_buzzer_index',
     // 'robotis_openCM70_cm_buzzer_melody',
     // 'robotis_openCM70_cm_sound_detected_clear',
     'robotis_openCM70_cm_screen',
     'robotis_openCM70_cm_led',
+    'robotis_openCM70_RGee_motion',
     'robotis_openCM70_cm_motion',
     'robotis_openCM70_cm_custom_value',
     'robotis_openCM70_cm_custom',
@@ -1139,6 +1145,257 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 py: ['Robotis.opencm70_cm_custom_value(%1, %2)'],
             },
         },
+        robotis_openCM70_cm_ir_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1번', '1'],
+                        ['2번', '2'],
+                        ['3번', '3'],
+                        ['4번', '4'],
+                        ['5번', '5'],
+                        ['6번', '6'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: 'robotis_openCM70_cm_ir_value',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 2;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                
+                data_address = (script.getNumberValue('VALUE')-1) * 2 + 360;
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_cm_ir_value(%1)'],
+            },
+        },
+        robotis_openCM70_cm_joystick_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: 'robotis_openCM70_cm_joystick_value',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 1;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                
+                data_address = 50;
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.openCM70_cm_joystick_value()'],
+            },
+        },
+        robotis_openCM70_cm_btn_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['실행', '45'],
+                        ['복귀', '42'],
+                    ],
+                    value: '45',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null
+                ],
+                type: 'robotis_openCM70_cm_btn_value',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 1;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                
+                data_address = script.getNumberValue('VALUE');
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_cm_btn_value(%1)'],
+            },
+        },
+
         robotis_openCM70_sensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1895,6 +2152,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     [data_instruction, data_address, data_length, data_value],
                 ];
               
+
+
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -1999,6 +2258,70 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
         },
+        robotis_openCM70_RGee_motion: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ["일어서기", '50007'],
+                        ["앉기", '50008'], //Lang.Blocks.robotis_common_green_color
+                        ["발버둥", '50071'],
+                        ["발들기", '50072'],
+                    ],
+                    value: '50007',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_openCM70_RGee_motion',
+            },
+            paramsKeyMap: {
+                MotionNumber: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+               
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
+                data_value = script.getField('MotionNumber', script);
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                    //[data_instruction, data_address, data_length, 0],
+                ];
+                
+                //console.log(script);
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    
+                    data_value > 50070 ? 2000 : 1000 
+                    //Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_RGee_motion(%1)'] },
+        },
         robotis_openCM70_cm_motion: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2045,6 +2368,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
+                    [data_instruction, data_address, data_length, 0]
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
