@@ -1031,6 +1031,7 @@ Entry.Robotis_openCM70.blockMenuBlocks = [
     // 'robotis_openCM70_cm_sound_detected_clear',
     'robotis_openCM70_cm_screen',
     'robotis_openCM70_cm_led',
+    'robotis_openCM70_RGee_go',
     'robotis_openCM70_RGee_motion',
     'robotis_openCM70_cm_motion',
     'robotis_openCM70_cm_custom_value',
@@ -2258,6 +2259,88 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
         },
+        robotis_openCM70_RGee_go: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['전진', '1'],
+                        ['후진', '2'],
+                        ['좌회전', '3'],
+                        ['우회전', '4'],
+                    ],
+                    value: '32',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['1'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'robotis_openCM70_RGee_go',
+            },
+            paramsKeyMap: {
+                SPEED: 0,
+                DIRECTION: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var speed = script.getField('SPEED', script);
+                var direction = script.getField('DIRECTION', script);
+                
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 710;
+                var data_length = 2;
+                var data_value = 0;
+                
+                switch(direction) {
+                    case '1':
+                        data_value = speed * 256 + speed;
+                        break;
+                }
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                    ],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_RGee_go(%1, %2)'],
+            },
+        },
         robotis_openCM70_RGee_motion: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2294,7 +2377,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             func: function (sprite, script) {
-               
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address = 0;

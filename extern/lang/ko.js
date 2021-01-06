@@ -6318,6 +6318,7 @@ Lang.template = {
     "robotis_openCM70_cm_btn_value": "%1 버튼 눌림여부",
     "robotis_openCM70_cm_joystick_value": "조이스틱 값",
     "robotis_openCM70_RGee_motion": "알쥐 %1",
+    "robotis_openCM70_cm_RGee_go": "알쥐 %1 속도로 %2 하기",
     "robotis_openCM70_sensor_value": "제어기 %1 값",
     "robotis_openCM70_aux_sensor_value": "%1   %2 값",
     "robotis_openCM70_cm_buzzer_index": "제어기 음계값 %1 을(를) %2 초 동안 연주 %3",
