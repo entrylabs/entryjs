@@ -79,7 +79,7 @@ Entry.exMars_Cube.setLanguage = function() {
                 RecordIndex3: '풀 불라인드',
                 RecordIndex4: '시간 패널티',
                 RecordIndex5: '20~28 모드',
-                RecordIndex6: '01 모드',
+                RecordIndex6: '최소회전',
                 RecordIndex7: '02 모드',
                 RecordTime1: '최신',
                 RecordTime2: '최신-1',
@@ -87,10 +87,12 @@ Entry.exMars_Cube.setLanguage = function() {
                 RecordTime4: '최신-3',
                 RecordTime5: '최신-4',
                 RecordTimeBest: '최고',
+                RecordDiceNumber: '주사위 숫자',
                 CellLedColor: '%1 면 %2 번 셀의 색상값',
-                FaceLedColor: ' %1 면의 셀 색상값',
-                FaceDir: ' %1 면의 회전값',
-                Record: ' %1 의 %2 기록',
+                FaceLedColor: '%1 면의 셀 색상값',
+                FaceDir: '%1 면의 회전값',
+                Record: '%1 의 %2 기록',
+                RecodeDice: '%1 기록',
                 MenuInit: '모드 빠져나오기  %1',
                 NonBrake: '브레이크 기능을 %1 %2',
                 ResetAllFace: '모든 색상을 초기화하기 %1',
@@ -103,9 +105,11 @@ Entry.exMars_Cube.setLanguage = function() {
                 FacesRotation: '%1 면을 %2 방향으로 %3º 만큼,  %4 면을 %5 방향으로 %6º 만큼 회전하기 %7',
                 SolveCube: '%1 을 앞면으로 %2 를 %3 초 동안 풀기 %4',
                 PlayMode: '%1 연주 모드로 바꾸기 %2',
-                UserMode: '%1 모드로 바꾸기 %2',
+                UserMode: '%1 펌웨어로 바꾸기 %2',
                 PlayNote: '%1 를 %2 초 연주하기 %3',
-                GetRecord: '%1 기록 가져오기 %2'
+                GetRecord: '%1 기록 가져오기 %2',
+                GetRecordDice: '주사위 숫자 기록 가져오기 %1',
+                AutoSolve: '자동솔빙 시작 %1',
             },
         },
         en: {
@@ -147,7 +151,7 @@ Entry.exMars_Cube.setLanguage = function() {
                 RecordIndex3: 'Full blind',
                 RecordIndex4: 'Time penalty',
                 RecordIndex5: '20~28 mode',
-                RecordIndex6: '01 mode',
+                RecordIndex6: 'Fewest move',
                 RecordIndex7: '02 mode',
                 RecordTime1: 'Latest',
                 RecordTime2: 'Latest-1',
@@ -155,25 +159,29 @@ Entry.exMars_Cube.setLanguage = function() {
                 RecordTime4: 'Latest-3',
                 RecordTime5: 'Latest-4',
                 RecordTimeBest: 'Best',
+                RecordDiceNumber: 'Dice number',
                 CellLedColor: 'LED color of %1 face %2 cell',
-                FaceLedColor: ' LED color of %1 face',
-                FaceDir: ' %1 face rotation',                
-                Record: ' %2 record of %1',
-                MenuInit: 'Set initialize menu  %1',
-                NonBrake: '%1 the brake %2',
-                ResetAllFace: 'Reset all face %1',
-                ModeSetting: 'Set mode %1 %2  %3',
-                CenterColorChange: 'Write %1 face center color to  %2  %3',
-                CellColorChange: 'Write %1 face cell color to %2  %3 %4 %5 %6 %7 %8 %9  %10',
-                PosDirTorChange: 'Write %1 face position to %2 & direction to %3 & torque to %4  %5',
-                FaceRotationOnlyColor: 'Rotate %1 LED %2 %3º %4',
-                FaceRotation: 'Rotate %1 face %2 %3º %4',
-                FacesRotation: 'Rotate %1 face %2 %3º,  %4 face %5 %6º %7',
-                SolveCube: 'Solve %1 front face %2 for %3 seconds %4',
-                PlayMode: 'Set %1 play mode %2',
-                UserMode: 'Set %1 mode %2',
-                PlayNote: 'Play %1 for %2 seconds %3',                
-                GetRecord: 'Get %1 Record  %2'
+                FaceLedColor: 'LED color of %1 face',
+                FaceDir: 'rotation value of %1 face',
+                Record: '%2 record of %1',
+                RecodeDice: '%1 record',
+                MenuInit: 'Exit mode %1',
+                NonBrake: '%1 the brake function %2',
+                ResetAllFace: 'Initialize all colors %1',
+                ModeSetting: 'Set mode to %1 %2 %3',
+                CenterColorChange: 'Change the center cell LED color of %1 face to %2 %3',
+                CellColorChange: 'Change the cell color of %1 face to %2  %3 %4 %5 %6 %7 %8 %9 %10',
+                PosDirTorChange: 'Change %1 face to %2 position, %3 direction %4 torque %5',
+                FaceRotationOnlyColor: 'Rotate the LED color of %1 face to %3º in %2 direction %4',
+                FaceRotation: 'Rotate %1 face to %3º in %2 direction %4',
+                FacesRotation: 'Rotate %1 face to %3º in %2 direction, %4 face to %6º in %5 direction %7',
+                SolveCube: 'Solve %1 for %3 seconds with %2 as front face %4',
+                PlayMode: 'Change to %1 play mode %2',
+                UserMode: 'Change to %1 firmware %2',
+                PlayNote: 'Play %1 for %2 seconds %3',
+                GetRecord: 'Get %1 record %2',
+                GetRecordDice: 'Get dice number record %1',
+                AutoSolve: 'Auto solving start %1'
             },
         },
     };
@@ -184,6 +192,7 @@ Entry.exMars_Cube.blockMenuBlocks = [
     'GetBlock_FaceLedColor',
     'GetBlock_FaceDir',
     'GetBlock_Record',
+    'GetBlock_RecordDice',
     'SetBlock_MenuInit',
     'SetBlock_ModeSetting',
     'SetBlock_PlayMode',
@@ -198,7 +207,9 @@ Entry.exMars_Cube.blockMenuBlocks = [
     'SetBlock_FacesRotation',
     'SetBlock_SolveCube',
     'SetBlock_PlayNote',
-    'SetBlock_GetRecord'
+    'SetBlock_GetRecord',
+    'SetBlock_GetRecordDice',
+    'SetBlock_AutoSolve'
 ];
 
 Entry.exMars_Cube.getBlocks = function() {
@@ -844,7 +855,7 @@ Entry.exMars_Cube.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [                        
+                    options: [
                         [Lang.template.RecordIndex0, '0'],
                         [Lang.template.RecordIndex1, '1'],
                         [Lang.template.RecordIndex2, '2'],
@@ -889,6 +900,35 @@ Entry.exMars_Cube.getBlocks = function() {
                         [Lang.template.RecordTimeBest, '5'],
                     ],
                     value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE
+                }
+            ],
+            def: {
+                params: [null]
+            },
+            paramsKeyMap: {
+                TIME: 0
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('TIME');
+            }
+        },
+        DropDownBlock_RecordDice: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.RecordDiceNumber, '5']
+                    ],
+                    value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE
@@ -1041,7 +1081,7 @@ Entry.exMars_Cube.getBlocks = function() {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number'
-                },                
+                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -1068,6 +1108,42 @@ Entry.exMars_Cube.getBlocks = function() {
             isNotFor: ['exMars_Cube'],
             func: function(sprite, script) {
                 var index = script.getNumberValue('INDEX');
+                var time = script.getNumberValue('TIME');
+                var hwData = Entry.hw.portData;
+                var s = Math.floor(hwData[index + 7][time] / 10) / 100;
+
+                return s;
+            }
+        },
+        GetBlock_RecordDice: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            template: Lang.template.RecodeDice,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number'
+                }
+            ],
+            def: {
+                params: [
+                    {
+                        type: 'DropDownBlock_RecordDice'
+                    }
+                ],
+                type: 'GetBlock_RecordDice'
+            },
+            paramsKeyMap: {
+                TIME: 0
+            },
+            events: {},
+            class: 'GetBlock',
+            isNotFor: ['exMars_Cube'],
+            func: function(sprite, script) {
+                var index = 7;
                 var time = script.getNumberValue('TIME');
                 var hwData = Entry.hw.portData;
                 var s = Math.floor(hwData[index + 7][time] / 10) / 100;
@@ -2237,6 +2313,108 @@ Entry.exMars_Cube.getBlocks = function() {
             isNotFor: ['exMars_Cube'],
             func: function(sprite, script) {
                 var index = script.getNumberValue('INDEX');
+                if(!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.exMars_Cube.removeTimeout(timer);
+                    }, Entry.exMars_Cube.delayTime);
+                    Entry.exMars_Cube.timeouts.push(timer);
+                    return script;
+                }
+                else if(script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    Entry.exMars_Cube.getIndex();
+                    Entry.hw.sendQueue['SetBlock'] = {
+                        name: 'GetRecord',
+                        index: Entry.exMars_Cube.index,
+                        data0: index
+                    };
+                    return script.callReturn();
+                }
+            }
+        },
+        SetBlock_GetRecordDice: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            template: Lang.template.GetRecordDice,
+             params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12
+                }
+            ],
+            def: {
+                params: [
+                    null
+                ],
+                type: 'SetBlock_GetRecordDice'
+            },
+            paramsKeyMap: {
+            },
+            events: {},
+            class: 'WriteBlock',
+            isNotFor: ['exMars_Cube'],
+            func: function(sprite, script) {
+                var index = 7;
+                if(!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.exMars_Cube.removeTimeout(timer);
+                    }, Entry.exMars_Cube.delayTime);
+                    Entry.exMars_Cube.timeouts.push(timer);
+                    return script;
+                }
+                else if(script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    Entry.exMars_Cube.getIndex();
+                    Entry.hw.sendQueue['SetBlock'] = {
+                        name: 'GetRecord',
+                        index: Entry.exMars_Cube.index,
+                        data0: index
+                    };
+                    return script.callReturn();
+                }
+            }
+        },
+        SetBlock_AutoSolve: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            template: Lang.template.AutoSolve,
+             params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12
+                }
+            ],
+            def: {
+                params: [
+                    null
+                ],
+                type: 'SetBlock_AutoSolve'
+            },
+            paramsKeyMap: {
+            },
+            events: {},
+            class: 'WriteBlock',
+            isNotFor: ['exMars_Cube'],
+            func: function(sprite, script) {
+                var index = 7;
                 if(!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;

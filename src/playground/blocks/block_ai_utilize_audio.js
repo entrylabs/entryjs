@@ -92,7 +92,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                     await AudioUtils.initialize();
                 }
                 if (AudioUtils.isRecording) {
-                    throw new Entry.Utils.AsyncError();
+                    return;
                 }
                 try {
                     AudioUtils.isRecording = true;
