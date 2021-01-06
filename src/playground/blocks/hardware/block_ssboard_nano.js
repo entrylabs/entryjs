@@ -19,6 +19,7 @@ Entry.ssboard_nano = {
 
     setZero: () => {
         ///  하드웨어 초기화 로직
+        const rgbled_0 = [];
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -34,11 +35,9 @@ Entry.ssboard_nano = {
         Entry.hw.update();
         lmotor_speed = 0;
         rmotor_speed = 0;
-        for (var i = 0; i < 255; i++) {
-            rgbled_r[i] = 0;
-            rgbled_g[i] = 0;
-            rgbled_b[i] = 0;
-        }
+        rgbled_r = rgbled_0;
+        rgbled_g = rgbled_0;
+        rgbled_b = rgbled_0;
     },
     Static: {
 //        ssboard_nano_BLOCK_COLOR: '#00979D', // gray(#848484)
@@ -284,7 +283,7 @@ Entry.ssboard_nano.getBlocks = function() {
                         ['7', '7'],
                         ['8', '8'],
                     ],
-                    value: '5',
+                    value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -718,7 +717,7 @@ Entry.ssboard_nano.getBlocks = function() {
                     }
                     if(duration > 300)
                         duration = 300;
-                    duration = duration * 1000;
+                    duration = duration * 100;
                     script.isStart = true;  // 출력 시작 플래그 셋
                     script.timeFlag = 1;    // 시간플래그 셋
 
@@ -727,7 +726,7 @@ Entry.ssboard_nano.getBlocks = function() {
                         data: 
                         {
                             value: value,
-                            duration: duration / 10,
+                            duration: duration,
                         },
                         time: new Date().getTime(),
                     };
@@ -796,7 +795,7 @@ Entry.ssboard_nano.getBlocks = function() {
                     },
                     {
                         type: 'text',
-                        params: ['0.25'],
+                        params: ['1'],
                     },
                     null,
                 ],
@@ -844,7 +843,7 @@ Entry.ssboard_nano.getBlocks = function() {
                     if (note != 0) value = Entry.ssboard_nano.toneMap[note][octave];
                     if(duration > 300)
                         duration = 300;
-                    duration = duration * 1000;
+                    duration = duration * 100;
                     script.isStart = true;
                     script.timeFlag = 1;
 
@@ -854,7 +853,7 @@ Entry.ssboard_nano.getBlocks = function() {
                         data: 
 						{
                             value: value,
-                            duration: duration / 10,
+                            duration: duration,
                         },
                         time: new Date().getTime(),
                     };
@@ -1155,7 +1154,7 @@ Entry.ssboard_nano.getBlocks = function() {
                                     break;					
 						case 6: 	rLED = 255; gLED = 0;	bLED = 255;	// Magenta
                                     break;
-                        case 7: 	rLED = 0; gLED = 0;	bLED = 0;	    // 끄기
+                        case 6: 	rLED = 0; gLED = 0;	bLED = 0;	    // 끄기
                                     break;
 				}
                 
@@ -1182,7 +1181,7 @@ Entry.ssboard_nano.getBlocks = function() {
                         script.timeFlag = 1;    // 시간플래그 셋
                         setTimeout(() => {
                             script.timeFlag = 0;
-                        }, delay_time + 110 );
+                        }, delay_time );
                         return script;
                     } else if (script.timeFlag == 1) {
                         return script;
@@ -1344,38 +1343,23 @@ Entry.ssboard_nano.getBlocks = function() {
                 const ledmode = 7;
 
                 if(!(rgbled_r[port] == rLED) || !(rgbled_g[port] == gLED) || !(rgbled_b[port] == bLED)) {
-                    if (!script.isStart) {
-                        if (!Entry.hw.sendQueue.SET) {
-                            Entry.hw.sendQueue.SET = {};
-                        }
-                        Entry.hw.sendQueue.SET[port] = {
-                            type: Entry.ssboard_nano.sensorTypes.RGBLED,
-                            data: {
-                                r: rLED,
-                                g: gLED,
-                                b: bLED,
-                                mode: ledmode,
-                            },
-                            time: new Date().getTime(),
-                        };
-                        
-                        script.isStart = true;  // 출력 시작 플래그 셋
-                        script.timeFlag = 1;    // 시간플래그 셋
-                        setTimeout(() => {
-                            script.timeFlag = 0;
-                        }, 100 );
-                        return script;
-                    } else if (script.timeFlag == 1) {
-                        return script;
-                    } else {// 설정 시간이 지나면 출력 리셋
-                        rgbled_r[port] = rLED;
-                        rgbled_g[port] = gLED;
-                        rgbled_b[port] = bLED;
-                        delete script.timeFlag;
-                        delete script.isStart;
-                        Entry.engine.isContinue = false;
-                        return script.callReturn();
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
                     }
+                    Entry.hw.sendQueue.SET[port] = {
+                        type: Entry.ssboard_nano.sensorTypes.RGBLED,
+                        data: {
+                            r: rLED,
+                            g: gLED,
+                            b: bLED,
+                            mode: ledmode,
+                        },
+                        time: new Date().getTime(),
+                    };
+                    rgbled_r[port] = rLED;
+                    rgbled_g[port] = gLED;
+                    rgbled_b[port] = bLED;
+                    return script.callReturn();
                 }
                 else
                     return script.callReturn();
@@ -1420,38 +1404,19 @@ Entry.ssboard_nano.getBlocks = function() {
                 const port = 4;//script.getNumberValue('PORT');
                 const ledmode = script.getNumberValue('VALUE', script);
 
-				if (ledmode == 2) {
-                    for (var i = 0; i < 255; i++) {
-                        rgbled_r[i] = 0;
-                        rgbled_g[i] = 0;
-                        rgbled_b[i] = 0;
-                    }
+				
+								
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
                 }
-				if (!script.isStart) {
-                    if (!Entry.hw.sendQueue.SET) {
-                        Entry.hw.sendQueue.SET = {};
-                    }
-                    Entry.hw.sendQueue.SET[port] = {
-                        type: Entry.ssboard_nano.sensorTypes.RGBLEDSHOW,
-                        data: {
-                            mode: ledmode,
-                        },
-                        time: new Date().getTime(),
-                    };
-                    script.isStart = true;  // 출력 시작 플래그 셋
-                    script.timeFlag = 1;    // 시간플래그 셋
-                    setTimeout(() => {
-                        script.timeFlag = 0;
-                    }, delay_time + 80 );
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {// 설정 시간이 지나면 출력 리셋
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.ssboard_nano.sensorTypes.RGBLEDSHOW,
+                    data: {
+                        mode: ledmode,
+                    },
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },

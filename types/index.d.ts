@@ -20,7 +20,7 @@ declare interface ISkeleton {
     dropdownHeight?: number; // for pebble
     path: (blockView: any) => string; // svg path string
     box: (
-        blockView: any
+        blockView: any,
     ) => {
         offsetX: number;
         offsetY: number;
@@ -31,7 +31,7 @@ declare interface ISkeleton {
     };
     contentPos: (blockView: any) => Point;
     magnets?: (
-        blockView: any
+        blockView: any,
     ) => {
         next?: Point;
         previous?: Point;
@@ -43,7 +43,7 @@ declare interface ISkeleton {
 }
 
 declare interface MediaUtilsInterface {
-    initialize(list?: string[][]): void;
+    initialize(): void;
 
     reset(): void;
 
@@ -69,7 +69,7 @@ declare interface EntryDom extends JQuery {
 
 declare type EntryDomConstructor = (
     tag: string | HTMLElement | JQuery,
-    options?: EntryDomOptions
+    options?: EntryDomOptions,
 ) => EntryDom;
 
 interface HardwareMessageData extends HardwareModuleId {
@@ -145,26 +145,26 @@ declare type EntryBlock = {
     skeleton: string;
     statements?: any[];
     template?: string;
-    params: { [key: string]: any };
+    params: { [key: string]: any; };
     defs?: any; // legacy
-    def: { type: string } & { [key: string]: any };
-    paramsKeyMap?: { [key: string]: number };
+    def: { type: string; } & { [key: string]: any }
+    paramsKeyMap?: { [key: string]: number; }
     class: string;
     isFor?: string[];
     isNotFor?: string[];
-    events: { [key: string]: any };
+    events: { [key: string]: any; }
     type?: string;
     category?: string;
     pyHelpDef?: {
         params: string[];
         type: string;
-    };
+    }
     func?: Function;
     syntax?: {
         js?: any[];
         py: any[];
-    };
-};
+    }
+}
 
 // expansion blocks 의 스키마를 따름
 declare interface EntryBlockModule {

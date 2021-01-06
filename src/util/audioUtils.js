@@ -24,7 +24,7 @@ class AudioUtils {
     }
 
     constructor() {
-        this.isInitialized = false; // 유저 인풋 연결 확인
+        this.isAudioInitComplete = false; // 유저 인풋 연결 확인
         this.isRecording = false;
         this._userMediaStream = undefined;
         this._mediaRecorder = undefined;
@@ -32,7 +32,15 @@ class AudioUtils {
         this._audioChunks = [];
         this.result = null;
         this.startedRecording = false;
-        this.audioInputList = [];
+    }
+
+    async checkUserMicAvailable() {
+        try {
+            await navigator.mediaDevices.getUserMedia({ audio: true });
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 
     async getMediaStream() {
@@ -60,22 +68,17 @@ class AudioUtils {
         }
     }
 
-    async initialize() {
-        if (this.isInitialized) {
-            return;
-        }
+    async initUserMedia() {
         this.incompatBrowserChecker();
         const mediaStream = await this.getMediaStream();
+
+        if (this.isAudioInitComplete) {
+            return;
+        }
+        Entry.addEventListener('beforeStop', () => {
+            this.improperStop();
+        });
         try {
-            Entry.addEventListener('beforeStop', () => {
-                this.improperStop();
-            });
-
-            const inputList = await navigator.mediaDevices.enumerateDevices();
-            this.audioInputList = inputList
-                .filter((input) => input.kind === 'audioinput')
-                .map((item) => [item.label, item.deviceId]);
-
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
                     window.AudioContext = window.webkitAudioContext;
@@ -97,17 +100,17 @@ class AudioUtils {
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
             this._mediaRecorder = mediaRecorder;
+            this.isAudioInitComplete = true;
 
             // 음성 인식 api 를 사용하기 위함
             // 음성 인식은 websocket 을 통해서 WAV로 전송하게 되어있음.
             // 첫번째 파라미터는 프로토콜을 제외한 hostname+port 조합
             // ex)'localhost:4001'
-            this.isInitialized = true;
-            return;
+            return true;
         } catch (e) {
             console.error('error occurred while init audio input', e);
-            this.isInitialized = false;
-            return;
+            this.isAudioInitComplete = false;
+            return false;
         }
     }
 
@@ -123,15 +126,14 @@ class AudioUtils {
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
             this.resolveFunc = resolve;
-            if (!this.isInitialized) {
+            if (!this.isAudioInitComplete) {
                 console.log('audio not initialized');
                 resolve(0);
                 return;
             }
             // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
-                this.isInitialized = false;
-                await this.initialize();
+                await this.initUserMedia();
             }
 
             try {
@@ -181,13 +183,15 @@ class AudioUtils {
     }
 
     /**
-     * 녹음을 종료한다.
+     * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
+     * @param {object=} option
+     * @param {boolean} [option.silent=false]
      */
-    async stopRecord() {
+    async stopRecord(option = { silent: false }) {
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
-        if (!this.isInitialized || !this.isRecording) {
+        if (!this.isAudioInitComplete || !this.isRecording) {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
@@ -196,9 +200,17 @@ class AudioUtils {
         }
         this.startedRecording = false;
 
-        this._mediaRecorder.onstop = null;
-
-        this._stopMediaRecorder();
+        if (option.silent) {
+            this._mediaRecorder.onstop = () => {
+                console.log('silent stop');
+            };
+            this._stopMediaRecorder();
+        } else {
+            this._stopMediaRecorder();
+            this._mediaRecorder.onstop = () => {
+                console.log('proper stop');
+            };
+        }
         this._audioContext.suspend();
         this.stream.getTracks().forEach((track) => {
             track.stop();
@@ -208,7 +220,7 @@ class AudioUtils {
     }
 
     isAudioConnected() {
-        if (!this._isBrowserSupportAudio() || !this.isInitialized || !this._userMediaStream) {
+        if (!this._isBrowserSupportAudio() || !this.isAudioInitComplete || !this._userMediaStream) {
             return false;
         }
         const tracks = this._userMediaStream.getAudioTracks();

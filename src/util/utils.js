@@ -36,7 +36,7 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
-    DataTable.setTables(project.tables);
+    this.dataTableEnable && DataTable.setTables(project.tables);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
@@ -391,7 +391,8 @@ Entry.overridePrototype = function() {
                 .mod(right)
                 .add(right)
                 .mod(right)
-                .value.toNumber();
+                .value
+                .toNumber();
         } catch (e) {
             return ((this % n) + n) % n;
         }
@@ -460,15 +461,6 @@ Entry.Utils.isNumber = function(num) {
 
 Entry.Utils.generateId = function() {
     return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(36)}`.substr(-4);
-};
-
-Entry.Utils.randomColor = function() {
-    const letters = '0123456789ABCDEF';
-    let color = '#';
-    for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
 };
 
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
@@ -1970,15 +1962,13 @@ Entry.Utils.createMouseEvent = function(type, event) {
     return e;
 };
 
-Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
+Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     let block = scope.block;
     message = message || 'Runtime Error';
     const toast = error.toast;
     const engine = Entry.engine;
 
-    if (engine) {
-        await engine.toggleStop();
-    }
+    engine && engine.toggleStop();
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
@@ -2539,6 +2529,7 @@ Entry.Utils.playSound = function(id, option = {}) {
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
+    console.log('add sound instance');
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);

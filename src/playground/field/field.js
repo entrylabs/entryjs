@@ -366,8 +366,6 @@ Entry.Field = class Field {
             return 'keyboard';
         } else if (this instanceof Entry.FieldLed) {
             return 'led';
-        } else if (this instanceof Entry.FieldDynamicText) {
-            return 'dynamicText';
         }
     }
 

@@ -133,7 +133,6 @@ require('./playground/field/lineBreak');
 require('./playground/field/output');
 require('./playground/field/statement');
 require('./playground/field/text');
-require('./playground/field/textDynamic');
 require('./playground/field/textInput');
 require('./textcoding/ast/jsAstGenerator');
 require('./textcoding/ast/pyAstGenerator');

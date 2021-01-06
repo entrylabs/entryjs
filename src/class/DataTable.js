@@ -1,10 +1,7 @@
-import _map from 'lodash/map';
 import _find from 'lodash/find';
-import _uniq from 'lodash/uniq';
-import _filter from 'lodash/filter';
-import _flatten from 'lodash/flatten';
-import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
+import _uniq from 'lodash/uniq';
+import _flatten from 'lodash/flatten';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -14,28 +11,8 @@ class DataTable {
     modal;
     selected;
 
-    get tables() {
-        return this.#tables;
-    }
-
-    get dataTables() {
-        return _map(this.#tables, ({ id, fields, chart, name, origin, summary }) => ({
-            id,
-            name,
-            summary,
-            chart: _cloneDeep(chart),
-            table: [[...fields], ..._cloneDeep(origin)],
-        }));
-    }
-
-    constructor() {
-        this.#generateView();
-    }
-
     removeAllBlocks() {
-        const { blocks } = EntryStatic.getAllBlocks().find(
-            ({ category }) => category === 'analysis'
-        );
+        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'analysis');
         blocks.forEach((blockType) => {
             Entry.Utils.removeBlockByType(blockType);
         });
@@ -49,6 +26,15 @@ class DataTable {
 
     unbanBlock() {
         Entry.playground.blockMenu.unbanClass('analysis');
+    }
+
+    set view(view) {
+        this.#view = view;
+        this.#generateView();
+    }
+
+    get tables() {
+        return this.#tables;
     }
 
     getTables(blockList = []) {
@@ -96,22 +82,19 @@ class DataTable {
         return _findIndex(this.#tables, { id });
     }
 
-    addSource(table) {
+    addSource(table, shouldTableMode = true) {
+        const isWorkspace = Entry.type === 'workspace';
+        if (shouldTableMode && isWorkspace) {
+            Entry.do('playgroundChangeViewMode', 'table');
+        }
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
-
-        this.#tables.push(table instanceof DataTableSource ? table : new DataTableSource(table));
-        this.hide();
-        this.show({ list: this.dataTables, selectedIndex: this.dataTables.length - 1 });
+        const isDataTableSource = data instanceof DataTableSource;
+        Entry.do('dataTableAddSource', isDataTableSource ? data : new DataTableSource(data));
     }
 
-    addSources(tables = []) {
-        const dataTableSources = _map(tables, (table) =>
-            table instanceof DataTableSource ? table : new DataTableSource(table)
-        );
-        this.#tables.push(...dataTableSources);
-        this.hide();
-        this.show({ list: this.dataTables, selectedIndex: this.dataTables.length - 1 });
+    removeSource(table) {
+        Entry.do('dataTableRemoveSource', table);
     }
 
     changeItemPosition(start, end) {
@@ -120,70 +103,81 @@ class DataTable {
         }
     }
 
-    setSource({ chart, table, name, id }) {
+    async selectTable(table = {}) {
+        if (this.tempDataAnalytics) {
+            const temp = { ...this.tempDataAnalytics };
+            const confirm = await entrylms.confirm(Lang.Menus.save_modified_table);
+            if (confirm) {
+                const result = this.saveTable(temp);
+                if (!result) {
+                    return;
+                }
+            }
+        }
+        const json = table.toJSON && table.toJSON();
+        const { tab } = table;
+        this.selected = table;
+        this.dataAnalytics.setData({
+            table: { ...json, tab },
+        });
+        delete table.tab;
+        delete this.tempDataAnalytics;
+        return table;
+    }
+
+    saveTable = (dataAnalytics) => {
+        const { id, table = [[]], charts = [], title } = dataAnalytics;
+        if (!title) {
+            Entry.toast.alert(
+                Lang.DataAnalytics.fail_save_table,
+                Lang.DataAnalytics.empty_table_name_content
+            );
+            return;
+        }
+        if (
+            Entry.playground.isDuplicatedTableName(
+                title,
+                _.findIndex(this.tables, (table) => table.id === id)
+            )
+        ) {
+            Entry.toast.alert(
+                Lang.DataAnalytics.fail_save_table,
+                Lang.DataAnalytics.duplicate_table_name_content
+            );
+            return;
+        }
         const source = this.getSource(id);
+        const data = ((this.tempDataAnalytics && this.tempDataAnalytics.table) || table).slice(1);
         if (source) {
             source.modal = null;
             source.setArray({
-                name,
-                chart,
+                data,
+                chart: charts,
                 fields: table[0],
-                data: table.slice(1),
+                name: title,
             });
-            source.updated = new Date();
+            Entry.playground.injectTable();
         }
-    }
-
-    saveTable = ({ selected }) => {
-        this.setSource(selected);
-        Entry.playground.reloadPlayground();
-    };
-
-    removeTable = (index) => {
-        this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
-    };
-
-    show(data) {
-        if (!this.dataAnalytics) {
-            this.#generateView();
-        }
-        this.dataAnalytics.show(
-            data || { selectedIndex: this.#tables.legnth - 1, list: this.dataTables }
+        Entry.toast.success(
+            Lang.DataAnalytics.saved_table_title,
+            Lang.DataAnalytics.saved_table_content
         );
-    }
-
-    hide() {
-        this.dataAnalytics && this.dataAnalytics.hide();
-        if (this.#tables.length) {
-            this.unbanBlock();
-        } else {
-            this.banAllBlock();
-        }
+        delete this.tempDataAnalytics;
         Entry.playground.reloadPlayground();
-        Entry.playground.refreshPlayground();
-        Entry.dispatchEvent('dismissModal');
-    }
+        return true;
+    };
 
     #generateView() {
-        const view = document.createElement('div');
-        view.className = 'table-modal';
-        document.body.appendChild(view);
-        this.dataAnalytics = new DataAnalytics({ container: view, data: {}, isShow: false })
+        this.dataAnalytics = new DataAnalytics({ container: this.#view, data: {} })
             .on('submit', this.saveTable)
-            .on('alert', ({ message, title = Lang.DataAnalytics.max_row_count_error_title }) =>
-                entrylms.alert(message, title)
-            )
+            .on('alert', (({ message, title = Lang.DataAnalytics.max_row_count_error_title }) => entrylms.alert(message, title)))
             .on('toast', (message) => {
                 const { title, content } = message;
                 Entry.toast.alert(title, content);
             })
-            .on('close', async () => {
-                this.hide();
-            })
-            .on('addTable', () => {
-                Entry.dispatchEvent('openTableManager');
-            })
-            .on('removeTable', this.removeTable);
+            .on('change', (dataAnalytics) => {
+                this.tempDataAnalytics = dataAnalytics;
+            });
     }
 
     getTableJSON() {
@@ -192,36 +186,32 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            let data = table || { name: Lang.Workspace.data_table };
-            data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
-            const isDataTableSource = data instanceof DataTableSource;
-            this.#tables.push(isDataTableSource ? data : new DataTableSource(data));
+            this.addSource(table, false);
         });
-
-        tables.length && this.refreshPlayground();
     }
 
-    refreshPlayground() {
-        const isWorkspace = Entry.type === 'workspace';
-        if (isWorkspace) {
-            this.unbanBlock();
-            Entry.playground.reloadPlayground();
-            Entry.playground.refreshPlayground();
-        }
-    }
-
-    showChart(tableId, chartIndex = 0) {
-        this.closeChart();
-        const source = this.getSource(tableId);
-        if (!source) {
-            console.log(`not exist souce, table id: ${tableId}`);
+    setTableName(id, name) {
+        if (!name) {
             return;
         }
+
+        const source = this.getSource(id);
+        if (!source) {
+            return;
+        }
+
+        const { chart, array, fields } = source;
+        source.setArray({ chart, data: array, fields, name });
+    }
+
+    showChart(tableId) {
+        this.closeChart();
+        const source = this.getSource(tableId);
         if (!source.modal) {
-            source.modal = this.createChart(source, chartIndex);
+            source.modal = this.createChart(source);
         }
         source.forceApply();
-        source.modal.show({ chartIndex });
+        source.modal.show();
         this.modal = source.modal;
     }
 
@@ -231,7 +221,7 @@ class DataTable {
         }
     }
 
-    createChart(source, chartIndex = 0) {
+    createChart(source) {
         const { chart = [], fields, rows } = source;
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
@@ -239,11 +229,9 @@ class DataTable {
         })[0];
         return new ModalChart({
             data: {
-                chartIndex,
                 source: { fields, origin: rows, chart },
                 togglePause: () => Entry.engine.togglePause(),
-                stop: () => Entry.engine.toggleStop(),
-                isIframe: self !== top,
+                stop: () => Entry.engine.toggleStop()
             },
             container,
         });
