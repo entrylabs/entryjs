@@ -510,6 +510,11 @@ Entry.parseOptions = function(options) {
         this.variableEnable = true;
     }
 
+    this.dataTableEnable = options.dataTableEnable;
+    if (this.dataTableEnable === undefined) {
+        this.dataTableEnable = false;
+    }
+
     this.aiLearningEnable = options.aiLearningEnable;
     if (this.aiLearningEnable === undefined) {
         this.aiLearningEnable = true;

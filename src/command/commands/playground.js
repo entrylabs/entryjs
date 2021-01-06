@@ -21,10 +21,7 @@
         },
         log(newType, oldType) {
             oldType = oldType || 'code';
-            return [
-                ['newType', newType],
-                ['oldType', oldType],
-            ];
+            return [['newType', newType], ['oldType', oldType]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: 'playgroundChangeViewMode',

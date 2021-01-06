@@ -43,6 +43,8 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
 
     renderStart() {
         const blockView = this._blockView;
+        const X_PADDING = 20;
+        const X_PADDING_SUBT = 10;
         const that = this;
         const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         const arrowInfo = this.getArrow();
@@ -97,17 +99,41 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
                 stroke: arrowInfo.color,
             });
         }
-        let promise;
+
         if (this instanceof Entry.FieldDropdownDynamic) {
-            promise = this._updateValue();
-            if (promise instanceof Promise) {
-                promise.then(() => {
-                    this._updateTextRender();
-                });
-            }
+            this._updateValue();
         }
-        this._updateTextRender();
-        return promise;
+
+        this._setTextValue();
+
+        const bBox = this.getTextBBox();
+
+        this.textElement.attr({
+            y: bBox.height * 0.27,
+        });
+
+        let width = bBox.width + X_PADDING;
+
+        if (this._noArrow) {
+            width -= X_PADDING_SUBT;
+        }
+
+        this._header.attr({ width });
+
+        if (!this._noArrow) {
+            this._arrow.attr({
+                transform: `translate(${width - arrowInfo.width - 5},${-arrowInfo.height / 2})`,
+            });
+        }
+
+        this._bindRenderOptions();
+
+        this.box.set({
+            x: 0,
+            y: 0,
+            width,
+            height: CONTENT_HEIGHT,
+        });
     }
 
     resize() {
@@ -130,7 +156,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         });
 
         this.box.set({ width });
-        this._block.view?.dAlignContent();
+        this._block.view.dAlignContent();
     }
 
     _attachDisposeEvent(func) {
@@ -230,43 +256,6 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         if (this.getTextValue() !== newValue) {
             this.textElement.textContent = newValue;
         }
-    }
-
-    _updateTextRender() {
-        const X_PADDING = 20;
-        const X_PADDING_SUBT = 10;
-        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
-        const arrowInfo = this.getArrow();
-        this._setTextValue();
-
-        const bBox = this.getTextBBox();
-
-        this.textElement.attr({
-            y: bBox.height * 0.27,
-        });
-
-        let width = bBox.width + X_PADDING;
-
-        if (this._noArrow) {
-            width -= X_PADDING_SUBT;
-        }
-
-        this._header.attr({ width });
-
-        if (!this._noArrow) {
-            this._arrow.attr({
-                transform: `translate(${width - arrowInfo.width - 5},${-arrowInfo.height / 2})`,
-            });
-        }
-
-        this._bindRenderOptions();
-
-        this.box.set({
-            x: 0,
-            y: 0,
-            width,
-            height: CONTENT_HEIGHT,
-        });
     }
 
     getTextValue() {
