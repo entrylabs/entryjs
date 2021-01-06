@@ -191,6 +191,7 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 40, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 66, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 710, 2, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
@@ -1032,6 +1033,7 @@ Entry.Robotis_openCM70.blockMenuBlocks = [
     'robotis_openCM70_cm_screen',
     'robotis_openCM70_cm_led',
     'robotis_openCM70_RGee_go',
+    'robotis_openCM70_RGee_stop',
     'robotis_openCM70_RGee_motion',
     'robotis_openCM70_cm_motion',
     'robotis_openCM70_cm_custom_value',
@@ -2277,7 +2279,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
                         ['좌회전', '3'],
                         ['우회전', '4'],
                     ],
-                    value: '32',
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2291,10 +2293,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
+                    null,
                     null,
                     null,
                 ],
@@ -2308,7 +2307,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
-                var speed = script.getField('SPEED', script);
+                var speed = script.getNumberValue('SPEED', script);
                 var direction = script.getField('DIRECTION', script);
                 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
@@ -2320,8 +2319,20 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     case '1':
                         data_value = speed * 256 + speed;
                         break;
+                    case '2':
+                        data_value = (256 - speed) * 256 + (256 - speed);
+                        break;
+                    case '3':
+                        data_value = speed * 256 + (256 - speed);
+                        break;
+                    case '4':
+                        data_value = (256 - speed) * 256 + speed;
+                        break;
+                    default:
+                        data_value = 0;
+                        break;
                 }
-
+                
                 var data_sendqueue = [
                     [
                         data_instruction,
@@ -2339,6 +2350,54 @@ Entry.Robotis_openCM70.getBlocks = function () {
             syntax: {
                 js: [],
                 py: ['Robotis.opencm70_RGee_go(%1, %2)'],
+            },
+        },
+        robotis_openCM70_RGee_stop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                params: [
+                   
+                ],
+                type: 'robotis_openCM70_RGee_stop',
+            },
+            paramsKeyMap: {
+                SPEED: 0,
+                DIRECTION: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var speed = script.getNumberValue('SPEED', script);
+                var direction = script.getField('DIRECTION', script);
+                
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 710;
+                var data_length = 2;
+                var data_value = 0;
+            
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                    ],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_RGee_stop()'],
             },
         },
         robotis_openCM70_RGee_motion: {
