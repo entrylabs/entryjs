@@ -100,7 +100,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         if (reDraw && this._menuName === 'variables' && !this._isBlockInBoardWhenFunctionEdit()) {
             this.value = undefined;
         }
-        this.setValue(this.getOptionCheckedValue(), reDraw);
+        this.applyValue(this.getOptionCheckedValue(), reDraw);
     }
 
     getTargetValue(key, useParent = false) {
@@ -115,7 +115,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
     }
 
     getOptionCheckedValue() {
-        const { options, defaultValue } = this._contents;
+        const { options = [], defaultValue } = this._contents;
         let value = this.getValue();
 
         if (this._blockView.isInBlockMenu || !value || value == 'null') {

@@ -1892,9 +1892,6 @@ Entry.LineCoding.getBlocks = function() {
             func(sprite, script) {
                 let rspeed2 = script.getNumberValue('RSPEED', script);
                 let lspeed2 = script.getNumberValue('LSPEED', script);
-                if (LineSaveFlag == 1) {
-                    ++LineNum;
-                }
                 lspeed2 = Math.min(20, lspeed2);
                 lspeed2 = Math.max(-20, lspeed2);
                 rspeed2 = Math.min(20, rspeed2);
@@ -1904,10 +1901,15 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    if (WheelNum == 18) {
-                        WheelNum = 19;
+                    if (LineSaveFlag == 1) {
+                        ++LineNum;
+                        WheelNum = LineNum;
                     } else {
-                        WheelNum = 18;
+                        if (WheelNum == 18) {
+                            WheelNum = 19;
+                        } else {
+                            WheelNum = 18;
+                        }
                     }
                     Entry.hw.sendQueue.SET[parseInt(WheelNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_WHEEL,
