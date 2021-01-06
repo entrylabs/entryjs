@@ -4,7 +4,7 @@ import floor from 'lodash/floor';
 import LearningView from './LearningView';
 import Chart from './Chart';
 
-const GRAPH_COLOR = ['#6e5ae6', '#f16670', '#556670', '#00b6b1'];
+const GRAPH_COLOR = ['#4f80ff', '#f16670', '#6e5ae6', '#00b6b1', '#9fbaff', '#fcad93', '#c5b4ff', '#b3c3cd', '#2d51ac', '#a23941', '#423496', '#2a7d7f'];
 
 export const classes = [
     'ai_learning_train',
@@ -131,8 +131,16 @@ class Cluster {
             centroids,
         };
         this.#isTrained = true;
+        const { k } = this.#trainParam;
         this.#chart?.load({
             source: this.chartData,
+            description: `
+                    <em>${Lang.AiLearning.cluster_number}</em>   ${k}
+                    ${this.#fields.map(
+                        (field, index) =>
+                            `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`
+                    )}
+                `,
         });
         this.#trainCallback(100);
     }
