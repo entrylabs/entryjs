@@ -78,6 +78,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 jikko_toggle_led: '디지털 %1 번 핀 %2 %3',
                 jikko_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                jikko_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
             },
         },
         en: {
@@ -87,6 +88,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_pwm: 'Digital %1 Pin %2 %3',
                 jikko_toggle_led: 'Digital %1 Pin %2 %3',
                 jikko_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                jikko_set_servo: 'Set servo pin %1 angle as %2 %3',
             },
         },
     };
@@ -98,6 +100,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_toggle_pwm',
     'jikko_toggle_led',
     'jikko_set_tone',
+    'jikko_set_servo',
 ];
 
 Entry.jikko.getBlocks = function() {
@@ -739,6 +742,82 @@ Entry.jikko.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        jikko_set_servo: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['3'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_servo',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'jikkoBlock',
+            //isNotFor: ['ArduinoExt'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let value = script.getNumberValue('VALUE', script);
+                value = Math.min(180, value);
+                value = Math.max(0, value);
+
+                if (!sq.SET) {
+                    sq.SET = {};
+                }
+                sq.SET[port] = {
+                    type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.servomotorWrite(%1, %2)',
+                        textParams: [
                             {
                                 type: 'Block',
                                 accept: 'string',
