@@ -73,8 +73,6 @@ Entry.jikko.setLanguage = function() {
     return {
         ko: {
             template: {
-                jikko_on_digital_value: '디지털 핀 %1 번을 켜기 %2',
-                jikko_off_digital_value: '디지털 핀 %1 번을 끄기 %2',
                 jikko_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 jikko_toggle_led: '디지털 %1 번 핀 %2 %3',
                 jikko_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
@@ -83,8 +81,6 @@ Entry.jikko.setLanguage = function() {
         },
         en: {
             template: {
-                jikko_on_digital_value: 'turn on digital pin %1 %2',
-                jikko_off_digital_value: 'turn off digital pin %1 %2',
                 jikko_toggle_pwm: 'Digital %1 Pin %2 %3',
                 jikko_toggle_led: 'Digital %1 Pin %2 %3',
                 jikko_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
@@ -95,8 +91,6 @@ Entry.jikko.setLanguage = function() {
 };
 
 Entry.jikko.blockMenuBlocks = [
-    'jikko_on_digital_value',
-    'jikko_off_digital_value',
     'jikko_toggle_pwm',
     'jikko_toggle_led',
     'jikko_set_tone',
@@ -105,109 +99,6 @@ Entry.jikko.blockMenuBlocks = [
 
 Entry.jikko.getBlocks = function() {
     return {
-        jikko_on_digital_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic', // 블록 모양 템플릿. 자세한 목록은 docs 를 참고해주세요
-            statements: [],
-            params: [
-                //입력될 파라미터들의 속성을 정의
-                {
-                    type: 'Block',
-                    accept: 'string', //숫자만 들어가도 string 입니다. 엔트리엔 이를 구분하지 않습니다.
-                },
-                // basic skeleton 의 마지막엔 인디케이터를 추가해주셔야 합니다.
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            def: {
-                params: [
-                    //파라미터에 들어갈 기본 값.
-                    {
-                        type: 'number',
-                        params: [5],
-                    },
-                ],
-                type: 'jikko_on_digital_value', // 블록 상속과 관련된 값입니다. 블록명과 동일하게 해주면 됩니다.
-            },
-            paramsKeyMap: {
-                // 실제 블록의 로직인 func 에서 해당 인덱스의 파라미터를 가져올때 쓸 key 값
-                PORT: 0,
-            },
-            events: {},
-            class: 'jikkoBlock', // 블록을 묶어서 보여줄 단위값. 이 값이 바뀌면 사이에 가로줄이 생깁니다.
-            //isNotFor: ['jikko'], // 하드웨어가 연결되었을 경우만 블록을 보여주겠다는 판단값입니다. name 과 동일해야 합니다.
-            func(sprite, script) {
-                // paramsKeyMap 에서 PORT 는 파라미터의 0번 인덱스 값이었습니다.
-                const portNumber = script.getNumberValue('PORT');
-                Entry.hw.sendQueue[portNumber] = 1;
-                // 값을 반환해야하는 경우는 return 할 수 있습니다.
-            },
-            syntax: {
-                // 파이썬 문법 변환에 사용되고 있습니다.
-                js: [],
-                py: [
-                    {
-                        syntax: 'jikko.turnOnDigitalPort(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        jikko_off_digital_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#ffffff',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: [5],
-                    },
-                ],
-                type: 'jikko_off_digital_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            events: {},
-            class: 'jikkoBlock',
-            //NotFor: ['jikko'],
-            func(sprite, script) {
-                const portNumber = script.getNumberValue('PORT');
-                Entry.hw.sendQueue[portNumber] = 0;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'jikko.turnOffDigitalPort(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
         arduino_get_digital_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -395,8 +286,11 @@ Entry.jikko.getBlocks = function() {
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
-                //Entry.hw.setDigitalPortValue(port, value);
-                Entry.hw.sendQueue[port] = value;
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.ArduinoExt.sensorTypes.PWM,
+                    data: value,
+                    time: new Date().getTime(),
+                };
 
                 return script.callReturn();
             },
