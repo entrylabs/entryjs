@@ -13,8 +13,17 @@ class Testino {
     }
 
     setZero() {
-        for (let i = 2; i <= 13; i++) {
-            Entry.hw.sendQueue.PORT[i] = 0;
+        if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                GET: {},
+                SET: {},
+            };
+        } else {
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach(function(key) {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            });
         }
         Entry.hw.update();
     }
