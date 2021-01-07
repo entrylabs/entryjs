@@ -77,6 +77,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_led: '디지털 %1 번 핀 %2 %3',
                 jikko_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 jikko_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                jikko_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
             },
         },
         en: {
@@ -85,6 +86,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_led: 'Digital %1 Pin %2 %3',
                 jikko_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 jikko_set_servo: 'Set servo pin %1 angle as %2 %3',
+                jikko_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
             },
         },
     };
@@ -95,6 +97,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_toggle_led',
     'jikko_set_tone',
     'jikko_set_servo',
+    'jikko_get_ultrasonic_value',
 ];
 
 Entry.jikko.getBlocks = function() {
@@ -711,6 +714,83 @@ Entry.jikko.getBlocks = function() {
                 py: [
                     {
                         syntax: 'Arduino.servomotorWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        jikko_get_ultrasonic_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['13'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['12'],
+                    },
+                ],
+                type: 'jikko_get_ultrasonic_value',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+            },
+            class: 'jikkoBlock',
+            //isNotFor: ['ArduinoExt'],
+            func(sprite, script) {
+                const port1 = script.getNumberValue('PORT1', script);
+                const port2 = script.getNumberValue('PORT2', script);
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                delete Entry.hw.sendQueue.SET[port1];
+                delete Entry.hw.sendQueue.SET[port2];
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
+                    port: [port1, port2],
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.ULTRASONIC || 0;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
+                        blockType: 'param',
                         textParams: [
                             {
                                 type: 'Block',
