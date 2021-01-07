@@ -77,7 +77,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_led: '디지털 %1 번 핀 %2 %3',
                 jikko_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 jikko_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                jikko_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                jikko_get_ultrasonic_value: '초음파센서 (trig %1 echo %2) 거리(cm)',
             },
         },
         en: {
@@ -86,7 +86,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_led: 'Digital %1 Pin %2 %3',
                 jikko_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 jikko_set_servo: 'Set servo pin %1 angle as %2 %3',
-                jikko_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                jikko_get_ultrasonic_value: 'Ultrasonic sensor (trig pin %1 echo pin %2) distance(cm)',
             },
         },
     };
