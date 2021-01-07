@@ -34,6 +34,10 @@ Entry.jikko = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
+        LCDINIT: 41,
+        LCD: 42,
+        LCDCLEAR: 43,
+        LCDEMOTION: 44,
     },
     toneTable: {
         '0': 0,
@@ -66,6 +70,308 @@ Entry.jikko = {
     },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
+    duration: {
+        TIME_1ms: 1,
+        TIME_5ms: 5,
+        TIME_10ms: 10,
+        TIME_20ms: 20,
+        TIME_50ms: 50,
+        TIME_100ms: 100,
+        TIME_200ms: 200, 
+        TIME_500ms: 500,    
+        TIME_600ms: 600,   
+    }, 
+    toByte: function(data) {
+        switch (data) {
+            case ' ':
+                data = 32;
+                break;
+            case '!':
+                data = 33;
+                break;
+            case '"':
+                data = 34;
+                break;
+            case '#':
+                data = 35;
+                break;
+            case '$':
+                data = 36;
+                break;
+            case '%':
+                data = 37;
+                break;
+            case '&':
+                data = 38;
+                break;
+            case "'":
+                data = 39;
+                break;
+            case '(':
+                data = 40;
+                break;
+            case ')':
+                data = 41;
+                break;
+            case '*':
+                data = 42;
+                break;
+            case '+':
+                data = 43;
+                break;
+            case ',':
+                data = 44;
+                break;
+            case '-':
+                data = 45;
+                break;
+            case '.':
+                data = 46;
+                break;
+            case '/':
+                data = 47;
+                break;
+            case '0':
+                data = 48;
+                break;
+            case '1':
+                data = 49;
+                break;
+            case '2':
+                data = 50;
+                break;
+            case '3':
+                data = 51;
+                break;
+            case '4':
+                data = 52;
+                break;
+            case '5':
+                data = 53;
+                break;
+            case '6':
+                data = 54;
+                break;
+            case '7':
+                data = 55;
+                break;
+            case '8':
+                data = 56;
+                break;
+            case '9':
+                data = 57;
+                break;
+            case ':':
+                data = 58;
+                break;
+            case ';':
+                data = 59;
+                break;
+            case '<':
+                data = 60;
+                break;
+            case '=':
+                data = 61;
+                break;
+            case '>':
+                data = 62;
+                break;
+            case '?':
+                data = 63;
+                break;
+            case '@':
+                data = 64;
+                break;
+            case 'A':
+                data = 65;
+                break;
+            case 'B':
+                data = 66;
+                break;
+            case 'C':
+                data = 67;
+                break;
+            case 'D':
+                data = 68;
+                break;
+            case 'E':
+                data = 69;
+                break;
+            case 'F':
+                data = 70;
+                break;
+            case 'G':
+                data = 71;
+                break;
+            case 'H':
+                data = 72;
+                break;
+            case 'I':
+                data = 73;
+                break;
+            case 'J':
+                data = 74;
+                break;
+            case 'K':
+                data = 75;
+                break;
+            case 'L':
+                data = 76;
+                break;
+            case 'M':
+                data = 77;
+                break;
+            case 'N':
+                data = 78;
+                break;
+            case 'O':
+                data = 79;
+                break;
+            case 'P':
+                data = 80;
+                break;
+            case 'Q':
+                data = 81;
+                break;
+            case 'R':
+                data = 82;
+                break;
+            case 'S':
+                data = 83;
+                break;
+            case 'T':
+                data = 84;
+                break;
+            case 'U':
+                data = 85;
+                break;
+            case 'V':
+                data = 86;
+                break;
+            case 'W':
+                data = 87;
+                break;
+            case 'X':
+                data = 88;
+                break;
+            case 'Y':
+                data = 89;
+                break;
+            case 'Z':
+                data = 90;
+                break;
+            case '[':
+                data = 91;
+                break;
+            case '\\':
+                data = 92;
+                break;
+            case ']':
+                data = 93;
+                break;
+            case '^':
+                data = 94;
+                break;
+            case '_':
+                data = 95;
+                break;
+            case '`':
+                data = 96;
+                break;
+            case 'a':
+                data = 97;
+                break;
+            case 'b':
+                data = 98;
+                break;
+            case 'c':
+                data = 99;
+                break;
+            case 'd':
+                data = 100;
+                break;
+            case 'e':
+                data = 101;
+                break;
+            case 'f':
+                data = 102;
+                break;
+            case 'g':
+                data = 103;
+                break;
+            case 'h':
+                data = 104;
+                break;
+            case 'i':
+                data = 105;
+                break;
+            case 'j':
+                data = 106;
+                break;
+            case 'k':
+                data = 107;
+                break;
+            case 'l':
+                data = 108;
+                break;
+            case 'm':
+                data = 109;
+                break;
+            case 'n':
+                data = 110;
+                break;
+            case 'o':
+                data = 111;
+                break;
+            case 'p':
+                data = 112;
+                break;
+            case 'q':
+                data = 113;
+                break;
+            case 'r':
+                data = 114;
+                break;
+            case 's':
+                data = 115;
+                break;
+            case 't':
+                data = 116;
+                break;
+            case 'u':
+                data = 117;
+                break;
+            case 'v':
+                data = 118;
+                break;
+            case 'w':
+                data = 119;
+                break;
+            case 'x':
+                data = 120;
+                break;
+            case 'y':
+                data = 121;
+                break;
+            case 'z':
+                data = 122;
+                break;
+            case '{':
+                data = 123;
+                break;
+            case '|':
+                data = 124;
+                break;
+            case '}':
+                data = 125;
+                break;
+            case '~':
+                data = 126;
+                break;
+        }
+
+        return data;
+    },
     BlockState: {},
 };
 
@@ -78,6 +384,13 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 jikko_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 jikko_get_ultrasonic_value: '초음파센서 (trig %1 echo %2) 거리(cm)',
+                jikko_get_lcd_row: '%1',
+				jikko_get_lcd_col: '%1',
+				//jikko_set_I2CLCD_init: 'I2C LCD 시작하기 설정 (주소 0x%1, 열 %2, 행 %3) %4',
+                jikko_set_I2CLCD_init: 'I2C LCD 시작하기 설정 %3',
+                jikko_set_I2CLCD_print: 'I2C LCD의 %1 번째 줄, %2 번째 칸에 %3 출력하기 %4',
+				jikko_set_I2CLCD_clear: 'I2C LCD의 화면 모두 지우기 %3',
+				jikko_set_I2CLCD_emotion: 'I2C LCD의 %1 번째 줄, %2 번째 칸에 %3 이모티콘 출력하기 %4',
             },
         },
         en: {
@@ -87,6 +400,13 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 jikko_set_servo: 'Set servo pin %1 angle as %2 %3',
                 jikko_get_ultrasonic_value: 'Ultrasonic sensor (trig pin %1 echo pin %2) distance(cm)',
+                jikko_get_lcd_row: '%1',
+				jikko_get_lcd_col: '%1',
+				//jikko_set_I2CLCD_init: 'Start I2C LCD setting (address 0x%1, col %2, row %3) %4',
+                jikko_set_I2CLCD_init: 'Start I2C LCD setting %3',
+                jikko_set_I2CLCD_print: 'I2C LCD의 %1 번째 줄, %2 번째 칸에 %3 출력하기 %4',
+				jikko_set_I2CLCD_clear: 'I2C LCD의 화면 모두 지우기 %3',
+				jikko_set_I2CLCD_emotion: 'I2C LCD의 %1 번째 줄, %2 번째 칸에 %3 이모티콘 출력하기 %4',
             },
         },
     };
@@ -98,6 +418,12 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_tone',
     'jikko_set_servo',
     'jikko_get_ultrasonic_value',
+    'jikko_get_lcd_row',
+	'jikko_get_lcd_col',
+	'jikko_set_I2CLCD_init',
+	'jikko_set_I2CLCD_print',
+	'jikko_set_I2CLCD_clear',
+	'jikko_set_I2CLCD_emotion',
 ];
 
 Entry.jikko.getBlocks = function() {
@@ -801,6 +1127,718 @@ Entry.jikko.getBlocks = function() {
                                 accept: 'string',
                             },
                         ],
+                    },
+                ],
+            },
+        },
+        jikko_get_lcd_row: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                ROW: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('ROW');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+                                    ['1', '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        keyOption: 'jikko_get_lcd_row',
+                    },
+                ],
+            },
+        },
+		
+		jikko_get_lcd_col: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+						['2', '2'],
+                        ['3', '3'],
+						['4', '4'],
+                        ['5', '5'],
+						['6', '6'],
+                        ['7', '7'],
+						['8', '8'],
+                        ['9', '9'],
+						['10', '10'],
+                        ['11', '11'],
+						['12', '12'],
+                        ['13', '13'],
+						['14', '14'],
+                        ['15', '15'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                ROW: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('ROW');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+									['1', '1'],
+									['2', '2'],
+									['3', '3'],
+									['4', '4'],
+									['5', '5'],
+									['6', '6'],
+									['7', '7'],
+									['8', '8'],
+									['9', '9'],
+									['10', '10'],
+									['11', '11'],
+									['12', '12'],
+									['13', '13'],
+									['14', '14'],
+									['15', '15'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                        ],
+                        keyOption: 'jikko_get_lcd_col',
+                    },
+                ],
+            },
+        },
+        /*
+		jikko_list_lcd_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['27', '39'],
+                        ['3f', '63']
+                    ],
+                    value: '39',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                LCD_INIT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('LCD_INIT');
+                // return script.getField('LCD_INIT');
+            },
+        },
+        */
+        /*
+		jikko_set_I2CLCD_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+			def: {
+                params: [
+                    {
+                        type: 'jikko_list_lcd_init',
+                        params: ['39'],
+                    },
+					{
+						type: 'number',
+                        params: ['14'],
+                        // 16
+					},
+					{
+						type: 'number',
+                        params: ['1'],
+                        // 2
+					},
+					null,
+                ],
+                type: 'jikko_set_I2CLCD_init',
+            },
+            paramsKeyMap: {
+                LCD_INIT: 0,
+				PORT: 1,
+				PORT1: 2,
+            },
+            class: 'LCD',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var value = script.getNumberValue('LCD_INIT', script);
+                var port = script.getNumberValue('PORT', script);
+				var port1 = script.getNumberValue('PORT1', script);
+
+				if (!script.isStart) 
+                {
+                    
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+                    
+					var duration = Entry.jikko.duration.TIME_200ms;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    
+                    
+                    
+					sq.SET[port] = {
+							type: Entry.jikko.sensorTypes.LCDINIT,
+							data: port1,
+							time: new Date().getTime(),
+                    };
+                    
+                    // 이 밑으로는 모두 동일
+					setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration );
+                    return script;
+                }
+				else if (script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else 
+                {
+                    delete script.timeFlag;
+                    delete script.isStart;
+
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+						
+                    },
+                ],
+            },
+        },
+        */
+        jikko_set_I2CLCD_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+			def: {
+                params: [
+					{
+						type: 'number',
+						params: ['16'],
+					},
+					{
+						type: 'number',
+						params: ['2'],
+					},
+					null,
+                ],
+                type: 'jikko_set_I2CLCD_init',
+            },
+            paramsKeyMap: {
+				PORT: 0,
+				PORT1: 1,
+            },
+            class: 'LCD',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT', script);
+				var port1 = script.getNumberValue('PORT1', script);
+
+				if (!script.isStart) 
+                {
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+					
+					var duration = Entry.jikko.duration.TIME_200ms;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+					
+					sq.SET[port] = {
+							type: Entry.jikko.sensorTypes.LCDINIT,
+							data: port1,
+							time: new Date().getTime(),
+					};
+					setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration );
+                    return script;
+				}
+				else if (script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else 
+                {
+                    delete script.timeFlag;
+                    delete script.isStart;
+
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+						
+                    },
+                ],
+            },
+        },
+        
+		jikko_set_I2CLCD_print: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+			def: {
+                params: [
+					{
+                        type: 'jikko_get_lcd_row',
+						params: ['0'],
+
+                    },
+					{
+                        type: 'jikko_get_lcd_col',
+                        params: ['0'],
+                    },
+					{
+                        type: 'text',
+                        params: ['kocoafab'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_I2CLCD_print',
+            },
+            paramsKeyMap: {
+				ROW: 0,
+				COL: 1,
+				STRING: 2,
+            },
+            class: 'LCD',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('ROW', script);
+				var col = script.getNumberValue('COL', script);
+				var string = script.getValue('STRING', script);
+				var text = [];
+
+				if (!script.isStart) 
+                {
+					if (typeof string === 'string') 
+                    {
+                        for (var i = 0; i < string.length; i++) {
+                            text[i] = Entry.jikko.toByte(string[i]);
+                        }
+                    }
+                    else if (typeof string === 'number') 
+                    {
+                        //console.log("string");
+                        //console.log(string);
+                        var num_to_string = string.toString();
+                        for (var i = 0; i < num_to_string.length; i++) {
+                            text[i] = Entry.jikko.toByte(num_to_string[i]);
+                        }
+                        //console.log("num_to_string");
+                        //console.log(num_to_string);
+                        //text[0] = 1;
+                        //text[1] = string / 1;
+                    } 
+                    else 
+                    {
+                        text[0] = string;
+                    }
+					
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+					
+					var duration = Entry.jikko.duration.TIME_500ms;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+					
+					sq.SET['15'] = {
+							type: Entry.jikko.sensorTypes.LCD,
+							data: {
+								row: port,
+								col: col,
+								text0: text[0],
+								text1: text[1],
+								text2: text[2],
+								text3: text[3],
+								text4: text[4],
+								text5: text[5],
+								text6: text[6],
+								text7: text[7],
+								text8: text[8],
+								text9: text[9],
+								text10: text[10],
+								text11: text[11],
+								text12: text[12],
+								text13: text[13],
+								text14: text[14],
+								text15: text[15],
+							},
+							time: new Date().getTime(),
+					};
+					setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration );
+                    return script;
+				}
+				else if (script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else 
+                {
+                    delete script.timeFlag;
+                    delete script.isStart;
+
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+						
+                    },
+                ],
+            },
+        },
+		
+		jikko_set_I2CLCD_clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+			def: {
+                params: [
+					{
+						type: 'number',
+						params: ['15'],
+					},
+					{
+						type: 'number',
+						params: ['1'],
+					},
+					null,
+                ],
+                type: 'jikko_set_I2CLCD_clear',
+            },
+            paramsKeyMap: {
+				PORT: 0,
+				PORT1: 1,
+            },
+            class: 'LCD',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT', script);
+				var port1 = script.getNumberValue('PORT1', script);
+
+				if (!script.isStart) 
+                {
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+					
+					var duration = Entry.jikko.duration.TIME_200ms;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+					
+					sq.SET[port] = {
+							type: Entry.jikko.sensorTypes.LCDCLEAR,
+							data: port1,
+							time: new Date().getTime(),
+					};
+					setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration );
+                    return script;
+				}
+				else if (script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else 
+                {
+                    delete script.timeFlag;
+                    delete script.isStart;
+
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+						
+                    },
+                ],
+            },
+        },
+		
+		jikko_set_I2CLCD_emotion: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+				{
+                    type: "Dropdown",
+					options: [
+						[ "온도", '1' ],
+						[ "습도", '2' ],
+						[ "미세먼지", '3' ],
+						[ "하트", '4' ],
+					],
+					fontSize: 11,
+					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+					},
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+			def: {
+                params: [
+					{
+                        type: 'jikko_get_lcd_row',
+						params: ['0'],
+
+                    },
+					{
+                        type: 'jikko_get_lcd_col',
+                        params: ['0'],
+                    },
+					'1',
+                    null,
+                ],
+                type: 'jikko_set_I2CLCD_emotion',
+            },
+            paramsKeyMap: {
+				ROW: 0,
+				COL: 1,
+				EMOTICON: 2,
+            },
+            class: 'LCD',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var row = script.getNumberValue('ROW', script);
+				var col = script.getNumberValue('COL', script);
+				var emoticon = script.getValue('EMOTICON', script);
+
+				if (!script.isStart) 
+                {
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+					
+					var duration = Entry.jikko.duration.TIME_200ms;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+					
+					sq.SET['15'] = {
+							type: Entry.jikko.sensorTypes.LCDEMOTICON,
+							data: {
+								row: row,
+								col: col,
+								emoticon: emoticon,
+							},
+							time: new Date().getTime(),
+					};
+					setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration );
+                    return script;
+				}
+				else if (script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else 
+                {
+                    delete script.timeFlag;
+                    delete script.isStart;
+
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+						
                     },
                 ],
             },
