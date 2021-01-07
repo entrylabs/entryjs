@@ -40,7 +40,7 @@ Entry.jikko = {
         LCDINIT: 41,
         LCD: 42,
         LCDCLEAR: 43,
-        LCDEMOTION: 44,
+        LCDEMOTICON: 44,
     },
     toneTable: {
         '0': 0,
@@ -1468,11 +1468,11 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['16'],
+                        params: ['14'],
                     },
                     {
                         type: 'number',
-                        params: ['2'],
+                        params: ['1'],
                     },
                     null,
                 ],
