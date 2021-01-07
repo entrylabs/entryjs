@@ -34,6 +34,9 @@ Entry.jikko = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
+        DHTINIT: 21,
+        DHTTEMP: 22,
+        DHTHUMI: 23,
     },
     toneTable: {
         '0': 0,
@@ -66,6 +69,17 @@ Entry.jikko = {
     },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
+    duration: {
+        TIME_1ms: 1,
+        TIME_5ms: 5,
+        TIME_10ms: 10,
+        TIME_20ms: 20,
+        TIME_50ms: 50,
+        TIME_100ms: 100,
+        TIME_200ms: 200,
+        TIME_500ms: 500,
+        TIME_600ms: 600,
+    },
     BlockState: {},
 };
 
@@ -78,6 +92,9 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 jikko_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 jikko_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                jikko_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 이용하기 %2',
+                jikko_get_dht_temp_value: '온습도센서의 온도값',
+                jikko_get_dht_humi_value: '온습도센서의 습도값',
             },
         },
         en: {
@@ -87,6 +104,9 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 jikko_set_servo: 'Set servo pin %1 angle as %2 %3',
                 jikko_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                jikko_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 이용하기 %2',
+                jikko_get_dht_temp_value: '온습도센서의 온도값',
+                jikko_get_dht_humi_value: '온습도센서의 습도값',
             },
         },
     };
@@ -98,6 +118,9 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_tone',
     'jikko_set_servo',
     'jikko_get_ultrasonic_value',
+    'jikko_dht_init',
+    'jikko_get_dht_temp_value',
+    'jikko_get_dht_humi_value',
 ];
 
 Entry.jikko.getBlocks = function() {
@@ -803,6 +826,168 @@ Entry.jikko.getBlocks = function() {
                         ],
                     },
                 ],
+            },
+        },
+        jikko_dht_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['3'],
+                    },
+                    null,
+                ],
+                type: 'jikko_dht_init',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'jikkoBlock',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT', script);
+
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+
+                    var duration = Entry.jikko.duration.TIME_500ms;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    sq.SET[port] = {
+                        type: Entry.jikko.sensorTypes.DHTINIT,
+                        data: port,
+                        time: new Date().getTime(),
+                    };
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_get_dht_temp_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: ['0'],
+                type: 'jikko_get_dht_temp_value',
+            },
+            paramsKeyMap: {
+                TEMP: 0,
+            },
+            class: 'jikkoBlock',
+            //  isNotFor: ['Orange'],
+            func(sprite, script) {
+                const temp = script.getNumberValue('TEMP', script);
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                delete Entry.hw.sendQueue.SET[temp];
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+
+                Entry.hw.sendQueue.GET[Entry.jikko.sensorTypes.DHTTEMP] = {
+                    port: temp,
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.DHTTEMP || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_get_dht_humi_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1'],
+                type: 'jikko_get_dht_humi_value',
+            },
+            paramsKeyMap: {
+                HUMI: 0,
+            },
+            class: 'jikkoBlock',
+            //isNotFor: ['Orange'],
+            func(sprite, script) {
+                const humi = script.getNumberValue('HUMI', script);
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                delete Entry.hw.sendQueue.SET[humi];
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+
+                Entry.hw.sendQueue.GET[Entry.Orange.sensorTypes.DHTHUMI] = {
+                    port: humi,
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.DHTHUMI || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
             },
         },
     };
