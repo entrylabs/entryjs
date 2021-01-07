@@ -159,10 +159,10 @@ class Cluster {
     findColor(id, a, b) {
         const { centroids, graphData } = this.#result;
         if (id === 'y') {
-            const { type = 0 } = graphData?.find(({ x, y }) => x === a && y === b) || {};
+            const { type = 0 } = graphData?.find(({ x, y }) => String(x) === String(a) && String(y) === String(b)) || {};
             return GRAPH_COLOR[type];
         } else if (id === 'centroid' && b) {
-            const type = centroids?.findIndex(([x]) => x === a) || 0;
+            const type = centroids?.findIndex(([x]) => String(x) === String(a)) || 0;
             return GRAPH_COLOR[type];
         }
         return undefined;
