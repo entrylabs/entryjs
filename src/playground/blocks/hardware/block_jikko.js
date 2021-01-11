@@ -11,7 +11,7 @@ Entry.jikko = {
         ko: '직코',
         en: 'jikko',
     },
-    setZero: function() {
+    setZero: function () {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 SET: {},
@@ -92,7 +92,7 @@ Entry.jikko = {
         '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
-    toByte: function(data) {
+    toByte: function (data) {
         switch (data) {
             case ' ':
                 data = 32;
@@ -387,7 +387,7 @@ Entry.jikko = {
     lowList: ['low', '0', 'off'],
     BlockState: {},
 };
-Entry.jikko.setLanguage = function() {
+Entry.jikko.setLanguage = function () {
     return {
         ko: {
             template: {
@@ -485,7 +485,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_module_digital_bluetooth',
     'jikko_module_digital_oled',
 ];
-Entry.jikko.getBlocks = function() {
+Entry.jikko.getBlocks = function () {
     const promiseManager = new PromiseManager();
 
     return {
@@ -520,7 +520,7 @@ Entry.jikko.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getField('PORT');
             },
         },
@@ -562,7 +562,7 @@ Entry.jikko.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('PORT');
             },
         },
@@ -598,7 +598,7 @@ Entry.jikko.getBlocks = function() {
             paramsKeyMap: {
                 OCTAVE: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getField('OCTAVE');
             },
         },
@@ -632,7 +632,7 @@ Entry.jikko.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('PORT');
             },
         },
@@ -662,7 +662,7 @@ Entry.jikko.getBlocks = function() {
             paramsKeyMap: {
                 OPERATOR: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('OPERATOR');
             },
         },
@@ -703,7 +703,7 @@ Entry.jikko.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getField('NOTE');
             },
         },
@@ -730,13 +730,13 @@ Entry.jikko.getBlocks = function() {
                 },
             ],
             events: {},
-			def: {
+            def: {
                 params: [
                     {
                         type: 'arduino_get_port_number',
                         params: ['7'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['4'],
                     },
@@ -750,45 +750,45 @@ Entry.jikko.getBlocks = function() {
             },
             class: 'neo',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('NUM');
-if(!script.isStart){                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-script.isStart = true;
-script.timeFlag = 1;
-var fps = Entry.FPS || 60;
-var timeValue = 60 / fps * 50;
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
 
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.NEOPIXELINIT,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                
-                setTimeout(function(){
-                    script.timeFlag = 0;
-                }, timeValue);
-                return script;
-}
-else if(script.timeFlag == 1){
-    return script;
-}
-else{
-    delete script.timeFlag;
-    delete script.isStart;
-    Entry.engine.isContinue= false;
-    return script.callReturn();
-}
-},                
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELINIT,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }
+                else if (script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
             syntax: {
                 js: [],
                 py: [
                     {
-						
+
                     },
                 ],
             },
@@ -816,13 +816,13 @@ else{
                 },
             ],
             events: {},
-			def: {
+            def: {
                 params: [
                     {
                         type: 'arduino_get_port_number',
                         params: ['7'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
@@ -836,49 +836,49 @@ else{
             },
             class: 'neo',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('NUM');
- if(!script.isStart){                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELBRIGHT,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
                 }
-script.isStart = true;
-script.timeFlag = 1;
-var fps = Entry.FPS || 60;
-var timeValue = 60 / fps * 50;
-
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.NEOPIXELBRIGHT,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-
-                setTimeout(function(){
-                    script.timeFlag = 0;
-                }, timeValue);
-                return script;
-}
-else if(script.timeFlag == 1){
-    return script;
-}
-else{
-    delete script.timeFlag;
-    delete script.isStart;
-    Entry.engine.isContinue= false;
-    return script.callReturn();
-}
-},                
+                else if (script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
             syntax: {
                 js: [],
                 py: [
                     {
-						
+
                     },
                 ],
             },
         },
-		jikko_set_neopixel: {
+        jikko_set_neopixel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -894,17 +894,17 @@ else{
                     accept: 'string',
                     defaultType: 'number',
                 },
-				{
+                {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-				{
+                {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-				{
+                {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -916,25 +916,25 @@ else{
                 },
             ],
             events: {},
-			def: {
+            def: {
                 params: [
                     {
                         type: 'arduino_get_port_number',
                         params: ['7'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['0'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
@@ -945,30 +945,71 @@ else{
             paramsKeyMap: {
                 PORT: 0,
                 NUM: 1,
-				RED: 2,
-				GREEN: 3,
-				BLUE: 4,
+                RED: 2,
+                GREEN: 3,
+                BLUE: 4,
             },
             class: 'neo',
             isNotFor: ['Jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
                 var num = script.getNumberValue('NUM', script);
-				var r = script.getNumberValue('RED', script);
-				var g = script.getNumberValue('GREEN', script);
+                var r = script.getNumberValue('RED', script);
+                var g = script.getNumberValue('GREEN', script);
                 var b = script.getNumberValue('BLUE', script);
-                
-if(!script.isStart){                
-script.isStart = true;
-script.timeFlag = 1;
-var fps = Entry.FPS || 60;
-var timeValue = 60 / fps * 50;
-                /*
-                if(!script.isStart){
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+                    /*
+                    if(!script.isStart){
+                        if (!Entry.hw.sendQueue['SET']) {
+                            Entry.hw.sendQueue['SET'] = {};
+                        }
+                        r = Math.round(r);
+                        r = Math.min(r, 255);
+                        r = Math.max(r, 0);
+    
+                        g = Math.round(g);
+                        g = Math.min(g, 255);
+                        g = Math.max(g, 0);
+    
+                        b = Math.round(b);
+                        b = Math.min(b, 255);
+                        b = Math.max(b, 0);
+    
+                        script.isStart = true;
+                        script.timeFlag = 1;
+                        var fps = Entry.FPS || 60;
+                        var timeValue = 60 / fps * 50;
+    
+                        Entry.hw.sendQueue['SET'][port] = {
+                            type: Entry.jikko.sensorTypes.NEOPIXEL,
+                            data: {
+                                num: num,
+                                r: r,
+                                g: g,
+                                b: b,
+                            },
+                            time: new Date().getTime(),
+                        };
+    
+                        setTimeout(function() {
+                            script.timeFlag = 0;
+                        }, timeValue);
+                        return script;
+                    } else if (script.timeFlag == 1) {
+                        return script;
+                    } else {
+                        delete script.timeFlag;
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        return script.callReturn();
+                    }*/
+
                     r = Math.round(r);
                     r = Math.min(r, 255);
                     r = Math.max(r, 0);
@@ -981,11 +1022,9 @@ var timeValue = 60 / fps * 50;
                     b = Math.min(b, 255);
                     b = Math.max(b, 0);
 
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * 50;
-
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
                     Entry.hw.sendQueue['SET'][port] = {
                         type: Entry.jikko.sensorTypes.NEOPIXEL,
                         data: {
@@ -997,65 +1036,26 @@ var timeValue = 60 / fps * 50;
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    //Entry.hw.update();
+                    //sq['SET'] = {};
+                    //return promiseManager.sleep(Entry.jikko.defaultWaitTime);
+
+
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
-                } else if (script.timeFlag == 1) {
+                }
+                else if (script.timeFlag == 1) {
                     return script;
-                } else {
+                }
+                else {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
                     return script.callReturn();
-                }*/
-                
-                r = Math.round(r);
-                r = Math.min(r, 255);
-                r = Math.max(r, 0);
-
-                g = Math.round(g);
-                g = Math.min(g, 255);
-                g = Math.max(g, 0);
-
-                b = Math.round(b);
-                b = Math.min(b, 255);
-                b = Math.max(b, 0);
-                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
                 }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.NEOPIXEL,
-                    data: {
-                        num: num,
-                        r: r,
-                        g: g,
-                        b: b,
-                    },
-                    time: new Date().getTime(),
-                };
-                
-                //Entry.hw.update();
-                //sq['SET'] = {};
-                //return promiseManager.sleep(Entry.jikko.defaultWaitTime);
-                
-                
-                setTimeout(function(){
-                    script.timeFlag = 0;
-                }, timeValue);
-                return script;
-}
-else if(script.timeFlag == 1){
-    return script;
-}
-else{
-    delete script.timeFlag;
-    delete script.isStart;
-    Entry.engine.isContinue= false;
-    return script.callReturn();
-}
-},                
+            },
             syntax: {
                 js: [],
                 py: [
@@ -1081,12 +1081,12 @@ else{
                     accept: 'string',
                     defaultType: 'number',
                 },
-				{
+                {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-				{
+                {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -1098,21 +1098,21 @@ else{
                 },
             ],
             events: {},
-			def: {
+            def: {
                 params: [
                     {
                         type: 'arduino_get_port_number',
                         params: ['7'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
-					{
+                    {
                         type: 'number',
                         params: ['255'],
                     },
@@ -1123,62 +1123,62 @@ else{
             paramsKeyMap: {
                 PORT: 0,
                 RED: 1,
-				GREEN: 2,
-				BLUE: 3,
+                GREEN: 2,
+                BLUE: 3,
             },
             class: 'neo',
             isNotFor: ['Jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
                 var r = script.getNumberValue('RED', script);
-				var g = script.getNumberValue('GREEN', script);
-				var b = script.getNumberValue('BLUE', script);
-if(!script.isStart){
-script.isStart = true;
-script.timeFlag = 1;
-var fps = Entry.FPS || 60;
-var timeValue = 60 / fps * 50;
-                r = Math.round(r);
-                r = Math.min(r, 255);
-                r = Math.max(r, 0);
+                var g = script.getNumberValue('GREEN', script);
+                var b = script.getNumberValue('BLUE', script);
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+                    r = Math.round(r);
+                    r = Math.min(r, 255);
+                    r = Math.max(r, 0);
 
-                g = Math.round(g);
-                g = Math.min(g, 255);
-                g = Math.max(g, 0);
+                    g = Math.round(g);
+                    g = Math.min(g, 255);
+                    g = Math.max(g, 0);
 
-                b = Math.round(b);
-                b = Math.min(b, 255);
-                b = Math.max(b, 0);
-                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                    b = Math.round(b);
+                    b = Math.min(b, 255);
+                    b = Math.max(b, 0);
+
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELALL,
+                        data: {
+                            r: r,
+                            g: g,
+                            b: b,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
                 }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.NEOPIXELALL,
-                    data: {
-                        r: r,
-                        g: g,
-                        b: b,
-                    },
-                    time: new Date().getTime(),
-                };
-                
-                setTimeout(function(){
-                    script.timeFlag = 0;
-                }, timeValue);
-                return script;
-}
-else if(script.timeFlag == 1){
-    return script;
-}
-else{
-    delete script.timeFlag;
-    delete script.isStart;
-    Entry.engine.isContinue= false;
-    return script.callReturn();
-}
-},                
+                else if (script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
             syntax: {
                 js: [],
                 py: [
@@ -1188,6 +1188,7 @@ else{
                 ],
             },
         },
+
         jikko_set_neopixel_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1206,7 +1207,7 @@ else{
                 },
             ],
             events: {},
-			def: {
+            def: {
                 params: [
                     {
                         type: 'arduino_get_port_number',
@@ -1221,42 +1222,42 @@ else{
             },
             class: 'neo',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
- if(!script.isStart){                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELCLEAR,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
                 }
-script.isStart = true;
-script.timeFlag = 1;
-var fps = Entry.FPS || 60;
-var timeValue = 60 / fps * 50;
-
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.NEOPIXELCLEAR,
-                    time: new Date().getTime(),
-                };
-
-                setTimeout(function(){
-                    script.timeFlag = 0;
-                }, timeValue);
-                return script;
-}
-else if(script.timeFlag == 1){
-    return script;
-}
-else{
-    delete script.timeFlag;
-    delete script.isStart;
-    Entry.engine.isContinue= false;
-    return script.callReturn();
-}
-},                
+                else if (script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
             syntax: {
                 js: [],
                 py: [
                     {
-						
+
                     },
                 ],
             },
@@ -1287,7 +1288,7 @@ else{
             paramsKeyMap: {
                 LINE: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getField('LINE');
             },
         },
@@ -1317,7 +1318,7 @@ else{
             paramsKeyMap: {
                 DIRECTION: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getField('DIRECTION');
             },
         },
@@ -1479,7 +1480,7 @@ else{
             paramsKeyMap: {
                 DIRECTION: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getField('DIRECTION');
             },
         },
@@ -1510,7 +1511,7 @@ else{
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
 
@@ -1583,7 +1584,7 @@ else{
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getValue('PORT', script);
                 var result = 0;
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -1635,7 +1636,7 @@ else{
             paramsKeyMap: {},
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = 2;
                 var getString = Entry.hw.portData.READ_BLUETOOTH;
                 if (!Entry.hw.sendQueue['SET']) {
@@ -1691,7 +1692,7 @@ else{
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port1 = script.getNumberValue('PORT1');
                 var port2 = script.getNumberValue('PORT2');
 
@@ -1743,7 +1744,7 @@ else{
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
@@ -1790,7 +1791,7 @@ else{
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
@@ -1833,7 +1834,7 @@ else{
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
@@ -1890,7 +1891,7 @@ else{
             },
             class: 'jikkoSet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
 
@@ -1959,7 +1960,7 @@ else{
             },
             class: 'jikkoSet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
 
@@ -2039,7 +2040,7 @@ else{
             },
             class: 'jikkoSet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = [3];
                 value[0] = script.getNumberValue('VALUE0');
@@ -2110,7 +2111,7 @@ else{
             },
             class: 'jikkoSet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
                 value = Math.min(value, 180);
@@ -2187,7 +2188,7 @@ else{
             },
             class: 'jikkoSet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var duration = script.getNumberValue('DURATION');
                 var octave = script.getNumberValue('OCTAVE') - 1;
@@ -2239,7 +2240,7 @@ else{
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, duration + 32);
                     return script;
@@ -2320,7 +2321,7 @@ else{
             },
             class: 'jikkoSet',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = 0; // port value is dummy;
                 var directionPort = script.getNumberValue('PORT0');
                 var speedPort = script.getNumberValue('PORT1');
@@ -2402,7 +2403,7 @@ else{
             },
             class: 'jikkoModule',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var line = script.getNumberValue('LINE');
                 var column = script.getNumberValue('COL');
                 var string = script.getValue('STRING');
@@ -2460,7 +2461,7 @@ else{
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
@@ -2527,7 +2528,7 @@ else{
             },
             class: 'jikkoModule',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = 0; // port value is dummy;
                 var coodinate_x = script.getNumberValue('VALUE0');
                 var coodinate_y = script.getNumberValue('VALUE1');
@@ -2584,7 +2585,7 @@ else{
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
@@ -2633,7 +2634,7 @@ else{
             },
             class: 'jikkoModule',
             isNotFor: ['jikko'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var string = script.getValue('STRING');
                 var port = 3;
                 var text = [];
@@ -2678,7 +2679,7 @@ else{
                         time: new Date().getTime(),
                     };
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
