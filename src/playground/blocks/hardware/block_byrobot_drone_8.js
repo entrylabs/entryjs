@@ -55,71 +55,8 @@ Entry.byrobot_drone_8 =
             Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
-
-    // Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
-    // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
-    monitorTemplate: {
-        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
-        imgPath: "hw/byrobot_drone_8.png",      // 배경 이미지
-        width: 256,     // 이미지의 폭
-        height: 256,    // 이미지의 높이
-        */
-
-        // 모니터 화면 상단에 차례대로 나열하는 값
-        listPorts: {
-            state_modeFlight:                           { name: 'Flight Mode',              type: 'input', pos: { x: 0, y: 0 } },
-            state_modeControlFlight:                    { name: 'Control Flight Mode',      type: 'input', pos: { x: 0, y: 0 } },
-            state_modeMovement:                         { name: 'Movement Mode',            type: 'input', pos: { x: 0, y: 0 } },
-            state_headless:                             { name: 'Headless',                 type: 'input', pos: { x: 0, y: 0 } },
-            state_controlSpeed:                         { name: 'Control Speed',            type: 'input', pos: { x: 0, y: 0 } },
-            state_sensorOrientation:                    { name: 'Sensor Orientation',       type: 'input', pos: { x: 0, y: 0 } },
-            state_battery:                              { name: 'Battery',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_accelX:                              { name: 'Accel X',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_accelY:                              { name: 'Accel Y',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_accelZ:                              { name: 'Accel Z',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_gyroRoll:                            { name: 'Gyro Roll',                type: 'input', pos: { x: 0, y: 0 } },
-            motion_gyroPitch:                           { name: 'Gyro Pitch',               type: 'input', pos: { x: 0, y: 0 } },
-            motion_gyroYaw:                             { name: 'Gyro Yaw',                 type: 'input', pos: { x: 0, y: 0 } },
-            motion_angleRoll:                           { name: 'Roll',                     type: 'input', pos: { x: 0, y: 0 } },
-            motion_anglePitch:                          { name: 'Pitch',                    type: 'input', pos: { x: 0, y: 0 } },
-            motion_angleYaw:                            { name: 'Yaw',                      type: 'input', pos: { x: 0, y: 0 } },
-            range_front:                                { name: 'Range Front',              type: 'input', pos: { x: 0, y: 0 } },
-            range_bottom:                               { name: 'Range Bottom',             type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontHue:                         { name: 'Front Hue',                type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontSaturation:                  { name: 'Front Saturation',         type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontValue:                       { name: 'Front Value',              type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontLightness:                   { name: 'Front Lightness',          type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearHue:                          { name: 'Rear Hue',                 type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearSaturation:                   { name: 'Rear Saturation',          type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearValue:                        { name: 'Rear Value',               type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearLightness:                    { name: 'Rear Lightness',           type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontColor:                       { name: 'Front Color',              type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearColor:                        { name: 'Rear Color',               type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_card:                             { name: 'Card',                     type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionX:     { name: 'Position X',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionY:     { name: 'Position Y',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionZ:     { name: 'Position Z',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_altitude:      { name: 'Altitude',                 type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_rangeHeight:   { name: 'Height',                   type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_x:                            { name: 'Left Joystick X',          type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_y:                            { name: 'Left Joystick Y',          type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_direction:                    { name: 'Left Joystick Direction',  type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_event:                        { name: 'Left Joystick Event',      type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_x:                           { name: 'Right Joystick X',         type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_y:                           { name: 'Right Joystick Y',         type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_direction:                   { name: 'Right Joystick Direction', type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_event:                       { name: 'Right Joystick Event',     type: 'input', pos: { x: 0, y: 0 } },
-            button_button:                              { name: 'Button',                   type: 'input', pos: { x: 0, y: 0 } },
-            button_event:                               { name: 'Button Event',             type: 'input', pos: { x: 0, y: 0 } },
-            entryhw_countTransferReserved:              { name: 'Transfer Buffer',          type: 'output', pos: { x: 0, y: 0 } },
-        },
-
-        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
-        ports: {},
-
-        mode: 'both', // 표시 모드
-    },
 };
+
 
 /***************************************************************************************
  *  언어 적용
@@ -129,6 +66,54 @@ Entry.byrobot_drone_8.setLanguage = function() {
         ko: {
             // ko.js에 작성하던 내용
             Blocks: {
+                // 정보창
+                monitor_state_modeFlight                            : '비행 모드',
+                monitor_state_modeControlFlight                     : '비행 제어기 모드',
+                monitor_state_modeMovement                          : '이동 상태',
+                monitor_state_headless                              : '헤드리스',
+                monitor_state_controlSpeed                          : '제어 속도',
+                monitor_state_sensorOrientation                     : '센서 방향',
+                monitor_state_battery                               : '배터리',
+                monitor_motion_accelX                               : '가속도 X',
+                monitor_motion_accelY                               : '가속도 Y',
+                monitor_motion_accelZ                               : '가속도 Z',
+                monitor_motion_gyroRoll                             : '자이로 Roll',
+                monitor_motion_gyroPitch                            : '자이로 Pitch',
+                monitor_motion_gyroYaw                              : '자이로 Yaw',
+                monitor_motion_angleRoll                            : '자세 Roll',
+                monitor_motion_anglePitch                           : '자세 Pitch',
+                monitor_motion_angleYaw                             : '자세 Yaw',
+                monitor_range_front                                 : '정면 거리 센서',
+                monitor_range_bottom                                : '바닥 거리 센서',
+                monitor_cardColor_frontHue                          : '카드 위 색상',
+                monitor_cardColor_frontSaturation                   : '카드 위 채도',
+                monitor_cardColor_frontValue                        : '카드 위 명도',
+                monitor_cardColor_frontLightness                    : '카드 위 밝기',
+                monitor_cardColor_rearHue                           : '카드 아래 색상',
+                monitor_cardColor_rearSaturation                    : '카드 아래 채도',
+                monitor_cardColor_rearValue                         : '카드 아래 명도',
+                monitor_cardColor_rearLightness                     : '카드 아래 밝기',
+                monitor_cardColor_frontColor                        : '카드 위 색',
+                monitor_cardColor_rearColor                         : '카드 아래 색',
+                monitor_cardColor_card                              : '카드',
+                monitor_informationAssembledForEntry_positionX      : '위치 X',
+                monitor_informationAssembledForEntry_positionY      : '위치 Y',
+                monitor_informationAssembledForEntry_positionZ      : '위치 Z',
+                monitor_informationAssembledForEntry_altitude       : '고도',
+                monitor_informationAssembledForEntry_rangeHeight    : '거리 센서의 높이',
+                monitor_joystick_left_x                             : '왼쪽 조이스틱 X',
+                monitor_joystick_left_y                             : '왼쪽 조이스틱 Y',
+                monitor_joystick_left_direction                     : '왼쪽 조이스틱 방향',
+                monitor_joystick_left_event                         : '왼쪽 조이스틱 이벤트',
+                monitor_joystick_right_x                            : '오른쪽 조이스틱 X',
+                monitor_joystick_right_y                            : '오른쪽 조이스틱 Y',
+                monitor_joystick_right_direction                    : '오른쪽 조이스틱 방향',
+                monitor_joystick_right_event                        : '오른쪽 조이스틱 이벤트',
+                monitor_button_button                               : '버튼',
+                monitor_button_event                                : '버튼 이벤트',
+                monitor_entryhw_countTransferReserved               : '전송 예정 데이터',
+
+                // 일반 블럭
                 common_light_color_red              : '빨강',
                 common_light_color_yellow           : '노랑',
                 common_light_color_green            : '초록',
@@ -402,50 +387,98 @@ Entry.byrobot_drone_8.setLanguage = function() {
 
         en: {
             Blocks: {
-                common_light_color_cottoncandy: 'cotton candy',
-                common_light_color_emerald: 'emerald',
-                common_light_color_lavender: 'lavender',
-                common_light_color_muscat: 'muscat',
-                common_light_color_strawberrymilk: 'strawberry milk',
-                common_light_color_sunset: 'sunset',
-                common_light_mode_hold: 'hold',
-                common_light_mode_dimming: 'dimming',
-                common_light_mode_flicker: 'flicker',
-                common_light_mode_flicker_double: 'flicker double',
-                common_light_brightness_all: 'all',
-                common_light_brightness_b100: 'brightness 100%',
-                common_light_brightness_b25: 'brightness 25%',
-                common_light_brightness_b50: 'brightness 50%',
-                common_light_brightness_b75: 'brightness 75%',
-                common_light_color_blue: 'blue',
-                common_light_color_cyan: 'cyan',
-                common_light_color_green: 'green',
-                common_light_color_magenta: 'magenta',
-                common_light_brightness_off: 'off',
-                common_light_brightness_on: 'on',
-                common_light_color_red: 'red',
-                common_light_color_white: 'white',
-                common_light_color_yellow: 'yellow',
-                common_left: 'left',
-                common_right: 'right',
-                common_roll: 'Roll',
-                common_pitch: 'Pitch',
-                common_yaw: 'Yaw',
-                common_throttle: 'Throttle',
-                controller_button: 'button',
-                controller_button_event: 'button event',
-                controller_button_front_left_up: 'Fromt left top button',
-                controller_button_front_left_down: 'Fromt left bottom button',
-                controller_button_front_right_up: 'Fromt right top button',
-                controller_button_front_right_down: 'Fromt right bottom button',
-                controller_button_top_left: 'Top left button',
-                controller_button_top_right: 'Top right button',
-                controller_button_center_up: 'Trim up button',
-                controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim right button',
-                controller_button_center_down: 'Trim down button',
-                controller_button_bottom_left: 'Bottom left button',
-                controller_button_bottom_right: 'Bottom right button',
+                // 정보창
+                monitor_state_modeFlight                            : 'Flight Mode',
+                monitor_state_modeControlFlight                     : 'Control Flight Mode',
+                monitor_state_modeMovement                          : 'Movement Mode',
+                monitor_state_headless                              : 'Headless',
+                monitor_state_controlSpeed                          : 'Control Speed',
+                monitor_state_sensorOrientation                     : 'Sensor Orientation',
+                monitor_state_battery                               : 'Battery',
+                monitor_motion_accelX                               : 'Accel X',
+                monitor_motion_accelY                               : 'Accel Y',
+                monitor_motion_accelZ                               : 'Accel Z',
+                monitor_motion_gyroRoll                             : 'Gyro Roll',
+                monitor_motion_gyroPitch                            : 'Gyro Pitch',
+                monitor_motion_gyroYaw                              : 'Gyro Yaw',
+                monitor_motion_angleRoll                            : 'Roll',
+                monitor_motion_anglePitch                           : 'Pitch',
+                monitor_motion_angleYaw                             : 'Yaw',
+                monitor_range_front                                 : 'Range Front',
+                monitor_range_bottom                                : 'Range Bottom',
+                monitor_cardColor_frontHue                          : 'Front Hue',
+                monitor_cardColor_frontSaturation                   : 'Front Saturation',
+                monitor_cardColor_frontValue                        : 'Front Value',
+                monitor_cardColor_frontLightness                    : 'Front Lightness',
+                monitor_cardColor_rearHue                           : 'Rear Hue',
+                monitor_cardColor_rearSaturation                    : 'Rear Saturation',
+                monitor_cardColor_rearValue                         : 'Rear Value',
+                monitor_cardColor_rearLightness                     : 'Rear Lightness',
+                monitor_cardColor_frontColor                        : 'Front Color',
+                monitor_cardColor_rearColor                         : 'Rear Color',
+                monitor_cardColor_card                              : 'Card',
+                monitor_informationAssembledForEntry_positionX      : 'Position X',
+                monitor_informationAssembledForEntry_positionY      : 'Position Y',
+                monitor_informationAssembledForEntry_positionZ      : 'Position Z',
+                monitor_informationAssembledForEntry_altitude       : 'Altitude',
+                monitor_informationAssembledForEntry_rangeHeight    : 'Height',
+                monitor_joystick_left_x                             : 'Left Joystick X',
+                monitor_joystick_left_y                             : 'Left Joystick Y',
+                monitor_joystick_left_direction                     : 'Left Joystick Direction',
+                monitor_joystick_left_event                         : 'Left Joystick Event',
+                monitor_joystick_right_x                            : 'Right Joystick X',
+                monitor_joystick_right_y                            : 'Right Joystick Y',
+                monitor_joystick_right_direction                    : 'Right Joystick Direction',
+                monitor_joystick_right_event                        : 'Right Joystick Event',
+                monitor_button_button                               : 'Button',
+                monitor_button_event                                : 'Button Event',
+                monitor_entryhw_countTransferReserved               : 'Transfer Buffer',
+
+                // 일반 블럭
+                common_light_color_cottoncandy      : 'cotton candy',
+                common_light_color_emerald          : 'emerald',
+                common_light_color_lavender         : 'lavender',
+                common_light_color_muscat           : 'muscat',
+                common_light_color_strawberrymilk   : 'strawberry milk',
+                common_light_color_sunset           : 'sunset',
+                common_light_mode_hold              : 'hold',
+                common_light_mode_dimming           : 'dimming',
+                common_light_mode_flicker           : 'flicker',
+                common_light_mode_flicker_double    : 'flicker double',
+                common_light_brightness_all         : 'all',
+                common_light_brightness_b100        : 'brightness 100%',
+                common_light_brightness_b25         : 'brightness 25%',
+                common_light_brightness_b50         : 'brightness 50%',
+                common_light_brightness_b75         : 'brightness 75%',
+                common_light_color_blue             : 'blue',
+                common_light_color_cyan             : 'cyan',
+                common_light_color_green            : 'green',
+                common_light_color_magenta          : 'magenta',
+                common_light_brightness_off         : 'off',
+                common_light_brightness_on          : 'on',
+                common_light_color_red              : 'red',
+                common_light_color_white            : 'white',
+                common_light_color_yellow           : 'yellow',
+                common_left     : 'left',
+                common_right    : 'right',
+                common_roll     : 'Roll',
+                common_pitch    : 'Pitch',
+                common_yaw      : 'Yaw',
+                common_throttle : 'Throttle',
+                controller_button                   : 'button',
+                controller_button_event             : 'button event',
+                controller_button_front_left_up     : 'Fromt left top button',
+                controller_button_front_left_down   : 'Fromt left bottom button',
+                controller_button_front_right_up    : 'Fromt right top button',
+                controller_button_front_right_down  : 'Fromt right bottom button',
+                controller_button_top_left      : 'Top left button',
+                controller_button_top_right     : 'Top right button',
+                controller_button_center_up     : 'Trim up button',
+                controller_button_center_left   : 'Trim left button',
+                controller_button_center_right  : 'Trim right button',
+                controller_button_center_down   : 'Trim down button',
+                controller_button_bottom_left   : 'Bottom left button',
+                controller_button_bottom_right  : 'Bottom right button',
                 controller_buzzer: 'buzzer',
                 controller_buzzer_a: 'A',
                 controller_buzzer_as: 'A#',
@@ -536,15 +569,15 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_cardcolor_front_color         : 'Front Card Color',
                 drone_cardcolor_rear_color          : 'Rear Card Color',
                 drone_cardcolor_card                : 'Card',
-                drone_state_mode_system: 'System Mode',
-                drone_state_mode_flight: 'Flight Mode',
-                drone_state_mode_control_flight : 'Flight Control Mode',
-                drone_state_mode_movement       : 'mode movement',
-                drone_state_headless: 'Headless',
-                drone_state_control_speed       : 'Speed',
-                drone_state_sensor_orientation  : 'Sensor direction',
-                drone_state_battery: 'Battery',
-                entryhw_count_transfer_reserved: 'Reserved data for transfer',
+                drone_state_mode_system             : 'System Mode',
+                drone_state_mode_flight             : 'Flight Mode',
+                drone_state_mode_control_flight     : 'Flight Control Mode',
+                drone_state_mode_movement           : 'mode movement',
+                drone_state_headless                : 'Headless',
+                drone_state_control_speed           : 'Speed',
+                drone_state_sensor_orientation      : 'Sensor direction',
+                drone_state_battery                 : 'Battery',
+                entryhw_count_transfer_reserved     : 'Reserved data for transfer',
             },
 
             template: {
@@ -668,6 +701,75 @@ Entry.byrobot_drone_8.setLanguage = function() {
     };
 };
 
+
+// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
+// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
+Entry.byrobot_drone_8.monitorTemplate = function()
+{
+    return {
+        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
+        imgPath: "hw/byrobot_drone_8.png",      // 배경 이미지
+        width: 256,     // 이미지의 폭
+        height: 256,    // 이미지의 높이
+        */
+
+        // 모니터 화면 상단에 차례대로 나열하는 값
+        listPorts: {
+            state_modeFlight:                           { name: Lang.Blocks.monitor_state_modeFlight,                          type: 'input', pos: { x: 0, y: 0 } },
+            state_modeControlFlight:                    { name: Lang.Blocks.monitor_state_modeControlFlight,                   type: 'input', pos: { x: 0, y: 0 } },
+            state_modeMovement:                         { name: Lang.Blocks.monitor_state_modeMovement,                        type: 'input', pos: { x: 0, y: 0 } },
+            state_headless:                             { name: Lang.Blocks.monitor_state_headless,                            type: 'input', pos: { x: 0, y: 0 } },
+            state_controlSpeed:                         { name: Lang.Blocks.monitor_state_controlSpeed,                        type: 'input', pos: { x: 0, y: 0 } },
+            state_sensorOrientation:                    { name: Lang.Blocks.monitor_state_sensorOrientation,                   type: 'input', pos: { x: 0, y: 0 } },
+            state_battery:                              { name: Lang.Blocks.monitor_state_battery,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_accelX:                              { name: Lang.Blocks.monitor_motion_accelX,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_accelY:                              { name: Lang.Blocks.monitor_motion_accelY,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_accelZ:                              { name: Lang.Blocks.monitor_motion_accelZ,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_gyroRoll:                            { name: Lang.Blocks.monitor_motion_gyroRoll,                           type: 'input', pos: { x: 0, y: 0 } },
+            motion_gyroPitch:                           { name: Lang.Blocks.monitor_motion_gyroPitch,                          type: 'input', pos: { x: 0, y: 0 } },
+            motion_gyroYaw:                             { name: Lang.Blocks.monitor_motion_gyroYaw,                            type: 'input', pos: { x: 0, y: 0 } },
+            motion_angleRoll:                           { name: Lang.Blocks.monitor_motion_angleRoll,                          type: 'input', pos: { x: 0, y: 0 } },
+            motion_anglePitch:                          { name: Lang.Blocks.monitor_motion_anglePitch,                         type: 'input', pos: { x: 0, y: 0 } },
+            motion_angleYaw:                            { name: Lang.Blocks.monitor_motion_angleYaw,                           type: 'input', pos: { x: 0, y: 0 } },
+            range_front:                                { name: Lang.Blocks.monitor_range_front,                               type: 'input', pos: { x: 0, y: 0 } },
+            range_bottom:                               { name: Lang.Blocks.monitor_range_bottom,                              type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontHue:                         { name: Lang.Blocks.monitor_cardColor_frontHue,                        type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontSaturation:                  { name: Lang.Blocks.monitor_cardColor_frontSaturation,                 type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontValue:                       { name: Lang.Blocks.monitor_cardColor_frontValue,                      type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontLightness:                   { name: Lang.Blocks.monitor_cardColor_frontLightness,                  type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearHue:                          { name: Lang.Blocks.monitor_cardColor_rearHue,                         type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearSaturation:                   { name: Lang.Blocks.monitor_cardColor_rearSaturation,                  type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearValue:                        { name: Lang.Blocks.monitor_cardColor_rearValue,                       type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearLightness:                    { name: Lang.Blocks.monitor_cardColor_rearLightness,                   type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontColor:                       { name: Lang.Blocks.monitor_cardColor_frontColor,                      type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearColor:                        { name: Lang.Blocks.monitor_cardColor_rearColor,                       type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_card:                             { name: Lang.Blocks.monitor_cardColor_card,                            type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_positionX:     { name: Lang.Blocks.monitor_informationAssembledForEntry_positionX,    type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_positionY:     { name: Lang.Blocks.monitor_informationAssembledForEntry_positionY,    type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_positionZ:     { name: Lang.Blocks.monitor_informationAssembledForEntry_positionZ,    type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_altitude:      { name: Lang.Blocks.monitor_informationAssembledForEntry_altitude,     type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_rangeHeight:   { name: Lang.Blocks.monitor_informationAssembledForEntry_rangeHeight,  type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_x:                            { name: Lang.Blocks.monitor_joystick_left_x,                           type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_y:                            { name: Lang.Blocks.monitor_joystick_left_y,                           type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_direction:                    { name: Lang.Blocks.monitor_joystick_left_direction,                   type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_event:                        { name: Lang.Blocks.monitor_joystick_left_event,                       type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_x:                           { name: Lang.Blocks.monitor_joystick_right_x,                          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_y:                           { name: Lang.Blocks.monitor_joystick_right_y,                          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_direction:                   { name: Lang.Blocks.monitor_joystick_right_direction,                  type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_event:                       { name: Lang.Blocks.monitor_joystick_right_event,                      type: 'input', pos: { x: 0, y: 0 } },
+            button_button:                              { name: Lang.Blocks.monitor_button_button,                             type: 'input', pos: { x: 0, y: 0 } },
+            button_event:                               { name: Lang.Blocks.monitor_button_event,                              type: 'input', pos: { x: 0, y: 0 } },
+            entryhw_countTransferReserved:              { name: Lang.Blocks.monitor_entryhw_countTransferReserved,             type: 'output', pos: { x: 0, y: 0 } },
+        },
+
+        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
+        ports: {},
+
+        mode: 'both', // 표시 모드
+    };
+};
+
+
 /***************************************************************************************
  *  엔트리에 등록할 블록들의 블록명(다른 장치의 블록 이름과 달라야 함)
  ***************************************************************************************/
@@ -686,7 +788,7 @@ Entry.byrobot_drone_8.blockMenuBlocks = [
     'byrobot_drone_8_drone_control_drone_landing',
     'byrobot_drone_8_drone_control_drone_stop',
     'byrobot_drone_8_drone_control_headless',
-    'byrobot_drone_8_drone_control_drone_reset_heading',
+    //'byrobot_drone_8_drone_control_drone_reset_heading',
     'byrobot_drone_8_drone_control_quad_one',
     'byrobot_drone_8_drone_control_quad_one_delay',
     'byrobot_drone_8_drone_control_quad',
@@ -2919,6 +3021,11 @@ Entry.byrobot_drone_8.getBlocks = function()
             },
         },
 
+        /*
+        // 2020.12.11
+        // E-Drone, 코딩 드론은 비행 중 헤딩 리셋을 막아둔 상태여서
+        // 헤딩 리셋 버튼을 사용할 수 없음
+        // 헤드리스 모드 시 이륙 방향이 0도로 결정됨
         byrobot_drone_8_drone_control_drone_reset_heading: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2938,6 +3045,7 @@ Entry.byrobot_drone_8.getBlocks = function()
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
+        // */
 
         byrobot_drone_8_drone_control_quad_one: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3161,23 +3269,28 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
-                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-				
-				let x = 0;
-				let y = 0;
-				let z = 0;
+                let time = 0;
+                
+                if( speed > 0 )
+                {
+                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
+
+                let x = 0;
+                let y = 0;
+                let z = 0;
 
                 switch( controlDirection )
                 {
-                    case 'pitch_forward':   x = distance;	break;
-                    case 'pitch_backward':  x = -distance;	break;
-                    case 'roll_left':       y = distance;	break;
-                    case 'roll_right':      y = -distance;	break;
-                    case 'throttle_up':     z = distance;	break;
-                    default:                z = -distance;	break;
+                    case 'pitch_forward':   x = distance;   break;
+                    case 'pitch_backward':  x = -distance;  break;
+                    case 'roll_left':       y = distance;   break;
+                    case 'roll_right':      y = -distance;  break;
+                    case 'throttle_up':     z = distance;   break;
+                    default:                z = -distance;  break;
                 }
 
-				return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
         },
 
@@ -3226,7 +3339,12 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const time          = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                let time = 0;
+
+                if( speedYaw > 0 )
+                {
+                    time = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                }
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
             },
@@ -3314,7 +3432,13 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
-                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+
+                let time = 0;
+
+                if( speed > 0 )
+                {
+                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
@@ -3426,9 +3550,20 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                const timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
-                const time         = Math.max(timePosition, timeRotation);
+                let timePosition = 0;
+                let timeRotation = 0;
+
+                if( speed > 0 )
+                {
+                    timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
+
+                if( speedYaw > 0 )
+                {
+                    timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                }
+
+                const time = Math.max(timePosition, timeRotation);
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
             },
