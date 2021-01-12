@@ -16,10 +16,12 @@ Entry.jikko = {
             Entry.hw.sendQueue = {
                 SET: {},
             };
-        } else {
+        }
+        else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function (key) {
                 if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
+                    /*
                     Entry.hw.sendQueue.SET[key].data = {
                         //num: Entry.hw.sendQueue.SET[key].data.num,
                         num: 0,
@@ -54,19 +56,11 @@ Entry.jikko = {
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
                 else {
+                    */
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
-            });
-            //     keySet.forEach(function(key) {
-            //         if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.DCMOTOR) {
-            //             Entry.hw.sendQueue.SET[key].data.value1 = 0;
-            //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            //         } else {
-            //             Entry.hw.sendQueue.SET[key].data = 0;
-            //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            //         }
-            //     });
+        });
         }
         // Entry.hw.sendQueue.GET = {};
 
@@ -452,8 +446,10 @@ Entry.jikko.setLanguage = function () {
                 jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
                 jikko_set_neopixel_init: '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
-                jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
-                jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
+                jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
+                jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
@@ -486,8 +482,10 @@ Entry.jikko.setLanguage = function () {
                 jikko_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
                 jikko_set_neopixel_init: '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
-                jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
-                jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
+                jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
+                jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
@@ -931,19 +929,7 @@ Entry.jikko.getBlocks = function () {
                     defaultType: 'number',
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    type: 'Color',
                 },
                 {
                     type: 'Indicator',
@@ -962,18 +948,7 @@ Entry.jikko.getBlocks = function () {
                         type: 'number',
                         params: ['0'],
                     },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
+                    null,
                     null,
                 ],
                 type: 'jikko_set_neopixel',
@@ -981,9 +956,7 @@ Entry.jikko.getBlocks = function () {
             paramsKeyMap: {
                 PORT: 0,
                 NUM: 1,
-                RED: 2,
-                GREEN: 3,
-                BLUE: 4,
+                COLOR: 2,
             },
             class: 'neo',
             isNotFor: ['Jikko'],
@@ -991,60 +964,17 @@ Entry.jikko.getBlocks = function () {
                 //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
                 var num = script.getNumberValue('NUM', script);
-                var r = script.getNumberValue('RED', script);
-                var g = script.getNumberValue('GREEN', script);
-                var b = script.getNumberValue('BLUE', script);
+                var value = script.getStringField('COLOR', script);
 
+                let r = parseInt(value.substr(1, 2), 16);
+                let g = parseInt(value.substr(3, 2), 16);
+                let b = parseInt(value.substr(5, 2), 16);
+                
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
                     var timeValue = 60 / fps * 50;
-                    /*
-                    if(!script.isStart){
-                        if (!Entry.hw.sendQueue['SET']) {
-                            Entry.hw.sendQueue['SET'] = {};
-                        }
-                        r = Math.round(r);
-                        r = Math.min(r, 255);
-                        r = Math.max(r, 0);
-    
-                        g = Math.round(g);
-                        g = Math.min(g, 255);
-                        g = Math.max(g, 0);
-    
-                        b = Math.round(b);
-                        b = Math.min(b, 255);
-                        b = Math.max(b, 0);
-    
-                        script.isStart = true;
-                        script.timeFlag = 1;
-                        var fps = Entry.FPS || 60;
-                        var timeValue = 60 / fps * 50;
-    
-                        Entry.hw.sendQueue['SET'][port] = {
-                            type: Entry.jikko.sensorTypes.NEOPIXEL,
-                            data: {
-                                num: num,
-                                r: r,
-                                g: g,
-                                b: b,
-                            },
-                            time: new Date().getTime(),
-                        };
-    
-                        setTimeout(function() {
-                            script.timeFlag = 0;
-                        }, timeValue);
-                        return script;
-                    } else if (script.timeFlag == 1) {
-                        return script;
-                    } else {
-                        delete script.timeFlag;
-                        delete script.isStart;
-                        Entry.engine.isContinue = false;
-                        return script.callReturn();
-                    }*/
 
                     r = Math.round(r);
                     r = Math.min(r, 255);
@@ -1071,11 +1001,6 @@ Entry.jikko.getBlocks = function () {
                         },
                         time: new Date().getTime(),
                     };
-
-                    //Entry.hw.update();
-                    //sq['SET'] = {};
-                    //return promiseManager.sleep(Entry.jikko.defaultWaitTime);
-
 
                     setTimeout(function () {
                         script.timeFlag = 0;
@@ -1113,19 +1038,7 @@ Entry.jikko.getBlocks = function () {
                     defaultType: 'number',
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    type: 'Color',
                 },
                 {
                     type: 'Indicator',
@@ -1140,36 +1053,26 @@ Entry.jikko.getBlocks = function () {
                         type: 'arduino_get_port_number',
                         params: ['7'],
                     },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['255'],
-                    },
+                    null,
                     null,
                 ],
                 type: 'jikko_set_neopixel_all',
             },
             paramsKeyMap: {
                 PORT: 0,
-                RED: 1,
-                GREEN: 2,
-                BLUE: 3,
+                COLOR: 1,
             },
             class: 'neo',
             isNotFor: ['Jikko'],
             func: function (sprite, script) {
                 //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
-                var r = script.getNumberValue('RED', script);
-                var g = script.getNumberValue('GREEN', script);
-                var b = script.getNumberValue('BLUE', script);
+                var value = script.getStringField('COLOR', script);
+
+                let r = parseInt(value.substr(1, 2), 16);
+                let g = parseInt(value.substr(3, 2), 16);
+                let b = parseInt(value.substr(5, 2), 16);
+                
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -1224,7 +1127,7 @@ Entry.jikko.getBlocks = function () {
                 ],
             },
         },
-
+        
         jikko_set_neopixel_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
