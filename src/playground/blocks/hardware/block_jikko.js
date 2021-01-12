@@ -21,7 +21,32 @@ Entry.jikko = {
             keySet.forEach(function (key) {
                 if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
                     Entry.hw.sendQueue.SET[key].data = {
-                        num: Entry.hw.sendQueue.SET[key].data.num,
+                        //num: Entry.hw.sendQueue.SET[key].data.num,
+                        num: 0,
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    }
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    Entry.hw.sendQueue.SET[key].data = {
+                        //num: Entry.hw.sendQueue.SET[key].data.num,
+                        num: 1,
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    }
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    Entry.hw.sendQueue.SET[key].data = {
+                        //num: Entry.hw.sendQueue.SET[key].data.num,
+                        num: 2,
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    }
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    Entry.hw.sendQueue.SET[key].data = {
+                        //num: Entry.hw.sendQueue.SET[key].data.num,
+                        num: 3,
                         r: 0,
                         g: 0,
                         b: 0,
