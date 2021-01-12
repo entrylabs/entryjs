@@ -18,9 +18,20 @@ Entry.jikko = {
             };
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            keySet.forEach(function (key) {
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
+                    Entry.hw.sendQueue.SET[key].data = {
+                        num: Entry.hw.sendQueue.SET[key].data.num,
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    }
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
+                else {
+                    Entry.hw.sendQueue.SET[key].data = 0;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
             });
             //     keySet.forEach(function(key) {
             //         if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.DCMOTOR) {
