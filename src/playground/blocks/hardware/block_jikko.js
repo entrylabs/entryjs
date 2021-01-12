@@ -12,26 +12,32 @@ Entry.jikko = {
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
+                GET: {},
                 SET: {},
             };
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
+                    // Entry.hw.sendQueue['SET'][1] = {
+                    //     data: { line: 3 },
+                    //     time: new Date().getTime(),
+                    Entry.hw.sendQueue.SET[key].data.line = 3;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    //};
+                } else {
+                    Entry.hw.sendQueue.SET[key].data = 0;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
             });
             //     keySet.forEach(function(key) {
-            //         if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.DCMOTOR) {
-            //             Entry.hw.sendQueue.SET[key].data.value1 = 0;
-            //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            //         } else {
+            //        else {
             //             Entry.hw.sendQueue.SET[key].data = 0;
             //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             //         }
             //     });
         }
-        // Entry.hw.sendQueue.GET = {};
-
+        //Entry.hw.sendQueue.GET = {};
         Entry.hw.update();
     },
     sensorTypes: {
@@ -47,10 +53,15 @@ Entry.jikko = {
         READ_BLUETOOTH: 9,
         WRITE_BLUETOOTH: 10,
         LCD: 11,
-        RGBLED: 12,
-        DCMOTOR: 13,
-        OLED: 14,
-        PIR: 15,
+        LCDCLEAR: 12,
+        RGBLED: 13,
+        DCMOTOR: 14,
+        OLED: 15,
+        PIR: 16,
+        DHTINIT: 17,
+        DHTHUMI: 18,
+        DHTTEMP: 19,
+        // NEOPIXEL: 20,
     },
     toneTable: {
         '0': 0,
@@ -405,7 +416,12 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
-                jikko_module_digital_lcd: 'LCD화면 %1 줄에 %2 칸에 %3 나타내기 %4',
+                jikko_module_digital_lcd: 'LCD화면 %1 줄 %2 칸에 %3 나타내기 %4',
+                jikko_lcd_clear: 'LCD화면 지우기 %1',
+                // jikko_set_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2',
+                jikko_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도값',
+                jikko_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도값',
+                //jikko_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
                 jikko_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
                 jikko_module_digital_oled: 'OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4',
             },
@@ -435,6 +451,9 @@ Entry.jikko.setLanguage = function() {
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
                 jikko_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
+                //jikko_set_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2',
+                jikko_get_dht_temp_value: '온습도센서의 온도값',
+                jikko_get_dht_humi_value: '온습도센서의 습도값',
             },
         },
     };
@@ -456,6 +475,11 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_module_digital_lcd',
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
+    'jikko_lcd_clear',
+    // 'jikko_set_dht_init',
+    'jikko_get_dht_temp_value',
+    'jikko_get_dht_humi_value',
+    //'jikko_get_analog_temp_value',
     'jikko_module_digital_bluetooth',
     'jikko_module_digital_oled',
 ];
@@ -679,36 +703,7 @@ Entry.jikko.getBlocks = function() {
                 return script.getField('NOTE');
             },
         },
-        jikko_list_digital_lcd: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.template.jikko_lcd_first_line, '0'],
-                        [Lang.template.jikko_lcd_seconds_line, '1'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                LINE: 0,
-            },
-            func: function(sprite, script) {
-                return script.getField('LINE');
-            },
-        },
+
         jikko_list_digital_dcmotor_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1852,7 +1847,7 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    //    Entry.hw.sendQueue['SET'][line] = {
+                    //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
                         type: Entry.jikko.sensorTypes.LCD,
                         data: {
@@ -1893,6 +1888,198 @@ Entry.jikko.getBlocks = function() {
             },
             syntax: { js: [], py: ['jikko.module_digital_lcd(%1, %2)'] },
         },
+        jikko_lcd_clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'jikko_lcd_clear',
+            },
+            class: 'jikkoModule',
+            isNotFor: ['jikko'],
+            func(sprite, script) {
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][1] = {
+                        type: Entry.jikko.sensorTypes.LCDCLEAR,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_analog_temp_name: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['습도', '0'],
+                        ['온도(화씨)', '1'],
+                        ['온도(섭씨)', '2'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('PORT');
+            },
+        },
+
+        jikko_get_dht_temp_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    //defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['4'],
+                    },
+                ],
+                type: 'jikko_get_dht_temp_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'dht',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port];
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DHTTEMP] = {
+                    port: port,
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.DHTTEMP || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_get_dht_humi_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    //defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                //params: ['1'],
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['4'],
+                    },
+                ],
+                type: 'jikko_get_dht_humi_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'dht',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port];
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DHTHUMI] = {
+                    port: port,
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.DHTHUMI || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
         jikko_module_digital_oled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
