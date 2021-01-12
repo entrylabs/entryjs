@@ -130,7 +130,7 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         });
 
         this.box.set({ width });
-        this._block.view.dAlignContent();
+        this._block.view?.dAlignContent();
     }
 
     _attachDisposeEvent(func) {
