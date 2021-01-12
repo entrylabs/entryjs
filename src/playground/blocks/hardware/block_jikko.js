@@ -1,5 +1,7 @@
 'use strict';
 
+const PromiseManager = require('../../../core/promiseManager');
+
 Entry.jikko = {
     id: 'FF.FF',
     name: 'jikko',
@@ -54,14 +56,18 @@ Entry.jikko = {
         WRITE_BLUETOOTH: 10,
         LCD: 11,
         LCDCLEAR: 12,
-        RGBLED: 13,
-        DCMOTOR: 14,
-        OLED: 15,
-        PIR: 16,
+        RGBLED: 12,
+        DCMOTOR: 13,
+        OLED: 14,
+        PIR: 15,
         DHTINIT: 17,
         DHTHUMI: 18,
         DHTTEMP: 19,
-        // NEOPIXEL: 20,
+        NEOPIXELINIT: 20,
+        NEOPIXELBRIGHT: 21,
+        NEOPIXEL: 22,
+        NEOPIXELALL: 23,
+        NEOPIXELCLEAR: 24,
     },
     toneTable: {
         '0': 0,
@@ -414,6 +420,14 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 jikko_set_digital_buzzer: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
+                jikko_set_neopixel_init:
+                    '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
+                jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
+                jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
+                jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
                 jikko_module_digital_lcd: 'LCD화면 %1 줄 %2 칸에 %3 나타내기 %4',
@@ -448,6 +462,14 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_servo: 'Set servo pin %1 angle as %2 %3',
                 jikko_set_digital_buzzer: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 jikko_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
+                jikko_set_neopixel_init:
+                    '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
+                jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
+                jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
+                jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
                 jikko_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
@@ -472,6 +494,11 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_digital_servo',
     'jikko_set_digital_buzzer',
     'jikko_set_digital_dcmotor',
+    'jikko_set_neopixel_init',
+    'jikko_set_neopixel_bright',
+    'jikko_set_neopixel',
+    'jikko_set_neopixel_all',
+    'jikko_set_neopixel_clear',
     'jikko_module_digital_lcd',
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
@@ -484,6 +511,8 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_module_digital_oled',
 ];
 Entry.jikko.getBlocks = function() {
+    const promiseManager = new PromiseManager();
+
     return {
         //region jikko 대장장이보드
         jikko_list_analog_basic: {
@@ -703,7 +732,466 @@ Entry.jikko.getBlocks = function() {
                 return script.getField('NOTE');
             },
         },
+        jikko_set_neopixel_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['7'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['4'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_neopixel_init',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NUM: 1,
+            },
+            class: 'neo',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                //var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT');
+                var value = script.getNumberValue('NUM');
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
 
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELINIT,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_set_neopixel_bright: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['7'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_neopixel_bright',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NUM: 1,
+            },
+            class: 'neo',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getNumberValue('NUM');
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELBRIGHT,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_set_neopixel: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['7'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'jikko_set_neopixel',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NUM: 1,
+                COLOR: 2,
+            },
+            class: 'neo',
+            isNotFor: ['Jikko'],
+            func: function(sprite, script) {
+                //var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT', script);
+                var num = script.getNumberValue('NUM', script);
+                var value = script.getStringField('COLOR', script);
+
+                let r = parseInt(value.substr(1, 2), 16);
+                let g = parseInt(value.substr(3, 2), 16);
+                let b = parseInt(value.substr(5, 2), 16);
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    r = Math.round(r);
+                    r = Math.min(r, 255);
+                    r = Math.max(r, 0);
+
+                    g = Math.round(g);
+                    g = Math.min(g, 255);
+                    g = Math.max(g, 0);
+
+                    b = Math.round(b);
+                    b = Math.min(b, 255);
+                    b = Math.max(b, 0);
+
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXEL,
+                        data: {
+                            num: num,
+                            r: r,
+                            g: g,
+                            b: b,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_set_neopixel_all: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['7'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'jikko_set_neopixel_all',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                COLOR: 1,
+            },
+            class: 'neo',
+            isNotFor: ['Jikko'],
+            func: function(sprite, script) {
+                //var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT', script);
+                var value = script.getStringField('COLOR', script);
+
+                let r = parseInt(value.substr(1, 2), 16);
+                let g = parseInt(value.substr(3, 2), 16);
+                let b = parseInt(value.substr(5, 2), 16);
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+                    r = Math.round(r);
+                    r = Math.min(r, 255);
+                    r = Math.max(r, 0);
+
+                    g = Math.round(g);
+                    g = Math.min(g, 255);
+                    g = Math.max(g, 0);
+
+                    b = Math.round(b);
+                    b = Math.min(b, 255);
+                    b = Math.max(b, 0);
+
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELALL,
+                        data: {
+                            r: r,
+                            g: g,
+                            b: b,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_set_neopixel_clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['7'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_neopixel_clear',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'neo',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.NEOPIXELCLEAR,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_list_digital_lcd: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.jikko_lcd_first_line, '0'],
+                        [Lang.template.jikko_lcd_seconds_line, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                LINE: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('LINE');
+            },
+        },
         jikko_list_digital_dcmotor_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
