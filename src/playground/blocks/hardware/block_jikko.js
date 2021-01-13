@@ -63,11 +63,11 @@ Entry.jikko = {
         WRITE_BLUETOOTH: 10,
         LCD: 11,
         LCDCLEAR: 12,
-        RGBLED: 12,
-        DCMOTOR: 13,
-        OLED: 14,
-        PIR: 15,
-        DHTINIT: 17,
+        RGBLED: 13,
+        DCMOTOR: 14,
+        OLED: 15,
+        PIR: 16,
+        LCDINIT: 17,
         DHTHUMI: 18,
         DHTTEMP: 19,
         NEOPIXELINIT: 20,
@@ -435,6 +435,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
+                jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
                 jikko_module_digital_lcd: 'LCD화면 %1 줄 %2 칸에 %3 나타내기 %4',
@@ -478,6 +479,8 @@ Entry.jikko.setLanguage = function() {
                 //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
+                jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
+
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
                 jikko_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
                 //jikko_set_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2',
@@ -510,6 +513,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
     'jikko_lcd_clear',
+    'jikko_lcd_init',
     // 'jikko_set_dht_init',
     'jikko_get_dht_temp_value',
     'jikko_get_dht_humi_value',
@@ -1167,6 +1171,36 @@ Entry.jikko.getBlocks = function() {
             syntax: {
                 js: [],
                 py: [{}],
+            },
+        },
+        jikko_lcd_list_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0x27', '0'],
+                        ['0x3F', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                LINE: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('LINE');
             },
         },
         jikko_list_digital_lcd: {
@@ -2256,6 +2290,101 @@ Entry.jikko.getBlocks = function() {
             },
             syntax: { js: [], py: ['jikko.set_digital_dcmotor(%1, %2, %3, %4)'] },
         },
+        jikko_lcd_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            //    template: Lang.template.jikko_module_digital_lcd,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    //defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    // defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_lcd_list_init',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['16'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    null,
+                ],
+                type: 'jikko_lcd_init',
+            },
+            paramsKeyMap: {
+                LIST: 0,
+                COL: 1,
+                LINE: 2,
+            },
+            class: 'jikkoModule',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var list = script.getNumberValue('LIST');
+                var col = script.getNumberValue('COL');
+                var line = script.getValue('LINE');
+
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    //Entry.hw.sendQueue['SET'][0] = {
+                    Entry.hw.sendQueue['SET'][1] = {
+                        type: Entry.jikko.sensorTypes.LCDINIT,
+                        data: {
+                            list: list,
+                            col: col,
+                            line: line,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: ['jikko.module_digital_lcd(%1, %2)'] },
+        },
         jikko_module_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2313,25 +2442,25 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 var line = script.getNumberValue('LINE');
                 var column = script.getNumberValue('COL');
-                var string = script.getValue('STRING');
-                var text = [];
+                var text = script.getValue('STRING');
+                //var text = [];
 
                 if (!script.isStart) {
-                    if (typeof string === 'string') {
-                        for (var i = 0; i < string.length; i++) {
-                            //  text[i] = string.charCodeAt(i);
-                            text[i] = Entry.jikko.toByte(string[i]);
-                        }
-                    } else if (typeof string === 'number') {
-                        // text[0] = 1;
-                        // text[1] = string / 1;
-                        var num_to_string = string.toString();
-                        for (var i = 0; i < num_to_string.length; i++) {
-                            text[i] = Entry.jikko.toByte(num_to_string[i]);
-                        }
-                    } else {
-                        text[0] = string;
-                    }
+                    // if (typeof string === 'string') {
+                    //     for (var i = 0; i < string.length; i++) {
+                    //         //  text[i] = string.charCodeAt(i);
+                    //         text[i] = Entry.jikko.toByte(string[i]);
+                    //     }
+                    // } else if (typeof string === 'number') {
+                    //     // text[0] = 1;
+                    //     // text[1] = string / 1;
+                    //     var num_to_string = string.toString();
+                    //     for (var i = 0; i < num_to_string.length; i++) {
+                    //         text[i] = Entry.jikko.toByte(num_to_string[i]);
+                    //     }
+                    // } else {
+                    //     text[0] = string;
+                    // }
 
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -2348,22 +2477,23 @@ Entry.jikko.getBlocks = function() {
                         data: {
                             line: line,
                             column: column,
-                            text0: text[0],
-                            text1: text[1],
-                            text2: text[2],
-                            text3: text[3],
-                            text4: text[4],
-                            text5: text[5],
-                            text6: text[6],
-                            text7: text[7],
-                            text8: text[8],
-                            text9: text[9],
-                            text10: text[10],
-                            text11: text[11],
-                            text12: text[12],
-                            text13: text[13],
-                            text14: text[14],
-                            text15: text[15],
+                            text: text,
+                            // text0: text[0],
+                            // text1: text[1],
+                            // text2: text[2],
+                            // text3: text[3],
+                            // text4: text[4],
+                            // text5: text[5],
+                            // text6: text[6],
+                            // text7: text[7],
+                            // text8: text[8],
+                            // text9: text[9],
+                            // text10: text[10],
+                            // text11: text[11],
+                            // text12: text[12],
+                            // text13: text[13],
+                            // text14: text[14],
+                            // text15: text[15],
                         },
                         time: new Date().getTime(),
                     };
