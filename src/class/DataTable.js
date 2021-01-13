@@ -131,6 +131,10 @@ class DataTable {
                 data: table.slice(1),
             });
             source.updated = new Date();
+        } else {
+            this.#tables.push(
+                new DataTableSource({ chart, data: table.slice(1), fields: table[0], name })
+            );
         }
     }
 
