@@ -20,7 +20,11 @@ Entry.jikko = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL){
+                    Entry.hw.sendQueue.SET[key].data.num = 4;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
+                else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
                     // Entry.hw.sendQueue['SET'][1] = {
                     //     data: { line: 3 },
                     //     time: new Date().getTime(),
@@ -28,6 +32,9 @@ Entry.jikko = {
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                     //};
                 } else {
+                    //Entry.hw.sendQueue.RESET[key].data = 0;
+                    //Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
+                    
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
