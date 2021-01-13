@@ -20,11 +20,10 @@ Entry.jikko = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL){
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
                     Entry.hw.sendQueue.SET[key].data.num = 4;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                }
-                else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
+                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
                     // Entry.hw.sendQueue['SET'][1] = {
                     //     data: { line: 3 },
                     //     time: new Date().getTime(),
@@ -34,7 +33,7 @@ Entry.jikko = {
                 } else {
                     //Entry.hw.sendQueue.RESET[key].data = 0;
                     //Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
-                    
+
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
@@ -413,6 +412,11 @@ Entry.jikko.setLanguage = function() {
                 jikko_btData_select_number: '숫자',
                 jikko_btData_select_character: '문자',
                 jikko_get_analog_value: '아날로그 %1 번 핀 센서 값',
+                jikko_get_analog_value: '아날로그 %1 번 핀 센서 값',
+                jikko_get_light_value: '조도센서(AO %1)값',
+                jikko_get_moisture_value: '토양수분센서(AO %1)값',
+                jikko_get_sound_value: '사운드센서(AO %1)값',
+                jikko_get_infrared_value: '적외선센서(AO %1)값',
                 jikko_get_analog_mapping:
                     '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
                 jikko_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
@@ -498,6 +502,10 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_digital',
     'jikko_get_digital_toggle',
     'jikko_get_digital_pir',
+    'jikko_get_light_value',
+    'jikko_get_moisture_value',
+    'jikko_get_sound_value',
+    'jikko_get_infrared_value',
     'jikko_set_digital_toggle',
     'jikko_set_digital_pwm',
     'jikko_set_digital_rgbled',
@@ -509,11 +517,11 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_neopixel',
     'jikko_set_neopixel_all',
     'jikko_set_neopixel_clear',
+    'jikko_lcd_init',
     'jikko_module_digital_lcd',
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
     'jikko_lcd_clear',
-    'jikko_lcd_init',
     // 'jikko_set_dht_init',
     'jikko_get_dht_temp_value',
     'jikko_get_dht_humi_value',
@@ -1446,6 +1454,154 @@ Entry.jikko.getBlocks = function() {
                     },
                 ],
                 type: 'jikko_get_analog_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'jikkoGet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+
+                if (port[0] === 'A') port = port.substring(1);
+
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
+        },
+        jikko_get_light_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            //template: Lang.template.jikko_get_analog_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_analog_basic',
+                    },
+                ],
+                type: 'jikko_get_light_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'jikkoGet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+
+                if (port[0] === 'A') port = port.substring(1);
+
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
+        },
+        jikko_get_moisture_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            //template: Lang.template.jikko_get_analog_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_analog_basic',
+                    },
+                ],
+                type: 'jikko_get_moisture_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'jikkoGet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+
+                if (port[0] === 'A') port = port.substring(1);
+
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
+        },
+        jikko_get_sound_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            //template: Lang.template.jikko_get_analog_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_analog_basic',
+                    },
+                ],
+                type: 'jikko_get_sound_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'jikkoGet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+
+                if (port[0] === 'A') port = port.substring(1);
+
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
+        },
+        jikko_get_infrared_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            //template: Lang.template.jikko_get_analog_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_analog_basic',
+                    },
+                ],
+                type: 'jikko_get_infrared_value',
             },
             paramsKeyMap: {
                 PORT: 0,
