@@ -75,6 +75,9 @@ Entry.jikko = {
         NEOPIXEL: 22,
         NEOPIXELALL: 23,
         NEOPIXELCLEAR: 24,
+        DOTMATRIXINIT: 25,
+        DOTMATRIXBRIGHT: 26,
+        DOTMATRIX: 27,
     },
     toneTable: {
         '0': 0,
@@ -435,6 +438,9 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
+                jikko_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
+                jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
+                jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
@@ -478,6 +484,9 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
+                jikko_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
+                jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
+                jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
 
@@ -509,6 +518,9 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_neopixel',
     'jikko_set_neopixel_all',
     'jikko_set_neopixel_clear',
+    'jikko_set_dotmatrix_init',
+    'jikko_set_dotmatrix_bright',
+    'jikko_set_dotmatrix',
     'jikko_module_digital_lcd',
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
@@ -1203,6 +1215,187 @@ Entry.jikko.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
+        // dot matrix
+        jikko_set_dotmatrix_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['12'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['11'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_dotmatrix_init',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+                PORT3: 2,
+            },
+            class: 'dot',
+            isNotFor: ['Jikko'],
+            func: function (sprite, script) {
+                //var sq = Entry.hw.sendQueue;
+                var port1 = script.getNumberValue('PORT1', script);
+                var port2 = script.getNumberValue('PORT2', script);
+                var port3 = script.getNumberValue('PORT3', script);
+                
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+
+                    Entry.hw.sendQueue['SET'][port1] = {
+                        type: Entry.jikko.sensorTypes.DOTMATRIXINIT,
+                        data: {
+                            port1: port1,
+                            port2: port2,
+                            port3: port3,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }
+                else if (script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+
+                    },
+                ],
+            },
+        },
+        jikko_set_dotmatrix_bright: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['8'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_dotmatrix_bright',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            class: 'dot',
+            isNotFor: ['Jikko'],
+            func: function (sprite, script) {
+                //var sq = Entry.hw.sendQueue;
+                var num = script.getNumberValue('NUM', script);
+                
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+
+                    Entry.hw.sendQueue['SET'][1] = {
+                        type: Entry.jikko.sensorTypes.DOTMATRIXBRIGHT,
+                        data: num,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }
+                else if (script.timeFlag == 1) {
+                    return script;
+                }
+                else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+
+                    },
+                ],
+            },
+        },
+
+        // dot matrix
         jikko_list_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
