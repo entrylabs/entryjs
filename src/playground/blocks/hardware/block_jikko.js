@@ -77,6 +77,7 @@ Entry.jikko = {
         DOTMATRIXINIT: 25,
         DOTMATRIXBRIGHT: 26,
         DOTMATRIX: 27,
+        DOTMATRIXCLEAR: 28,
     },
     toneTable: {
         '0': 0,
@@ -446,6 +447,8 @@ Entry.jikko.setLanguage = function() {
                     '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
+                jikko_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
+
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
@@ -532,6 +535,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_dotmatrix_init',
     'jikko_set_dotmatrix_bright',
     'jikko_set_dotmatrix',
+    'jikko_set_dotmatrix_clear',
     'jikko_module_digital_lcd',
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
@@ -1392,7 +1396,60 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
+        jikko_set_dotmatrix_clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'jikko_set_dotmatrix_clear',
+            },
+            class: 'dot',
+            isNotFor: ['jikko'],
+            func(sprite, script) {
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
 
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][12] = {
+                        type: Entry.jikko.sensorTypes.DOTMATRIXCLEAR,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
         // dot matrix
         jikko_list_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
