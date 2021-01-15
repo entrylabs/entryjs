@@ -262,7 +262,7 @@ Entry.Choco.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 
-                const move_cnt = parseInt(script.getValue('MOVE_CNT'));
+                const move_cnt = script.getValue('MOVE_CNT');
                 let move_unit = script.getValue('MOVE_UNIT');
                 if(move_cnt===0) return script.callReturn();
 
@@ -336,7 +336,7 @@ Entry.Choco.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
-                const move_cnt = parseInt(script.getValue('MOVE_CNT'));
+                const move_cnt = script.getValue('MOVE_CNT');
                 let move_unit = script.getValue('MOVE_UNIT');
                 if(move_cnt===0) return script.callReturn();
 
@@ -409,7 +409,7 @@ Entry.Choco.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
-                const turn_cnt = parseInt(script.getValue('TURN_CNT'));
+                const turn_cnt = script.getValue('TURN_CNT');
                 let turn_unit = script.getValue('TURN_UNIT');
                 if (turn_cnt < 0) turn_cnt = 0;                    
                 if(turn_cnt===0) return script.callReturn();
@@ -483,7 +483,7 @@ Entry.Choco.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
-                const turn_cnt = parseInt(script.getValue('TURN_CNT'));
+                const turn_cnt = script.getValue('TURN_CNT');
                 let turn_unit = script.getValue('TURN_UNIT');
                 if (turn_cnt < 0) turn_cnt = 0;                                
                 if(turn_cnt===0) return script.callReturn();
@@ -575,8 +575,8 @@ Entry.Choco.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
-                const move_right_cnt = parseInt(script.getValue('MOVE_RIGHT_CNT'));
-                const move_left_cnt = parseInt(script.getValue('MOVE_LEFT_CNT'));
+                const move_right_cnt = script.getValue('MOVE_RIGHT_CNT');
+                const move_left_cnt = script.getValue('MOVE_LEFT_CNT');
                 let move_right_unit = script.getValue('MOVE_RIGHT_UNIT');
                 let move_left_unit = script.getValue('MOVE_LEFT_UNIT');
 
