@@ -12,6 +12,20 @@ Entry.jikko = {
         en: 'jikko',
     },
     setZero: function() {
+        // if (!Entry.hw.sendQueue['SET']) {
+        //     Entry.hw.sendQueue['SET'] = {};
+        // }
+        // //reset - [중지] 시
+        // var port = 3;
+        // Entry.hw.sendQueue['SET'][port] = {
+        //     type: Entry.FunBoard.sensorTypes.RESET_,
+        //     time: new Date().getTime(),
+        // };
+        // // for (var i = 0; i < 50000; i++) {}
+        // Entry.hw.update();
+        // delete Entry.hw.sendQueue[port];
+        // //    for (var i = 0; i < 500000; i++) {}
+
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -20,32 +34,15 @@ Entry.jikko = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
-                    Entry.hw.sendQueue.SET[key].data.num = 4;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
-                    // Entry.hw.sendQueue['SET'][1] = {
-                    //     data: { line: 3 },
-                    //     time: new Date().getTime(),
-                    Entry.hw.sendQueue.SET[key].data.line = 3;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                    //};
-                } else {
-                    //Entry.hw.sendQueue.RESET[key].data = 0;
-                    //Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
-
-                    Entry.hw.sendQueue.SET[key].data = 0;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                }
+                // if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.RESET_) {
+                //     // Entry.hw.sendQueue.SET[key].data = 0;
+                //     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                // } else {
+                Entry.hw.sendQueue.RESET[key].data = 0;
+                Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
+                //}
             });
-            //     keySet.forEach(function(key) {
-            //        else {
-            //             Entry.hw.sendQueue.SET[key].data = 0;
-            //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            //         }
-            //     });
         }
-        //Entry.hw.sendQueue.GET = {};
         Entry.hw.update();
     },
     sensorTypes: {
@@ -78,6 +75,7 @@ Entry.jikko = {
         DOTMATRIXBRIGHT: 26,
         DOTMATRIX: 27,
         DOTMATRIXCLEAR: 28,
+        RESET_: 29,
     },
     toneTable: {
         '0': 0,
@@ -446,7 +444,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_dotmatrix_init:
                     '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
-                jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
+                jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1',
                 jikko_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
 
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
@@ -1266,11 +1264,11 @@ Entry.jikko.getBlocks = function() {
                     },
                     {
                         type: 'arduino_get_port_number',
-                        params: ['10'],
+                        params: ['11'],
                     },
                     {
                         type: 'arduino_get_port_number',
-                        params: ['11'],
+                        params: ['10'],
                     },
                     null,
                 ],
@@ -1297,6 +1295,8 @@ Entry.jikko.getBlocks = function() {
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
+                    // var timeValue = (1 + 0.5) * 0.1; //0.15
+                    // timeValue = (60 / fps) * timeValue * 10000;
 
                     Entry.hw.sendQueue['SET'][port1] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIXINIT,
@@ -1320,6 +1320,7 @@ Entry.jikko.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
+                //  return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1421,13 +1422,79 @@ Entry.jikko.getBlocks = function() {
                         Entry.hw.sendQueue['SET'] = {};
                     }
 
+                    // script.isStart = true;
+                    // script.timeFlag = 1;
+                    // var fps = Entry.FPS || 60;
+                    // var timeValue = (60 / fps) * 50;
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    // var timeValue = (60 / fps) * 50;
+                    var timeValue = (1 + 0.5) * 0.1; //0.15
+                    timeValue = (60 / fps) * timeValue * 100;
 
                     Entry.hw.sendQueue['SET'][12] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIXCLEAR,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_set_dotmatrix: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'jikko_set_dotmatrix',
+            },
+            class: 'dot',
+            isNotFor: ['jikko'],
+            func(sprite, script) {
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    // script.isStart = true;
+                    // script.timeFlag = 1;
+                    // var fps = Entry.FPS || 60;
+                    // var timeValue = (60 / fps) * 50;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    // var timeValue = (60 / fps) * 50;
+                    var timeValue = (1 + 0.5) * 0.1; //0.15
+                    timeValue = (60 / fps) * timeValue * 100;
+
+                    Entry.hw.sendQueue['SET'][12] = {
+                        type: Entry.jikko.sensorTypes.DOTMATRIX,
                         data: 0,
                         time: new Date().getTime(),
                     };
