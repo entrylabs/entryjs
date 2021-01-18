@@ -14,38 +14,41 @@ Entry.jikko = {
     Static: {
         BUTTON_PRESS_VALUE: 0,
     },
-    setZero() {
-        if (!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
-
-        var port = 13;
-        Entry.hw.sendQueue['SET'][port] = {
-            type: Entry.jikko.sensorTypes.RESET_,
-            time: new Date().getTime(),
-        };
-        for (var i = 0; i < 50000; i++) {}
-        Entry.hw.update();
-        delete Entry.hw.sendQueue[port];
-        for (var i = 0; i < 500000; i++) {}
-
+    setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
                 SET: {},
             };
         } else {
-            const keySet = Object.keys(Entry.hw.sendQueue.SET);
+            var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                // if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.RESET_) {
-                //     // Entry.hw.sendQueue.SET[key].data = 0;
-                //     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                // } else {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                // }
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
+                    Entry.hw.sendQueue.SET[key].data.num = 4;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
+                    // Entry.hw.sendQueue['SET'][1] = {
+                    //     data: { line: 3 },
+                    //     time: new Date().getTime(),
+                    Entry.hw.sendQueue.SET[key].data.line = 3;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                    //};
+                } else {
+                    //Entry.hw.sendQueue.RESET[key].data = 0;
+                    //Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
+
+                    Entry.hw.sendQueue.SET[key].data = 0;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
             });
+            //     keySet.forEach(function(key) {
+            //        else {
+            //             Entry.hw.sendQueue.SET[key].data = 0;
+            //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            //         }
+            //     });
         }
+        //Entry.hw.sendQueue.GET = {};
         Entry.hw.update();
     },
     sensorTypes: {
@@ -466,10 +469,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도값',
                 jikko_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도값',
 
-                jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, tx: %2 ) %3',
-                jikko_set_mp3_play: 'mp3 ( tx %1 ) %2 번 파일 재생 %3',
-                jikko_set_mp3_play2: 'mp3 ( tx %1 ) %2 번 파일 %3 초 동안 재생 %4',
-                jikko_set_mp3_vol: 'mp3  ( tx %1 ) 볼륨 %2 으로 설정 (0 ~ 30) %3',
+                jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
+                jikko_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
+                //jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
+                jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
                 jikko_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
                 jikko_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
                 jikko_module_digital_oled: 'OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4',
@@ -518,10 +521,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_dht_temp_value: '온습도센서의 온도값',
                 jikko_get_dht_humi_value: '온습도센서의 습도값',
 
-                jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, tx: %2 ) %3',
-                jikko_set_mp3_play: 'mp3 ( tx %1 ) %2 번 파일 재생 %3',
-                jikko_set_mp3_play2: 'mp3 ( tx %1 ) %2 번 파일 %3 초 동안 재생 %4',
-                jikko_set_mp3_vol: 'mp3  ( tx %1 ) 볼륨 %2 으로 설정 (0 ~ 30) %3',
+                jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
+                jikko_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
+                //jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
+                jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
             },
         },
     };
@@ -573,11 +576,11 @@ Entry.jikko.blockMenuBlocks = [
     //'jikko_module_digital_oled',
     'jikko_set_mp3_init',
     'jikko_set_mp3_play',
-    'jikko_set_mp3_play2',
+    //'jikko_set_mp3_play2',
     'jikko_set_mp3_vol',
 ];
 Entry.jikko.getBlocks = function() {
-    const promiseManager = new PromiseManager();
+    var tx;
 
     return {
         jikko_list_analog_basic: {
@@ -1870,7 +1873,7 @@ Entry.jikko.getBlocks = function() {
 
                 if (port[0] === 'A') port = port.substring(1);
 
-                return ANALOG ? ANALOG[port] || 0 : 0;
+                return ANALOG ? (ANALOG[port] || 0)/10 : 0;
             },
             syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
         },
@@ -1907,7 +1910,7 @@ Entry.jikko.getBlocks = function() {
 
                 if (port[0] === 'A') port = port.substring(1);
 
-                return ANALOG ? ANALOG[port] || 0 : 0;
+                return ANALOG ? (ANALOG[port] || 0)/10 : 0;
             },
             syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
         },
@@ -1989,7 +1992,7 @@ Entry.jikko.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
@@ -3403,11 +3406,11 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_port_number',
-                        params: ['3'],
+                        params: ['2'],
                     },
                     {
                         type: 'arduino_get_port_number',
-                        params: ['2'],
+                        params: ['3'],
                     },
                     null,
                 ],
@@ -3421,7 +3424,7 @@ Entry.jikko.getBlocks = function() {
             isNotFor: ['jikko'],
             func: function(sprite, script) {
                 //var sq = Entry.hw.sendQueue;
-                var tx = script.getNumberValue('PORT1');
+                tx = script.getNumberValue('PORT1');
                 var rx = script.getNumberValue('PORT2');
 
                 if (!script.isStart) {
@@ -3473,11 +3476,6 @@ Entry.jikko.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
@@ -3487,10 +3485,6 @@ Entry.jikko.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
-                        params: ['3'],
-                    },
-                    {
                         type: 'number',
                         params: ['1'],
                     },
@@ -3499,13 +3493,12 @@ Entry.jikko.getBlocks = function() {
                 type: 'jikko_set_mp3_play',
             },
             paramsKeyMap: {
-                PORT: 0,
-                NUM: 1,
+                NUM: 0,
             },
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var tx = script.getNumberValue('PORT');
+                //var tx = script.getNumberValue('PORT');
                 var num = script.getNumberValue('NUM');
 
                 if (!script.isStart) {
@@ -3544,17 +3537,13 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
+        /*
         jikko_set_mp3_play2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -3575,10 +3564,6 @@ Entry.jikko.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
-                        params: ['3'],
-                    },
-                    {
                         type: 'number',
                         params: ['1'],
                     },
@@ -3591,14 +3576,13 @@ Entry.jikko.getBlocks = function() {
                 type: 'jikko_set_mp3_play2',
             },
             paramsKeyMap: {
-                PORT: 0,
-                NUM: 1,
-                TIME: 2,
+                NUM: 0,
+                TIME: 1,
             },
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var tx = script.getNumberValue('PORT');
+                //var tx = script.getNumberValue('PORT');
                 var num = script.getNumberValue('NUM');
                 var time_value = script.getNumberValue('TIME');
 
@@ -3639,18 +3623,13 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-
+        */
         jikko_set_mp3_vol: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -3666,10 +3645,6 @@ Entry.jikko.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
-                        params: ['3'],
-                    },
-                    {
                         type: 'number',
                         params: ['15'],
                     },
@@ -3678,13 +3653,12 @@ Entry.jikko.getBlocks = function() {
                 type: 'jikko_set_mp3_vol',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VOL: 1,
+                VOL: 0,
             },
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var tx = script.getNumberValue('PORT');
+                //var tx = script.getNumberValue('PORT');
                 var vol = script.getNumberValue('VOL');
 
                 if (!script.isStart) {
