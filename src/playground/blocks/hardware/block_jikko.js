@@ -15,19 +15,19 @@ Entry.jikko = {
         BUTTON_PRESS_VALUE: 0,
     },
     setZero() {
-        if (!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
+        // if (!Entry.hw.sendQueue['SET']) {
+        //     Entry.hw.sendQueue['SET'] = {};
+        // }
 
-        var port = 13;
-        Entry.hw.sendQueue['SET'][port] = {
-            type: Entry.jikko.sensorTypes.RESET_,
-            time: new Date().getTime(),
-        };
-        for (var i = 0; i < 50000; i++) {}
-        Entry.hw.update();
-        delete Entry.hw.sendQueue[port];
-        for (var i = 0; i < 500000; i++) {}
+        // var port = 13;
+        // Entry.hw.sendQueue['SET'][port] = {
+        //     type: Entry.jikko.sensorTypes.RESET_,
+        //     time: new Date().getTime(),
+        // };
+        // for (var i = 0; i < 50000; i++) {}
+        // Entry.hw.update();
+        // delete Entry.hw.sendQueue[port];
+        // for (var i = 0; i < 500000; i++) {}
 
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -454,7 +454,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_dotmatrix_init:
                     '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
-                jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1',
+                jikko_set_dotmatrix: '도트매트릭스 LED %1 그리기 %2',
                 jikko_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
 
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
@@ -1524,6 +1524,10 @@ Entry.jikko.getBlocks = function() {
             statements: [],
             params: [
                 {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
@@ -1531,12 +1535,21 @@ Entry.jikko.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [],
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0x1824428181815a24'],
+                    },
+                ],
                 type: 'jikko_set_dotmatrix',
+            },
+            paramsKeyMap: {
+                STRING: 0,
             },
             class: 'dot',
             isNotFor: ['jikko'],
-            func(sprite, script) {
+            func: function(sprite, script) {
+                var text = script.getValue('SRING');
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -1555,7 +1568,9 @@ Entry.jikko.getBlocks = function() {
 
                     Entry.hw.sendQueue['SET'][12] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIX,
-                        data: 0,
+                        data: {
+                            text: text,
+                        },
                         time: new Date().getTime(),
                     };
 
