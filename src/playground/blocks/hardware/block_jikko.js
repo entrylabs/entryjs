@@ -86,6 +86,7 @@ Entry.jikko = {
         MP3PLAY2: 31,
         MP3VOL: 32,
         RESET_: 33,
+        PULUP: 34,
     },
     toneTable: {
         '0': 0,
@@ -2020,11 +2021,11 @@ Entry.jikko.getBlocks = function() {
 
                 var value = DIGITAL ? DIGITAL[port] || 0 : 0;
                 if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
-                    value = value ? 0 : 1;
+                    value = value ? 1 : 0;
                 }
                 return value;
                 //return DIGITAL ? 0 : DIGITAL[port] || 0;
-                //return DIGITAL ? DIGITAL[port] || 0 : 0;
+                //return DIGITAL ? DIGITAL[port] || 0 : 0; 
             },
             syntax: { js: [], py: [] },
         },
@@ -2059,9 +2060,11 @@ Entry.jikko.getBlocks = function() {
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
                 var value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                /*
                 if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
                     value = value ? 1 : 0;
                 }
+                */
                 return value;
                 //return DIGITAL ? 0 : DIGITAL[port] || 0;
                 //return DIGITAL ? DIGITAL[port] || 0 : 0;
