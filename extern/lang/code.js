@@ -6326,7 +6326,7 @@ Lang.template = {
     'robotis_dxl_each_control': "%1 모터 %2° %3 초 동안 움직이기",
     "robotis_openCM70_sensor_value": "제어기 %1 값",
     "robotis_openCM70_aux_sensor_value": "%1   %2 값",
-    "robotis_openCM70_cm_buzzer_index": "제어기 음계값 %1 , %2 , 연주 %3",
+    "robotis_openCM70_cm_buzzer_index": "제어기 음계값 %1 을(를) %2 초 동안 연주 %3",
     "robotis_openCM70_cm_buzzer_melody": "제어기 멜로디 %1 번 연주 %2",
     "robotis_openCM70_cm_sound_detected_clear": "최종소리감지횟수 초기화 %1",
     "robotis_openCM70_cm_led": "제어기 %1 LED %2 %3",
