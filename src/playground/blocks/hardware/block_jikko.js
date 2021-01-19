@@ -1577,7 +1577,6 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-
                     Entry.hw.sendQueue['SET'][din] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIX,
                         data: {
@@ -2042,18 +2041,17 @@ Entry.jikko.getBlocks = function() {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
-                
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                
+
                 Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DIGITAL] = {
                     port: port,
                     data: 2,
                     time: new Date().getTime(),
                 };
 
-                var value =  DIGITAL ? DIGITAL[port] || 0 : 0;
+                var value = DIGITAL ? DIGITAL[port] || 0 : 0;
                 return !value;
 
                 // var value = DIGITAL ? DIGITAL[port] || 0 : 0;
@@ -3071,7 +3069,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / fps) * 1 * 1000;
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
@@ -3088,6 +3086,15 @@ Entry.jikko.getBlocks = function() {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
+                    // const blockId = script.block.id;
+                    // Entry.TimeWaitManager.add(
+                    //     blockId,
+                    //     function() {
+                    //         script.timeFlag = 0;
+                    //     },
+                    //     timeValue
+                    // );
+                    // return script;
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
@@ -3183,7 +3190,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / fps) * 0.1 * 1000;
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
