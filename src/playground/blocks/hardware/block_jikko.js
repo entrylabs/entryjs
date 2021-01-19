@@ -2818,6 +2818,7 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_list_digital_basic',
+                        params: ['6'],
                     },
                     {
                         type: 'jikko_list_digital_tone',
@@ -3069,7 +3070,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 1 * 1000;
+                    var timeValue = (60 / fps) * 0.1 * 1000;
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
