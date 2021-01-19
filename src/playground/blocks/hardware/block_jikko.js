@@ -2034,17 +2034,20 @@ Entry.jikko.getBlocks = function() {
                 var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
+                
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-
+                
                 Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DIGITAL] = {
                     port: port,
                     data: 2,
                     time: new Date().getTime(),
                 };
 
-                return DIGITAL ? DIGITAL[port] || 0 : 0;
+                var value =  DIGITAL ? DIGITAL[port] || 0 : 0;
+                return !value;
+
                 // var value = DIGITAL ? DIGITAL[port] || 0 : 0;
                 // if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
                 //     value = value ? 1 : 0;
@@ -2091,7 +2094,7 @@ Entry.jikko.getBlocks = function() {
                     value = value ? 1 : 0;
                 }
                 */
-                return value;
+                return !value;
                 //return DIGITAL ? 0 : DIGITAL[port] || 0;
                 //return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
