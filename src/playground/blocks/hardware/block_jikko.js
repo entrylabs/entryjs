@@ -472,7 +472,7 @@ Entry.jikko.setLanguage = function() {
 
                 jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
                 jikko_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
-                //jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
+                jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
                 jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
                 jikko_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
                 jikko_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
@@ -524,7 +524,7 @@ Entry.jikko.setLanguage = function() {
 
                 jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
                 jikko_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
-                //jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
+                jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
                 jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
             },
         },
@@ -577,7 +577,7 @@ Entry.jikko.blockMenuBlocks = [
     //'jikko_module_digital_oled',
     'jikko_set_mp3_init',
     'jikko_set_mp3_play',
-    //'jikko_set_mp3_play2',
+    'jikko_set_mp3_play2',
     'jikko_set_mp3_vol',
 ];
 Entry.jikko.getBlocks = function() {
@@ -3087,15 +3087,6 @@ Entry.jikko.getBlocks = function() {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
-                    // const blockId = script.block.id;
-                    // Entry.TimeWaitManager.add(
-                    //     blockId,
-                    //     function() {
-                    //         script.timeFlag = 0;
-                    //     },
-                    //     timeValue
-                    // );
-                    // return script;
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
@@ -3585,7 +3576,7 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        /*
+        
         jikko_set_mp3_play2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3638,10 +3629,12 @@ Entry.jikko.getBlocks = function() {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
+                    //var timeValue = (60 / fps) * 50;
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / fps) * time_value * 1000;
+
 
                     Entry.hw.sendQueue['SET'][tx] = {
                         type: Entry.jikko.sensorTypes.MP3PLAY2,
@@ -3671,7 +3664,7 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        */
+        
         jikko_set_mp3_vol: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
