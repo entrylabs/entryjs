@@ -582,6 +582,9 @@ Entry.jikko.blockMenuBlocks = [
 ];
 Entry.jikko.getBlocks = function() {
     var tx;
+    var din;
+    var cs;
+    var clk;
 
     return {
         jikko_list_analog_basic: {
@@ -1351,6 +1354,10 @@ Entry.jikko.getBlocks = function() {
                 var port2 = script.getNumberValue('PORT2', script);
                 var port3 = script.getNumberValue('PORT3', script);
 
+                din = port1;
+                clk = port2;
+                cs = port3;
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -1437,7 +1444,7 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    Entry.hw.sendQueue['SET'][1] = {
+                    Entry.hw.sendQueue['SET'][din] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIXBRIGHT,
                         data: num,
                         time: new Date().getTime(),
@@ -1497,7 +1504,7 @@ Entry.jikko.getBlocks = function() {
                     var timeValue = (1 + 0.5) * 0.1; //0.15
                     timeValue = (60 / fps) * timeValue * 100;
 
-                    Entry.hw.sendQueue['SET'][12] = {
+                    Entry.hw.sendQueue['SET'][din] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIXCLEAR,
                         data: 0,
                         time: new Date().getTime(),
@@ -1542,7 +1549,7 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['0x1824428181815a24'],
+                        params: ['003c420024242400'],
                     },
                 ],
                 type: 'jikko_set_dotmatrix',
@@ -1553,24 +1560,25 @@ Entry.jikko.getBlocks = function() {
             class: 'dot',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var text = script.getValue('SRING');
+                var text = script.getValue('STRING');
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
 
-                    // script.isStart = true;
-                    // script.timeFlag = 1;
-                    // var fps = Entry.FPS || 60;
-                    // var timeValue = (60 / fps) * 50;
+                    //script.isStart = true;
+                    //script.timeFlag = 1;
+                    //var fps = Entry.FPS || 60;
+                    //var timeValue = (1 + 0.5) * 0.1; //0.15
+                    //timeValue = (60 / fps) * timeValue * 100;
+
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    // var timeValue = (60 / fps) * 50;
-                    var timeValue = (1 + 0.5) * 0.1; //0.15
-                    timeValue = (60 / fps) * timeValue * 100;
+                    var timeValue = (60 / fps) * 50;
 
-                    Entry.hw.sendQueue['SET'][12] = {
+
+                    Entry.hw.sendQueue['SET'][din] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIX,
                         data: {
                             text: text,
