@@ -2008,7 +2008,7 @@ Entry.jikko.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_string_field',
+            skeleton: 'basic_boolean_field',
             statements: [],
             params: [
                 {
@@ -2031,14 +2031,25 @@ Entry.jikko.getBlocks = function() {
             class: 'jikkoGet',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var port = script.getNumberValue('PORT', script);
+                var port = script.getNumberValue('PORT');
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
-                var value = DIGITAL ? DIGITAL[port] || 0 : 0;
-                if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
-                    value = value ? 1 : 0;
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
                 }
-                return value;
+
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DIGITAL] = {
+                    port: port,
+                    data: 2,
+                    time: new Date().getTime(),
+                };
+
+                return DIGITAL ? DIGITAL[port] || 0 : 0;
+                // var value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                // if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
+                //     value = value ? 1 : 0;
+                // }
+                // return value;
                 //return DIGITAL ? 0 : DIGITAL[port] || 0;
                 //return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
