@@ -445,7 +445,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_rgbled:
                     '디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5',
                 jikko_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                jikko_set_digital_buzzer: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
+                jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력(0~255) %3',
+                jikko_set_digital_buzzer:
+                    '피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
                 jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
                 jikko_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
@@ -499,7 +502,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_pwm: 'Digital pwm %1 Pin %2 %3',
                 jikko_set_digital_rgbled: 'Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5',
                 jikko_set_digital_servo: 'Set servo pin %1 angle as %2 %3',
-                jikko_set_digital_buzzer: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
+                jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력(0~255) %3',
+                jikko_set_digital_buzzer:
+                    '피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
                 jikko_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
                 jikko_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
@@ -555,6 +561,8 @@ Entry.jikko.blockMenuBlocks = [
 
     'jikko_set_digital_rgbled',
     'jikko_set_digital_servo',
+    'jikko_set_digital_buzzer_toggle',
+    'jikko_set_digital_buzzer_volume',
     'jikko_set_digital_buzzer',
     'jikko_set_digital_dcmotor',
     'jikko_set_neopixel_init',
@@ -2783,7 +2791,7 @@ Entry.jikko.getBlocks = function() {
             },
             syntax: { js: [], py: ['jikko.set_digital_servo(%1, %2)'] },
         },
-        jikko_set_digital_buzzer: {
+        jikko_set_digital_buzzer_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -2885,6 +2893,273 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.TONE,
+                        data: {
+                            value: value,
+                            duration: duration,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: ['jikko.set_digital_toggle(%1, %2, %3, %4)'],
+            },
+        },
+        jikko_set_digital_buzzer_volume: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.jikko_set_digital_buzzer,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_digital_basic',
+                        params: ['6'],
+                    },
+                    {
+                        type: 'jikko_list_digital_tone',
+                    },
+                    {
+                        type: 'jikko_list_digital_octave',
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_digital_buzzer',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NOTE: 1,
+                OCTAVE: 2,
+                DURATION: 3,
+            },
+            class: 'jikkoSet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var duration = script.getNumberValue('DURATION');
+                var octave = script.getNumberValue('OCTAVE') - 1;
+                var value = 0;
+
+                if (!script.isStart) {
+                    var note = script.getValue('NOTE');
+                    if (!Entry.Utils.isNumber(note)) {
+                        note = Entry.jikko.toneTable[note];
+                    }
+                    if (note < 0) {
+                        note = 0;
+                    } else if (note > 12) {
+                        note = 12;
+                    }
+                    if (duration < 0) {
+                        duration = 0;
+                    }
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    if (duration === 0) {
+                        Entry.hw.sendQueue['SET'][port] = {
+                            type: Entry.jikko.sensorTypes.TONE,
+                            data: 0,
+                            time: new Date().getTime(),
+                        };
+                        return script.callReturn();
+                    }
+                    if (octave < 0) {
+                        octave = 0;
+                    } else if (octave > 8) {
+                        octave = 8;
+                    }
+                    if (note != 0) {
+                        value = Entry.jikko.toneMap[note][octave];
+                    }
+
+                    duration = duration * 1000;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.TONE,
+                        data: {
+                            value: value,
+                            duration: duration,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.jikko.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: ['jikko.set_digital_toggle(%1, %2, %3, %4)'],
+            },
+        },
+        jikko_set_digital_buzzer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.jikko_set_digital_buzzer,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_digital_basic',
+                        params: ['6'],
+                    },
+                    {
+                        type: 'jikko_list_digital_tone',
+                    },
+                    {
+                        type: 'jikko_list_digital_octave',
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_digital_buzzer',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NOTE: 1,
+                OCTAVE: 2,
+                DURATION: 3,
+            },
+            class: 'jikkoSet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var duration = script.getNumberValue('DURATION');
+                var octave = script.getNumberValue('OCTAVE') - 1;
+                var value = 0;
+
+                if (!script.isStart) {
+                    var note = script.getValue('NOTE');
+                    if (!Entry.Utils.isNumber(note)) {
+                        note = Entry.jikko.toneTable[note];
+                    }
+                    if (note < 0) {
+                        note = 0;
+                    } else if (note > 12) {
+                        note = 12;
+                    }
+                    if (duration < 0) {
+                        duration = 0;
+                    }
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    if (duration === 0) {
+                        Entry.hw.sendQueue['SET'][port] = {
+                            type: Entry.jikko.sensorTypes.TONE,
+                            data: 0,
+                            time: new Date().getTime(),
+                        };
+                        return script.callReturn();
+                    }
+                    if (octave < 0) {
+                        octave = 0;
+                    } else if (octave > 8) {
+                        octave = 8;
+                    }
+                    if (note != 0) {
+                        value = Entry.jikko.toneMap[note][octave];
+                    }
+
+                    duration = duration * 1000;
+                    script.isStart = true;
+                    script.timeFlag = 1;
                     Entry.hw.sendQueue['SET'][port] = {
                         type: Entry.jikko.sensorTypes.TONE,
                         data: {
@@ -3445,11 +3720,11 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_port_number',
-                        params: ['2'],
+                        params: ['10'],
                     },
                     {
                         type: 'arduino_get_port_number',
-                        params: ['3'],
+                        params: ['11'],
                     },
                     null,
                 ],
@@ -3547,7 +3822,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / fps) * 3 * 1000;
 
                     Entry.hw.sendQueue['SET'][tx] = {
                         type: Entry.jikko.sensorTypes.MP3PLAY1,
@@ -3576,7 +3851,7 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        
+
         jikko_set_mp3_play2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3633,8 +3908,14 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * time_value * 1000;
+                    time_value = time_value * 1000;
 
+                    console.log('sleep전');
+                    function sleep(delay) {
+                        var start = new Date().getTime();
+                        while (new Date().getTime() < start + delay);
+                    }
+                    sleep(600);
 
                     Entry.hw.sendQueue['SET'][tx] = {
                         type: Entry.jikko.sensorTypes.MP3PLAY2,
@@ -3645,17 +3926,49 @@ Entry.jikko.getBlocks = function() {
                         },
                         time: new Date().getTime(),
                     };
+                    console.log(time_value);
 
+                    // sleep(3000);
+
+                    // var blockId = script.block.id;
+                    // Entry.TimeWaitManager.add(
+                    //     blockId,
+                    //     function() {
+                    //         script.timeFlag = 0;
+                    //         Entry.hw.sendQueue.SET[tx].data = 0;
+                    //         Entry.hw.sendQueue.SET[tx].time = new Date().getTime();
+                    //     },
+                    //     time_value + 32
+                    // );
                     setTimeout(function() {
+                        console.log('timeout');
                         script.timeFlag = 0;
-                    }, timeValue);
+                        // Entry.hw.sendQueue.SET[tx].data = 0;
+                        // Entry.hw.sendQueue.SET[tx].time = new Date().getTime();
+                    }, time_value);
+                    //Entry.hw.sendQueue.SET[tx].data = 0;
                     return script;
                 } else if (script.timeFlag == 1) {
+                    console.log('2');
                     return script;
                 } else {
+                    console.log('3');
                     delete script.timeFlag;
                     delete script.isStart;
+
+                    Entry.hw.sendQueue['SET'][tx] = {
+                        type: Entry.jikko.sensorTypes.MP3PLAY2,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    // console.log('sleep전')
+                    // function sleep(delay) {
+                    //     var start = new Date().getTime();
+                    //     while (new Date().getTime() < start + delay);
+                    // }
+                    // sleep(1000);
                     Entry.engine.isContinue = false;
+
                     return script.callReturn();
                 }
             },
@@ -3664,7 +3977,7 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        
+
         jikko_set_mp3_vol: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
