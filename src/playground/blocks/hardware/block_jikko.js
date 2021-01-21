@@ -1,7 +1,5 @@
 'use strict';
 
-const PromiseManager = require('../../../core/promiseManager');
-
 Entry.jikko = {
     id: 'FF.FF',
     name: 'jikko',
@@ -80,13 +78,14 @@ Entry.jikko = {
         DOTMATRIXINIT: 25,
         DOTMATRIXBRIGHT: 26,
         DOTMATRIX: 27,
-        DOTMATRIXCLEAR: 28,
-        MP3INIT: 29,
-        MP3PLAY1: 30,
-        MP3PLAY2: 31,
-        MP3VOL: 32,
-        RESET_: 33,
-        PULUP: 34,
+        DOTMATRIXEMOJI: 28,
+        DOTMATRIXCLEAR: 29,
+        MP3INIT: 30,
+        MP3PLAY1: 31,
+        MP3PLAY2: 32,
+        MP3VOL: 33,
+        RESET_: 34,
+        PULUP: 35,
     },
     toneTable: {
         '0': 0,
@@ -433,6 +432,8 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_button: '버튼 %1 핀 눌림 상태',
                 jikko_get_analog_mapping:
                     '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
+                jikko_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
+                jikko_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
                 jikko_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
                 jikko_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
                 jikko_get_digital: '디지털 %1 핀 읽기',
@@ -462,6 +463,7 @@ Entry.jikko.setLanguage = function() {
                     '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 jikko_set_dotmatrix: '도트매트릭스 LED %1 그리기 %2',
+                jikko_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
                 jikko_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
 
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
@@ -494,6 +496,8 @@ Entry.jikko.setLanguage = function() {
                 jikko_btData_select_character: 'character',
                 jikko_get_analog_value: 'Read analog %1 pin sensor value',
                 jikko_get_analog_mapping: 'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
+                jikko_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
+                jikko_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
                 jikko_get_digital_bluetooth: 'Bluetooth RX 2 value',
                 jikko_get_digital_ultrasonic: 'Read ultrasonic Trig %1 Echo %2 sensor value',
                 jikko_get_digital: 'Digital %1 pin sensor value',
@@ -519,6 +523,7 @@ Entry.jikko.setLanguage = function() {
                     '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
+                jikko_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
 
@@ -541,6 +546,8 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_analog_value',
     'jikko_get_digital',
     'jikko_get_analog_mapping',
+    'jikko_mapping1',
+    'jikko_mapping2',
 
     'jikko_set_led_toggle',
     'jikko_set_digital_pwm',
@@ -573,6 +580,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_dotmatrix_init',
     'jikko_set_dotmatrix_bright',
     'jikko_set_dotmatrix',
+    'jikko_set_dotmatrix_emoji',
     'jikko_set_dotmatrix_clear',
     'jikko_module_digital_lcd',
     'jikko_lcd_init',
@@ -1611,6 +1619,117 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
+        jikko_dotmatrix_emoji_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['♥', '1'],
+                        ['♡', '2'],
+                        ['↑', '3'],
+                        ['↓', '4'],
+                        ['←', '5'],
+                        ['→', '6'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                LINE: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('LINE');
+            },
+        },
+        jikko_set_dotmatrix_emoji: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_dotmatrix_emoji_list',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_dotmatrix_emoji',
+            },
+            paramsKeyMap: {
+                LIST: 0,
+            },
+            class: 'dot',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var value = script.getNumberValue('LIST');
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    //script.isStart = true;
+                    //script.timeFlag = 1;
+                    //var fps = Entry.FPS || 60;
+                    //var timeValue = (1 + 0.5) * 0.1; //0.15
+                    //timeValue = (60 / fps) * timeValue * 100;
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    console.log("JS LIST NUM: ");
+                    console.log(value);
+
+                    Entry.hw.sendQueue['SET'][din] = {
+                        type: Entry.jikko.sensorTypes.DOTMATRIXEMOJI,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
         // dot matrix
         jikko_list_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1904,7 +2023,7 @@ Entry.jikko.getBlocks = function() {
 
                 if (port[0] === 'A') port = port.substring(1);
 
-                return ANALOG ? (ANALOG[port] || 0) / 10 : 0;
+                return ANALOG ? (ANALOG[port] || 0) : 0;
             },
             syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
         },
@@ -1941,7 +2060,7 @@ Entry.jikko.getBlocks = function() {
 
                 if (port[0] === 'A') port = port.substring(1);
 
-                return ANALOG ? (ANALOG[port] || 0) / 10 : 0;
+                return ANALOG ? (ANALOG[port] || 0) : 0;
             },
             syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
         },
@@ -2211,6 +2330,170 @@ Entry.jikko.getBlocks = function() {
             syntax: {
                 js: [],
                 py: ['jikko.get_analog_mapping(%1, %2, %3, %4, %5)'],
+            },
+        },
+        jikko_mapping1: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['255'],
+                    },
+                ],
+                type: 'jikko_mapping1',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+            },
+            class: 'jikkoPin',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var num = script.getNumberValue('NUM', script);
+                
+                var value2 = script.getNumberValue('VALUE2', script);
+                var value3 = script.getNumberValue('VALUE3', script);
+                
+                if (value2 > value3) {
+                    var swap = value2;
+                    value2 = value3;
+                    value3 = swap;
+                }
+
+                num = Math.min(value3, num);
+                num = Math.max(value2, num);
+
+                return parseInt(num);
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+        jikko_mapping2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['1024'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'jikko_mapping2',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
+                VALUE5: 4,
+            },
+            class: 'jikkoPin',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var num = script.getNumberValue('NUM', script);
+                var result = 0;
+
+                var value2 = script.getNumberValue('VALUE2', script);
+                var value3 = script.getNumberValue('VALUE3', script);
+                var value4 = script.getNumberValue('VALUE4', script);
+                var value5 = script.getNumberValue('VALUE5', script);
+
+                if (value2 > value3) {
+                    var swap = value2;
+                    value2 = value3;
+                    value3 = swap;
+                }
+
+                if (value4 > value5) {
+                    var swap = value4;
+                    value4 = value5;
+                    value5 = swap;
+                }
+
+                num -= value2;
+                num = num * ((value5 - value4) / (value3 - value2));
+                num += value4;
+                num = Math.min(value5, num);
+                num = Math.max(value4, num);
+
+                return parseInt(num);
+            },
+            syntax: {
+                js: [],
+                py: [],
             },
         },
         jikko_get_digital_bluetooth: {
@@ -2634,95 +2917,6 @@ Entry.jikko.getBlocks = function() {
                 Entry.hw.sendQueue['SET'][port] = {
                     type: Entry.jikko.sensorTypes.PWM,
                     data: value,
-                    time: new Date().getTime(),
-                };
-
-                return script.callReturn();
-            },
-            syntax: { js: [], py: ['jikko.set_digital_pwm(%1, %2)'] },
-        },
-        jikko_set_digital_rgbled: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            template: Lang.template.jikko_set_digital_rgbled,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'jikko_list_digital_basic',
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'text',
-                        params: ['0'],
-                    },
-                    null,
-                ],
-                type: 'jikko_set_digital_rgbled',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE0: 1,
-                VALUE1: 2,
-                VALUE2: 3,
-            },
-            class: 'jikkoSet',
-            isNotFor: ['jikko'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = [3];
-                value[0] = script.getNumberValue('VALUE0');
-                value[1] = script.getNumberValue('VALUE1');
-                value[2] = script.getNumberValue('VALUE2');
-
-                for (var i = 0; i < 3; i++) {
-                    value[i] = Math.round(value[i]);
-                    value[i] = Math.min(value[i], 200);
-                    value[i] = Math.max(value[i], 0);
-                }
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.RGBLED,
-                    data: {
-                        redValue: value[0],
-                        greenValue: value[1],
-                        blueValue: value[2],
-                    },
                     time: new Date().getTime(),
                 };
 
@@ -3345,7 +3539,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 0.1 * 1000;
+                    var timeValue = (60 / fps) * 200;
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
@@ -3434,22 +3628,7 @@ Entry.jikko.getBlocks = function() {
                 //var text = [];
 
                 if (!script.isStart) {
-                    // if (typeof string === 'string') {
-                    //     for (var i = 0; i < string.length; i++) {
-                    //         //  text[i] = string.charCodeAt(i);
-                    //         text[i] = Entry.jikko.toByte(string[i]);
-                    //     }
-                    // } else if (typeof string === 'number') {
-                    //     // text[0] = 1;
-                    //     // text[1] = string / 1;
-                    //     var num_to_string = string.toString();
-                    //     for (var i = 0; i < num_to_string.length; i++) {
-                    //         text[i] = Entry.jikko.toByte(num_to_string[i]);
-                    //     }
-                    // } else {
-                    //     text[0] = string;
-                    // }
-
+    
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
@@ -3457,7 +3636,13 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 0.1 * 1000;
+                    var timeValue = (60 / fps) * 200;
+
+                    function sleep(delay) {
+                        var start = new Date().getTime();
+                        while (new Date().getTime() < start + delay);
+                    }
+                    //sleep(200);
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
@@ -3466,22 +3651,6 @@ Entry.jikko.getBlocks = function() {
                             line: line,
                             column: column,
                             text: text,
-                            // text0: text[0],
-                            // text1: text[1],
-                            // text2: text[2],
-                            // text3: text[3],
-                            // text4: text[4],
-                            // text5: text[5],
-                            // text6: text[6],
-                            // text7: text[7],
-                            // text8: text[8],
-                            // text9: text[9],
-                            // text10: text[10],
-                            // text11: text[11],
-                            // text12: text[12],
-                            // text13: text[13],
-                            // text14: text[14],
-                            // text15: text[15],
                         },
                         time: new Date().getTime(),
                     };
@@ -3822,7 +3991,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 3 * 1000;
+                    var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][tx] = {
                         type: Entry.jikko.sensorTypes.MP3PLAY1,
@@ -3961,12 +4130,6 @@ Entry.jikko.getBlocks = function() {
                         data: 0,
                         time: new Date().getTime(),
                     };
-                    // console.log('sleep전')
-                    // function sleep(delay) {
-                    //     var start = new Date().getTime();
-                    //     while (new Date().getTime() < start + delay);
-                    // }
-                    // sleep(1000);
                     Entry.engine.isContinue = false;
 
                     return script.callReturn();
