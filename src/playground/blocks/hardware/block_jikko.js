@@ -450,7 +450,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력(0~255) %3',
                 jikko_set_digital_buzzer:
                     '피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
-                jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
+                jikko_set_digital_dcmotor: '모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
                 jikko_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
@@ -3539,7 +3539,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 200;
+                    var timeValue = (60 / fps) * 0.1 * 1000;
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
@@ -4077,7 +4077,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    time_value = time_value * 1000;
+                    time_value = (60 / fps) * time_value * 1000;
 
                     console.log('sleep전');
                     function sleep(delay) {
@@ -4097,25 +4097,12 @@ Entry.jikko.getBlocks = function() {
                     };
                     console.log(time_value);
 
-                    // sleep(3000);
-
-                    // var blockId = script.block.id;
-                    // Entry.TimeWaitManager.add(
-                    //     blockId,
-                    //     function() {
-                    //         script.timeFlag = 0;
-                    //         Entry.hw.sendQueue.SET[tx].data = 0;
-                    //         Entry.hw.sendQueue.SET[tx].time = new Date().getTime();
-                    //     },
-                    //     time_value + 32
-                    // );
                     setTimeout(function() {
                         console.log('timeout');
                         script.timeFlag = 0;
                         // Entry.hw.sendQueue.SET[tx].data = 0;
                         // Entry.hw.sendQueue.SET[tx].time = new Date().getTime();
                     }, time_value);
-                    //Entry.hw.sendQueue.SET[tx].data = 0;
                     return script;
                 } else if (script.timeFlag == 1) {
                     console.log('2');
