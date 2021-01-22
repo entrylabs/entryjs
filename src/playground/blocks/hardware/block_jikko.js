@@ -3636,13 +3636,13 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 200;
+                    var timeValue = (60 / fps) * 100;
 
                     function sleep(delay) {
                         var start = new Date().getTime();
                         while (new Date().getTime() < start + delay);
                     }
-                    //sleep(200);
+                    sleep(200);
 
                     //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
