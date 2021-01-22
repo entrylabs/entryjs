@@ -202,7 +202,7 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            let data = table || { name: Lang.Workspace.data_table };
+            const data = table || { name: Lang.Workspace.data_table };
             data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
             const isDataTableSource = data instanceof DataTableSource;
             this.#tables.push(isDataTableSource ? data : new DataTableSource(data));
