@@ -13,22 +13,6 @@ Entry.jikko = {
         BUTTON_PRESS_VALUE: 0,
     },
     setZero: function() {
-        {
-            if (!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-            //reset - [중지] 시
-            var port = 14;
-            Entry.hw.sendQueue['SET'][port] = {
-                type: Entry.jikko.sensorTypes.RESET_,
-                time: new Date().getTime(),
-            };
-            for (var i = 0; i < 50000; i++) {}
-            Entry.hw.update();
-            delete Entry.hw.sendQueue[port];
-            for (var i = 0; i < 500000; i++) {}
-        }
-
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -435,10 +419,6 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_off: '끄기',
                 jikko_lcd_first_line: '첫 번째',
                 jikko_lcd_seconds_line: '두 번째',
-                jikko_dcmotor_direction_forward: '정방향',
-                jikko_dcmotor_direction_reverse: '역방향',
-                jikko_btData_select_number: '숫자',
-                jikko_btData_select_character: '문자',
                 jikko_get_analog_value: '아날로그 %1 핀 읽기',
                 jikko_get_light_value: '조도센서(AO %1)값',
                 jikko_get_moisture_value: '토양수분센서(AO %1)값',
@@ -450,7 +430,6 @@ Entry.jikko.setLanguage = function() {
                     '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
                 jikko_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
                 jikko_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
-                jikko_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
                 jikko_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
                 jikko_get_digital: '디지털 %1 핀 읽기',
                 jikko_get_digital_toggle: '디지털 %1 핀 센서 값',
@@ -459,13 +438,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_led_toggle: 'LED %1 핀 %2 %3',
 
                 jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력(0~255)%3',
-                jikko_set_digital_rgbled:
-                    '디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5',
                 jikko_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
                 jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력(0~255) %3',
                 jikko_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
-                jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
                 jikko_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
@@ -495,8 +471,6 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
                 jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
                 jikko_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
-                jikko_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
-                jikko_module_digital_oled: 'OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4',
             },
         },
         en: {
@@ -505,10 +479,6 @@ Entry.jikko.setLanguage = function() {
                 jikko_toggle_off: 'off',
                 jikko_lcd_first_line: 'first',
                 jikko_lcd_seconds_line: 'seconds',
-                jikko_dcmotor_direction_forward: 'forward',
-                jikko_dcmotor_direction_reverse: 'reverse',
-                jikko_btData_select_number: 'number',
-                jikko_btData_select_character: 'character',
                 jikko_get_analog_value: 'Read analog %1 pin sensor value',
                 jikko_get_analog_mapping: 'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
                 jikko_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
@@ -544,7 +514,6 @@ Entry.jikko.setLanguage = function() {
 
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
                 jikko_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
-                //jikko_set_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2',
                 jikko_get_dht_temp_value: '온습도센서의 온도값',
                 jikko_get_dht_humi_value: '온습도센서의 습도값',
 
@@ -567,7 +536,6 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_led_toggle',
     'jikko_set_digital_pwm',
 
-    'jikko_get_digital_bluetooth',
     'jikko_get_digital_ultrasonic',
 
     'jikko_get_digital_toggle',
@@ -581,12 +549,10 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_pullup',
     'jikko_get_button',
 
-    'jikko_set_digital_rgbled',
     'jikko_set_digital_servo',
     'jikko_set_digital_buzzer_toggle',
     'jikko_set_digital_buzzer_volume',
     'jikko_set_digital_buzzer',
-    'jikko_set_digital_dcmotor',
     'jikko_set_neopixel_init',
     'jikko_set_neopixel_bright',
     'jikko_set_neopixel',
@@ -602,10 +568,6 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_lcd_row',
     'jikko_get_lcd_col',
     'jikko_lcd_clear',
-    // 'jikko_set_dht_init',
-
-    'jikko_module_digital_bluetooth',
-    //'jikko_module_digital_oled',
     'jikko_set_mp3_init',
     'jikko_set_mp3_vol',
     'jikko_set_mp3_play',
@@ -1775,36 +1737,6 @@ Entry.jikko.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
-        jikko_list_digital_dcmotor_direction: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.template.jikko_dcmotor_direction_reverse, '0'],
-                        [Lang.template.jikko_dcmotor_direction_forward, '1'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                DIRECTION: 0,
-            },
-            func: function(sprite, script) {
-                return script.getField('DIRECTION');
-            },
-        },
         jikko_get_lcd_row: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1934,37 +1866,6 @@ Entry.jikko.getBlocks = function() {
                         keyOption: 'jikko_get_lcd_col',
                     },
                 ],
-            },
-        },
-
-        jikko_list_digital_btData_select: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.template.jikko_btData_select_number, '0'],
-                        [Lang.template.jikko_btData_select_character, '1'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                DIRECTION: 0,
-            },
-            func: function(sprite, script) {
-                return script.getField('DIRECTION');
             },
         },
         jikko_get_analog_value: {
@@ -2511,41 +2412,6 @@ Entry.jikko.getBlocks = function() {
                 py: [],
             },
         },
-        jikko_get_digital_bluetooth: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            template: Lang.template.jikko_get_digital_bluetooth,
-            statements: [],
-            params: [],
-            events: {},
-            def: {
-                params: [],
-                type: 'jikko_get_digital_bluetooth',
-            },
-            paramsKeyMap: {},
-            class: 'jikkoGet',
-            isNotFor: ['jikko'],
-            func: function(sprite, script) {
-                var port = 2;
-                var getString = Entry.hw.portData.READ_BLUETOOTH;
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                delete Entry.hw.sendQueue['SET'][port];
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
-                }
-                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.READ_BLUETOOTH] = {
-                    port: port,
-                    time: new Date().getTime(),
-                };
-
-                return getString ? getString.slice(0, getString.length - 1) : ' ';
-            },
-            syntax: { js: [], py: ['jikko.get_digital_bluetooth()'] },
-        },
         jikko_get_digital_ultrasonic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2659,7 +2525,7 @@ Entry.jikko.getBlocks = function() {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             template: Lang.template.jikko_get_digital_toggle,
             params: [
@@ -3275,92 +3141,6 @@ Entry.jikko.getBlocks = function() {
                 py: ['jikko.set_digital_toggle(%1, %2, %3, %4)'],
             },
         },
-        jikko_set_digital_dcmotor: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            template: Lang.template.jikko_set_digital_dcmotor,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'jikko_list_digital_basic',
-                    },
-                    {
-                        type: 'jikko_list_digital_dcmotor_direction',
-                    },
-                    {
-                        type: 'jikko_list_digital_pwm',
-                    },
-                    {
-                        type: 'text',
-                        params: ['255'],
-                    },
-                    null,
-                ],
-                type: 'jikko_set_digital_dcmotor',
-            },
-            paramsKeyMap: {
-                PORT0: 0,
-                VALUE0: 1,
-                PORT1: 2,
-                VALUE1: 3,
-            },
-            class: 'jikkoSet',
-            isNotFor: ['jikko'],
-            func: function(sprite, script) {
-                var port = 0; // port value is dummy;
-                var directionPort = script.getNumberValue('PORT0');
-                var speedPort = script.getNumberValue('PORT1');
-                var directionValue = script.getNumberValue('VALUE0');
-                var speedValue = script.getNumberValue('VALUE1');
-
-                speedValue = Math.round(speedValue);
-                speedValue = Math.min(speedValue, 255);
-                speedValue = Math.max(speedValue, 0);
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.jikko.sensorTypes.DCMOTOR,
-                    data: {
-                        port0: directionPort,
-                        port1: speedPort,
-                        value0: directionValue,
-                        value1: speedValue,
-                    },
-                    time: new Date().getTime(),
-                };
-
-                return script.callReturn();
-            },
-            syntax: { js: [], py: ['jikko.set_digital_dcmotor(%1, %2, %3, %4)'] },
-        },
         jikko_lcd_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3545,7 +3325,7 @@ Entry.jikko.getBlocks = function() {
 
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, 100);
+                    }, 300);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -3610,38 +3390,6 @@ Entry.jikko.getBlocks = function() {
             syntax: {
                 js: [],
                 py: [{}],
-            },
-        },
-        jikko_analog_temp_name: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['습도', '0'],
-                        ['온도(화씨)', '1'],
-                        ['온도(섭씨)', '2'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func: function(sprite, script) {
-                return script.getField('PORT');
             },
         },
 
