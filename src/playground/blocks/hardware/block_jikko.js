@@ -13,6 +13,22 @@ Entry.jikko = {
         BUTTON_PRESS_VALUE: 0,
     },
     setZero: function() {
+        {
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            //reset - [중지] 시
+            var port = 14;
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.jikko.sensorTypes.RESET_,
+                time: new Date().getTime(),
+            };
+            for (var i = 0; i < 50000; i++) {}
+            Entry.hw.update();
+            delete Entry.hw.sendQueue[port];
+            for (var i = 0; i < 500000; i++) {}
+        }
+
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 GET: {},
@@ -31,6 +47,7 @@ Entry.jikko = {
                     Entry.hw.sendQueue.SET[key].data.line = 3;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                     //};
+                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.ULTRASONIC) {
                 } else {
                     //Entry.hw.sendQueue.RESET[key].data = 0;
                     //Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
@@ -78,11 +95,13 @@ Entry.jikko = {
         DOTMATRIXINIT: 25,
         DOTMATRIXBRIGHT: 26,
         DOTMATRIX: 27,
-        DOTMATRIXCLEAR: 28,
-        MP3INIT: 29,
-        MP3PLAY1: 30,
-        MP3PLAY2: 31,
-        MP3VOL: 32,
+        DOTMATRIXEMOJI: 28,
+        DOTMATRIXCLEAR: 29,
+        MP3INIT: 30,
+        MP3PLAY1: 31,
+        MP3PLAY2: 32,
+        MP3VOL: 33,
+        RESET_: 34,
     },
     toneTable: {
         '0': 0,
@@ -439,7 +458,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_toggle: '디지털 %1 핀 %2 %3',
                 jikko_set_led_toggle: 'LED %1 핀 %2 %3',
 
-                jikko_set_digital_pwm: '디지털(PWM %1 핀)밝기 %2 출력(0~255)%3',
+                jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력(0~255)%3',
                 jikko_set_digital_rgbled:
                     '디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5',
                 jikko_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
@@ -465,11 +484,11 @@ Entry.jikko.setLanguage = function() {
                 jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
-                jikko_module_digital_lcd: 'LCD화면 %1 줄 %2 부터 %3 출력 %4',
+                jikko_module_digital_lcd: 'LCD화면 %1 줄 %2칸 부터 %3 출력 %4',
                 jikko_lcd_clear: 'LCD화면 지우기 %1',
                 // jikko_set_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2',
-                jikko_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도값',
-                jikko_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도값',
+                jikko_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
+                jikko_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도(%)값',
 
                 jikko_set_mp3_init: 'mp3 초기화 ( tx: %1, rx: %2 ) %3',
                 jikko_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
@@ -907,7 +926,6 @@ Entry.jikko.getBlocks = function() {
                         data: value,
                         time: new Date().getTime(),
                     };
-
                     setTimeout(function() {
                         script.timeFlag = 0;
                     }, timeValue);
@@ -1063,50 +1081,50 @@ Entry.jikko.getBlocks = function() {
                 let g = parseInt(value.substr(3, 2), 16);
                 let b = parseInt(value.substr(5, 2), 16);
 
-                if (!script.isStart) {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                //if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = (60 / fps) * 50;
 
-                    r = Math.round(r);
-                    r = Math.min(r, 255);
-                    r = Math.max(r, 0);
+                r = Math.round(r);
+                r = Math.min(r, 255);
+                r = Math.max(r, 0);
 
-                    g = Math.round(g);
-                    g = Math.min(g, 255);
-                    g = Math.max(g, 0);
+                g = Math.round(g);
+                g = Math.min(g, 255);
+                g = Math.max(g, 0);
 
-                    b = Math.round(b);
-                    b = Math.min(b, 255);
-                    b = Math.max(b, 0);
+                b = Math.round(b);
+                b = Math.min(b, 255);
+                b = Math.max(b, 0);
 
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
-                    Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.jikko.sensorTypes.NEOPIXEL,
-                        data: {
-                            num: num,
-                            r: r,
-                            g: g,
-                            b: b,
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, timeValue);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
                 }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.jikko.sensorTypes.NEOPIXEL,
+                    data: {
+                        num: num,
+                        r: r,
+                        g: g,
+                        b: b,
+                    },
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+                //     setTimeout(function() {
+                //         script.timeFlag = 0;
+                //     }, timeValue);
+                //     return script;
+                // } else if (script.timeFlag == 1) {
+                //     return script;
+                // } else {
+                //     delete script.timeFlag;
+                //     delete script.isStart;
+                //     Entry.engine.isContinue = false;
+                //     return script.callReturn();
+                // }
             },
             syntax: {
                 js: [],
@@ -1189,10 +1207,10 @@ Entry.jikko.getBlocks = function() {
                         },
                         time: new Date().getTime(),
                     };
-
+                    //                return script.callReturn();
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, timeValue);
+                    }, 10);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -2041,6 +2059,7 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_list_analog_basic',
+                        params: ['1'],
                     },
                 ],
                 type: 'jikko_get_moisture_value',
@@ -2817,6 +2836,7 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_list_digital_basic',
+                        params: ['5'],
                     },
                     {
                         type: 'jikko_list_digital_toggle',
@@ -2885,6 +2905,7 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_list_digital_pwm',
+                        params: ['5'],
                     },
                     {
                         type: 'text',
@@ -2947,6 +2968,7 @@ Entry.jikko.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_list_digital_basic',
+                        params: ['8'],
                     },
                     {
                         type: 'text',
@@ -3502,7 +3524,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 200;
+                    var timeValue = (60 / fps) * 50;
 
                     function sleep(delay) {
                         var start = new Date().getTime();
@@ -3523,7 +3545,7 @@ Entry.jikko.getBlocks = function() {
 
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, timeValue);
+                    }, 100);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -3850,36 +3872,38 @@ Entry.jikko.getBlocks = function() {
                 //var tx = script.getNumberValue('PORT');
                 var num = script.getNumberValue('NUM');
 
-                if (!script.isStart) {
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
-
-                    Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.jikko.sensorTypes.MP3PLAY1,
-                        data: {
-                            tx: tx,
-                            num: num,
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, timeValue);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
+                //   if (!script.isStart) {
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
                 }
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = (60 / fps) * 50;
+
+                Entry.hw.sendQueue['SET'][tx] = {
+                    type: Entry.jikko.sensorTypes.MP3PLAY1,
+                    data: {
+                        tx: tx,
+                        num: num,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+
+                //     setTimeout(function() {
+                //         script.timeFlag = 0;
+                //     }, 100);
+                //     return script;
+                // } else if (script.timeFlag == 1) {
+                //     return script;
+                // } else {
+                //     delete script.timeFlag;
+                //     delete script.isStart;
+                //     Entry.engine.isContinue = false;
+                //     return script.callReturn();
+                // }
             },
             syntax: {
                 js: [],
