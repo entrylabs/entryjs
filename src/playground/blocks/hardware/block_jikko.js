@@ -458,12 +458,12 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_toggle: '디지털 %1 핀 %2 %3',
                 jikko_set_led_toggle: 'LED %1 핀 %2 %3',
 
-                jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력(0~255)%3',
+                jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
                 jikko_set_digital_rgbled:
                     '디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5',
                 jikko_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
                 jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
-                jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력(0~255) %3',
+                jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
                 jikko_set_digital_dcmotor: 'DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5',
                 jikko_set_neopixel_init:
@@ -473,15 +473,15 @@ Entry.jikko.setLanguage = function() {
                 //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
-                jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
+                jikko_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
                 jikko_set_dotmatrix_init:
-                    '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
+                    '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 jikko_set_dotmatrix: '도트매트릭스 LED %1 그리기 %2',
                 jikko_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
                 jikko_set_dotmatrix_clear: '도트매트릭스 LED 지우기 %1',
 
-                jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
+                jikko_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
                 jikko_module_digital_lcd: 'LCD화면 %1 줄 %2칸 부터 %3 출력 %4',
@@ -522,7 +522,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_rgbled: 'Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5',
                 jikko_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
                 jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
-                jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력(0~255) %3',
+                jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_set_digital_buzzer:
                     '피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
                 jikko_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
@@ -533,14 +533,14 @@ Entry.jikko.setLanguage = function() {
                 //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
-                jikko_set_neopixel_clear: '네오픽셀 LED( %1 핀) 모든 LED 끄기 %2',
+                jikko_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
                 jikko_set_dotmatrix_init:
-                    '8x8 도트매트릭스 시작하기 설정(DIN %1, CLK %2, CS %3) %4',
+                    '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
                 jikko_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
                 jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
-                jikko_lcd_init: 'I2C LCD 시작하기 설정(주소 %1 ,열 %2, 행 %3) %4',
+                jikko_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
 
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
                 jikko_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
@@ -990,6 +990,12 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('NUM');
+
+                value = Math.round(value);
+                value = Math.min(value, 255);
+                value = Math.max(value, 0);
+                
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -1464,6 +1470,11 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 //var sq = Entry.hw.sendQueue;
                 var num = script.getNumberValue('NUM', script);
+
+                num = Math.round(num);
+                num = Math.min(num, 8);
+                num = Math.max(num, 0);
+                
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -3526,13 +3537,6 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    function sleep(delay) {
-                        var start = new Date().getTime();
-                        while (new Date().getTime() < start + delay);
-                    }
-                    //sleep(200);
-
-                    //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
                         type: Entry.jikko.sensorTypes.LCD,
                         data: {
@@ -3545,7 +3549,7 @@ Entry.jikko.getBlocks = function() {
 
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, 100);
+                    }, timeValue);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -4054,6 +4058,10 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 //var tx = script.getNumberValue('PORT');
                 var vol = script.getNumberValue('VOL');
+
+                vol = Math.round(vol);
+                vol = Math.min(vol, 30);
+                vol = Math.max(vol, 0);
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
