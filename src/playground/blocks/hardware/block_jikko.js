@@ -25,29 +25,15 @@ Entry.jikko = {
                     Entry.hw.sendQueue.SET[key].data.num = 4;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
-                    // Entry.hw.sendQueue['SET'][1] = {
-                    //     data: { line: 3 },
-                    //     time: new Date().getTime(),
                     Entry.hw.sendQueue.SET[key].data.line = 3;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                    //};
                 } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.ULTRASONIC) {
                 } else {
-                    //Entry.hw.sendQueue.RESET[key].data = 0;
-                    //Entry.hw.sendQueue.RESET[key].time = new Date().getTime();
-
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
             });
-            //     keySet.forEach(function(key) {
-            //        else {
-            //             Entry.hw.sendQueue.SET[key].data = 0;
-            //             Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            //         }
-            //     });
         }
-        //Entry.hw.sendQueue.GET = {};
         Entry.hw.update();
     },
     sensorTypes: {
@@ -446,9 +432,7 @@ Entry.jikko.setLanguage = function() {
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
                 jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
-                //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
-                //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
                 jikko_set_dotmatrix_init:
                     '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
@@ -462,7 +446,6 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_lcd_col: '%1',
                 jikko_module_digital_lcd: 'LCD화면 %1 줄 %2칸 부터 %3 출력 %4',
                 jikko_lcd_clear: 'LCD화면 지우기 %1',
-                // jikko_set_dht_init: '디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2',
                 jikko_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
                 jikko_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도(%)값',
 
@@ -500,9 +483,7 @@ Entry.jikko.setLanguage = function() {
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
                 jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
-                //jikko_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 R: %3 , G: %4 , B: %5 출력 %6',
                 jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
-                //jikko_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 R: %2 , G: %3 , B: %4 출력 %5',
                 jikko_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
                 jikko_set_dotmatrix_init:
                     '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
@@ -871,7 +852,6 @@ Entry.jikko.getBlocks = function() {
             class: 'neo',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('NUM');
                 if (!script.isStart) {
@@ -1081,18 +1061,6 @@ Entry.jikko.getBlocks = function() {
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
-                //     setTimeout(function() {
-                //         script.timeFlag = 0;
-                //     }, timeValue);
-                //     return script;
-                // } else if (script.timeFlag == 1) {
-                //     return script;
-                // } else {
-                //     delete script.timeFlag;
-                //     delete script.isStart;
-                //     Entry.engine.isContinue = false;
-                //     return script.callReturn();
-                // }
             },
             syntax: {
                 js: [],
@@ -1138,7 +1106,6 @@ Entry.jikko.getBlocks = function() {
             class: 'neo',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
                 var value = script.getStringField('COLOR', script);
 
@@ -1175,7 +1142,6 @@ Entry.jikko.getBlocks = function() {
                         },
                         time: new Date().getTime(),
                     };
-                    //                return script.callReturn();
                     setTimeout(function() {
                         script.timeFlag = 0;
                     }, 10);
@@ -1292,7 +1258,6 @@ Entry.jikko.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
-        // dot matrix
         jikko_set_dotmatrix_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1347,7 +1312,6 @@ Entry.jikko.getBlocks = function() {
             class: 'dot',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var sq = Entry.hw.sendQueue;
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
                 var port3 = script.getNumberValue('PORT3', script);
@@ -1364,8 +1328,6 @@ Entry.jikko.getBlocks = function() {
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
-                    // var timeValue = (1 + 0.5) * 0.1; //0.15
-                    // timeValue = (60 / fps) * timeValue * 10000;
 
                     Entry.hw.sendQueue['SET'][port1] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIXINIT,
@@ -1389,7 +1351,6 @@ Entry.jikko.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-                //  return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1430,7 +1391,6 @@ Entry.jikko.getBlocks = function() {
             class: 'dot',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var sq = Entry.hw.sendQueue;
                 var num = script.getNumberValue('NUM', script);
 
                 num = Math.round(num);
@@ -1495,15 +1455,9 @@ Entry.jikko.getBlocks = function() {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
-
-                    // script.isStart = true;
-                    // script.timeFlag = 1;
-                    // var fps = Entry.FPS || 60;
-                    // var timeValue = (60 / fps) * 50;
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    // var timeValue = (60 / fps) * 50;
                     var timeValue = (1 + 0.5) * 0.1; //0.15
                     timeValue = (60 / fps) * timeValue * 100;
 
@@ -1568,12 +1522,6 @@ Entry.jikko.getBlocks = function() {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
-
-                    //script.isStart = true;
-                    //script.timeFlag = 1;
-                    //var fps = Entry.FPS || 60;
-                    //var timeValue = (1 + 0.5) * 0.1; //0.15
-                    //timeValue = (60 / fps) * timeValue * 100;
 
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -1679,12 +1627,6 @@ Entry.jikko.getBlocks = function() {
                         Entry.hw.sendQueue['SET'] = {};
                     }
 
-                    //script.isStart = true;
-                    //script.timeFlag = 1;
-                    //var fps = Entry.FPS || 60;
-                    //var timeValue = (1 + 0.5) * 0.1; //0.15
-                    //timeValue = (60 / fps) * timeValue * 100;
-
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
@@ -1717,7 +1659,6 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        // dot matrix
         jikko_list_digital_lcd: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1921,7 +1862,6 @@ Entry.jikko.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            //template: Lang.template.jikko_get_analog_value,
             statements: [],
             params: [
                 {
@@ -1996,7 +1936,6 @@ Entry.jikko.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            //template: Lang.template.jikko_get_analog_value,
             statements: [],
             params: [
                 {
@@ -2033,7 +1972,6 @@ Entry.jikko.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            //template: Lang.template.jikko_get_analog_value,
             statements: [],
             params: [
                 {
@@ -2107,14 +2045,6 @@ Entry.jikko.getBlocks = function() {
 
                 var value = DIGITAL ? DIGITAL[port] || 0 : 0;
                 return !value;
-
-                // var value = DIGITAL ? DIGITAL[port] || 0 : 0;
-                // if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
-                //     value = value ? 1 : 0;
-                // }
-                // return value;
-                //return DIGITAL ? 0 : DIGITAL[port] || 0;
-                //return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
             syntax: { js: [], py: [] },
         },
@@ -2149,14 +2079,8 @@ Entry.jikko.getBlocks = function() {
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
                 var value = DIGITAL ? DIGITAL[port] || 0 : 0;
-                /*
-                if (Entry.jikko.Static.BUTTON_PRESS_VALUE == 0) {
-                    value = value ? 1 : 0;
-                }
-                */
+
                 return !value;
-                //return DIGITAL ? 0 : DIGITAL[port] || 0;
-                //return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
             syntax: { js: [], py: [] },
         },
@@ -2692,7 +2616,6 @@ Entry.jikko.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            //template: Lang.template.jikko_set_digital_toggle,
             params: [
                 {
                     type: 'Block',
@@ -2886,7 +2809,6 @@ Entry.jikko.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            //template: Lang.template.jikko_set_digital_buzzer,
             params: [
                 {
                     type: 'Block',
@@ -2959,7 +2881,6 @@ Entry.jikko.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
-            // template: Lang.template.jikko_set_digital_buzzer,
             params: [
                 {
                     type: 'Block',
@@ -3157,18 +3078,15 @@ Entry.jikko.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            //    template: Lang.template.jikko_module_digital_lcd,
             statements: [],
             params: [
                 {
                     type: 'Block',
                     accept: 'string',
-                    //defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
-                    // defaultType: 'number',
                 },
                 {
                     type: 'Block',
@@ -3221,7 +3139,6 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 0.1 * 1000;
 
-                    //Entry.hw.sendQueue['SET'][0] = {
                     Entry.hw.sendQueue['SET'][1] = {
                         type: Entry.jikko.sensorTypes.LCDINIT,
                         data: {
@@ -3252,7 +3169,6 @@ Entry.jikko.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
-            //    template: Lang.template.jikko_module_digital_lcd,
             statements: [],
             params: [
                 {
@@ -3305,8 +3221,7 @@ Entry.jikko.getBlocks = function() {
                 var line = script.getNumberValue('LINE');
                 var column = script.getNumberValue('COL');
                 var text = script.getValue('STRING');
-                //var text = [];
-
+                
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -3407,7 +3322,6 @@ Entry.jikko.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                    //defaultType: 'number',
                 },
             ],
             events: {},
@@ -3459,12 +3373,10 @@ Entry.jikko.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                    //defaultType: 'number',
                 },
             ],
             events: {},
             def: {
-                //params: ['1'],
                 params: [
                     {
                         type: 'arduino_get_port_number',
@@ -3546,7 +3458,6 @@ Entry.jikko.getBlocks = function() {
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var sq = Entry.hw.sendQueue;
                 tx = script.getNumberValue('PORT1');
                 var rx = script.getNumberValue('PORT2');
 
@@ -3621,10 +3532,8 @@ Entry.jikko.getBlocks = function() {
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var tx = script.getNumberValue('PORT');
                 var num = script.getNumberValue('NUM');
 
-                //   if (!script.isStart) {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -3644,18 +3553,6 @@ Entry.jikko.getBlocks = function() {
 
                 return script.callReturn();
 
-                //     setTimeout(function() {
-                //         script.timeFlag = 0;
-                //     }, 100);
-                //     return script;
-                // } else if (script.timeFlag == 1) {
-                //     return script;
-                // } else {
-                //     delete script.timeFlag;
-                //     delete script.isStart;
-                //     Entry.engine.isContinue = false;
-                //     return script.callReturn();
-                // }
             },
             syntax: {
                 js: [],
@@ -3707,7 +3604,6 @@ Entry.jikko.getBlocks = function() {
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var tx = script.getNumberValue('PORT');
                 var num = script.getNumberValue('NUM');
                 var time_value = script.getNumberValue('TIME');
 
@@ -3715,18 +3611,10 @@ Entry.jikko.getBlocks = function() {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
                     }
-                    //var timeValue = (60 / fps) * 50;
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
                     time_value = (60 / fps) * time_value * 1000;
-
-                    // console.log('sleep전');
-                    // function sleep(delay) {
-                    //     var start = new Date().getTime();
-                    //     while (new Date().getTime() < start + delay);
-                    // }
-                    // sleep(800);
 
                     Entry.hw.sendQueue['SET'][tx] = {
                         type: Entry.jikko.sensorTypes.MP3PLAY2,
@@ -3742,8 +3630,6 @@ Entry.jikko.getBlocks = function() {
                     setTimeout(function() {
                         console.log('timeout');
                         script.timeFlag = 0;
-                        // Entry.hw.sendQueue.SET[tx].data = 0;
-                        // Entry.hw.sendQueue.SET[tx].time = new Date().getTime();
                     }, time_value);
                     return script;
                 } else if (script.timeFlag == 1) {
@@ -3804,7 +3690,6 @@ Entry.jikko.getBlocks = function() {
             class: 'mp3',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                //var tx = script.getNumberValue('PORT');
                 var vol = script.getNumberValue('VOL');
 
                 vol = Math.round(vol);
@@ -3901,7 +3786,7 @@ Entry.jikko.getBlocks = function() {
             class: 'jikkoModule',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var port = 0; // port value is dummy;
+                var port = 0; 
                 var coodinate_x = script.getNumberValue('VALUE0');
                 var coodinate_y = script.getNumberValue('VALUE1');
                 var string = script.getValue('STRING');
