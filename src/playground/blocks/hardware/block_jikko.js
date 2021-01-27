@@ -1029,7 +1029,7 @@ Entry.jikko.getBlocks = function() {
                 let g = parseInt(value.substr(3, 2), 16);
                 let b = parseInt(value.substr(5, 2), 16);
 
-                //if (!script.isStart) {
+                if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
@@ -1060,7 +1060,18 @@ Entry.jikko.getBlocks = function() {
                     },
                     time: new Date().getTime(),
                 };
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 10);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
                 return script.callReturn();
+            }
             },
             syntax: {
                 js: [],
@@ -2315,12 +2326,15 @@ Entry.jikko.getBlocks = function() {
             isNotFor: ['jikko'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
-                var result = 0;
+                var flag = 0;
 
                 var value2 = script.getNumberValue('VALUE2', script);
                 var value3 = script.getNumberValue('VALUE3', script);
                 var value4 = script.getNumberValue('VALUE4', script);
                 var value5 = script.getNumberValue('VALUE5', script);
+
+                var value4_1 = value4;
+                var value5_1 = value5;
 
                 if (value2 > value3) {
                     var swap = value2;
@@ -2329,16 +2343,26 @@ Entry.jikko.getBlocks = function() {
                 }
 
                 if (value4 > value5) {
+                    flag = 1;
                     var swap = value4;
-                    value4 = value5;
-                    value5 = swap;
+                    value4_1 = value5;
+                    value5_1 = swap;
                 }
+                
 
                 num -= value2;
-                num = num * ((value5 - value4) / (value3 - value2));
-                num += value4;
-                num = Math.min(value5, num);
-                num = Math.max(value4, num);
+                num = num * ((value5_1 - value4_1) / (value3 - value2));
+                
+                if(flag == 1){
+                    console.log("FLAG1");
+                    num = value4 - num;
+                    num = Math.min(value4, num);
+                    num = Math.max(value5, num);
+                } else{
+                    num = num + value4;
+                    num = Math.min(value5, num);
+                    num = Math.max(value4, num);    
+                }
 
                 return parseInt(num);
             },
