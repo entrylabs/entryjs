@@ -259,6 +259,8 @@ Entry.jikko.blockMenuBlocks = [
 Entry.jikko.getBlocks = function() {
     var tx;
     var din;
+    var clk;
+    var cs;
 
     return {
         jikko_list_analog_basic: {
