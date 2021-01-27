@@ -21,10 +21,11 @@ Entry.jikko = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
-                    Entry.hw.sendQueue.SET[key].data.num = 4;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
+                // if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.NEOPIXEL) {
+                //     Entry.hw.sendQueue.SET[key].data.num = 4;
+                //     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                // } else
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.LCD) {
                     Entry.hw.sendQueue.SET[key].data.line = 3;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.ULTRASONIC) {
@@ -936,7 +937,6 @@ Entry.jikko.getBlocks = function() {
                 value = Math.round(value);
                 value = Math.min(value, 255);
                 value = Math.max(value, 0);
-                
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -1396,7 +1396,6 @@ Entry.jikko.getBlocks = function() {
                 num = Math.round(num);
                 num = Math.min(num, 8);
                 num = Math.max(num, 0);
-                
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -3221,7 +3220,7 @@ Entry.jikko.getBlocks = function() {
                 var line = script.getNumberValue('LINE');
                 var column = script.getNumberValue('COL');
                 var text = script.getValue('STRING');
-                
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -3552,7 +3551,6 @@ Entry.jikko.getBlocks = function() {
                 };
 
                 return script.callReturn();
-
             },
             syntax: {
                 js: [],
@@ -3617,11 +3615,11 @@ Entry.jikko.getBlocks = function() {
                     time_value = (60 / fps) * time_value * 1000;
 
                     Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.jikko.sensorTypes.MP3PLAY2,
+                        type: Entry.jikko.sensorTypes.MP3PLAY1,
                         data: {
                             tx: tx,
                             num: num,
-                            time_value: time_value,
+                            //time_value: time_value,
                         },
                         time: new Date().getTime(),
                     };
@@ -3641,7 +3639,7 @@ Entry.jikko.getBlocks = function() {
                     delete script.isStart;
 
                     Entry.hw.sendQueue['SET'][tx] = {
-                        type: Entry.jikko.sensorTypes.MP3PLAY2,
+                        type: Entry.jikko.sensorTypes.MP3PLAY1,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -3786,7 +3784,7 @@ Entry.jikko.getBlocks = function() {
             class: 'jikkoModule',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var port = 0; 
+                var port = 0;
                 var coodinate_x = script.getNumberValue('VALUE0');
                 var coodinate_y = script.getNumberValue('VALUE1');
                 var string = script.getValue('STRING');
