@@ -425,7 +425,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_led_toggle: 'LED %1 핀 %2 %3',
 
                 jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
-                jikko_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                jikko_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
                 jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
                 jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
@@ -445,8 +445,8 @@ Entry.jikko.setLanguage = function() {
                 jikko_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
                 jikko_get_lcd_row: '%1',
                 jikko_get_lcd_col: '%1',
-                jikko_module_digital_lcd: 'LCD화면 %1 줄 %2칸 부터 %3 출력 %4',
-                jikko_lcd_clear: 'LCD화면 지우기 %1',
+                jikko_module_digital_lcd: 'LCD화면 %1 열 %2 행 부터 %3 출력 %4',
+                jikko_lcd_clear: 'LCD 화면 지우기 %1',
                 jikko_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
                 jikko_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도(%)값',
 
@@ -491,7 +491,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 jikko_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
                 jikko_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
-                jikko_module_digital_lcd: 'LCD %1 line %2 appear %3',
+                jikko_module_digital_lcd: 'LCD %1 열 %2 행 부터 %3 출력',
                 jikko_lcd_init: 'I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
 
                 jikko_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
@@ -1029,7 +1029,7 @@ Entry.jikko.getBlocks = function() {
                 let g = parseInt(value.substr(3, 2), 16);
                 let b = parseInt(value.substr(5, 2), 16);
 
-                //if (!script.isStart) {
+                if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
@@ -1060,7 +1060,18 @@ Entry.jikko.getBlocks = function() {
                     },
                     time: new Date().getTime(),
                 };
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 10);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
                 return script.callReturn();
+            }
             },
             syntax: {
                 js: [],
@@ -2314,12 +2325,15 @@ Entry.jikko.getBlocks = function() {
             isNotFor: ['jikko'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
-                var result = 0;
+                var flag = 0;
 
                 var value2 = script.getNumberValue('VALUE2', script);
                 var value3 = script.getNumberValue('VALUE3', script);
                 var value4 = script.getNumberValue('VALUE4', script);
                 var value5 = script.getNumberValue('VALUE5', script);
+
+                var value4_1 = value4;
+                var value5_1 = value5;
 
                 if (value2 > value3) {
                     var swap = value2;
@@ -2328,16 +2342,26 @@ Entry.jikko.getBlocks = function() {
                 }
 
                 if (value4 > value5) {
+                    flag = 1;
                     var swap = value4;
-                    value4 = value5;
-                    value5 = swap;
+                    value4_1 = value5;
+                    value5_1 = swap;
                 }
+                
 
                 num -= value2;
-                num = num * ((value5 - value4) / (value3 - value2));
-                num += value4;
-                num = Math.min(value5, num);
-                num = Math.max(value4, num);
+                num = num * ((value5_1 - value4_1) / (value3 - value2));
+                
+                if(flag == 1){
+                    console.log("FLAG1");
+                    num = value4 - num;
+                    num = Math.min(value4, num);
+                    num = Math.max(value5, num);
+                } else{
+                    num = num + value4;
+                    num = Math.min(value5, num);
+                    num = Math.max(value4, num);    
+                }
 
                 return parseInt(num);
             },
@@ -3194,11 +3218,11 @@ Entry.jikko.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'jikko_get_lcd_row',
+                        type: 'jikko_get_lcd_col',
                         params: ['0'],
                     },
                     {
-                        type: 'jikko_get_lcd_col',
+                        type: 'jikko_get_lcd_row',
                         params: ['0'],
                     },
                     {
@@ -3210,15 +3234,15 @@ Entry.jikko.getBlocks = function() {
                 type: 'jikko_module_digital_lcd',
             },
             paramsKeyMap: {
-                LINE: 0,
-                COL: 1,
+                COL: 0,
+                ROW: 1,
                 STRING: 2,
             },
             class: 'jikkoModule',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
-                var line = script.getNumberValue('LINE');
-                var column = script.getNumberValue('COL');
+                var row = script.getNumberValue('ROW');
+                var col = script.getNumberValue('COL');
                 var text = script.getValue('STRING');
 
                 if (!script.isStart) {
@@ -3234,8 +3258,8 @@ Entry.jikko.getBlocks = function() {
                     Entry.hw.sendQueue['SET'][1] = {
                         type: Entry.jikko.sensorTypes.LCD,
                         data: {
-                            line: line,
-                            column: column,
+                            line: row,
+                            column: col,
                             text: text,
                         },
                         time: new Date().getTime(),
