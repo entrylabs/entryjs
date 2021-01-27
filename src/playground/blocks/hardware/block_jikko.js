@@ -259,6 +259,8 @@ Entry.jikko.blockMenuBlocks = [
 Entry.jikko.getBlocks = function() {
     var tx;
     var din;
+    var clk;
+    var cs;
 
     return {
         jikko_list_analog_basic: {
@@ -1273,12 +1275,16 @@ Entry.jikko.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['♥', '1'],
-                        ['♡', '2'],
-                        ['↑', '3'],
-                        ['↓', '4'],
-                        ['←', '5'],
-                        ['→', '6'],
+                        ['🖤', '1'],
+                        ['🤍', '2'],
+                        ['👆', '3'],
+                        ['👇', '4'],
+                        ['👈', '5'],
+                        ['👉', '6'],
+                        ['😊', '7'],
+                        ['😥', '8'],
+                        ['😡', '9'],
+                        ['😆', '10']
                     ],
                     value: '1',
                     fontSize: 11,
