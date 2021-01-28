@@ -65,6 +65,9 @@ Entry.jikko = {
         MP3PLAY2: 32,
         MP3VOL: 33,
         RESET_: 34,
+        LOADINIT: 35,
+        LOADSCALE: 36,
+        LOADVALUE: 37,
     },
     toneTable: {
         '0': 0,
@@ -156,6 +159,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
                 jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
                 jikko_get_analog_temp_value: 'DHT11 포트 %1의 %2 센서 값',
+
+                jikko_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
+                jikko_load_scale: 'HX711 로드셀 보정하기 %1 %2',
+                jikko_load_value: 'HX711 로드셀 값',
             },
         },
         en: {
@@ -204,6 +211,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
                 jikko_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
                 jikko_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
+
+                jikko_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
+                jikko_load_scale: 'HX711 로드셀 보정하기 %1 %2',
+                jikko_load_value: 'HX711 로드셀 값',
             },
         },
     };
@@ -255,12 +266,17 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_mp3_vol',
     'jikko_set_mp3_play',
     'jikko_set_mp3_play2',
+    'jikko_load_init',
+    'jikko_load_scale',
+    'jikko_load_value',
 ];
 Entry.jikko.getBlocks = function() {
     var tx;
     var din;
     var clk;
     var cs;
+    var dout;
+    var sck;
 
     return {
         jikko_list_analog_basic: {
@@ -1090,7 +1106,7 @@ Entry.jikko.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
+                        type: 'number',
                         params: ['8'],
                     },
                     null,
@@ -3452,6 +3468,203 @@ Entry.jikko.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_load_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['6'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['7'],
+                    },
+                    null,
+                ],
+                type: 'jikko_load_init',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+            },
+            class: 'load',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port1 = script.getNumberValue('PORT1', script);
+                var port2 = script.getNumberValue('PORT2', script);
+
+                dout = port1;
+                sck = port2;
+                
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][sck] = {
+                        type: Entry.jikko.sensorTypes.LOADINIT,
+                        data: {
+                            port1: port1,
+                            port2: port2,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_load_scale: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['-20000'],
+                    },
+                    null,
+                ],
+                type: 'jikko_load_scale',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            class: 'load',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var num = script.getNumberValue('NUM', script);
+        
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][sck] = {
+                        type: Entry.jikko.sensorTypes.LOADSCALE,
+                        data: {
+                            num: num,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_load_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+            ],
+            events: {},
+            def: {
+                type: 'jikko_load_value',
+            },
+            paramsKeyMap: {
+            },
+            class: 'load',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][sck];
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.LOADVALUE] = {
+                    port: sck,
+                    time: new Date().getTime(),
+                };
+
+                return Entry.hw.portData.LOADVALUE || 0;
             },
             syntax: {
                 js: [],
