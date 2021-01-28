@@ -68,6 +68,7 @@ Entry.jikko = {
         LOADINIT: 35,
         LOADSCALE: 36,
         LOADVALUE: 37,
+        DUST: 38,
     },
     toneTable: {
         '0': 0,
@@ -163,6 +164,8 @@ Entry.jikko.setLanguage = function() {
                 jikko_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
                 jikko_load_scale: 'HX711 로드셀 보정하기 %1 %2',
                 jikko_load_value: 'HX711 로드셀 값',
+
+                jikko_get_dust: '미세먼지센서 (LED %1, AO %2) 값',
             },
         },
         en: {
@@ -215,6 +218,8 @@ Entry.jikko.setLanguage = function() {
                 jikko_load_init: 'HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
                 jikko_load_scale: 'HX711 로드셀 보정하기 %1 %2',
                 jikko_load_value: 'HX711 로드셀 값',
+
+                jikko_get_dust: '미세먼지센서(LED %1, AO %2) 값(μg/m³)',
             },
         },
     };
@@ -231,7 +236,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_set_digital_pwm',
 
     'jikko_get_digital_ultrasonic',
-
+    'jikko_get_dust',
     'jikko_get_digital_toggle',
     'jikko_get_digital_pir',
     'jikko_get_light_value',
@@ -1300,7 +1305,7 @@ Entry.jikko.getBlocks = function() {
                         ['😊', '7'],
                         ['😥', '8'],
                         ['😡', '9'],
-                        ['😆', '10']
+                        ['😆', '10'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2111,11 +2116,11 @@ Entry.jikko.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'text',
+                        type: 'jikko_list_digital_basic',
                         params: ['13'],
                     },
                     {
-                        type: 'text',
+                        type: 'jikko_list_digital_basic',
                         params: ['12'],
                     },
                 ],
@@ -2145,6 +2150,66 @@ Entry.jikko.getBlocks = function() {
                 };
 
                 return Entry.hw.portData.ULTRASONIC || 0;
+            },
+            syntax: {
+                js: [],
+                py: ['jikko.get_digital_ultrasonic(%1, %2)'],
+            },
+        },
+        jikko_get_dust: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_digital_basic',
+                        params: ['7'],
+                    },
+                    {
+                        type: 'jikko_list_analog_basic',
+                        params: ['0'],
+                    },
+                ],
+                type: 'jikko_get_dust',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+            },
+            class: 'jikkoGet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port1 = script.getNumberValue('PORT1');
+                var port2 = script.getNumberValue('PORT2');
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port1];
+                delete Entry.hw.sendQueue['SET'][port2];
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DUST] = {
+                    port: [port1, port2],
+                    time: new Date().getTime(),
+                };
+
+                return Entry.hw.portData.DUST || 0;
             },
             syntax: {
                 js: [],
@@ -3524,7 +3589,7 @@ Entry.jikko.getBlocks = function() {
 
                 dout = port1;
                 sck = port2;
-                
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -3597,7 +3662,7 @@ Entry.jikko.getBlocks = function() {
             isNotFor: ['jikko'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
-        
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -3640,14 +3705,12 @@ Entry.jikko.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
                 type: 'jikko_load_value',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'load',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
