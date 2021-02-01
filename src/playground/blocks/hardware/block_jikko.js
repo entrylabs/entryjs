@@ -69,7 +69,11 @@ Entry.jikko = {
         LOADSCALE: 36,
         LOADVALUE: 37,
         DUST: 38,
-        //39-43: 조이스틱
+        JOYINIT: 39,
+        JOYX: 40,
+        JOYY: 41,
+        JOYZ: 42,
+        JOYMOVE: 43,
         RFIDINIT: 44,
         RFIDTAP: 45,
         RFIDVALUE: 46,
@@ -102,6 +106,17 @@ Entry.jikko = {
         '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
         '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+    },
+    direction: {
+        CENTER: 0,
+        UP: 1,
+        LEFT: 2,
+        RIGHT: 3,
+        DOWN: 4,
+        LEFT_UP: 5,
+        LEFT_DOWN: 6,
+        RIGHT_UP: 7,
+        RIGHT_DOWN: 8,
     },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
@@ -174,6 +189,11 @@ Entry.jikko.setLanguage = function() {
                 jikko_rfid_init: 'RFID 시작하기 설정 (SS %1, RST %2) %3',
                 jikko_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
                 jikko_get_rfid_value: 'RFID 카드 값',
+                jikko_joy_init: '조이스틱 시작하기 설정 (X AO %1, Y AO %2, Z %3) %4',
+                jikko_get_joy_x: '조이스틱 X값',
+                jikko_get_joy_y: '조이스틱 y값',
+                jikko_get_joy_z: '조이스틱 버튼 눌림 상태',
+                jikko_get_joy_move: '조이스틱이 %1 방향으로 움직였을 때',
             },
         },
         en: {
@@ -232,6 +252,11 @@ Entry.jikko.setLanguage = function() {
                 jikko_rfid_init: 'RFID 시작하기 설정 (RST %1, SS %2) %3',
                 jikko_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
                 jikko_get_rfid_value: 'RFID 카드 값',
+                jikko_joy_init: '조이스틱 시작하기 설정 (X AO %1, Y AO %2, Z %3) %4',
+                jikko_get_joy_x: '조이스틱 X값',
+                jikko_get_joy_y: '조이스틱 y값',
+                jikko_get_joy_z: '조이스틱 버튼 눌림 상태',
+                jikko_get_joy_move: '조이스틱이 %1 방향으로 움직였을 때',
             },
         },
     };
@@ -289,6 +314,11 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_rfid_init',
     'jikko_is_rfid_tapped',
     'jikko_get_rfid_value',
+    'jikko_joy_init',
+    'jikko_get_joy_x',
+    'jikko_get_joy_y',
+    'jikko_get_joy_z',
+    'jikko_get_joy_move',
 ];
 Entry.jikko.getBlocks = function() {
     var tx;
@@ -298,6 +328,9 @@ Entry.jikko.getBlocks = function() {
     var dout;
     var sck;
     var ss;
+    var joyx;
+    var joyy;
+    var joyz;
 
     return {
         jikko_list_analog_basic: {
@@ -1830,8 +1863,17 @@ Entry.jikko.getBlocks = function() {
                 var port = script.getNumberValue('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
 
-                var value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
 
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DIGITAL] = {
+                    port: port,
+                    data: 2,
+                    time: new Date().getTime(),
+                };
+
+                var value = DIGITAL ? DIGITAL[port] || 0 : 0;
                 return !value;
             },
             syntax: { js: [], py: [] },
@@ -3744,6 +3786,336 @@ Entry.jikko.getBlocks = function() {
                 };
 
                 return Entry.hw.portData.LOADVALUE || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_joy_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_analog_basic',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'jikko_list_analog_basic',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['8'],
+                    },
+                    null,
+                ],
+                type: 'jikko_joy_init',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+                PORT3: 2,
+            },
+            class: 'joy',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port1 = script.getNumberValue('PORT1', script);
+                var port2 = script.getNumberValue('PORT2', script);
+                var port3 = script.getNumberValue('PORT3', script);
+
+                joyx = port1;
+                joyy = port2;
+                joyz = port3;
+                console.log('JOY PORT');
+                console.log(joyx);
+                console.log(joyy);
+                console.log(joyz);
+
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][joyx] = {
+                        type: Entry.jikko.sensorTypes.JOYINIT,
+                        data: {
+                            port1: port1,
+                            port2: port2,
+                            port3: port3,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_get_joy_x: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'jikko_get_joy_x',
+            },
+            paramsKeyMap: {},
+            class: 'joy',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var ANALOG = Entry.hw.portData.ANALOG;
+                return ANALOG ? ANALOG[joyx] || 0 : 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_get_joy_y: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'jikko_get_joy_y',
+            },
+            paramsKeyMap: {},
+            class: 'joy',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var ANALOG = Entry.hw.portData.ANALOG;
+                return ANALOG ? ANALOG[joyy] || 0 : 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+
+        jikko_get_joy_z: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'jikko_get_joy_z',
+            },
+            paramsKeyMap: {},
+            class: 'joy',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var DIGITAL = Entry.hw.portData.DIGITAL;
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.DIGITAL] = {
+                    port: joyz,
+                    data: 2,
+                    time: new Date().getTime(),
+                };
+
+                var value = DIGITAL ? DIGITAL[joyz] || 0 : 0;
+                return !value;
+            },
+            syntax: { js: [], py: [] },
+        },
+        jikko_list_joy_direction: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['가운데', '0'],
+                        ['위', '1'],
+                        ['아래', '4'],
+                        ['왼쪽', '2'],
+                        ['오른쪽', '3'],
+                        ['왼쪽위', '5'],
+                        ['왼쪽아래', '6'],
+                        ['오른쪽위', '7'],
+                        ['오른쪽아래', '8'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('DIR');
+            },
+        },
+        jikko_get_joy_move: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_joy_direction',
+                        params: ['0'],
+                    },
+                ],
+                type: 'jikko_get_joy_move',
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            class: 'joy',
+            isNotFor: ['jikko'],
+            func(sprite, script) {
+                var direction = script.getNumberValue('DIR');
+                console.log('JIKKO MOVE');
+                console.log(direction);
+                const ANALOG = Entry.hw.portData.ANALOG;
+
+                const getValue = function(w) {
+                    return ANALOG[w] <= 10 ? 0 : ANALOG[w] >= 1000 ? 2 : 1;
+                };
+
+                if (
+                    direction == Entry.jikko.direction.CENTER &&
+                    getValue(joyx) == 1 &&
+                    getValue(joyy) == 1
+                ) {
+                    console.log('0: center');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.DOWN &&
+                    getValue(joyx) == 1 &&
+                    getValue(joyy) == 2
+                ) {
+                    console.log('4: down');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.LEFT &&
+                    getValue(joyx) == 0 &&
+                    getValue(joyy) == 1
+                ) {
+                    console.log('2: left');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.LEFT_DOWN &&
+                    getValue(joyx) == 0 &&
+                    getValue(joyy) == 2
+                ) {
+                    console.log('6: left down');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.LEFT_UP &&
+                    getValue(joyx) == 0 &&
+                    getValue(joyy) == 0
+                ) {
+                    console.log('7: left up');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.RIGHT &&
+                    getValue(joyx) == 2 &&
+                    getValue(joyy) == 1
+                ) {
+                    console.log('3: right');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.RIGHT_DOWN &&
+                    getValue(joyx) == 2 &&
+                    getValue(joyy) == 2
+                ) {
+                    console.log('8: right down');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.RIGHT_UP &&
+                    getValue(joyx) == 2 &&
+                    getValue(joyy) == 0
+                ) {
+                    console.log('7: right up');
+                    return 1;
+                } else if (
+                    direction == Entry.jikko.direction.UP &&
+                    getValue(joyx) == 1 &&
+                    getValue(joyy) == 0
+                ) {
+                    console.log('1: up');
+                    return 1;
+                }
+
+                return 0;
             },
             syntax: {
                 js: [],
