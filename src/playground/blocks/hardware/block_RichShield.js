@@ -1402,5 +1402,4 @@ Entry.RichShield.getBlocks = function() {
         },
     };
 };
-
 module.exports = Entry.RichShield;
