@@ -74,13 +74,14 @@ Entry.jikko = {
         JOYY: 41,
         JOYZ: 42,
         JOYMOVE: 43,
-
+        RFIDINIT: 44,
+        RFIDTAP: 45,
+        RFIDVALUE: 46,
         STEPINIT: 47,
         STEPSPEED: 48,
         STEPROTATE: 49,
         STEPROTATE2: 50,
         STEPROTATE3: 51,
-        STEPSTOP: 52,
     },
     toneTable: {
         '0': 0,
@@ -190,6 +191,9 @@ Entry.jikko.setLanguage = function() {
 
                 jikko_get_dust: '미세먼지센서 (LED %1, AO %2) 값',
 
+                jikko_rfid_init: 'RFID 시작하기 설정 (SS %1, RST %2) %3',
+                jikko_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
+                jikko_get_rfid_value: 'RFID 카드 값',
                 jikko_joy_init: '조이스틱 시작하기 설정 (X AO %1, Y AO %2, Z %3) %4',
                 jikko_get_joy_x: '조이스틱 X값',
                 jikko_get_joy_y: '조이스틱 y값',
@@ -257,6 +261,9 @@ Entry.jikko.setLanguage = function() {
 
                 jikko_get_dust: '미세먼지센서(LED %1, AO %2) 값(μg/m³)',
 
+                jikko_rfid_init: 'RFID 시작하기 설정 (RST %1, SS %2) %3',
+                jikko_is_rfid_tapped: 'RFID 카드가 인식되었는가?',
+                jikko_get_rfid_value: 'RFID 카드 값',
                 jikko_joy_init: '조이스틱 시작하기 설정 (X AO %1, Y AO %2, Z %3) %4',
                 jikko_get_joy_x: '조이스틱 X값',
                 jikko_get_joy_y: '조이스틱 y값',
@@ -323,6 +330,9 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_load_init',
     'jikko_load_scale',
     'jikko_load_value',
+    'jikko_rfid_init',
+    'jikko_is_rfid_tapped',
+    'jikko_get_rfid_value',
     'jikko_joy_init',
     'jikko_get_joy_x',
     'jikko_get_joy_y',
@@ -338,12 +348,16 @@ Entry.jikko.blockMenuBlocks = [
 Entry.jikko.getBlocks = function() {
     var tx;
     var din;
-    var clk;
-    var cs;
+    // var clk;
+    // var cs;
     var dout;
     var sck;
     var joyx, joyy, joyz;
     var in1, in2, in3, in4;
+    var ss;
+    var joyx;
+    var joyy;
+    var joyz;
 
     return {
         jikko_list_analog_basic: {
@@ -1112,8 +1126,8 @@ Entry.jikko.getBlocks = function() {
                 var port3 = script.getNumberValue('PORT3', script);
 
                 din = port1;
-                clk = port2;
-                cs = port3;
+                // clk = port2;
+                // cs = port3;
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -3896,7 +3910,7 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        
+
         jikko_get_joy_x: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3944,21 +3958,19 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
-        
+
         jikko_get_joy_z: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
                 type: 'jikko_get_joy_z',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'joy',
             isNotFor: ['jikko'],
             func: function(sprite, script) {
@@ -4760,6 +4772,157 @@ Entry.jikko.getBlocks = function() {
                 }
             },
             syntax: { js: [], py: ['jikko.Module_digital_oled(%1, %2, %3)'] },
+        },
+
+        jikko_rfid_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['9'],
+                    },
+                    null,
+                ],
+                type: 'jikko_rfid_init',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+            },
+            class: 'rfid',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port1 = script.getNumberValue('PORT1', script);
+                var port2 = script.getNumberValue('PORT2', script);
+
+                ss = port1;
+
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][ss] = {
+                        type: Entry.jikko.sensorTypes.RFIDINIT,
+                        data: {
+                            port1: port1,
+                            port2: port2,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_is_rfid_tapped: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                params: [],
+                type: 'jikko_is_rfid_tapped',
+            },
+            paramsKeyMap: {},
+            class: 'rfid',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.RFIDTAP] = {
+                    port: ss,
+                    time: new Date().getTime(),
+                };
+
+                var value = Entry.hw.portData.RFIDTAP || 0;
+                return value;
+            },
+            syntax: { js: [], py: [] },
+        },
+        jikko_get_rfid_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'jikko_get_rfid_value',
+            },
+            paramsKeyMap: {},
+            class: 'rfid',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][ss];
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][Entry.jikko.sensorTypes.RFIDVALUE] = {
+                    port: ss,
+                    time: new Date().getTime(),
+                };
+
+                return Entry.hw.portData.RFIDVALUE || 0;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
         },
         jikko_module_digital_bluetooth: {
             color: EntryStatic.colorSet.block.default.HARDWARE,

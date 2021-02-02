@@ -16,11 +16,14 @@ Entry.ArduinoCake = {
                 SET: {},
             };
         } else {
-            const keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
+            // const keySet = Object.keys(Entry.hw.sendQueue.SET);
+            // keySet.forEach((key) => {
+            //     Entry.hw.sendQueue.SET[key].data = 0;
+            //     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            // });
+            for (var port = 0; port < 14; port++) {
+                Entry.hw.sendQueue[port] = 0;
+            }
         }
         Entry.hw.update();
     },
@@ -190,22 +193,22 @@ Entry.ArduinoCake.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['pinBD', '10'], 
-                        ['pinA1', '16'], 
-                        ['pinA2', '17'], 
-                        ['pinB1', '14'], 
+                        ['pinBD', '10'],
+                        ['pinA1', '16'],
+                        ['pinA2', '17'],
+                        ['pinB1', '14'],
                         ['pinB2', '15'],
-                        ['pinB3', '2'], 
+                        ['pinB3', '2'],
                         ['pinB4', '9'],
-                        ['pinC1', '3'], 
+                        ['pinC1', '3'],
                         ['pinC2', '12'],
-                        ['pinC3', '11'], 
+                        ['pinC3', '11'],
                         ['pinC4', '13'],
-                        ['pinC5', '5'], 
+                        ['pinC5', '5'],
                         ['pinC6', '4'],
-                        ['pinC7', '6'], 
+                        ['pinC7', '6'],
                         ['pinC8', '7'],
-                        ['pinSD', '18'], 
+                        ['pinSD', '18'],
                         ['pinSC', '19'],
                     ],
                     value: '3',
@@ -234,22 +237,22 @@ Entry.ArduinoCake.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    ['pinBD', '10'], 
-                                    ['pinA1', '16'], 
-                                    ['pinA2', '17'], 
-                                    ['pinB1', '14'], 
+                                    ['pinBD', '10'],
+                                    ['pinA1', '16'],
+                                    ['pinA2', '17'],
+                                    ['pinB1', '14'],
                                     ['pinB2', '15'],
-                                    ['pinB3', '2'], 
+                                    ['pinB3', '2'],
                                     ['pinB4', '9'],
-                                    ['pinC1', '3'], 
+                                    ['pinC1', '3'],
                                     ['pinC2', '12'],
-                                    ['pinC3', '11'], 
+                                    ['pinC3', '11'],
                                     ['pinC4', '13'],
-                                    ['pinC5', '5'], 
+                                    ['pinC5', '5'],
                                     ['pinC6', '4'],
-                                    ['pinC7', '6'], 
+                                    ['pinC7', '6'],
                                     ['pinC8', '7'],
-                                    ['pinSD', '18'], 
+                                    ['pinSD', '18'],
                                     ['pinSC', '19'],
                                 ],
                                 value: '3',
@@ -265,7 +268,7 @@ Entry.ArduinoCake.getBlocks = function() {
                 ],
             },
         },
-        
+
         arduino_cake_pwm_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -278,9 +281,9 @@ Entry.ArduinoCake.getBlocks = function() {
                     options: [
                         ['pinBD', '10'],
                         ['pinB4', '9'],
-                        ['pinC1', '3'], 
+                        ['pinC1', '3'],
                         ['pinC3', '11'],
-                        ['pinC5', '5'], 
+                        ['pinC5', '5'],
                         ['pinC6', '4'],
                     ],
                     value: '10',
@@ -311,9 +314,9 @@ Entry.ArduinoCake.getBlocks = function() {
                                 options: [
                                     ['pinBD', '10'],
                                     ['pinB4', '9'],
-                                    ['pinC1', '3'], 
+                                    ['pinC1', '3'],
                                     ['pinC3', '11'],
-                                    ['pinC5', '5'], 
+                                    ['pinC5', '5'],
                                     ['pinC6', '4'],
                                 ],
                                 value: '10',
@@ -329,7 +332,7 @@ Entry.ArduinoCake.getBlocks = function() {
                 ],
             },
         },
-        
+
         arduino_cake_buz_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -339,9 +342,7 @@ Entry.ArduinoCake.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['pinBD', '8'],
-                    ],
+                    options: [['pinBD', '8']],
                     value: '8',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -367,9 +368,7 @@ Entry.ArduinoCake.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [
-                                    ['pinBD', '8'],
-                                ],
+                                options: [['pinBD', '8']],
                                 value: '8',
                                 fontSize: 11,
                                 converter: Entry.block.converters.returnStringKey,
@@ -383,8 +382,7 @@ Entry.ArduinoCake.getBlocks = function() {
                 ],
             },
         },
-        
-        
+
         arduino_cake_get_analog_value: {
             parent: 'arduino_ext_get_analog_value',
             template: Lang.template.arduino_ext_get_analog_value,
