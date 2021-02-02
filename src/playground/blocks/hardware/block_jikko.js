@@ -81,7 +81,6 @@ Entry.jikko = {
         STEPSPEED: 48,
         STEPROTATE: 49,
         STEPROTATE2: 50,
-        STEPROTATE3: 51,
     },
     toneTable: {
         '0': 0,
@@ -205,7 +204,6 @@ Entry.jikko.setLanguage = function() {
                 jikko_step_rotate: '스텝모터 %1 으로 %2 바퀴 회전하기 %3',
                 jikko_step_rotate2: '스텝모터 %1 으로 %2 도 회전하기 %3',
                 jikko_step_rotate3: '스텝모터 %1 으로 %2 초 동안 회전하기 %3',
-                jikko_step_stop: '스텝모터 정지하기 %1',
             },
         },
         en: {
@@ -275,7 +273,6 @@ Entry.jikko.setLanguage = function() {
                 jikko_step_rotate: '스텝모터 %1 으로 %2 바퀴 회전하기 %3',
                 jikko_step_rotate2: '스텝모터 %1 으로 %2 도 회전하기 %3',
                 jikko_step_rotate3: '스텝모터 %1 으로 %2 초 동안 회전하기 %3',
-                jikko_step_stop: '스텝모터 정지하기 %1',
             },
         },
     };
@@ -343,7 +340,6 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_step_rotate',
     'jikko_step_rotate2',
     'jikko_step_rotate3',
-    'jikko_step_stop',
 ];
 Entry.jikko.getBlocks = function() {
     var tx;
@@ -4569,64 +4565,6 @@ Entry.jikko.getBlocks = function() {
                         data: {
                             dir: dir,
                             sec: sec,
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, timeValue);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-            syntax: {
-                js: [],
-                py: [{}],
-            },
-        },
-        jikko_step_stop: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                ],
-                type: 'jikko_step_stop',
-            },
-            paramsKeyMap: {
-            },
-            class: 'step',
-            isNotFor: ['jikko'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
-                    
-                    Entry.hw.sendQueue['SET'][in1] = {
-                        type: Entry.jikko.sensorTypes.STEPSTOP,
-                        data: {
                         },
                         time: new Date().getTime(),
                     };
