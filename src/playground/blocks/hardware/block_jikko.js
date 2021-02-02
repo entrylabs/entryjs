@@ -200,7 +200,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_joy_move: '조이스틱이 %1 방향으로 움직였을 때',
 
                 jikko_step_init: '스텝모터 시작하기 설정 (IN1 %1, IN2 %2, IN3 %3, IN4 %4) %5',
-                jikko_step_speed: '스텝모터 속도를 %1 로 설정하기 %2',
+                jikko_step_speed: '스텝모터 속도를 %1 로 설정하기 (0 ~ 20) %2',
                 jikko_step_rotate: '스텝모터 %1 으로 %2 바퀴 회전하기 %3',
                 jikko_step_rotate2: '스텝모터 %1 으로 %2 도 회전하기 %3',
                 jikko_step_rotate3: '스텝모터 %1 으로 %2 초 동안 회전하기 %3',
@@ -269,7 +269,7 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_joy_move: '조이스틱이 %1 방향으로 움직였을 때',
 
                 jikko_step_init: '스텝모터 시작하기 설정 (IN1 %1, IN2 %2, IN3 %3, IN4 %4) %5',
-                jikko_step_speed: '스텝모터 속도를 %1 로 설정하기 %2',
+                jikko_step_speed: '스텝모터 속도를 %1 로 설정하기 (0 ~ 20) %2',
                 jikko_step_rotate: '스텝모터 %1 으로 %2 바퀴 회전하기 %3',
                 jikko_step_rotate2: '스텝모터 %1 으로 %2 도 회전하기 %3',
                 jikko_step_rotate3: '스텝모터 %1 으로 %2 초 동안 회전하기 %3',
@@ -4269,6 +4269,9 @@ Entry.jikko.getBlocks = function() {
             isNotFor: ['jikko'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
+                num = Math.round(num);
+                num = Math.min(num, 20);
+                num = Math.max(num, 0);
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
