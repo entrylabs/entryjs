@@ -582,7 +582,6 @@ Entry.RichShield.getBlocks = function() {
                 }
                 Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.ANALOG] = {
                     port,
-                    //data: opr,
                     time: new Date().getTime(),
                 };
 
