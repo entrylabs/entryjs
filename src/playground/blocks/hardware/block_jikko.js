@@ -74,6 +74,13 @@ Entry.jikko = {
         JOYY: 41,
         JOYZ: 42,
         JOYMOVE: 43,
+
+        STEPINIT: 47,
+        STEPSPEED: 48,
+        STEPROTATE: 49,
+        STEPROTATE2: 50,
+        STEPROTATE3: 51,
+        STEPSTOP: 52,
     },
     toneTable: {
         '0': 0,
@@ -188,6 +195,13 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_joy_y: '조이스틱 y값',
                 jikko_get_joy_z: '조이스틱 버튼 눌림 상태',
                 jikko_get_joy_move: '조이스틱이 %1 방향으로 움직였을 때',
+
+                jikko_step_init: '스텝모터 시작하기 설정 (IN1 %1, IN2 %2, IN3 %3, IN4 %4) %5',
+                jikko_step_speed: '스텝모터 속도를 %1 로 설정하기 %2',
+                jikko_step_rotate: '스텝모터 %1 으로 %2 바퀴 회전하기 %3',
+                jikko_step_rotate2: '스텝모터 %1 으로 %2 도 회전하기 %3',
+                jikko_step_rotate3: '스텝모터 %1 으로 %2 초 동안 회전하기 %3',
+                jikko_step_stop: '스텝모터 정지하기 %1',
             },
         },
         en: {
@@ -248,6 +262,13 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_joy_y: '조이스틱 y값',
                 jikko_get_joy_z: '조이스틱 버튼 눌림 상태',
                 jikko_get_joy_move: '조이스틱이 %1 방향으로 움직였을 때',
+
+                jikko_step_init: '스텝모터 시작하기 설정 (IN1 %1, IN2 %2, IN3 %3, IN4 %4) %5',
+                jikko_step_speed: '스텝모터 속도를 %1 로 설정하기 %2',
+                jikko_step_rotate: '스텝모터 %1 으로 %2 바퀴 회전하기 %3',
+                jikko_step_rotate2: '스텝모터 %1 으로 %2 도 회전하기 %3',
+                jikko_step_rotate3: '스텝모터 %1 으로 %2 초 동안 회전하기 %3',
+                jikko_step_stop: '스텝모터 정지하기 %1',
             },
         },
     };
@@ -307,6 +328,12 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_joy_y',
     'jikko_get_joy_z',
     'jikko_get_joy_move',
+    'jikko_step_init',
+    'jikko_step_speed',
+    'jikko_step_rotate',
+    'jikko_step_rotate2',
+    'jikko_step_rotate3',
+    'jikko_step_stop',
 ];
 Entry.jikko.getBlocks = function() {
     var tx;
@@ -315,9 +342,8 @@ Entry.jikko.getBlocks = function() {
     var cs;
     var dout;
     var sck;
-    var joyx;
-    var joyy;
-    var joyz;
+    var joyx, joyy, joyz;
+    var in1, in2, in3, in4;
 
     return {
         jikko_list_analog_basic: {
@@ -1404,9 +1430,6 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    console.log('JS LIST NUM: ');
-                    console.log(value);
-
                     Entry.hw.sendQueue['SET'][din] = {
                         type: Entry.jikko.sensorTypes.DOTMATRIXEMOJI,
                         data: value,
@@ -2123,7 +2146,6 @@ Entry.jikko.getBlocks = function() {
                 num = num * ((value5_1 - value4_1) / (value3 - value2));
 
                 if (flag == 1) {
-                    console.log('FLAG1');
                     num = value4 - num;
                     num = Math.min(value4, num);
                     num = Math.max(value5, num);
@@ -3477,18 +3499,14 @@ Entry.jikko.getBlocks = function() {
                         },
                         time: new Date().getTime(),
                     };
-                    console.log(time_value);
 
                     setTimeout(function() {
-                        console.log('timeout');
                         script.timeFlag = 0;
                     }, time_value);
                     return script;
                 } else if (script.timeFlag == 1) {
-                    console.log('2');
                     return script;
                 } else {
-                    console.log('3');
                     delete script.timeFlag;
                     delete script.isStart;
 
@@ -3840,10 +3858,6 @@ Entry.jikko.getBlocks = function() {
                 joyx = port1;
                 joyy = port2;
                 joyz = port3;
-                console.log("JOY PORT");
-                console.log(joyx);
-                console.log(joyy);
-                console.log(joyz);
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -4031,8 +4045,6 @@ Entry.jikko.getBlocks = function() {
             isNotFor: ['jikko'],
             func(sprite, script) {
                 var direction = script.getNumberValue('DIR');
-                console.log("JIKKO MOVE");
-                console.log(direction);
                 const ANALOG = Entry.hw.portData.ANALOG;
 
                 const getValue = function(w) {
@@ -4044,63 +4056,54 @@ Entry.jikko.getBlocks = function() {
                     getValue(joyx) == 1 &&
                     getValue(joyy) == 1
                 ) { 
-                    console.log("0: center");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.DOWN &&
                     getValue(joyx) == 1 &&
                     getValue(joyy) == 2
                 ) {
-                    console.log("4: down");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.LEFT &&
                     getValue(joyx) == 0 &&
                     getValue(joyy) == 1
                 ) {
-                    console.log("2: left");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.LEFT_DOWN &&
                     getValue(joyx) == 0 &&
                     getValue(joyy) == 2
                 ) {
-                    console.log("6: left down");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.LEFT_UP &&
                     getValue(joyx) == 0 &&
                     getValue(joyy) == 0
                 ) {
-                    console.log("7: left up");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.RIGHT &&
                     getValue(joyx) == 2 &&
                     getValue(joyy) == 1
                 ) {
-                    console.log("3: right");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.RIGHT_DOWN &&
                     getValue(joyx) == 2 &&
                     getValue(joyy) == 2
                 ) {
-                    console.log("8: right down");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.RIGHT_UP &&
                     getValue(joyx) == 2 &&
                     getValue(joyy) == 0
                 ) {
-                    console.log("7: right up");
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.UP &&
                     getValue(joyx) == 1 &&
                     getValue(joyy) == 0
                 ) {
-                    console.log("1: up");
                     return 1;
                 }
 
@@ -4111,7 +4114,529 @@ Entry.jikko.getBlocks = function() {
                 py: [{}],
             },
         },
+        jikko_step_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['8'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['9'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['10'],
+                    },
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['11'],
+                    },
+                    null,
+                ],
+                type: 'jikko_step_init',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+                PORT3: 2,
+                PORT4: 3,
+            },
+            class: 'step',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port1 = script.getNumberValue('PORT1', script);
+                var port2 = script.getNumberValue('PORT2', script);
+                var port3 = script.getNumberValue('PORT3', script);
+                var port4 = script.getNumberValue('PORT4', script);
 
+                in1 = port1;
+                in2 = port2;
+                in3 = port3;
+                in4 = port4;
+
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    Entry.hw.sendQueue['SET'][port1] = {
+                        type: Entry.jikko.sensorTypes.STEPINIT,
+                        data: {
+                            port1: port1,
+                            port2: port2,
+                            port3: port3,
+                            port4: port4,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_step_speed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['14'],
+                    },
+                    null,
+                ],
+                type: 'jikko_step_speed',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            class: 'step',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var num = script.getNumberValue('NUM', script);
+
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPSPEED,
+                        data: num,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_list_step_direction: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['정방향', '1'],
+                        ['역방향', '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('DIR');
+            },
+        },
+        jikko_step_rotate: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_step_direction',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'jikko_step_rotate',
+            },
+            paramsKeyMap: {
+                DIR: 0,
+                NUM: 1,
+            },
+            class: 'step',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var dir = script.getNumberValue('DIR');
+                var num = script.getNumberValue('NUM');
+                
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    num = num * 2048;
+                    
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPROTATE,
+                        data: {
+                            dir: dir,
+                            num: num,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_step_rotate2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_step_direction',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['90'],
+                    },
+                    null,
+                ],
+                type: 'jikko_step_rotate2',
+            },
+            paramsKeyMap: {
+                DIR: 0,
+                NUM: 1,
+            },
+            class: 'step',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var dir = script.getNumberValue('DIR');
+                var num = script.getNumberValue('NUM');
+                
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    num = num / 360 * 2048;
+            
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPROTATE2,
+                        data: {
+                            dir: dir,
+                            num: num,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_step_rotate3: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_step_direction',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['5'],
+                    },
+                    null,
+                ],
+                type: 'jikko_step_rotate3',
+            },
+            paramsKeyMap: {
+                DIR: 0,
+                SEC: 1,
+            },
+            class: 'step',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var dir = script.getNumberValue('DIR');
+                var sec = script.getNumberValue('SEC');
+                
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+                    
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPROTATE3,
+                        data: {
+                            dir: dir,
+                            sec: sec,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
+        jikko_step_stop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'jikko_step_stop',
+            },
+            paramsKeyMap: {
+            },
+            class: 'step',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+                    
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPSTOP,
+                        data: {
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
+        },
         jikko_module_digital_oled: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
