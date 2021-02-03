@@ -1225,7 +1225,6 @@ Entry.RichShield.getBlocks = function() {
                 const splited_array = [];
                 let display_str_converted = 0;
 
-                // index number patched by Remoted 2020-11-20
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
@@ -1252,9 +1251,6 @@ Entry.RichShield.getBlocks = function() {
                     },
                     time: new Date().getTime(),
                 };
-
-                //console.log("Display_str : " + display_str);
-                //console.log("Display_str type : " + typeof display_str);
 
                 return script.callReturn();
             },
