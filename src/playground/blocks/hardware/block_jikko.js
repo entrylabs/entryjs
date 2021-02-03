@@ -352,9 +352,10 @@ Entry.jikko.getBlocks = function() {
     var joyx, joyy, joyz;
     var in1, in2, in3, in4;
     var ss;
-    var joyx;
-    var joyy;
-    var joyz;
+    var speed = 14;
+    // var joyx;
+    // var joyy;
+    // var joyz;
 
     return {
         jikko_list_analog_basic: {
@@ -4273,6 +4274,7 @@ Entry.jikko.getBlocks = function() {
                 num = Math.round(num);
                 num = Math.min(num, 20);
                 num = Math.max(num, 0);
+                speed = num;
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
@@ -4391,10 +4393,9 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / speed) * num * 1000 + 32;
 
                     num = num * 2048;
-
                     Entry.hw.sendQueue['SET'][in1] = {
                         type: Entry.jikko.sensorTypes.STEPROTATE,
                         data: {
@@ -4481,7 +4482,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / (speed * 360)) * num * 1000 + 32;
 
                     num = (num / 360) * 2048;
 
