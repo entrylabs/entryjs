@@ -81,6 +81,7 @@ Entry.jikko = {
         STEPSPEED: 48,
         STEPROTATE: 49,
         STEPROTATE2: 50,
+        STEPROTATE3: 51,
     },
     toneTable: {
         '0': 0,
@@ -4056,14 +4057,14 @@ Entry.jikko.getBlocks = function() {
                 const ANALOG = Entry.hw.portData.ANALOG;
 
                 const getValue = function(w) {
-                    return ANALOG[w] <= 10 ? 0 : ANALOG[w] >= 1000 ? 2 : 1;
+                    return ANALOG[w] <= 100 ? 0 : ANALOG[w] >= 930 ? 2 : 1;
                 };
 
                 if (
                     direction == Entry.jikko.direction.CENTER &&
                     getValue(joyx) == 1 &&
                     getValue(joyy) == 1
-                ) { 
+                ) {
                     return 1;
                 } else if (
                     direction == Entry.jikko.direction.DOWN &&
@@ -4282,7 +4283,6 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-
                     Entry.hw.sendQueue['SET'][in1] = {
                         type: Entry.jikko.sensorTypes.STEPSPEED,
                         data: num,
@@ -4383,7 +4383,7 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR');
                 var num = script.getNumberValue('NUM');
-                
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -4394,7 +4394,7 @@ Entry.jikko.getBlocks = function() {
                     var timeValue = (60 / fps) * 50;
 
                     num = num * 2048;
-                    
+
                     Entry.hw.sendQueue['SET'][in1] = {
                         type: Entry.jikko.sensorTypes.STEPROTATE,
                         data: {
@@ -4413,6 +4413,11 @@ Entry.jikko.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPROTATE,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
@@ -4468,7 +4473,7 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR');
                 var num = script.getNumberValue('NUM');
-                
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -4478,8 +4483,8 @@ Entry.jikko.getBlocks = function() {
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
 
-                    num = num / 360 * 2048;
-            
+                    num = (num / 360) * 2048;
+
                     Entry.hw.sendQueue['SET'][in1] = {
                         type: Entry.jikko.sensorTypes.STEPROTATE2,
                         data: {
@@ -4498,6 +4503,11 @@ Entry.jikko.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPROTATE2,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
@@ -4553,7 +4563,7 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR');
                 var sec = script.getNumberValue('SEC');
-                
+
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -4562,7 +4572,7 @@ Entry.jikko.getBlocks = function() {
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
                     var timeValue = (60 / fps) * 50;
-                    
+
                     Entry.hw.sendQueue['SET'][in1] = {
                         type: Entry.jikko.sensorTypes.STEPROTATE3,
                         data: {
@@ -4574,13 +4584,18 @@ Entry.jikko.getBlocks = function() {
 
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, timeValue);
+                    }, sec * 1000 + 32);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
+                    Entry.hw.sendQueue['SET'][in1] = {
+                        type: Entry.jikko.sensorTypes.STEPROTATE3,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
