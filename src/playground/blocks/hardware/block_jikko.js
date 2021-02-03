@@ -2220,6 +2220,9 @@ Entry.jikko.getBlocks = function() {
                 }
                 delete Entry.hw.sendQueue['SET'][port1];
                 delete Entry.hw.sendQueue['SET'][port2];
+
+                Entry.Utils.sleep(700);
+
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -2228,7 +2231,7 @@ Entry.jikko.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                return Entry.hw.portData.ULTRASONIC || 0;
+                return Entry.hw.portData.ULTRASONIC[port2] || 0;
             },
             syntax: {
                 js: [],
@@ -3117,7 +3120,7 @@ Entry.jikko.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
+                    var timeValue = (60 / fps) * 100;
 
                     Entry.hw.sendQueue['SET'][1] = {
                         type: Entry.jikko.sensorTypes.LCD,
