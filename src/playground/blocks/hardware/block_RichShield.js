@@ -1,4 +1,5 @@
 'use strict';
+
 Entry.RichShield = {
     id: '36.2',
     name: 'RichShield',
