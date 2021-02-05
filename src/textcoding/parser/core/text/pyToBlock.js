@@ -944,9 +944,10 @@ Entry.PyToBlockParser = class {
                 const scenes = Entry.scene.scenes_.filter((s) => s.name === value);
                 return scenes[0] ? scenes[0].id : undefined;
             case 'sounds':
-                if (value) {
-                    const sound = this.object.getSound(value);
+                if (!value) {
+                    return undefined;
                 }
+                const sound = this.object.getSound(value);
                 return sound ? sound.id : undefined;
             case 'clone':
             case 'textBoxWithSelf':

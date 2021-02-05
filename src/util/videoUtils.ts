@@ -48,6 +48,13 @@ type DetectedObject = {
 };
 type IndicatorType = 'pose' | 'face' | 'object';
 
+export const getInputList = async () => {
+    if(navigator.mediaDevices) {
+        return (await navigator.mediaDevices.enumerateDevices()) || [];
+    }
+    return [];
+}
+
 class VideoUtils implements MediaUtilsInterface {
     // 비디오 캔버스 크기에 쓰이는 공통 밸류
     public CANVAS_WIDTH: number = 480;
@@ -94,10 +101,6 @@ class VideoUtils implements MediaUtilsInterface {
         warmup: false,
     };
 
-    // motion test
-    // private tempCanvas: any;
-    // motion test
-
     // 감지된 요소들
     public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
         Array(this.CANVAS_WIDTH / this._SAMPLE_SIZE)
@@ -138,16 +141,38 @@ class VideoUtils implements MediaUtilsInterface {
     public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
+    private isFront = true;
+    public videoInputList: string[][] = [];
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
+
+    // issue 12160 bug , 강제로 usermedia를 가져오도록 하기 위함 enumerateDevices자체로는 권한 요청을 하지 않음
+    async checkPermission() {
+        await navigator.permissions
+            .query({ name: 'camera' })
+            .then(async (permission) => {
+                console.log('camera state', permission.state);
+                if (permission.state !== 'granted') {
+                    await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+                }
+            })
+            .catch(async (error) => {
+                console.log('Got error :', error);
+            });
+    }
+
     async initialize() {
         if (this.isInitialized) {
             return;
         }
+        await this.checkPermission();
+        const inputList = await getInputList();
+        this.videoInputList = inputList
+            .filter((input) => input.kind === 'videoinput')
+            .map((item) => [item.label, item.deviceId]);
         await this.compatabilityChecker();
-
         // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
@@ -177,7 +202,7 @@ class VideoUtils implements MediaUtilsInterface {
             const stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
-                    facingMode: 'user',
+                    deviceId: { exact: this.videoInputList[0][1] },
                     width: this._VIDEO_WIDTH,
                     height: this._VIDEO_HEIGHT,
                 },
@@ -214,11 +239,11 @@ class VideoUtils implements MediaUtilsInterface {
                     if (Entry.engine.state !== 'run' && type !== 'init') {
                         return;
                     }
+                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                    const modelLang = Lang.Blocks[`video_${name}_model`];
+
                     switch (type) {
                         case 'init':
-                            const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-                            const modelLang = Lang.Blocks[`video_${name}_model`];
-
                             if (message === 'warmup') {
                                 Entry.toast.success(
                                     Lang.Msgs.video_model_load_success,
@@ -275,13 +300,12 @@ class VideoUtils implements MediaUtilsInterface {
                         })
                         .then((cocoLoaded: any) => {
                             this.coco = cocoLoaded;
-                            // console.log('coco model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
+                                // eslint-disable-next-line
                                 `${Lang.Blocks.video_object_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
-                            // this.postMessage({ type: 'init', message: 'object' });
                             console.timeEnd('test');
                         }),
                     posenet
@@ -296,9 +320,9 @@ class VideoUtils implements MediaUtilsInterface {
                         })
                         .then((mobileNetLoaded: any) => {
                             this.mobileNet = mobileNetLoaded;
-                            // console.log('posenet model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
+                                // eslint-disable-next-line
                                 `${Lang.Blocks.video_pose_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
@@ -315,12 +339,12 @@ class VideoUtils implements MediaUtilsInterface {
 
             const video = document.createElement('video');
             video.id = 'webCamElement';
+            video.autoplay = true;
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
             video.height = this.CANVAS_HEIGHT;
-            video.autoplay = true;
-            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
 
+            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
@@ -330,8 +354,34 @@ class VideoUtils implements MediaUtilsInterface {
             this.isInitialized = false;
         }
     }
+    async changeSource(target: number) {
+        if (!this.videoInputList[target]) {
+            return;
+        }
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    deviceId: {
+                        exact: this.videoInputList[target][1],
+                    },
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+            this.isFront = !this.isFront;
+            this.stream = stream;
+            this.video.srcObject = this.stream;
+            this.video.width = this.CANVAS_WIDTH;
+            this.video.height = this.CANVAS_HEIGHT;
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     videoOnLoadHandler() {
-        this.video.play();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -424,8 +474,14 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         if (this.isChrome) {
-            const captured = await this.imageCapture.grabFrame();
-            this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+            if (
+                this.imageCapture.track.readyState === 'live' &&
+                this.imageCapture.track.enabled &&
+                !this.imageCapture.track.muted
+            ) {
+                const captured = await this.imageCapture.grabFrame();
+                this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+            }
         } else {
             const context = this.inMemoryCanvas.getContext('2d');
             context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
@@ -605,13 +661,10 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     cameraSwitch(mode: String) {
-        switch (mode) {
-            case 'on':
-                this.turnOnWebcam();
-                break;
-            default:
-                this.turnOffWebcam();
-                break;
+        if (mode === 'on') {
+            this.turnOnWebcam();
+        } else {
+            this.turnOffWebcam();
         }
     }
     turnOffWebcam() {
@@ -736,8 +789,6 @@ class VideoUtils implements MediaUtilsInterface {
                     track.stop();
                 });
             }
-
-            // this.worker.terminate();
         } catch (err) {
             console.log(err);
         }
@@ -775,27 +826,10 @@ class VideoUtils implements MediaUtilsInterface {
                 Lang.Workspace.check_browser_error_video,
             ]);
         }
-        if (!this.stream) {
-            if (!this.checkUserCamAvailable()) {
-                throw new Entry.Utils.IncompatibleError('IncompatibleError', [
-                    Lang.Workspace.check_webcam_error,
-                ]);
-            }
-        }
-    }
-    async checkUserCamAvailable() {
-        try {
-            await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: {
-                    facingMode: 'user',
-                    width: this._VIDEO_WIDTH,
-                    height: this._VIDEO_HEIGHT,
-                },
-            });
-            return true;
-        } catch (err) {
-            return false;
+        if (!this.stream && this.videoInputList.length == 0) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
         }
     }
 }
