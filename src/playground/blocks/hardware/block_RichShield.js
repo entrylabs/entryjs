@@ -86,7 +86,6 @@ Entry.RichShield = {
 Entry.RichShield.setLanguage = function() {
     return {
         ko: {
-            // ko.js에 작성하던 내용
             Blocks: {
                 RichShield_pulldown: '기본',
                 RichShield_pullup: '풀업',
