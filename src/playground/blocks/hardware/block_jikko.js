@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.jikko = {
-    id: 'FF.FF',
+    id: '47.1',
     name: 'jikko',
     url: 'http://www.makeitall.co.kr',
     imageName: 'jikko.png',
