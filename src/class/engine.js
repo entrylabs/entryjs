@@ -920,13 +920,7 @@ Entry.Engine = class Engine {
      * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
-        let keyCode = e.code == undefined ? e.key : e.code;
-        if (!keyCode) {
-            return;
-        }
-        keyCode = keyCode.replace('Digit', '');
-        keyCode = keyCode.replace('Numpad', '');
-        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        const keyCode = Entry.Utils.inputToKeycode(e);
         if (!keyCode) {
             return;
         }
