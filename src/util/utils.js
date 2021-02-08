@@ -728,7 +728,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        doc.on('mousedown', function(e) {
+        doc.on('mousedown', (e) => {
             const selectedBlock = document.querySelector('.selected');
             if (selectedBlock) {
                 selectedBlock.classList.remove('selected');
