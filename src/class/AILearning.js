@@ -2,7 +2,9 @@ import TextLearning, { classes as TextClasses } from './learning/TextLearning';
 import Cluster, { classes as ClusterClasses } from './learning/Cluster';
 import Regression, { classes as RegressionClasses } from './learning/Regression';
 import Classification, { classes as ClassificationClasses } from './learning/Classification';
-import NumberClassification, { classes as NumberClassificationClasses } from './learning/NumberClassification';
+import NumberClassification, {
+    classes as NumberClassificationClasses,
+} from './learning/NumberClassification';
 
 const banClasses = [
     ...ClusterClasses,
@@ -27,7 +29,7 @@ export default class AILearning {
     #recordTime = 2000;
     #module = null;
     #tableData = null;
-    
+
     constructor(playground, isEnable = true) {
         this.#playground = playground;
         this.isEnable = isEnable;
@@ -38,50 +40,60 @@ export default class AILearning {
     }
 
     removeAllBlocks() {
-        const utilizeBlock  = Object.values(Entry.AI_UTILIZE_BLOCK_LIST).map(x => Object.keys(x.getBlocks())).flatten();
-        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
-        blocks.filter(x => !utilizeBlock.includes(x)).forEach((blockType) => {
-            Entry.Utils.removeBlockByType(blockType);
-        });
+        const utilizeBlock = Object.values(Entry.AI_UTILIZE_BLOCK_LIST)
+            .map((x) => Object.keys(x.getBlocks()))
+            .flatten();
+        const { blocks } = EntryStatic.getAllBlocks().find(
+            ({ category }) => category === 'ai_utilize'
+        );
+        blocks
+            .filter((x) => !utilizeBlock.includes(x))
+            .forEach((blockType) => {
+                Entry.Utils.removeBlockByType(blockType);
+            });
         this.banBlocks();
         this.destroy();
     }
 
     removeLearningBlocks() {
         if (!this.isLoaded) {
-            return ;
+            return;
         }
-        const { blocks } = EntryStatic.getAllBlocks().find(({category}) => category === 'ai_utilize');
-        blocks.filter(x => Entry.block[x].class === 'ai_learning').forEach((blockType) => {
-            Entry.Utils.removeBlockByType(blockType);
-        });
+        const { blocks } = EntryStatic.getAllBlocks().find(
+            ({ category }) => category === 'ai_utilize'
+        );
+        blocks
+            .filter((x) => Entry.block[x].class === 'ai_learning')
+            .forEach((blockType) => {
+                Entry.Utils.removeBlockByType(blockType);
+            });
         this.banBlocks();
         this.destroy();
     }
 
     load(modelInfo) {
-        const { 
-            url, 
-            labels, 
-            type, 
-            classes = [], 
-            model, 
-            id, 
-            _id, 
-            isActive = true, 
-            name, 
+        const {
+            url,
+            labels,
+            type,
+            classes = [],
+            model,
+            id,
+            _id,
+            isActive = true,
+            name,
             recordTime,
             trainParam,
             tableData,
             result,
         } = modelInfo || {};
 
-        if(!url ||  !this.isEnable || !isActive) {
-            return ;
+        if (!url || !this.isEnable || !isActive) {
+            return;
         }
         this.destroy();
 
-        this.#labels = labels || classes.map(({name}) => name);
+        this.#labels = labels || classes.map(({ name }) => name);
         this.#type = type;
         this.#url = url;
         this.#oid = _id;
@@ -95,48 +107,48 @@ export default class AILearning {
         } else {
             this.#tableData = tableData;
         }
-        
+
         if (this.#playground) {
-            this.#playground.reloadPlayground()
+            this.#playground.reloadPlayground();
         }
-        
+
         if (type === 'text') {
             this.#module = new TextLearning({
-                url, 
-                labels: this.#labels, 
-                type, 
-                recordTime
+                url,
+                labels: this.#labels,
+                type,
+                recordTime,
             });
-        } else if(type === 'number'){
-            this.#module = new NumberClassification({ 
+        } else if (type === 'number') {
+            this.#module = new NumberClassification({
                 name,
                 result,
                 url,
-                trainParam, 
+                trainParam,
                 table: this.#tableData,
             });
             this.#labels = this.#module.getLabels();
         } else if (type === 'cluster') {
-            this.#module = new Cluster({ 
+            this.#module = new Cluster({
                 name,
-                result, 
-                trainParam, 
+                result,
+                trainParam,
                 table: this.#tableData,
             });
         } else if (type === 'regression') {
-            this.#module = new Regression({ 
+            this.#module = new Regression({
                 name,
                 result,
                 url,
-                trainParam, 
+                trainParam,
                 table: this.#tableData,
-             });
+            });
         } else if (type === 'image' || type === 'speech') {
             this.#module = new Classification({
-                url, 
-                labels: this.#labels, 
-                type, 
-                recordTime
+                url,
+                labels: this.#labels,
+                type,
+                recordTime,
             });
         }
 
@@ -149,7 +161,7 @@ export default class AILearning {
     openInputPopup() {
         this.#module?.openInputPopup?.();
     }
-    
+
     train() {
         this.#module?.train?.();
     }
@@ -163,7 +175,7 @@ export default class AILearning {
     }
 
     getTrainOption() {
-        return this.#module?.getTrainOption?.();   
+        return this.#module?.getTrainOption?.();
     }
 
     getTableData() {
@@ -171,11 +183,11 @@ export default class AILearning {
     }
 
     getTrainResult() {
-        return this.#module?.getTrainResult?.()
+        return this.#module?.getTrainResult?.();
     }
 
     getPredictResult(index) {
-        return this.#module?.getResult?.(index)
+        return this.#module?.getResult?.(index);
     }
 
     getId() {
@@ -203,27 +215,26 @@ export default class AILearning {
     }
 
     async predict(obj) {
-        if(this.#module && this.#module.predict) {
+        if (this.#module && this.#module.predict) {
             this.result = await this.#module.predict(obj);
         }
         return [];
     }
 
-
     unbanBlocks() {
         this.banBlocks();
-        const blockMenu =  getBlockMenu(this.#playground);
+        const blockMenu = getBlockMenu(this.#playground);
         if (blockMenu) {
             this.#module?.unbanBlocks?.(blockMenu);
         }
     }
 
     banBlocks() {
-        const blockMenu =  getBlockMenu(this.#playground);
-        if (blockMenu) {       
+        const blockMenu = getBlockMenu(this.#playground);
+        if (blockMenu) {
             banClasses.forEach((clazz) => {
-                blockMenu.banClass(clazz); 
-            })
+                blockMenu.banClass(clazz);
+            });
         }
     }
 
@@ -235,7 +246,7 @@ export default class AILearning {
         this.result = [];
         this.isLoaded = false;
         this.#recordTime = 2000;
-        this.#tableData  = null;
+        this.#tableData = null;
         if (this.#module) {
             this.#module?.destroy?.();
             this.#module = null;
@@ -256,7 +267,7 @@ export default class AILearning {
             trainParam: this.getTrainOption(),
             result: this.getTrainResult(),
             tableData: this.#tableData,
-        }
+        };
     }
 }
 
@@ -275,14 +286,14 @@ function getBlockMenu(playground) {
 
 function createDataTable(classes) {
     try {
-        const [{samples}] = classes;
-        const [{data}] = samples;
-        if(typeof data === 'string') {
+        const [{ samples }] = classes;
+        const [{ data }] = samples;
+        if (typeof data === 'string') {
             return JSON.parse(data);
-        }else {
+        } else {
             return data;
         }
-    } catch(e) {
+    } catch (e) {
         console.log('set table error', e);
     }
 }
