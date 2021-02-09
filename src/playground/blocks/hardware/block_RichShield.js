@@ -1364,7 +1364,7 @@ Entry.RichShield.getBlocks = function() {
                 },
             ],
             def: { params: [], type: 'RichShield_DHT_Control_Read_Temper' },
-            paramsKeyMap: { dht_device: 0, tempVer: 1 },
+            paramsKeyMap: { dht_device: 0, tempMode: 1 },
             class: 'RichShield_DHT',
             isNotFor: ['RichShield'],
             func(sprite, script) {
@@ -1372,26 +1372,38 @@ Entry.RichShield.getBlocks = function() {
                 // 일반적으로는 getValue로 값을 가져오고
                 // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('dht_device', script);
-                const tempMode = script.getNumberValue('tempMode', script);
-                const Temperature = Entry.hw.portData.DHT;
+                const tempType = script.getNumberValue('tempMode', script);
+                const port = 12;
+                const opr = 2;
+                //"down = 0" or "up = 2"
+
+                const DIGITAL = Entry.hw.portData.DIGITAL;
 
                 // index number patched by Remoted 2020-11-20
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+
                 // DHT Temp-Reader type data protocol defined
                 Entry.hw.sendQueue.SET[device] = {
                     type: Entry.RichShield.sensorTypes.DHT,
                     data: {
-                        tempMode,
+                        tempMode: tempType,
                         dht_block_index: 1,
                     },
                     time: new Date().getTime(),
                 };
 
-                console.log(`temperature : ${Temperature}`);
-                return Temperature ? Temperature[12] | 0 : 0;
-                // Temperature pin on Richshied has 12
+                Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.DIGITAL] = {
+                    port,
+                    data: opr,
+                    time: new Date().getTime(),
+                };
+                return DIGITAL ? DIGITAL[12] || 0 : 0;
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Read_Temper(%1, %2)'] },
         },
