@@ -132,15 +132,6 @@ class DataTable {
                 data: table.slice(1),
             });
             source.updated = new Date();
-        } else {
-            const newSource = new DataTableSource({
-                chart,
-                data: table.slice(1),
-                fields: table[0],
-                name,
-            });
-            this.#tables.push(newSource);
-            selected.id = newSource.id;
         }
     }
 

@@ -4,7 +4,7 @@ import floor from 'lodash/floor';
 import LearningView from './LearningView';
 import Chart from './Chart';
 
-const GRAPH_COLOR = ['#4f80ff', '#f16670', '#6e5ae6', '#00b6b1', '#9fbaff', '#fcad93', '#c5b4ff', '#b3c3cd', '#2d51ac', '#a23941', '#423496', '#2a7d7f'];
+const GRAPH_COLOR = ['#6e5ae6', '#f16670', '#556670', '#00b6b1'];
 
 export const classes = [
     'ai_learning_train',
@@ -131,16 +131,8 @@ class Cluster {
             centroids,
         };
         this.#isTrained = true;
-        const { k } = this.#trainParam;
         this.#chart?.load({
             source: this.chartData,
-            description: `
-                    <em>${Lang.AiLearning.cluster_number}</em>   ${k}
-                    ${this.#fields.map(
-                        (field, index) =>
-                            `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>${field}`
-                    )}
-                `,
         });
         this.#trainCallback(100);
     }
@@ -159,10 +151,10 @@ class Cluster {
     findColor(id, a, b) {
         const { centroids, graphData } = this.#result;
         if (id === 'y') {
-            const { type = 0 } = graphData?.find(({ x, y }) => String(x) === String(a) && String(y) === String(b)) || {};
+            const { type = 0 } = graphData?.find(({ x, y }) => x === a && y === b) || {};
             return GRAPH_COLOR[type];
         } else if (id === 'centroid' && b) {
-            const type = centroids?.findIndex(([x]) => String(x) === String(a)) || 0;
+            const type = centroids?.findIndex(([x]) => x === a) || 0;
             return GRAPH_COLOR[type];
         }
         return undefined;
