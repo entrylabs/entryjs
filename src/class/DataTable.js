@@ -119,8 +119,7 @@ class DataTable {
             this.#tables.splice(end, 0, this.#tables.splice(start, 1)[0]);
         }
     }
-
-    setSource(selected) {
+    setSource({ chart, table, name, id }) {
         const { chart, table, name, id } = selected;
         const source = this.getSource(id);
         if (source) {
