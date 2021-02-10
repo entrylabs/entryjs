@@ -119,7 +119,8 @@ class DataTable {
             this.#tables.splice(end, 0, this.#tables.splice(start, 1)[0]);
         }
     }
-    setSource({ chart, table, name, id }) {
+
+    setSource(selected) {
         const { chart, table, name, id } = selected;
         const source = this.getSource(id);
         if (source) {
@@ -131,6 +132,15 @@ class DataTable {
                 data: table.slice(1),
             });
             source.updated = new Date();
+        } else {
+            const newSource = new DataTableSource({
+                chart,
+                data: table.slice(1),
+                fields: table[0],
+                name,
+            });
+            this.#tables.push(newSource);
+            selected.id = newSource.id;
         }
     }
 
