@@ -4,7 +4,7 @@ Entry.NeoSpider = {
     id: '41.1',
     name: 'NeoSpider',
     url: 'http://www.neo3ds.com/',
-    imageName: 'NeoSpider.png',
+    imageName: 'neo_spider.png',
     title: {
         ko: '네오스파이더',
         en: 'NeoSpider',
@@ -16,7 +16,8 @@ Entry.NeoSpider = {
         ultrasonic: 0,
         motion: 0,
         neopixel: 0,
-        outerMotor: 0,
+        outerLeftMotor: 0,
+        outerRightMotor: 0,
     },
     setZero() {
         let portMap = Entry.NeoSpider.PORT_MAP;
@@ -93,7 +94,7 @@ Entry.NeoSpider.setLanguage = function () {
                 neo_spider_neopixel: 'RGB LED %1번 빨 %2 녹 %3 파 %4 (으)로 켜기 %5',
                 neo_spider_neopixel_all_on: 'RGB LED 전체 빨 %1 녹 %2 파 %3 (으)로 켜기 %4',
                 neo_spider_neopixel_all_off: 'RGB LED 전체 끄기 %1',
-                neo_spider_outer_motor: '외부모터 %1 %2',
+                neo_spider_outer_motor: '디지털 %1핀 %2 %3',
             },
         },
         en: {
@@ -109,11 +110,12 @@ Entry.NeoSpider.setLanguage = function () {
                 neo_spider_neopixel: 'RGB LED number %1 turn on R %2 G %3 B %4 %5',
                 neo_spider_neopixel_all_on: 'All RGB LED turn on R %1 G %2 B %3 %4',
                 neo_spider_neopixel_all_off: 'All RGB LED turn off %1',
-                neo_spider_outer_motor: 'Outer motor %1 %2',
+                neo_spider_outer_motor: 'Digital %1 pin %2 %3',
             },
         },
     };
 };
+
 
 Entry.NeoSpider.blockMenuBlocks = [
     'neo_spider_get_analog_value',
@@ -491,11 +493,15 @@ Entry.NeoSpider.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 let port = script.getValue('PORT', script);
 
-                if (!sq.outerMotor) {
-                    sq.outerMotor = {};
+                if (!sq.outerLeftMotor) {
+                    sq.outerLeftMotor = {};
+                }
+                if (!sq.outerRightMotor) {
+                    sq.outerRightMotor = {};
                 }
 
-                sq.outerMotor = 3;
+                sq.outerLeftMotor = 2;
+                sq.outerRightMotor = 2;
 
                 return Entry.hw.portData[port] || 0;
             },
@@ -1260,11 +1266,21 @@ Entry.NeoSpider.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['정지', '0'],
-                        ['정회전', '1'],
-                        ['역회전', '2'],
+                        ['D5', '5'],
+                        ['D6', '6'],
                     ],
-                    value: '1',
+                    value: '5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['LOW', '0'],
+                        ['HIGH', '1'],
+                    ],
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1277,40 +1293,59 @@ Entry.NeoSpider.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [null,],
+                params: [
+                    5,
+                    null,
+                ],
                 type: 'neo_spider_outer_motor',
             },
             paramsKeyMap: {
-                STATE: 0,
+                PORT: 0,
+                STATE: 1,
             },
             class: 'NeoSpider',
             isNotFor: ['NeoSpider'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                let port = script.getNumberValue('PORT', script);
                 let state = script.getNumberValue('STATE', script);
-
-                if (!sq.outerMotor) {
-                    sq.outerMotor = {};
+                if (port == 5) {
+                    if (!sq.outerLeftMotor) {
+                        sq.outerLeftMotor = {};
+                    }
+                    sq.outerLeftMotor = state;
+                } else if (port == 6) {
+                    if (!sq.outerRightMotor) {
+                        sq.outerRightMotor = {};
+                    }
+                    sq.outerRightMotor = state;
                 }
-
-                sq.outerMotor = state;
-
                 return script.callReturn();
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'NeoSpider.outerMotor(%1)',
+                        syntax: 'NeoSpider.outerDigitalPin(%1, %2)',
                         textParams: [
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    ['stop', '0'],
-                                    ['forward', '1'],
-                                    ['backward', '2'],
+                                    ['D5', '5'],
+                                    ['D6', '6'],
                                 ],
-                                value: '1',
+                                value: '5',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['LOW', '0'],
+                                    ['HIGH', '1'],
+                                ],
+                                value: '0',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
