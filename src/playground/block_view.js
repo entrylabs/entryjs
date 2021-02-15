@@ -1057,7 +1057,7 @@ Entry.BlockView = class BlockView {
     }
 
     addSelected() {
-        document.activeElement.blur();
+        document?.activeElement?.blur();
         $(this.pathGroup).insertAfter(this._nextGroup);
         this.svgGroup.removeClass('activated');
         this.svgGroup.addClass('selected');
