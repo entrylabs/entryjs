@@ -60,6 +60,7 @@ Entry.jikko_esp = {
         MP3PLAY2: 32,
         MP3VOL: 33,
         OLEDTEXT: 34,
+        TOUCH: 35,
     },
 
     toneTable: {
@@ -161,6 +162,7 @@ Entry.jikko_esp.setLanguage = function() {
                 jikko_esp_set_mp3_play: 'mp3 %1 번 파일 재생 %2',
                 jikko_esp_set_mp3_play2: 'mp3 %1 번 파일 %2 초 동안 재생 %3',
                 jikko_esp_set_mp3_vol: 'mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
+                jikko_esp_touch: '%1 핀 터치센서 터치 상태',
             },
         },
         en: {
@@ -238,6 +240,7 @@ Entry.jikko_esp.blockMenuBlocks = [
     'jikko_esp_set_mp3_vol',
     'jikko_esp_set_mp3_play',
     'jikko_esp_set_mp3_play2',
+    'jikko_esp_touch',
 ];
 Entry.jikko_esp.getBlocks = function() {
     var tx;
@@ -3418,6 +3421,103 @@ Entry.jikko_esp.getBlocks = function() {
                 }
             },
             syntax: { js: [], py: ['jikko_esp.module_digital_bluetooth(%1)'] },
+        },
+
+        jikko_list_touch: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IO2', '2'],
+                        ['IO32', '32'],
+                        ['IO33', '33'],
+                        ['IO13', '13'],
+                        ['IO14', '14'],
+                        ['IO15', '15'],
+                        ['IO27', '27'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('NUM');
+            },
+        },
+        jikko_esp_touch: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_touch',
+                        params: ['2'],
+                    },
+                ],
+                type: 'jikko_esp_touch',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            isNotFor: ['jikko_esp'],
+            class: 'jikkoGet',
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var TCH = Entry.hw.portData.TOUCH;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port];
+
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+
+                Entry.hw.sendQueue['GET'][Entry.jikko_esp.sensorTypes.TOUCH] = {
+                    port: port,
+                    time: new Date().getTime(),
+                };
+                console.log('TOUCH VAL: ');
+
+                // return Entry.hw.portData.TOUCH || 0;
+
+                console.log(port);
+
+                var value = TCH <= 30 ? TCH || 0 : 0;
+
+                console.log(!value);
+                return !value;
+            },
+            syntax: {
+                js: [],
+                py: [{}],
+            },
         },
     };
 };
