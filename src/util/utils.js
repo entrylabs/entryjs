@@ -728,9 +728,12 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        // doc.on('mousedown', function(e) {
-        //     Entry.documentMousedown.notify(e);
-        // });
+        doc.on('mousedown', (e) => {
+            const selectedBlock = document.querySelector('.selected');
+            if (selectedBlock) {
+                selectedBlock.classList.remove('selected');
+            }
+        });
     }
 
     if (options.indexOf('mousemove') > -1) {
@@ -759,13 +762,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
         doc.on('keydown', (e) => {
-            let keyCode = e.code == undefined ? e.key : e.code;
-            if (!keyCode) {
-                return;
-            }
-            keyCode = keyCode.replace('Digit', '');
-            keyCode = keyCode.replace('Numpad', '');
-            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -783,13 +780,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.keyUpped = new Entry.Event(window);
         doc.on('keyup', (e) => {
-            let keyCode = e.code == undefined ? e.key : e.code;
-            if (!keyCode) {
-                return;
-            }
-            keyCode = keyCode.replace('Digit', '');
-            keyCode = keyCode.replace('Numpad', '');
-            keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+            const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -814,7 +805,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     }
 };
 Entry.Utils.inputToKeycode = (e) => {
-    let keyCode = e.code == undefined ? e.key : e.code;
+    //https://riptutorial.com/jquery/example/21119/originalevent
+    const event = e.originalEvent || e;
+    let keyCode = event.code == undefined ? event.key : event.code;
     if (!keyCode) {
         return null;
     }
