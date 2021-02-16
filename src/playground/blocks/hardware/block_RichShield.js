@@ -42,7 +42,7 @@ Entry.RichShield = {
         READ_BLUETOOTH: 9,
         WRITE_BLUETOOTH: 10,
         LCD: 11,
-        RGBLED: 12,
+        //RGBLED: 12,
         DCMOTOR: 13,
         OLED: 14,
         PIR: 15,
@@ -125,7 +125,8 @@ Entry.RichShield.setLanguage = function() {
                     'FND %1 번 : %2 출력하기:나머지0채우기 %3  %4 초 대기',
                 RichShield_DHT_event: '온습도센서(DHT11/22)-디지털 12번 핀',
                 RichShield_DHT_Control_Init_Process: '온습도 %1 번 : 디지털 %2 번 핀 / 버전 %3',
-                RichShield_DHT_Control_Read_Temper: '온습도 %1 번 : 온도값 읽기 %2',
+                RichShield_DHT_Control_Set_Temper: '온습도 %1 번 : 온도값 읽기 %2 모드설정',
+                RichShield_DHT_Control_Get_Temper: '온습도 %1 번 온도값 읽기',
                 /*
                 chocopi_control_button: '%1 컨트롤 %2번을 누름',
                 chocopi_control_event: '%1 %2 컨트롤 %3을 %4',
@@ -224,8 +225,8 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_DHT_event: 'Humidity/Temperature(DHT11/22)-Digital 12 pin',
                 RichShield_DHT_Control_Init_Process:
                     'Humidity/Temperature %1 : Digital %2 Pin, Version %3',
-
-                RichShield_DHT_Control_Read_Temper: 'Humidity/Temperature %1 : read Temperature %2',
+                RichShield_DHT_Control_Set_Temper: 'DHT %1 : read Temperature %2 Setting',
+                RichShield_DHT_Control_Get_Temper: 'DHT %1 : read Temperature',
                 /*
                 chocopi_control_button: '%1 controller %2 is pressed',
                 chocopi_control_event: '%1 When %2 controller %3 is %4',
@@ -300,8 +301,8 @@ Entry.RichShield.blockMenuBlocks = [
 
     'RichShield_DHT_event',
     'RichShield_DHT_Control_Init_Process',
-    'RichShield_DHT_Control_Read_Temper',
-    //'RichShield_DHT_Control_Read_Temper',
+    'RichShield_DHT_Control_Set_Temper',
+    'RichShield_DHT_Control_Get_Temper',
     //'RichShield_get_number_sensor_value',
     /*
     'RichShield_get_number_sensor_value',
@@ -1337,7 +1338,64 @@ Entry.RichShield.getBlocks = function() {
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Init_Process(%1, %2, %3)'] },
         },
-        RichShield_DHT_Control_Read_Temper: {
+        RichShield_DHT_Control_Set_Temper: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['C', 0],
+                        ['F', 1],
+                    ],
+                    value: 0,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_DHT_Control_Set_Temper' },
+            paramsKeyMap: { dht_device: 0, tempMode: 1 },
+            class: 'RichShield_DHT',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
+                // 일반적으로는 getValue로 값을 가져오고
+                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
+                const device = script.getNumberValue('dht_device', script);
+                const tempType = script.getNumberValue('tempMode', script);
+
+                // index number patched by Remoted 2020-11-20
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+
+                // DHT Temp-Reader type data protocol defined
+                Entry.hw.sendQueue.SET[device] = {
+                    type: Entry.RichShield.sensorTypes.DHT,
+                    data: {
+                        tempMode: tempType,
+                        dht_block_index: 1,
+                    },
+                    time: new Date().getTime(),
+                };
+                console.log(`TempMode = ${tempType}`);
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield_DHT_Control_Set_Temper(%1, %2)'] },
+        },
+        RichShield_DHT_Control_Get_Temper: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1351,20 +1409,9 @@ Entry.RichShield.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['C', 1],
-                        ['F', 2],
-                    ],
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
             ],
-            def: { params: [], type: 'RichShield_DHT_Control_Read_Temper' },
-            paramsKeyMap: { dht_device: 0, tempVer: 1 },
+            def: { params: [], type: 'RichShield_DHT_Control_Get_Temper' },
+            paramsKeyMap: { dht_device: 0 },
             class: 'RichShield_DHT',
             isNotFor: ['RichShield'],
             func(sprite, script) {
@@ -1372,28 +1419,24 @@ Entry.RichShield.getBlocks = function() {
                 // 일반적으로는 getValue로 값을 가져오고
                 // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('dht_device', script);
-                const tempMode = script.getNumberValue('tempMode', script);
-                const Temperature = Entry.hw.portData.DHT;
+                const port = 12;
+                const DHT = Entry.hw.portData.DHT;
 
-                // index number patched by Remoted 2020-11-20
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
                 }
+
                 // DHT Temp-Reader type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.DHT,
-                    data: {
-                        tempMode,
-                        dht_block_index: 1,
-                    },
+                Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.DHT] = {
+                    port,
                     time: new Date().getTime(),
                 };
 
-                console.log(`temperature : ${Temperature}`);
-                return Temperature ? Temperature[12] | 0 : 0;
-                // Temperature pin on Richshied has 12
+                console.log(`DHT Sensor Value = ${DHT}`);
+
+                return DHT ? (DHT || 0).toFixed(1) : 0;
             },
-            syntax: { js: [], py: ['RichShield_DHT_Control_Read_Temper(%1, %2)'] },
+            syntax: { js: [], py: ['RichShield_DHT_Control_Get_Temper(%1, %2)'] },
         },
     };
 };
