@@ -61,6 +61,9 @@ Entry.jikko_esp = {
     MP3VOL: 33,
     RESET_: 34,
     TOUCH: 35,
+    GYRO_X: 36,
+    GYRO_Y: 37,
+    GYRO_Z: 38,
   },
 
   toneTable: {
@@ -165,6 +168,7 @@ Entry.jikko_esp.setLanguage = function () {
         jikko_esp_set_mp3_vol: "mp3 볼륨 %1 으로 설정 (0 ~ 30) %2",
 
         jikko_esp_touch: "%1 핀 터치센서 터치 상태",
+        jikko_get_gyro: '자이로 센서 %1값',
       },
     },
     en: {
@@ -219,6 +223,7 @@ Entry.jikko_esp.setLanguage = function () {
         jikko_esp_set_mp3_vol: "mp3 볼륨 %1 으로 설정 (0 ~ 30) %2",
 
         jikko_esp_touch: "%1 핀 터치센서 터치 상태",
+        jikko_get_gyro: '자이로 센서 %1값',
       },
     },
   };
@@ -247,6 +252,7 @@ Entry.jikko_esp.blockMenuBlocks = [
   // 'jikko_esp_set_mp3_play',
   // 'jikko_esp_set_mp3_play2',
   "jikko_esp_touch",
+  "jikko_get_gyro",
 ];
 Entry.jikko_esp.getBlocks = function () {
   var tx;
@@ -3397,7 +3403,7 @@ Entry.jikko_esp.getBlocks = function () {
           Entry.hw.sendQueue["SET"] = {};
         }
         delete Entry.hw.sendQueue["SET"][port];
-        
+
         if (!Entry.hw.sendQueue["GET"]) {
           Entry.hw.sendQueue["GET"] = {};
         }
@@ -3409,7 +3415,7 @@ Entry.jikko_esp.getBlocks = function () {
         console.log("TOUCH VAL: ");
 
         // return Entry.hw.portData.TOUCH || 0;
-  
+
         console.log(port);
 
         var value = (TCH <= 30) ? TCH || 0 : 0;
@@ -3420,6 +3426,67 @@ Entry.jikko_esp.getBlocks = function () {
       syntax: {
         js: [],
         py: [{}],
+      },
+    },
+    jikko_get_gyro: {
+      color: EntryStatic.colorSet.block.default.HARDWARE,
+      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+      skeleton: 'basic_string_field',
+      fontColor: '#fff',
+      params: [
+        {
+          type: 'Dropdown',
+          options: [
+            ['X', '1'],
+            ['Y', '2'],
+            ['Z', '3'],
+          ],
+          value: '1',
+          fontSize: 11,
+          bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+          arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        },
+      ],
+      def: {
+        params: [null],
+        type: 'jikko_get_gyro',
+      },
+      paramsKeyMap: {
+        GYRO_TYPE: 0,
+      },
+      isNotFor: ['jikko_esp'],
+      class: 'jikkoGet',
+      func: function (sprite, script) {
+        var type = script.getNumberValue("GYRO_TYPE");
+
+        if (!Entry.hw.sendQueue["SET"]) {
+          Entry.hw.sendQueue["SET"] = {};
+        }
+        delete Entry.hw.sendQueue["SET"][1];
+
+        if (!Entry.hw.sendQueue["GET"]) {
+          Entry.hw.sendQueue["GET"] = {};
+        }
+
+        console.log(type);
+        if (type == 1) {
+          Entry.hw.sendQueue["GET"][Entry.jikko_esp.sensorTypes.GYRO_X] = {
+            time: new Date().getTime(),
+          };
+          return Entry.hw.portData.GYRO_X || 0;
+        }
+        else if (type == 2) {
+          Entry.hw.sendQueue["GET"][Entry.jikko_esp.sensorTypes.GYRO_Y] = {
+            time: new Date().getTime(),
+          };
+          return Entry.hw.portData.GYRO_Y || 0;
+        }
+        else if (type == 3) {
+          Entry.hw.sendQueue["GET"][Entry.jikko_esp.sensorTypes.GYRO_Z] = {
+            time: new Date().getTime(),
+          };
+          return Entry.hw.portData.GYRO_Z || 0;
+        }
       },
     },
   };
