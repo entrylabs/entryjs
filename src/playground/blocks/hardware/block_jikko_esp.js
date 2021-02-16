@@ -223,6 +223,7 @@ Entry.jikko_esp.blockMenuBlocks = [
     // 'jikko_esp_set_digital_buzzer',
     'jikko_esp_get_dht_temp_value',
     'jikko_esp_get_dht_humi_value',
+    'jikko_esp_get_digital_ultrasonic',
     'jikko_esp_set_neopixel_init',
     'jikko_esp_set_neopixel_bright',
     'jikko_esp_set_neopixel',
@@ -3243,6 +3244,36 @@ Entry.jikko_esp.getBlocks = function() {
                 py: [{}],
             },
         },
+        jikko_list_oled_color: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['흰색', '0'],
+                        ['검정색', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('NUM');
+            },
+        },
         jikko_esp_oled_text_size: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3273,8 +3304,8 @@ Entry.jikko_esp.getBlocks = function() {
                         params: ['1'],
                     },
                     {
-                        type: 'text',
-                        params: ['1'],
+                        type: 'jikko_list_oled_color',
+                        params: ['0'],
                     },
                     null,
                 ],
