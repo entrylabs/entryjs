@@ -31,7 +31,7 @@ Entry.Choco.setLanguage = function () {
                 choco_move_backward: "뒤로 %1 %2 이동 %3",
                 choco_turn_left: "왼쪽으로 %1 %2 돌기 %3",
                 choco_turn_right: "오른쪽으로 %1 %2 돌기 %3",
-                choco_move_right_left: "오른쪽으로 %1 %2,왼쪽 %3 %4 이동 %5",
+                choco_move_right_left: "오른쪽으로 %1 왼쪽으로 %2 %3 이동 %4",
                 choco_onoff_led_rear: "뒤쪽 LED %1 %2",
                 choco_set_led_color: "%1 LED %2 %3",
                 choco_play_sound: "%1 소리내기 %2",
@@ -117,7 +117,7 @@ Entry.Choco.setLanguage = function () {
                 choco_move_backward: "move backward %1 %2 block %3",
                 choco_turn_left: "%1 %2 to the left %3",
                 choco_turn_right: "%1 %2 to the right %3",
-                choco_move_right_left: "move right %1 %2,left %3 %4 %5",
+                choco_move_right_left: "move right %1 left %2 %3 %4",
                 choco_onoff_led_rear: "Rear LED %1 %2",
                 choco_set_led_color: "%1 LED %2 %3",
                 choco_play_sound: "play %1 %2",
@@ -524,18 +524,7 @@ Entry.Choco.getBlocks = function () {
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.choco_move_step, 'step'],
-                        [Lang.Blocks.choco_move_cm, 'cm'],
-                    ],
-                    value: 'step',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
+                },            
                 {
                     type: 'Block',
                     accept: 'string',
@@ -560,14 +549,13 @@ Entry.Choco.getBlocks = function () {
             ],
             events: {},
             def: {
-                params: [1, 'step', 1, 'step', null],
+                params: [1, 1, 'step', null],
                 type: 'choco_move_right_left',
             },
             paramsKeyMap: {
-                MOVE_RIGHT_CNT: 0,
-                MOVE_RIGHT_UNIT: 1,
-                MOVE_LEFT_CNT: 2,
-                MOVE_LEFT_UNIT: 3,
+                MOVE_RIGHT_CNT: 0,                
+                MOVE_LEFT_CNT: 1,
+                MOVE_UNIT: 2,
             },
             class: 'choco_command',
             isNotFor: ['choco'],
@@ -576,9 +564,8 @@ Entry.Choco.getBlocks = function () {
                 const pd = Entry.hw.portData;
 
                 const move_right_cnt = script.getValue('MOVE_RIGHT_CNT');
-                const move_left_cnt = script.getValue('MOVE_LEFT_CNT');
-                let move_right_unit = script.getValue('MOVE_RIGHT_UNIT');
-                let move_left_unit = script.getValue('MOVE_LEFT_UNIT');
+                const move_left_cnt = script.getValue('MOVE_LEFT_CNT');                
+                let move_unit = script.getValue('MOVE_UNIT');
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -590,9 +577,8 @@ Entry.Choco.getBlocks = function () {
                         type: "move_right_left",
                         data: {
                             param1: move_right_cnt,
-                            param2: move_right_unit,
-                            param3: move_left_cnt,
-                            param4: move_left_unit,
+                            param2: move_left_cnt,
+                            param3: move_unit,
                         },
                         time: Date.now()
                     };
