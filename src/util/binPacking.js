@@ -178,7 +178,7 @@ class BinPacking {
     }
 
     replace(id, x = 0, y = 0, width, height) {
-        const item = this.itemList.get(id);
+        const item = this.itemList.get(id) || {};
         item.x = x + 230;
         item.y = y + 105;
         item.w = width;
