@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.jikko_esp = {
-    id: 'EF.FF',
+    id: 'FF.FF',
     name: 'jikko_esp',
     url: 'http://www.makeitall.co.kr',
     imageName: 'jikko_esp.png',
@@ -155,8 +155,7 @@ Entry.jikko_esp.setLanguage = function() {
                 jikko_esp_get_lcd_col: '%1',
                 jikko_esp_module_digital_lcd: 'LCD화면 %1 열 %2 행 부터 %3 출력 %4',
                 jikko_esp_lcd_clear: 'LCD 화면 지우기 %1',
-                jikko_esp_module_digital_oled: 'OLED 화면 %1 열 %2 행 부터 %3 입력 %4',
-                jikko_esp_oled_display: 'OLED 문자열 출력하기 %1',
+                jikko_esp_module_digital_oled: 'OLED 화면 %1 열 %2 행 부터 %3 출력 %4',
                 jikko_esp_oled_clear: 'OLED 화면 지우기 %1',
                 jikko_esp_oled_text_size: 'OLED 글씨 크기 %1 색상 %2로 설정 %3',
                 jikko_esp_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
@@ -224,6 +223,7 @@ Entry.jikko_esp.blockMenuBlocks = [
     'jikko_esp_toggle_led',
     'jikko_esp_set_digital_servo',
     'jikko_esp_set_digital_pwm',
+    'jikko_esp_get_analog_value',
     // 'jikko_esp_set_digital_buzzer_toggle',
     // 'jikko_esp_set_digital_buzzer_volume',
     // 'jikko_esp_set_digital_buzzer',
@@ -241,10 +241,8 @@ Entry.jikko_esp.blockMenuBlocks = [
     'jikko_esp_get_lcd_col',
     'jikko_esp_lcd_clear',
     'jikko_esp_module_digital_oled',
-    'jikko_esp_oled_display',
     'jikko_esp_oled_clear',
     'jikko_esp_oled_text_size',
-
     'jikko_esp_set_mp3_init',
     'jikko_esp_set_mp3_vol',
     'jikko_esp_set_mp3_play',
@@ -406,6 +404,48 @@ Entry.jikko_esp.getBlocks = function() {
                         ['33', '33'],
                     ],
                     value: '10',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        jikko_esp_list_adc: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['2', '2'],
+                        ['4', '4'],
+                        ['12', '12'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['25', '25'],
+                        ['26', '26'],
+                        ['27', '27'],
+                        ['32', '32'],
+                        ['33', '33'],
+                        ['34', '34'],
+                        ['35', '35'],
+                        ['36', '36'],
+                        ['39', '39'],
+                    ],
+                    value: '34',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1197,7 +1237,7 @@ Entry.jikko_esp.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'jikko_esp_list_analog_basic',
+                        type: 'jikko_esp_list_adc',
                     },
                 ],
                 type: 'jikko_esp_get_analog_value',
@@ -1209,11 +1249,24 @@ Entry.jikko_esp.getBlocks = function() {
             isNotFor: ['jikko_esp'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+                console.log(port);
 
-                if (port[0] === 'A') port = port.substring(1);
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port];
 
-                return ANALOG ? ANALOG[port] || 0 : 0;
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+
+                Entry.hw.sendQueue['GET'][Entry.jikko_esp.sensorTypes.ANALOG] = {
+                    port: port,
+                    time: new Date().getTime(),
+                };
+                console.log(Entry.hw.portData.ANALOG);
+
+                return Entry.hw.portData.ANALOG[port] || 0;
             },
             syntax: { js: [], py: ['jikko_esp.get_analog_value(%1)'] },
         },
@@ -3231,62 +3284,6 @@ Entry.jikko_esp.getBlocks = function() {
                         type: Entry.jikko_esp.sensorTypes.OLEDTEXT,
                         data: {
                             cmd: 1,
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, timeValue);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-            syntax: {
-                js: [],
-                py: [{}],
-            },
-        },
-        jikko_esp_oled_display: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [],
-                type: 'jikko_esp_oled_display',
-            },
-            class: 'jikkoModule',
-            isNotFor: ['jikko_esp'],
-            func(sprite, script) {
-                if (!script.isStart) {
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
-
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
-
-                    Entry.hw.sendQueue['SET'][1] = {
-                        type: Entry.jikko_esp.sensorTypes.OLEDTEXT,
-                        data: {
-                            cmd: 3,
                         },
                         time: new Date().getTime(),
                     };
