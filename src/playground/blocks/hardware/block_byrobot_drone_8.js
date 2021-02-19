@@ -4472,7 +4472,7 @@ Entry.byrobot_drone_8.getBlocks = function()
             isNotFor: ['byrobot_drone_8'],
             func(sprite, script)
             {
-                const headless = script.getField('HEADLESS') ? 1 : 2;
+                const headless = script.getField('HEADLESS');
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x03, headless);
             },
             syntax: {
