@@ -37,12 +37,12 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
     DataTable.setTables(project.tables);
+    Entry.aiLearning.load(project.learning);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
-    Entry.aiLearning.load(project.learning);
     Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
     if (Entry.aiUtilizeBlocks.length > 0) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {

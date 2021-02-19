@@ -131,7 +131,7 @@ class Regression {
             let percent = 0;
             this.#trainCallback(1);
             const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
-            const { model, trainHistory, a, b, graphData = [], rsquared } = await train(
+            const { model, trainHistory, a, b, graphData = [], rsquared, normResult } = await train(
                 inputs,
                 outputs,
                 this.#trainParam,
@@ -157,6 +157,7 @@ class Regression {
             this.#result = {
                 graphData: (graphData.originalPoints || []).slice(0, 1000),
                 accuracy,
+                normResult,
                 rsquared,
                 equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
             }
@@ -178,7 +179,20 @@ class Regression {
         this.#model = await tf.loadLayersModel(url);
     }
 
+    convertNomalResult() {
+        const { inputMin, inputMax, outputMax, outputMin } = this.#result.normResult;
+        if(!Array.isArray(inputMin)) {
+            return this.#result.normResult;
+        }
+        return {
+            inputMin: tf.tensor1d(inputMin),
+            inputMax: tf.tensor1d(inputMax),
+            outputMax: tf.tensor1d(outputMax),
+            outputMin: tf.tensor1d(outputMin)
+        };
+    }
     async predict(data) {
+        const { inputMin, inputMax, outputMax, outputMin } = this.convertNomalResult();
         return tf.tidy(() => {
             let convertedData;
             if(Array.isArray(data)) {
@@ -186,7 +200,8 @@ class Regression {
             } else {
                 convertedData = tf.tensor1d([data]);
             }
-            const preds = this.#model.predict(convertedData);
+            convertedData = convertedData.sub(inputMin).div(inputMax.sub(inputMin));
+            const preds = this.#model.predict(convertedData).mul(outputMax.sub(outputMin)).add(outputMin);
             const [result] = preds.dataSync();
             this.#predictResult = _floor(result, 2);
             return this.#predictResult;
@@ -409,6 +424,7 @@ async function train(
 
     return {
         model,
+        normResult,
         trainHistory: history,
         a: Array.from(a.dataSync()).map(x => _floor(x, 2)),
         b: _floor(b.dataSync()[0], 2),
