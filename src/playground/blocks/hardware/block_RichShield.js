@@ -127,6 +127,7 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_DHT_Control_Init_Process: '온습도 %1 번 : 디지털 %2 번 핀 / 버전 %3',
                 RichShield_DHT_Control_Set_Temper: '온습도 %1 번 : 온도값 읽기 %2 모드설정',
                 RichShield_DHT_Control_Get_Temper: '온습도 %1 번 온도값 읽기',
+                RichShield_DHT_Control_Get_Humid: '온습도 %1 번 : 습도값 읽기',
                 /*
                 chocopi_control_button: '%1 컨트롤 %2번을 누름',
                 chocopi_control_event: '%1 %2 컨트롤 %3을 %4',
@@ -227,6 +228,7 @@ Entry.RichShield.setLanguage = function() {
                     'Humidity/Temperature %1 : Digital %2 Pin, Version %3',
                 RichShield_DHT_Control_Set_Temper: 'DHT %1 : read Temperature %2 Setting',
                 RichShield_DHT_Control_Get_Temper: 'DHT %1 : read Temperature',
+                RichShield_DHT_Control_Get_Humid: 'DHT %1 : read Humid',
                 /*
                 chocopi_control_button: '%1 controller %2 is pressed',
                 chocopi_control_event: '%1 When %2 controller %3 is %4',
@@ -303,6 +305,7 @@ Entry.RichShield.blockMenuBlocks = [
     'RichShield_DHT_Control_Init_Process',
     'RichShield_DHT_Control_Set_Temper',
     'RichShield_DHT_Control_Get_Temper',
+    'RichShield_DHT_Control_Get_Humid',
     //'RichShield_get_number_sensor_value',
     /*
     'RichShield_get_number_sensor_value',
@@ -1374,8 +1377,10 @@ Entry.RichShield.getBlocks = function() {
                 // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('dht_device', script);
                 const tempType = script.getNumberValue('tempMode', script);
+                const port = 12;
 
                 // index number patched by Remoted 2020-11-20
+
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
@@ -1420,7 +1425,6 @@ Entry.RichShield.getBlocks = function() {
                 // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('dht_device', script);
                 const port = 12;
-                const DHT = Entry.hw.portData.DHT;
 
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
@@ -1432,11 +1436,53 @@ Entry.RichShield.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                console.log(`DHT Sensor Value = ${DHT}`);
+                console.log((Entry.hw.portData.DHT || 0).toFixed(1));
 
-                return DHT ? (DHT || 0).toFixed(1) : 0;
+                return (Entry.hw.portData.DHT || 0).toFixed(1);
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Get_Temper(%1, %2)'] },
+        },
+        RichShield_DHT_Control_Get_Humid: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_DHT_Control_Get_Humid' },
+            paramsKeyMap: { dht_device: 0 },
+            class: 'RichShield_DHT',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
+                // 일반적으로는 getValue로 값을 가져오고
+                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
+                const device = script.getNumberValue('dht_device', script);
+                const port = 12;
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+
+                // DHT Temp-Reader type data protocol defined
+                Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.DHT] = {
+                    port,
+                    time: new Date().getTime(),
+                };
+
+                console.log((Entry.hw.portData.DHT || 0).toFixed(1));
+
+                return (Entry.hw.portData.DHT || 0).toFixed(1);
+            },
+            syntax: { js: [], py: ['RichShield_DHT_Control_Get_Humid(%1)'] },
         },
     };
 };
