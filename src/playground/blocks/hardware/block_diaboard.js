@@ -180,7 +180,7 @@ Entry.Diaboard = {
         // 뛰어 오르는
         5: {
             gap : 120,
-            commands : [ "b:n:48:20", "b:n:50:20", "b:n:52:20", "b:n:58:20", "b:n:53:20", "b:x", "b:x", "b:x" ] 
+            commands : [ "b:n:48:20", "b:n:50:20", "b:n:52:20", "b:n:48:20", "b:n:53:20", "b:x", "b:x", "b:x" ] 
         },
         // 뛰어 내리는
         6: {
@@ -278,7 +278,7 @@ Entry.Diaboard = {
         // this.fireCommand( "m:x" );      // 모터 끄기
         // this.fireCommand( "l:x:0" );    // LED 끄기
     },
-    id: 'FF.FF',
+    id: '3.2',
     name: 'diaboard',
     url: 'http://www.bitbrick.cc/',
     imageName: 'diaboard.png',
@@ -2236,17 +2236,17 @@ Entry.Diaboard.getBlocks = function() {
                 if( effectIndex == 0 ) {
                     // 1. 신바람
                     let command     = "n";
-                    let time        = 5;    
                     let inc         = 0;
                     let delay       = 20;
+                    let time        = 5;    
                     for( let i = 0; i <= 50; i++ ) {
                         let setNote = 0;
-                        if ( ( i / 5 ) == 0) setNote = i * 2;
-                        else if ( ( i / 5 ) == 1 ) setNote = i * 3;
-                        else if ( ( i / 5 ) == 2 ) setNote = i * 4;
-                        else if ( ( i / 5 ) == 3 ) setNote = i * 2;
-                        else if ( ( i / 5 ) == 4 ) setNote = i * 4;
-                        else if ( ( i / 5 )  > 4 ) setNote = i * 2;
+                        if ( parseInt( i / 5 ) == 0) setNote = i * 2;
+                        else if ( parseInt( i / 5 ) == 1 ) setNote = i * 3;
+                        else if ( parseInt( i / 5 ) == 2 ) setNote = i * 4;
+                        else if ( parseInt( i / 5 ) == 3 ) setNote = i * 2;
+                        else if ( parseInt( i / 5 ) == 4 ) setNote = i * 4;
+                        else if ( parseInt( i / 5 )  > 4 ) setNote = i * 2;
 
                         setNote         = setNote + 20;
                         let note        = setNote;
@@ -2495,7 +2495,7 @@ Entry.Diaboard.getBlocks = function() {
                 ];
                 let bpm         = script.getNumberValue('BPM');
                 bpm             = isNaN( bpm ) ? 120 : bpm;                         // 유효하지 않은 값은 120bpm으로 설정
-                bpm             = Math.max( Math.min( bpm, 3000 ), 30);             // bpm은 30 ~ 3000
+                bpm             = Math.max( Math.min( bpm, 300 ), 30);             // bpm은 30 ~ 300
                 let second      = Entry.Diaboard.convertTimeByBPM( bpm, 0.5 );      // 리턴 단위 초, ( bpm, 박자 )
                 let totalSecond = second * 8;
                 let octave      = 4;                                                // 기본값 4 옥타브
