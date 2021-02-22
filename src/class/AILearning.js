@@ -40,9 +40,15 @@ export default class AILearning {
     }
 
     removeAllBlocks() {
-        const utilizeBlock = Object.values(Entry.AI_UTILIZE_BLOCK_LIST)
+        const utilizeBlock = [];
+        Object.values(Entry.AI_UTILIZE_BLOCK_LIST)
             .map((x) => Object.keys(x.getBlocks()))
-            .flatten();
+            .forEach((category) => {
+                category.forEach((block) => {
+                    utilizeBlock.push(block);
+                });
+            });
+
         const { blocks } = EntryStatic.getAllBlocks().find(
             ({ category }) => category === 'ai_utilize'
         );
