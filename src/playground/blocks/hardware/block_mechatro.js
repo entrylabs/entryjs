@@ -274,7 +274,7 @@ class mechatro {
         return {
             ko: { // ko.js에 작성하던 내용
                 template: {
-                    mechatro_get_dc_motor_current: "%1모터 사용전류값[A]",
+                    mechatro_get_dc_motor_current: "%1모터 전류값[mA]",
                     mechatro_get_digital: "%1 디지털 값",
                     mechatro_get_sensor_value: "%1 센서값",
                     mechatro_set_get_sensor_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
@@ -295,7 +295,7 @@ class mechatro {
             },
             en: { // en.js에 작성하던 내용
                 template: {
-                    mechatro_get_dc_motor_current: "Get 1%motor current[A]",
+                    mechatro_get_dc_motor_current: "Get 1%motor current[mA]",
                     mechatro_get_digital: "%1",
                     mechatro_get_sensor_value: "Analog %1 Sensor value",
                     mechatro_set_get_sensor_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
@@ -1337,7 +1337,7 @@ class mechatro {
                     Entry.mechatro.transferMode(portNo, mode);
 
                     if (Entry.hw.portData[portNo] !== undefined) {
-                        return Entry.hw.portData[portNo] / 100; // [A]
+                        return Entry.hw.portData[portNo] * 10; // [cA] → [mA]
                     } else {
                         return 0;
                     }
