@@ -186,8 +186,9 @@ Entry.Painter = class Painter {
         )}/image/${filename}.${imageType}`;
     }
 
-    addPicture(picture, isChangeShape) {
-        const { imageType = 'png' } = picture || {};
+    addPicture(picture = {}, isChangeShape) {
+        picture.imageType = picture.imageType || 'png';
+        const { imageType } = picture;
         const imageSrc = this.getImageSrc(picture);
 
         isChangeShape && (this.isImport = true);
