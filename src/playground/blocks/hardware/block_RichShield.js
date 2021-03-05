@@ -114,9 +114,12 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_set_digital_toggle: '디지털 %1 번 핀 %2 %3',
                 RichShield_get_digital: '디지털 %1 번 핀 센서 %2 값',
                 RichShield_get_digital_toggle: '디지털 %1 번 핀 센서 %2 값',
+
                 RichShield_LCD_event: 'LCD Display(1602)-I2C',
-                RichShield_LCD_Control_init: 'LCD %1 번 :  주소 %2 로 설정',
-                RichShield_LCD_Control_Display: 'LCD화면 %1 줄에 %2 나타내기 %3',
+                RichShield_LCD_Control_init: 'LCD %1 번 : 주소 %2 로 설정',
+                RichShield_LCD_Control_Display: 'LCD %1 번 : %2 행 %3 열에 %4 출력 %5',
+                RichShield_LCD_Control_Clear: 'LCD %1 번 : 지우기',
+
                 RichShield_FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
                 RichShield_FND_Control_init: 'FND %1 번 : 디지털 CLK %2, DIO %3 번 핀으로 설정',
                 RichShield_FND_Control_diplay_brightness: 'FND %1 번 : 밝기 %2 단계로 설정',
@@ -215,9 +218,13 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_set_digital_toggle: 'Digital %1 pin %2 %3',
                 RichShield_get_digital: 'Digital %1 pin sensor value %2',
                 RichShield_get_digital_toggle: 'Digital %1 pin sensor value %2',
+
                 RichShield_LCD_event: 'LCD Display(1602)-I2C',
                 RichShield_LCD_Control_init: 'LCD %1 :  Address set to %2',
-                RichShield_LCD_Control_Display: 'LCD %1 line %2 appear %3',
+                RichShield_LCD_Control_Display: 'LCD %1  : row %2  column %3 display %4 %5',
+                RichShield_LCD_Control_Clear: 'LCD %1 : Clear Display',
+
+                //RichShield_LCD_Control_Display: 'LCD %1 line %2 appear %3',
                 RichShield_FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
                 RichShield_FND_Control_init: 'FND %1 : Digital CLK %2  , DIO %3 pin setting',
                 RichShield_FND_Control_diplay_brightness: 'FND %1 : Brightness %2 level setting',
@@ -296,6 +303,7 @@ Entry.RichShield.blockMenuBlocks = [
     'RichShield_LCD_event',
     'RichShield_LCD_Control_init',
     'RichShield_LCD_Control_Display',
+    'RichShield_LCD_Control_Clear',
 
     'RichShield_FND_event',
     'RichShield_FND_Control_init',
@@ -801,7 +809,7 @@ Entry.RichShield.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof addr_val === 'string') {
                         for (let i = 0; i < 16; i++) {
-                            text[i] = string.charCodeAt(i);
+                            text[i] = string.charAt(i);
                         }
                     } else if (typeof addr_val === 'number') {
                         text[0] = 1;
@@ -874,6 +882,7 @@ Entry.RichShield.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
+        //LCD Number번 :Number  행 Number 열에 String  출력
         RichShield_LCD_Control_Display: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -882,6 +891,14 @@ Entry.RichShield.getBlocks = function() {
             template: Lang.template.RichShield_LCD_Control_Display,
             statements: [],
             params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -900,28 +917,41 @@ Entry.RichShield.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'RichShield_list_digital_lcd',
+                        type: 'number',
+                        params: [1],
+                    },
+                    {
+                        type: 'number',
+                        params: [1],
+                    },
+                    {
+                        type: 'number',
+                        params: [1],
                     },
                     {
                         type: 'text',
-                        params: ['Gorilla-Cell!!'],
+                        params: ['RichShield !!'],
                     },
                     null,
                 ],
                 type: 'RichShield_LCD_Control_Display',
             },
             paramsKeyMap: {
-                LINE: 0,
-                STRING: 1,
+                //LINE: 0,
+                line: 0,
+                Row: 1,
+                Col: 2,
+                STRING: 3,
             },
             class: 'RichShield_LCD',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                const line = script.getNumberValue('LINE');
+                const line = script.getNumberValue('line'); // No used this data in RichShield
+                const Row = parseInt(script.getNumberValue('Row'));
+                const Col = parseInt(script.getNumberValue('Col'));
                 const string = script.getValue('STRING');
                 const text = [];
 
-                // index number patched by Remoted 2020-11-20
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (let i = 0; i < 16; i++) {
@@ -943,9 +973,18 @@ Entry.RichShield.getBlocks = function() {
                     const fps = Entry.FPS || 60;
                     const timeValue = (60 / fps) * 50;
 
+                    console.log(
+                        // eslint-disable-next-line max-len
+                        `Row : ${Row} / Col : ${Col} / text : ${text}`
+                    );
+
+                    //Entry.hw.sendQueue.SET[line] = {
                     Entry.hw.sendQueue.SET[line] = {
                         type: Entry.RichShield.sensorTypes.LCD,
                         data: {
+                            block_index: 2,
+                            displayRow: Row,
+                            displayCol: Col,
                             text0: text[0],
                             text1: text[1],
                             text2: text[2],
@@ -980,6 +1019,55 @@ Entry.RichShield.getBlocks = function() {
                 }
             },
             syntax: { js: [], py: ['RichShield.LCD_Display(%1, %2)'] },
+        },
+        RichShield_LCD_Control_Clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['1', 1]],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_LCD_Control_Clear' },
+            paramsKeyMap: { lcd_device: 0 },
+            class: 'RichShield_LCD',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
+                // 일반적으로는 getValue로 값을 가져오고
+                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
+                const device = script.getNumberValue('lcd_device', script);
+
+                /*
+                  LCD Clear Block Added with block_index number 3
+                  Writer : Remoted
+                  Date : 2021-03-01
+                */
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+
+                // LCD_Init type data protocol defined
+                Entry.hw.sendQueue.SET[device] = {
+                    type: Entry.RichShield.sensorTypes.LCD,
+                    data: {
+                        block_index: 3,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield_LCD_Control_Clear(%1)'] },
         },
         RichShield_FND_event: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1238,8 +1326,10 @@ Entry.RichShield.getBlocks = function() {
                 display_str_converted = display_str.toString();
 
                 for (let i = 0; i < display_str_converted.length; i++) {
-                    splited_array.push(parseInt(display_str_converted.charAt(i)));
+                    splited_array.push(parseInt(display_str_converted.charCodeAt(i)));
                 }
+
+                console.log(`splited_array :${splited_array}`);
 
                 // FND_Init type data protocol defined
                 Entry.hw.sendQueue.SET[device] = {
