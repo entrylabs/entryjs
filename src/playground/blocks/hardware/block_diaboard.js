@@ -500,6 +500,7 @@ Entry.Diaboard.getBlocks = function() {
         [Lang.Blocks.DIABOARD_tonicsolfa_la,         9],
         [Lang.Blocks.DIABOARD_tonicsolfa_la_sharp,  10],
         [Lang.Blocks.DIABOARD_tonicsolfa_si,        11],
+        [Lang.Blocks.DIABOARD_tonicsolfa_high_do,   12],
         [Lang.Blocks.DIABOARD_tonicsolfa_rest,     100],
     ];
 
@@ -3005,6 +3006,7 @@ Entry.Diaboard.setLanguage = function() {
                 DIABOARD_tonicsolfa_la:         '라',
                 DIABOARD_tonicsolfa_la_sharp:   '라#(시b)',
                 DIABOARD_tonicsolfa_si:         '시',
+                DIABOARD_tonicsolfa_high_do:    '(높은)도',
                 DIABOARD_tonicsolfa_rest:       '쉬기',
             },
         },
@@ -3116,6 +3118,7 @@ Entry.Diaboard.setLanguage = function() {
                 DIABOARD_tonicsolfa_la:         'la',
                 DIABOARD_tonicsolfa_la_sharp:   'la#(sib)',
                 DIABOARD_tonicsolfa_si:         'si',
+                DIABOARD_tonicsolfa_high_do:    '(C5)do',
                 DIABOARD_tonicsolfa_rest:       'rest',
             },
         },
