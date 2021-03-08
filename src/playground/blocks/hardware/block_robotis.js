@@ -56,7 +56,6 @@ Entry.Robotis_carCont = {
             script.isStart = true;
             script.timeFlag = 1;
             //data setting
-           
             this.setRobotisData(data);
             this.update();
 
@@ -125,26 +124,18 @@ Entry.Robotis_openCM70 = {
         NONE: 0,
         WRITE: 3,
         READ: 2,
-        SYNCWRITE: 4,
-        REGWRITE: 5,
-        ACTION: 6
     },
     CONTROL_TABLE: {
         // [default address, default length, address (when reads together), length (when reads together)]
         CM_LED_R: [79, 1],
         CM_LED_G: [80, 1],
         CM_LED_B: [81, 1],
-
-        RB_LED_L: [40, 1],
-        RB_LED_R: [41, 1],
-        RB_LED_B: [40, 2],
-
-        CM_BUZZER_INDEX: [60, 1], //[84, 1]
-        CM_BUZZER_TIME: [63, 1], //[85, 1]
+        CM_BUZZER_INDEX: [84, 1],
+        CM_BUZZER_TIME: [85, 1],
         CM_SOUND_DETECTED: [86, 1],
         CM_SOUND_DETECTING: [87, 1],
         CM_USER_BUTTON: [26, 1],
-        CM_MOTION: [66, 2], //[66,1]
+        CM_MOTION: [66, 1],
 
         AUX_SERVO_POSITION: [152, 2],
         AUX_IR: [168, 2],
@@ -176,9 +167,6 @@ Entry.Robotis_openCM70 = {
         PORT5: false,
         PORT6: false,
     },
-    DXL_POSITION: {
-        values: [0,0,0,0,0,0,0,0]
-    },
     setZero: function () {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
@@ -193,25 +181,19 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],*/
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 21, 2, 20],
-            // [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 12, 0],
-            // [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 710, 2, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 163, 2, 30975],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 12, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
-            // [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 86, 1, 0], // 최종 소리 // add by kjs start 170605
-            // [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 108, 4, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 86, 1, 0], // 최종 소리 // add by kjs start 170605
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 108, 4, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 108, 1, 0], // port 3
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 109, 1, 0], // port 4
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 110, 1, 0], // port 5
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 111, 1, 0] // port 6 // add by kjs end 170605*/
         ]);
 
-      
         Entry.Robotis_carCont.update();
 
         Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = false;
@@ -237,9 +219,7 @@ Entry.Robotis_openCM70 = {
         "ko": "로보티즈 IoT",
         "en": "Robotis Open CM70"
     },
-    delay: 30,
-    readDelay: 30,
-
+    delay: 15,
 };
 
 Entry.Robotis_openCM70EDU = {
@@ -379,7 +359,6 @@ Entry.Robotis_openCM70EDU = {
     },
     delay: 15,
 };
-
 
 Entry.Robotis_carCont.blockMenuBlocks = [
     'robotis_carCont_sensor_value',
@@ -1033,29 +1012,19 @@ Entry.Robotis_carCont.getBlocks = function () {
 
 Entry.Robotis_openCM70.blockMenuBlocks = [
     //robotis_openCM70
-    // 'robotis_openCM70_sensor_value',
-    
-    //입력
-    'robotis_openCM70_cm_ir_value',
-    'robotis_openCM70_cm_ir_compare',
-    'robotis_openCM70_cm_btn_value',
-    'robotis_openCM70_cm_joystick_value',
-    'robotis_RB_mic',
-    'robotis_RB_imu',
-    'robotis_RB_roll_pitch', // 값 안나옴.
-    // 'robotis_openCM70_cm_buzzer_melody',
-    // 'robotis_openCM70_cm_sound_detected_clear',
+    'robotis_openCM70_sensor_value',
+    'robotis_openCM70_aux_sensor_value',
     'robotis_openCM70_cm_buzzer_index',
-    'robotis_openCM70_cm_screen',
+    'robotis_openCM70_cm_buzzer_melody',
+    'robotis_openCM70_cm_sound_detected_clear',
     'robotis_openCM70_cm_led',
-    'robotis_openCM70_RGee_go',
-    'robotis_openCM70_RGee_stop',
-    // 'robotis_dxl_test',
-    'robotis_dxl_control',
-    'robotis_dxl_each_control',
-    'robotis_openCM70_RGee_motion',
     'robotis_openCM70_cm_motion',
-
+    'robotis_openCM70_aux_motor_speed',
+    'robotis_openCM70_aux_servo_mode',
+    'robotis_openCM70_aux_servo_speed',
+    'robotis_openCM70_aux_servo_position',
+    'robotis_openCM70_aux_led_module',
+    'robotis_openCM70_aux_custom',
     'robotis_openCM70_cm_custom_value',
     'robotis_openCM70_cm_custom',
 ];
@@ -1137,7 +1106,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 ) {
                     if (
                         Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
                     ) {
                         //throw new Entry.Utils.AsyncError();
                         return Entry.hw.sendQueue.prevResult;
@@ -1168,681 +1137,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 py: ['Robotis.opencm70_cm_custom_value(%1, %2)'],
             },
         },
-        robotis_openCM70_cm_ir_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1번', '360'],
-                        ['2번', '362'],
-                        ['3번', '364'],
-                        ['4번', '366'],
-                        ['5번', '368'],
-                        ['6번', '370'],
-                    ],
-                    value: '360',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null
-                ],
-                type: 'robotis_openCM70_cm_ir_value',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                return result;
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.opencm70_cm_ir_value(%1)'],
-            },
-        },
-        robotis_openCM70_cm_ir_compare: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['1번', '360'],
-                        ['2번', '362'],
-                        ['3번', '364'],
-                        ['4번', '366'],
-                        ['5번', '368'],
-                        ['6번', '370'],
-                    ],
-                    value: '360',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['>', '0'],
-                        ['<', '1'],
-                        ['=', '2'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                    200
-                ],
-                type: 'robotis_openCM70_cm_ir_compare',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-                COMPARE_OP: 1,
-                COMPARE_VAL: 2,
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-                var compareValue = script.getNumberValue('COMPARE_VAL');
-                var compareOP = script.getNumberValue('COMPARE_OP');
-
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay//200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        switch(compareOP) {
-                            case 0:
-                                return Entry.hw.sendQueue.prevResult > compareValue;
-                            case 1:
-                                return Entry.hw.sendQueue.prevResult < compareValue;
-                            case 2:
-                                return Entry.hw.sendQueue.prevResult == compareValue;
-                        }
-
-                        
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                switch(compareOP) {
-                    case 0:
-                        return result > compareValue;
-                    case 1:
-                        return result < compareValue;
-                    case 2:
-                        return result == compareValue;
-                }
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.robotis_openCM70_cm_ir_compare(%1)'],
-            },
-        },
-        robotis_RB_mic:{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [],
-            events: {},
-            def: {
-                params: [
-                    null
-                ],
-                type: 'robotis_RB_mic',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = 119;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                return result;
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.robotis_RB_mic()'],
-            },
-        },
-        robotis_RB_imu:{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['x', '78'],//72
-                        ['y', '80'],//74
-                        ['z', '82']//76
-                    ],
-                    value: '78',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['가속도', '0'],//72
-                        ['자이로', '6'],//74
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                }
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null
-                ],
-                type: 'robotis_RB_imu',
-            },
-            paramsKeyMap: {
-                AXIS: 0,
-                MODE: 1,
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getField('AXIS', script) - script.getField('MODE', script);
-                
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                return result;
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.robotis_RB_imu()'],
-            },
-        },
-        robotis_RB_roll_pitch:{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['Roll', '70'],//72
-                        ['Pitch', '88'],//74
-                    ],
-                    value: '70',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                }
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                ],
-                type: 'robotis_RB_roll_pitch',
-            },
-            paramsKeyMap: {
-                AXIS: 0,
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 2;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getNumberValue('AXIS');
-                
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        return Entry.hw.sendQueue.prevResult;
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                return result;
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.robotis_RB_roll_pitch(%1)'],
-            },
-        },
-        robotis_openCM70_cm_joystick_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [ 
-                        ['중앙', '0'],
-                        ['←', '1'],
-                        ['→', '2'],
-                        ['↑', '3'],
-                        ['↓', '4'],
-                        ['↖', '5'],
-                        ['↗', '6'],
-                        ['↙', '7'],
-                        ['↘', '8'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                }
-            ],
-            events: {},
-            def: {
-                params: [
-                    null
-                ],
-                type: 'robotis_openCM70_cm_joystick_value',
-            },
-            paramsKeyMap: {
-                COMPARE_VAL: 0,
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = 50;
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                var compareValue = script.getNumberValue('COMPARE_VAL', script);
-
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 200
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        return (Entry.hw.sendQueue.prevResult == compareValue);
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-
-
-                return (result == compareValue);
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.openCM70_cm_joystick_value()'],
-            },
-        },
-        robotis_openCM70_cm_btn_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['실행', '45'],
-                        ['뒤로', '42'],
-                    ],
-                    value: '45',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['눌림', '1'],
-                        ['안눌림', '0'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null
-                ],
-                type: 'robotis_openCM70_cm_btn_value',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-                COMPARE_VAL: 1
-            },
-            class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                var scope = script.executor.scope;
-
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 1;
-                var data_value = 0;
-
-                var data_default_address = 0;
-                var data_default_length = 0;
-
-                
-                data_address = script.getNumberValue('VALUE');
-
-                data_default_address = data_address;
-                data_default_length = data_length;
-
-                var compareValue = script.getNumberValue('COMPARE_VAL');
-                if (
-                    Entry.hw.sendQueue.prevAddress &&
-                    Entry.hw.sendQueue.prevAddress == data_default_address
-                ) {
-                    if (
-                        Entry.hw.sendQueue.prevTime &&
-                        new Date() - Entry.hw.sendQueue.prevTime < 50
-                    ) {
-                        //throw new Entry.Utils.AsyncError();
-                        return (Entry.hw.sendQueue.prevResult == compareValue);
-                    }
-                }
-
-                Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
-                ]);
-                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
-                Entry.Robotis_carCont.update();
-
-                var result = Entry.hw.portData[data_default_address];
-                Entry.hw.sendQueue.prevAddress = data_default_address;
-                Entry.hw.sendQueue.prevTime = new Date();
-                Entry.hw.sendQueue.prevResult = result;
-
-                return (result == compareValue);
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.opencm70_cm_btn_value(%1)'],
-            },
-        },
-
         robotis_openCM70_sensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2243,60 +1537,60 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.General.note_a + '(0)', '32'],
-                        [Lang.General.note_a + '#(1)', '33'],
-                        [Lang.General.note_b + '(2)', '34'],
-                        [Lang.General.note_c + '(3)', '35'],
-                        [Lang.General.note_c + '#(4)', '36'],
-                        [Lang.General.note_d + '(5)', '37'],
-                        [Lang.General.note_d + '#(6)', '38'],
-                        [Lang.General.note_e + '(7)', '39'],
-                        [Lang.General.note_f + '(8)', '40'],
-                        [Lang.General.note_f + '#(9)', '41'],
-                        [Lang.General.note_g + '(10)', '42'],
-                        [Lang.General.note_g + '#(11)', '43'],
-                        [Lang.General.note_a + '(12)', '44'],
-                        [Lang.General.note_a + '#(13)', '45'],
-                        [Lang.General.note_b + '(14)', '46'],
-                        [Lang.General.note_c + '(15)', '47'],
-                        [Lang.General.note_c + '#(16)', '48'],
-                        [Lang.General.note_d + '(17)', '49'],
-                        [Lang.General.note_d + '#(18)', '50'],
-                        [Lang.General.note_e + '(19)', '51'],
-                        [Lang.General.note_f + '(20)', '52'],
-                        [Lang.General.note_f + '#(21)', '53'],
-                        [Lang.General.note_g + '(22)', '54'],
-                        [Lang.General.note_g + '#(23)', '55'],
-                        [Lang.General.note_a + '(24)', '56'],
-                        [Lang.General.note_a + '#(25)', '57'],
-                        [Lang.General.note_b + '(26)', '58'],
-                        [Lang.General.note_c + '(27)', '59'],
-                        [Lang.General.note_c + '#(28)', '60'],
-                        [Lang.General.note_d + '(29)', '61'],
-                        [Lang.General.note_d + '#(30)', '62'],
-                        [Lang.General.note_e + '(31)', '63'],
-                        [Lang.General.note_f + '(32)', '64'],
-                        [Lang.General.note_f + '#(33)', '65'],
-                        [Lang.General.note_g + '(34)', '66'],
-                        [Lang.General.note_g + '#(35)', '67'],
-                        [Lang.General.note_a + '(36)', '68'],
-                        [Lang.General.note_a + '#(37)', '69'],
-                        [Lang.General.note_b + '(38)', '70'],
-                        [Lang.General.note_c + '(39)', '71'],
-                        [Lang.General.note_c + '#(40)', '72'],
-                        [Lang.General.note_d + '(41)', '73'],
-                        [Lang.General.note_d + '#(42)', '74'],
-                        [Lang.General.note_e + '(43)', '75'],
-                        [Lang.General.note_f + '(44)', '76'],
-                        [Lang.General.note_f + '#(45)', '77'],
-                        [Lang.General.note_g + '(46)', '78'],
-                        [Lang.General.note_g + '#(47)', '79'],
-                        [Lang.General.note_a + '(48)', '80'],
-                        [Lang.General.note_a + '#(49)', '81'],
-                        [Lang.General.note_b + '(50)', '82'],
-                        [Lang.General.note_c + '(51)', '83'],
+                        [Lang.General.note_a + '(0)', '0'],
+                        [Lang.General.note_a + '#(1)', '1'],
+                        [Lang.General.note_b + '(2)', '2'],
+                        [Lang.General.note_c + '(3)', '3'],
+                        [Lang.General.note_c + '#(4)', '4'],
+                        [Lang.General.note_d + '(5)', '5'],
+                        [Lang.General.note_d + '#(6)', '6'],
+                        [Lang.General.note_e + '(7)', '7'],
+                        [Lang.General.note_f + '(8)', '8'],
+                        [Lang.General.note_f + '#(9)', '9'],
+                        [Lang.General.note_g + '(10)', '10'],
+                        [Lang.General.note_g + '#(11)', '11'],
+                        [Lang.General.note_a + '(12)', '12'],
+                        [Lang.General.note_a + '#(13)', '13'],
+                        [Lang.General.note_b + '(14)', '14'],
+                        [Lang.General.note_c + '(15)', '15'],
+                        [Lang.General.note_c + '#(16)', '16'],
+                        [Lang.General.note_d + '(17)', '17'],
+                        [Lang.General.note_d + '#(18)', '18'],
+                        [Lang.General.note_e + '(19)', '19'],
+                        [Lang.General.note_f + '(20)', '20'],
+                        [Lang.General.note_f + '#(21)', '21'],
+                        [Lang.General.note_g + '(22)', '22'],
+                        [Lang.General.note_g + '#(23)', '23'],
+                        [Lang.General.note_a + '(24)', '24'],
+                        [Lang.General.note_a + '#(25)', '25'],
+                        [Lang.General.note_b + '(26)', '26'],
+                        [Lang.General.note_c + '(27)', '27'],
+                        [Lang.General.note_c + '#(28)', '28'],
+                        [Lang.General.note_d + '(29)', '29'],
+                        [Lang.General.note_d + '#(30)', '30'],
+                        [Lang.General.note_e + '(31)', '31'],
+                        [Lang.General.note_f + '(32)', '32'],
+                        [Lang.General.note_f + '#(33)', '33'],
+                        [Lang.General.note_g + '(34)', '34'],
+                        [Lang.General.note_g + '#(35)', '35'],
+                        [Lang.General.note_a + '(36)', '36'],
+                        [Lang.General.note_a + '#(37)', '37'],
+                        [Lang.General.note_b + '(38)', '38'],
+                        [Lang.General.note_c + '(39)', '39'],
+                        [Lang.General.note_c + '#(40)', '40'],
+                        [Lang.General.note_d + '(41)', '41'],
+                        [Lang.General.note_d + '#(42)', '42'],
+                        [Lang.General.note_e + '(43)', '43'],
+                        [Lang.General.note_f + '(44)', '44'],
+                        [Lang.General.note_f + '#(45)', '45'],
+                        [Lang.General.note_g + '(46)', '46'],
+                        [Lang.General.note_g + '#(47)', '47'],
+                        [Lang.General.note_a + '(48)', '48'],
+                        [Lang.General.note_a + '#(49)', '49'],
+                        [Lang.General.note_b + '(50)', '50'],
+                        [Lang.General.note_c + '(51)', '51'],
                     ],
-                    value: '32',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2363,7 +1657,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
                 data_value_2 = cmBuzzerIndex;
 
-                // console.log("buzzer send");
                 var data_sendqueue = [
                     [
                         data_instruction,
@@ -2539,82 +1832,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_sound_clear()'] },
         },
-        robotis_openCM70_cm_screen: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["무표정", '2817'],
-                        ["짜증", '2818'], //Lang.Blocks.robotis_common_green_color
-                        ["귀여움", '2819'],
-                        ["화냄", '2820'],
-                        ["행복", '2821'],
-
-                        ["배고픔", '2822'],
-                        ["웃기1", '2823'], //Lang.Blocks.robotis_common_green_color
-                        ["웃기2", '2824'],
-                        ["당황", '2825'],
-                        ["졸림", '2826'],
-
-                        ["쿨쿨", '2827'],
-                        ["찡그리기", '2828'], //Lang.Blocks.robotis_common_green_color
-                        ["하품", '2829'],
-                        
-                        ["애니메이션 1", "30730"],
-                        ["애니메이션 2", "30731"],
-                        ["애니메이션 3", "30732"],
-                        ["애니메이션 4", "30733"],
-                        ["애니메이션 5", "30734"],
-                    ],
-                    value: '2817',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null, null, null],
-                type: 'robotis_openCM70_cm_screen',
-            },
-            paramsKeyMap: {
-                BACKGROUND: 0,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var screenValue = script.getField('BACKGROUND', script);
-                
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 163;
-                var data_length = 2;
-                var data_value = screenValue;
-                console.log("screen send");
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
-                ];
-              
-
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 1000
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
-        },
         robotis_openCM70_cm_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2624,11 +1841,11 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["왼쪽", 'RB_LED_L'],
-                        ["오른쪽", 'RB_LED_R'], //Lang.Blocks.robotis_common_green_color
-                        ["양쪽", 'RB_LED_B'],
+                        [Lang.Blocks.robotis_common_red_color, 'CM_LED_R'],
+                        [Lang.Blocks.robotis_common_green_color, 'CM_LED_G'],
+                        [Lang.Blocks.robotis_common_blue_color, 'CM_LED_B'],
                     ],
-                    value: 'RB_LED_L',
+                    value: 'CM_LED_R',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2656,14 +1873,14 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 type: 'robotis_openCM70_cm_led',
             },
             paramsKeyMap: {
-                RB_LED: 0,
+                CM_LED: 0,
                 VALUE: 1,
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
-                var cmLed = script.getField('RB_LED', script);
+                var cmLed = script.getField('CM_LED', script);
                 var value = script.getField('VALUE', script);
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
@@ -2671,38 +1888,28 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                var data_address_2 = 0;
-                var data_length_2 = 0;
-                var sCase = false;
-                if (cmLed == 'RB_LED_L') {
+                if (cmLed == 'CM_LED_R') {
                     data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.RB_LED_L[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
                     data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.RB_LED_L[1];
-                } else if (cmLed == 'RB_LED_R') {
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
+                } else if (cmLed == 'CM_LED_G') {
                     data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.RB_LED_R[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0];
                     data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.RB_LED_R[1];
-                } else if (cmLed == 'RB_LED_B') {
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1];
+                } else if (cmLed == 'CM_LED_B') {
                     data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.RB_LED_B[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
                     data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.RB_LED_B[1];
-                    if(value != 0){
-                        value = 257;
-                    }
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
                 }
 
                 data_value = value;
-                console.log("led send");
+
                 var data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
-                if(sCase) {
-                    data_sendqueue.push([data_instruction, data_address_2, data_length_2, data_value]);
-                    sCase = false;
-                }
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2710,569 +1917,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
-        },
-        robotis_dxl_control: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
-                ],
-                type: 'robotis_dxl_control',
-            },
-            
-            paramsKeyMap: {
-                ANGLE1: 0,
-                ANGLE2: 1,
-                ANGLE3: 2,
-                ANGLE4: 3,
-                
-                ANGLE5: 4,
-                ANGLE6: 5,
-                ANGLE7: 6,
-                ANGLE8: 7,
-                TIME: 8
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func(entity, script) {
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 19;
-                var data_length = 1;
-                var data_value = 1;
-
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0],
-                ]
-                
-                var keyWord = 'ANGLE';
-                for(let i = 1; i < 9; i++) {   
-                    keyWord = 'ANGLE' + i;
-                    var value = script.getNumberValue('ANGLE' + i, script);
-                
-                    var engValue = 2048;
-                    engValue = Math.floor(Math.round(value * 4096) / 360 + 2048);
-
-                    var time = script.getNumberValue('TIME', script) * 1000;
-                    
-                    var velocity = 0;
-                
-                    if(time == 0) {
-                        velocity = 0;
-                    } else {
-                        velocity = Math.round(Math.floor(60 * Math.abs(value - Entry.Robotis_openCM70.DXL_POSITION.values[i - 1]) * 1000 / 360 / time)/0.229);
-                    }
-
-                    Entry.Robotis_openCM70.DXL_POSITION.values[i - 1] = value;
-
-                    data_sendqueue.push([Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 112, 8, velocity * 4294967296 + engValue, [i]]);
-                    
-                }
-                
-                data_sendqueue.push([Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0]);
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    time + Entry.Robotis_openCM70.delay
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_control(%1)'] },
-        },
-
-        robotis_dxl_each_control: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1번", '1'],
-                        ["2번", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3번", '3'],
-                        ["4번", '4'],
-                        ["5번", '5'],
-                        ["6번", '6'],
-                        ["7번", '7'],
-                        ["8번", '8'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                ],
-                type: 'robotis_dxl_each_control',
-            },
-            
-            paramsKeyMap: {
-                DXLNUM: 0,
-                ANGLE: 1,
-                TIME: 2,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func(entity, script) {
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 19;
-                var data_length = 1;
-                var data_value = 1;
-
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0],
-
-                    
-                ]
-                
-                var dxlID = script.getField('DXLNUM', script);
-                var angle = script.getNumberValue('ANGLE', script);
-                var time = script.getNumberValue('TIME', script) * 1000;
-
-                var engValue = 2048;
-                engValue = Math.floor(Math.round(angle * 4096) / 360 + 2048);
-                var velocity = 0;
-                
-                if(time == 0) {
-                    velocity = 0;
-                } else {
-                    velocity = Math.round(Math.floor(60 * Math.abs(angle - Entry.Robotis_openCM70.DXL_POSITION.values[dxlID - 1]) * 1000 / 360 / time)/0.229);
-                }
-
-                Entry.Robotis_openCM70.DXL_POSITION.values[dxlID - 1] = angle;
-                data_sendqueue.push([Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 112, 8, velocity * 4294967296 + engValue, [dxlID]]);
-                
-                data_sendqueue.push([Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0]);
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    time + Entry.Robotis_openCM70.delay
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_each_control(%1)'] },
-        },
-
-        robotis_dxl_test: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                
-            ],
-            events: {},
-            def: {
-                params: [],
-                type: 'robotis_dxl_test',
-            },
-            paramsKeyMap: {
-                
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                //19번지에 1바이트로 1 설정 
-
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 19;
-                var data_length = 1;
-                var data_value = 1;
-                console.log("dxl send");
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
-                    // [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [33]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 64, 1, 1, [34]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0],
-               
-
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [2]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [3]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [4]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [5]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [6]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [7]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [8]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0],
-
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2548, [1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 1548, [2]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [3]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [4]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [5]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2048, [6]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 2248, [7]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.REGWRITE, 116, 4, 1848, [8]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.ACTION, 0, 0, 0],
-                    
-                    /*[Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 64, 1, 60, [1,2], [1,1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 64, 1, 60, [3,4], [1,1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 64, 1, 60, [5,6], [1,1]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 64, 1, 60, [7,8], [1,1]],
-
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [1], [2048]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [2], [2048]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [3], [2048]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [4], [2048]],
-
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [5], [2048]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [6], [2048]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [7], [2048]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [8], [2048]],
-
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [1], [1948]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [2], [1948]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [3], [1948]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [4], [1948]],
-
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [5], [1948]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [6], [1948]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [7], [1948]],
-                    [Entry.Robotis_openCM70.INSTRUCTION.SYNCWRITE, 116, 4, 60, [8], [1948]],*/
-
-                ];
-               
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    100
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
-        },
-        robotis_openCM70_RGee_go: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['전진', '1'],
-                        ['후진', '2'],
-                        ['좌회전', '3'],
-                        ['우회전', '4'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                    null,
-                ],
-                type: 'robotis_openCM70_RGee_go',
-            },
-            paramsKeyMap: {
-                SPEED: 0,
-                DIRECTION: 1,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var speed = script.getNumberValue('SPEED', script);
-                var direction = script.getField('DIRECTION', script);
-                
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 710;
-                var data_length = 2;
-                var data_value = 0;
-                
-                switch(direction) {
-                    case '1':
-                        data_value = speed * 256 + speed;
-                        break;
-                    case '2':
-                        data_value = (256 - speed) * 256 + (256 - speed);
-                        break;
-                    case '3':
-                        data_value = speed * 256 + (256 - speed);
-                        break;
-                    case '4':
-                        data_value = (256 - speed) * 256 + speed;
-                        break;
-                    default:
-                        data_value = 0;
-                        break;
-                }
-                console.log(speed);
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                ];
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.opencm70_RGee_go(%1, %2)'],
-            },
-        },
-        robotis_openCM70_RGee_stop: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [],
-            events: {},
-            def: {
-                params: [
-                   
-                ],
-                type: 'robotis_openCM70_RGee_stop',
-            },
-            paramsKeyMap: {
-                SPEED: 0,
-                DIRECTION: 1,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var speed = script.getNumberValue('SPEED', script);
-                var direction = script.getField('DIRECTION', script);
-                
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 710;
-                var data_length = 2;
-                var data_value = 0;
-            
-                console.log("rg stop send");
-                var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                    ],
-                ];
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: {
-                js: [],
-                py: ['Robotis.opencm70_RGee_stop()'],
-            },
-        },
-        robotis_openCM70_RGee_motion: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["일어서기", '50007'],
-                        ["앉기", '50008'], //Lang.Blocks.robotis_common_green_color
-                        ["발버둥", '50071'],
-                        ["발들기", '50072'],
-                    ],
-                    value: '50007',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'robotis_openCM70_RGee_motion',
-            },
-            paramsKeyMap: {
-                MotionNumber: 0,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
-
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
-                data_value = script.getField('MotionNumber', script);
-
-                console.log("rg motion send");
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    //[data_instruction, data_address, data_length, 0],
-                ];
-                
-                //console.log(script);
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    
-                    data_value > 50070 ? 2000 : 1000 
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_RGee_motion(%1)'] },
         },
         robotis_openCM70_cm_motion: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3281,28 +1925,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['기본자세', '1'],
-                        ["전진", '4'],
-                        ["우전진", '5'],
-                        ["좌전진", '6'],
-                        ["후진", '7'], //Lang.Blocks.robotis_common_green_color
-                        ["오른쪽으로", '8'],
-                        ["왼쪽으로", '9'],
-                        ["우회전", '10'],
-                        ["좌회전", '11'],
-                        ["앞으로 일어나기", '12'],
-                        ["뒤로 일어나기", '13'],
-                        ["공격 1", '14'],
-                        ["공격 2", '15'],
-                        ["공격 3", '16'],
-                        ["공격 4", '17']
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Indicator',
@@ -3313,7 +1937,10 @@ Entry.Robotis_openCM70.getBlocks = function () {
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'number',
+                        params: ['1'],
+                    },
                     null,
                 ],
                 type: 'robotis_openCM70_cm_motion',
@@ -3329,32 +1956,19 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_address = 0;
                 var data_length = 0;
                 var data_value = 0;
-                var extraTime = 0; 
 
                 data_address =
                     Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
-                data_value = script.getField('VALUE', script);
+                data_value = script.getNumberValue('VALUE', script);
 
-
-                console.log("motion send");
                 var data_sendqueue = [
-                     
+                    [data_instruction, data_address, data_length, data_value],
                 ];
-                if(data_value == 10 || data_value == 11) {
-                    data_sendqueue.push([data_instruction, data_address, data_length, data_value]);
-                } else if(data_value == 7) {
-                    data_sendqueue.push([data_instruction, data_address, data_length, 0]);
-                    data_sendqueue.push([data_instruction, data_address, data_length, data_value]);
-                    extraTime = 500;
-                } else {
-                    data_sendqueue.push([data_instruction, data_address, data_length, data_value]);
-                    data_sendqueue.push([data_instruction, data_address, data_length, 0]);
-                }
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + extraTime
+                    Entry.Robotis_openCM70.delay
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
@@ -3910,6 +2524,101 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     accept: 'string',
                 },
                 {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_cm_custom',
+            },
+            paramsKeyMap: {
+                ADDRESS: 0,
+                VALUE: 1,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address = script.getNumberValue('ADDRESS');
+                data_value = script.getNumberValue('VALUE');
+                if (data_value > 65535) {
+                    data_length = 4;
+                } else if (data_value > 255) {
+                    data_length = 2;
+                } else {
+                    data_length = 1;
+                }
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_custom(%1, %2)'] },
+        },
+        //endregion robotis 로보티즈
+    };
+};
+
+/*Entry.Robotis_openCM70EDU.blockMenuBlocks = [
+    //Robotis_openCM70EDU
+    'robotis_openCM70_sensor_value',
+    'robotis_openCM70_aux_sensor_value',
+    'robotis_openCM70_cm_buzzer_index',
+    'robotis_openCM70_cm_buzzer_melody',
+    'robotis_openCM70_cm_sound_detected_clear',
+    'robotis_openCM70_cm_led',
+    'robotis_openCM70_cm_motion',
+    'robotis_openCM70_aux_motor_speed',
+    'robotis_openCM70_aux_servo_mode',
+    'robotis_openCM70_aux_servo_speed',
+    'robotis_openCM70_aux_servo_position',
+    'robotis_openCM70_aux_led_module',
+    'robotis_openCM70_aux_custom',
+    'robotis_openCM70_cm_custom_value',
+    'robotis_openCM70_cm_custom',
+];
+Entry.Robotis_openCM70EDU.getBlocks = function () {
+    return {
+        //region robotis 로보티즈 openCM70
+        robotis_openCM70_cm_custom_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
                     type: 'Dropdown',
                     options: [
                         ['BYTE', 'BYTE'],
@@ -3920,6 +2629,1474 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_cm_custom_value',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+                SIZE: 1,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                var size = script.getStringField('SIZE');
+
+                if (size == 'BYTE') {
+                    data_length = 1;
+                } else if (size == 'WORD') {
+                    data_length = 2;
+                } else if (size == 'DWORD') {
+                    data_length = 4;
+                }
+
+                data_address = script.getNumberValue('VALUE');
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_cm_custom_value(%1, %2)'],
+            },
+        },
+        robotis_openCM70_sensor_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [
+                            Lang.Blocks.robotis_cm_sound_detected,
+                            'CM_SOUND_DETECTED',
+                        ],
+                        [
+                            Lang.Blocks.robotis_cm_sound_detecting,
+                            'CM_SOUND_DETECTING',
+                        ],
+                        [Lang.Blocks.robotis_cm_user_button, 'CM_USER_BUTTON'],
+                    ],
+                    value: 'CM_SOUND_DETECTED',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_openCM70_sensor_value',
+            },
+            paramsKeyMap: {
+                SENSOR: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                scope.isStart = true;
+                scope.count = 0;
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                var sensor = script.getStringField('SENSOR');
+
+                var increase = 0;
+
+                if (sensor == 'CM_SOUND_DETECTED') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTED[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTED[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTED[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTED[1];
+                } else if (sensor == 'CM_SOUND_DETECTING') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTING[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTING[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTING[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .CM_SOUND_DETECTING[1];
+                } else if (sensor == 'CM_USER_BUTTON') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                }
+
+                data_default_address =
+                    data_default_address + increase * data_default_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                return result;
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_sensor_value(%1)'] },
+        },
+        robotis_openCM70_aux_sensor_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['3', 'PORT_3'],
+                        ['4', 'PORT_4'],
+                        ['5', 'PORT_5'],
+                        ['6', 'PORT_6'],
+                    ],
+                    value: 'PORT_3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [
+                            Lang.Blocks.robotis_aux_servo_position,
+                            'AUX_SERVO_POSITION',
+                        ],
+                        [Lang.Blocks.robotis_aux_ir, 'AUX_IR'],
+                        [Lang.Blocks.robotis_aux_touch, 'AUX_TOUCH'],
+                        [Lang.Blocks.robotis_aux_brightness, 'AUX_BRIGHTNESS'],
+                        [
+                            Lang.Blocks.robotis_aux_hydro_themo_humidity,
+                            'AUX_HYDRO_THEMO_HUMIDITY',
+                        ],
+                        [
+                            Lang.Blocks.robotis_aux_hydro_themo_temper,
+                            'AUX_HYDRO_THEMO_TEMPER',
+                        ],
+                        [
+                            Lang.Blocks.robotis_aux_temperature,
+                            'AUX_TEMPERATURE',
+                        ],
+                        [Lang.Blocks.robotis_aux_ultrasonic, 'AUX_ULTRASONIC'],
+                        [Lang.Blocks.robotis_aux_magnetic, 'AUX_MAGNETIC'],
+                        [
+                            Lang.Blocks.robotis_aux_motion_detection,
+                            'AUX_MOTION_DETECTION',
+                        ],
+                        [Lang.Blocks.robotis_aux_color, 'AUX_COLOR'],
+                        [Lang.Blocks.robotis_aux_custom, 'AUX_CUSTOM'],
+                    ],
+                    value: 'AUX_SERVO_POSITION',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'robotis_openCM70_aux_sensor_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                SENSOR: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                var scope = script.executor.scope;
+
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+
+                var port = script.getStringField('PORT');
+                var sensor = script.getStringField('SENSOR');
+
+                var increase = 0;
+                if (port == 'PORT_3') {
+                    increase = 2;
+                } else if (port == 'PORT_4') {
+                    increase = 3;
+                } else if (port == 'PORT_5') {
+                    increase = 4;
+                } else if (port == 'PORT_6') {
+                    increase = 5;
+                }
+
+                if (sensor == 'AUX_SERVO_POSITION') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_SERVO_POSITION[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_SERVO_POSITION[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_SERVO_POSITION[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_SERVO_POSITION[1];
+                } else if (sensor == 'AUX_IR') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                } else if (sensor == 'AUX_TOUCH') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                } else if (sensor == 'AUX_TEMPERATURE') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                } else if (sensor == 'AUX_BRIGHTNESS') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_HUMIDITY[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_HUMIDITY[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_HUMIDITY[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_HUMIDITY[1];
+                } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_TEMPER[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_TEMPER[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_TEMPER[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_HYDRO_THEMO_TEMPER[1];
+                } else if (sensor == 'AUX_ULTRASONIC') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                } else if (sensor == 'AUX_MAGNETIC') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                } else if (sensor == 'AUX_MOTION_DETECTION') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_MOTION_DETECTION[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_MOTION_DETECTION[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_MOTION_DETECTION[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE
+                            .AUX_MOTION_DETECTION[1];
+                } else if (sensor == 'AUX_COLOR') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                } else if (sensor == 'AUX_CUSTOM') {
+                    data_default_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                    data_default_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                }
+
+                data_default_address =
+                    data_default_address + increase * data_default_length;
+                data_address = data_default_address;
+                // if (increase != 0) {
+                // data_length = 6 * data_default_length;
+                // }
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < 200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        return Entry.hw.sendQueue.prevResult;
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_aux_sensor_value(%1, %2)'],
+            },
+        },
+        robotis_openCM70_cm_buzzer_index: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.General.note_a + '(0)', '0'],
+                        [Lang.General.note_a + '#(1)', '1'],
+                        [Lang.General.note_b + '(2)', '2'],
+                        [Lang.General.note_c + '(3)', '3'],
+                        [Lang.General.note_c + '#(4)', '4'],
+                        [Lang.General.note_d + '(5)', '5'],
+                        [Lang.General.note_d + '#(6)', '6'],
+                        [Lang.General.note_e + '(7)', '7'],
+                        [Lang.General.note_f + '(8)', '8'],
+                        [Lang.General.note_f + '#(9)', '9'],
+                        [Lang.General.note_g + '(10)', '10'],
+                        [Lang.General.note_g + '#(11)', '11'],
+                        [Lang.General.note_a + '(12)', '12'],
+                        [Lang.General.note_a + '#(13)', '13'],
+                        [Lang.General.note_b + '(14)', '14'],
+                        [Lang.General.note_c + '(15)', '15'],
+                        [Lang.General.note_c + '#(16)', '16'],
+                        [Lang.General.note_d + '(17)', '17'],
+                        [Lang.General.note_d + '#(18)', '18'],
+                        [Lang.General.note_e + '(19)', '19'],
+                        [Lang.General.note_f + '(20)', '20'],
+                        [Lang.General.note_f + '#(21)', '21'],
+                        [Lang.General.note_g + '(22)', '22'],
+                        [Lang.General.note_g + '#(23)', '23'],
+                        [Lang.General.note_a + '(24)', '24'],
+                        [Lang.General.note_a + '#(25)', '25'],
+                        [Lang.General.note_b + '(26)', '26'],
+                        [Lang.General.note_c + '(27)', '27'],
+                        [Lang.General.note_c + '#(28)', '28'],
+                        [Lang.General.note_d + '(29)', '29'],
+                        [Lang.General.note_d + '#(30)', '30'],
+                        [Lang.General.note_e + '(31)', '31'],
+                        [Lang.General.note_f + '(32)', '32'],
+                        [Lang.General.note_f + '#(33)', '33'],
+                        [Lang.General.note_g + '(34)', '34'],
+                        [Lang.General.note_g + '#(35)', '35'],
+                        [Lang.General.note_a + '(36)', '36'],
+                        [Lang.General.note_a + '#(37)', '37'],
+                        [Lang.General.note_b + '(38)', '38'],
+                        [Lang.General.note_c + '(39)', '39'],
+                        [Lang.General.note_c + '#(40)', '40'],
+                        [Lang.General.note_d + '(41)', '41'],
+                        [Lang.General.note_d + '#(42)', '42'],
+                        [Lang.General.note_e + '(43)', '43'],
+                        [Lang.General.note_f + '(44)', '44'],
+                        [Lang.General.note_f + '#(45)', '45'],
+                        [Lang.General.note_g + '(46)', '46'],
+                        [Lang.General.note_g + '#(47)', '47'],
+                        [Lang.General.note_a + '(48)', '48'],
+                        [Lang.General.note_a + '#(49)', '49'],
+                        [Lang.General.note_b + '(50)', '50'],
+                        [Lang.General.note_c + '(51)', '51'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_cm_buzzer_index',
+            },
+            paramsKeyMap: {
+                CM_BUZZER_INDEX: 0,
+                CM_BUZZER_TIME: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var cmBuzzerIndex = script.getField('CM_BUZZER_INDEX', script);
+                var cmBuzzerTime = script.getNumberValue(
+                    'CM_BUZZER_TIME',
+                    script
+                );
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address_1 = 0;
+                var data_length_1 = 0;
+                var data_value_1 = 0;
+                var data_address_2 = 0;
+                var data_length_2 = 0;
+                var data_value_2 = 0;
+                var interval = 100;
+
+                data_address_1 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+                data_length_1 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+                // data_value_1 = cmBuzzerTime * 10;
+                // TODO 텍스트 입력으로 바꾸고 최대는 5초 : 0.5 초 하려면 5를 입력  - console.log(parseInt(0.59 * 10)); max 는 5초
+                data_value_1 = parseInt(cmBuzzerTime * 10);
+                if (data_value_1 > 50) {
+                    data_value_1 = 50;
+                }
+
+                data_address_2 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+                data_length_2 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+                data_value_2 = cmBuzzerIndex;
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address_1,
+                        data_length_1,
+                        data_value_1,
+                    ],
+                    [
+                        data_instruction,
+                        data_address_2,
+                        data_length_2,
+                        data_value_2,
+                    ],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    cmBuzzerTime * 1000 + interval
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
+            },
+        },
+        robotis_openCM70_cm_buzzer_melody: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                        ['16', '16'],
+                        ['17', '17'],
+                        ['18', '18'],
+                        ['19', '19'],
+                        ['20', '20'],
+                        ['21', '21'],
+                        ['22', '22'],
+                        ['23', '23'],
+                        ['24', '24'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'robotis_openCM70_cm_buzzer_melody',
+            },
+            paramsKeyMap: {
+                CM_BUZZER_MELODY: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var cmBuzzerMelody = script.getField(
+                    'CM_BUZZER_MELODY',
+                    script
+                );
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address_1 = 0;
+                var data_length_1 = 0;
+                var data_value_1 = 0;
+                var data_address_2 = 0;
+                var data_length_2 = 0;
+                var data_value_2 = 0;
+                var interval = 100;
+
+                data_address_1 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+                data_length_1 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+                data_value_1 = 255;
+
+                data_address_2 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+                data_length_2 =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+                data_value_2 = cmBuzzerMelody;
+
+                var data_sendqueue = [
+                    [
+                        data_instruction,
+                        data_address_1,
+                        data_length_1,
+                        data_value_1,
+                    ],
+                    [
+                        data_instruction,
+                        data_address_2,
+                        data_length_2,
+                        data_value_2,
+                    ],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    1000 + interval
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_buzzer_melody(%1)'] },
+        },
+        robotis_openCM70_cm_sound_detected_clear: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_openCM70_cm_sound_detected_clear',
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_value = 0;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_sound_clear()'] },
+        },
+        robotis_openCM70_cm_led: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_red_color, 'CM_LED_R'],
+                        [Lang.Blocks.robotis_common_green_color, 'CM_LED_G'],
+                        [Lang.Blocks.robotis_common_blue_color, 'CM_LED_B'],
+                    ],
+                    value: 'CM_LED_R',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_on, '1'],
+                        [Lang.Blocks.robotis_common_off, '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'robotis_openCM70_cm_led',
+            },
+            paramsKeyMap: {
+                CM_LED: 0,
+                VALUE: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var cmLed = script.getField('CM_LED', script);
+                var value = script.getField('VALUE', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                if (cmLed == 'CM_LED_R') {
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
+                } else if (cmLed == 'CM_LED_G') {
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1];
+                } else if (cmLed == 'CM_LED_B') {
+                    data_address =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
+                    data_length =
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
+                }
+
+                data_value = value;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
+        },
+        robotis_openCM70_cm_motion: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_cm_motion',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
+                data_value = script.getNumberValue('VALUE', script);
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
+        },
+        robotis_openCM70_aux_motor_speed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_port_1, '1'],
+                        [Lang.Blocks.robotis_common_port_2, '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_clockwhise, 'CW'],
+                        [Lang.Blocks.robotis_common_counter_clockwhise, 'CCW'],
+                    ],
+                    value: 'CW',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['500'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_aux_motor_speed',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                DIRECTION_ANGLE: 1,
+                VALUE: 2,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var port = script.getField('PORT', script);
+                var directionAngle = script.getField('DIRECTION_ANGLE', script);
+                var value = script.getNumberValue('VALUE');
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
+
+                data_address = data_address + (port - 1) * data_length;
+
+                if (directionAngle == 'CW') {
+                    value = value + 1024;
+                    if (value > 2047) {
+                        value = 2047;
+                    }
+                } else {
+                    if (value > 1023) {
+                        value = 1023;
+                    }
+                }
+
+                data_value = value;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_aux_motor_speed(%1, %2, %3)'],
+            },
+        },
+        robotis_openCM70_aux_servo_mode: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_port_3, '3'],
+                        [Lang.Blocks.robotis_common_port_4, '4'],
+                        [Lang.Blocks.robotis_common_port_5, '5'],
+                        [Lang.Blocks.robotis_common_port_6, '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_wheel_mode, '0'],
+                        [Lang.Blocks.robotis_common_joint_mode, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'robotis_openCM70_aux_servo_mode',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                MODE: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var port = script.getField('PORT', script);
+                var mode = script.getField('MODE', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+
+                data_address = data_address + (port - 1) * data_length;
+                data_value = mode;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_aux_servo_mode(%1, %2)'] },
+        },
+        robotis_openCM70_aux_servo_speed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_port_3, '3'],
+                        [Lang.Blocks.robotis_common_port_4, '4'],
+                        [Lang.Blocks.robotis_common_port_5, '5'],
+                        [Lang.Blocks.robotis_common_port_6, '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_clockwhise, 'CW'],
+                        [Lang.Blocks.robotis_common_counter_clockwhise, 'CCW'],
+                    ],
+                    value: 'CW',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['500'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_aux_servo_speed',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                DIRECTION_ANGLE: 1,
+                VALUE: 2,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var port = script.getField('PORT', script);
+                var directionAngle = script.getField('DIRECTION_ANGLE', script);
+                var value = script.getNumberValue('VALUE');
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+
+                data_address = data_address + (port - 1) * data_length;
+
+                if (directionAngle == 'CW') {
+                    value = value + 1024;
+                    if (value > 2047) {
+                        value = 2047;
+                    }
+                } else {
+                    if (value > 1023) {
+                        value = 1023;
+                    }
+                }
+
+                data_value = value;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_aux_servo_speed(%1, %2, %3)'],
+            },
+        },
+        robotis_openCM70_aux_servo_position: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_port_3, '3'],
+                        [Lang.Blocks.robotis_common_port_4, '4'],
+                        [Lang.Blocks.robotis_common_port_5, '5'],
+                        [Lang.Blocks.robotis_common_port_6, '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['512'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_aux_servo_position',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var port = script.getField('PORT', script);
+                var value = script.getNumberValue('VALUE');
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+
+                data_address = data_address + (port - 1) * data_length;
+
+                if (value > 1023) {
+                    value = 1023;
+                } else if (value < 0) {
+                    value = 0;
+                }
+
+                data_value = value;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_aux_servo_position(%1, %2)'],
+            },
+        },
+        robotis_openCM70_aux_led_module: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_port_3, '3'],
+                        [Lang.Blocks.robotis_common_port_4, '4'],
+                        [Lang.Blocks.robotis_common_port_5, '5'],
+                        [Lang.Blocks.robotis_common_port_6, '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [
+                            Lang.Blocks.robotis_cm_led_both +
+                                Lang.Blocks.robotis_common_off,
+                            '0',
+                        ],
+                        [
+                            Lang.Blocks.robotis_cm_led_right +
+                                Lang.Blocks.robotis_common_on,
+                            '1',
+                        ],
+                        [
+                            Lang.Blocks.robotis_cm_led_left +
+                                Lang.Blocks.robotis_common_on,
+                            '2',
+                        ],
+                        [
+                            Lang.Blocks.robotis_cm_led_both +
+                                Lang.Blocks.robotis_common_on,
+                            '3',
+                        ],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'robotis_openCM70_aux_led_module',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                LED_MODULE: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var port = script.getField('PORT', script);
+                var ledModule = script.getField('LED_MODULE', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+
+                data_address = data_address + (port - 1) * data_length;
+                data_value = ledModule;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_aux_led_module(%1, %2)'] },
+        },
+        robotis_openCM70_aux_custom: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_port_3, '3'],
+                        [Lang.Blocks.robotis_common_port_4, '4'],
+                        [Lang.Blocks.robotis_common_port_5, '5'],
+                        [Lang.Blocks.robotis_common_port_6, '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'robotis_openCM70_aux_custom',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_openCM70EDU'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var port = script.getField('PORT', script);
+                var value = script.getNumberValue('VALUE');
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_length =
+                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+
+                data_address = data_address + (port - 1) * data_length;
+                data_value = value;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_aux_custom(%1, %2)'] },
+        },
+        robotis_openCM70_cm_custom: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
                 },
                 {
                     type: 'Block',
@@ -3938,7 +4115,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
                         type: 'number',
                         params: ['0'],
                     },
-                    null,
                     {
                         type: 'number',
                         params: ['0'],
@@ -3949,11 +4125,10 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             paramsKeyMap: {
                 ADDRESS: 0,
-                LENGTH: 1,
-                VALUE: 2,
+                VALUE: 1,
             },
             class: 'robotis_openCM70_custom',
-            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            isNotFor: ['Robotis_openCM70EDU'],
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
@@ -3963,19 +4138,12 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 data_address = script.getNumberValue('ADDRESS');
                 data_value = script.getNumberValue('VALUE');
-               
-                switch(script.getField('LENGTH')){
-                    case 'BYTE':
-                        data_length = 1;
-                        break;
-                    case 'WORD':
-                        data_length = 2;
-                        break;
-                    case 'DWORD':
-                        data_length = 4;
-                        break;
-                    default:
-                        break;
+                if (data_value > 65535) {
+                    data_length = 4;
+                } else if (data_value > 255) {
+                    data_length = 2;
+                } else {
+                    data_length = 1;
                 }
 
                 var data_sendqueue = [
@@ -3991,8 +4159,6 @@ Entry.Robotis_openCM70.getBlocks = function () {
         },
         //endregion robotis 로보티즈
     };
-};
-
-
+};*/
 
 module.exports = [Entry.Robotis_carCont, Entry.Robotis_openCM70, Entry.Robotis_openCM70EDU];
