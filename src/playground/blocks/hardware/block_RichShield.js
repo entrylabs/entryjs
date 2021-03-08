@@ -119,6 +119,7 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_LCD_Control_init: 'LCD %1 번 : 주소 %2 로 설정',
                 RichShield_LCD_Control_Display: 'LCD %1 번 : %2 행 %3 열에 %4 출력 %5',
                 RichShield_LCD_Control_Clear: 'LCD %1 번 : 지우기',
+                RichShield_LCD_Control_Scroll: 'LCD %1 번 : 화면스크롤 %2',
 
                 RichShield_FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
                 RichShield_FND_Control_init: 'FND %1 번 : 디지털 CLK %2, DIO %3 번 핀으로 설정',
@@ -223,6 +224,7 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_LCD_Control_init: 'LCD %1 :  Address set to %2',
                 RichShield_LCD_Control_Display: 'LCD %1  : row %2  column %3 display %4 %5',
                 RichShield_LCD_Control_Clear: 'LCD %1 : Clear Display',
+                RichShield_LCD_Control_Scroll: 'LCD %1 : Display Scroll to %2',
 
                 //RichShield_LCD_Control_Display: 'LCD %1 line %2 appear %3',
                 RichShield_FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
@@ -304,6 +306,7 @@ Entry.RichShield.blockMenuBlocks = [
     'RichShield_LCD_Control_init',
     'RichShield_LCD_Control_Display',
     'RichShield_LCD_Control_Clear',
+    'RichShield_LCD_Control_Scroll',
 
     'RichShield_FND_event',
     'RichShield_FND_Control_init',
@@ -1018,7 +1021,7 @@ Entry.RichShield.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['RichShield.LCD_Display(%1, %2)'] },
+            syntax: { js: [], py: ['RichShield.LCD_Display(%1, %2, %3, %4)'] },
         },
         RichShield_LCD_Control_Clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1068,6 +1071,71 @@ Entry.RichShield.getBlocks = function() {
                 return script.callReturn();
             },
             syntax: { js: [], py: ['RichShield_LCD_Control_Clear(%1)'] },
+        },
+        RichShield_LCD_Control_Scroll: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['1', 1]],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['왼쪽', 1],
+                        ['오른쪽', 2],
+                    ],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_LCD_Control_Scroll' },
+            paramsKeyMap: {
+                lcd_device: 0,
+                direction: 1,
+            },
+            class: 'RichShield_LCD',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
+                // 일반적으로는 getValue로 값을 가져오고
+                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
+                const device = script.getNumberValue('lcd_device', script);
+                const direction = script.getNumberValue('direction', script);
+
+                /*
+                  LCD Scrolling Block Added
+                  Writer : Remoted
+                  Date : 2021-03-07
+                */
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+
+                // LCD_Init type data protocol defined
+                Entry.hw.sendQueue.SET[device] = {
+                    type: Entry.RichShield.sensorTypes.LCD,
+                    data: {
+                        block_index: 4,
+                        direction,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield_LCD_Control_Scroll(%1)'] },
         },
         RichShield_FND_event: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
