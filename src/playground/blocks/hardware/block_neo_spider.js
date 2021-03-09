@@ -18,6 +18,8 @@ Entry.NeoSpider = {
         neopixel: 0,
         outerLeftMotor: 0,
         outerRightMotor: 0,
+        left_infared: 0,
+        right_infared: 0,
     },
     setZero() {
         let portMap = Entry.NeoSpider.PORT_MAP;
@@ -26,24 +28,6 @@ Entry.NeoSpider = {
             sq[port] = portMap[port];
         }
         Entry.hw.update();
-        let NeoSpider = Entry.NeoSpider;
-        NeoSpider.removeAllTimeouts();
-    },
-    timeouts: [],
-    removeTimeout: function (id) {
-        clearTimeout(id);
-        var timeouts = this.timeouts;
-        var index = timeouts.indexOf(id);
-        if (index >= 0) {
-            timeouts.splice(index, 1);
-        }
-    },
-    removeAllTimeouts: function () {
-        var timeouts = this.timeouts;
-        for (var i in timeouts) {
-            clearTimeout(timeouts[i]);
-        }
-        this.timeouts = [];
     },
     toneTable: {
         '0': 0,
@@ -148,7 +132,7 @@ Entry.NeoSpider.getBlocks = function () {
                         ['조도', 'cds'],
                         ['온도', 'tmp'],
                         ['진동', 'vibe'],
-                        ['외부', 'outer'],
+                        ['외부', 'gas'],
                     ],
                     value: 'gas',
                     fontSize: 11,
@@ -168,8 +152,8 @@ Entry.NeoSpider.getBlocks = function () {
             isNotFor: ['NeoSpider'],
             func(sprite, script) {
                 const pd = Entry.hw.portData;
-                let port = script.getValue('PORT', script);
-                return pd[port]
+                const port = script.getValue('PORT', script);
+                return pd[port];
             },
             syntax: {
                 js: [],
@@ -185,7 +169,7 @@ Entry.NeoSpider.getBlocks = function () {
                                     ['조도', 'cds'],
                                     ['온도', 'tmp'],
                                     ['진동', 'vibe'],
-                                    ['외부', 'outer'],
+                                    ['외부', 'gas'],
                                 ],
                                 value: 'gas',
                                 fontSize: 11,
@@ -212,7 +196,7 @@ Entry.NeoSpider.getBlocks = function () {
                         ['조도', 'cds'],
                         ['온도', 'tmp'],
                         ['진동', 'vibe'],
-                        ['외부', 'outer'],
+                        ['외부', 'gas'],
                     ],
                     value: 'gas',
                     fontSize: 11,
@@ -275,7 +259,7 @@ Entry.NeoSpider.getBlocks = function () {
             func(sprite, script) {
                 const port = script.getValue('PORT', script);
                 const pd = Entry.hw.portData;
-                let result = pd[port]
+                let result = pd[port];
                 let value2 = script.getNumberValue('VALUE2', script);
                 let value3 = script.getNumberValue('VALUE3', script);
                 let value4 = script.getNumberValue('VALUE4', script);
@@ -305,7 +289,7 @@ Entry.NeoSpider.getBlocks = function () {
                                     ['조도', 'cds'],
                                     ['온도', 'tmp'],
                                     ['진동', 'vibe'],
-                                    ['외부', 'outer'],
+                                    ['외부', 'gas'],
                                 ],
                                 value: 'gas',
                                 fontSize: 11,
@@ -407,59 +391,6 @@ Entry.NeoSpider.getBlocks = function () {
                 ],
             },
         },
-        neo_spider_infared_list: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['왼쪽', 'left_infared'],
-                        ['오른쪽', 'right_infared'],
-                    ],
-                    value: 'left_infared',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null,],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func(sprite, script) {
-                return script.getField('PORT');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '1%',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    ['왼쪽', 'left_infared'],
-                                    ['오른쪽', 'right_infared'],
-                                ],
-                                value: 'left_infared',
-                                fontSize: 11,
-                                converter: Entry.block.converters.returnStringKey,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
         neo_spider_get_infared_value : {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -490,18 +421,7 @@ Entry.NeoSpider.getBlocks = function () {
             class: 'NeoSpiderGet',
             isNotFor: ['NeoSpider'],
             func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
                 let port = script.getValue('PORT', script);
-
-                if (!sq.outerLeftMotor) {
-                    sq.outerLeftMotor = {};
-                }
-                if (!sq.outerRightMotor) {
-                    sq.outerRightMotor = {};
-                }
-
-                sq.outerLeftMotor = 2;
-                sq.outerRightMotor = 2;
 
                 return Entry.hw.portData[port] || 0;
             },
@@ -1075,18 +995,21 @@ Entry.NeoSpider.getBlocks = function () {
                     sq.neopixel = {};
                 }
 
-                sq.neopixel = {
-                    type: Entry.NeoSpider.PORT_MAP.neopixel,
-                    data: {
-                        numStr,
-                        red,
-                        green,
-                        blue
-                    },
-                    time: new Date().getTime(),
-                };
+                if (numStr) {
+                    sq.neopixel = {
+                        type: Entry.NeoSpider.PORT_MAP.neopixel,
+                        data: {
+                            numStr,
+                            red,
+                            green,
+                            blue
+                        },
+                        time: new Date().getTime(),
+                    };
+    
+                    Entry.hw.update();
+                }
 
-                Entry.hw.update();
                 return script.callReturn();
             },
             syntax: {
