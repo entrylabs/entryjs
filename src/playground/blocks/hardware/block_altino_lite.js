@@ -43,7 +43,7 @@ Entry.AltinoLite = {
         }
         this.timeouts = [];
     },
-    id: '47.1',
+    id: '18.2',
     name: 'altino_lite',
     url: 'http://saeon.co.kr/',
     imageName: 'altino_lite.png',
