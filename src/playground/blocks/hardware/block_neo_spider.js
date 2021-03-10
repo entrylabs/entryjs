@@ -18,8 +18,6 @@ Entry.NeoSpider = {
         neopixel: 0,
         outerLeftMotor: 0,
         outerRightMotor: 0,
-        left_infared: 0,
-        right_infared: 0,
     },
     setZero() {
         let portMap = Entry.NeoSpider.PORT_MAP;
@@ -58,8 +56,54 @@ Entry.NeoSpider = {
         '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
-    highList: ['high', '1', 'on'],
-    lowList: ['low', '0', 'off'],
+    monitorTemplate: {
+        imgPath: 'hw/neo_spider.png',
+        width: 256,
+        height: 256,
+        listPorts: {
+            gas: {
+                name: '가스/외부센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            cds: {
+                name: '조도센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            tmp: {
+                name: '온도센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            vibe: {
+                name: '진동센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            left_infared: {
+                name: '적외선(좌)',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            right_infared: {
+                name: '적외선(우)',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            ultrasonic: {
+                name: '초음파센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            motion: {
+                name: '모션센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+        },
+        mode: 'both',
+    },
     BlockState: {},
 };
 
@@ -71,14 +115,41 @@ Entry.NeoSpider.setLanguage = function () {
                 neo_spider_get_analog_value_map: '아날로그 %1 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
                 neo_spider_get_ultrasonic_value: '초음파 센서값',
                 neo_spider_get_motion_value: '모션 센서값',
-                neo_spider_get_infared_value: '적외선 %1 센서값',
+                neo_spider_get_infared_value: '적외선센서 %1 감지됨',
                 neo_spider_set_tone: '버저를 %1 %2 음으로 %3 초 연주하기 %4',
-                neo_spider_set_servo: '서보모터를 %1 의 각도로 정하기 %2',
+                neo_spider_set_servo: '머리방향 %1 의 각도로 정하기 (최소:50, 최대:130) %2',
+                neo_spider_set_servo_direction: '머리방향 %1 바라보기 %2',
                 neo_spider_motor_state: '네오스파이더 %1 이동하기 %2',
-                neo_spider_neopixel: 'RGB LED %1번 빨 %2 녹 %3 파 %4 (으)로 켜기 %5',
-                neo_spider_neopixel_all_on: 'RGB LED 전체 빨 %1 녹 %2 파 %3 (으)로 켜기 %4',
+                neo_spider_motor_state_secs: '네오스파이더 %1(으)로 %2초 이동하기 %3',
+                neo_spider_motor_stop: '네오스파이더 정지하기 %1',
+                neo_spider_neopixel_color_picker: 'RGB LED %1번  %2 (으)로 켜기 %3',
+                neo_spider_neopixel: 'RGB LED %1번  빨 %2 녹 %3 파 %4 (으)로 켜기 %5',
+                neo_spider_neopixel_color_picker_all_on: 'RGB LED 전체 %1 (으)로 켜기 %2',
+                neo_spider_neopixel_all_on: 'RGB LED 전체  빨 %1 녹 %2 파 %3 (으)로 켜기 %4',
                 neo_spider_neopixel_all_off: 'RGB LED 전체 끄기 %1',
                 neo_spider_outer_motor: '디지털 %1핀 %2 %3',
+                neo_spider_outer_motor_pwm: '디지털 %1핀 %2 (으)로 정하기 %3',
+            },
+
+            Helper: {
+                neo_spider_get_analog_value: '아날로그 센서값을 읽어오는 블럭입니다.<br/>가스, 조도, 진동, 외부 센서는 `0~1023`의 값 가지며, 온도센서는 온도값을 읽어옵니다.<br/><font color="crimson">(단, 가스센서와 외부센서는 동시에 사용할 수 없습니다.)</font>',
+                neo_spider_get_analog_value_map: '아날로그 센서값의 범위를 다른 범위로 변환합니다.',
+                neo_spider_get_ultrasonic_value: '초음파를 통해 거리를 측정합니다.<br/><font color="crimson">(참고, HC-SR04의 경우 약 0~2cm정도 측정을 못하고 너무 가까우면 이상한 값을 나타냅니다.)</font>',
+                neo_spider_get_motion_value: '모션 센서의 값을 가져옵니다.<br/>해당 센서값은 0: `감지 못함`, 1: `감지됨`입니다.<br/><font color="crimson">(참고, 해당 센서의 경우 길게는 약 7초 정도 감지된 값을 유지합니다.)</font>',
+                neo_spider_get_infared_value: '적외선 센서의 값을 가져옵니다.<br/>왼쪽과 오른쪽 2가지로 나뉘어 있으며, 센서값은 0: `감지 못함`, 1: `감지됨`입니다.',
+                neo_spider_set_tone: '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
+                neo_spider_set_servo: '머리각도를 최소 50 ~ 최대 130도 사이의 값으로 움직입니다.',
+                neo_spider_set_servo_direction: '머리각도를 왼쪽(50), 정면(90), 오른쪽(130)으로 이동할 수 있습니다.',
+                neo_spider_motor_state: '네오스파이더를 전진, 좌회전, 우회전, 후진을 실행합니다.',
+                neo_spider_motor_state_secs: '네오스파이더를 전진, 좌회전, 우회전, 후진을 정해진 시간만큼 실행합니다.',
+                neo_spider_motor_stop: '네오스파이더 이동을 정지',
+                neo_spider_neopixel_color_picker: '색을 보고 RGB색상을 정하여 정해진 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
+                neo_spider_neopixel: '정해준 LED 번호에 빨강, 파랑, 초록의 색을 넣고 조합하여 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
+                neo_spider_neopixel_color_picker_all_on: '색을 보고 RGB색상을 정하여 모든 LED를 켤 수 있습니다.',
+                neo_spider_neopixel_all_on: '빨강, 파랑, 초록의 색을 넣고 조합하여 모든 LED를 켤 수 있습니다.',
+                neo_spider_neopixel_all_off: '모든 LED를 끌 수 있습니다.',
+                neo_spider_outer_motor: '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 HIGH를 주어 작동 시킬 수 없습니다.)</font>',
+                neo_spider_outer_motor_pwm: '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 0 이상의 값을 주어 작동 시킬 수 없습니다.)</font>',
             },
         },
         en: {
@@ -89,12 +160,18 @@ Entry.NeoSpider.setLanguage = function () {
                 neo_spider_get_motion_value: 'Motion Sensor value',
                 neo_spider_get_infared_value: 'Infared ray %1 Sensor value',
                 neo_spider_set_tone: 'Play tone note %1 octave %2 beat %3 %4',
-                neo_spider_set_servo: 'Set servo pin angle as %1 %2',
+                neo_spider_set_servo: 'Set head direction as %1 (min:50, max:130) %2',
+                neo_spider_set_servo_direction: 'Set head direction as %1 %2',
                 neo_spider_motor_state: 'Move neospider %1 %2',
+                neo_spider_motor_state_secs: 'Move neospider %1 %2 secs %3',
+                neo_spider_motor_stop: 'Neospider stop %1',
+                neo_spider_neopixel_color_picker: 'RGB LED number %1 turn on %2 %3',
                 neo_spider_neopixel: 'RGB LED number %1 turn on R %2 G %3 B %4 %5',
+                neo_spider_neopixel_color_picker_all_on: 'All RGB LED turn on %1 %2',
                 neo_spider_neopixel_all_on: 'All RGB LED turn on R %1 G %2 B %3 %4',
                 neo_spider_neopixel_all_off: 'All RGB LED turn off %1',
                 neo_spider_outer_motor: 'Digital %1 pin %2 %3',
+                neo_spider_outer_motor_pwm: 'Digital %1 pin %2 %3',
             },
         },
     };
@@ -108,12 +185,18 @@ Entry.NeoSpider.blockMenuBlocks = [
     'neo_spider_get_motion_value',
     'neo_spider_get_infared_value',
     'neo_spider_set_servo',
+    'neo_spider_set_servo_direction',
     'neo_spider_set_tone',
     'neo_spider_motor_state',
+    'neo_spider_motor_state_secs',
+    'neo_spider_motor_stop',
+    'neo_spider_neopixel_color_picker',
+    'neo_spider_neopixel_color_picker_all_on',
     'neo_spider_neopixel',
     'neo_spider_neopixel_all_on',
     'neo_spider_neopixel_all_off',
     'neo_spider_outer_motor',
+    'neo_spider_outer_motor_pwm',
 ];
 
 Entry.NeoSpider.getBlocks = function () {
@@ -809,6 +892,65 @@ Entry.NeoSpider.getBlocks = function () {
                 ],
             },
         },
+        neo_spider_set_servo_direction: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞', '90'],
+                        ['왼쪽', '50'],
+                        ['오른쪽', '130'],
+                    ],
+                    value: '90',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'neo_spider_set_servo_direction',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'NeoSpider',
+            isNotFor: ['NeoSpider'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let value = script.getNumberValue('VALUE', script);
+                value = Math.min(130, value);
+                value = Math.max(50, value);
+
+                sq.servoAngle = value;
+
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoSpider.servomotorWrite(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
         neo_spider_motor_state: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -818,7 +960,6 @@ Entry.NeoSpider.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['정지', 0],
                         ['앞으로', 1],
                         ['왼쪽으로', 2],
                         ['오른쪽으로', 3],
@@ -868,7 +1009,6 @@ Entry.NeoSpider.getBlocks = function () {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    ['정지', '0'],
                                     ['앞으로', '1'],
                                     ['왼쪽으로', '2'],
                                     ['오른쪽으로', '3'],
@@ -881,6 +1021,157 @@ Entry.NeoSpider.getBlocks = function () {
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             },
                         ],
+                    },
+                ],
+            },
+        },
+        neo_spider_motor_state_secs: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', 1],
+                        ['왼쪽으로', 2],
+                        ['오른쪽으로', 3],
+                        ['뒤로', 4],
+                    ],
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                ],
+                type: 'neo_spider_motor_state_secs',
+            },
+            paramsKeyMap: {
+                STATE: 0,
+                DURATION: 1,
+            },
+            class: 'NeoSpider',
+            isNotFor: ['NeoSpider'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+
+                if (!script.isStart) {
+                    let state = script.getNumberValue('STATE', script);
+                    let duration = script.getNumberValue('DURATION', script);
+
+                    if (duration <= 0) {
+                        duration = 0;
+                        state = 0;
+                    }
+
+                    duration = duration * 1000;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    if (!sq.motorState) {
+                        sq.motorState = {};
+                    }
+
+                    sq.motorState = state;
+
+                    setTimeout(() =>  {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    sq.motorState = 0;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoSpider.motorStateSecs(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['앞으로', '1'],
+                                    ['왼쪽으로', '2'],
+                                    ['오른쪽으로', '3'],
+                                    ['뒤로', '4'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        neo_spider_motor_stop: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'neo_spider_motor_stop',
+            },
+            paramsKeyMap: {},
+            class: 'NeoSpider',
+            isNotFor: ['NeoSpider'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                if (!sq.motorState) {
+                    sq.motorState = {};
+                }
+                sq.motorState = 0;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoSpider.motorStop()',
+                        textParams: [],
                     },
                 ],
             },
@@ -922,7 +1213,7 @@ Entry.NeoSpider.getBlocks = function () {
                 params: [
                     {
                         type: 'number',
-                        params: ['1'],
+                        params: ['0'],
                     },
                     {
                         type: 'number',
@@ -953,35 +1244,35 @@ Entry.NeoSpider.getBlocks = function () {
                 let num = script.getNumberValue('NUM', script);
                 let numStr = '';
                 switch (num) {
-                    case 1: {
+                    case 0: {
                         numStr = 'first';
                         break;
                     }
-                    case 2: {
+                    case 1: {
                         numStr = 'second';
                         break;
                     }
-                    case 3: {
+                    case 2: {
                         numStr = 'third';
                         break;
                     }
-                    case 4: {
+                    case 3: {
                         numStr = 'fourth';
                         break;
                     }
-                    case 5: {
+                    case 4: {
                         numStr = 'fifth';
                         break;
                     }
-                    case 6: {
+                    case 5: {
                         numStr = 'sixth';
                         break;
                     }
-                    case 7: {
+                    case 6: {
                         numStr = 'seventh';
                         break;
                     }
-                    case 8: {
+                    case 7: {
                         numStr = 'eighth';
                         break;
                     }
@@ -1037,6 +1328,165 @@ Entry.NeoSpider.getBlocks = function () {
                         ],
                     },
                 ],
+            },
+        },
+        neo_spider_neopixel_color_picker: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'neo_spider_neopixel_color_picker',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                COLOR: 1,
+            },
+            class: 'NeoSpider',
+            isNotFor: ['NeoSpider'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let num = script.getNumberValue('NUM', script);
+                let numStr = '';
+                switch (num) {
+                    case 0: {
+                        numStr = 'first';
+                        break;
+                    }
+                    case 1: {
+                        numStr = 'second';
+                        break;
+                    }
+                    case 2: {
+                        numStr = 'third';
+                        break;
+                    }
+                    case 3: {
+                        numStr = 'fourth';
+                        break;
+                    }
+                    case 4: {
+                        numStr = 'fifth';
+                        break;
+                    }
+                    case 5: {
+                        numStr = 'sixth';
+                        break;
+                    }
+                    case 6: {
+                        numStr = 'seventh';
+                        break;
+                    }
+                    case 7: {
+                        numStr = 'eighth';
+                        break;
+                    }
+                }
+
+                let value = script.getStringField('COLOR');
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                if (numStr) {
+                    let red = parseInt(value.substr(1, 2), 16);
+                    let green = parseInt(value.substr(3, 2), 16);
+                    let blue = parseInt(value.substr(5, 2), 16);
+
+                    sq.neopixel = {
+                        type: Entry.NeoSpider.PORT_MAP.neopixel,
+                        data: {
+                            numStr,
+                            red,
+                            green,
+                            blue
+                        },
+                        time: new Date().getTime(),
+                    };
+    
+                    Entry.hw.update();
+                }
+
+                return script.callReturn();
+            },
+        },
+        neo_spider_neopixel_color_picker_all_on: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'neo_spider_neopixel_color_picker_all_on',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'NeoSpider',
+            isNotFor: ['NeoSpider'],
+            func: function (sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let value = script.getStringField('COLOR');
+
+                if (!sq.neopixel) {
+                    sq.neopixel = {};
+                }
+
+                let red = parseInt(value.substr(1, 2), 16);
+                let green = parseInt(value.substr(3, 2), 16);
+                let blue = parseInt(value.substr(5, 2), 16);
+
+                sq.neopixel = {
+                    type: Entry.NeoSpider.PORT_MAP.neopixel,
+                    data: {
+                        red,
+                        green,
+                        blue
+                    },
+                    time: new Date().getTime(),
+                };
+
+                Entry.hw.update();
+                return script.callReturn();
             },
         },
         neo_spider_neopixel_all_on: {
@@ -1189,8 +1639,8 @@ Entry.NeoSpider.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['D5', '5'],
-                        ['D6', '6'],
+                        ['5', '5'],
+                        ['6', '6'],
                     ],
                     value: '5',
                     fontSize: 11,
@@ -1232,6 +1682,7 @@ Entry.NeoSpider.getBlocks = function () {
                 const sq = Entry.hw.sendQueue;
                 let port = script.getNumberValue('PORT', script);
                 let state = script.getNumberValue('STATE', script);
+                state = state ? 255 : 0;
                 if (port == 5) {
                     if (!sq.outerLeftMotor) {
                         sq.outerLeftMotor = {};
@@ -1254,8 +1705,8 @@ Entry.NeoSpider.getBlocks = function () {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    ['D5', '5'],
-                                    ['D6', '6'],
+                                    ['5', '5'],
+                                    ['6', '6'],
                                 ],
                                 value: '5',
                                 fontSize: 11,
@@ -1277,7 +1728,96 @@ Entry.NeoSpider.getBlocks = function () {
                     },
                 ],
             },
-        }
+        },
+        neo_spider_outer_motor_pwm: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['5', '5'],
+                        ['6', '6'],
+                    ],
+                    value: '5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    5,
+                    null,
+                ],
+                type: 'neo_spider_outer_motor_pwm',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'NeoSpider',
+            isNotFor: ['NeoSpider'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let port = script.getNumberValue('PORT', script);
+                let value = script.getNumberValue('VALUE', script);
+                value = Math.round(value);
+                value = Math.max(value, 0);
+                value = Math.min(value, 255);
+                
+                if (port == 5) {
+                    if (!sq.outerLeftMotor) {
+                        sq.outerLeftMotor = {};
+                    }
+                    sq.outerLeftMotor = value;
+                } else if (port == 6) {
+                    if (!sq.outerRightMotor) {
+                        sq.outerRightMotor = {};
+                    }
+                    sq.outerRightMotor = value;
+                }
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoSpider.outerDigitalPinPWM(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                ],
+                                value: '5',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
     };
 };
 
