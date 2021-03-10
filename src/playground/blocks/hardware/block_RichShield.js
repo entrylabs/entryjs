@@ -1349,10 +1349,7 @@ Entry.RichShield.getBlocks = function() {
                 },
                 {
                     type: 'Block',
-                    value: 2020,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    accept: 'string',
                 },
                 {
                     type: 'Dropdown',
@@ -1367,14 +1364,25 @@ Entry.RichShield.getBlocks = function() {
                 },
                 {
                     type: 'Block',
-                    value: 0.1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    accept: 'string',
                 },
             ],
             events: {},
-            def: { params: [], type: 'RichShield_FND_Control_diplay_char' },
+            def: {
+                params: [
+                    '1',
+                    {
+                        type: 'number',
+                        params: ['2021'],
+                    },
+                    '0',
+                    {
+                        type: 'number',
+                        params: ['0.1'],
+                    },
+                ],
+                type: 'RichShield_FND_Control_diplay_char',
+            },
             events: {},
             paramsKeyMap: { fnd_device: 0, display_value: 1, onoff: 2, delay_ms: 3 },
             class: 'RichShield_FND',
@@ -1394,7 +1402,7 @@ Entry.RichShield.getBlocks = function() {
                 display_str_converted = display_str.toString();
 
                 for (let i = 0; i < display_str_converted.length; i++) {
-                    splited_array.push(parseInt(display_str_converted.charCodeAt(i)));
+                    splited_array.push(parseInt(display_str_converted.charAt(i)));
                 }
 
                 console.log(`splited_array :${splited_array}`);
@@ -1599,7 +1607,7 @@ Entry.RichShield.getBlocks = function() {
 
                 console.log((Entry.hw.portData.DHT || 0).toFixed(1));
 
-                return (Entry.hw.portData.DHT || 0).toFixed(1);
+                return (Entry.hw.portData.DHT || 0).toFixed(0);
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Get_Temper(%1, %2)'] },
         },
@@ -1684,9 +1692,9 @@ Entry.RichShield.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                console.log((Entry.hw.portData.DHT || 0).toFixed(1));
+                //console.log((Entry.hw.portData.DHT || 0).toFixed(1));
 
-                return (Entry.hw.portData.DHT || 0).toFixed(1);
+                return (Entry.hw.portData.DHT || 0).toFixed(0);
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Get_Humid(%1)'] },
         },
