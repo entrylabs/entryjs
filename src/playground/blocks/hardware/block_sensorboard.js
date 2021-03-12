@@ -19,6 +19,35 @@ Entry.SensorBoard = {
     },
 };
 
+Entry.SensorBoard.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                sensorBoard_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                sensorBoard_get_digital_value: '디지털 %1 번 센서값  ',
+                sensorBoard_toggle_led: '디지털 %1 번 핀 %2 %3',
+                sensorBoard_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                sensorBoard_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                sensorBoard_get_named_sensor_value: '%1  센서값',
+                sensorBoard_is_button_pressed: '%1  버튼을 눌렀는가?',
+                sensorBoard_led: '%1  LED %2   %3',
+            },
+        },
+        en: {
+            template: {
+                sensorBoard_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                sensorBoard_get_digital_value: 'Digital %1 Sensor value  ',
+                sensorBoard_toggle_led: 'Digital %1 Pin %2 %3',
+                sensorBoard_toggle_pwm: 'Digital %1 Pin %2 %3',
+                sensorBoard_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                sensorBoard_get_named_sensor_value: '%1  Sensor value',
+                sensorBoard_is_button_pressed: 'Pressed %1 button?',
+                sensorBoard_led: '%1  LED %2   %3',
+            },
+        },
+    };
+};
+
 Entry.SensorBoard.blockMenuBlocks = [
     //sensorBoard
     'sensorBoard_get_named_sensor_value',
@@ -43,7 +72,12 @@ Entry.SensorBoard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['소리', '0'], ['빛 감지', '1'], ['슬라이더', '2'], ['온도', '3']],
+                    options: [
+                        ['소리', '0'],
+                        ['빛 감지', '1'],
+                        ['슬라이더', '2'],
+                        ['온도', '3'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -74,7 +108,12 @@ Entry.SensorBoard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨간', '8'], ['파란', '9'], ['노랑', '10'], ['초록', '11']],
+                    options: [
+                        ['빨간', '8'],
+                        ['파란', '9'],
+                        ['노랑', '10'],
+                        ['초록', '11'],
+                    ],
                     value: '8',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -104,7 +143,12 @@ Entry.SensorBoard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨간', '2'], ['초록', '3'], ['파란', '4'], ['노랑', '5']],
+                    options: [
+                        ['빨간', '2'],
+                        ['초록', '3'],
+                        ['파란', '4'],
+                        ['노랑', '5'],
+                    ],
                     value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -112,7 +156,10 @@ Entry.SensorBoard.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['켜기', '255'], ['끄기', '0']],
+                    options: [
+                        ['켜기', '255'],
+                        ['끄기', '0'],
+                    ],
                     value: '255',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

@@ -152,6 +152,79 @@ Entry.dplay.blockMenuBlocks = [
     'dplay_robot_speed_set',
     'dplay_robot_stop',
 ];
+
+Entry.dplay.setLangauge = function() {
+    return {
+        ko: {
+            template: {
+                dplay_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                dplay_get_digital_value: '디지털 %1 번 센서값  ',
+                dplay_toggle_led: '디지털 %1 번 핀 %2 %3',
+                dplay_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                dplay_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+            },
+            Blocks: {
+                dplay_switch: '스위치 ',
+                dplay_light: '빛센서가 ',
+                dplay_tilt: '기울기센서 상태가',
+                dplay_string_1: '켜짐',
+                dplay_string_2: '꺼짐',
+                dplay_string_3: '밝음',
+                dplay_string_4: '어두움',
+                dplay_string_5: '눌림',
+                dplay_string_6: '열림',
+                dplay_num_pin_1: 'LED 상태를',
+                dplay_num_pin_2: '번 스위치가',
+                dplay_num_pin_3: '아날로그',
+                dplay_num_pin_4: '번 ',
+                dplay_num_pin_5: '센서값',
+                dplay_analog_number_0: 'A0',
+                dplay_analog_number_1: 'A1',
+                dplay_analog_number_2: 'A2',
+                dplay_analog_number_3: 'A3',
+                dplay_analog_number_4: 'A4',
+                dplay_analog_number_5: 'A5',
+            },
+            Menus: {
+                dplay: '디플레이',
+            },
+        },
+        en: {
+            template: {
+                dplay_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                dplay_get_digital_value: 'Digital %1 Sensor value  ',
+                dplay_toggle_led: 'Digital %1 Pin %2 %3',
+                dplay_toggle_pwm: 'Digital %1 Pin %2 %3',
+                dplay_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+            },
+            Blocks: {
+                dplay_switch: '스위치 ',
+                dplay_light: 'Light sensor is ',
+                dplay_tilt: 'Slope sensor status is',
+                dplay_string_1: '켜짐',
+                dplay_string_2: '꺼짐',
+                dplay_string_3: 'bright',
+                dplay_string_4: 'dark',
+                dplay_string_5: 'pressed',
+                dplay_string_6: 'opened',
+                dplay_num_pin_1: 'LED status',
+                dplay_num_pin_2: 'switch',
+                dplay_num_pin_3: 'analogue',
+                dplay_num_pin_4: '번 ',
+                dplay_num_pin_5: 'sensor value',
+                dplay_analog_number_0: 'A0',
+                dplay_analog_number_1: 'A1',
+                dplay_analog_number_2: 'A2',
+                dplay_analog_number_3: 'A3',
+                dplay_analog_number_4: 'A4',
+                dplay_analog_number_5: 'A5',
+            },
+            Menus: {
+                dplay: 'DPLAY',
+            },
+        },
+    };
+};
 Entry.dplay.getBlocks = function() {
     return {
         //region dplay 디플레이
@@ -333,7 +406,10 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['2', '2'], ['4', '4']],
+                    options: [
+                        ['2', '2'],
+                        ['4', '4'],
+                    ],
                     value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -341,7 +417,10 @@ Entry.dplay.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['눌림', 'ON'], ['열림', 'OFF']],
+                    options: [
+                        ['눌림', 'ON'],
+                        ['열림', 'OFF'],
+                    ],
                     value: 'ON',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -380,7 +459,10 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['2', '2'], ['4', '4']],
+                    options: [
+                        ['2', '2'],
+                        ['4', '4'],
+                    ],
                     value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -388,7 +470,10 @@ Entry.dplay.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['왼쪽', 'LEFT'], ['오른쪽', 'LIGHT']],
+                    options: [
+                        ['왼쪽', 'LEFT'],
+                        ['오른쪽', 'LIGHT'],
+                    ],
                     value: 'LEFT',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -462,7 +547,12 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['7', '7'], ['8', '8'], ['12', '12'], ['13', '13']],
+                    options: [
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['12', '12'],
+                        ['13', '13'],
+                    ],
                     value: '7',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -470,7 +560,10 @@ Entry.dplay.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'ON'], ['끄기', 'OFF']],
+                    options: [
+                        ['켜기', 'ON'],
+                        ['끄기', 'OFF'],
+                    ],
                     value: 'ON',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -517,7 +610,11 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
+                    options: [
+                        ['왼쪽', '1'],
+                        ['오른쪽', '2'],
+                        ['양쪽', '3'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -525,7 +622,11 @@ Entry.dplay.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['정방향', 'FRONT'], ['역방향', 'REAR'], ['정지', 'OFF']],
+                    options: [
+                        ['정방향', 'FRONT'],
+                        ['역방향', 'REAR'],
+                        ['정지', 'OFF'],
+                    ],
                     value: 'FRONT',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -600,7 +701,11 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
+                    options: [
+                        ['왼쪽', '1'],
+                        ['오른쪽', '2'],
+                        ['양쪽', '3'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -736,7 +841,11 @@ Entry.dplay.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -779,7 +888,7 @@ Entry.dplay.getBlocks = function() {
                     var beat = script.getNumberValue('VALUE');
                     var tempo = 60;
                     var note_go = note + (octave - 1) * 12;
-                    var timeValue = beat * 60 * 1000 / tempo;
+                    var timeValue = (beat * 60 * 1000) / tempo;
                     script.isStart = true;
                     script.timeFlag = 1;
                     if (note == 100) Entry.hw.setDigitalPortValue(10, 100);
@@ -864,7 +973,12 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['전진', '1'], ['후진', '2'], ['우회전', '3'], ['좌회전', '4']],
+                    options: [
+                        ['전진', '1'],
+                        ['후진', '2'],
+                        ['우회전', '3'],
+                        ['좌회전', '4'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -941,7 +1055,12 @@ Entry.dplay.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['전진', '1'], ['후진', '2'], ['우회전', '3'], ['좌회전', '4']],
+                    options: [
+                        ['전진', '1'],
+                        ['후진', '2'],
+                        ['우회전', '3'],
+                        ['좌회전', '4'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1043,7 +1162,11 @@ Entry.dplay.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
+                    options: [
+                        ['왼쪽', '1'],
+                        ['오른쪽', '2'],
+                        ['양쪽', '3'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

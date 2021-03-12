@@ -117,6 +117,41 @@ Entry.Arduino = {
     },
 };
 
+Entry.Arduino.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                arduino_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                arduino_get_digital_value: '디지털 %1 번 센서값  ',
+                arduino_toggle_led: '디지털 %1 번 핀 %2 %3',
+                arduino_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                arduino_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+            },
+            Device: {
+                arduino: '아두이노',
+            },
+            Menus: {
+                arduino: '아두이노',
+            },
+        },
+        en: {
+            template: {
+                arduino_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                arduino_get_digital_value: 'Digital %1 Sensor value  ',
+                arduino_toggle_led: 'Digital %1 Pin %2 %3',
+                arduino_toggle_pwm: 'Digital %1 Pin %2 %3',
+                arduino_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+            },
+            Device: {
+                arduino: 'arduino',
+            },
+            Menus: {
+                arduino: 'Arduino',
+            },
+        },
+    };
+};
+
 Entry.Arduino.blockMenuBlocks = [
     'arduino_get_number_sensor_value',
     'arduino_get_digital_value',
@@ -474,7 +509,10 @@ Entry.Arduino.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

@@ -79,6 +79,38 @@ Entry.EduMaker.blockMenuBlocks = [
     'edumaker_set_servo',
     // EduMaker Added 2017-11-30
 ];
+
+Entry.EduMaker.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                edumaker_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                edumaker_get_analog_value: '아날로그 %1 번 센서값',
+                edumaker_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                edumaker_get_digital: '디지털 %1 번 센서값',
+                edumaker_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                edumaker_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                edumaker_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                edumaker_toggle_led: '디지털 %1 번 핀 %2 %3',
+            },
+            Menus: { edumaker: '에듀메이커 보드' },
+        },
+        en: {
+            template: {
+                edumaker_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                edumaker_get_analog_value: '아날로그 %1 번 센서값',
+                edumaker_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                edumaker_get_digital: '디지털 %1 번 센서값',
+                edumaker_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                edumaker_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                edumaker_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                edumaker_toggle_led: '디지털 %1 번 핀 %2 %3',
+            },
+            Menus: { edumaker: 'EduMaker Board' },
+        },
+    };
+};
+
 Entry.EduMaker.getBlocks = function() {
     return {
         //region edumaker 에듀메이커
@@ -367,7 +399,10 @@ Entry.EduMaker.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
