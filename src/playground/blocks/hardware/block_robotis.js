@@ -377,6 +377,23 @@ Entry.Robotis_carCont.setLanguage = function() {
                     '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
                 robotis_carCont_cm_calibration:
                     '%1 적외선 센서 캘리브레이션 값을 %2 (으)로 정하기 %3',
+                robotis_openCM70_cm_custom_value: '직접입력 주소 ( %1 ) %2 값',
+                robotis_openCM70_sensor_value: '제어기 %1 값',
+                robotis_openCM70_aux_sensor_value: '%1   %2 값',
+                robotis_openCM70_cm_buzzer_index: '제어기 음계값 %1 을(를) %2 초 동안 연주 %3',
+                robotis_openCM70_cm_buzzer_melody: '제어기 멜로디 %1 번 연주 %2',
+                robotis_openCM70_cm_sound_detected_clear: '최종소리감지횟수 초기화 %1',
+                robotis_openCM70_cm_led: '제어기 %1 LED %2 %3',
+                robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
+                robotis_openCM70_aux_motor_speed:
+                    '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
+                robotis_openCM70_aux_servo_speed:
+                    '%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2 (으)로 정하기 %3',
+                robotis_openCM70_aux_led_module: '%1 LED 모듈을 %2 (으)로 정하기 %3',
+                robotis_openCM70_aux_custom: '%1 사용자 장치를 %2 (으)로 정하기 %3',
+                robotis_openCM70_cm_custom: '직접입력 주소 ( %1 ) (을)를 %2 (으)로 정하기 %3',
             },
             Helper: {
                 robotis_carCont_sensor_value:
@@ -388,6 +405,30 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_carCont_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
                 robotis_carCont_cm_calibration:
                     '적외선센서 조정 값(http://support.robotis.com/ko/: 자동차로봇> 2. B. 적외선 값 조정)을 직접 정합니다.',
+                robotis_openCM70_sensor_value:
+                    '최종 소리 감지 횟수 : 마지막 실시간 소리 감지 횟수 값 입니다.<br/>실시간 소리 감지 횟수 : 약 1초 안에 다음 소리가 감지되면 1씩 증가합니다.<br/>사용자 버튼 상태 : 접촉(1), 비접촉(0) 값 입니다.최종 소리 감지 횟수 : 마지막 실시간 소리 감지 횟수 값 입니다.<br/>실시간 소리 감지 횟수 : 약 1초 안에 다음 소리가 감지되면 1씩 증가합니다.<br/>사용자 버튼 상태 : 접촉(1), 비접촉(0) 값 입니다.',
+                robotis_openCM70_aux_sensor_value:
+                    '서보모터 위치 : 0 ~ 1023, 중간 위치의 값은 512 입니다.<br/>적외선센서 :  물체와 가까울 수록 큰 값 입니다.<br/>접촉센서 : 접촉(1), 비접촉(0) 값 입니다.<br/>조도센서(CDS) : 0 ~ 1023, 밝을 수록 큰 값 입니다.<br/>온습도센서(습도) : 0 ~ 100, 습할 수록 큰 값 입니다.<br/>온습도센서(온도) : -20 ~ 100, 온도가 높을 수록 큰 값 입니다.<br/>온도센서 :  -20 ~ 100, 온도가 높을 수록 큰 값 입니다.<br/>초음파센서 : -<br/>자석센서 : 접촉(1), 비접촉(0) 값 입니다.<br/>동작감지센서 : 동작 감지(1), 동작 미감지(0) 값 입니다.<br/>컬러센서 : 알수없음(0), 흰색(1), 검은색(2), 빨간색(3), 녹색(4), 파란색(5), 노란색(6) 값 입니다.<br/>사용자 장치 : 사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_buzzer_index: '음계를 0.1 ~ 5 초 동안 연주 합니다.',
+                robotis_openCM70_cm_buzzer_melody:
+                    "멜로디를 연주 합니다.<br/>멜로디를 연속으로 재생하는 경우, 다음 소리가 재생되지 않으면 '흐름 > X 초 기다리기' 블록을 사용하여 기다린 후 실행합니다.",
+                robotis_openCM70_cm_sound_detected_clear:
+                    '최종 소리 감지횟 수를 0 으로 초기화 합니다.',
+                robotis_openCM70_cm_led: '제어기의 빨간색, 녹색, 파란색 LED 를 켜거나 끕니다.',
+                robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
+                robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_servo_mode:
+                    '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
+                robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_servo_position:
+                    '서보모터 위치를 0 ~ 1023 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
+                robotis_openCM70_aux_led_module: 'LED 모듈의 LED 를 켜거나 끕니다.',
+                robotis_openCM70_aux_custom:
+                    '사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_custom_value:
+                    '컨트롤 테이블 주소를 직접 입력하여 값을 확인 합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_custom:
+                    '컨트롤 테이블 주소를 직접 입력하여 값을 정합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
             },
             Blocks: {
                 robotis_carCont_aux_motor_speed_1: '감속모터 속도를',
@@ -459,8 +500,52 @@ Entry.Robotis_carCont.setLanguage = function() {
                     'Set the speed of decelerating motor of %1 to %2, and the output value to %3  %4',
                 robotis_carCont_cm_calibration:
                     'Set %1 value of infrared sensor calibration to %2  %3',
+                robotis_openCM70_cm_custom_value: 'Custom address ( %1 ) value %2',
+                robotis_openCM70_sensor_value: 'Controller value %1',
+                robotis_openCM70_aux_sensor_value: 'Value %1   %2',
+                robotis_openCM70_cm_buzzer_index:
+                    'Play %1 controller scale value for %2 seconds %3 ',
+                robotis_openCM70_cm_buzzer_melody: 'Play controller melody %1 times %2',
+                robotis_openCM70_cm_sound_detected_clear:
+                    'Initialize the final number of sound detection  %1',
+                robotis_openCM70_cm_led: 'Controller %1 LED %2 %3',
+                robotis_openCM70_cm_motion: 'Play the motion %1 times',
+                robotis_openCM70_aux_motor_speed:
+                    'Set the speed of decelerating motor of %1 to %2 , and the output value to %3  %4',
+                robotis_openCM70_aux_servo_mode: 'Set the mode of %1 servo motor to %2  %3',
+                robotis_openCM70_aux_servo_speed:
+                    'Set the speed of servo motor of %1 to %2 , and the output value to %3  %4',
+                robotis_openCM70_aux_servo_position: 'Set the position of %1 servo motor to %2  %3',
+                robotis_openCM70_aux_led_module: 'Set the LED module of %1 as %2  %3',
+                robotis_openCM70_aux_custom: 'Set the user device of %1 as %2  %3',
+                robotis_openCM70_cm_custom: 'Set the custom address ( %1 ) as %2  %3',
             },
             Helper: {
+                robotis_openCM70_sensor_value:
+                    'Final number of sound detection : the value of the final detected sound times.<br/>Number of live sound detection : increases by 1 when it detects the next sound within 1 second.<br/>Status of user button: the value of contact (1), non-contact (0).Final number of sound detection : the value of the number of last live sound detection.<br/>Number of live sound detection : increases by 1 when it detects the next sound within 1 second.<br/>Status of user button : the value of contact (1), non-contact (0).',
+                robotis_openCM70_aux_sensor_value:
+                    "Position of servo motor: 0-1023, the value of the middle is 512.<br/>Infrared sensor : the value is larger when it's close to an object.<br/>Contact sensor: the value of contact(1), non-contact(0).<br/>CDS: 0-1023, the value is larger when it's brighter.<br/>Temperature-humidity sensor (humidity) : 0-100, the value is larger when it's more humid.<br/>Temperature-humidity sensor (temperature) : -20 - 100, the value is larger when it's higher in temperature.<br/>Temperature sensor : -20 - 100, the value is larger when it's higher in temperature.<br/>Ultrasound sensor: -<br/>Magnetic sensor : the value of contact(1), non-contact(0).<br/>Motion detector: the value of detected motion(1), non-detected motion(0).<br/>Color sensor: the value of unknown(0), white(1), black(2), red(3), green(4), blue(5), yellow(6).<br/>User device: please refer to ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation on user sensor production.",
+                robotis_openCM70_cm_buzzer_index: 'Plays the scale for 0.1 to 5 seconds.',
+                robotis_openCM70_cm_buzzer_melody:
+                    "Plays melody.<br/>If the following sound doesn't play when repeatedly playing melodies, use the block 'flow > wait for X seconds' and execute it again.",
+                robotis_openCM70_cm_sound_detected_clear: 'Final number of sound detection ',
+                robotis_openCM70_cm_led: 'Turns the red, green, blue LED of the device on or off.',
+                robotis_openCM70_cm_motion: 'Executes the motion downloaded on the device.',
+                robotis_openCM70_aux_motor_speed:
+                    'Sets the speed of decelerating motor to the value of 0 - 1023.',
+                robotis_openCM70_aux_servo_mode:
+                    "Sets the servo motor as wheel mode or joint mode.<br/>The same mode continues to apply once it's set.<br/>Wheel mode designates the servo motor's speed, and spins the servo motor.<br/>Joint mode moves the servo motor's position with the set servo motor speed.",
+                robotis_openCM70_aux_servo_speed:
+                    "Sets servo motor's speed to the value of 0 - 1023.",
+                robotis_openCM70_aux_servo_position:
+                    "Sets servo motor's position to the value of 0-1023.<br/>Use as servo motor speed",
+                robotis_openCM70_aux_led_module: 'Turns the LED of LED module on or off.',
+                robotis_openCM70_aux_custom:
+                    'Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation of user sensor production.',
+                robotis_openCM70_cm_custom_value:
+                    'Checks the value by directly inputting the control table address.<br/>Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation about control table.',
+                robotis_openCM70_cm_custom:
+                    'Checks the value by directly inputting the control table address.<br/>Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation about control table.',
                 robotis_carCont_sensor_value:
                     "Left connected sensor : the value of contact (1), non-contact (0).<br/>Right contact sensor: the value of contact (1), non-contact (0).<br/>Final number of sound detection : the value of the number of last live sound detection.<br/>Number of live sound detection : increases by 1 when it detects the next sound within 1 second.<br/>Right infrared sensor: the value is larger when it's closer to an object.<br/>Value of left infrared sensor calibration : the calibration value of the infrared sensor.<br/>Value of right infrared sensor calibration : the calibration value of the infrared sensor.<br/>(*Calibration value - control value of infrared sensor)",
                 robotis_carCont_cm_led:
