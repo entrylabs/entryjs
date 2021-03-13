@@ -795,6 +795,12 @@ Entry.Bitbrick.setLanguage = function() {
                 BITBRICK_dc_direction_ccw: '반시계',
                 BITBRICK_dc_direction_cw: '시계',
             },
+            Menus: {
+                bitbrick: '비트브릭',
+            },
+            Device: {
+                bitbrick: '비트브릭',
+            },
         },
         en: {
             // en.js에 작성하던 내용
@@ -824,6 +830,9 @@ Entry.Bitbrick.setLanguage = function() {
                 BITBRICK_UserInput: 'UserInput',
                 BITBRICK_dc_direction_ccw: 'CCW',
                 BITBRICK_dc_direction_cw: 'CW',
+            },
+            Menus: {
+                bitbrick: 'bitbrick',
             },
         },
     };

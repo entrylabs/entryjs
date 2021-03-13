@@ -22,7 +22,7 @@ Entry.Robotis_carCont = {
         AUX_MOTOR_SPEED_LEFT: [152, 2], // car_cont
         AUX_MOTOR_SPEED_RIGHT: [154, 2],
     },
-    setZero: function () {
+    setZero: function() {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
         this.update();
@@ -41,11 +41,11 @@ Entry.Robotis_carCont = {
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_carCont.png',
     title: {
-        "ko": "로보티즈 로봇자동차",
-        "en": "Robotis Robot car"
+        ko: '로보티즈 로봇자동차',
+        en: 'Robotis Robot car',
     },
     delay: 40,
-    postCallReturn: function (script, data, ms) {
+    postCallReturn: function(script, data, ms) {
         if (ms <= 0) {
             this.setRobotisData(data);
             this.update();
@@ -60,7 +60,7 @@ Entry.Robotis_carCont = {
             this.update();
 
             //delay xx ms
-            setTimeout(function () {
+            setTimeout(function() {
                 script.timeFlag = 0;
             }, ms);
 
@@ -77,7 +77,7 @@ Entry.Robotis_carCont = {
             return script.callReturn();
         }
     },
-    wait: function (sq, ms) {
+    wait: function(sq, ms) {
         Entry.hw.socket.send(JSON.stringify(sq));
 
         var start = new Date().getTime();
@@ -87,34 +87,32 @@ Entry.Robotis_carCont = {
             end = new Date().getTime();
         }
     },
-    update: function () {
+    update: function() {
         Entry.hw.update();
         var ROBOTIS_DATA = Entry.hw.sendQueue['ROBOTIS_DATA'];
         if (ROBOTIS_DATA) {
-            ROBOTIS_DATA.forEach(function (data) {
+            ROBOTIS_DATA.forEach(function(data) {
                 data['send'] = true;
             });
         }
         this.setRobotisData(null);
     },
-    filterSendData: function () {
+    filterSendData: function() {
         var ROBOTIS_DATA = Entry.hw.sendQueue['ROBOTIS_DATA'];
         if (ROBOTIS_DATA) {
-            return ROBOTIS_DATA.filter(function (data) {
+            return ROBOTIS_DATA.filter(function(data) {
                 return data.send !== true;
             });
         } else {
             return null;
         }
     },
-    setRobotisData: function (data) {
+    setRobotisData: function(data) {
         var filterData = this.filterSendData();
         if (data == null) {
             Entry.hw.sendQueue['ROBOTIS_DATA'] = filterData;
         } else {
-            Entry.hw.sendQueue['ROBOTIS_DATA'] = filterData
-                ? filterData.concat(data)
-                : data;
+            Entry.hw.sendQueue['ROBOTIS_DATA'] = filterData ? filterData.concat(data) : data;
         }
     },
 };
@@ -167,7 +165,7 @@ Entry.Robotis_openCM70 = {
         PORT5: false,
         PORT6: false,
     },
-    setZero: function () {
+    setZero: function() {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
         Entry.Robotis_carCont.update();
@@ -216,8 +214,8 @@ Entry.Robotis_openCM70 = {
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_openCM70.png',
     title: {
-        "ko": "로보티즈 IoT",
-        "en": "Robotis Open CM70"
+        ko: '로보티즈 IoT',
+        en: 'Robotis Open CM70',
     },
     delay: 15,
 };
@@ -270,7 +268,7 @@ Entry.Robotis_openCM70EDU = {
         PORT5: false,
         PORT6: false,
     },
-    setZero: function () {
+    setZero: function() {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
         Entry.Robotis_carCont.update();
@@ -309,7 +307,6 @@ Entry.Robotis_openCM70EDU = {
         Entry.Robotis_openCM70EDU.SERVO_MODULEWRITE.PORT5 = false;
         Entry.Robotis_openCM70EDU.SERVO_MODULEWRITE.PORT6 = false;
 
-
         Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = false;
         Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = false;
         Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = false;
@@ -336,26 +333,26 @@ Entry.Robotis_openCM70EDU = {
             //FND: { name: '전원', type: 'output', pos: { x: 0, y: 0 } },
         },
         ports: {
-            'USERBUTTONSTATE': { name: 'USERBUTTON', type: 'input', pos: { x: 565, y: 335 } },
+            USERBUTTONSTATE: { name: 'USERBUTTON', type: 'input', pos: { x: 565, y: 335 } },
             //'LEDR': { name: 'R', type: 'input', pos: { x: 140, y: 300 } },
             //'LEDG': { name: 'G', type: 'input', pos: { x: 170, y: 300 } },
             //'LEDB': { name: 'B', type: 'input', pos: { x: 200, y: 300 } },
             //'GM1': { name: 'GEARD1', type: 'input', pos: { x: 450, y: 300 } },
             //'GM2': { name: 'GEARD2', type: 'input', pos: { x: 450, y: 480 } },
-            'MONITORPORT0': { name: 'PORT3', type: 'input', pos: { x: 320, y: 320 } },
-            'MONITORPORT1': { name: 'PORT4', type: 'input', pos: { x: 330, y: 330 } },
-            'MONITORPORT2': { name: 'PORT5', type: 'input', pos: { x: 320, y: 440 } },
-            'MONITORPORT3': { name: 'PORT6', type: 'input', pos: { x: 330, y: 460 } }
+            MONITORPORT0: { name: 'PORT3', type: 'input', pos: { x: 320, y: 320 } },
+            MONITORPORT1: { name: 'PORT4', type: 'input', pos: { x: 330, y: 330 } },
+            MONITORPORT2: { name: 'PORT5', type: 'input', pos: { x: 320, y: 440 } },
+            MONITORPORT3: { name: 'PORT6', type: 'input', pos: { x: 330, y: 460 } },
         },
-        mode: 'both'
+        mode: 'both',
     },
     id: '7.3',
     name: 'robotis_openCM70EDU',
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_openCM70EDU.png',
     title: {
-        "ko": "로보티즈 실과",
-        "en": "ROBOTIS InfoRobot"
+        ko: '로보티즈 실과',
+        en: 'ROBOTIS InfoRobot',
     },
     delay: 15,
 };
@@ -369,7 +366,261 @@ Entry.Robotis_carCont.blockMenuBlocks = [
     'robotis_carCont_cm_calibration',
 ];
 
-Entry.Robotis_carCont.getBlocks = function () {
+Entry.Robotis_carCont.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                robotis_carCont_sensor_value: '%1   값',
+                robotis_carCont_cm_led: '4번 LED %1 ,  1번 LED %2 %3',
+                robotis_carCont_cm_sound_detected_clear: '최종소리감지횟수 초기화 %1',
+                robotis_carCont_aux_motor_speed:
+                    '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                robotis_carCont_cm_calibration:
+                    '%1 적외선 센서 캘리브레이션 값을 %2 (으)로 정하기 %3',
+                robotis_openCM70_cm_custom_value: '직접입력 주소 ( %1 ) %2 값',
+                robotis_openCM70_sensor_value: '제어기 %1 값',
+                robotis_openCM70_aux_sensor_value: '%1   %2 값',
+                robotis_openCM70_cm_buzzer_index: '제어기 음계값 %1 을(를) %2 초 동안 연주 %3',
+                robotis_openCM70_cm_buzzer_melody: '제어기 멜로디 %1 번 연주 %2',
+                robotis_openCM70_cm_sound_detected_clear: '최종소리감지횟수 초기화 %1',
+                robotis_openCM70_cm_led: '제어기 %1 LED %2 %3',
+                robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
+                robotis_openCM70_aux_motor_speed:
+                    '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
+                robotis_openCM70_aux_servo_speed:
+                    '%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2 (으)로 정하기 %3',
+                robotis_openCM70_aux_led_module: '%1 LED 모듈을 %2 (으)로 정하기 %3',
+                robotis_openCM70_aux_custom: '%1 사용자 장치를 %2 (으)로 정하기 %3',
+                robotis_openCM70_cm_custom: '직접입력 주소 ( %1 ) (을)를 %2 (으)로 정하기 %3',
+            },
+            Helper: {
+                robotis_carCont_sensor_value:
+                    '왼쪽 접속 센서 : 접촉(1), 비접촉(0) 값 입니다.<br/>오른쪽 접촉 센서 : 접촉(1), 비접촉(0) 값 입니다.<br/>선택 버튼 상태 : 접촉(1), 비접촉(0) 값 입니다.<br/>최종 소리 감지 횟수 : 마지막 실시간 소리 감지 횟수 값 입니다.<br/>실시간 소리 감지 횟수 : 약 1초 안에 다음 소리가 감지되면 1씩 증가합니다.<br/>왼쪽 적외선 센서 : 물체와 가까울 수록 큰 값 입니다.<br/>오른쪽 적외선 센서 : 물체와 가까울 수록 큰 값 값 입니다.<br/>왼쪽 적외선 센서 캘리브레이션 값 : 적외선 센서의 캘리브레이션 값 입니다.<br/>오른쪽 적외선 센서 캘리브레이션 값 : 적외선 센서의 캘리브레이션 값 입니다.<br/>(*캘리브레이션 값 - 적외선센서 조정 값)',
+                robotis_carCont_cm_led:
+                    '4개의 LED 중 1번 또는 4번 LED 를 켜거나 끕니다.<br/>LED 2번과 3번은 동작 지원하지 않습니다.',
+                robotis_carCont_cm_sound_detected_clear:
+                    '최종 소리 감지횟 수를 0 으로 초기화 합니다.',
+                robotis_carCont_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_carCont_cm_calibration:
+                    '적외선센서 조정 값(http://support.robotis.com/ko/: 자동차로봇> 2. B. 적외선 값 조정)을 직접 정합니다.',
+                robotis_openCM70_sensor_value:
+                    '최종 소리 감지 횟수 : 마지막 실시간 소리 감지 횟수 값 입니다.<br/>실시간 소리 감지 횟수 : 약 1초 안에 다음 소리가 감지되면 1씩 증가합니다.<br/>사용자 버튼 상태 : 접촉(1), 비접촉(0) 값 입니다.최종 소리 감지 횟수 : 마지막 실시간 소리 감지 횟수 값 입니다.<br/>실시간 소리 감지 횟수 : 약 1초 안에 다음 소리가 감지되면 1씩 증가합니다.<br/>사용자 버튼 상태 : 접촉(1), 비접촉(0) 값 입니다.',
+                robotis_openCM70_aux_sensor_value:
+                    '서보모터 위치 : 0 ~ 1023, 중간 위치의 값은 512 입니다.<br/>적외선센서 :  물체와 가까울 수록 큰 값 입니다.<br/>접촉센서 : 접촉(1), 비접촉(0) 값 입니다.<br/>조도센서(CDS) : 0 ~ 1023, 밝을 수록 큰 값 입니다.<br/>온습도센서(습도) : 0 ~ 100, 습할 수록 큰 값 입니다.<br/>온습도센서(온도) : -20 ~ 100, 온도가 높을 수록 큰 값 입니다.<br/>온도센서 :  -20 ~ 100, 온도가 높을 수록 큰 값 입니다.<br/>초음파센서 : -<br/>자석센서 : 접촉(1), 비접촉(0) 값 입니다.<br/>동작감지센서 : 동작 감지(1), 동작 미감지(0) 값 입니다.<br/>컬러센서 : 알수없음(0), 흰색(1), 검은색(2), 빨간색(3), 녹색(4), 파란색(5), 노란색(6) 값 입니다.<br/>사용자 장치 : 사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_buzzer_index: '음계를 0.1 ~ 5 초 동안 연주 합니다.',
+                robotis_openCM70_cm_buzzer_melody:
+                    "멜로디를 연주 합니다.<br/>멜로디를 연속으로 재생하는 경우, 다음 소리가 재생되지 않으면 '흐름 > X 초 기다리기' 블록을 사용하여 기다린 후 실행합니다.",
+                robotis_openCM70_cm_sound_detected_clear:
+                    '최종 소리 감지횟 수를 0 으로 초기화 합니다.',
+                robotis_openCM70_cm_led: '제어기의 빨간색, 녹색, 파란색 LED 를 켜거나 끕니다.',
+                robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
+                robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_servo_mode:
+                    '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
+                robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_servo_position:
+                    '서보모터 위치를 0 ~ 1023 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
+                robotis_openCM70_aux_led_module: 'LED 모듈의 LED 를 켜거나 끕니다.',
+                robotis_openCM70_aux_custom:
+                    '사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_custom_value:
+                    '컨트롤 테이블 주소를 직접 입력하여 값을 확인 합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_custom:
+                    '컨트롤 테이블 주소를 직접 입력하여 값을 정합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+            },
+            Blocks: {
+                robotis_carCont_aux_motor_speed_1: '감속모터 속도를',
+                robotis_carCont_aux_motor_speed_2: ', 출력값을',
+                robotis_carCont_calibration_1: '적외선 센서 캘리브레이션 값을',
+                robotis_common_case_01: '(을)를',
+                robotis_common_set: '(으)로 정하기',
+                robotis_common_value: '값',
+                robotis_common_clockwhise: '시계방향',
+                robotis_common_counter_clockwhise: '반시계방향',
+                robotis_common_wheel_mode: '회전모드',
+                robotis_common_joint_mode: '관절모드',
+                robotis_common_red_color: '빨간색',
+                robotis_common_green_color: '녹색',
+                robotis_common_blue_color: '파란색',
+                robotis_common_on: '켜기',
+                robotis_common_off: '끄기',
+                robotis_common_cm: '제어기',
+                robotis_common_port_1: '포트 1',
+                robotis_common_port_2: '포트 2',
+                robotis_common_port_3: '포트 3',
+                robotis_common_port_4: '포트 4',
+                robotis_common_port_5: '포트 5',
+                robotis_common_port_6: '포트 6',
+                robotis_common_play_buzzer: '연주',
+                robotis_common_play_motion: '실행',
+                robotis_common_motion: '모션',
+                robotis_common_index_number: '번',
+                robotis_cm_custom: '직접입력 주소',
+                robotis_cm_spring_left: '왼쪽 접촉 센서',
+                robotis_cm_spring_right: '오른쪽 접촉 센서',
+                robotis_cm_led_left: '왼쪽 LED',
+                robotis_cm_led_right: '오른쪽 LED',
+                robotis_cm_led_both: '양 쪽 LED',
+                robotis_cm_switch: '선택 버튼 상태',
+                robotis_cm_user_button: '사용자 버튼 상태',
+                robotis_cm_sound_detected: '최종 소리 감지 횟수',
+                robotis_cm_sound_detecting: '실시간 소리 감지 횟수',
+                robotis_cm_ir_left: '왼쪽 적외선 센서',
+                robotis_cm_ir_right: '오른쪽 적외선 센서',
+                robotis_cm_calibration_left: '왼쪽 적외선 센서 캘리브레이션 값',
+                robotis_cm_calibration_right: '오른쪽 적외선 센서 캘리브레이션 값',
+                robotis_cm_clear_sound_detected: '최종소리감지횟수 초기화',
+                robotis_cm_buzzer_index: '음계값',
+                robotis_cm_buzzer_melody: '멜로디',
+                robotis_cm_led_1: '1번 LED',
+                robotis_cm_led_4: '4번 LED',
+                robotis_aux_servo_position: '서보모터 위치',
+                robotis_aux_ir: '적외선센서',
+                robotis_aux_touch: '접촉센서',
+                robotis_aux_brightness: '조도센서(CDS)',
+                robotis_aux_hydro_themo_humidity: '온습도센서(습도)',
+                robotis_aux_hydro_themo_temper: '온습도센서(온도)',
+                robotis_aux_temperature: '온도센서',
+                robotis_aux_ultrasonic: '초음파센서',
+                robotis_aux_magnetic: '자석센서',
+                robotis_aux_motion_detection: '동작감지센서',
+                robotis_aux_color: '컬러센서',
+                robotis_aux_custom: '사용자 장치',
+            },
+        },
+        en: {
+            template: {
+                robotis_carCont_sensor_value: 'Value   %1',
+                robotis_carCont_cm_led: '%1 LED 4,  %2 LED %3',
+                robotis_carCont_cm_sound_detected_clear:
+                    'Initialize the final number of sound detection  %1',
+                robotis_carCont_aux_motor_speed:
+                    'Set the speed of decelerating motor of %1 to %2, and the output value to %3  %4',
+                robotis_carCont_cm_calibration:
+                    'Set %1 value of infrared sensor calibration to %2  %3',
+                robotis_openCM70_cm_custom_value: 'Custom address ( %1 ) value %2',
+                robotis_openCM70_sensor_value: 'Controller value %1',
+                robotis_openCM70_aux_sensor_value: 'Value %1   %2',
+                robotis_openCM70_cm_buzzer_index:
+                    'Play %1 controller scale value for %2 seconds %3 ',
+                robotis_openCM70_cm_buzzer_melody: 'Play controller melody %1 times %2',
+                robotis_openCM70_cm_sound_detected_clear:
+                    'Initialize the final number of sound detection  %1',
+                robotis_openCM70_cm_led: 'Controller %1 LED %2 %3',
+                robotis_openCM70_cm_motion: 'Play the motion %1 times',
+                robotis_openCM70_aux_motor_speed:
+                    'Set the speed of decelerating motor of %1 to %2 , and the output value to %3  %4',
+                robotis_openCM70_aux_servo_mode: 'Set the mode of %1 servo motor to %2  %3',
+                robotis_openCM70_aux_servo_speed:
+                    'Set the speed of servo motor of %1 to %2 , and the output value to %3  %4',
+                robotis_openCM70_aux_servo_position: 'Set the position of %1 servo motor to %2  %3',
+                robotis_openCM70_aux_led_module: 'Set the LED module of %1 as %2  %3',
+                robotis_openCM70_aux_custom: 'Set the user device of %1 as %2  %3',
+                robotis_openCM70_cm_custom: 'Set the custom address ( %1 ) as %2  %3',
+            },
+            Helper: {
+                robotis_openCM70_sensor_value:
+                    'Final number of sound detection : the value of the final detected sound times.<br/>Number of live sound detection : increases by 1 when it detects the next sound within 1 second.<br/>Status of user button: the value of contact (1), non-contact (0).Final number of sound detection : the value of the number of last live sound detection.<br/>Number of live sound detection : increases by 1 when it detects the next sound within 1 second.<br/>Status of user button : the value of contact (1), non-contact (0).',
+                robotis_openCM70_aux_sensor_value:
+                    "Position of servo motor: 0-1023, the value of the middle is 512.<br/>Infrared sensor : the value is larger when it's close to an object.<br/>Contact sensor: the value of contact(1), non-contact(0).<br/>CDS: 0-1023, the value is larger when it's brighter.<br/>Temperature-humidity sensor (humidity) : 0-100, the value is larger when it's more humid.<br/>Temperature-humidity sensor (temperature) : -20 - 100, the value is larger when it's higher in temperature.<br/>Temperature sensor : -20 - 100, the value is larger when it's higher in temperature.<br/>Ultrasound sensor: -<br/>Magnetic sensor : the value of contact(1), non-contact(0).<br/>Motion detector: the value of detected motion(1), non-detected motion(0).<br/>Color sensor: the value of unknown(0), white(1), black(2), red(3), green(4), blue(5), yellow(6).<br/>User device: please refer to ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation on user sensor production.",
+                robotis_openCM70_cm_buzzer_index: 'Plays the scale for 0.1 to 5 seconds.',
+                robotis_openCM70_cm_buzzer_melody:
+                    "Plays melody.<br/>If the following sound doesn't play when repeatedly playing melodies, use the block 'flow > wait for X seconds' and execute it again.",
+                robotis_openCM70_cm_sound_detected_clear: 'Final number of sound detection ',
+                robotis_openCM70_cm_led: 'Turns the red, green, blue LED of the device on or off.',
+                robotis_openCM70_cm_motion: 'Executes the motion downloaded on the device.',
+                robotis_openCM70_aux_motor_speed:
+                    'Sets the speed of decelerating motor to the value of 0 - 1023.',
+                robotis_openCM70_aux_servo_mode:
+                    "Sets the servo motor as wheel mode or joint mode.<br/>The same mode continues to apply once it's set.<br/>Wheel mode designates the servo motor's speed, and spins the servo motor.<br/>Joint mode moves the servo motor's position with the set servo motor speed.",
+                robotis_openCM70_aux_servo_speed:
+                    "Sets servo motor's speed to the value of 0 - 1023.",
+                robotis_openCM70_aux_servo_position:
+                    "Sets servo motor's position to the value of 0-1023.<br/>Use as servo motor speed",
+                robotis_openCM70_aux_led_module: 'Turns the LED of LED module on or off.',
+                robotis_openCM70_aux_custom:
+                    'Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation of user sensor production.',
+                robotis_openCM70_cm_custom_value:
+                    'Checks the value by directly inputting the control table address.<br/>Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation about control table.',
+                robotis_openCM70_cm_custom:
+                    'Checks the value by directly inputting the control table address.<br/>Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation about control table.',
+                robotis_carCont_sensor_value:
+                    "Left connected sensor : the value of contact (1), non-contact (0).<br/>Right contact sensor: the value of contact (1), non-contact (0).<br/>Final number of sound detection : the value of the number of last live sound detection.<br/>Number of live sound detection : increases by 1 when it detects the next sound within 1 second.<br/>Right infrared sensor: the value is larger when it's closer to an object.<br/>Value of left infrared sensor calibration : the calibration value of the infrared sensor.<br/>Value of right infrared sensor calibration : the calibration value of the infrared sensor.<br/>(*Calibration value - control value of infrared sensor)",
+                robotis_carCont_cm_led:
+                    'Turns LED 1 or LED 4 among the 4 LEDs on or off. <br/>Not applicable to LED 2 and LED 3.',
+                robotis_carCont_cm_sound_detected_clear:
+                    'Initializes the final amount of detected sound to 0.',
+                robotis_carCont_aux_motor_speed:
+                    'Sets the speed of decelerating motor to the value of 0-1023.',
+                robotis_carCont_cm_calibration:
+                    'Sets the controlling value of infrared sensor (http://support.robotis.com/ko/: automobile robot> 2. B. control infrared value).',
+            },
+            Blocks: {
+                robotis_carCont_aux_motor_speed_1: 'Speed of decelerating motor',
+                robotis_carCont_aux_motor_speed_2: ', the output value',
+                robotis_carCont_calibration_1: 'Value of the infrared sensor calibration ',
+                robotis_common_case_01: '(을)를',
+                robotis_common_set: 'the output value',
+                robotis_common_value: 'Value',
+                robotis_common_clockwhise: 'Clockwise',
+                robotis_common_counter_clockwhise: 'Counterclockwise',
+                robotis_common_wheel_mode: 'Wheel mode',
+                robotis_common_joint_mode: 'Joint mode',
+                robotis_common_red_color: 'Red',
+                robotis_common_green_color: 'Green',
+                robotis_common_blue_color: 'Blue',
+                robotis_common_on: 'Turn on',
+                robotis_common_off: 'Turn off',
+                robotis_common_cm: 'Controller',
+                robotis_common_port_1: 'Port 1',
+                robotis_common_port_2: 'Port 2',
+                robotis_common_port_3: 'Port 3',
+                robotis_common_port_4: 'Port 4',
+                robotis_common_port_5: 'Port 5',
+                robotis_common_port_6: 'Port 6',
+                robotis_common_play_buzzer: 'Play',
+                robotis_common_play_motion: 'Play',
+                robotis_common_motion: 'Motion',
+                robotis_common_index_number: 'Number',
+                robotis_cm_custom: 'Custom address',
+                robotis_cm_spring_left: 'Left contact sensor',
+                robotis_cm_spring_right: 'Right contact sensor',
+                robotis_cm_led_left: 'Left LED',
+                robotis_cm_led_right: 'Right LED',
+                robotis_cm_led_both: 'Both LED',
+                robotis_cm_switch: 'Status of the switch',
+                robotis_cm_user_button: 'Status of user button',
+                robotis_cm_sound_detected: 'Final number of sound detection ',
+                robotis_cm_sound_detecting: 'Number of live sound detection ',
+                robotis_cm_ir_left: 'Left infrared sensor',
+                robotis_cm_ir_right: 'Right infrared sensor',
+                robotis_cm_calibration_left: 'Value of the left infrared sensor calibration ',
+                robotis_cm_calibration_right: 'Value of the right infrared sensor calibration ',
+                robotis_cm_clear_sound_detected: 'Initialize the final number of sound detection',
+                robotis_cm_buzzer_index: 'Scale index',
+                robotis_cm_buzzer_melody: 'Melody',
+                robotis_cm_led_1: 'LED 1',
+                robotis_cm_led_4: 'LED 4',
+                robotis_aux_servo_position: 'Position of servo motor',
+                robotis_aux_ir: 'Infrared sensor',
+                robotis_aux_touch: 'Contact sensor',
+                robotis_aux_brightness: 'CDS',
+                robotis_aux_hydro_themo_humidity: 'Temperature-humidity sensor (humidity)',
+                robotis_aux_hydro_themo_temper: 'Temperature-humidity sensor (temperature)',
+                robotis_aux_temperature: 'Temperature sensor',
+                robotis_aux_ultrasonic: 'Ultrasonic sensor',
+                robotis_aux_magnetic: 'Magnetic sensor',
+                robotis_aux_motion_detection: 'Motion detector',
+                robotis_aux_color: 'Color sensor',
+                robotis_aux_custom: 'User device',
+            },
+        },
+    };
+};
+
+Entry.Robotis_carCont.getBlocks = function() {
     return {
         //region robotis 로보티즈 carCont
         robotis_carCont_sensor_value: {
@@ -383,29 +634,14 @@ Entry.Robotis_carCont.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.robotis_cm_spring_left, 'CM_SPRING_LEFT'],
-                        [
-                            Lang.Blocks.robotis_cm_spring_right,
-                            'CM_SPRING_RIGHT',
-                        ],
+                        [Lang.Blocks.robotis_cm_spring_right, 'CM_SPRING_RIGHT'],
                         [Lang.Blocks.robotis_cm_switch, 'CM_SWITCH'],
-                        [
-                            Lang.Blocks.robotis_cm_sound_detected,
-                            'CM_SOUND_DETECTED',
-                        ],
-                        [
-                            Lang.Blocks.robotis_cm_sound_detecting,
-                            'CM_SOUND_DETECTING',
-                        ],
+                        [Lang.Blocks.robotis_cm_sound_detected, 'CM_SOUND_DETECTED'],
+                        [Lang.Blocks.robotis_cm_sound_detecting, 'CM_SOUND_DETECTING'],
                         [Lang.Blocks.robotis_cm_ir_left, 'CM_IR_LEFT'],
                         [Lang.Blocks.robotis_cm_ir_right, 'CM_IR_RIGHT'],
-                        [
-                            Lang.Blocks.robotis_cm_calibration_left,
-                            'CM_CALIBRATION_LEFT',
-                        ],
-                        [
-                            Lang.Blocks.robotis_cm_calibration_right,
-                            'CM_CALIBRATION_RIGHT',
-                        ],
+                        [Lang.Blocks.robotis_cm_calibration_left, 'CM_CALIBRATION_LEFT'],
+                        [Lang.Blocks.robotis_cm_calibration_right, 'CM_CALIBRATION_RIGHT'],
                     ],
                     value: 'CM_SPRING_LEFT',
                     fontSize: 11,
@@ -423,7 +659,7 @@ Entry.Robotis_carCont.getBlocks = function () {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_carCont.INSTRUCTION.READ;
                 var data_address = 0;
@@ -436,111 +672,60 @@ Entry.Robotis_carCont.getBlocks = function () {
                 var sensor = script.getStringField('SENSOR');
 
                 if (sensor == 'CM_SPRING_LEFT') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[2];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_LEFT[3];
                 } else if (sensor == 'CM_SPRING_RIGHT') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[2];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SPRING_RIGHT[3];
                 } else if (sensor == 'CM_SWITCH') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SWITCH[1];
                 } else if (sensor == 'CM_SOUND_DETECTED') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[1];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
                 } else if (sensor == 'CM_SOUND_DETECTING') {
                     data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[1];
+                        Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTING[1];
                 } else if (sensor == 'CM_IR_LEFT') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[2];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_LEFT[3];
                 } else if (sensor == 'CM_IR_RIGHT') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[2];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_IR_RIGHT[3];
                 } else if (sensor == 'CM_CALIBRATION_LEFT') {
                     data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_LEFT[0];
+                        Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
                     data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_LEFT[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_LEFT[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_LEFT[1];
+                        Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
                 } else if (sensor == 'CM_CALIBRATION_RIGHT') {
                     data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_RIGHT[0];
+                        Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
                     data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_RIGHT[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_RIGHT[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_RIGHT[1];
+                        Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
                 } else if (sensor == 'CM_BUTTON_STATUS') {
-                    data_default_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
-                    data_default_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
+                    data_default_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
+                    data_default_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_BUTTON_STATUS[1];
                 }
 
                 //Entry.Robotis_carCont.setRobotisData([[data_instruction, data_address, data_length, data_value, data_default_length]]);
@@ -563,13 +748,7 @@ Entry.Robotis_carCont.getBlocks = function () {
                 }
 
                 Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
+                    [data_instruction, data_address, data_length, data_value, data_default_length],
                 ]);
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
@@ -628,7 +807,7 @@ Entry.Robotis_carCont.getBlocks = function () {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var value_left = script.getField('VALUE_LEFT', script);
                 var value_right = script.getField('VALUE_RIGHT', script);
@@ -650,9 +829,7 @@ Entry.Robotis_carCont.getBlocks = function () {
                     data_value = 1;
                 }
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -680,7 +857,7 @@ Entry.Robotis_carCont.getBlocks = function () {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
 
                 var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
@@ -688,15 +865,11 @@ Entry.Robotis_carCont.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
-                data_length =
-                    Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_SOUND_DETECTED[1];
                 data_value = 0;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -763,7 +936,7 @@ Entry.Robotis_carCont.getBlocks = function () {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var direction = script.getField('DIRECTION', script);
                 var directionAngle = script.getField('DIRECTION_ANGLE', script);
@@ -775,19 +948,11 @@ Entry.Robotis_carCont.getBlocks = function () {
                 var data_value = 0;
 
                 if (direction == 'LEFT') {
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .AUX_MOTOR_SPEED_LEFT[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .AUX_MOTOR_SPEED_LEFT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[1];
                 } else {
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .AUX_MOTOR_SPEED_RIGHT[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .AUX_MOTOR_SPEED_RIGHT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_RIGHT[1];
                 }
 
                 if (directionAngle == 'CW') {
@@ -803,9 +968,7 @@ Entry.Robotis_carCont.getBlocks = function () {
 
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -886,11 +1049,9 @@ Entry.Robotis_carCont.getBlocks = function () {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
-                    address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .AUX_MOTOR_SPEED_LEFT[0];
+                    address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
 
                 var leftAngle = script.getField('LEFT_ANGLE', script);
                 var leftValue = script.getNumberValue('LEFT_VALUE');
@@ -963,7 +1124,7 @@ Entry.Robotis_carCont.getBlocks = function () {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var direction = script.getField('DIRECTION', script);
                 var value = script.getNumberValue('VALUE');
@@ -974,26 +1135,16 @@ Entry.Robotis_carCont.getBlocks = function () {
                 var data_value = 0;
 
                 if (direction == 'LEFT') {
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_LEFT[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_LEFT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_LEFT[1];
                 } else {
-                    data_address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_RIGHT[0];
-                    data_length =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .CM_CALIBRATION_RIGHT[1];
+                    data_address = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[0];
+                    data_length = Entry.Robotis_carCont.CONTROL_TABLE.CM_CALIBRATION_RIGHT[1];
                 }
 
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -1029,7 +1180,7 @@ Entry.Robotis_openCM70.blockMenuBlocks = [
     'robotis_openCM70_cm_custom',
 ];
 
-Entry.Robotis_openCM70.getBlocks = function () {
+Entry.Robotis_openCM70.getBlocks = function() {
     return {
         //region robotis 로보티즈 openCM70
         robotis_openCM70_cm_custom_value: {
@@ -1073,7 +1224,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_custom',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var scope = script.executor.scope;
 
                 // instruction / address / length / value / default length
@@ -1114,13 +1265,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 }
 
                 Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
+                    [data_instruction, data_address, data_length, data_value, data_default_length],
                 ]);
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
@@ -1147,14 +1292,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.robotis_cm_sound_detected,
-                            'CM_SOUND_DETECTED',
-                        ],
-                        [
-                            Lang.Blocks.robotis_cm_sound_detecting,
-                            'CM_SOUND_DETECTING',
-                        ],
+                        [Lang.Blocks.robotis_cm_sound_detected, 'CM_SOUND_DETECTED'],
+                        [Lang.Blocks.robotis_cm_sound_detecting, 'CM_SOUND_DETECTING'],
                         [Lang.Blocks.robotis_cm_user_button, 'CM_USER_BUTTON'],
                     ],
                     value: 'CM_SOUND_DETECTED',
@@ -1173,7 +1312,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var scope = script.executor.scope;
 
                 scope.isStart = true;
@@ -1192,43 +1331,25 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 if (sensor == 'CM_SOUND_DETECTED') {
                     data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTED[1];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
                 } else if (sensor == 'CM_SOUND_DETECTING') {
                     data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
                     data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .CM_SOUND_DETECTING[1];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
                 } else if (sensor == 'CM_USER_BUTTON') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
                 }
 
-                data_default_address =
-                    data_default_address + increase * data_default_length;
+                data_default_address = data_default_address + increase * data_default_length;
 
                 if (
                     Entry.hw.sendQueue.prevAddress &&
@@ -1244,13 +1365,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 }
 
                 Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
+                    [data_instruction, data_address, data_length, data_value, data_default_length],
                 ]);
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
@@ -1287,31 +1402,16 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.robotis_aux_servo_position,
-                            'AUX_SERVO_POSITION',
-                        ],
+                        [Lang.Blocks.robotis_aux_servo_position, 'AUX_SERVO_POSITION'],
                         [Lang.Blocks.robotis_aux_ir, 'AUX_IR'],
                         [Lang.Blocks.robotis_aux_touch, 'AUX_TOUCH'],
                         [Lang.Blocks.robotis_aux_brightness, 'AUX_BRIGHTNESS'],
-                        [
-                            Lang.Blocks.robotis_aux_hydro_themo_humidity,
-                            'AUX_HYDRO_THEMO_HUMIDITY',
-                        ],
-                        [
-                            Lang.Blocks.robotis_aux_hydro_themo_temper,
-                            'AUX_HYDRO_THEMO_TEMPER',
-                        ],
-                        [
-                            Lang.Blocks.robotis_aux_temperature,
-                            'AUX_TEMPERATURE',
-                        ],
+                        [Lang.Blocks.robotis_aux_hydro_themo_humidity, 'AUX_HYDRO_THEMO_HUMIDITY'],
+                        [Lang.Blocks.robotis_aux_hydro_themo_temper, 'AUX_HYDRO_THEMO_TEMPER'],
+                        [Lang.Blocks.robotis_aux_temperature, 'AUX_TEMPERATURE'],
                         [Lang.Blocks.robotis_aux_ultrasonic, 'AUX_ULTRASONIC'],
                         [Lang.Blocks.robotis_aux_magnetic, 'AUX_MAGNETIC'],
-                        [
-                            Lang.Blocks.robotis_aux_motion_detection,
-                            'AUX_MOTION_DETECTION',
-                        ],
+                        [Lang.Blocks.robotis_aux_motion_detection, 'AUX_MOTION_DETECTION'],
                         [Lang.Blocks.robotis_aux_color, 'AUX_COLOR'],
                         [Lang.Blocks.robotis_aux_custom, 'AUX_CUSTOM'],
                     ],
@@ -1332,7 +1432,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var scope = script.executor.scope;
 
                 // instruction / address / length / value / default length
@@ -1360,132 +1460,75 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 if (sensor == 'AUX_SERVO_POSITION') {
                     data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_SERVO_POSITION[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
                     data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_SERVO_POSITION[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_SERVO_POSITION[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_SERVO_POSITION[1];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
                 } else if (sensor == 'AUX_IR') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
                 } else if (sensor == 'AUX_TOUCH') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
                 } else if (sensor == 'AUX_TEMPERATURE') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
                 } else if (sensor == 'AUX_BRIGHTNESS') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
                 } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
                     data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_HUMIDITY[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
                     data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_HUMIDITY[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_HUMIDITY[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_HUMIDITY[1];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
                 } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
                     data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_TEMPER[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
                     data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_TEMPER[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_TEMPER[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_HYDRO_THEMO_TEMPER[1];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
                 } else if (sensor == 'AUX_ULTRASONIC') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
                 } else if (sensor == 'AUX_MAGNETIC') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
                 } else if (sensor == 'AUX_MOTION_DETECTION') {
                     data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_MOTION_DETECTION[0];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
                     data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_MOTION_DETECTION[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_MOTION_DETECTION[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE
-                            .AUX_MOTION_DETECTION[1];
+                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
                 } else if (sensor == 'AUX_COLOR') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
                 } else if (sensor == 'AUX_CUSTOM') {
-                    data_default_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                    data_default_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                    data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                    data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
                 }
 
-                data_default_address =
-                    data_default_address + increase * data_default_length;
+                data_default_address = data_default_address + increase * data_default_length;
                 data_address = data_default_address;
                 // if (increase != 0) {
                 // data_length = 6 * data_default_length;
@@ -1505,13 +1548,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 }
 
                 Entry.Robotis_carCont.setRobotisData([
-                    [
-                        data_instruction,
-                        data_address,
-                        data_length,
-                        data_value,
-                        data_default_length,
-                    ],
+                    [data_instruction, data_address, data_length, data_value, data_default_length],
                 ]);
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
@@ -1623,13 +1660,10 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var cmBuzzerIndex = script.getField('CM_BUZZER_INDEX', script);
-                var cmBuzzerTime = script.getNumberValue(
-                    'CM_BUZZER_TIME',
-                    script
-                );
+                var cmBuzzerTime = script.getNumberValue('CM_BUZZER_TIME', script);
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address_1 = 0;
@@ -1640,10 +1674,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_value_2 = 0;
                 var interval = 100;
 
-                data_address_1 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
-                data_length_1 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+                data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+                data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
                 // data_value_1 = cmBuzzerTime * 10;
                 // TODO 텍스트 입력으로 바꾸고 최대는 5초 : 0.5 초 하려면 5를 입력  - console.log(parseInt(0.59 * 10)); max 는 5초
                 data_value_1 = parseInt(cmBuzzerTime * 10);
@@ -1651,25 +1683,13 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     data_value_1 = 50;
                 }
 
-                data_address_2 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-                data_length_2 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+                data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+                data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
                 data_value_2 = cmBuzzerIndex;
 
                 var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address_1,
-                        data_length_1,
-                        data_value_1,
-                    ],
-                    [
-                        data_instruction,
-                        data_address_2,
-                        data_length_2,
-                        data_value_2,
-                    ],
+                    [data_instruction, data_address_1, data_length_1, data_value_1],
+                    [data_instruction, data_address_2, data_length_2, data_value_2],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
@@ -1738,12 +1758,9 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
-                var cmBuzzerMelody = script.getField(
-                    'CM_BUZZER_MELODY',
-                    script
-                );
+                var cmBuzzerMelody = script.getField('CM_BUZZER_MELODY', script);
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address_1 = 0;
@@ -1754,31 +1771,17 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_value_2 = 0;
                 var interval = 100;
 
-                data_address_1 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
-                data_length_1 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
+                data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
+                data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
                 data_value_1 = 255;
 
-                data_address_2 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
-                data_length_2 =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
+                data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
+                data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
                 data_value_2 = cmBuzzerMelody;
 
                 var data_sendqueue = [
-                    [
-                        data_instruction,
-                        data_address_1,
-                        data_length_1,
-                        data_value_1,
-                    ],
-                    [
-                        data_instruction,
-                        data_address_2,
-                        data_length_2,
-                        data_value_2,
-                    ],
+                    [data_instruction, data_address_1, data_length_1, data_value_1],
+                    [data_instruction, data_address_2, data_length_2, data_value_2],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
@@ -1807,7 +1810,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
@@ -1815,15 +1818,11 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
                 data_value = 0;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -1878,7 +1877,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var cmLed = script.getField('CM_LED', script);
                 var value = script.getField('VALUE', script);
@@ -1889,27 +1888,19 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_value = 0;
 
                 if (cmLed == 'CM_LED_R') {
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_R[1];
                 } else if (cmLed == 'CM_LED_G') {
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_G[1];
                 } else if (cmLed == 'CM_LED_B') {
-                    data_address =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
-                    data_length =
-                        Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_LED_B[1];
                 }
 
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -1950,21 +1941,18 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address = 0;
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
                 data_value = script.getNumberValue('VALUE', script);
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2031,7 +2019,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var directionAngle = script.getField('DIRECTION_ANGLE', script);
@@ -2042,10 +2030,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
 
                 data_address = data_address + (port - 1) * data_length;
 
@@ -2062,9 +2048,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2123,7 +2107,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var mode = script.getField('MODE', script);
@@ -2133,17 +2117,13 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_MODE[1];
 
                 data_address = data_address + (port - 1) * data_length;
                 data_value = mode;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2212,7 +2192,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var directionAngle = script.getField('DIRECTION_ANGLE', script);
@@ -2223,10 +2203,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
 
                 data_address = data_address + (port - 1) * data_length;
 
@@ -2243,9 +2221,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2304,7 +2280,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var value = script.getNumberValue('VALUE');
@@ -2314,10 +2290,8 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
 
                 data_address = data_address + (port - 1) * data_length;
 
@@ -2329,9 +2303,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
 
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2365,26 +2337,10 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.robotis_cm_led_both +
-                                Lang.Blocks.robotis_common_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.robotis_cm_led_right +
-                                Lang.Blocks.robotis_common_on,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.robotis_cm_led_left +
-                                Lang.Blocks.robotis_common_on,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.robotis_cm_led_both +
-                                Lang.Blocks.robotis_common_on,
-                            '3',
-                        ],
+                        [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_off, '0'],
+                        [Lang.Blocks.robotis_cm_led_right + Lang.Blocks.robotis_common_on, '1'],
+                        [Lang.Blocks.robotis_cm_led_left + Lang.Blocks.robotis_common_on, '2'],
+                        [Lang.Blocks.robotis_cm_led_both + Lang.Blocks.robotis_common_on, '3'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2408,7 +2364,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var ledModule = script.getField('LED_MODULE', script);
@@ -2418,17 +2374,13 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
 
                 data_address = data_address + (port - 1) * data_length;
                 data_value = ledModule;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2484,7 +2436,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField('PORT', script);
                 var value = script.getNumberValue('VALUE');
@@ -2494,17 +2446,13 @@ Entry.Robotis_openCM70.getBlocks = function () {
                 var data_length = 0;
                 var data_value = 0;
 
-                data_address =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
-                data_length =
-                    Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
 
                 data_address = data_address + (port - 1) * data_length;
                 data_value = value;
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -2554,7 +2502,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
             },
             class: 'robotis_openCM70_custom',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 // instruction / address / length / value / default length
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address = 0;
@@ -2571,9 +2519,7 @@ Entry.Robotis_openCM70.getBlocks = function () {
                     data_length = 1;
                 }
 
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                ];
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
