@@ -338,9 +338,9 @@ Entry.Diaboard = {
 
 Entry.Diaboard.blockMenuBlocks = [
     // 이벤트
-    'diaboard_when_button_pressed',
-    'diaboard_when_color_is',
-    'diaboard_when_sensor_is',
+    // 'diaboard_when_button_pressed',
+    // 'diaboard_when_color_is',
+    // 'diaboard_when_sensor_is',
     
     // 센서/버튼
     'diaboard_button_pressed',
@@ -522,6 +522,7 @@ Entry.Diaboard.getBlocks = function() {
 
     return {
         //region 
+        /**
         diaboard_when_button_pressed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -731,6 +732,7 @@ Entry.Diaboard.getBlocks = function() {
             },
             syntax: { js: [], py: ['Diaboard.when_sensor_is(%2,%3,%4)'] },
         },
+         */
         // ---
         diaboard_button_pressed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2827,7 +2829,7 @@ Entry.Diaboard.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: Entry.Diaboard.RHYTHM_TYPE,
-                    value: 0.5,
+                    value: 0.25,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
