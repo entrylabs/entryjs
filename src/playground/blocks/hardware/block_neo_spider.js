@@ -215,7 +215,7 @@ Entry.NeoSpider.getBlocks = function () {
                         ['조도', 'cds'],
                         ['온도', 'tmp'],
                         ['진동', 'vibe'],
-                        ['외부', 'gas'],
+                        ['외부', 'outer'],
                     ],
                     value: 'gas',
                     fontSize: 11,
@@ -235,7 +235,8 @@ Entry.NeoSpider.getBlocks = function () {
             isNotFor: ['NeoSpider'],
             func(sprite, script) {
                 const pd = Entry.hw.portData;
-                const port = script.getValue('PORT', script);
+                let port = script.getValue('PORT', script);
+                port = port == 'outer' ? 'gas' : port;
                 return pd[port];
             },
             syntax: {
@@ -252,7 +253,7 @@ Entry.NeoSpider.getBlocks = function () {
                                     ['조도', 'cds'],
                                     ['온도', 'tmp'],
                                     ['진동', 'vibe'],
-                                    ['외부', 'gas'],
+                                    ['외부', 'outer'],
                                 ],
                                 value: 'gas',
                                 fontSize: 11,
@@ -279,7 +280,7 @@ Entry.NeoSpider.getBlocks = function () {
                         ['조도', 'cds'],
                         ['온도', 'tmp'],
                         ['진동', 'vibe'],
-                        ['외부', 'gas'],
+                        ['외부', 'outer'],
                     ],
                     value: 'gas',
                     fontSize: 11,
@@ -340,8 +341,9 @@ Entry.NeoSpider.getBlocks = function () {
             class: 'NeoSpiderGet',
             isNotFor: ['NeoSpider'],
             func(sprite, script) {
-                const port = script.getValue('PORT', script);
                 const pd = Entry.hw.portData;
+                let port = script.getValue('PORT', script);
+                port = port == 'outer' ? 'gas' : port;
                 let result = pd[port];
                 let value2 = script.getNumberValue('VALUE2', script);
                 let value3 = script.getNumberValue('VALUE3', script);
@@ -353,7 +355,7 @@ Entry.NeoSpider.getBlocks = function () {
                 if ((result % 1) == 0) {
                     result = Math.round(result);
                 } else {
-                    result = Math.round(result * 100) / 100;
+                    result = Math.round(result * 100 / 100);
                 }
 
                 return result;
@@ -372,7 +374,7 @@ Entry.NeoSpider.getBlocks = function () {
                                     ['조도', 'cds'],
                                     ['온도', 'tmp'],
                                     ['진동', 'vibe'],
-                                    ['외부', 'gas'],
+                                    ['외부', 'outer'],
                                 ],
                                 value: 'gas',
                                 fontSize: 11,
