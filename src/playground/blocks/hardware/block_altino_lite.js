@@ -272,7 +272,7 @@ Entry.AltinoLite.getBlocks = function() {
                 DEVICE: 0,
             },
             class: 'altino_lite_sensor',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('DEVICE');
@@ -316,7 +316,7 @@ Entry.AltinoLite.getBlocks = function() {
                 DIRECTION: 0,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var direction = script.getField('DIRECTION', script);
@@ -400,7 +400,7 @@ Entry.AltinoLite.getBlocks = function() {
                 DIRECTION: 0,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var direction = script.getField('DIRECTION', script);
@@ -459,7 +459,7 @@ Entry.AltinoLite.getBlocks = function() {
                 steerVal: 0,
             },
             class: 'altino_lite_expert',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.steering = script.getNumberValue('steerVal');
@@ -498,7 +498,7 @@ Entry.AltinoLite.getBlocks = function() {
                 soundVal: 0,
             },
             class: 'altino_lite_expert',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.note = script.getNumberValue('soundVal');
@@ -546,7 +546,7 @@ Entry.AltinoLite.getBlocks = function() {
                 rightWheel: 1,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
@@ -617,7 +617,7 @@ Entry.AltinoLite.getBlocks = function() {
                 NOTE: 1,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var octave = script.getStringField('OCTAVE', script);
@@ -771,7 +771,7 @@ Entry.AltinoLite.getBlocks = function() {
                 ONOFF: 1,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var select = script.getStringField('SELECT', script);
@@ -845,7 +845,7 @@ Entry.AltinoLite.getBlocks = function() {
                 VALUE2: 1,
             },
             class: 'altino_lite_expert',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var nx = script.getNumberValue('VALUE1');
@@ -920,7 +920,7 @@ Entry.AltinoLite.getBlocks = function() {
                 VALUE2: 1,
             },
             class: 'altino_lite_expert',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var nx = script.getNumberValue('VALUE1');
@@ -985,7 +985,7 @@ Entry.AltinoLite.getBlocks = function() {
                 LSB: 0,
             },
             class: 'altino_lite_expert',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var lsb = script.getNumberValue('LSB');
@@ -1027,7 +1027,7 @@ Entry.AltinoLite.getBlocks = function() {
                 VALUE: 0,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var str = script.getStringValue('VALUE');
@@ -1184,7 +1184,7 @@ Entry.AltinoLite.getBlocks = function() {
                 SW8: 8,
             },
             class: 'altino_lite_output',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var line = script.getStringField('LINE', script);
@@ -1369,7 +1369,7 @@ Entry.AltinoLite.getBlocks = function() {
                 VALUE8: 7,
             },
             class: 'altino_lite_expert',
-            isNotFor: ['altino_lite_lite'],
+            isNotFor: ['altino_lite'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.ascii = 0xff;
