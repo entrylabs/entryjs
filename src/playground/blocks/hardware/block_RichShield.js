@@ -133,6 +133,10 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_DHT_Control_Get_Temper: '온습도 %1 번 온도값 읽기',
                 RichShield_DHT_Control_Set_Humid: '온습도 %1 번 : 습도 읽기 모드설정',
                 RichShield_DHT_Control_Get_Humid: '온습도 %1 번 : 습도값 읽기',
+
+                RichShield_OLED_event: 'OLED Display(0.96"16*08)-I2C',
+                RichShield_OLED_init: 'OLED : I2C 주소 0X3C로 설정하고, 초기화',
+                RichShield_OLED_Display_String: 'OLED : %1 행, %2 열 %3 문자(16) 출력',
                 /*
                 chocopi_control_button: '%1 컨트롤 %2번을 누름',
                 chocopi_control_event: '%1 %2 컨트롤 %3을 %4',
@@ -240,6 +244,10 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_DHT_Control_Get_Temper: 'DHT %1 : read Temperature',
                 RichShield_DHT_Control_Set_Humid: 'DHT %1 : read Humid Setting',
                 RichShield_DHT_Control_Get_Humid: 'DHT %1 : read Humid',
+
+                RichShield_OLED_event: 'OLED Display(0.96"16*08)-I2C',
+                RichShield_OLED_init: 'OLED : I2C adress 0X3C set, initialize',
+                RichShield_OLED_Display_String: 'OLED : %1 Row, %2 Col %3 String(16) Display',
                 /*
                 chocopi_control_button: '%1 controller %2 is pressed',
                 chocopi_control_event: '%1 When %2 controller %3 is %4',
@@ -320,6 +328,10 @@ Entry.RichShield.blockMenuBlocks = [
     'RichShield_DHT_Control_Get_Temper',
     'RichShield_DHT_Control_Set_Humid',
     'RichShield_DHT_Control_Get_Humid',
+
+    'RichShield_OLED_event',
+    'RichShield_OLED_init',
+    'RichShield_OLED_Display_String',
     //'RichShield_get_number_sensor_value',
     /*
     'RichShield_get_number_sensor_value',
@@ -1697,6 +1709,181 @@ Entry.RichShield.getBlocks = function() {
                 return (Entry.hw.portData.DHT || 0).toFixed(0);
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Get_Humid(%1)'] },
+        },
+        RichShield_OLED_event: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_event',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
+                    position: { x: 0, y: -2 },
+                },
+            ],
+            def: { params: [], type: 'RichShield_OLED_event' },
+            class: 'RichShield_OLED',
+            isNotFor: ['RichShield'],
+        },
+        RichShield_OLED_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
+                    position: { x: 0, y: -2 },
+                },
+            ],
+            def: { params: [], type: 'RichShield_OLED_init' },
+            paramsKeyMap: {},
+            class: 'RichShield_OLED',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                const device = 1;
+                // OLED Block Added By Remoted 2021-03-16
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+
+                // DHT Temp-Reader type data protocol defined
+                Entry.hw.sendQueue.SET[device] = {
+                    type: Entry.RichShield.sensorTypes.OLED,
+                    data: {
+                        oled_block_index: 0,
+                    },
+                    time: new Date().getTime(),
+                };
+            },
+            syntax: { js: [], py: ['RichShield_OLED_init(0x3C)'] },
+        },
+        RichShield_OLED_Display_String: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [1],
+                    },
+                    {
+                        type: 'number',
+                        params: [1],
+                    },
+                    {
+                        type: 'text',
+                        params: ['RichShield !!'],
+                    },
+                    null,
+                ],
+                type: 'RichShield_OLED_Display_String',
+            },
+            paramsKeyMap: {
+                Row: 0,
+                Col: 1,
+                STRING: 2,
+            },
+            class: 'RichShield_OLED',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                const device = 1;
+                const Row = parseInt(script.getNumberValue('Row'));
+                const Col = parseInt(script.getNumberValue('Col'));
+                const string = script.getValue('STRING');
+                const text = [];
+
+                if (!script.isStart) {
+                    if (typeof string === 'string') {
+                        for (let i = 0; i < 16; i++) {
+                            text[i] = string.charCodeAt(i);
+                        }
+                    } else if (typeof string === 'number') {
+                        text[0] = 1;
+                        text[1] = string / 1;
+                    } else {
+                        text[0] = string;
+                    }
+
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) * 50;
+
+                    console.log(
+                        // eslint-disable-next-line max-len
+                        `Row : ${Row} / Col : ${Col} / text : ${text}`
+                    );
+
+                    //Entry.hw.sendQueue.SET[line] = {
+                    Entry.hw.sendQueue.SET[device] = {
+                        type: Entry.RichShield.sensorTypes.OLED,
+                        data: {
+                            oled_block_index: 1,
+                            displayRow: Row,
+                            displayCol: Col,
+                            text0: text[0],
+                            text1: text[1],
+                            text2: text[2],
+                            text3: text[3],
+                            text4: text[4],
+                            text5: text[5],
+                            text6: text[6],
+                            text7: text[7],
+                            text8: text[8],
+                            text9: text[9],
+                            text10: text[10],
+                            text11: text[11],
+                            text12: text[12],
+                            text13: text[13],
+                            text14: text[14],
+                            text15: text[15],
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: ['RichShield_OLED_Display_String(%1, %2, %3)'] },
         },
     };
 };
