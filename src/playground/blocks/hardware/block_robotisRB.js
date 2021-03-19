@@ -68,10 +68,7 @@ Entry.Robotis_rb = {
 };
 
 Entry.Robotis_rb.blockMenuBlocks = [
-    //robotis_openCM70
-    // 'robotis_openCM70_sensor_value',
     
-    //입력
     'robotis_RB_cm_ir_value',
     'robotis_RB_cm_ir_compare',
     'robotis_RB_detectFrontObj',
@@ -108,114 +105,77 @@ Entry.Robotis_rb.blockMenuBlocks = [
     // 'robotis_RB_cm_custom',
 ];
 
-Entry.Robotis_rb_H = {
-    INSTRUCTION: {
-        NONE: 0,
-        WRITE: 3,
-        READ: 2,
-        SYNCWRITE: 4,
-        REGWRITE: 5,
-        ACTION: 6
-    },
-    CONTROL_TABLE: {
-        // [default address, default length, address (when reads together), length (when reads together)]
-        CM_LED_R: [79, 1],
-        CM_LED_G: [80, 1],
-        CM_LED_B: [81, 1],
+Entry.Robotis_rb.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                robotis_RB_cm_ir_value: "%1 번 IR 센서 값",
+                robotis_RB_cm_ir_compare: "%1 번 IR 센서 값이 %2  %3이면",
+                robotis_RB_detectFrontObj: "앞에 물체가 있으면",
+                robotis_RB_cm_btn_value: "%1 버튼이 %2 이면",
+                robotis_RB_cm_joystick_value: "조이스틱 위치가 %1 이면",
+                robotis_RB_mic: "마이크 음량(dB)",
+                robotis_RB_detectSound_compare: "소리가 %1에서 나면",
+                robotis_RB_imu: "%1축의 %2 값",
+                robotis_RB_roll_pitch: "제어기 각도 %1 값",
+                robotis_RB_detectPose: "로봇이 %1 넘어지면",
 
-        RB_LED_L: [40, 1],
-        RB_LED_R: [41, 1],
-        RB_LED_B: [40, 2],
+                robotis_RB_cm_buzzer_index: "제어기 음계값 %1 을(를) %2 옥타브로 %3 초 동안 %4 %5",
+                robotis_RB_cm_screen: "제어기 화면 배경을 %1 로 선택 %2",
+                robotis_RB_rsp_screen: "제어기 화면에 %1 출력하기 %2",
 
-        CM_BUZZER_INDEX: [60, 1], //[84, 1]
-        CM_BUZZER_TIME: [63, 1], //[85, 1]
-        CM_SOUND_DETECTED: [86, 1],
-        CM_SOUND_DETECTING: [87, 1],
-        CM_USER_BUTTON: [26, 1],
-        CM_MOTION: [66, 2], //[66,1]
+                robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
+                robotis_RB_LCDColor: "제어기 화면 색상을 %1로 정하기 %2",
+                
+                robotis_RB_LEDBright: "제어기 %1 LED 밝기를 %2로 정하기 %3",
+                robotis_RB_cm_led: "제어기 %1 LED %2 %3",
 
-        AUX_SERVO_POSITION: [152, 2],
-        
-        AUX_CUSTOM: [216, 2],
-        
-        AUX_SERVO_MODE: [126, 1],
-        AUX_SERVO_SPEED: [136, 2],
-        AUX_MOTOR_SPEED: [136, 2],
-        AUX_LED_MODULE: [210, 1],
-    },
-    DXL_POSITION: {
-        values: [0,0,0,0,0,0,0,0]
-    },
-    setZero: function () {
-        // instruction / address / length / value / default length
-        Entry.hw.sendQueue['setZero'] = [1];
-        Entry.Robotis_carCont.update();
-        Entry.Robotis_carCont.setRobotisData(null);
-        Entry.hw.sendQueue['setZero'] = null;
-        Entry.Robotis_carCont.update();
-        Entry.Robotis_carCont.setRobotisData([
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 21, 2, 20],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 40, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 66, 2, 0],
-            [Entry.Robotis_rb.INSTRUCTION.WRITE, 710, 2, 0],
-            // [Entry.Robotis_rb.INSTRUCTION.WRITE, 163, 2, 30759],
-            // [Entry.Robotis_rb.INSTRUCTION.WRITE, 162, 1, 1],
-        ]);
-        
-        Entry.Robotis_carCont.update();
-    },
-    id: ['7.7', '7.8'],
-    name: 'Robotis_rb_H',
-    url: 'http://www.robotis.com/index/product.php?cate_code=111310',
-    imageName: 'robotis_RB100im_Humanoid.png',
-    title: {
-        "ko": "로보티즈 꼭두",
-        "en": "ROBOTIS Humanoid"
-    },
-    delay: 30,
-    readDelay: 30,
+                robotis_RB_Hello: "%1 말하기 %2",
+                robotis_RB_effectSound: "효과음 %1 재생하기 %2",
+                robotis_RB_record: "%1 번 방에 녹음하기 %2",
+                robotis_RB_playRecord: "%1 번 방 소리 재생하기 %2",
+                robotis_openCM70_RGee_go: "알쥐 %1 속도로 %2 하기 %3",
+                robotis_openCM70_RGee_stop: "알쥐 정지하기 %1",
+                robotis_openCM70_RGee_motion: "알쥐 %1 %2",
+            },
+            
+        },
+        en: {
+            template: {
+                robotis_RB_cm_ir_value:"IR sensor value of %1 Value of IR Sensor",
+                robotis_RB_cm_ir_compare:"If IR sensor value of %1 is %2 %3",
+                robotis_RB_detectFrontObj:"If there is an object in front",
+                robotis_RB_cm_btn_value:"If %1 button is %2",
+                robotis_RB_cm_joystick_value:"If the joystick location is %1",
+                robotis_RB_mic:"MIC volume(dB)",
+                robotis_RB_detectSound_compare:"If sound is detected from %1",
+                robotis_RB_imu:"%1 axis' %2 value",
+                robotis_RB_roll_pitch:"%1 Controller position ",
+                robotis_RB_detectPose:"If robot falls %1",
+                
+                robotis_RB_cm_buzzer_index:"%1 at %2 octaves for %3 second(s) -> %4 %5",
+                robotis_RB_cm_screen:"Choose %1 as a screen background %2",
+                robotis_RB_rsp_screen:"Print %1 on the screen %2",
+                
+                robotis_RB_LCDBright:"Adjust screen brightness to %1 %2",
+                robotis_RB_LCDColor:"Set screen color to %1 %2",
+                
+                robotis_RB_LEDBright:"Set the brightness of the %1 LED to %2 %3",
+                robotis_RB_cm_led:"%1 LED %2 %3",
+                
+                robotis_RB_Hello:"Say %1 %2",
+                robotis_RB_effectSound:"Play the sound of %1 %2",
+                robotis_RB_record:"Record in room %1 %2",
+                robotis_RB_playRecord:"Play recorded sound in room %1 %2",
+                robotis_openCM70_RGee_go:"With %1 velocity, move R-G %2",
+                robotis_openCM70_RGee_stop:"R-G STOP",
+                robotis_openCM70_RGee_motion:"Do %1",
+            },
+            
+        }
+    }
 };
 
-Entry.Robotis_rb_H.blockMenuBlocks = [
-    //robotis_openCM70
-    // 'robotis_openCM70_sensor_value',
-    
-    //입력
-    'robotis_RB_cm_ir_value',
-    'robotis_RB_cm_ir_compare',
-    'robotis_RB_detectFrontObj',
-    'robotis_RB_cm_btn_value',
-    'robotis_RB_cm_joystick_value',
-    'robotis_RB_mic',
-    'robotis_RB_detectSound_compare',
-    'robotis_RB_imu',
-    'robotis_RB_roll_pitch', 
-    'robotis_RB_detectPose',
-
-    'robotis_RB_cm_buzzer_index',
-    'robotis_RB_cm_screen',
-    'robotis_RB_rsp_screen',
-
-    'robotis_RB_LCDBright',
-    'robotis_RB_LCDColor',
-    
-    'robotis_RB_LEDBright',
-    'robotis_RB_cm_led',
-
-    'robotis_RB_Hello',
-    'robotis_RB_effectSound',
-    'robotis_RB_record',
-    'robotis_RB_playRecord',
-
-    'robotis_RB_cm_motion',
-    'robotis_RB_cm_motion2',
-    'robotis_RB_cm_motion_custom',
-    'robotis_dxl_control',
-    'robotis_dxl_each_control',
-    
-    // 'robotis_RB_cm_custom_value2',
-    // 'robotis_RB_cm_custom2',
-];
 
 Entry.Robotis_rb.getBlocks = function () {
     return {
@@ -229,9 +189,9 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['가위', '11545'],
-                        ['바위', '11546'],
-                        ['보', '11547'],
+                        [Lang.Blocks.robotis_screen1, '11545'],
+                        [Lang.Blocks.robotis_screen2, '11546'],
+                        [Lang.Blocks.robotis_screen3, '11547'],
                         ['0', '11283'],
                         ['1', '11284'],
                         ['2', '11285'],
@@ -548,12 +508,12 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번', '360'],
-                        ['2번', '362'],
-                        ['3번', '364'],
-                        ['4번', '366'],
-                        ['5번', '368'],
-                        ['6번', '370'],
+                        ['1', '360'],
+                        ['2', '362'],
+                        ['3', '364'],
+                        ['4', '366'],
+                        ['5', '368'],
+                        ['6', '370'],
                     ],
                     value: '360',
                     fontSize: 11,
@@ -645,12 +605,12 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번', '360'],
-                        ['2번', '362'],
-                        ['3번', '364'],
-                        ['4번', '366'],
-                        ['5번', '368'],
-                        ['6번', '370'],
+                        ['1', '360'],
+                        ['2', '362'],
+                        ['3', '364'],
+                        ['4', '366'],
+                        ['5', '368'],
+                        ['6', '370'],
                     ],
                     value: '360',
                     fontSize: 11,
@@ -829,14 +789,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['빨강', '224'],
-                        ['주황', '244'],
-                        ['노랑', '252'],
-                        ['초록', '28'],
-                        ['파랑', '3'],
-                        ['갈색', '173'],
-                        ['검정', '0'],
-                        ['흰색', '255'],
+                        [Lang.Blocks.robotis_red, '224'],
+                        [Lang.Blocks.robotis_orange, '244'],
+                        [Lang.Blocks.robotis_yellow, '252'],
+                        [Lang.Blocks.robotis_green, '28'],
+                        [Lang.Blocks.robotis_blue, '3'],
+                        [Lang.Blocks.robotis_brown, '173'],
+                        [Lang.Blocks.robotis_black, '0'],
+                        [Lang.Blocks.robotis_white, '255'],
                     ],
                     value: '224',
                     fontSize: 11,
@@ -905,9 +865,9 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['왼쪽', '1'],
-                        ['중앙', '0'],
-                        ['오른쪽', '255'],
+                        [Lang.Blocks.robotis_left, '1'],
+                        [Lang.Blocks.robotis_center, '0'],
+                        [Lang.Blocks.robotis_right, '255'],
                     ],
                     value: '255',
                     fontSize: 11,
@@ -992,9 +952,9 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['왼쪽', 'RB_LED_L'],
-                        ['오른쪽', 'RB_LED_R'],
-                        ['양쪽', 'RB_LED_B'],
+                        [Lang.Blocks.robotis_left, 'RB_LED_L'],
+                        [Lang.Blocks.robotis_right, 'RB_LED_R'],
+                        [Lang.Blocks.robotis_both, 'RB_LED_B'],
                     ],
                     value: 'RB_LED_L',
                     fontSize: 11,
@@ -1094,66 +1054,66 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['안녕하세요' ,'0'],
-                        ['반가워요' ,'1'],
-                        ['알겠어요' ,'2'],
-                        ['아니에요' ,'3'],
-                        ['모르겠어요' ,'4'],
-                        ['좋아요' ,'5'],
-                        ['싫어요' ,'6'],
-                        ['이름을 말하세요' ,'7'],
-                        ['무엇을 도와줄까?' ,'8'],
-                        ['잘했어' ,'9'],
-                        ['괜찮아' ,'10'],
-                        ['다시 해보자' ,'11'],
-                        ['고마워' ,'12'],
-                        ['다시 말해줄래?' ,'13'],
-                        ['최고야!' ,'14'],
-                        ['신나요' ,'15'],
-                        ['즐거워요' ,'16'],
-                        ['미안해요' ,'17'],
-                        ['화나요' ,'18'],
-                        ['부끄러워요' ,'19'],
-                        ['무서워요' ,'20'],
-                        ['속상해요' ,'21'],
-                        ['사랑해요' ,'22'],
-                        ['예뻐요' ,'23'],
-                        ['신기해요' ,'24'],
-                        ['초조해요' ,'25'],
-                        ['앞으로 가자' ,'26'],
-                        ['뒤로 가자' ,'27'],
-                        ['일어나자' ,'28'],
-                        ['넘어졌네?' ,'29'],
-                        ['오예' ,'30'],
-                        ['아싸' ,'31'],
-                        ['어머' ,'32'],
-                        ['이런' ,'33'],
-                        ['오호' ,'34'],
-                        ['하하하' ,'35'],
-                        ['호호호' ,'36'],
-                        ['졸려' ,'37'],
-                        ['자장가를 들려줘' ,'38'],
-                        ['안녕' ,'39'],
-                        ['배고프다' ,'40'],
-                        ['도토리 땡긴다' ,'41'],
-                        ['아.씻고싶어' ,'42'],
-                        ['비누목욕시간이야' ,'43'],
-                        ['심심한데' ,'44'],
-                        ['간식먹을까' ,'45'],
-                        ['아파요' ,'46'],
-                        ['약은 없나요?' ,'47'],
-                        ['어디로 가야하지?' ,'48'],
-                        ['와아 도착이다' ,'49'],
-                        ['왼쪽으로 가자' ,'50'],
-                        ['오른쪽으로 가자' ,'51'],
-                        ['깜짝이야' ,'52'],
-                        ['찾았다' ,'53'],
-                        ['여긴 없네' ,'54'],
-                        ['혹시 나 불렀어?' ,'55'],
-                        ['내려주세요' ,'56'],
-                        ['앗' ,'57'],
-                        ['힝' ,'58'],
-                        ['이익' ,'59'],
+                        [Lang.Blocks.robotis_korean1,'0'],
+                        [Lang.Blocks.robotis_korean2,'1'],
+                        [Lang.Blocks.robotis_korean3,'2'],
+                        [Lang.Blocks.robotis_korean4,'3'],
+                        [Lang.Blocks.robotis_korean5,'4'],
+                        [Lang.Blocks.robotis_korean6,'5'],
+                        [Lang.Blocks.robotis_korean7,'6'],
+                        [Lang.Blocks.robotis_korean8,'7'],
+                        [Lang.Blocks.robotis_korean9,'8'],
+                        [Lang.Blocks.robotis_korean10,'9'],
+                        [Lang.Blocks.robotis_korean11,'10'],
+                        [Lang.Blocks.robotis_korean12,'11'],
+                        [Lang.Blocks.robotis_korean13,'12'],
+                        [Lang.Blocks.robotis_korean14,'13'],
+                        [Lang.Blocks.robotis_korean15,'14'],
+                        [Lang.Blocks.robotis_korean16,'15'],
+                        [Lang.Blocks.robotis_korean17,'16'],
+                        [Lang.Blocks.robotis_korean18,'17'],
+                        [Lang.Blocks.robotis_korean19,'18'],
+                        [Lang.Blocks.robotis_korean20,'19'],
+                        [Lang.Blocks.robotis_korean21,'20'],
+                        [Lang.Blocks.robotis_korean22,'21'],
+                        [Lang.Blocks.robotis_korean23,'22'],
+                        [Lang.Blocks.robotis_korean24,'23'],
+                        [Lang.Blocks.robotis_korean25,'24'],
+                        [Lang.Blocks.robotis_korean26,'25'],
+                        [Lang.Blocks.robotis_korean27,'26'],
+                        [Lang.Blocks.robotis_korean28,'27'],
+                        [Lang.Blocks.robotis_korean29,'28'],
+                        [Lang.Blocks.robotis_korean30,'29'],
+                        [Lang.Blocks.robotis_korean31,'30'],
+                        [Lang.Blocks.robotis_korean32,'31'],
+                        [Lang.Blocks.robotis_korean33,'32'],
+                        [Lang.Blocks.robotis_korean34,'33'],
+                        [Lang.Blocks.robotis_korean35,'34'],
+                        [Lang.Blocks.robotis_korean36,'35'],
+                        [Lang.Blocks.robotis_korean37,'36'],
+                        [Lang.Blocks.robotis_korean38,'37'],
+                        [Lang.Blocks.robotis_korean39,'38'],
+                        [Lang.Blocks.robotis_korean40,'39'],
+                        [Lang.Blocks.robotis_korean41,'40'],
+                        [Lang.Blocks.robotis_korean42,'41'],
+                        [Lang.Blocks.robotis_korean43,'42'],
+                        [Lang.Blocks.robotis_korean44,'43'],
+                        [Lang.Blocks.robotis_korean45,'44'],
+                        [Lang.Blocks.robotis_korean46,'45'],
+                        [Lang.Blocks.robotis_korean47,'46'],
+                        [Lang.Blocks.robotis_korean48,'47'],
+                        [Lang.Blocks.robotis_korean49,'48'],
+                        [Lang.Blocks.robotis_korean50,'49'],
+                        [Lang.Blocks.robotis_korean51,'50'],
+                        [Lang.Blocks.robotis_korean52,'51'],
+                        [Lang.Blocks.robotis_korean53,'52'],
+                        [Lang.Blocks.robotis_korean54,'53'],
+                        [Lang.Blocks.robotis_korean55,'54'],
+                        [Lang.Blocks.robotis_korean56,'55'],
+                        [Lang.Blocks.robotis_korean57,'56'],
+                        [Lang.Blocks.robotis_korean58,'57'],
+                        [Lang.Blocks.robotis_korean59,'58'],
+                        [Lang.Blocks.robotis_korean60,'59'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1232,24 +1192,24 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['개', '0'],
-                        ['개구리', '1'],
-                        ['고양이', '2'],
-                        ['닭', '7'],
-                        ['호랑이', '19'],
-                        ['쥐', '17'],
+                        [Lang.Blocks.robotis_dog, '0'],
+                        [Lang.Blocks.robotis_frog, '1'],
+                        [Lang.Blocks.robotis_cat, '2'],
+                        [Lang.Blocks.robotis_chicken, '7'],
+                        [Lang.Blocks.robotis_tiger, '19'],
+                        [Lang.Blocks.robotis_mouse, '17'],
 
-                        ['구급차', '773'],
-                        ['경적(빵빵)', '781'],
-                        ['사이렌(경찰차)', '774'],
-                        ['호루라기', '274'],
-                        ['총소리', '775'],
-                        ['박수', '260'],
+                        [Lang.Blocks.robotis_ambul, '773'],
+                        [Lang.Blocks.robotis_Horn, '781'],
+                        [Lang.Blocks.robotis_siren, '774'],
+                        [Lang.Blocks.robotis_whistle, '274'],
+                        [Lang.Blocks.robotis_gun, '775'],
+                        [Lang.Blocks.robotis_clap, '260'],
 
-                        ['멜로디1', '786'],
-                        ['멜로디2', '787'],
-                        ['멜로디3', '788'],
-                        ['멜로디4', '789'],
+                        [Lang.Blocks.robotis_melody1, '786'],
+                        [Lang.Blocks.robotis_melody2, '787'],
+                        [Lang.Blocks.robotis_melody3, '788'],
+                        [Lang.Blocks.robotis_melody4, '789'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1328,11 +1288,11 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번', '0'],
-                        ['2번', '1'],
-                        ['3번', '2'],
-                        ['4번', '3'],
-                        ['5번', '4'],
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                        ['5', '4'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1398,11 +1358,11 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번', '0'],
-                        ['2번', '1'],
-                        ['3번', '2'],
-                        ['4번', '3'],
-                        ['5번', '4'],
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                        ['5', '4'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1551,8 +1511,8 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['앞으로', '1'],//72
-                        ['뒤로', '2'],//74
+                        [Lang.Blocks.robotis_forward, '1'],//72
+                        [Lang.Blocks.robotis_backward, '2'],//74
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1738,8 +1698,8 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['가속도', '0'],//72
-                        ['자이로', '6'],//74
+                        [Lang.Blocks.robotis_acceleration, '0'],//72
+                        [Lang.Blocks.robotis_gyro, '6'],//74
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1926,7 +1886,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [ 
-                        ['중앙', '0'],
+                        [Lang.Blocks.robotis_center, '0'],
                         ['←', '1'],
                         ['→', '2'],
                         ['↑', '3'],
@@ -2023,8 +1983,8 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['실행', '45'],
-                        ['뒤로', '42'],
+                        [Lang.Blocks.robotis_run, '45'],
+                        [Lang.Blocks.robotis_cancel, '42'],
                     ],
                     value: '45',
                     fontSize: 11,
@@ -2034,8 +1994,9 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['눌림', '1'],
-                        ['안눌림', '0'],
+                        [Lang.Blocks.robotis_push, '1'],
+                        [Lang.Blocks.robotis_notPush, '0'],
+
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2113,8 +2074,6 @@ Entry.Robotis_rb.getBlocks = function () {
                 py: ['Robotis.opencm70_cm_btn_value(%1)'],
             },
         },
-
-       
         robotis_RB_cm_buzzer_index: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2161,8 +2120,8 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['연주', '1'],
-                        ['쉼표', '2'],
+                        [Lang.Blocks.robotis_play, '1'],
+                        [Lang.Blocks.robotis_rest, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2260,9 +2219,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 js: [],
                 py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
             },
-        },
-       
-        
+        }, 
         robotis_RB_cm_screen: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2274,27 +2231,27 @@ Entry.Robotis_rb.getBlocks = function () {
                     options: [
                         // ["센서 로그", '30759'],
                         // ["다이나믹셀 로그", '30760'],
-                        ["무표정", '2817'],
-                        ["짜증", '2818'], //Lang.Blocks.robotis_common_green_color
-                        ["귀여움", '2819'],
-                        ["화냄", '2820'],
-                        ["행복", '2821'],
+                        [Lang.Blocks.robotis_face1, '2817'],
+                        [Lang.Blocks.robotis_face2, '2818'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_face3, '2819'],
+                        [Lang.Blocks.robotis_face4, '2820'],
+                        [Lang.Blocks.robotis_face5, '2821'],
 
-                        ["배고픔", '2822'],
-                        ["웃기1", '2823'], //Lang.Blocks.robotis_common_green_color
-                        ["웃기2", '2824'],
-                        ["당황", '2825'],
-                        ["졸림", '2826'],
+                        [Lang.Blocks.robotis_face6, '2822'],
+                        [Lang.Blocks.robotis_face7, '2823'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_face8, '2824'],
+                        [Lang.Blocks.robotis_face9, '2825'],
+                        [Lang.Blocks.robotis_face10, '2826'],
 
-                        ["쿨쿨", '2827'],
-                        ["찡그리기", '2828'], //Lang.Blocks.robotis_common_green_color
-                        ["하품", '2829'],
+                        [Lang.Blocks.robotis_face11, '2827'],
+                        [Lang.Blocks.robotis_face12, '2828'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_face13, '2829'],
                         
-                        ["애니메이션 1", "30730"],
-                        ["애니메이션 2", "30731"],
-                        ["애니메이션 3", "30732"],
-                        ["애니메이션 4", "30733"],
-                        ["애니메이션 5", "30734"],
+                        [Lang.Blocks.robotis_face14, "30730"],
+                        [Lang.Blocks.robotis_face15, "30731"],
+                        [Lang.Blocks.robotis_face16, "30732"],
+                        [Lang.Blocks.robotis_face17, "30733"],
+                        [Lang.Blocks.robotis_face18, "30734"],
                     ],
                     value: '2817',
                     fontSize: 11,
@@ -2350,17 +2307,18 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["점멸1", '11'],
-                        ["점멸2", '12'], //Lang.Blocks.robotis_common_green_color
-                        ["점멸3", '13'],
+                        [Lang.Blocks.robotis_flashing1, '11'],
+                        [Lang.Blocks.robotis_flashing2, '12'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_flashing3, '13'],
 
-                        ["점멸4", '21'],
-                        ["점멸5", '22'], //Lang.Blocks.robotis_common_green_color
-                        ["점멸6", '23'],
+                        [Lang.Blocks.robotis_flashing4, '21'],
+                        [Lang.Blocks.robotis_flashing5, '22'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_flashing6, '23'],
 
-                        ["점멸7", '31'],
-                        ["점멸8", '32'], //Lang.Blocks.robotis_common_green_color
-                        ["점멸9", '33'],
+                        [Lang.Blocks.robotis_flashing7, '31'],
+                        [Lang.Blocks.robotis_flashing8, '32'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_flashing9, '33'],
+
                     ],
                     value: '11',
                     fontSize: 11,
@@ -2420,289 +2378,6 @@ Entry.Robotis_rb.getBlocks = function () {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
         },
-        robotis_dxl_control: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
-                ],
-                type: 'robotis_dxl_control',
-            },
-            
-            paramsKeyMap: {
-                ANGLE1: 0,
-                ANGLE2: 1,
-                ANGLE3: 2,
-                ANGLE4: 3,
-                
-                ANGLE5: 4,
-                ANGLE6: 5,
-                ANGLE7: 6,
-                ANGLE8: 7,
-                TIME: 8
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H'],
-            func(entity, script) {
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 19;
-                var data_length = 1;
-                var data_value = 1;
-
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
-                    [Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0],
-                ]
-                
-                var keyWord = 'ANGLE';
-                for(let i = 1; i < 9; i++) {   
-                    keyWord = 'ANGLE' + i;
-                    var value = script.getNumberValue('ANGLE' + i, script);
-                
-                    var engValue = 2048;
-                    engValue = Math.floor(Math.round(value * 4096) / 360 + 2048);
-
-                    var time = script.getNumberValue('TIME', script) * 1000;
-                    
-                    var velocity = 0;
-                
-                    if(time == 0) {
-                        velocity = 0;
-                    } else {
-                        velocity = Math.round(Math.floor(60 * Math.abs(value - Entry.Robotis_rb.DXL_POSITION.values[i - 1]) * 1000 / 360 / time)/0.229);
-                    }
-
-                    Entry.Robotis_rb.DXL_POSITION.values[i - 1] = value;
-
-                    data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 8, velocity * 4294967296 + engValue, [i]]);
-                    
-                }
-                
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
-
-                for(let j = 1; j < 9; j++) {
-                    data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 4, 0, [j]]);
-
-                }
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
-                
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    time + Entry.Robotis_openCM70.delay
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_control(%1)'] },
-        },
-
-        robotis_dxl_each_control: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ["1번", '1'],
-                        ["2번", '2'], //Lang.Blocks.robotis_common_green_color
-                        ["3번", '3'],
-                        ["4번", '4'],
-                        ["5번", '5'],
-                        ["6번", '6'],
-                        ["7번", '7'],
-                        ["8번", '8'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                    {
-                        type: 'number',
-                        params: ['0'],
-                    },
-                ],
-                type: 'robotis_dxl_each_control',
-            },
-            
-            paramsKeyMap: {
-                DXLNUM: 0,
-                ANGLE: 1,
-                TIME: 2,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H'],
-            func(entity, script) {
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 19;
-                var data_length = 1;
-                var data_value = 1;
-
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [1]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [2]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [3]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [4]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [5]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [6]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [7]],
-                    [Entry.Robotis_rb.INSTRUCTION.REGWRITE, 64, 1, 1, [8]],
-                    [Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0],
-
-                    
-                ]
-                
-                var dxlID = script.getField('DXLNUM', script);
-                var angle = script.getNumberValue('ANGLE', script);
-                var time = script.getNumberValue('TIME', script) * 1000;
-
-                var engValue = 2048;
-                engValue = Math.floor(Math.round(angle * 4096) / 360 + 2048);
-                var velocity = 0;
-                
-                if(time == 0) {
-                    velocity = 0;
-                } else {
-                    velocity = Math.round(Math.floor(60 * Math.abs(angle - Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1]) * 1000 / 360 / time)/0.229);
-                }
-
-                Entry.Robotis_rb.DXL_POSITION.values[dxlID - 1] = angle;
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 8, velocity * 4294967296 + engValue, [dxlID]]);
-                
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
-
-                for(let j = 1; j < 9; j++) {
-                    data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.REGWRITE, 112, 4, 0, [j]]);
-
-                }
-                data_sendqueue.push([Entry.Robotis_rb.INSTRUCTION.ACTION, 0, 0, 0]);
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    time + Entry.Robotis_openCM70.delay
-                    //Entry.Robotis_openCM70.delay
-                );
-            },
-            syntax: { js: [], py: ['Robotis.robotis_dxl_each_control(%1)'] },
-        },
-
         robotis_dxl_test: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2769,22 +2444,18 @@ Entry.Robotis_rb.getBlocks = function () {
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 64, 1, 60, [3,4], [1,1]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 64, 1, 60, [5,6], [1,1]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 64, 1, 60, [7,8], [1,1]],
-
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [1], [2048]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [2], [2048]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [3], [2048]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [4], [2048]],
-
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [5], [2048]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [6], [2048]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [7], [2048]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [8], [2048]],
-
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [1], [1948]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [2], [1948]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [3], [1948]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [4], [1948]],
-
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [5], [1948]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [6], [1948]],
                     [Entry.Robotis_rb.INSTRUCTION.SYNCWRITE, 116, 4, 60, [7], [1948]],
@@ -2814,10 +2485,11 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['전진', '1'],
-                        ['후진', '2'],
-                        ['좌회전', '3'],
-                        ['우회전', '4'],
+                        [Lang.Blocks.robotis_moveF, '1'],
+                        [Lang.Blocks.robotis_moveB, '2'],
+                        [Lang.Blocks.robotis_moveL, '3'],
+                        [Lang.Blocks.robotis_moveR, '4'],
+
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2897,11 +2569,17 @@ Entry.Robotis_rb.getBlocks = function () {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
             events: {},
             def: {
                 params: [
-                   
+                   null
                 ],
                 type: 'robotis_openCM70_RGee_stop',
             },
@@ -2950,10 +2628,10 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ["일어서기", '50007'],
-                        ["앉기", '50008'], //Lang.Blocks.robotis_common_green_color
-                        ["발버둥", '50071'],
-                        ["발들기", '50072'],
+                        [Lang.Blocks.robotis_moveRG1, '50007'],
+                        [Lang.Blocks.robotis_moveRG2, '50008'], //Lang.Blocks.robotis_robotis_common_green_color
+                        [Lang.Blocks.robotis_moveRG3, '50071'],
+                        [Lang.Blocks.robotis_moveRG4, '50072'],
                     ],
                     value: '50007',
                     fontSize: 11,
@@ -3004,298 +2682,7 @@ Entry.Robotis_rb.getBlocks = function () {
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_RGee_motion(%1)'] },
-        },
-        robotis_RB_cm_motion: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['기본자세', '1'],
-                        ["전진", '25'],
-                        ["우전진", '46'],
-                        ["좌전진", '47'],
-                        ["후진", '37'], //Lang.Blocks.robotis_common_green_color
-                        ["오른쪽으로", '38'],
-                        ["왼쪽으로", '39'],
-                        ["우회전", '41'],
-                        ["좌회전", '40'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                ],
-                type: 'robotis_RB_cm_motion',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
-                var extraTime = 0; 
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_MOTION[0];
-                data_length = Entry.Robotis_rb.CONTROL_TABLE.CM_MOTION[1];
-                data_value = script.getField('VALUE', script);
-
-
-                console.log("motion send");
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, 0],
-                    [data_instruction, data_address, data_length, data_value]
-                ];
-               
-                switch(data_value){
-                    case '1':
-                        extraTime = 100;
-                        break;
-                    case '25':
-                    case '46':
-                    case '47':
-                        extraTime = 3000;
-                        break;
-                    case '37':
-                        extraTime = 3000;
-                        break;
-                    case '38':
-                        extraTime = 1000;
-                        break;
-                    case '39':
-                        extraTime = 1000;
-                        break;
-                    case '40':
-                        extraTime = 2300;
-                        break;
-                    case '41':
-                        extraTime = 2300;
-                        break;
-                    
-                    
-                }
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay + extraTime + 300
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
-        },
-        robotis_RB_cm_motion2: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['오른손 들기', '26'],
-                        ["오른손 내리기", '27'],
-                        ["왼손 들기", '28'],
-                        ["왼손 내리기", '29'],
-                        ["양손 들기", '30'], //Lang.Blocks.robotis_common_green_color
-                        ["양손 내리기", '31'],
-                        ["뒤로 넘어지기", '32'],
-                        ["앞으로 넘어지기", '33'],
-                        ["앞으로 일어서기", '48'],
-                        ["뒤로 일어서기", '35'],
-                        ["방어", '36'],
-                        ["공격1", '42'],
-                        ["공격2", '43'],
-                        ["공격3", '44'],
-                        ["공격4", '45'],
-                    ],
-                    value: '26',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                ],
-                type: 'robotis_RB_cm_motion2',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
-                var extraTime = 0; 
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_MOTION[0];
-                data_length = Entry.Robotis_rb.CONTROL_TABLE.CM_MOTION[1];
-                data_value = script.getField('VALUE', script);
-
-
-                console.log("motion send");
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, 0],
-                    [data_instruction, data_address, data_length, data_value]
-                ];
-               
-                switch(data_value){
-                    case '26':
-                        extraTime = 800;
-                        break;
-                    case '27':
-                        extraTime = 1000;
-                        break;
-                    case '28':
-                        extraTime = 800;
-                        break;
-                    case '29':
-                        extraTime = 1000;
-                        break;
-                    case '30':
-                        extraTime = 800;
-                        break;
-                    case '31':
-                        extraTime = 1000;
-                        break;
-                    case '32':
-                        extraTime = 5800;
-                        break;
-                    case '33':
-                        extraTime = 3800;
-                        break;
-                    case '34':
-                        extraTime = 8400;
-                        break;
-                    case '35':
-                        extraTime = 4000;
-                        break;
-                    case '36':
-                        extraTime = 300;
-                        break;
-                    case '42':
-                        extraTime = 600;
-                        break;
-                    case '43':
-                        extraTime = 800;
-                        break;
-                    case '44':
-                        extraTime = 800;
-                        break;
-                    case '45':
-                        extraTime = 1000;
-                        break;  
-                    case '48':
-                        extraTime = 12400;
-                        break;     
-                }
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay + extraTime + 200
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
-        },
-        
-       
-        robotis_RB_cm_motion_custom: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['1'],
-                    },
-                    null,
-                ],
-                type: 'robotis_RB_cm_motion_custom',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_H'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
-                var extraTime = 0; 
-
-                data_address =
-                    Entry.Robotis_rb.CONTROL_TABLE.CM_MOTION[0];
-                data_length = Entry.Robotis_rb.CONTROL_TABLE.CM_MOTION[1];
-                data_value = script.getNumberValue('VALUE', script);
-
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, 0],
-                    [data_instruction, data_address, data_length, data_value]
-                ];
-            
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_rb_H.delay
-                    //Entry.Robotis_openCM70.delay + extraTime + 200
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_motion_custom(%1)'] },
-        },
-       
-        
-       
+        }, 
         robotis_RB_cm_custom: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -3481,6 +2868,4 @@ Entry.Robotis_rb.getBlocks = function () {
 };
 
 
-
-
-module.exports = [Entry.Robotis_rb, Entry.Robotis_rb_H];
+module.exports = [Entry.Robotis_rb];
