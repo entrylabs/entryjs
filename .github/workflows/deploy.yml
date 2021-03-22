@@ -5,7 +5,7 @@ on:
     branches:
       - 'deploy/**'
       - master
-      - hardware/**
+      - develop-hw
 
 jobs:
   build-and-deploy:
