@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.GBot = {
-    id: ['FF.FF', 'FF.FF'],
+    id: '49.1',
     name: 'GBot',
     url: 'https://www.gbot123.com/',
     imageName: 'Gbot.png',
