@@ -100,7 +100,7 @@ class mechatro {
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
-                'com': {
+                com: {
                     name: ` inform `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
@@ -146,8 +146,24 @@ class mechatro {
         this.prev_sensor_data = { '2': 0, '4': 0, '5': 0, '6': 0, '7': 0, '10': 0 };
 
         this.eventState = {
-            FALLING: { '2': false, '4': false, '5': false, '6': false, '7': false, '10': false, 'TRIGGER': false },
-            RISING: { '2': false, '4': false, '5': false, '6': false, '7': false, '10': false, 'TRIGGER': false },
+            FALLING: {
+                '2': false,
+                '4': false,
+                '5': false,
+                '6': false,
+                '7': false,
+                '10': false,
+                TRIGGER: false,
+            },
+            RISING: {
+                '2': false,
+                '4': false,
+                '5': false,
+                '6': false,
+                '7': false,
+                '10': false,
+                TRIGGER: false,
+            },
             ENABLE: { '2': true, '4': true, '5': true, '6': true, '7': true, '10': true },
         };
 
@@ -175,20 +191,36 @@ class mechatro {
         ];
     }
 
-    setZero() {                  // 엔트리 정지시 하드웨어 초기화 로직
+    setZero() {
+        // 엔트리 정지시 하드웨어 초기화 로직
         Entry.hw.sendQueue = {
-            SEND_DATA: {},       // key 값이 없으면 entry-HW에서 entryJS 정지로 인식
+            SEND_DATA: {}, // key 값이 없으면 entry-HW에서 entryJS 정지로 인식
         };
-        Entry.hw.update();       // 반드시 업데이트 해야 전송됨
+        Entry.hw.update(); // 반드시 업데이트 해야 전송됨
         this.eventState = {
-            FALLING: { '2': false, '4': false, '5': false, '6': false, '7': false, '10': false, 'TRIGGER': false },
-            RISING: { '2': false, '4': false, '5': false, '6': false, '7': false, '10': false, 'TRIGGER': false },
+            FALLING: {
+                '2': false,
+                '4': false,
+                '5': false,
+                '6': false,
+                '7': false,
+                '10': false,
+                TRIGGER: false,
+            },
+            RISING: {
+                '2': false,
+                '4': false,
+                '5': false,
+                '6': false,
+                '7': false,
+                '10': false,
+                TRIGGER: false,
+            },
             ENABLE: { '2': true, '4': true, '5': true, '6': true, '7': true, '10': true },
         };
     }
 
     afterReceive(pd) {
-
         if (!Entry.engine.isState('run')) {
             // 정지시에도 이전값 저장으로 실행하는 순간 발생할 수 있는 이벤트 발생을 금지
             Object.keys(this.prev_sensor_data).forEach((key) => {
@@ -198,7 +230,8 @@ class mechatro {
         }
 
         Object.keys(this.prev_sensor_data).forEach((key) => {
-            if (this.eventState.ENABLE[key]) { //초음파 센서 값 포트 이벤트 사용 정지함.
+            if (this.eventState.ENABLE[key]) {
+                //초음파 센서 값 포트 이벤트 사용 정지함.
                 const new_data = pd[key];
                 if (this.prev_sensor_data[key] ^ new_data) {
                     if (new_data) {
@@ -243,7 +276,8 @@ class mechatro {
         };
     }
 
-    transferValue(portNo, value) {  // only used in mechatro_set_dc_motor Block
+    transferValue(portNo, value) {
+        // only used in mechatro_set_dc_motor Block
         if (Entry.hw.sendQueue.SEND_DATA == undefined) {
             Entry.hw.sendQueue = {
                 SEND_DATA: {},
@@ -267,46 +301,49 @@ class mechatro {
 
     setLanguage() {
         return {
-            ko: { // ko.js에 작성하던 내용
+            ko: {
+                // ko.js에 작성하던 내용
                 template: {
-                    mechatro_get_dc_motor_current: "%1모터 전류값[mA]",
-                    mechatro_get_digital: "%1 디지털 값",
-                    mechatro_get_sensor_value: "%1 센서값",
-                    mechatro_set_get_sensor_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                    mechatro_get_ultrasonic_value: "초음파센서 Trig %1 Echo %2 의 거리값 [cm]",
-                    mechatro_get_temperature: "%1 온도 센서 값",
-                    mechatro_set_blue_pw: "블루투스 비밀번호 : %1%2%3%4로 정하기%5",
-                    mechatro_set_dc_motor: "%1모터 속도 %2로 정하기%3",
-                    mechatro_set_digital: "%1번 %2 %3",
-                    mechatro_set_pwm: "%1PWM을 %2%로 정하기 %3",
-                    mechatro_set_servo_position: "%1서보모터 위치 :%2도로 옮기기 %3",
-                    mechatro_set_servo_speed: "%1서보모터 속도 : 1초당 %2도로 정하기 %3",
-                    mechatro_set_threshold: "%1 센서 감도 : %2로 정하기%3",
-                    mechatro_set_tone: "%1버저 %2 %3 음으로 연주 %4",
-                    mechatro_set_tone_time: "%1버저 %2 %3 음으로 %4 초 연주 %5",
-                    mechatro_event_rising: "%1 %2 이 참이 될 때",
-                    mechatro_event_falling: "%1 %2 이 거짓이 될 때",
+                    mechatro_get_dc_motor_current: '%1모터 사용전류값',
+                    mechatro_get_digital: '%1 디지털 값',
+                    mechatro_get_sensor_value: '%1 센서값',
+                    mechatro_set_get_sensor_value_map:
+                        '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                    mechatro_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 의 거리값 [cm]',
+                    mechatro_get_temperature: '%1 온도 센서 값',
+                    mechatro_set_blue_pw: '블루투스 비밀번호 : %1%2%3%4로 정하기%5',
+                    mechatro_set_dc_motor: '%1모터 속도 %2로 정하기%3',
+                    mechatro_set_digital: '%1번 %2 %3',
+                    mechatro_set_pwm: '%1PWM을 %2%로 정하기 %3',
+                    mechatro_set_servo_position: '%1서보모터 위치 :%2도로 옮기기 %3',
+                    mechatro_set_servo_speed: '%1서보모터 속도 : 1초당 %2도로 정하기 %3',
+                    mechatro_set_threshold: '%1 센서 감도 : %2로 정하기%3',
+                    mechatro_set_tone: '%1버저 %2 %3 음으로 연주 %4',
+                    mechatro_set_tone_time: '%1버저 %2 %3 음으로 %4 초 연주 %5',
+                    mechatro_event_rising: '%1 %2 이 참이 될 때',
+                    mechatro_event_falling: '%1 %2 이 거짓이 될 때',
                 },
             },
-            en: { // en.js에 작성하던 내용
+            en: {
+                // en.js에 작성하던 내용
                 template: {
-                    mechatro_get_dc_motor_current: "Get 1%motor current[mA]",
-                    mechatro_get_digital: "%1",
-                    mechatro_get_sensor_value: "Analog %1 Sensor value",
+                    mechatro_get_dc_motor_current: 'Get 1%motor current',
+                    mechatro_get_digital: '%1',
+                    mechatro_get_sensor_value: 'Analog %1 Sensor value',
                     mechatro_set_get_sensor_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                    mechatro_get_ultrasonic_value: "Read ultrasonic sensor trig pin %1 echo pin %2",
-                    mechatro_get_temperature: "temperature %1 Sensor",
-                    mechatro_set_blue_pw: "Change PW of Bluetooth to %1%2%3%4 %5",
-                    mechatro_set_dc_motor: "Set %1 motor speed to %2 %3",
-                    mechatro_set_digital: "Digital %1 Pin %2 %3",
-                    mechatro_set_pwm: "Digital %1 Pin %2 %3",
-                    mechatro_set_servo_position: "Set servo pin %1 angle as %2 %3",
-                    mechatro_set_servo_speed: "Set servo pin %1 speed %2 degree per second %3",
-                    mechatro_set_threshold: "Set %1 threshold : %2%3",
-                    mechatro_set_tone: "Play tone pin %1 on note %2 octave %3 %4",
-                    mechatro_set_tone_time: "Play tone pin %1 on note %2 octave %3 beat %4 %5",
-                    mechatro_event_rising: "%1 When %2 is turned true",
-                    mechatro_event_falling: "%1 When %2 is turned false",
+                    mechatro_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                    mechatro_get_temperature: 'temperature %1 Sensor',
+                    mechatro_set_blue_pw: 'Change PW of Bluetooth to %1%2%3%4 %5',
+                    mechatro_set_dc_motor: 'Set %1 motor speed to %2 %3',
+                    mechatro_set_digital: 'Digital %1 Pin %2 %3',
+                    mechatro_set_pwm: 'Digital %1 Pin %2 %3',
+                    mechatro_set_servo_position: 'Set servo pin %1 angle as %2 %3',
+                    mechatro_set_servo_speed: 'Set servo pin %1 speed %2 degree per second %3',
+                    mechatro_set_threshold: 'Set %1 threshold : %2%3',
+                    mechatro_set_tone: 'Play tone pin %1 on note %2 octave %3 %4',
+                    mechatro_set_tone_time: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                    mechatro_event_rising: '%1 When %2 is turned true',
+                    mechatro_event_falling: '%1 When %2 is turned false',
                 },
             },
         };
@@ -815,7 +852,6 @@ class mechatro {
                 class: 'MechatroGet',
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
-
                     const trig = script.getNumberField('TIRG', script);
                     const echo = script.getNumberField('ECHO', script);
                     const mode = Entry.mechatro.portMode.SET_ULTRASONIC;
@@ -871,7 +907,10 @@ class mechatro {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['켜기', '1'], ['끄기', '0']],
+                        options: [
+                            ['켜기', '1'],
+                            ['끄기', '0'],
+                        ],
                         value: '1',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -912,7 +951,10 @@ class mechatro {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['D5', '5'], ['D6', '6']],
+                        options: [
+                            ['D5', '5'],
+                            ['D6', '6'],
+                        ],
                         value: '5',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1058,7 +1100,6 @@ class mechatro {
                     let mode;
 
                     if (!script.isStart) {
-
                         let duration = script.getNumberValue('DURATION', script);
                         if (duration < 0) {
                             duration = 0;
@@ -1084,7 +1125,6 @@ class mechatro {
                             script.timeFlag = 0;
                         }, duration + 32);
                         return script;
-
                     } else if (script.timeFlag == 1) {
                         return script;
                     } else {
@@ -1248,7 +1288,10 @@ class mechatro {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['MA', '3'], ['MB', '11']],
+                        options: [
+                            ['MA', '3'],
+                            ['MB', '11'],
+                        ],
                         value: '3',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1308,7 +1351,10 @@ class mechatro {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['MA', '14'], ['MB', '15']],
+                        options: [
+                            ['MA', '14'],
+                            ['MB', '15'],
+                        ],
                         value: '14',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1350,7 +1396,12 @@ class mechatro {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['D2', '2'], ['D5', '5'], ['D6', '6'], ['D10', '10']],
+                        options: [
+                            ['D2', '2'],
+                            ['D5', '5'],
+                            ['D6', '6'],
+                            ['D10', '10'],
+                        ],
                         value: '2',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1412,7 +1463,12 @@ class mechatro {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['D2', '22'], ['D5', '23'], ['D6', '24'], ['D10', '25']],
+                        options: [
+                            ['D2', '22'],
+                            ['D5', '23'],
+                            ['D6', '24'],
+                            ['D10', '25'],
+                        ],
                         value: '22',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

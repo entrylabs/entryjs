@@ -123,7 +123,7 @@ Entry.Roboid = {
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            
+
             cheese0inputSa: {
                 name: `${Lang.Blocks.ROBOID_cheese_stick} 0: ${Lang.Blocks.ROBOID_sensor_input_sa}`,
                 type: 'input',
@@ -182,6 +182,79 @@ Entry.Roboid = {
 Entry.Roboid.setLanguage = () => ({
     ko: {
         template: {
+            roboid_hamster_beep: '햄스터 %1: 삐 소리내기 %2',
+            roboid_hamster_change_both_wheels_by:
+                '햄스터 %1: 왼쪽 바퀴 %2 오른쪽 바퀴 %3 만큼 바꾸기 %4',
+            roboid_hamster_change_buzzer_by: '햄스터 %1: 버저 음을 %2 만큼 바꾸기 %3',
+            roboid_hamster_change_output_by: '햄스터 %1: 출력 %2 를 %3 만큼 바꾸기 %4',
+            roboid_hamster_change_tempo_by: '햄스터 %1: 연주 속도를 %2 만큼 바꾸기 %3',
+            roboid_hamster_change_wheel_by: '햄스터 %1: %2 바퀴 %3 만큼 바꾸기 %4',
+            roboid_hamster_clear_buzzer: '햄스터 %1: 버저 끄기 %2',
+            roboid_hamster_clear_led: '햄스터 %1: %2 LED 끄기 %3',
+            roboid_hamster_follow_line_until: '햄스터 %1: %2 선을 따라 %3 교차로까지 이동하기 %4',
+            roboid_hamster_follow_line_using: '햄스터 %1: %2 선을 %3 바닥 센서로 따라가기 %4',
+            roboid_hamster_hand_found: '햄스터 %1: 손 찾음?',
+            roboid_hamster_move_backward_for_secs: '햄스터 %1: 뒤로 %2 초 이동하기 %3',
+            roboid_hamster_move_forward_for_secs: '햄스터 %1: 앞으로 %2 초 이동하기 %3',
+            roboid_hamster_move_forward_once: '햄스터 %1: 말판 앞으로 한 칸 이동하기 %2',
+            roboid_hamster_play_note_for: '햄스터 %1: %2 %3 음을 %4 박자 연주하기 %5',
+            roboid_hamster_rest_for: '햄스터 %1: %2 박자 쉬기 %3',
+            roboid_hamster_set_both_wheels_to:
+                '햄스터 %1: 왼쪽 바퀴 %2 오른쪽 바퀴 %3 (으)로 정하기 %4',
+            roboid_hamster_set_buzzer_to: '햄스터 %1: 버저 음을 %2 (으)로 정하기 %3',
+            roboid_hamster_set_following_speed_to:
+                '햄스터 %1: 선 따라가기 속도를 %2 (으)로 정하기 %3',
+            roboid_hamster_set_led_to: '햄스터 %1: %2 LED를 %3 으로 정하기 %4',
+            roboid_hamster_set_output_to: '햄스터 %1: 출력 %2 를 %3 (으)로 정하기 %4',
+            roboid_hamster_set_port_to: '햄스터 %1: 포트 %2 를 %3 으로 정하기 %4',
+            roboid_hamster_set_tempo_to: '햄스터 %1: 연주 속도를 %2 BPM으로 정하기 %3',
+            roboid_hamster_set_wheel_to: '햄스터 %1: %2 바퀴 %3 (으)로 정하기 %4',
+            roboid_hamster_stop: '햄스터 %1: 정지하기 %2',
+            roboid_hamster_turn_for_secs: '햄스터 %1: %2 으로 %3 초 돌기 %4',
+            roboid_hamster_turn_once: '햄스터 %1: 말판 %2 으로 한 번 돌기 %3',
+            roboid_hamster_value: '햄스터 %1: %2',
+            roboid_turtle_button_state: '거북이 %1: 버튼을 %2 ?',
+            roboid_turtle_change_buzzer_by: '거북이 %1: 버저 음을 %2 만큼 바꾸기 %3',
+            roboid_turtle_change_head_led_by_rgb:
+                '거북이 %1: 머리 LED를 R: %2 G: %3 B: %4 만큼 바꾸기 %5',
+            roboid_turtle_change_tempo_by: '거북이 %1: 연주 속도를 %2 만큼 바꾸기 %3',
+            roboid_turtle_change_wheel_by: '거북이 %1: %2 바퀴 %3 만큼 바꾸기 %4',
+            roboid_turtle_change_wheels_by_left_right:
+                '거북이 %1: 왼쪽 바퀴 %2 오른쪽 바퀴 %3 만큼 바꾸기 %4',
+            roboid_turtle_clear_head_led: '거북이 %1: 머리 LED 끄기 %2',
+            roboid_turtle_clear_sound: '거북이 %1: 소리 끄기 %2',
+            roboid_turtle_cross_intersection: '거북이 %1: 검은색 교차로 건너가기 %2',
+            roboid_turtle_follow_line: '거북이 %1: %2 선을 따라가기 %3',
+            roboid_turtle_follow_line_until: '거북이 %1: 검은색 선을 따라 %2 까지 이동하기 %3',
+            roboid_turtle_follow_line_until_black: '거북이 %1: %2 선을 따라 검은색까지 이동하기 %3',
+            roboid_turtle_is_color_pattern: '거북이 %1: 색깔 패턴이 %2 %3 인가?',
+            roboid_turtle_move_backward_unit: '거북이 %1: 뒤로 %2 %3 이동하기 %4',
+            roboid_turtle_move_forward_unit: '거북이 %1: 앞으로 %2 %3 이동하기 %4',
+            roboid_turtle_pivot_around_wheel_unit_in_direction:
+                '거북이 %1: %2 바퀴 중심으로 %3 %4 %5 방향으로 돌기 %6',
+            roboid_turtle_play_note: '거북이 %1: %2 %3 음을 연주하기 %4',
+            roboid_turtle_play_note_for_beats: '거북이 %1: %2 %3 음을 %4 박자 연주하기 %5',
+            roboid_turtle_play_sound_times: '거북이 %1: %2 소리 %3 번 재생하기 %4',
+            roboid_turtle_play_sound_times_until_done:
+                '거북이 %1: %2 소리 %3 번 재생하고 기다리기 %4',
+            roboid_turtle_rest_for_beats: '거북이 %1: %2 박자 쉬기 %3',
+            roboid_turtle_set_buzzer_to: '거북이 %1: 버저 음을 %2 (으)로 정하기 %3',
+            roboid_turtle_set_following_speed_to:
+                '거북이 %1: 선 따라가기 속도를 %2 (으)로 정하기 %3',
+            roboid_turtle_set_head_led_to: '거북이 %1: 머리 LED를 %2 으로 정하기 %3',
+            roboid_turtle_set_head_led_to_rgb:
+                '거북이 %1: 머리 LED를 R: %2 G: %3 B: %4 (으)로 정하기 %5',
+            roboid_turtle_set_tempo_to: '거북이 %1: 연주 속도를 %2 BPM으로 정하기 %3',
+            roboid_turtle_set_wheel_to: '거북이 %1: %2 바퀴 %3 (으)로 정하기 %4',
+            roboid_turtle_set_wheels_to_left_right:
+                '거북이 %1: 왼쪽 바퀴 %2 오른쪽 바퀴 %3 (으)로 정하기 %4',
+            roboid_turtle_stop: '거북이 %1: 정지하기 %2',
+            roboid_turtle_touching_color: '거북이 %1: %2 에 닿았는가?',
+            roboid_turtle_turn_at_intersection: '거북이 %1: 검은색 교차로에서 %2 으로 돌기 %3',
+            roboid_turtle_turn_unit_in_place: '거북이 %1: %2 으로 %3 %4 제자리 돌기 %5',
+            roboid_turtle_turn_unit_with_radius_in_direction:
+                '거북이 %1: %2 으로 %3 %4 반지름 %5 cm를 %6 방향으로 돌기 %7',
+            roboid_turtle_value: '거북이 %1: %2',
             roboid_hamster_gripper: '햄스터 %1: 집게 %2 %3',
             roboid_hamster_release_gripper: '햄스터 %1: 집게 끄기 %2',
             roboid_hamster_boolean: '햄스터 %1: %2?',
@@ -282,11 +355,12 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: '거북이 %1: %2',
             roboid_turtle_boolean: '거북이 %1: %2?',
             roboid_turtle_pick_head_led: '거북이 %1: 머리 LED를 %2로 정하기 %3',
-            
+
             roboid_cheese_value: '치즈 스틱 %1: %2',
             roboid_cheese_boolean: '치즈 스틱 %1: %2?',
             roboid_cheese_play_sound_times: '치즈 스틱 %1: %2 소리 %3 번 재생하기 %4',
-            roboid_cheese_play_sound_times_until_done: '치즈 스틱 %1: %2 소리 %3 번 재생하고 기다리기 %4',
+            roboid_cheese_play_sound_times_until_done:
+                '치즈 스틱 %1: %2 소리 %3 번 재생하고 기다리기 %4',
             roboid_cheese_change_buzzer_by: '치즈 스틱 %1: 버저 음을 %2 Hz만큼 바꾸기 %3',
             roboid_cheese_set_buzzer_to: '치즈 스틱 %1: 버저 음을 %2 Hz로 정하기 %3',
             roboid_cheese_clear_sound: '치즈 스틱 %1: 소리 끄기 %2',
@@ -297,95 +371,251 @@ Entry.Roboid.setLanguage = () => ({
             roboid_cheese_set_tempo_to: '치즈 스틱 %1: 연주 속도를 %2 BPM으로 정하기 %3',
             roboid_cheese_set_sound_port_to: '치즈 스틱 %1: 소리 출력을 %2로 정하기 %3',
             roboid_cheese_set_input_mode_to: '치즈 스틱 %1: 포트 %2를 %3 입력으로 정하기 %4',
-            roboid_cheese_set_input_range_to: '치즈 스틱 %1: 입력 %2의 범위 %3 ~ %4을(를) %5 ~ %6 소수점 %7으로 정하기 %8',
-            roboid_cheese_set_three_input_ranges_to: '치즈 스틱 %1: 입력 %2의 범위 %3 ~ %4 ~ %5을(를) %6 ~ %7 ~ %8 소수점 %9으로 정하기 %10',
+            roboid_cheese_set_input_range_to:
+                '치즈 스틱 %1: 입력 %2의 범위 %3 ~ %4을(를) %5 ~ %6 소수점 %7으로 정하기 %8',
+            roboid_cheese_set_three_input_ranges_to:
+                '치즈 스틱 %1: 입력 %2의 범위 %3 ~ %4 ~ %5을(를) %6 ~ %7 ~ %8 소수점 %9으로 정하기 %10',
             roboid_cheese_analog_input: '치즈 스틱 %1: 입력 %2',
             roboid_cheese_digital_input: '치즈 스틱 %1: 입력 %2 %3 ?',
             roboid_cheese_button_state: '치즈 스틱 %1: 버튼 %2를 %3?',
             roboid_cheese_set_pulse_mode_to: '치즈 스틱 %1: 포트 %2를 %3 입력으로 정하기 %4',
             roboid_cheese_pulse_input: '치즈 스틱 %1: 포트 %2에서 펄스 감지?',
-            roboid_cheese_set_digital_output_to: '치즈 스틱 %1: 디지털 출력 %2를 %3(으)로 정하기 %4',
+            roboid_cheese_set_digital_output_to:
+                '치즈 스틱 %1: 디지털 출력 %2를 %3(으)로 정하기 %4',
             roboid_cheese_change_pwm_output_by: '치즈 스틱 %1: PWM 출력 %2를 %3%만큼 바꾸기 %4',
             roboid_cheese_set_pwm_output_to: '치즈 스틱 %1: PWM 출력 %2를 %3%로 정하기 %4',
-            roboid_cheese_change_servo_motor_angle_by: '치즈 스틱 %1: 서보 모터 %2의 각도를 %3도만큼 바꾸기 %4',
-            roboid_cheese_set_servo_motor_angle_to: '치즈 스틱 %1: 서보 모터 %2의 각도를 %3도로 정하기 %4',
+            roboid_cheese_change_servo_motor_angle_by:
+                '치즈 스틱 %1: 서보 모터 %2의 각도를 %3도만큼 바꾸기 %4',
+            roboid_cheese_set_servo_motor_angle_to:
+                '치즈 스틱 %1: 서보 모터 %2의 각도를 %3도로 정하기 %4',
             roboid_cheese_turn_off_servo_motor: '치즈 스틱 %1: 서보 모터 %2 전원 끄기 %3',
-            roboid_cheese_change_dc_motor_velocity_by: '치즈 스틱 %1: DC 모터 %2의 속도를 %3%만큼 바꾸기 %4',
-            roboid_cheese_set_dc_motor_velocity_to: '치즈 스틱 %1: DC 모터 %2의 속도를 %3%로 정하기 %4',
+            roboid_cheese_change_dc_motor_velocity_by:
+                '치즈 스틱 %1: DC 모터 %2의 속도를 %3%만큼 바꾸기 %4',
+            roboid_cheese_set_dc_motor_velocity_to:
+                '치즈 스틱 %1: DC 모터 %2의 속도를 %3%로 정하기 %4',
             roboid_cheese_stop_dc_motor: '치즈 스틱 %1: DC 모터 %2 정지하기 %3',
-            roboid_cheese_rotate_step_motor: '치즈 스틱 %1: 스텝 모터 %2 스텝을 속도 %3 스텝/초로 회전하기 %4',
-            roboid_cheese_change_step_motor_velocity_by: '치즈 스틱 %1: 스텝 모터의 속도를 %2 스텝/초만큼 바꾸기 %3',
-            roboid_cheese_set_step_motor_velocity_to: '치즈 스틱 %1: 스텝 모터의 속도를 %2 스텝/초로 정하기 %3',
+            roboid_cheese_rotate_step_motor:
+                '치즈 스틱 %1: 스텝 모터 %2 스텝을 속도 %3 스텝/초로 회전하기 %4',
+            roboid_cheese_change_step_motor_velocity_by:
+                '치즈 스틱 %1: 스텝 모터의 속도를 %2 스텝/초만큼 바꾸기 %3',
+            roboid_cheese_set_step_motor_velocity_to:
+                '치즈 스틱 %1: 스텝 모터의 속도를 %2 스텝/초로 정하기 %3',
             roboid_cheese_stop_off_step_motor: '치즈 스틱 %1: 스텝 모터 %2 %3',
             roboid_cheese_set_step_motor_mode_to: '치즈 스틱 %1: 스텝 모터를 %2 모드로 정하기 %3',
             roboid_cheese_step_count: '치즈 스틱 %1: 스텝 수',
             roboid_cheese_set_led_to_color: '치즈 스틱 %1: RGB LED %2을(를) %3 %4으로 정하기 %5',
             roboid_cheese_pick_led_to: '치즈 스틱 %1: RGB LED %2을(를) %3로 정하기 %4',
-            roboid_cheese_change_led_by_rgb: '치즈 스틱 %1: RGB LED %2을(를) R: %3 G: %4 B: %5만큼 바꾸기 %6',
-            roboid_cheese_setLed_to_rgb: '치즈 스틱 %1: RGB LED %2을(를) R: %3 G: %4 B: %5(으)로 정하기 %6',
+            roboid_cheese_change_led_by_rgb:
+                '치즈 스틱 %1: RGB LED %2을(를) R: %3 G: %4 B: %5만큼 바꾸기 %6',
+            roboid_cheese_setLed_to_rgb:
+                '치즈 스틱 %1: RGB LED %2을(를) R: %3 G: %4 B: %5(으)로 정하기 %6',
             roboid_cheese_clear_led: '치즈 스틱 %1: RGB LED %2 끄기 %3',
             roboid_cheese_set_led_type_to: '치즈 스틱 %1: RGB LED %2을(를) %3형으로 정하기 %4',
-            roboid_cheese_neopixel_set_number_and_type_to: '치즈 스틱 %1: 네오픽셀 LED %2개, %3로 정하기 %4',
-            roboid_cheese_neopixel_set_all_leds_to_pattern: '치즈 스틱 %1: 네오픽셀 모든 LED를 %2 패턴으로 정하기 %3',
-            roboid_cheese_neopixel_set_all_leds_to_color: '치즈 스틱 %1: 네오픽셀 모든 LED를 %2으로 정하기 %3',
-            roboid_cheese_neopixel_pick_all_leds_to: '치즈 스틱 %1: 네오픽셀 모든 LED를 %2로 정하기 %3',
-            roboid_cheese_neopixel_change_all_leds_by_rgb: '치즈 스틱 %1: 네오픽셀 모든 LED를 R: %2 G: %3 B: %4만큼 바꾸기 %5',
-            roboid_cheese_neopixel_set_all_leds_to_rgb: '치즈 스틱 %1: 네오픽셀 모든 LED를 R: %2 G: %3 B: %4(으)로 정하기 %5',
+            roboid_cheese_neopixel_set_number_and_type_to:
+                '치즈 스틱 %1: 네오픽셀 LED %2개, %3로 정하기 %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern:
+                '치즈 스틱 %1: 네오픽셀 모든 LED를 %2 패턴으로 정하기 %3',
+            roboid_cheese_neopixel_set_all_leds_to_color:
+                '치즈 스틱 %1: 네오픽셀 모든 LED를 %2으로 정하기 %3',
+            roboid_cheese_neopixel_pick_all_leds_to:
+                '치즈 스틱 %1: 네오픽셀 모든 LED를 %2로 정하기 %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb:
+                '치즈 스틱 %1: 네오픽셀 모든 LED를 R: %2 G: %3 B: %4만큼 바꾸기 %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb:
+                '치즈 스틱 %1: 네오픽셀 모든 LED를 R: %2 G: %3 B: %4(으)로 정하기 %5',
             roboid_cheese_neopixel_clear_all_leds: '치즈 스틱 %1: 네오픽셀 모든 LED 끄기 %2',
-            roboid_cheese_neopixel_set_led_to_color: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 %3으로 정하기 %4',
-            roboid_cheese_neopixel_pick_led_to: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 %3로 정하기 %4',
-            roboid_cheese_neopixel_change_led_by_rgb: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 R: %3 G: %4 B: %5만큼 바꾸기 %6',
-            roboid_cheese_neopixel_set_led_to_rgb: '치즈 스틱 %1: 네오픽셀 %2번째 LED를 R: %3 G: %4 B: %5(으)로 정하기 %6',
+            roboid_cheese_neopixel_set_led_to_color:
+                '치즈 스틱 %1: 네오픽셀 %2번째 LED를 %3으로 정하기 %4',
+            roboid_cheese_neopixel_pick_led_to:
+                '치즈 스틱 %1: 네오픽셀 %2번째 LED를 %3로 정하기 %4',
+            roboid_cheese_neopixel_change_led_by_rgb:
+                '치즈 스틱 %1: 네오픽셀 %2번째 LED를 R: %3 G: %4 B: %5만큼 바꾸기 %6',
+            roboid_cheese_neopixel_set_led_to_rgb:
+                '치즈 스틱 %1: 네오픽셀 %2번째 LED를 R: %3 G: %4 B: %5(으)로 정하기 %6',
             roboid_cheese_neopixel_clear_led: '치즈 스틱 %1: 네오픽셀 %2번째 LED 끄기 %3',
-            roboid_cheese_neopixel_set_led_range_to_pattern: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지의 LED를 %4 패턴으로 정하기 %5',
-            roboid_cheese_neopixel_set_led_range_to_color: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 %5으로 정하기 %6',
-            roboid_cheese_neopixel_pick_led_range_to: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 %5로 정하기 %6',
-            roboid_cheese_neopixel_change_led_range_by_rgb: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 R: %5 G: %6 B: %7만큼 바꾸기 %8',
-            roboid_cheese_neopixel_set_led_range_to_rgb: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 R: %5 G: %6 B: %7(으)로 정하기 %8',
-            roboid_cheese_neopixel_clear_led_range: '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED 끄기 %5',
+            roboid_cheese_neopixel_set_led_range_to_pattern:
+                '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지의 LED를 %4 패턴으로 정하기 %5',
+            roboid_cheese_neopixel_set_led_range_to_color:
+                '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 %5으로 정하기 %6',
+            roboid_cheese_neopixel_pick_led_range_to:
+                '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 %5로 정하기 %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb:
+                '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 R: %5 G: %6 B: %7만큼 바꾸기 %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb:
+                '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED를 R: %5 G: %6 B: %7(으)로 정하기 %8',
+            roboid_cheese_neopixel_clear_led_range:
+                '치즈 스틱 %1: 네오픽셀 %2번째부터 %3번째까지 %4칸 간격의 LED 끄기 %5',
             roboid_cheese_neopixel_shift: '치즈 스틱 %1: 네오픽셀 %2칸 이동하기 %3',
             roboid_cheese_neopixel_rotate: '치즈 스틱 %1: 네오픽셀 %2칸 회전하기 %3',
-            roboid_cheese_neopixel_change_brightness_by: '치즈 스틱 %1: 네오픽셀 밝기를 %2%만큼 바꾸기 %3',
-            roboid_cheese_neopixel_set_brightness_to: '치즈 스틱 %1: 네오픽셀 밝기를 %2%로 정하기 %3',
+            roboid_cheese_neopixel_change_brightness_by:
+                '치즈 스틱 %1: 네오픽셀 밝기를 %2%만큼 바꾸기 %3',
+            roboid_cheese_neopixel_set_brightness_to:
+                '치즈 스틱 %1: 네오픽셀 밝기를 %2%로 정하기 %3',
             roboid_cheese_write_serial: '치즈 스틱 %1: 시리얼 %2 %3 쓰기 %4',
             roboid_cheese_read_serial_until: '치즈 스틱 %1: 시리얼 %2 읽기 %3',
             roboid_cheese_set_serial_port_to: '치즈 스틱 %1: 시리얼 포트를 %2로 정하기 %3',
             roboid_cheese_set_serial_rate_to: '치즈 스틱 %1: 시리얼 속도를 %2Bd로 정하기 %3',
             roboid_cheese_serial_input: '치즈 스틱 %1: 시리얼 입력',
             roboid_cheese_pid_start: '치즈 스틱 %1: %2 시작하기 %3',
-            roboid_cheese_pid_set_range_to: '치즈 스틱 %1: PID %2의 범위 %3 ~ %4을(를) %5 ~ %6 소수점 %7으로 정하기 %8',
-            roboid_cheese_pid_set_three_ranges_to: '치즈 스틱 %1: PID %2의 범위 %3 ~ %4 ~ %5을(를) %6 ~ %7 ~ %8 소수점 %9으로 정하기 %10',
+            roboid_cheese_pid_set_range_to:
+                '치즈 스틱 %1: PID %2의 범위 %3 ~ %4을(를) %5 ~ %6 소수점 %7으로 정하기 %8',
+            roboid_cheese_pid_set_three_ranges_to:
+                '치즈 스틱 %1: PID %2의 범위 %3 ~ %4 ~ %5을(를) %6 ~ %7 ~ %8 소수점 %9으로 정하기 %10',
             roboid_cheese_pid_reset_encoder: '치즈 스틱 %1: PID 엔코더 값 초기화하기 %2',
             roboid_cheese_pid_input: '치즈 스틱 %1: PID %2',
             roboid_cheese_pid_button_state: '치즈 스틱 %1: PID 버튼 %2을(를) %3?',
             roboid_cheese_hat010_start: '치즈 스틱 %1: HAT-010 5x5 매트릭스 시작하기 %2',
             roboid_cheese_hat010_button: '치즈 스틱 %1: HAT-010 버튼 %2',
             roboid_cheese_hat010_button_state: '치즈 스틱 %1: HAT-010 버튼 %2를 %3?',
-            roboid_cheese_hat010_background_turn_on_xy: '치즈 스틱 %1: HAT-010 배경 x: %2 y: %3 %4으로 켜기 %5',
-            roboid_cheese_hat010_background_turn_off_xy: '치즈 스틱 %1: HAT-010 배경 x: %2 y: %3 끄기 %4',
-            roboid_cheese_hat010_background_draw_shape_at_xy: '치즈 스틱 %1: HAT-010 배경 %2 %3을(를) x: %4 y: %5에 그리기 %6',
-            roboid_cheese_hat010_background_draw_string_at_xy: '치즈 스틱 %1: HAT-010 배경 %2 글자 %3을(를) x: %4 y: %5에 그리기 %6',
-            roboid_cheese_hat010_background_draw_pattern_at_xy: '치즈 스틱 %1: HAT-010 배경 %2 패턴 %3을(를) x: %4 y: %5에 그리기 %6',
+            roboid_cheese_hat010_background_turn_on_xy:
+                '치즈 스틱 %1: HAT-010 배경 x: %2 y: %3 %4으로 켜기 %5',
+            roboid_cheese_hat010_background_turn_off_xy:
+                '치즈 스틱 %1: HAT-010 배경 x: %2 y: %3 끄기 %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy:
+                '치즈 스틱 %1: HAT-010 배경 %2 %3을(를) x: %4 y: %5에 그리기 %6',
+            roboid_cheese_hat010_background_draw_string_at_xy:
+                '치즈 스틱 %1: HAT-010 배경 %2 글자 %3을(를) x: %4 y: %5에 그리기 %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy:
+                '치즈 스틱 %1: HAT-010 배경 %2 패턴 %3을(를) x: %4 y: %5에 그리기 %6',
             roboid_cheese_hat010_clear: '치즈 스틱 %1: HAT-010 %2 지우기 %3',
-            roboid_cheese_hat010_scroll_by_xy: '치즈 스틱 %1: HAT-010 %2 x: %3 y: %4만큼 이동하기 %5',
-            roboid_cheese_hat010_sprite_set_to_shape: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 %4(으)로 정하기 %5',
-            roboid_cheese_hat010_sprite_set_to_string: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 글자 %4(으)로 정하기 %5',
-            roboid_cheese_hat010_sprite_set_to_pattern: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 패턴 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_scroll_by_xy:
+                '치즈 스틱 %1: HAT-010 %2 x: %3 y: %4만큼 이동하기 %5',
+            roboid_cheese_hat010_sprite_set_to_shape:
+                '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_set_to_string:
+                '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 글자 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_set_to_pattern:
+                '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 패턴 %4(으)로 정하기 %5',
             roboid_cheese_hat010_sprite_clear_show_hide: '치즈 스틱 %1: HAT-010 그림 %2 %3 %4',
-            roboid_cheese_hat010_sprite_change_positions_by_xy: '치즈 스틱 %1: HAT-010 그림 %2의 위치를 x: %3 y: %4만큼 바꾸기 %5',
-            roboid_cheese_hat010_sprite_set_positions_to_xy: '치즈 스틱 %1: HAT-010 그림 %2의 위치를 x: %3 y: %4(으)로 정하기 %5',
-            roboid_cheese_hat010_sprite_change_position_by_value: '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치를 %4만큼 바꾸기 %5',
-            roboid_cheese_hat010_sprite_set_position_to_value: '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치를 %4(으)로 정하기 %5',
-            roboid_cheese_hat010_sprite_rotate: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 방향으로 회전하기 %4',
-            roboid_cheese_hat010_sprite_flip_in_direction: '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 방향으로 뒤집기 %4',
-            roboid_cheese_hat010_sprite_stamp_to_background: '치즈 스틱 %1: HAT-010 그림 %2을(를) 배경에 도장 찍기 %3',
+            roboid_cheese_hat010_sprite_change_positions_by_xy:
+                '치즈 스틱 %1: HAT-010 그림 %2의 위치를 x: %3 y: %4만큼 바꾸기 %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy:
+                '치즈 스틱 %1: HAT-010 그림 %2의 위치를 x: %3 y: %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_change_position_by_value:
+                '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치를 %4만큼 바꾸기 %5',
+            roboid_cheese_hat010_sprite_set_position_to_value:
+                '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치를 %4(으)로 정하기 %5',
+            roboid_cheese_hat010_sprite_rotate:
+                '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 방향으로 회전하기 %4',
+            roboid_cheese_hat010_sprite_flip_in_direction:
+                '치즈 스틱 %1: HAT-010 그림 %2을(를) %3 방향으로 뒤집기 %4',
+            roboid_cheese_hat010_sprite_stamp_to_background:
+                '치즈 스틱 %1: HAT-010 그림 %2을(를) 배경에 도장 찍기 %3',
             roboid_cheese_hat010_sprite_position: '치즈 스틱 %1: HAT-010 그림 %2의 %3 위치',
-            roboid_cheese_hat010_sprite_touching_sprite: '치즈 스틱 %1: HAT-010 그림 %2이(가) 그림 %3에 닿았는가?',
-            roboid_cheese_hat010_sprite_touching: '치즈 스틱 %1: HAT-010 그림 %2이(가) %3에 닿았는가?',
-            roboid_cheese_hat010_change_brightness_by: '치즈 스틱 %1: HAT-010 밝기를 %2%만큼 바꾸기 %3',
+            roboid_cheese_hat010_sprite_touching_sprite:
+                '치즈 스틱 %1: HAT-010 그림 %2이(가) 그림 %3에 닿았는가?',
+            roboid_cheese_hat010_sprite_touching:
+                '치즈 스틱 %1: HAT-010 그림 %2이(가) %3에 닿았는가?',
+            roboid_cheese_hat010_change_brightness_by:
+                '치즈 스틱 %1: HAT-010 밝기를 %2%만큼 바꾸기 %3',
             roboid_cheese_hat010_set_brightness_to: '치즈 스틱 %1: HAT-010 밝기를 %2%로 정하기 %3',
         },
         Helper: {
+            roboid_hamster_beep: '버저 소리를 짧게 냅니다.',
+            roboid_hamster_change_both_wheels_by:
+                '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            roboid_hamster_change_buzzer_by:
+                '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 둘째 자리까지 입력할 수 있습니다.',
+            roboid_hamster_change_output_by:
+                '선택한 외부 확장 포트의 현재 출력 값에 입력한 값을 더합니다. 더한 결과는 외부 확장 포트의 모드에 따라 다음의 범위를 가집니다.<br/>서보 출력: 유효한 값의 범위는 1 ~ 180도, 0이면 PWM 펄스 없이 항상 0을 출력<br/>PWM 출력: 0 ~ 100%, PWM 파형에서 ON 상태의 듀티비(%)<br/>디지털 출력: 0이면 LOW, 0이 아니면 HIGH',
+            roboid_hamster_change_tempo_by:
+                '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
+            roboid_hamster_change_wheel_by:
+                '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            roboid_hamster_clear_buzzer: '버저 소리를 끕니다.',
+            roboid_hamster_clear_led: '왼쪽/오른쪽/양쪽 LED를 끕니다.',
+            roboid_hamster_follow_line_until:
+                '왼쪽/오른쪽/앞쪽/뒤쪽의 검은색/하얀색 선을 따라 이동하다가 교차로를 만나면 정지합니다.',
+            roboid_hamster_follow_line_using:
+                '왼쪽/오른쪽/양쪽 바닥 센서를 사용하여 검은색/하얀색 선을 따라 이동합니다.',
+            roboid_hamster_hand_found:
+                "근접 센서 앞에 손 또는 물체가 있으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            roboid_hamster_move_backward_for_secs: '입력한 시간(초) 동안 뒤로 이동합니다.',
+            roboid_hamster_move_forward_for_secs: '입력한 시간(초) 동안 앞으로 이동합니다.',
+            roboid_hamster_move_forward_once: '말판 위에서 한 칸 앞으로 이동합니다.',
+            roboid_hamster_play_note_for:
+                '선택한 계이름과 옥타브의 음을 입력한 박자만큼 소리 냅니다.',
+            roboid_hamster_rest_for: '입력한 박자만큼 쉽니다.',
+            roboid_hamster_set_both_wheels_to:
+                '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            roboid_hamster_set_buzzer_to:
+                '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 둘째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 버저 소리를 끕니다.',
+            roboid_hamster_set_following_speed_to:
+                '선을 따라 이동하는 속도(1 ~ 8)를 설정합니다. 숫자가 클수록 이동하는 속도가 빠릅니다.',
+            roboid_hamster_set_led_to: '왼쪽/오른쪽/양쪽 LED를 선택한 색깔로 켭니다.',
+            roboid_hamster_set_output_to:
+                '선택한 외부 확장 포트의 출력 값을 입력한 값으로 설정합니다. 입력하는 값은 외부 확장 포트의 모드에 따라 다음의 범위를 가집니다.<br/>서보 출력: 유효한 값의 범위는 1 ~ 180도, 0이면 PWM 펄스 없이 항상 0을 출력<br/>PWM 출력: 0 ~ 100%, PWM 파형에서 ON 상태의 듀티비(%)<br/>디지털 출력: 0이면 LOW, 0이 아니면 HIGH',
+            roboid_hamster_set_port_to:
+                '선택한 외부 확장 포트의 입출력 모드를 선택한 모드로 설정합니다.',
+            roboid_hamster_set_tempo_to:
+                '연주하거나 쉬는 속도를 입력한 BPM(분당 박자 수)으로 설정합니다.',
+            roboid_hamster_set_wheel_to:
+                '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            roboid_hamster_stop: '양쪽 바퀴를 정지합니다.',
+            roboid_hamster_turn_for_secs:
+                '입력한 시간(초) 동안 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
+            roboid_hamster_turn_once:
+                '말판 위에서 왼쪽/오른쪽 방향으로 제자리에서 90도 회전합니다.',
+            roboid_hamster_value:
+                '왼쪽 근접 센서: 왼쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>오른쪽 근접 센서: 오른쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>왼쪽 바닥 센서: 왼쪽 바닥 센서의 값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>오른쪽 바닥 센서: 오른쪽 바닥 센서의 값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 가속도: 가속도 센서의 Y축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 왼쪽 방향이 Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.<br/>밝기: 밝기 센서의 값 (값의 범위: 0 ~ 65535, 초기값: 0) 밝을 수록 값이 커집니다.<br/>온도: 로봇 내부의 온도 값 (값의 범위: 섭씨 -40 ~ 88도, 초기값: 0)<br/>신호 세기: 블루투스 무선 통신의 신호 세기 (값의 범위: -128 ~ 0 dBm, 초기값: 0) 신호의 세기가 셀수록 값이 커집니다.<br/>입력 A: 외부 확장 포트 A로 입력되는 신호의 값 (값의 범위: 아날로그 입력 0 ~ 255, 디지털 입력 0 또는 1, 초기값: 0)<br/>입력 B: 외부 확장 포트 B로 입력되는 신호의 값 (값의 범위: 아날로그 입력 0 ~ 255, 디지털 입력 0 또는 1, 초기값: 0)',
+            roboid_turtle_button_state:
+                "등 버튼을 클릭했으면/더블클릭했으면/길게 눌렀으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            roboid_turtle_change_buzzer_by:
+                '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 둘째 자리까지 입력할 수 있습니다.',
+            roboid_turtle_change_head_led_by_rgb:
+                '머리 LED의 현재 R, G, B 값에 입력한 값을 각각 더합니다.',
+            roboid_turtle_change_tempo_by:
+                '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
+            roboid_turtle_change_wheel_by:
+                '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            roboid_turtle_change_wheels_by_left_right:
+                '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            roboid_turtle_clear_head_led: '머리 LED를 끕니다.',
+            roboid_turtle_clear_sound: '소리를 끕니다.',
+            roboid_turtle_cross_intersection:
+                '검은색 교차로에서 잠시 앞으로 이동한 후 검은색 선을 찾아 다시 이동합니다.',
+            roboid_turtle_follow_line: '하얀색 바탕 위에서 선택한 색깔의 선을 따라 이동합니다.',
+            roboid_turtle_follow_line_until:
+                '하얀색 바탕 위에서 검은색 선을 따라 이동하다가 선택한 색깔을 컬러 센서가 감지하면 정지합니다.',
+            roboid_turtle_follow_line_until_black:
+                '하얀색 바탕 위에서 선택한 색깔의 선을 따라 이동하다가 컬러 센서가 검은색을 감지하면 정지합니다.',
+            roboid_turtle_is_color_pattern:
+                "선택한 색깔 패턴을 컬러 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            roboid_turtle_move_backward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 뒤로 이동합니다.',
+            roboid_turtle_move_forward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 앞으로 이동합니다.',
+            roboid_turtle_pivot_around_wheel_unit_in_direction:
+                '왼쪽/오른쪽 바퀴 중심으로 입력한 각도(도)/시간(초)/펄스만큼 머리/꼬리 방향으로 회전합니다.',
+            roboid_turtle_play_note: '선택한 계이름과 옥타브의 음을 계속 소리 냅니다.',
+            roboid_turtle_play_note_for_beats:
+                '선택한 계이름과 옥타브의 음을 입력한 박자만큼 소리 냅니다.',
+            roboid_turtle_play_sound_times: '선택한 소리를 입력한 횟수만큼 재생합니다.',
+            roboid_turtle_play_sound_times_until_done:
+                '선택한 소리를 입력한 횟수만큼 재생하고, 재생이 완료될 때까지 기다립니다.',
+            roboid_turtle_rest_for_beats: '입력한 박자만큼 쉽니다.',
+            roboid_turtle_set_buzzer_to:
+                '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 둘째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 소리를 끕니다.',
+            roboid_turtle_set_following_speed_to:
+                '선을 따라 이동하는 속도(1 ~ 8)를 설정합니다. 숫자가 클수록 이동하는 속도가 빠릅니다.',
+            roboid_turtle_set_head_led_to: '머리 LED를 선택한 색깔로 켭니다.',
+            roboid_turtle_set_head_led_to_rgb:
+                '머리 LED의 R, G, B 값을 입력한 값으로 각각 설정합니다.',
+            roboid_turtle_set_tempo_to:
+                '연주하거나 쉬는 속도를 입력한 BPM(분당 박자 수)으로 설정합니다.',
+            roboid_turtle_set_wheel_to:
+                '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-400 ~ 400%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            roboid_turtle_set_wheels_to_left_right:
+                '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-400 ~ 400%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            roboid_turtle_stop: '양쪽 바퀴를 정지합니다.',
+            roboid_turtle_touching_color:
+                "선택한 색깔을 컬러 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            roboid_turtle_turn_at_intersection:
+                '검은색 교차로에서 잠시 앞으로 이동한 후 제자리에서 왼쪽/오른쪽/뒤쪽으로 회전하고 검은색 선을 찾아 다시 이동합니다.',
+            roboid_turtle_turn_unit_in_place:
+                '입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
+            roboid_turtle_turn_unit_with_radius_in_direction:
+                '입력한 반지름의 원을 그리면서 입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽, 머리/꼬리 방향으로 회전합니다.',
+            roboid_turtle_value:
+                '색깔 번호: 컬러 센서가 감지한 색깔의 번호 (값의 범위: -1 ~ 8, 초기값: -1)<br/>색깔 패턴: 컬러 센서가 감지한 색깔 패턴의 값 (값의 범위: -1 ~ 88, 초기값: -1)<br/>바닥 센서: 바닥 센서의 값 (값의 범위: 0 ~ 100, 초기값: 0)<br/>버튼: 거북이 등 버튼의 상태 값 (누르면 1, 아니면 0, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 가속도: 가속도 센서의 Y축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 왼쪽 방향이 Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -32768 ~ 32767, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.',
             roboid_hamster_gripper: '집게를 열거나 닫습니다.',
             roboid_hamster_release_gripper: '집게의 전원을 끄고 자유롭게 움직일 수 있도록 합니다.',
             roboid_hamster_boolean:
@@ -525,6 +755,51 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_pick_head_led: '머리 LED를 선택한 색깔로 켭니다.',
         },
         Blocks: {
+            ROBOID_acceleration_x: 'x축 가속도',
+            ROBOID_acceleration_y: 'y축 가속도',
+            ROBOID_acceleration_z: 'z축 가속도',
+            ROBOID_back: '뒤쪽',
+            ROBOID_both: '양쪽',
+            ROBOID_button: '버튼',
+            ROBOID_buzzer: '버저',
+            ROBOID_clicked: '클릭했는가',
+            ROBOID_color_any: '아무 색',
+            ROBOID_color_black: '검은색',
+            ROBOID_color_blue: '파란색',
+            ROBOID_color_green: '초록색',
+            ROBOID_color_number: '색깔 번호',
+            ROBOID_color_orange: '주황색',
+            ROBOID_color_pattern: '색깔 패턴',
+            ROBOID_color_purple: '자주색',
+            ROBOID_color_red: '빨간색',
+            ROBOID_color_sky_blue: '하늘색',
+            ROBOID_color_violet: '보라색',
+            ROBOID_color_white: '하얀색',
+            ROBOID_color_yellow: '노란색',
+            ROBOID_double_clicked: '더블클릭했는가',
+            ROBOID_floor: '바닥 센서',
+            ROBOID_head: '머리',
+            ROBOID_head_color: '머리 색깔',
+            ROBOID_left: '왼쪽',
+            ROBOID_left_wheel: '왼쪽 바퀴',
+            ROBOID_long_pressed: '길게~눌렀는가',
+            ROBOID_note: '음표',
+            ROBOID_right: '오른쪽',
+            ROBOID_right_wheel: '오른쪽 바퀴',
+            ROBOID_sound_beep: '삐',
+            ROBOID_sound_birthday: '생일',
+            ROBOID_sound_dibidibidip: '디비디비딥',
+            ROBOID_sound_engine: '엔진',
+            ROBOID_sound_good_job: '잘 했어요',
+            ROBOID_sound_march: '행진',
+            ROBOID_sound_random_beep: '무작위 삐',
+            ROBOID_sound_robot: '로봇',
+            ROBOID_sound_siren: '사이렌',
+            ROBOID_tail: '꼬리',
+            ROBOID_unit_cm: 'cm',
+            ROBOID_unit_deg: '도',
+            ROBOID_unit_pulse: '펄스',
+            ROBOID_unit_sec: '초',
             hamster_note_c: '도',
             hamster_note_c_sharp: '도♯(레♭)',
             hamster_note_d: '레',
@@ -927,6 +1202,75 @@ Entry.Roboid.setLanguage = () => ({
     },
     en: {
         template: {
+            roboid_hamster_beep: 'Hamster %1: beep %2',
+            roboid_hamster_change_both_wheels_by:
+                'Hamster %1: change wheels by left: %2 right: %3 %4',
+            roboid_hamster_change_buzzer_by: 'Hamster %1: change buzzer by %2 %3',
+            roboid_hamster_change_output_by: 'Hamster %1: change output %2 by %3 %4',
+            roboid_hamster_change_tempo_by: 'Hamster %1: change tempo by %2 %3',
+            roboid_hamster_change_wheel_by: 'Hamster %1: change %2 wheel by %3 %4',
+            roboid_hamster_clear_buzzer: 'Hamster %1: clear buzzer %2',
+            roboid_hamster_clear_led: 'Hamster %1: clear %2 led %3',
+            roboid_hamster_follow_line_until: 'Hamster %1: follow %2 line until %3 intersection %4',
+            roboid_hamster_follow_line_using: 'Hamster %1: follow %2 line using %3 floor sensor %4',
+            roboid_hamster_hand_found: 'Hamster %1: hand found?',
+            roboid_hamster_move_backward_for_secs: 'Hamster %1: move backward for %2 secs %3',
+            roboid_hamster_move_forward_for_secs: 'Hamster %1: move forward for %2 secs %3',
+            roboid_hamster_move_forward_once: 'Hamster %1: move forward once on board %2',
+            roboid_hamster_play_note_for: 'Hamster %1: play note %2 %3 for %4 beats %5',
+            roboid_hamster_rest_for: 'Hamster %1: rest for %2 beats %3',
+            roboid_hamster_set_both_wheels_to: 'Hamster %1: set wheels to left: %2 right: %3 %4',
+            roboid_hamster_set_buzzer_to: 'Hamster %1: set buzzer to %2 %3',
+            roboid_hamster_set_following_speed_to: 'Hamster %1: set following speed to %2 %3',
+            roboid_hamster_set_led_to: 'Hamster %1: set %2 led to %3 %4',
+            roboid_hamster_set_output_to: 'Hamster %1: set output %2 to %3 %4',
+            roboid_hamster_set_port_to: 'Hamster %1: set port %2 to %3 %4',
+            roboid_hamster_set_tempo_to: 'Hamster %1: set tempo to %2 bpm %3',
+            roboid_hamster_set_wheel_to: 'Hamster %1: set %2 wheel to %3 %4',
+            roboid_hamster_stop: 'Hamster %1: stop %2',
+            roboid_hamster_turn_for_secs: 'Hamster %1: turn %2 for %3 secs %4',
+            roboid_hamster_turn_once: 'Hamster %1: turn %2 once on board %3',
+            roboid_hamster_value: 'Hamster %1: %2',
+            roboid_turtle_button_state: 'Turtle %1: button %2 ?',
+            roboid_turtle_change_buzzer_by: 'Turtle %1: change buzzer by %2 %3',
+            roboid_turtle_change_head_led_by_rgb:
+                'Turtle %1: change head led by r: %2 g: %3 b: %4 %5',
+            roboid_turtle_change_tempo_by: 'Turtle %1: change tempo by %2 %3',
+            roboid_turtle_change_wheel_by: 'Turtle %1: change %2 wheel by %3 %4',
+            roboid_turtle_change_wheels_by_left_right:
+                'Turtle %1: change wheels by left: %2 right: %3 %4',
+            roboid_turtle_clear_head_led: 'Turtle %1: clear head led %2',
+            roboid_turtle_clear_sound: 'Turtle %1: clear sound %2',
+            roboid_turtle_cross_intersection: 'Turtle %1: cross black intersection %2',
+            roboid_turtle_follow_line: 'Turtle %1: follow %2 line %3',
+            roboid_turtle_follow_line_until: 'Turtle %1: follow black line until %2 %3',
+            roboid_turtle_follow_line_until_black: 'Turtle %1: follow %2 line until black %3',
+            roboid_turtle_is_color_pattern: 'Turtle %1: color pattern %2 %3 ?',
+            roboid_turtle_move_backward_unit: 'Turtle %1: move backward %2 %3 %4',
+            roboid_turtle_move_forward_unit: 'Turtle %1: move forward %2 %3 %4',
+            roboid_turtle_pivot_around_wheel_unit_in_direction:
+                'Turtle %1: pivot around %2 wheel %3 %4 in %5 direction %6',
+            roboid_turtle_play_note: 'Turtle %1: play note %2 %3 %4',
+            roboid_turtle_play_note_for_beats: 'Turtle %1: play note %2 %3 for %4 beats %5',
+            roboid_turtle_play_sound_times: 'Turtle %1: play sound %2 %3 times %4',
+            roboid_turtle_play_sound_times_until_done:
+                'Turtle %1: play sound %2 %3 times until done %4',
+            roboid_turtle_rest_for_beats: 'Turtle %1: rest for %2 beats %3',
+            roboid_turtle_set_buzzer_to: 'Turtle %1: set buzzer to %2 %3',
+            roboid_turtle_set_following_speed_to: 'Turtle %1: set following speed to %2 %3',
+            roboid_turtle_set_head_led_to: 'Turtle %1: set head led to %2 %3',
+            roboid_turtle_set_head_led_to_rgb: 'Turtle %1: set head led to r: %2 g: %3 b: %4 %5',
+            roboid_turtle_set_tempo_to: 'Turtle %1: set tempo to %2 bpm %3',
+            roboid_turtle_set_wheel_to: 'Turtle %1: set %2 wheel to %3 %4',
+            roboid_turtle_set_wheels_to_left_right:
+                'Turtle %1: set wheels to left: %2 right: %3 %4',
+            roboid_turtle_stop: 'Turtle %1: stop %2',
+            roboid_turtle_touching_color: 'Turtle %1: touching %2 ?',
+            roboid_turtle_turn_at_intersection: 'Turtle %1: turn %2 at black intersection %3',
+            roboid_turtle_turn_unit_in_place: 'Turtle %1: turn %2 %3 %4 in place %5',
+            roboid_turtle_turn_unit_with_radius_in_direction:
+                'Turtle %1: turn %2 %3 %4 with radius %5 cm in %6 direction %7',
+            roboid_turtle_value: 'Turtle %1: %2',
             roboid_hamster_gripper: 'Hamster %1: %2 gripper %3',
             roboid_hamster_release_gripper: 'Hamster %1: release gripper %2',
             roboid_hamster_boolean: 'Hamster %1: %2?',
@@ -1023,11 +1367,12 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: 'Turtle %1: %2',
             roboid_turtle_boolean: 'Turtle %1: %2?',
             roboid_turtle_pick_head_led: 'Turtle %1: set head led to %2 %3',
-            
+
             roboid_cheese_value: 'Cheese Stick %1: %2',
             roboid_cheese_boolean: 'Cheese Stick %1: %2?',
             roboid_cheese_play_sound_times: 'Cheese Stick %1: play sound %2 %3 times %4',
-            roboid_cheese_play_sound_times_until_done: 'Cheese Stick %1: play sound %2 %3 times until done %4',
+            roboid_cheese_play_sound_times_until_done:
+                'Cheese Stick %1: play sound %2 %3 times until done %4',
             roboid_cheese_change_buzzer_by: 'Cheese Stick %1: change buzzer by %2 Hz %3',
             roboid_cheese_set_buzzer_to: 'Cheese Stick %1: set buzzer to %2 Hz %3',
             roboid_cheese_clear_sound: 'Cheese Stick %1: clear sound %2',
@@ -1038,8 +1383,10 @@ Entry.Roboid.setLanguage = () => ({
             roboid_cheese_set_tempo_to: 'Cheese Stick %1: set tempo to %2 BPM %3',
             roboid_cheese_set_sound_port_to: 'Cheese Stick %1: set sound output to %2 %3',
             roboid_cheese_set_input_mode_to: 'Cheese Stick %1: set port %2 to %3 input %4',
-            roboid_cheese_set_input_range_to: 'Cheese Stick %1: set input %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
-            roboid_cheese_set_three_input_ranges_to: 'Cheese Stick %1: set input %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_set_input_range_to:
+                'Cheese Stick %1: set input %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_set_three_input_ranges_to:
+                'Cheese Stick %1: set input %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
             roboid_cheese_analog_input: 'Cheese Stick %1: input %2',
             roboid_cheese_digital_input: 'Cheese Stick %1: input %2 %3 ?',
             roboid_cheese_button_state: 'Cheese Stick %1: button %2 %3 ?',
@@ -1048,85 +1395,238 @@ Entry.Roboid.setLanguage = () => ({
             roboid_cheese_set_digital_output_to: 'Cheese Stick %1: set digital output %2 to %3 %4',
             roboid_cheese_change_pwm_output_by: 'Cheese Stick %1: change pwm output %2 by %3% %4',
             roboid_cheese_set_pwm_output_to: 'Cheese Stick %1: set pwm output %2 to %3% %4',
-            roboid_cheese_change_servo_motor_angle_by: 'Cheese Stick %1: change servo motor %2 by %3 degrees %4',
-            roboid_cheese_set_servo_motor_angle_to: 'Cheese Stick %1: set servo motor %2 to %3 degrees %4',
+            roboid_cheese_change_servo_motor_angle_by:
+                'Cheese Stick %1: change servo motor %2 by %3 degrees %4',
+            roboid_cheese_set_servo_motor_angle_to:
+                'Cheese Stick %1: set servo motor %2 to %3 degrees %4',
             roboid_cheese_turn_off_servo_motor: 'Cheese Stick %1: turn off servo motor %2 %3',
-            roboid_cheese_change_dc_motor_velocity_by: 'Cheese Stick %1: change dc motor %2 velocity by %3% %4',
-            roboid_cheese_set_dc_motor_velocity_to: 'Cheese Stick %1: set dc motor %2 velocity to %3% %4',
+            roboid_cheese_change_dc_motor_velocity_by:
+                'Cheese Stick %1: change dc motor %2 velocity by %3% %4',
+            roboid_cheese_set_dc_motor_velocity_to:
+                'Cheese Stick %1: set dc motor %2 velocity to %3% %4',
             roboid_cheese_stop_dc_motor: 'Cheese Stick %1: stop dc motor %2 %3',
-            roboid_cheese_rotate_step_motor: 'Cheese Stick %1: rotate step motor %2 steps with velocity %3 step/sec %4',
-            roboid_cheese_change_step_motor_velocity_by: 'Cheese Stick %1: change step motor velocity by %2 step/sec %3',
-            roboid_cheese_set_step_motor_velocity_to: 'Cheese Stick %1: set step motor velocity to %2 step/sec %3',
+            roboid_cheese_rotate_step_motor:
+                'Cheese Stick %1: rotate step motor %2 steps with velocity %3 step/sec %4',
+            roboid_cheese_change_step_motor_velocity_by:
+                'Cheese Stick %1: change step motor velocity by %2 step/sec %3',
+            roboid_cheese_set_step_motor_velocity_to:
+                'Cheese Stick %1: set step motor velocity to %2 step/sec %3',
             roboid_cheese_stop_off_step_motor: 'Cheese Stick %1: %2 step motor %3',
             roboid_cheese_set_step_motor_mode_to: 'Cheese Stick %1: set step motor to %2 mode %3',
             roboid_cheese_step_count: 'Cheese Stick %1: step count',
             roboid_cheese_set_led_to_color: 'Cheese Stick %1: set rgb led %2 to %3 %4 %5',
             roboid_cheese_pick_led_to: 'Cheese Stick %1: set rgb led %2 to %3 %4',
-            roboid_cheese_change_led_by_rgb: 'Cheese Stick %1: change rgb led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_change_led_by_rgb:
+                'Cheese Stick %1: change rgb led %2 by r: %3 g: %4 b: %5 %6',
             roboid_cheese_setLed_to_rgb: 'Cheese Stick %1: set rgb led %2 to r: %3 g: %4 b: %5 %6',
             roboid_cheese_clear_led: 'Cheese Stick %1: clear rgb led %2 %3',
             roboid_cheese_set_led_type_to: 'Cheese Stick %1: set rgb led %2 to %3 type %4',
-            roboid_cheese_neopixel_set_number_and_type_to: 'Cheese Stick %1 neopixel: set %2 leds as %3 %4',
-            roboid_cheese_neopixel_set_all_leds_to_pattern: 'Cheese Stick %1 neopixel: set all leds to pattern %2 %3',
-            roboid_cheese_neopixel_set_all_leds_to_color: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
-            roboid_cheese_neopixel_pick_all_leds_to: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
-            roboid_cheese_neopixel_change_all_leds_by_rgb: 'Cheese Stick %1 neopixel: change all leds by r: %2 g: %3 b: %4 %5',
-            roboid_cheese_neopixel_set_all_leds_to_rgb: 'Cheese Stick %1 neopixel: set all leds to r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_set_number_and_type_to:
+                'Cheese Stick %1 neopixel: set %2 leds as %3 %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern:
+                'Cheese Stick %1 neopixel: set all leds to pattern %2 %3',
+            roboid_cheese_neopixel_set_all_leds_to_color:
+                'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_pick_all_leds_to:
+                'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb:
+                'Cheese Stick %1 neopixel: change all leds by r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb:
+                'Cheese Stick %1 neopixel: set all leds to r: %2 g: %3 b: %4 %5',
             roboid_cheese_neopixel_clear_all_leds: 'Cheese Stick %1 neopixel: clear all leds %2',
-            roboid_cheese_neopixel_set_led_to_color: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
+            roboid_cheese_neopixel_set_led_to_color:
+                'Cheese Stick %1 neopixel: set led %2 to %3 %4',
             roboid_cheese_neopixel_pick_led_to: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
-            roboid_cheese_neopixel_change_led_by_rgb: 'Cheese Stick %1 neopixel: change led %2 by r: %3 g: %4 b: %5 %6',
-            roboid_cheese_neopixel_set_led_to_rgb: 'Cheese Stick %1 neopixel: set led %2 to r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_change_led_by_rgb:
+                'Cheese Stick %1 neopixel: change led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_set_led_to_rgb:
+                'Cheese Stick %1 neopixel: set led %2 to r: %3 g: %4 b: %5 %6',
             roboid_cheese_neopixel_clear_led: 'Cheese Stick %1 neopixel: clear led %2 %3',
-            roboid_cheese_neopixel_set_led_range_to_pattern: 'Cheese Stick %1 neopixel: set leds (from %2 to %3) to pattern %4 %5',
-            roboid_cheese_neopixel_set_led_range_to_color: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
-            roboid_cheese_neopixel_pick_led_range_to: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
-            roboid_cheese_neopixel_change_led_range_by_rgb: 'Cheese Stick %1 neopixel: change leds (from %2 to %3 with %4 increments) by r: %5 g: %6 b: %7 %8',
-            roboid_cheese_neopixel_set_led_range_to_rgb: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to r: %5 g: %6 b: %7 %8',
-            roboid_cheese_neopixel_clear_led_range: 'Cheese Stick %1 neopixel: clear leds (from %2 to %3 with %4 increments) %5',
+            roboid_cheese_neopixel_set_led_range_to_pattern:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3) to pattern %4 %5',
+            roboid_cheese_neopixel_set_led_range_to_color:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_pick_led_range_to:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb:
+                'Cheese Stick %1 neopixel: change leds (from %2 to %3 with %4 increments) by r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_clear_led_range:
+                'Cheese Stick %1 neopixel: clear leds (from %2 to %3 with %4 increments) %5',
             roboid_cheese_neopixel_shift: 'Cheese Stick %1 neopixel: shift %2 pixels %3',
             roboid_cheese_neopixel_rotate: 'Cheese Stick %1 neopixel: rotate %2 pixels %3',
-            roboid_cheese_neopixel_change_brightness_by: 'Cheese Stick %1 neopixel: change brightness by %2% %3',
-            roboid_cheese_neopixel_set_brightness_to: 'Cheese Stick %1 neopixel: set brightness to %2% %3',
+            roboid_cheese_neopixel_change_brightness_by:
+                'Cheese Stick %1 neopixel: change brightness by %2% %3',
+            roboid_cheese_neopixel_set_brightness_to:
+                'Cheese Stick %1 neopixel: set brightness to %2% %3',
             roboid_cheese_write_serial: 'Cheese Stick %1: write %2 %3 to serial %4',
             roboid_cheese_read_serial_until: 'Cheese Stick %1: read serial %2 %3',
             roboid_cheese_set_serial_port_to: 'Cheese Stick %1: set serial port to %2 %3',
             roboid_cheese_set_serial_rate_to: 'Cheese Stick %1: set serial rate to %2Bd %3',
             roboid_cheese_serial_input: 'Cheese Stick %1: serial input',
             roboid_cheese_pid_start: 'Cheese Stick %1: start %2 %3',
-            roboid_cheese_pid_set_range_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
-            roboid_cheese_pid_set_three_ranges_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_pid_set_range_to:
+                'Cheese Stick %1 PID: set %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_pid_set_three_ranges_to:
+                'Cheese Stick %1 PID: set %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
             roboid_cheese_pid_reset_encoder: 'Cheese Stick %1 PID: clear encoder %2',
             roboid_cheese_pid_input: 'Cheese Stick %1 PID: %2',
             roboid_cheese_pid_button_state: 'Cheese Stick %1 PID: button %2 %3?',
             roboid_cheese_hat010_start: 'Cheese Stick %1: start HAT-010 5x5 matrix %2',
             roboid_cheese_hat010_button: 'Cheese Stick %1 HAT-010: button %2',
             roboid_cheese_hat010_button_state: 'Cheese Stick %1 HAT-010: button %2 %3?',
-            roboid_cheese_hat010_background_turn_on_xy: 'Cheese Stick %1 HAT-010 background: turn on x: %2 y: %3 in %4 %5',
-            roboid_cheese_hat010_background_turn_off_xy: 'Cheese Stick %1 HAT-010 background: turn off x: %2 y: %3 %4',
-            roboid_cheese_hat010_background_draw_shape_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 %3 at x: %4 y: %5 %6',
-            roboid_cheese_hat010_background_draw_string_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 string %3 at x: %4 y: %5 %6',
-            roboid_cheese_hat010_background_draw_pattern_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 pattern %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_turn_on_xy:
+                'Cheese Stick %1 HAT-010 background: turn on x: %2 y: %3 in %4 %5',
+            roboid_cheese_hat010_background_turn_off_xy:
+                'Cheese Stick %1 HAT-010 background: turn off x: %2 y: %3 %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy:
+                'Cheese Stick %1 HAT-010 background: draw %2 %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_string_at_xy:
+                'Cheese Stick %1 HAT-010 background: draw %2 string %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy:
+                'Cheese Stick %1 HAT-010 background: draw %2 pattern %3 at x: %4 y: %5 %6',
             roboid_cheese_hat010_clear: 'Cheese Stick %1 HAT-010: clear %2 %3',
-            roboid_cheese_hat010_scroll_by_xy: 'Cheese Stick %1 HAT-010: scroll %2 by x: %3 y: %4 %5',
-            roboid_cheese_hat010_sprite_set_to_shape: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 %4 %5',
-            roboid_cheese_hat010_sprite_set_to_string: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 string %4 %5',
-            roboid_cheese_hat010_sprite_set_to_pattern: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 pattern %4 %5',
-            roboid_cheese_hat010_sprite_clear_show_hide: 'Cheese Stick %1 HAT-010 sprite %2: %3 sprite %4',
-            roboid_cheese_hat010_sprite_change_positions_by_xy: 'Cheese Stick %1 HAT-010 sprite %2: change position by x: %3 y: %4 %5',
-            roboid_cheese_hat010_sprite_set_positions_to_xy: 'Cheese Stick %1 HAT-010 sprite %2: set position to x: %3 y: %4 %5',
-            roboid_cheese_hat010_sprite_change_position_by_value: 'Cheese Stick %1 HAT-010 sprite %2: change %3 position by %4 %5',
-            roboid_cheese_hat010_sprite_set_position_to_value: 'Cheese Stick %1 HAT-010 sprite %2: set %3 position to %4 %5',
+            roboid_cheese_hat010_scroll_by_xy:
+                'Cheese Stick %1 HAT-010: scroll %2 by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_to_shape:
+                'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 %4 %5',
+            roboid_cheese_hat010_sprite_set_to_string:
+                'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 string %4 %5',
+            roboid_cheese_hat010_sprite_set_to_pattern:
+                'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 pattern %4 %5',
+            roboid_cheese_hat010_sprite_clear_show_hide:
+                'Cheese Stick %1 HAT-010 sprite %2: %3 sprite %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy:
+                'Cheese Stick %1 HAT-010 sprite %2: change position by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy:
+                'Cheese Stick %1 HAT-010 sprite %2: set position to x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_change_position_by_value:
+                'Cheese Stick %1 HAT-010 sprite %2: change %3 position by %4 %5',
+            roboid_cheese_hat010_sprite_set_position_to_value:
+                'Cheese Stick %1 HAT-010 sprite %2: set %3 position to %4 %5',
             roboid_cheese_hat010_sprite_rotate: 'Cheese Stick %1 HAT-010 sprite %2: rotate %3 %4',
-            roboid_cheese_hat010_sprite_flip_in_direction: 'Cheese Stick %1 HAT-010 sprite %2: flip in %3 direction %4',
-            roboid_cheese_hat010_sprite_stamp_to_background: 'Cheese Stick %1 HAT-010 sprite %2: stamp to background %3',
+            roboid_cheese_hat010_sprite_flip_in_direction:
+                'Cheese Stick %1 HAT-010 sprite %2: flip in %3 direction %4',
+            roboid_cheese_hat010_sprite_stamp_to_background:
+                'Cheese Stick %1 HAT-010 sprite %2: stamp to background %3',
             roboid_cheese_hat010_sprite_position: 'Cheese Stick %1 HAT-010 sprite %2: %3 position',
-            roboid_cheese_hat010_sprite_touching_sprite: 'Cheese Stick %1 HAT-010 sprite %2: touching sprite %3?',
+            roboid_cheese_hat010_sprite_touching_sprite:
+                'Cheese Stick %1 HAT-010 sprite %2: touching sprite %3?',
             roboid_cheese_hat010_sprite_touching: 'Cheese Stick %1 HAT-010 sprite %2: touching %3?',
-            roboid_cheese_hat010_change_brightness_by: 'Cheese Stick %1 HAT-010: change brightness by %2% %3',
-            roboid_cheese_hat010_set_brightness_to: 'Cheese Stick %1 HAT-010: set brightness to %2% %3',
+            roboid_cheese_hat010_change_brightness_by:
+                'Cheese Stick %1 HAT-010: change brightness by %2% %3',
+            roboid_cheese_hat010_set_brightness_to:
+                'Cheese Stick %1 HAT-010: set brightness to %2% %3',
         },
         Helper: {
+            roboid_hamster_beep: 'Plays beep sound.',
+            roboid_hamster_change_both_wheels_by:
+                'Adds the entered values to the current speed values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            roboid_hamster_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
+            roboid_hamster_change_output_by:
+                'Adds the entered value to the current output value of the selected external port. The result will be in the following range depending on the mode of the external port.<br/>Servo output: valid range from 1 to 180 degrees; if 0, output 0 without PWM pulse<br/>PWM output: 0 to 100%, duty ratio (%) of ON state in PWM waveform<br/>Digital output: LOW when 0, otherwise HIGH',
+            roboid_hamster_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            roboid_hamster_change_wheel_by:
+                'Adds the entered value to the current speed value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            roboid_hamster_clear_buzzer: 'Turns off buzzer sound.',
+            roboid_hamster_clear_led: 'Turns off the left/right/both LEDs.',
+            roboid_hamster_follow_line_until:
+                'Moves along the black/white line on the left/right/front/back, then stops when the robot meets the intersection.',
+            roboid_hamster_follow_line_using:
+                'Moves along the black/white line by using the left/right/both floor sensors.',
+            roboid_hamster_hand_found:
+                'If there is a hand or object in front of the proximity sensor, true, otherwise false',
+            roboid_hamster_move_backward_for_secs:
+                'Moves backward for the number of seconds entered.',
+            roboid_hamster_move_forward_for_secs:
+                'Moves forward for the number of seconds entered.',
+            roboid_hamster_move_forward_once: 'Moves one space forward on the board.',
+            roboid_hamster_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
+            roboid_hamster_rest_for: 'Rests as much as the beat you entered.',
+            roboid_hamster_set_both_wheels_to:
+                'Sets the speed of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            roboid_hamster_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
+            roboid_hamster_set_following_speed_to:
+                'Sets the speed (1 to 8) to move along the line. The larger the number, the faster the movement.',
+            roboid_hamster_set_led_to: 'Turns left/right/both LEDs to the selected color.',
+            roboid_hamster_set_output_to:
+                'Sets the output value of the selected external port to the entered value. The value has the following range according to the mode of external port.<br/>Servo output: valid range from 1 to 180 degrees; if 0, output 0 without PWM pulse<br/>PWM output: 0 to 100%, duty ratio (%) of ON state in PWM waveform<br/>Digital output: LOW when 0, otherwise HIGH',
+            roboid_hamster_set_port_to:
+                'Sets the io mode of the selected external port to the selected mode.',
+            roboid_hamster_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            roboid_hamster_set_wheel_to:
+                'Sets the speed of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            roboid_hamster_stop: 'Stops both wheels.',
+            roboid_hamster_turn_for_secs: 'Turns left/right for the number of seconds entered.',
+            roboid_hamster_turn_once: 'Turns left/right 90 degrees on the board.',
+            roboid_hamster_value:
+                'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>left floor: value of left floor sensor (range: 0 to 100, initial value: 0)<br/>right floor: value of right floor sensor (range: 0 to 100, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.<br/>input A: value of signal input to external port A (range: analog input 0 to 255, digital input 0 or 1, initial value: 0)<br/>input B: value of signal input to external port B (range: analog input 0 to 255, digital input 0 or 1, initial value: 0)',
+            roboid_turtle_button_state:
+                'If the button clicked/double-clicked/long-pressed, true, otherwise false.',
+            roboid_turtle_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
+            roboid_turtle_change_head_led_by_rgb:
+                'Adds the entered values to the current R, G, B values of the head LED, respectively.',
+            roboid_turtle_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            roboid_turtle_change_wheel_by:
+                'Adds the entered value to the current speed value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            roboid_turtle_change_wheels_by_left_right:
+                'Adds the entered values to the current speed values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            roboid_turtle_clear_head_led: 'Turns off the head LED.',
+            roboid_turtle_clear_sound: 'Turns off sound.',
+            roboid_turtle_cross_intersection:
+                'Moves forward for a moment at the black intersection, then finds the black line and moves again.',
+            roboid_turtle_follow_line: 'Moves along the selected color line on a white background.',
+            roboid_turtle_follow_line_until:
+                'Moves along the black line on a white background and stops when the color sensor detects the selected color.',
+            roboid_turtle_follow_line_until_black:
+                'Moves along the selected color line on a white background and stops when the color sensor detects black.',
+            roboid_turtle_is_color_pattern:
+                'If the color sensor detects the selected color pattern, true, otherwise false.',
+            roboid_turtle_move_backward_unit:
+                'Moves backward for the number of cm/seconds/pulses entered.',
+            roboid_turtle_move_forward_unit:
+                'Moves forward for the number of cm/seconds/pulses entered.',
+            roboid_turtle_pivot_around_wheel_unit_in_direction:
+                'Pivots around the left/right wheel in the head/tail direction for the number of degrees/seconds/pulses entered.',
+            roboid_turtle_play_note: 'It sounds the selected tone and octave.',
+            roboid_turtle_play_note_for_beats:
+                'It sounds the selected tone and octave as much as the beat you entered.',
+            roboid_turtle_play_sound_times: 'Plays the selected sound as many times as entered.',
+            roboid_turtle_play_sound_times_until_done:
+                'Plays the selected sound as many times as entered, and waits for completion.',
+            roboid_turtle_rest_for_beats: 'Rests as much as the beat you entered.',
+            roboid_turtle_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
+            roboid_turtle_set_following_speed_to:
+                'Sets the speed (1 to 8) to move along the line. The larger the number, the faster the movement.',
+            roboid_turtle_set_head_led_to: 'Turns the head LED to the selected color.',
+            roboid_turtle_set_head_led_to_rgb:
+                'Sets the R, G, B values of the head LED to the entered values.',
+            roboid_turtle_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            roboid_turtle_set_wheel_to:
+                'Sets the speed of the left/right/both wheels to the entered value (-400 to 400%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            roboid_turtle_set_wheels_to_left_right:
+                'Sets the speed of the left and right wheels to the entered values (-400 to 400%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            roboid_turtle_stop: 'Stops both wheels.',
+            roboid_turtle_touching_color:
+                'If the color sensor detects the selected color, true, otherwise false.',
+            roboid_turtle_turn_at_intersection:
+                'Moves forward for a moment at the black intersection, then turns left/right/back in place, finds the black line and moves again.',
+            roboid_turtle_turn_unit_in_place:
+                'Turns left/right in place for the number of degrees/seconds/pulses entered.',
+            roboid_turtle_turn_unit_with_radius_in_direction:
+                'Turns left/right drawing the circle of the entered radius in the head/tail direction for the number of degrees/seconds/pulses entered.',
+            roboid_turtle_value:
+                'color number: color number detected by the color sensor (range: -1 to 8, initial value: -1)<br/>color pattern: value of the color pattern detected by the color sensor (range: -1 ~ 88, initial value: -1) <br/>floor: value of floor sensor (range: 0 to 100, initial value: 0)<br/>button: status of the button (when pressed 1, otherwise 0, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -32768 to 32767, initial value: 0) The upward direction of the robot is the positive direction of the z axis.',
             roboid_hamster_gripper: 'Opens or closes the gripper.',
             roboid_hamster_release_gripper: 'Turns off the gripper so that it can be moved freely.',
             roboid_hamster_boolean:
@@ -1268,6 +1768,51 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_pick_head_led: 'Turns the head LED to the selected color.',
         },
         Blocks: {
+            ROBOID_acceleration_x: 'x acceleration',
+            ROBOID_acceleration_y: 'y acceleration',
+            ROBOID_acceleration_z: 'z acceleration',
+            ROBOID_back: 'back',
+            ROBOID_both: 'both',
+            ROBOID_button: 'button',
+            ROBOID_buzzer: 'buzzer',
+            ROBOID_clicked: 'clicked',
+            ROBOID_color_any: 'any color',
+            ROBOID_color_black: 'black',
+            ROBOID_color_blue: 'blue',
+            ROBOID_color_green: 'green',
+            ROBOID_color_number: 'color number',
+            ROBOID_color_orange: 'orange',
+            ROBOID_color_pattern: 'color pattern',
+            ROBOID_color_purple: 'purple',
+            ROBOID_color_red: 'red',
+            ROBOID_color_sky_blue: 'sky blue',
+            ROBOID_color_violet: 'violet',
+            ROBOID_color_white: 'white',
+            ROBOID_color_yellow: 'yellow',
+            ROBOID_double_clicked: 'double-clicked',
+            ROBOID_floor: 'floor',
+            ROBOID_head: 'head',
+            ROBOID_head_color: 'head color',
+            ROBOID_left: 'left',
+            ROBOID_left_wheel: 'left wheel',
+            ROBOID_long_pressed: 'long-pressed',
+            ROBOID_note: 'note',
+            ROBOID_right: 'right',
+            ROBOID_right_wheel: 'right wheel',
+            ROBOID_sound_beep: 'beep',
+            ROBOID_sound_birthday: 'birthday',
+            ROBOID_sound_dibidibidip: 'dibidibidip',
+            ROBOID_sound_engine: 'engine',
+            ROBOID_sound_good_job: 'good job',
+            ROBOID_sound_march: 'march',
+            ROBOID_sound_random_beep: 'random beep',
+            ROBOID_sound_robot: 'robot',
+            ROBOID_sound_siren: 'siren',
+            ROBOID_tail: 'tail',
+            ROBOID_unit_cm: 'cm',
+            ROBOID_unit_deg: 'degrees',
+            ROBOID_unit_pulse: 'pulses',
+            ROBOID_unit_sec: 'seconds',
             hamster_note_c: 'C',
             hamster_note_c_sharp: 'C♯(D♭)',
             hamster_note_d: 'D',
@@ -1768,108 +2313,169 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: 'カメ %1: %2',
             roboid_turtle_boolean: 'カメ %1: %2?',
             roboid_turtle_pick_head_led: 'カメ %1: 頭のLEDの色を %2 にする %3',
-            
+
             roboid_cheese_value: 'チーズスティック %1: %2',
             roboid_cheese_boolean: 'チーズスティック %1: %2?',
             roboid_cheese_play_sound_times: 'チーズスティック %1: %2 音を %3 回再生する %4',
-            roboid_cheese_play_sound_times_until_done: 'チーズスティック %1: %2 音を %3 回再生して待つ %4',
+            roboid_cheese_play_sound_times_until_done:
+                'チーズスティック %1: %2 音を %3 回再生して待つ %4',
             roboid_cheese_change_buzzer_by: 'チーズスティック %1: ブザー音を %2 Hzずつ変える %3',
             roboid_cheese_set_buzzer_to: 'チーズスティック %1: ブザー音を %2 Hzにする %3',
             roboid_cheese_clear_sound: 'チーズスティック %1: 音をオフにする %2',
             roboid_cheese_play_note: 'チーズスティック %1: %2 %3 音をならす %4',
             roboid_cheese_play_note_for: 'チーズスティック %1: %2 %3 音を %4 拍子ならす %5',
             roboid_cheese_rest_for: 'チーズスティック %1: %2 拍子休む %3',
-            roboid_cheese_change_tempo_by: 'チーズスティック %1: 演奏のテンポを %2 BPMずつ変える %3',
+            roboid_cheese_change_tempo_by:
+                'チーズスティック %1: 演奏のテンポを %2 BPMずつ変える %3',
             roboid_cheese_set_tempo_to: 'チーズスティック %1: 演奏のテンポを %2 BPMにする %3',
             roboid_cheese_set_sound_port_to: 'チーズスティック %1: 音出力を %2にする %3',
             roboid_cheese_set_input_mode_to: 'チーズスティック %1: ポート %2を %3 入力にする %4',
-            roboid_cheese_set_input_range_to: 'チーズスティック %1: 入力 %2の範囲 %3 ~ %4を %5 ~ %6 小数点 %7にする %8',
-            roboid_cheese_set_three_input_ranges_to: 'チーズスティック %1: 入力 %2の範囲 %3 ~ %4 ~ %5を %6 ~ %7 ~ %8 小数点 %9にする %10',
+            roboid_cheese_set_input_range_to:
+                'チーズスティック %1: 入力 %2の範囲 %3 ~ %4を %5 ~ %6 小数点 %7にする %8',
+            roboid_cheese_set_three_input_ranges_to:
+                'チーズスティック %1: 入力 %2の範囲 %3 ~ %4 ~ %5を %6 ~ %7 ~ %8 小数点 %9にする %10',
             roboid_cheese_analog_input: 'チーズスティック %1: 入力 %2',
             roboid_cheese_digital_input: 'チーズスティック %1: 入力 %2 %3 ?',
             roboid_cheese_button_state: 'チーズスティック %1: ボタン %2を %3?',
             roboid_cheese_set_pulse_mode_to: 'チーズスティック %1: ポート %2を %3 入力にする %4',
             roboid_cheese_pulse_input: 'チーズスティック %1: ポート %2でパルスが感知されたか?',
-            roboid_cheese_set_digital_output_to: 'チーズスティック %1: デジタル出力 %2を %3にする %4',
-            roboid_cheese_change_pwm_output_by: 'チーズスティック %1: PWM出力 %2を %3%ずつ変える %4',
+            roboid_cheese_set_digital_output_to:
+                'チーズスティック %1: デジタル出力 %2を %3にする %4',
+            roboid_cheese_change_pwm_output_by:
+                'チーズスティック %1: PWM出力 %2を %3%ずつ変える %4',
             roboid_cheese_set_pwm_output_to: 'チーズスティック %1: PWM出力 %2を %3%にする %4',
-            roboid_cheese_change_servo_motor_angle_by: 'チーズスティック %1: サーボモータ %2の角度を %3度ずつ変える %4',
-            roboid_cheese_set_servo_motor_angle_to: 'チーズスティック %1: サーボモータ %2の角度を %3度にする %4',
-            roboid_cheese_turn_off_servo_motor: 'チーズスティック %1: サーボモータ %2 の電源をオフにする %3',
-            roboid_cheese_change_dc_motor_velocity_by: 'チーズスティック %1: DCモータ %2の速度を %3%ずつ変える %4',
-            roboid_cheese_set_dc_motor_velocity_to: 'チーズスティック %1: DCモータ %2の速度を %3%にする %4',
+            roboid_cheese_change_servo_motor_angle_by:
+                'チーズスティック %1: サーボモータ %2の角度を %3度ずつ変える %4',
+            roboid_cheese_set_servo_motor_angle_to:
+                'チーズスティック %1: サーボモータ %2の角度を %3度にする %4',
+            roboid_cheese_turn_off_servo_motor:
+                'チーズスティック %1: サーボモータ %2 の電源をオフにする %3',
+            roboid_cheese_change_dc_motor_velocity_by:
+                'チーズスティック %1: DCモータ %2の速度を %3%ずつ変える %4',
+            roboid_cheese_set_dc_motor_velocity_to:
+                'チーズスティック %1: DCモータ %2の速度を %3%にする %4',
             roboid_cheese_stop_dc_motor: 'チーズスティック %1: DCモータ %2 を停止する %3',
-            roboid_cheese_rotate_step_motor: 'チーズスティック %1: ステップモータ %2 ステップを速度 %3 ステップ/秒に回る %4',
-            roboid_cheese_change_step_motor_velocity_by: 'チーズスティック %1: ステップモータの速度を %2 ステップ/秒ずつ変える %3',
-            roboid_cheese_set_step_motor_velocity_to: 'チーズスティック %1: ステップモータの速度を %2 ステップ/秒にする %3',
+            roboid_cheese_rotate_step_motor:
+                'チーズスティック %1: ステップモータ %2 ステップを速度 %3 ステップ/秒に回る %4',
+            roboid_cheese_change_step_motor_velocity_by:
+                'チーズスティック %1: ステップモータの速度を %2 ステップ/秒ずつ変える %3',
+            roboid_cheese_set_step_motor_velocity_to:
+                'チーズスティック %1: ステップモータの速度を %2 ステップ/秒にする %3',
             roboid_cheese_stop_off_step_motor: 'チーズスティック %1: ステップモータを %2 %3',
-            roboid_cheese_set_step_motor_mode_to: 'チーズスティック %1: ステップモータを %2 モードにする %3',
+            roboid_cheese_set_step_motor_mode_to:
+                'チーズスティック %1: ステップモータを %2 モードにする %3',
             roboid_cheese_step_count: 'チーズスティック %1: ステップ数',
             roboid_cheese_set_led_to_color: 'チーズスティック %1: RGBLED %2を %3 %4にする %5',
             roboid_cheese_pick_led_to: 'チーズスティック %1: RGBLED %2を %3にする %4',
-            roboid_cheese_change_led_by_rgb: 'チーズスティック %1: RGBLED %2を R: %3 G: %4 B: %5ずつ変える %6',
-            roboid_cheese_setLed_to_rgb: 'チーズスティック %1: RGBLED %2を R: %3 G: %4 B: %5にする %6',
+            roboid_cheese_change_led_by_rgb:
+                'チーズスティック %1: RGBLED %2を R: %3 G: %4 B: %5ずつ変える %6',
+            roboid_cheese_setLed_to_rgb:
+                'チーズスティック %1: RGBLED %2を R: %3 G: %4 B: %5にする %6',
             roboid_cheese_clear_led: 'チーズスティック %1: RGBLED %2 をオフにする %3',
             roboid_cheese_set_led_type_to: 'チーズスティック %1: RGBLED %2を %3形にする %4',
-            roboid_cheese_neopixel_set_number_and_type_to: 'チーズスティック %1 ネオピクセル: LED %2個、%3にする %4',
-            roboid_cheese_neopixel_set_all_leds_to_pattern: 'チーズスティック %1 ネオピクセル: すべてのLEDを %2 パターンにする %3',
-            roboid_cheese_neopixel_set_all_leds_to_color: 'チーズスティック %1 ネオピクセル: すべてのLEDを %2にする %3',
-            roboid_cheese_neopixel_pick_all_leds_to: 'チーズスティック %1 ネオピクセル: すべてのLEDを %2にする %3',
-            roboid_cheese_neopixel_change_all_leds_by_rgb: 'チーズスティック %1 ネオピクセル: すべてのLEDを R: %2 G: %3 B: %4ずつ変える %5',
-            roboid_cheese_neopixel_set_all_leds_to_rgb: 'チーズスティック %1 ネオピクセル: すべてのLEDを R: %2 G: %3 B: %4にする %5',
-            roboid_cheese_neopixel_clear_all_leds: 'チーズスティック %1 ネオピクセル: すべてのLEDをオフにする %2',
-            roboid_cheese_neopixel_set_led_to_color: 'チーズスティック %1 ネオピクセル: %2番目のLEDを %3にする %4',
-            roboid_cheese_neopixel_pick_led_to: 'チーズスティック %1 ネオピクセル: %2番目のLEDを %3にする %4',
-            roboid_cheese_neopixel_change_led_by_rgb: 'チーズスティック %1 ネオピクセル: %2番目のLEDを R: %3 G: %4 B: %5ずつ変える %6',
-            roboid_cheese_neopixel_set_led_to_rgb: 'チーズスティック %1 ネオピクセル: %2番目のLEDを R: %3 G: %4 B: %5にする %6',
-            roboid_cheese_neopixel_clear_led: 'チーズスティック %1 ネオピクセル: %2番目のLEDをオフにする %3',
-            roboid_cheese_neopixel_set_led_range_to_pattern: 'チーズスティック %1 ネオピクセル: %2番目から %3番目までのLEDを %4 パターンにする %5',
-            roboid_cheese_neopixel_set_led_range_to_color: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを %5にする %6',
-            roboid_cheese_neopixel_pick_led_range_to: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを %5にする %6',
-            roboid_cheese_neopixel_change_led_range_by_rgb: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを R: %5 G: %6 B: %7ずつ変える %8',
-            roboid_cheese_neopixel_set_led_range_to_rgb: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを R: %5 G: %6 B: %7にする %8',
-            roboid_cheese_neopixel_clear_led_range: 'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDをオフにする %5',
+            roboid_cheese_neopixel_set_number_and_type_to:
+                'チーズスティック %1 ネオピクセル: LED %2個、%3にする %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern:
+                'チーズスティック %1 ネオピクセル: すべてのLEDを %2 パターンにする %3',
+            roboid_cheese_neopixel_set_all_leds_to_color:
+                'チーズスティック %1 ネオピクセル: すべてのLEDを %2にする %3',
+            roboid_cheese_neopixel_pick_all_leds_to:
+                'チーズスティック %1 ネオピクセル: すべてのLEDを %2にする %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb:
+                'チーズスティック %1 ネオピクセル: すべてのLEDを R: %2 G: %3 B: %4ずつ変える %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb:
+                'チーズスティック %1 ネオピクセル: すべてのLEDを R: %2 G: %3 B: %4にする %5',
+            roboid_cheese_neopixel_clear_all_leds:
+                'チーズスティック %1 ネオピクセル: すべてのLEDをオフにする %2',
+            roboid_cheese_neopixel_set_led_to_color:
+                'チーズスティック %1 ネオピクセル: %2番目のLEDを %3にする %4',
+            roboid_cheese_neopixel_pick_led_to:
+                'チーズスティック %1 ネオピクセル: %2番目のLEDを %3にする %4',
+            roboid_cheese_neopixel_change_led_by_rgb:
+                'チーズスティック %1 ネオピクセル: %2番目のLEDを R: %3 G: %4 B: %5ずつ変える %6',
+            roboid_cheese_neopixel_set_led_to_rgb:
+                'チーズスティック %1 ネオピクセル: %2番目のLEDを R: %3 G: %4 B: %5にする %6',
+            roboid_cheese_neopixel_clear_led:
+                'チーズスティック %1 ネオピクセル: %2番目のLEDをオフにする %3',
+            roboid_cheese_neopixel_set_led_range_to_pattern:
+                'チーズスティック %1 ネオピクセル: %2番目から %3番目までのLEDを %4 パターンにする %5',
+            roboid_cheese_neopixel_set_led_range_to_color:
+                'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを %5にする %6',
+            roboid_cheese_neopixel_pick_led_range_to:
+                'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを %5にする %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb:
+                'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを R: %5 G: %6 B: %7ずつ変える %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb:
+                'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDを R: %5 G: %6 B: %7にする %8',
+            roboid_cheese_neopixel_clear_led_range:
+                'チーズスティック %1 ネオピクセル: %2番目から %3番目まで %4間隔のLEDをオフにする %5',
             roboid_cheese_neopixel_shift: 'チーズスティック %1 ネオピクセル: %2ピクセル移動する %3',
-            roboid_cheese_neopixel_rotate: 'チーズスティック %1 ネオピクセル: %2ピクセル回転する %3',
-            roboid_cheese_neopixel_change_brightness_by: 'チーズスティック %1 ネオピクセル: 明るさを %2%ずつ変える %3',
-            roboid_cheese_neopixel_set_brightness_to: 'チーズスティック %1 ネオピクセル: 明るさを %2%にする %3',
+            roboid_cheese_neopixel_rotate:
+                'チーズスティック %1 ネオピクセル: %2ピクセル回転する %3',
+            roboid_cheese_neopixel_change_brightness_by:
+                'チーズスティック %1 ネオピクセル: 明るさを %2%ずつ変える %3',
+            roboid_cheese_neopixel_set_brightness_to:
+                'チーズスティック %1 ネオピクセル: 明るさを %2%にする %3',
             roboid_cheese_write_serial: 'チーズスティック %1: シリアルに %2 %3 を書き出す %4',
             roboid_cheese_read_serial_until: 'チーズスティック %1: シリアルを %2 読み取る %3',
             roboid_cheese_set_serial_port_to: 'チーズスティック %1: シリアルポートを %2にする %3',
             roboid_cheese_set_serial_rate_to: 'チーズスティック %1: シリアル速度を %2Bdにする %3',
             roboid_cheese_serial_input: 'チーズスティック %1: シリアル入力',
             roboid_cheese_pid_start: 'チーズスティック %1: %2 を開始する %3',
-            roboid_cheese_pid_set_range_to: 'チーズスティック %1: PID %2の範囲 %3 ~ %4を %5 ~ %6 小数点 %7にする %8',
-            roboid_cheese_pid_set_three_ranges_to: 'チーズスティック %1: PID %2の範囲 %3 ~ %4 ~ %5を %6 ~ %7 ~ %8 小数点 %9にする %10',
+            roboid_cheese_pid_set_range_to:
+                'チーズスティック %1: PID %2の範囲 %3 ~ %4を %5 ~ %6 小数点 %7にする %8',
+            roboid_cheese_pid_set_three_ranges_to:
+                'チーズスティック %1: PID %2の範囲 %3 ~ %4 ~ %5を %6 ~ %7 ~ %8 小数点 %9にする %10',
             roboid_cheese_pid_reset_encoder: 'チーズスティック %1: PID エンコーダ値を初期化する %2',
             roboid_cheese_pid_input: 'チーズスティック %1: PID %2',
             roboid_cheese_pid_button_state: 'チーズスティック %1: PID ボタン %2を %3?',
             roboid_cheese_hat010_start: 'チーズスティック %1: HAT-010 5x5マトリックスを開始する %2',
             roboid_cheese_hat010_button: 'チーズスティック %1: HAT-010 ボタン %2',
             roboid_cheese_hat010_button_state: 'チーズスティック %1: HAT-010 ボタン %2を %3?',
-            roboid_cheese_hat010_background_turn_on_xy: 'チーズスティック %1: HAT-010 背景 x: %2 y: %3を %4に点灯する %5',
-            roboid_cheese_hat010_background_turn_off_xy: 'チーズスティック %1: HAT-010 背景 x: %2 y: %3をオフにする %4',
-            roboid_cheese_hat010_background_draw_shape_at_xy: 'チーズスティック %1: HAT-010 背景 %2 %3を x: %4 y: %5に描画する %6',
-            roboid_cheese_hat010_background_draw_string_at_xy: 'チーズスティック %1: HAT-010 背景 %2 文字列 %3を x: %4 y: %5に描画する %6',
-            roboid_cheese_hat010_background_draw_pattern_at_xy: 'チーズスティック %1: HAT-010 背景 %2 パターン %3を x: %4 y: %5に描画する %6',
+            roboid_cheese_hat010_background_turn_on_xy:
+                'チーズスティック %1: HAT-010 背景 x: %2 y: %3を %4に点灯する %5',
+            roboid_cheese_hat010_background_turn_off_xy:
+                'チーズスティック %1: HAT-010 背景 x: %2 y: %3をオフにする %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy:
+                'チーズスティック %1: HAT-010 背景 %2 %3を x: %4 y: %5に描画する %6',
+            roboid_cheese_hat010_background_draw_string_at_xy:
+                'チーズスティック %1: HAT-010 背景 %2 文字列 %3を x: %4 y: %5に描画する %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy:
+                'チーズスティック %1: HAT-010 背景 %2 パターン %3を x: %4 y: %5に描画する %6',
             roboid_cheese_hat010_clear: 'チーズスティック %1: HAT-010 %2 を消す %3',
-            roboid_cheese_hat010_scroll_by_xy: 'チーズスティック %1: HAT-010 %2 x: %3 y: %4だけ移動する %5',
-            roboid_cheese_hat010_sprite_set_to_shape: 'チーズスティック %1: HAT-010 図 %2を %3 %4にする %5',
-            roboid_cheese_hat010_sprite_set_to_string: 'チーズスティック %1: HAT-010 図 %2を %3 文字列 %4にする %5',
-            roboid_cheese_hat010_sprite_set_to_pattern: 'チーズスティック %1: HAT-010 図 %2を %3 パターン %4にする %5',
-            roboid_cheese_hat010_sprite_clear_show_hide: 'チーズスティック %1: HAT-010 図 %2を %3 %4',
-            roboid_cheese_hat010_sprite_change_positions_by_xy: 'チーズスティック %1: HAT-010 図 %2の位置を x: %3 y: %4ずつ変える %5',
-            roboid_cheese_hat010_sprite_set_positions_to_xy: 'チーズスティック %1: HAT-010 図 %2の位置を x: %3 y: %4にする %5',
-            roboid_cheese_hat010_sprite_change_position_by_value: 'チーズスティック %1: HAT-010 図 %2の %3 位置を %4ずつ変える %5',
-            roboid_cheese_hat010_sprite_set_position_to_value: 'チーズスティック %1: HAT-010 図 %2の %3 位置を %4にする %5',
-            roboid_cheese_hat010_sprite_rotate: 'チーズスティック %1: HAT-010 図 %2を %3 方向に回転する %4',
-            roboid_cheese_hat010_sprite_flip_in_direction: 'チーズスティック %1: HAT-010 図 %2を %3 方向に反転する %4',
-            roboid_cheese_hat010_sprite_stamp_to_background: 'チーズスティック %1: HAT-010 図 %2を背景にスタンプする %3',
+            roboid_cheese_hat010_scroll_by_xy:
+                'チーズスティック %1: HAT-010 %2 x: %3 y: %4だけ移動する %5',
+            roboid_cheese_hat010_sprite_set_to_shape:
+                'チーズスティック %1: HAT-010 図 %2を %3 %4にする %5',
+            roboid_cheese_hat010_sprite_set_to_string:
+                'チーズスティック %1: HAT-010 図 %2を %3 文字列 %4にする %5',
+            roboid_cheese_hat010_sprite_set_to_pattern:
+                'チーズスティック %1: HAT-010 図 %2を %3 パターン %4にする %5',
+            roboid_cheese_hat010_sprite_clear_show_hide:
+                'チーズスティック %1: HAT-010 図 %2を %3 %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy:
+                'チーズスティック %1: HAT-010 図 %2の位置を x: %3 y: %4ずつ変える %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy:
+                'チーズスティック %1: HAT-010 図 %2の位置を x: %3 y: %4にする %5',
+            roboid_cheese_hat010_sprite_change_position_by_value:
+                'チーズスティック %1: HAT-010 図 %2の %3 位置を %4ずつ変える %5',
+            roboid_cheese_hat010_sprite_set_position_to_value:
+                'チーズスティック %1: HAT-010 図 %2の %3 位置を %4にする %5',
+            roboid_cheese_hat010_sprite_rotate:
+                'チーズスティック %1: HAT-010 図 %2を %3 方向に回転する %4',
+            roboid_cheese_hat010_sprite_flip_in_direction:
+                'チーズスティック %1: HAT-010 図 %2を %3 方向に反転する %4',
+            roboid_cheese_hat010_sprite_stamp_to_background:
+                'チーズスティック %1: HAT-010 図 %2を背景にスタンプする %3',
             roboid_cheese_hat010_sprite_position: 'チーズスティック %1: HAT-010 図 %2の %3 位置',
-            roboid_cheese_hat010_sprite_touching_sprite: 'チーズスティック %1: HAT-010 図 %2が 図 %3に着いたか?',
-            roboid_cheese_hat010_sprite_touching: 'チーズスティック %1: HAT-010 図 %2が %3に着いたか?',
-            roboid_cheese_hat010_change_brightness_by: 'チーズスティック %1: HAT-010 明るさを %2%ずつ変える %3',
-            roboid_cheese_hat010_set_brightness_to: 'チーズスティック %1: HAT-010 明るさを %2%にする %3',
+            roboid_cheese_hat010_sprite_touching_sprite:
+                'チーズスティック %1: HAT-010 図 %2が 図 %3に着いたか?',
+            roboid_cheese_hat010_sprite_touching:
+                'チーズスティック %1: HAT-010 図 %2が %3に着いたか?',
+            roboid_cheese_hat010_change_brightness_by:
+                'チーズスティック %1: HAT-010 明るさを %2%ずつ変える %3',
+            roboid_cheese_hat010_set_brightness_to:
+                'チーズスティック %1: HAT-010 明るさを %2%にする %3',
         },
         Helper: {
             roboid_hamster_gripper: 'Opens or closes the gripper.',
@@ -2510,11 +3116,12 @@ Entry.Roboid.setLanguage = () => ({
             roboid_turtle_value: 'Turtle %1: %2',
             roboid_turtle_boolean: 'Turtle %1: %2?',
             roboid_turtle_pick_head_led: 'Turtle %1: set head led to %2 %3',
-            
+
             roboid_cheese_value: 'Cheese Stick %1: %2',
             roboid_cheese_boolean: 'Cheese Stick %1: %2?',
             roboid_cheese_play_sound_times: 'Cheese Stick %1: play sound %2 %3 times %4',
-            roboid_cheese_play_sound_times_until_done: 'Cheese Stick %1: play sound %2 %3 times until done %4',
+            roboid_cheese_play_sound_times_until_done:
+                'Cheese Stick %1: play sound %2 %3 times until done %4',
             roboid_cheese_change_buzzer_by: 'Cheese Stick %1: change buzzer by %2 Hz %3',
             roboid_cheese_set_buzzer_to: 'Cheese Stick %1: set buzzer to %2 Hz %3',
             roboid_cheese_clear_sound: 'Cheese Stick %1: clear sound %2',
@@ -2525,8 +3132,10 @@ Entry.Roboid.setLanguage = () => ({
             roboid_cheese_set_tempo_to: 'Cheese Stick %1: set tempo to %2 BPM %3',
             roboid_cheese_set_sound_port_to: 'Cheese Stick %1: set sound output to %2 %3',
             roboid_cheese_set_input_mode_to: 'Cheese Stick %1: set port %2 to %3 input %4',
-            roboid_cheese_set_input_range_to: 'Cheese Stick %1: set input %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
-            roboid_cheese_set_three_input_ranges_to: 'Cheese Stick %1: set input %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_set_input_range_to:
+                'Cheese Stick %1: set input %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_set_three_input_ranges_to:
+                'Cheese Stick %1: set input %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
             roboid_cheese_analog_input: 'Cheese Stick %1: input %2',
             roboid_cheese_digital_input: 'Cheese Stick %1: input %2 %3 ?',
             roboid_cheese_button_state: 'Cheese Stick %1: button %2 %3 ?',
@@ -2535,83 +3144,129 @@ Entry.Roboid.setLanguage = () => ({
             roboid_cheese_set_digital_output_to: 'Cheese Stick %1: set digital output %2 to %3 %4',
             roboid_cheese_change_pwm_output_by: 'Cheese Stick %1: change pwm output %2 by %3% %4',
             roboid_cheese_set_pwm_output_to: 'Cheese Stick %1: set pwm output %2 to %3% %4',
-            roboid_cheese_change_servo_motor_angle_by: 'Cheese Stick %1: change servo motor %2 by %3 degrees %4',
-            roboid_cheese_set_servo_motor_angle_to: 'Cheese Stick %1: set servo motor %2 to %3 degrees %4',
+            roboid_cheese_change_servo_motor_angle_by:
+                'Cheese Stick %1: change servo motor %2 by %3 degrees %4',
+            roboid_cheese_set_servo_motor_angle_to:
+                'Cheese Stick %1: set servo motor %2 to %3 degrees %4',
             roboid_cheese_turn_off_servo_motor: 'Cheese Stick %1: turn off servo motor %2 %3',
-            roboid_cheese_change_dc_motor_velocity_by: 'Cheese Stick %1: change dc motor %2 velocity by %3% %4',
-            roboid_cheese_set_dc_motor_velocity_to: 'Cheese Stick %1: set dc motor %2 velocity to %3% %4',
+            roboid_cheese_change_dc_motor_velocity_by:
+                'Cheese Stick %1: change dc motor %2 velocity by %3% %4',
+            roboid_cheese_set_dc_motor_velocity_to:
+                'Cheese Stick %1: set dc motor %2 velocity to %3% %4',
             roboid_cheese_stop_dc_motor: 'Cheese Stick %1: stop dc motor %2 %3',
-            roboid_cheese_rotate_step_motor: 'Cheese Stick %1: rotate step motor %2 steps with velocity %3 step/sec %4',
-            roboid_cheese_change_step_motor_velocity_by: 'Cheese Stick %1: change step motor velocity by %2 step/sec %3',
-            roboid_cheese_set_step_motor_velocity_to: 'Cheese Stick %1: set step motor velocity to %2 step/sec %3',
+            roboid_cheese_rotate_step_motor:
+                'Cheese Stick %1: rotate step motor %2 steps with velocity %3 step/sec %4',
+            roboid_cheese_change_step_motor_velocity_by:
+                'Cheese Stick %1: change step motor velocity by %2 step/sec %3',
+            roboid_cheese_set_step_motor_velocity_to:
+                'Cheese Stick %1: set step motor velocity to %2 step/sec %3',
             roboid_cheese_stop_off_step_motor: 'Cheese Stick %1: %2 step motor %3',
             roboid_cheese_set_step_motor_mode_to: 'Cheese Stick %1: set step motor to %2 mode %3',
             roboid_cheese_step_count: 'Cheese Stick %1: step count',
             roboid_cheese_set_led_to_color: 'Cheese Stick %1: set rgb led %2 to %3 %4 %5',
             roboid_cheese_pick_led_to: 'Cheese Stick %1: set rgb led %2 to %3 %4',
-            roboid_cheese_change_led_by_rgb: 'Cheese Stick %1: change rgb led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_change_led_by_rgb:
+                'Cheese Stick %1: change rgb led %2 by r: %3 g: %4 b: %5 %6',
             roboid_cheese_setLed_to_rgb: 'Cheese Stick %1: set rgb led %2 to r: %3 g: %4 b: %5 %6',
             roboid_cheese_clear_led: 'Cheese Stick %1: clear rgb led %2 %3',
             roboid_cheese_set_led_type_to: 'Cheese Stick %1: set rgb led %2 to %3 type %4',
-            roboid_cheese_neopixel_set_number_and_type_to: 'Cheese Stick %1 neopixel: set %2 leds as %3 %4',
-            roboid_cheese_neopixel_set_all_leds_to_pattern: 'Cheese Stick %1 neopixel: set all leds to pattern %2 %3',
-            roboid_cheese_neopixel_set_all_leds_to_color: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
-            roboid_cheese_neopixel_pick_all_leds_to: 'Cheese Stick %1 neopixel: set all leds to %2 %3',
-            roboid_cheese_neopixel_change_all_leds_by_rgb: 'Cheese Stick %1 neopixel: change all leds by r: %2 g: %3 b: %4 %5',
-            roboid_cheese_neopixel_set_all_leds_to_rgb: 'Cheese Stick %1 neopixel: set all leds to r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_set_number_and_type_to:
+                'Cheese Stick %1 neopixel: set %2 leds as %3 %4',
+            roboid_cheese_neopixel_set_all_leds_to_pattern:
+                'Cheese Stick %1 neopixel: set all leds to pattern %2 %3',
+            roboid_cheese_neopixel_set_all_leds_to_color:
+                'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_pick_all_leds_to:
+                'Cheese Stick %1 neopixel: set all leds to %2 %3',
+            roboid_cheese_neopixel_change_all_leds_by_rgb:
+                'Cheese Stick %1 neopixel: change all leds by r: %2 g: %3 b: %4 %5',
+            roboid_cheese_neopixel_set_all_leds_to_rgb:
+                'Cheese Stick %1 neopixel: set all leds to r: %2 g: %3 b: %4 %5',
             roboid_cheese_neopixel_clear_all_leds: 'Cheese Stick %1 neopixel: clear all leds %2',
-            roboid_cheese_neopixel_set_led_to_color: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
+            roboid_cheese_neopixel_set_led_to_color:
+                'Cheese Stick %1 neopixel: set led %2 to %3 %4',
             roboid_cheese_neopixel_pick_led_to: 'Cheese Stick %1 neopixel: set led %2 to %3 %4',
-            roboid_cheese_neopixel_change_led_by_rgb: 'Cheese Stick %1 neopixel: change led %2 by r: %3 g: %4 b: %5 %6',
-            roboid_cheese_neopixel_set_led_to_rgb: 'Cheese Stick %1 neopixel: set led %2 to r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_change_led_by_rgb:
+                'Cheese Stick %1 neopixel: change led %2 by r: %3 g: %4 b: %5 %6',
+            roboid_cheese_neopixel_set_led_to_rgb:
+                'Cheese Stick %1 neopixel: set led %2 to r: %3 g: %4 b: %5 %6',
             roboid_cheese_neopixel_clear_led: 'Cheese Stick %1 neopixel: clear led %2 %3',
-            roboid_cheese_neopixel_set_led_range_to_pattern: 'Cheese Stick %1 neopixel: set leds (from %2 to %3) to pattern %4 %5',
-            roboid_cheese_neopixel_set_led_range_to_color: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
-            roboid_cheese_neopixel_pick_led_range_to: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
-            roboid_cheese_neopixel_change_led_range_by_rgb: 'Cheese Stick %1 neopixel: change leds (from %2 to %3 with %4 increments) by r: %5 g: %6 b: %7 %8',
-            roboid_cheese_neopixel_set_led_range_to_rgb: 'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to r: %5 g: %6 b: %7 %8',
-            roboid_cheese_neopixel_clear_led_range: 'Cheese Stick %1 neopixel: clear leds (from %2 to %3 with %4 increments) %5',
+            roboid_cheese_neopixel_set_led_range_to_pattern:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3) to pattern %4 %5',
+            roboid_cheese_neopixel_set_led_range_to_color:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_pick_led_range_to:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to %5 %6',
+            roboid_cheese_neopixel_change_led_range_by_rgb:
+                'Cheese Stick %1 neopixel: change leds (from %2 to %3 with %4 increments) by r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_set_led_range_to_rgb:
+                'Cheese Stick %1 neopixel: set leds (from %2 to %3 with %4 increments) to r: %5 g: %6 b: %7 %8',
+            roboid_cheese_neopixel_clear_led_range:
+                'Cheese Stick %1 neopixel: clear leds (from %2 to %3 with %4 increments) %5',
             roboid_cheese_neopixel_shift: 'Cheese Stick %1 neopixel: shift %2 pixels %3',
             roboid_cheese_neopixel_rotate: 'Cheese Stick %1 neopixel: rotate %2 pixels %3',
-            roboid_cheese_neopixel_change_brightness_by: 'Cheese Stick %1 neopixel: change brightness by %2% %3',
-            roboid_cheese_neopixel_set_brightness_to: 'Cheese Stick %1 neopixel: set brightness to %2% %3',
+            roboid_cheese_neopixel_change_brightness_by:
+                'Cheese Stick %1 neopixel: change brightness by %2% %3',
+            roboid_cheese_neopixel_set_brightness_to:
+                'Cheese Stick %1 neopixel: set brightness to %2% %3',
             roboid_cheese_write_serial: 'Cheese Stick %1: write %2 %3 to serial %4',
             roboid_cheese_read_serial_until: 'Cheese Stick %1: read serial %2 %3',
             roboid_cheese_set_serial_port_to: 'Cheese Stick %1: set serial port to %2 %3',
             roboid_cheese_set_serial_rate_to: 'Cheese Stick %1: set serial rate to %2Bd %3',
             roboid_cheese_serial_input: 'Cheese Stick %1: serial input',
             roboid_cheese_pid_start: 'Cheese Stick %1: start %2 %3',
-            roboid_cheese_pid_set_range_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
-            roboid_cheese_pid_set_three_ranges_to: 'Cheese Stick %1 PID: set %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
+            roboid_cheese_pid_set_range_to:
+                'Cheese Stick %1 PID: set %2 range %3 - %4 to %5 - %6 %7 decimal point %8',
+            roboid_cheese_pid_set_three_ranges_to:
+                'Cheese Stick %1 PID: set %2 range %3 - %4 - %5 to %6 - %7 - %8 %9 decimal point %10',
             roboid_cheese_pid_reset_encoder: 'Cheese Stick %1 PID: clear encoder %2',
             roboid_cheese_pid_input: 'Cheese Stick %1 PID: %2',
             roboid_cheese_pid_button_state: 'Cheese Stick %1 PID: button %2 %3?',
             roboid_cheese_hat010_start: 'Cheese Stick %1: start HAT-010 5x5 matrix %2',
             roboid_cheese_hat010_button: 'Cheese Stick %1 HAT-010: button %2',
             roboid_cheese_hat010_button_state: 'Cheese Stick %1 HAT-010: button %2 %3?',
-            roboid_cheese_hat010_background_turn_on_xy: 'Cheese Stick %1 HAT-010 background: turn on x: %2 y: %3 in %4 %5',
-            roboid_cheese_hat010_background_turn_off_xy: 'Cheese Stick %1 HAT-010 background: turn off x: %2 y: %3 %4',
-            roboid_cheese_hat010_background_draw_shape_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 %3 at x: %4 y: %5 %6',
-            roboid_cheese_hat010_background_draw_string_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 string %3 at x: %4 y: %5 %6',
-            roboid_cheese_hat010_background_draw_pattern_at_xy: 'Cheese Stick %1 HAT-010 background: draw %2 pattern %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_turn_on_xy:
+                'Cheese Stick %1 HAT-010 background: turn on x: %2 y: %3 in %4 %5',
+            roboid_cheese_hat010_background_turn_off_xy:
+                'Cheese Stick %1 HAT-010 background: turn off x: %2 y: %3 %4',
+            roboid_cheese_hat010_background_draw_shape_at_xy:
+                'Cheese Stick %1 HAT-010 background: draw %2 %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_string_at_xy:
+                'Cheese Stick %1 HAT-010 background: draw %2 string %3 at x: %4 y: %5 %6',
+            roboid_cheese_hat010_background_draw_pattern_at_xy:
+                'Cheese Stick %1 HAT-010 background: draw %2 pattern %3 at x: %4 y: %5 %6',
             roboid_cheese_hat010_clear: 'Cheese Stick %1 HAT-010: clear %2 %3',
-            roboid_cheese_hat010_scroll_by_xy: 'Cheese Stick %1 HAT-010: scroll %2 by x: %3 y: %4 %5',
-            roboid_cheese_hat010_sprite_set_to_shape: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 %4 %5',
-            roboid_cheese_hat010_sprite_set_to_string: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 string %4 %5',
-            roboid_cheese_hat010_sprite_set_to_pattern: 'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 pattern %4 %5',
-            roboid_cheese_hat010_sprite_clear_show_hide: 'Cheese Stick %1 HAT-010 sprite %2: %3 sprite %4',
-            roboid_cheese_hat010_sprite_change_positions_by_xy: 'Cheese Stick %1 HAT-010 sprite %2: change position by x: %3 y: %4 %5',
-            roboid_cheese_hat010_sprite_set_positions_to_xy: 'Cheese Stick %1 HAT-010 sprite %2: set position to x: %3 y: %4 %5',
-            roboid_cheese_hat010_sprite_change_position_by_value: 'Cheese Stick %1 HAT-010 sprite %2: change %3 position by %4 %5',
-            roboid_cheese_hat010_sprite_set_position_to_value: 'Cheese Stick %1 HAT-010 sprite %2: set %3 position to %4 %5',
+            roboid_cheese_hat010_scroll_by_xy:
+                'Cheese Stick %1 HAT-010: scroll %2 by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_to_shape:
+                'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 %4 %5',
+            roboid_cheese_hat010_sprite_set_to_string:
+                'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 string %4 %5',
+            roboid_cheese_hat010_sprite_set_to_pattern:
+                'Cheese Stick %1 HAT-010 sprite %2: set sprite to %3 pattern %4 %5',
+            roboid_cheese_hat010_sprite_clear_show_hide:
+                'Cheese Stick %1 HAT-010 sprite %2: %3 sprite %4',
+            roboid_cheese_hat010_sprite_change_positions_by_xy:
+                'Cheese Stick %1 HAT-010 sprite %2: change position by x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_set_positions_to_xy:
+                'Cheese Stick %1 HAT-010 sprite %2: set position to x: %3 y: %4 %5',
+            roboid_cheese_hat010_sprite_change_position_by_value:
+                'Cheese Stick %1 HAT-010 sprite %2: change %3 position by %4 %5',
+            roboid_cheese_hat010_sprite_set_position_to_value:
+                'Cheese Stick %1 HAT-010 sprite %2: set %3 position to %4 %5',
             roboid_cheese_hat010_sprite_rotate: 'Cheese Stick %1 HAT-010 sprite %2: rotate %3 %4',
-            roboid_cheese_hat010_sprite_flip_in_direction: 'Cheese Stick %1 HAT-010 sprite %2: flip in %3 direction %4',
-            roboid_cheese_hat010_sprite_stamp_to_background: 'Cheese Stick %1 HAT-010 sprite %2: stamp to background %3',
+            roboid_cheese_hat010_sprite_flip_in_direction:
+                'Cheese Stick %1 HAT-010 sprite %2: flip in %3 direction %4',
+            roboid_cheese_hat010_sprite_stamp_to_background:
+                'Cheese Stick %1 HAT-010 sprite %2: stamp to background %3',
             roboid_cheese_hat010_sprite_position: 'Cheese Stick %1 HAT-010 sprite %2: %3 position',
-            roboid_cheese_hat010_sprite_touching_sprite: 'Cheese Stick %1 HAT-010 sprite %2: touching sprite %3?',
+            roboid_cheese_hat010_sprite_touching_sprite:
+                'Cheese Stick %1 HAT-010 sprite %2: touching sprite %3?',
             roboid_cheese_hat010_sprite_touching: 'Cheese Stick %1 HAT-010 sprite %2: touching %3?',
-            roboid_cheese_hat010_change_brightness_by: 'Cheese Stick %1 HAT-010: change brightness by %2% %3',
-            roboid_cheese_hat010_set_brightness_to: 'Cheese Stick %1 HAT-010: set brightness to %2% %3',
+            roboid_cheese_hat010_change_brightness_by:
+                'Cheese Stick %1 HAT-010: change brightness by %2% %3',
+            roboid_cheese_hat010_set_brightness_to:
+                'Cheese Stick %1 HAT-010: set brightness to %2% %3',
         },
         Helper: {
             roboid_hamster_gripper: 'Opens or closes the gripper.',
@@ -3356,7 +4011,7 @@ Entry.Roboid.blockMenuBlocks = [
     'roboid_cheese_hat010_sprite_set_to_shape',
     'roboid_cheese_hat010_sprite_set_to_string',
     'roboid_cheese_hat010_sprite_set_to_pattern',
-    'roboid_cheese_hat010_sprite_clear_show_hide',        
+    'roboid_cheese_hat010_sprite_clear_show_hide',
     'roboid_cheese_hat010_sprite_change_positions_by_xy',
     'roboid_cheese_hat010_sprite_set_positions_to_xy',
     'roboid_cheese_hat010_sprite_change_position_by_value',
@@ -13630,7 +14285,10 @@ Entry.Roboid.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.turtle_head, 'HEAD'], [Lang.Blocks.turtle_tail, 'TAIL']],
+                    options: [
+                        [Lang.Blocks.turtle_head, 'HEAD'],
+                        [Lang.Blocks.turtle_tail, 'TAIL'],
+                    ],
                     value: 'HEAD',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -13778,7 +14436,10 @@ Entry.Roboid.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.turtle_head, 'HEAD'], [Lang.Blocks.turtle_tail, 'TAIL']],
+                    options: [
+                        [Lang.Blocks.turtle_head, 'HEAD'],
+                        [Lang.Blocks.turtle_tail, 'TAIL'],
+                    ],
                     value: 'HEAD',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -17796,7 +18457,7 @@ Entry.Roboid.getBlocks = function() {
                         type: 'text',
                         params: ['0'],
                     },
-                    null
+                    null,
                 ],
                 type: 'roboid_cheese_value',
             },
@@ -17830,7 +18491,10 @@ Entry.Roboid.getBlocks = function() {
                                     [Lang.Blocks.ROBOID_sensor_acceleration_x, 'ACCELERATION_X'],
                                     [Lang.Blocks.ROBOID_sensor_acceleration_y, 'ACCELERATION_Y'],
                                     [Lang.Blocks.ROBOID_sensor_acceleration_z, 'ACCELERATION_Z'],
-                                    [Lang.Blocks.ROBOID_sensor_signal_strength_dbm, 'SIGNAL_STRENGTH'],
+                                    [
+                                        Lang.Blocks.ROBOID_sensor_signal_strength_dbm,
+                                        'SIGNAL_STRENGTH',
+                                    ],
                                 ],
                                 value: 'ACCELERATION_X',
                                 fontSize: 11,
@@ -17882,7 +18546,7 @@ Entry.Roboid.getBlocks = function() {
                         type: 'text',
                         params: ['0'],
                     },
-                    null
+                    null,
                 ],
                 type: 'roboid_cheese_boolean',
             },
@@ -18293,7 +18957,7 @@ Entry.Roboid.getBlocks = function() {
                         type: 'text',
                         params: ['0'],
                     },
-                    null
+                    null,
                 ],
                 type: 'roboid_cheese_clear_sound',
             },
@@ -18376,7 +19040,9 @@ Entry.Roboid.getBlocks = function() {
                         type: 'text',
                         params: ['0'],
                     },
-                    null, '4', null
+                    null,
+                    '4',
+                    null,
                 ],
                 type: 'roboid_cheese_play_note',
             },
@@ -18963,7 +19629,10 @@ Entry.Roboid.getBlocks = function() {
                                     [Lang.Blocks.ROBOID_io_mode_makey, 'MAKEY'],
                                     [Lang.Blocks.ROBOID_io_mode_button, 'BUTTON'],
                                     [Lang.Blocks.ROBOID_io_mode_digital_pull_up, 'DIGITAL_PULL_UP'],
-                                    [Lang.Blocks.ROBOID_io_mode_digital_pull_down, 'DIGITAL_PULL_DOWN'],
+                                    [
+                                        Lang.Blocks.ROBOID_io_mode_digital_pull_down,
+                                        'DIGITAL_PULL_DOWN',
+                                    ],
                                     [Lang.Blocks.ROBOID_io_mode_analog, 'ANALOG'],
                                     [Lang.Blocks.ROBOID_io_mode_voltage, 'VOLTAGE'],
                                 ],
@@ -19264,7 +19933,8 @@ Entry.Roboid.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'Roboid.cheese_set_input_range_middle(%1, %2, %3, %4, %5, %6, %7, %8, %9)',
+                        syntax:
+                            'Roboid.cheese_set_input_range_middle(%1, %2, %3, %4, %5, %6, %7, %8, %9)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -21045,7 +21715,7 @@ Entry.Roboid.getBlocks = function() {
                         type: 'text',
                         params: ['0'],
                     },
-                    null
+                    null,
                 ],
                 type: 'roboid_cheese_step_count',
             },
@@ -21915,21 +22585,39 @@ Entry.Roboid.getBlocks = function() {
                                     [Lang.Blocks.ROBOID_neopixel_red_white, 'GRADIENT_RED_WHITE'],
                                     [Lang.Blocks.ROBOID_neopixel_green_red, 'GRADIENT_GREEN_RED'],
                                     [Lang.Blocks.ROBOID_neopixel_green_blue, 'GRADIENT_GREEN_BLUE'],
-                                    [Lang.Blocks.ROBOID_neopixel_green_white, 'GRADIENT_GREEN_WHITE'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_green_white,
+                                        'GRADIENT_GREEN_WHITE',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_blue_red, 'GRADIENT_BLUE_RED'],
                                     [Lang.Blocks.ROBOID_neopixel_blue_green, 'GRADIENT_BLUE_GREEN'],
                                     [Lang.Blocks.ROBOID_neopixel_blue_white, 'GRADIENT_BLUE_WHITE'],
                                     [Lang.Blocks.ROBOID_neopixel_white_red, 'GRADIENT_WHITE_RED'],
-                                    [Lang.Blocks.ROBOID_neopixel_white_green, 'GRADIENT_WHITE_GREEN'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_white_green,
+                                        'GRADIENT_WHITE_GREEN',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_white_blue, 'GRADIENT_WHITE_BLUE'],
                                     [Lang.Blocks.ROBOID_neopixel_red_black, 'GRADIENT_RED_BLACK'],
-                                    [Lang.Blocks.ROBOID_neopixel_green_black, 'GRADIENT_GREEN_BLACK'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_green_black,
+                                        'GRADIENT_GREEN_BLACK',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_blue_black, 'GRADIENT_BLUE_BLACK'],
-                                    [Lang.Blocks.ROBOID_neopixel_white_black, 'GRADIENT_WHITE_BLACK'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_white_black,
+                                        'GRADIENT_WHITE_BLACK',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_black_red, 'GRADIENT_BLACK_RED'],
-                                    [Lang.Blocks.ROBOID_neopixel_black_green, 'GRADIENT_BLACK_GREEN'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_black_green,
+                                        'GRADIENT_BLACK_GREEN',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_black_blue, 'GRADIENT_BLACK_BLUE'],
-                                    [Lang.Blocks.ROBOID_neopixel_black_white, 'GRADIENT_BLACK_WHITE'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_black_white,
+                                        'GRADIENT_BLACK_WHITE',
+                                    ],
                                 ],
                                 value: 'FILL_3_COLORS',
                                 fontSize: 11,
@@ -22891,21 +23579,39 @@ Entry.Roboid.getBlocks = function() {
                                     [Lang.Blocks.ROBOID_neopixel_red_white, 'GRADIENT_RED_WHITE'],
                                     [Lang.Blocks.ROBOID_neopixel_green_red, 'GRADIENT_GREEN_RED'],
                                     [Lang.Blocks.ROBOID_neopixel_green_blue, 'GRADIENT_GREEN_BLUE'],
-                                    [Lang.Blocks.ROBOID_neopixel_green_white, 'GRADIENT_GREEN_WHITE'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_green_white,
+                                        'GRADIENT_GREEN_WHITE',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_blue_red, 'GRADIENT_BLUE_RED'],
                                     [Lang.Blocks.ROBOID_neopixel_blue_green, 'GRADIENT_BLUE_GREEN'],
                                     [Lang.Blocks.ROBOID_neopixel_blue_white, 'GRADIENT_BLUE_WHITE'],
                                     [Lang.Blocks.ROBOID_neopixel_white_red, 'GRADIENT_WHITE_RED'],
-                                    [Lang.Blocks.ROBOID_neopixel_white_green, 'GRADIENT_WHITE_GREEN'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_white_green,
+                                        'GRADIENT_WHITE_GREEN',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_white_blue, 'GRADIENT_WHITE_BLUE'],
                                     [Lang.Blocks.ROBOID_neopixel_red_black, 'GRADIENT_RED_BLACK'],
-                                    [Lang.Blocks.ROBOID_neopixel_green_black, 'GRADIENT_GREEN_BLACK'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_green_black,
+                                        'GRADIENT_GREEN_BLACK',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_blue_black, 'GRADIENT_BLUE_BLACK'],
-                                    [Lang.Blocks.ROBOID_neopixel_white_black, 'GRADIENT_WHITE_BLACK'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_white_black,
+                                        'GRADIENT_WHITE_BLACK',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_black_red, 'GRADIENT_BLACK_RED'],
-                                    [Lang.Blocks.ROBOID_neopixel_black_green, 'GRADIENT_BLACK_GREEN'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_black_green,
+                                        'GRADIENT_BLACK_GREEN',
+                                    ],
                                     [Lang.Blocks.ROBOID_neopixel_black_blue, 'GRADIENT_BLACK_BLUE'],
-                                    [Lang.Blocks.ROBOID_neopixel_black_white, 'GRADIENT_BLACK_WHITE'],
+                                    [
+                                        Lang.Blocks.ROBOID_neopixel_black_white,
+                                        'GRADIENT_BLACK_WHITE',
+                                    ],
                                 ],
                                 value: 'FILL_3_COLORS',
                                 fontSize: 11,
@@ -24168,7 +24874,7 @@ Entry.Roboid.getBlocks = function() {
                         [Lang.Blocks.ROBOID_pid_12, '12'],
                         [Lang.Blocks.ROBOID_pid_13, '13'],
                         [Lang.Blocks.ROBOID_pid_14, '14'],
-//                        [Lang.Blocks.ROBOID_pid_15, '15'],
+                        //                        [Lang.Blocks.ROBOID_pid_15, '15'],
                         [Lang.Blocks.ROBOID_pid_16, '16'],
                     ],
                     value: '10',
@@ -24225,7 +24931,7 @@ Entry.Roboid.getBlocks = function() {
                                     [Lang.Blocks.ROBOID_pid_12, '12'],
                                     [Lang.Blocks.ROBOID_pid_13, '13'],
                                     [Lang.Blocks.ROBOID_pid_14, '14'],
-//                                    [Lang.Blocks.ROBOID_pid_15, '15'],
+                                    //                                    [Lang.Blocks.ROBOID_pid_15, '15'],
                                     [Lang.Blocks.ROBOID_pid_16, '16'],
                                 ],
                                 value: '10',
@@ -24519,7 +25225,8 @@ Entry.Roboid.getBlocks = function() {
                 js: [],
                 py: [
                     {
-                        syntax: 'Roboid.cheese_pid_set_input_range_middle(%1, %2, %3, %4, %5, %6, %7, %8, %9)',
+                        syntax:
+                            'Roboid.cheese_pid_set_input_range_middle(%1, %2, %3, %4, %5, %6, %7, %8, %9)',
                         textParams: [
                             {
                                 type: 'Block',
@@ -25810,7 +26517,6 @@ Entry.Roboid.getBlocks = function() {
                 TARGET: 1,
                 X: 2,
                 Y: 3,
-                
             },
             class: 'cheese_hat010',
             isNotFor: ['roboid'],

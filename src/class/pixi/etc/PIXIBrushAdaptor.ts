@@ -1,3 +1,4 @@
+import { DisplayObject } from 'pixi.js';
 import { PIXIGraphics } from '../helper/PIXIHelper';
 
 interface IRBG {
@@ -18,7 +19,7 @@ export class PIXIBrushAdaptor {
     public stop: boolean;
 
     /** [박봉배] 추측 - 이 브러시가 따라다녀야 할 대상 */
-    public entity: PIXI.DisplayObject;
+    public entity: DisplayObject;
 
     //아래 값들은 내부에서만 사용함.
     private _alpha: number = 1;
@@ -26,23 +27,12 @@ export class PIXIBrushAdaptor {
     private _color: number;
 
     private _shape: PIXIGraphics;
-
-    constructor() {}
+    private position: any = { x: 0, y: 0 };
 
     endStroke() {
         //#10141 때문에 closePath 사용안함.
         // if(!this._shape || this._shape.destroyied) return;
         // this._shape.closePath();
-    }
-
-    setCurrentPath(path: any) {
-        if (this._shape) {
-            this._shape.currentPath = path;
-        }
-    }
-
-    getCurrentPath() {
-        return this._shape && this._shape.currentPath;
     }
 
     /**
@@ -75,15 +65,17 @@ export class PIXIBrushAdaptor {
             return;
         }
         this._shape.moveTo(Number(x), Number(y));
+        this.position = { x: Number(x), y: Number(y) };
     }
 
     lineTo(x: number, y: number) {
         if (!this._shape || this._shape.destroyed) {
             return;
         }
-        this._setStyle(); // pixi webgl 오류 때문에 이것을 함.
+        //this._setStyle(); // pixi webgl 오류 때문에 이것을 함.
+        this._shape.moveTo(this.position.x, this.position.y);
         this._shape.lineTo(Number(x), Number(y)); // 박봉배: #9374 x,y 좌표가 문자로 넘어와서 생긴 이슈
-        this._shape.clearDirty++; // 박봉배: [issue](https://github.com/pixijs/pixi.js/issues/5047) 이 이슈 때문에 추가 코딩.
+        this.position = { x: Number(x), y: Number(y) };
     }
 
     /** @param shape - drawing 을 할 대상을 지정 */

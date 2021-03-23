@@ -81,16 +81,16 @@ Entry.iboard.setLanguage = function() {
                 iboard_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
                 iboard_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 iboard_get_digital: '디지털 %1 번 센서값',
-				iboard_button: '%1 버튼을 눌렀는가?',
-				iboard_motor: '모터를 %2 (으)로 동작하기',
-				iboard_LED_pwm: 'LED %1 번의 밝기를 %2 (으)로 정하기',
-				iboard_led: 'LED %1 번을 %2',
-				iboard_buzzer: '버저를 %2 %3 음으로 %4 초 연주하기',
-				iboard_rgb_pwm: 'RGB LED의 %1 LED의 밝기를 %2 (으)로 정하기',
-				iboard_get_cds: '현재 밝기',
-				iboard_get_res: '가변저항 값',
-				iboard_get_mic: '소리센서 값',
-				iboard_get_tmp: '현재 섭씨온도',
+                iboard_button: '%1 버튼을 눌렀는가?',
+                iboard_motor: '모터를 %2 (으)로 동작하기',
+                iboard_LED_pwm: 'LED %1 번의 밝기를 %2 (으)로 정하기',
+                iboard_led: 'LED %1 번을 %2',
+                iboard_buzzer: '버저를 %2 %3 음으로 %4 초 연주하기',
+                iboard_rgb_pwm: 'RGB LED의 %1 LED의 밝기를 %2 (으)로 정하기',
+                iboard_get_cds: '현재 밝기',
+                iboard_get_res: '가변저항 값',
+                iboard_get_mic: '소리센서 값',
+                iboard_get_tmp: '현재 섭씨온도',
             },
         },
         en: {
@@ -103,32 +103,32 @@ Entry.iboard.setLanguage = function() {
                 iboard_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
                 iboard_set_servo: 'Set servo pin %1 angle as %2 %3',
                 iboard_get_digital: 'Digital %1 Sensor value',
-				iboard_button: 'Did you press button %1 ?',
-				iboard_motor: 'Turn on the fan %2',
-				iboard_LED_pwm: 'LED %1 Pin %2',
-				iboard_led: 'LED %1 pin %2',
-				iboard_buzzer: 'Play tone on note %2 octave %3 beat %4 %5',
-				iboard_rgb_pwm: 'RGB LED %1 Pin %2',
-				iboard_get_cds: 'Light Sensor Value',
-				iboard_get_res: 'Potentiometer Value',
-				iboard_get_mic: 'Mic Value',
-				iboard_get_tmp: 'Now Temp(C)',
+                iboard_button: 'Did you press button %1 ?',
+                iboard_motor: 'Turn on the fan %2',
+                iboard_LED_pwm: 'LED %1 Pin %2',
+                iboard_led: 'LED %1 pin %2',
+                iboard_buzzer: 'Play tone on note %2 octave %3 beat %4 %5',
+                iboard_rgb_pwm: 'RGB LED %1 Pin %2',
+                iboard_get_cds: 'Light Sensor Value',
+                iboard_get_res: 'Potentiometer Value',
+                iboard_get_mic: 'Mic Value',
+                iboard_get_tmp: 'Now Temp(C)',
             },
         },
     };
 };
 
 Entry.iboard.blockMenuBlocks = [
-	'iboard_get_tmp',
-	'iboard_get_res',
-	'iboard_get_cds',
-	'iboard_get_mic',
-	'iboard_button',
-	'iboard_led',
-	'iboard_LED_pwm',
-	'iboard_rgb_pwm',
-	'iboard_buzzer',
-	'iboard_motor',
+    'iboard_get_tmp',
+    'iboard_get_res',
+    'iboard_get_cds',
+    'iboard_get_mic',
+    'iboard_button',
+    'iboard_led',
+    'iboard_LED_pwm',
+    'iboard_rgb_pwm',
+    'iboard_buzzer',
+    'iboard_motor',
     'iboard_get_analog_value',
     'iboard_get_analog_value_map',
     'iboard_get_ultrasonic_value',
@@ -137,10 +137,98 @@ Entry.iboard.blockMenuBlocks = [
     'iboard_digital_pwm',
     'iboard_set_servo',
     'iboard_set_tone',
-	
 ];
+Entry.iboard.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                iboard_button: '%1  버튼을 눌렀는가?',
+                iboard_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                iboard_get_analog_value: '아날로그 %1 번 센서값  ',
+                iboard_get_analog_value_map: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                iboard_get_digital: '디지털 %1 번 센서값  ',
+                iboard_led: 'LED %1 번을 %2 %3',
+                iboard_motor: '모터를 %2 으로 동작하기 %3',
+                iboard_pwm_led: 'LED %1 번의 밝기를 %2 (으)로 정하기 %3',
+                iboard_rgb_led: 'RGB LED의 %1 LED %2 %3',
+                iboard_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                iboard_toggle_led: '디지털 %1 번 핀 %2 %3',
+            },
+            Blocks: {
+                iboard_analog_number_0: 'A0',
+                iboard_analog_number_1: 'A1',
+                iboard_analog_number_2: 'A2',
+                iboard_analog_number_3: 'A3',
+                iboard_analog_number_4: 'A4',
+                iboard_analog_number_5: 'A5',
+                iboard_light: '빛센서가 ',
+                iboard_num_pin_1: 'LED 상태를',
+                iboard_num_pin_2: '번 스위치가',
+                iboard_num_pin_3: '아날로그',
+                iboard_num_pin_4: '번 ',
+                iboard_num_pin_5: '센서값',
+                iboard_string_1: '켜짐',
+                iboard_string_2: '꺼짐',
+                iboard_string_3: '밝음',
+                iboard_string_4: '어두움',
+                iboard_string_5: '눌림',
+                iboard_string_6: '열림',
+                iboard_switch: '스위치 ',
+                iboard_tilt: '기울기센서 상태가',
+            },
+            Device: {
+                iboard: '아이보드',
+            },
+            Menus: {
+                iboard: '아이보드',
+            },
+        },
+        en: {
+            template: {
+                iboard_button: 'Pressed %1 button?',
+                iboard_digital_pwm: 'Digital %1 Pin %2 %3',
+                iboard_get_analog_value: 'Analog %1 Sensor value  ',
+                iboard_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                iboard_get_digital: 'Digital %1 Sensor value  ',
+                iboard_led: 'Digital %1 Pin %2 %3',
+                iboard_motor: 'Digital %1 Pin %2 %3',
+                iboard_pwm_led: 'Digital %1 Pin %2 %3',
+                iboard_rgb_led: ' %1 LED %2 %3',
+                iboard_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                iboard_toggle_led: 'Digital %1 Pin %2 %3',
+            },
+            Blocks: {
+                iboard_analog_number_0: 'A0',
+                iboard_analog_number_1: 'A1',
+                iboard_analog_number_2: 'A2',
+                iboard_analog_number_3: 'A3',
+                iboard_analog_number_4: 'A4',
+                iboard_analog_number_5: 'A5',
+                iboard_light: 'Light sensor is ',
+                iboard_num_pin_1: 'LED status',
+                iboard_num_pin_2: 'switch',
+                iboard_num_pin_3: 'analogue',
+                iboard_num_pin_4: ' ',
+                iboard_num_pin_5: 'sensor value',
+                iboard_string_1: 'on',
+                iboard_string_2: 'off',
+                iboard_string_3: 'bright',
+                iboard_string_4: 'dark',
+                iboard_string_5: 'pressed',
+                iboard_string_6: 'opened',
+                iboard_switch: 'switch ',
+                iboard_tilt: 'Slope sensor status is',
+            },
+            Device: {
+                iboard: 'iboard',
+            },
+            Menus: {
+                iboard: 'iboard',
+            },
+        },
+    };
+};
 
-//region iboard 아두이노 확장모드
 Entry.iboard.getBlocks = function() {
     return {
         iboard_analog_list: {
@@ -206,10 +294,9 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
-		
-/////////////////////////////////////////////////////////////////////////////////////////////		
-		iboard_button_list: {
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
+        iboard_button_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -218,34 +305,56 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D2', '2'], ['D3', '3'], ['D4', '4']],
-                    value: '2',
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                    ],
+                    value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func: function(sprite, script) {
-                return script.getStringField('PORT');
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['A0', '0'],
+                                    ['A1', '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_temp_sensor_get_value[0]',
+                            },
+                        ],
+                        keyOption: 'iboard_temp_sensor_get_value',
+                    },
+                ],
             },
         },
-		iboard_button: {
+        iboard_button: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    type: 'Dropdown',
+                    options: [
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
                 },
             ],
             events: {},
@@ -257,10 +366,10 @@ Entry.iboard.getBlocks = function() {
                 ],
                 type: 'iboard_button',
             },
-			paramsKeyMap: {
+            paramsKeyMap: {
                 PORT: 0,
             },
-			class: 'iboardGet',
+            class: 'iboardGet',
             isNotFor: ['iboard'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
@@ -288,16 +397,25 @@ Entry.iboard.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             {
-                                type: 'Block',
-                                accept: 'string',
+                                type: 'Dropdown',
+                                options: [
+                                    ['A2', '2'],
+                                    ['A3', '3'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_cds_sensor_get_value[0]',
                             },
                         ],
                     },
                 ],
             },
         },
-		
-		iboard_motor_list: {
+
+        iboard_motor_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -306,8 +424,11 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['정지', '0'], ['미풍', '100'], ['약풍', '170'], ['강풍', '255']],
-                    value: '0',
+                    options: [
+                        ['A3', '3'],
+                        ['A4', '4'],
+                    ],
+                    value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -324,8 +445,8 @@ Entry.iboard.getBlocks = function() {
                 return script.getField('VALUE', script);
             },
         },
-		
-		iboard_motor: {
+
+        iboard_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -350,7 +471,7 @@ Entry.iboard.getBlocks = function() {
                         params: ['6'],
                     },
                     {
-                        type: 'iboard_motor_list'
+                        type: 'iboard_motor_list',
                     },
                     null,
                 ],
@@ -385,20 +506,25 @@ Entry.iboard.getBlocks = function() {
                         syntax: 'Arduino.analogWrite(%1, %2)',
                         textParams: [
                             {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
+                                type: 'Dropdown',
+                                options: [
+                                    ['A3', '3'],
+                                    ['A4', '4'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_mic_get_value[0]',
                             },
                         ],
                     },
                 ],
             },
         },
-		//
-		iboard_pwm_rgb_list: {
+        //
+        iboard_pwm_rgb_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -407,8 +533,12 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨강', '5'], ['초록', '6'], ['파랑', '9']],
-                    value: '5',
+                    options: [
+                        ['D2', '2'],
+                        ['D3', '3'],
+                        ['D4', '4'],
+                    ],
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -425,22 +555,23 @@ Entry.iboard.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
-		
-		iboard_rgb_pwm: {
+
+        iboard_rgb_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    type: 'Dropdown',
+                    options: [
+                        ['D5', '5'],
+                        ['D6', '6'],
+                    ],
+                    value: '5',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -498,8 +629,8 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		//
-		iboard_led_list: {
+        //
+        iboard_led_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -508,7 +639,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D10', '10'], ['D11', '11']],
+                    options: [
+                        ['D10', '10'],
+                        ['D11', '11'],
+                    ],
                     value: '10',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -526,7 +660,7 @@ Entry.iboard.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
-		iboard_led_list2: {
+        iboard_led_list2: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -535,8 +669,12 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['켜기', '1'], ['끄기', '0'],],
-                    value: '0',
+                    options: [
+                        ['빨간', '5'],
+                        ['초록', '6'],
+                        ['파란', '9'],
+                    ],
+                    value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -553,7 +691,7 @@ Entry.iboard.getBlocks = function() {
                 return script.getField('VALUE', script);
             },
         },
-		iboard_led: {
+        iboard_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -631,8 +769,8 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
-		iboard_pwm_led_list: {
+
+        iboard_pwm_led_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -641,8 +779,13 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D5', '5'], ['D6', '6']],
-                    value: '5',
+                    options: [
+                        ['정지', '0'],
+                        ['미풍', '100'],
+                        ['약풍', '170'],
+                        ['강풍', '255'],
+                    ],
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -659,8 +802,8 @@ Entry.iboard.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
-		
-		iboard_LED_pwm: {
+
+        iboard_LED_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -697,44 +840,21 @@ Entry.iboard.getBlocks = function() {
             },
             class: 'iboard',
             isNotFor: ['iboard'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                let value = script.getNumberValue('VALUE');
-                value = Math.round(value);
-                value = Math.max(value, 0);
-                value = Math.min(value, 255);
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.ArduinoExt.sensorTypes.PWM,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') port = port.substring(1);
+                var value1 = ANALOG ? ANALOG[port] || 0 : 0;
+                var value2 = 5;
+                var value3 = 1024;
+                var value4 = 100;
+                var value5 = 50;
+                var result = ((value1 * value2) / value3) * value4 - value5;
+                return result;
             },
         },
-		
-		
-		iboard_buzzer: {
+
+        iboard_buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -900,7 +1020,7 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
+
         iboard_get_cds: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -953,8 +1073,8 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
-		iboard_get_res: {
+
+        iboard_get_res: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1006,8 +1126,8 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
-		iboard_get_mic: {
+
+        iboard_get_mic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1059,8 +1179,8 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
-		iboard_get_tmp: {
+
+        iboard_get_tmp: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1094,12 +1214,12 @@ Entry.iboard.getBlocks = function() {
                 if (port[0] === 'A') {
                     port = port.substring(1);
                 }
-                var value1 =  ANALOG ? ANALOG[port] || 0 : 0;
-				var value2 = 5;
+                var value1 = ANALOG ? ANALOG[port] || 0 : 0;
+                var value2 = 5;
                 var value3 = 1023;
                 var value4 = 100;
                 var value5 = 50;
-                var result = value1 * value2 / value3 * value4 - value5;
+                var result = ((value1 * value2) / value3) * value4 - value5;
                 return result;
             },
             syntax: {
@@ -1118,9 +1238,8 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
-		
-/////////////////////////////////////////////////////////////////////////////////////////		
+
+        /////////////////////////////////////////////////////////////////////////////////////////
         iboard_get_analog_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1456,7 +1575,7 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
+
         iboard_digital_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1465,7 +1584,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1507,7 +1629,7 @@ Entry.iboard.getBlocks = function() {
                 ],
             },
         },
-		
+
         iboard_toggle_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,

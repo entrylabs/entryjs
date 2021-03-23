@@ -168,6 +168,16 @@ Entry.Roborobo_Roduino.setLanguage = function() {
     return {
         ko: {
             template: {
+                roduino_get_analog_number: '%1  ',
+                roduino_get_port_number: '%1  ',
+                roduino_get_analog_value: '아날로그 %1 번 센서값  ',
+                roduino_get_digital_value: '디지털 %1 번 센서값  ',
+                roduino_set_digital: '디지털 %1 번 핀 %2 %3',
+                roduino_motor: '%1 %2 %3',
+                roduino_set_color_pin: '컬러센서 R : %1, G : %2, B : %3 %4',
+                roduino_get_color: '컬러센서 %1 감지',
+                roduino_on_block: ' On ',
+                roduino_off_block: ' Off ',
                 roduino_set_servo_value: '서보모터 %1 번 핀 %2˚ %3',
                 roduino_set_pwm_value: 'PWM %1 번 핀 %2으로 전류조절 %3',
                 roduino_get_sensor_analog_value: '아날로그 %1 %2 번 핀 값',
@@ -181,16 +191,72 @@ Entry.Roborobo_Roduino.setLanguage = function() {
                 roborobo_get_dial: '다이얼',
                 roborobo_get_keypad_a: 'A키패트(키번호)',
                 roborobo_get_ultrasonic: '초음파센서[cm]',
+                roborobo_num_analog_value_1: '아날로그',
+                roborobo_num_analog_value_2: '번 센서값',
+                roborobo_get_digital_value_1: '디지털',
+                roborobo_num_pin_1: '디지털',
+                roborobo_num_pin_2: '번 핀',
+                roborobo_on: '켜기',
+                roborobo_off: '끄기',
+                roborobo_motor1: '모터1',
+                roborobo_motor2: '모터2',
+                roborobo_motor_CW: '정회전',
+                roborobo_motor_CCW: '역회전',
+                roborobo_motor_stop: '정지',
+                roborobo_input_mode: '입력',
+                roborobo_output_mode: '출력',
+                roborobo_pwm_mode: '전류조절(pwm)',
+                roborobo_servo_mode: '서보모터',
+                roborobo_color: '컬러센서',
+                roborobo_color_red: ' 빨간색  ',
+                roborobo_color_green: ' 녹색 ',
+                roborobo_color_blue: ' 파란색 ',
+                roborobo_color_yellow: ' 노란색 ',
+                roborobo_color_detected: ' 감지 ',
+                roborobo_degree: ' ˚',
             },
         },
         en: {
             template: {
+                roduino_get_analog_number: '%1  ',
+                roduino_get_port_number: '%1  ',
+                roduino_get_analog_value: 'Analog %1 Sensor value  ',
+                roduino_get_digital_value: 'Digital %1 Sensor value  ',
+                roduino_set_digital: 'Digital %1 Pin %2 %3',
+                roduino_motor: '%1 %2 %3',
+                roduino_set_color_pin: 'Color Sensor R : %1, G : %2, B : %3 %4',
+                roduino_get_color: 'Color Sensor %1 Detected ',
+                roduino_on_block: ' On ',
+                roduino_off_block: ' Off ',
                 roduino_set_servo_value: 'Servo %1 Pin %2˚ %3',
                 roduino_set_pwm_value: 'PWM Set pin %1 to %2',
                 roduino_get_sensor_analog_value: 'analog %1 Pin %2 value',
                 roduino_get_sensor_digital_value: 'digital %1 %2 번 핀 값',
             },
             Blocks: {
+                roborobo_num_analog_value_1: 'Analog',
+                roborobo_num_analog_value_2: 'Sensor Value',
+                roborobo_get_digital_value_1: 'Digital',
+                roborobo_num_pin_1: 'Digital',
+                roborobo_num_pin_2: 'Pin',
+                roborobo_on: 'On',
+                roborobo_off: 'Off',
+                roborobo_motor1: 'motor1',
+                roborobo_motor2: 'motor2',
+                roborobo_motor_CW: 'ClockWise',
+                roborobo_motor_CCW: 'CounterClockWise',
+                roborobo_motor_stop: 'Stop',
+                roborobo_input_mode: 'Input',
+                roborobo_output_mode: 'Output',
+                roborobo_pwm_mode: 'PWM',
+                roborobo_servo_mode: 'Servo',
+                roborobo_color: 'Color Sensor ',
+                roborobo_color_red: ' Red ',
+                roborobo_color_green: ' Green ',
+                roborobo_color_blue: ' Blue ',
+                roborobo_color_yellow: ' Yellow ',
+                roborobo_color_detected: ' Detected ',
+                roborobo_degree: ' ˚',
                 roborobo_get_temperutre: 'Temperature Sensor',
                 roborobo_get_joystick_x: 'JoystickX',
                 roborobo_get_joystick_y: 'JoystickY',
@@ -982,7 +1048,10 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.roborobo_on, 'on'], [Lang.Blocks.roborobo_off, 'off']],
+                    options: [
+                        [Lang.Blocks.roborobo_on, 'on'],
+                        [Lang.Blocks.roborobo_off, 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1074,7 +1143,11 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['3', 3], ['5', 5], ['6', 6]],
+                    options: [
+                        ['3', 3],
+                        ['5', 5],
+                        ['6', 6],
+                    ],
                     value: 3,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1099,7 +1172,11 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['3', 3], ['5', 5], ['6', 6]],
+                                options: [
+                                    ['3', 3],
+                                    ['5', 5],
+                                    ['6', 6],
+                                ],
                                 value: 3,
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1286,7 +1363,11 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['3', 3], ['5', 5], ['6', 6]],
+                    options: [
+                        ['3', 3],
+                        ['5', 5],
+                        ['6', 6],
+                    ],
                     value: 3,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1312,7 +1393,11 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['3', 3], ['5', 5], ['6', 6]],
+                                options: [
+                                    ['3', 3],
+                                    ['5', 5],
+                                    ['6', 6],
+                                ],
                                 value: 3,
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1644,6 +1729,37 @@ Entry.Roborobo_Roduino.getBlocks = function() {
     };
 };
 
+Entry.Roborobo_SchoolKit.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                schoolkit_get_in_port_number: '%1  ',
+                schoolkit_get_out_port_number: '%1  ',
+                schoolkit_get_servo_port_number: '%1  ',
+                schoolkit_get_input_value: '디지털 %1 번 센서값  ',
+                schoolkit_set_output: '디지털 %1 번 핀 %2 %3',
+                schoolkit_motor: '%1 속도 %2(으)로 %3 %4',
+                schoolkit_set_servo_value: '서보모터 %1 번 핀 %2˚ %3',
+                schoolkit_on_block: ' On ',
+                schoolkit_off_block: ' Off ',
+            },
+        },
+        en: {
+            template: {
+                schoolkit_get_in_port_number: '%1  ',
+                schoolkit_get_out_port_number: '%1  ',
+                schoolkit_get_servo_port_number: '%1  ',
+                schoolkit_get_input_value: 'Digital %1 Sensor value  ',
+                schoolkit_set_output: 'Digital %1 Pin %2 %3',
+                schoolkit_motor: '%1 Speed %2 %3 %4',
+                schoolkit_set_servo_value: 'Servo %1 Pin %2˚ %3',
+                schoolkit_on_block: ' On ',
+                schoolkit_off_block: ' Off ',
+            },
+        },
+    };
+};
+
 Entry.Roborobo_SchoolKit.blockMenuBlocks = [
     'schoolkit_on_block',
     'schoolkit_off_block',
@@ -1720,7 +1836,13 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4], ['OUT4', 5], ['OUT5', 6]],
+                    options: [
+                        ['OUT1', 2],
+                        ['OUT2', 3],
+                        ['OUT3', 4],
+                        ['OUT4', 5],
+                        ['OUT5', 6],
+                    ],
                     value: 2,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1772,7 +1894,11 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4]],
+                    options: [
+                        ['OUT1', 2],
+                        ['OUT2', 3],
+                        ['OUT3', 4],
+                    ],
                     value: 2,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1797,7 +1923,11 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4]],
+                                options: [
+                                    ['OUT1', 2],
+                                    ['OUT2', 3],
+                                    ['OUT3', 4],
+                                ],
                                 value: 2,
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1884,7 +2014,10 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.roborobo_on, 'on'], [Lang.Blocks.roborobo_off, 'off']],
+                    options: [
+                        [Lang.Blocks.roborobo_on, 'on'],
+                        [Lang.Blocks.roborobo_off, 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

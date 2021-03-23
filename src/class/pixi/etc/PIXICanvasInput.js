@@ -7,14 +7,15 @@
  *
  *  MIT License
  */
-
+import * as PIXI from 'pixi.js';
 (function() {
     // create a buffer that stores all inputs so that tabbing
     // between them is made possible.
     const inputs = [];
 
     // initialize the Canvas Input
-    const CanvasInput = function(o) {
+    // eslint-disable-next-line no-multi-assign
+    const CanvasInput = (window.PIXICanvasInput = function(o) {
         const self = this;
 
         o = o ? o : {};
@@ -71,7 +72,7 @@
         self._renderCanvas.setAttribute('height', self.outerH);
         self._renderCtx = self._renderCanvas.getContext('2d');
 
-        const texture = PIXI.Texture.fromCanvas(self._renderCanvas);
+        const texture = PIXI.Texture.from(self._renderCanvas);
         self._pixiView = new PIXI.Sprite(texture);
         self._pixiView.interactive = false;
 
@@ -132,7 +133,7 @@
         // setup a global mouseup to blur the input outside of the canvas
         window.addEventListener(
             'mouseup',
-            (e) => {
+            () => {
                 //e = e || window.event;
                 //if (self._hasFocus && !self._mouseDown) {
                 //self.blur();
@@ -193,9 +194,7 @@
 
         // draw the text box
         self.render();
-    };
-
-    window.PIXICanvasInput = CanvasInput;
+    });
 
     // setup the prototype
     CanvasInput.prototype = {
