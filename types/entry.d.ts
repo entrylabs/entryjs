@@ -5,6 +5,7 @@ declare interface EntryOptions {
     mediaFilePath?: string;
     moduleBaseUrl?: string;
     dataTableDisable?: boolean;
+    expansionDisable?: boolean;
 }
 
 /**

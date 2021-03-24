@@ -546,11 +546,24 @@ Entry.Playground = class Playground {
             class: 'entryWorkspaceBlockMenu',
         });
 
+        const categoryData = EntryStatic.getAllBlocks().filter((item) => {
+            if (item.category === 'analysis') {
+                return !Entry.options.dataTableDisable;
+            }
+            if (item.category === 'ai_utilize') {
+                return !Entry.options.expansionDisable;
+            }
+            if (item.category === 'expansion') {
+                return !Entry.options.aiUtilizeDisable;
+            }
+            return true;
+        });
+
         const initOpts = {
             blockMenu: {
                 dom: blockMenuView,
                 align: 'LEFT',
-                categoryData: EntryStatic.getAllBlocks(),
+                categoryData,
                 scroll: true,
             },
             board: {
