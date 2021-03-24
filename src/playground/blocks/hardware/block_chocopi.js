@@ -79,7 +79,7 @@ Entry.Chocopi.blockMenuBlocks = [
     'chocopi_servo_motor',
     'chocopi_map_range',
 ];
-Entry.Chocopi.getBlocks = function () {
+Entry.Chocopi.getBlocks = function() {
     return {
         //region chocopi 초코파이
         chocopi_sensor: {
@@ -293,7 +293,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 var sensor = script.getField('sensor');
                 if (port == -1) return false;
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {ts:0, tv:[]}
+                if (!Entry.Chocopi.p[port]) Entry.Chocopi.p[port] = { ts: 0, tv: [] };
                 return (Entry.Chocopi.p[port].ts & (1 << sensor)) > 0;
             },
             syntax: { js: [], py: ['Chocopi.touchStatus(%1, %2)'] },
@@ -360,7 +360,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {ts:0, tv:[]}
+                if (!Entry.Chocopi.p[port]) Entry.Chocopi.p[port] = { ts: 0, tv: [] };
                 return Entry.Chocopi.p[port].tv[sensor];
             },
             syntax: { js: [], py: ['Chocopi.touchValue(%1, %2)'] },
@@ -502,7 +502,7 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(10, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {xyp:[]}
+                if (!Entry.Chocopi.p[port]) Entry.Chocopi.p[port] = { xyp: [] };
                 return Entry.Chocopi.p[port].xyp[sensor];
             },
             syntax: { js: [], py: ['Chocopi.joystick(%1, %2)'] },
@@ -600,7 +600,10 @@ Entry.Chocopi.getBlocks = function () {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[1, 0], [2, 1]],
+                    options: [
+                        [1, 0],
+                        [2, 1],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -694,16 +697,16 @@ Entry.Chocopi.getBlocks = function () {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return 0;
                 var sensor = script.getField('sensor');
-                if(!Entry.Chocopi.p[port])Entry.Chocopi.p[port] = {s:[]}
+                if (!Entry.Chocopi.p[port]) Entry.Chocopi.p[port] = { s: [] };
                 var v = Entry.Chocopi.p[port].s;
                 if (sensor < 9) return v[sensor];
                 switch (sensor) {
                     case 9:
-                        return Math.atan2(v[3], v[5]) * 180 / Math.PI;
+                        return (Math.atan2(v[3], v[5]) * 180) / Math.PI;
                     case 10:
-                        return Math.atan2(v[4], v[5]) * 180 / Math.PI;
+                        return (Math.atan2(v[4], v[5]) * 180) / Math.PI;
                     case 11:
-                        return Math.atan2(v[3], v[4]) * 180 / Math.PI;
+                        return (Math.atan2(v[3], v[4]) * 180) / Math.PI;
                 }
                 return 0;
             },
@@ -744,7 +747,10 @@ Entry.Chocopi.getBlocks = function () {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1', 0], ['2', 1]],
+                    options: [
+                        ['1', 0],
+                        ['2', 1],
+                    ],
                     value: 0,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -915,8 +921,7 @@ Entry.Chocopi.getBlocks = function () {
                 var r = script.getNumberValue('r');
                 var g = script.getNumberValue('g');
                 var b = script.getNumberValue('b');
-                if(!Entry.hw.sendQueue.data)
-                    Entry.hw.sendQueue.data = {};
+                if (!Entry.hw.sendQueue.data) Entry.hw.sendQueue.data = {};
                 Entry.hw.sendQueue.data[port] = [l, r, g, b];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -958,7 +963,10 @@ Entry.Chocopi.getBlocks = function () {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1', 0], ['2', 1]],
+                    options: [
+                        ['1', 0],
+                        ['2', 1],
+                    ],
                     value: 0,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -967,7 +975,10 @@ Entry.Chocopi.getBlocks = function () {
                 { type: 'Block', accept: 'string' },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.General.clock, 0], [Lang.General.counter_clock, 1]],
+                    options: [
+                        [Lang.General.clock, 0],
+                        [Lang.General.counter_clock, 1],
+                    ],
                     value: 0,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -992,8 +1003,7 @@ Entry.Chocopi.getBlocks = function () {
                 var id = script.getField('id');
                 var s = script.getNumberValue('power');
                 var d = script.getField('direction');
-                if(!Entry.hw.sendQueue.data)
-                    Entry.hw.sendQueue.data = {};
+                if (!Entry.hw.sendQueue.data) Entry.hw.sendQueue.data = {};
                 Entry.hw.sendQueue.data[port] = [id, s, d];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -1035,7 +1045,12 @@ Entry.Chocopi.getBlocks = function () {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1', 0], ['2', 1], ['3', 2], ['4', 3]],
+                    options: [
+                        ['1', 0],
+                        ['2', 1],
+                        ['3', 2],
+                        ['4', 3],
+                    ],
                     value: 0,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1060,15 +1075,14 @@ Entry.Chocopi.getBlocks = function () {
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
                 var a = script.getNumberValue('angle');
-                if(!Entry.hw.sendQueue.data)
-                Entry.hw.sendQueue.data = {};                
+                if (!Entry.hw.sendQueue.data) Entry.hw.sendQueue.data = {};
                 Entry.hw.sendQueue.data[port] = [id, a];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Chocopi.servo(%1, %2, %3)'] },
-        },        
+        },
         chocopi_map_range: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1102,7 +1116,7 @@ Entry.Chocopi.getBlocks = function () {
                 var y1 = script.getNumberValue('y1');
                 var y2 = script.getNumberValue('y2');
                 if (x1 === x2) return y1;
-                return y1 + (x - x1) * (y2 - y1) / (x2 - x1);
+                return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);
             },
             syntax: { js: [], py: ['Chocopi.mapRange(%1, %2, %3, %4, %5)'] },
         },
@@ -1147,6 +1161,12 @@ Entry.Chocopi.setLanguage = function() {
                 chocopi_touch_status: '%1 터치 %2번을 만짐',
                 chocopi_touch_value: '%1 터치 %2번의 값',
                 chocopi_map_range: '%1을 %2~%3에서 %4~%5로',
+            },
+            Device: {
+                chocopi: '초코파이보드',
+            },
+            Menus: {
+                chocopi: '초코파이보드',
             },
             Helper: {
                 chocopi_control_button:
@@ -1218,6 +1238,12 @@ Entry.Chocopi.setLanguage = function() {
                 chocopi_touch_status: '%1 touch pad%2 is touched',
                 chocopi_touch_value: '%1 touch pad%2 value',
                 chocopi_map_range: 'map %1 in %2~%3 to %4~%5',
+            },
+            Device: {
+                chocopi: 'ChocoPi',
+            },
+            Menus: {
+                chocopi: 'ChocoPi',
             },
             Helper: {
                 chocopi_control_button:

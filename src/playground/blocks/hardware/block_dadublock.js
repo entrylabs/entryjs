@@ -103,6 +103,82 @@ Entry.DaduBlock_Car = {
     },
     BlockState: {},
 };
+Entry.DaduBlock_Car.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                dadublock_car_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                dadublock_car_get_analog_value: '아날로그 %1 번 센서값',
+                dadublock_car_get_analog_value_map:
+                    '아날로그 %1번 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                dadublock_car_get_digital: '디지털 %1 번 센서값',
+                dadublock_car_get_irsensor: '적외선 %1 번 센서값',
+                dadublock_car_get_ultrasonic_value: '울트라소닉 Trig %1번핀 Echo %2번핀 센서값',
+                dadublock_car_motor: '모터 %1 번을 %2 (으)로 %3 %의 속도로 움직이기 %4',
+                dadublock_car_motor_stop: '모터 %1 번 멈추기 %2',
+                dadublock_car_set_servo: '서보모터 %1 번 핀을 %2 의 각도로 정하기 %3',
+                dadublock_car_set_tone:
+                    '디지털 %1 번 핀 을 %2 음으로 %3의 옥타브로 %4 만큼 연주하기 %5',
+                dadublock_car_toggle_led: '디지털 %1 번 핀 %2 %3',
+            },
+            Menus: {
+                dadublock_car: '다두블럭 자동차',
+            },
+        },
+        en: {
+            template: {
+                dadublock_car_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                dadublock_car_get_analog_value: '아날로그 %1 번 센서값',
+                dadublock_car_get_analog_value_map:
+                    '아날로그 %1번 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                dadublock_car_get_digital: '디지털 %1 번 센서값',
+                dadublock_car_get_irsensor: '적외선 %1 번 센서값',
+                dadublock_car_get_ultrasonic_value: '울트라소닉 Trig %1번핀 Echo %2번핀 센서값',
+                dadublock_car_motor: '모터 %1 번을 %2 (으)로 %3 %의 속도로 움직이기 %4',
+                dadublock_car_motor_stop: '모터 %1 번 멈추기 %2',
+                dadublock_car_set_servo: '서보모터 %1 번 핀을 %2 의 각도로 정하기 %3',
+                dadublock_car_set_tone:
+                    '디지털 %1 번 핀 을 %2 음으로 %3의 옥타브로 %4 만큼 연주하기 %5',
+                dadublock_car_toggle_led: '디지털 %1 번 핀 %2 %3',
+            },
+            Menus: {
+                dadublock_car: 'DaduBlock Car',
+            },
+        },
+    };
+};
+Entry.DaduBlock.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                dadublock_get_analog_value: '아날로그 %1 번 센서값',
+                dadublock_get_analog_value_map:
+                    '아날로그 %1번 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값',
+                dadublock_get_ultrasonic_value: '울트라소닉 Trig %1번핀 Echo %2번핀 센서값',
+                dadublock_toggle_led: '디지털 %1 번 핀 %2 %3',
+                dadublock_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                dadublock_set_tone: '디지털 %1 번 핀을 %2 음으로 %3 옥타브로 %4 만큼 연주하기 %5',
+                dadublock_set_servo: '서보모터 %1 번 핀을 %2 의 각도로 정하기 %3',
+                dadublock_get_digital: '디지털 %1 번 센서값',
+            },
+            Menus: { dadublock: '다두블럭' },
+        },
+        en: {
+            template: {
+                dadublock_get_analog_value: 'Analog %1 Sensor value',
+                dadublock_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                dadublock_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                dadublock_toggle_led: 'Digital %1 Pin %2 %3',
+                dadublock_digital_pwm: 'Digital %1 Pin %2 %3',
+                dadublock_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                dadublock_set_servo: 'Set servo pin %1 angle as %2 %3',
+                dadublock_get_digital: '디지털 %1 번 센서값',
+            },
+            Menus: { dadublock: 'DaduBlock' },
+        },
+    };
+};
+
 Entry.DaduBlock.blockMenuBlocks = [
     //dadublock 2016-12-19
     'dadublock_get_analog_value',
@@ -140,7 +216,12 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -172,7 +253,12 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -416,7 +502,10 @@ Entry.DaduBlock.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off']],
+                    options: [
+                        ['켜기', 'on'],
+                        ['끄기', 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -467,7 +556,12 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['~5', '5'], ['~6', '6'], ['~9', '9'], ['~10', '10']],
+                    options: [
+                        ['~5', '5'],
+                        ['~6', '6'],
+                        ['~9', '9'],
+                        ['~10', '10'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -755,7 +849,12 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -787,7 +886,12 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1031,7 +1135,10 @@ Entry.DaduBlock.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off']],
+                    options: [
+                        ['켜기', 'on'],
+                        ['끄기', 'off'],
+                    ],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1082,7 +1189,12 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['~5', '5'], ['~6', '6'], ['~9', '9'], ['~10', '10']],
+                    options: [
+                        ['~5', '5'],
+                        ['~6', '6'],
+                        ['~9', '9'],
+                        ['~10', '10'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1369,7 +1481,10 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['~5,~6', '1'], ['~9,~10', '2']],
+                    options: [
+                        ['~5,~6', '1'],
+                        ['~9,~10', '2'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1444,7 +1559,10 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['~5,~6', '1'], ['~9,~10', '2']],
+                    options: [
+                        ['~5,~6', '1'],
+                        ['~9,~10', '2'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1452,7 +1570,10 @@ Entry.DaduBlock.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['정방향', '1'], ['역방향', '2']],
+                    options: [
+                        ['정방향', '1'],
+                        ['역방향', '2'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

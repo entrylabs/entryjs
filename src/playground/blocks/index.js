@@ -54,7 +54,7 @@ function getBlockObject(items) {
                 Object.assign(blockObject, item.getBlocks());
             }
         } catch (err) {
-            console.log(err, item);
+            console.log(err);
         }
     });
     return blockObject;

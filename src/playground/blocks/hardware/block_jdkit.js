@@ -58,7 +58,7 @@ Entry.JDKit = {
         width: 600,
         height: 355,
         listPorts: {
-            'A6': {
+            A6: {
                 name: '드론연결상태',
                 type: 'input',
                 pos: {
@@ -66,7 +66,7 @@ Entry.JDKit = {
                     y: 0,
                 },
             },
-            'A10': {
+            A10: {
                 name: '드론준비상태',
                 type: 'input',
                 pos: {
@@ -74,7 +74,7 @@ Entry.JDKit = {
                     y: 0,
                 },
             },
-            'A8': {
+            A8: {
                 name: '드론좌우기울기',
                 type: 'input',
                 pos: {
@@ -82,7 +82,7 @@ Entry.JDKit = {
                     y: 0,
                 },
             },
-            'A9': {
+            A9: {
                 name: '드론앞뒤기울기',
                 type: 'input',
                 pos: {
@@ -90,7 +90,7 @@ Entry.JDKit = {
                     y: 0,
                 },
             },
-            'A7': {
+            A7: {
                 name: '드론높이',
                 type: 'input',
                 pos: {
@@ -100,7 +100,7 @@ Entry.JDKit = {
             },
         },
         ports: {
-            'A1': {
+            A1: {
                 name: Lang.Blocks.jdkit_joystick_leftleftright,
                 type: 'input',
                 pos: {
@@ -109,7 +109,7 @@ Entry.JDKit = {
                 },
             },
 
-            'A2': {
+            A2: {
                 name: Lang.Blocks.jdkit_joystick_lefttopbottom,
                 type: 'input',
                 pos: {
@@ -117,7 +117,7 @@ Entry.JDKit = {
                     y: 140,
                 },
             },
-            'A3': {
+            A3: {
                 name: Lang.Blocks.jdkit_joystick_rightleftright,
                 type: 'input',
                 pos: {
@@ -126,7 +126,7 @@ Entry.JDKit = {
                 },
             },
 
-            'A4': {
+            A4: {
                 name: Lang.Blocks.jdkit_joystick_righttopbottom,
                 type: 'input',
                 pos: {
@@ -134,7 +134,7 @@ Entry.JDKit = {
                     y: 140,
                 },
             },
-            'A5': {
+            A5: {
                 name: '버튼',
                 type: 'input',
                 pos: {
@@ -146,6 +146,106 @@ Entry.JDKit = {
         mode: 'both',
     },
 };
+
+Entry.JDKit.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                jdkit_altitude: '드론을 %1 높이만큼 날리기 %2',
+                jdkit_button: '%1번 버튼 값 읽어오기',
+                jdkit_connect: '드론 연결 상태 읽어오기',
+                jdkit_emergency: '드론을 즉시 멈추기 %1',
+                jdkit_gyro: '보드 %1 기울기 값 읽어오기',
+                jdkit_joystick: '조이스틱 %1 읽기',
+                jdkit_led: '%1 LED %2  %3',
+                jdkit_motor: '%1 모터를 %2 세기로 돌리기 %3',
+                jdkit_ready: '드론 비행 준비 상태 읽어오기',
+                jdkit_rollpitch: '드론을 %1 방향 %2 세기로 움직이기 %3',
+                jdkit_throttle: '드론 프로펠러를 %1 만큼 세기로 돌리기 %2',
+                jdkit_tune: '%1 음을  %2 초동안 소리내기 %3',
+                jdkit_ultrasonic: '거리(초음파)값 읽어오기',
+                jdkit_yaw: '드론을 %1 만큼 회전하기 %2',
+            },
+            Blocks: {
+                jdkit_clockwise: '시계방향',
+                jdkit_counterclockwise: '반시계방향',
+                jdkit_gyro_frontrear: '앞뒤',
+                jdkit_gyro_leftright: '좌우',
+                jdkit_joystick_leftleftright: '왼쪽 좌우',
+                jdkit_joystick_lefttopbottom: '왼쪽 상하',
+                jdkit_joystick_rightleftright: '오른쪽 좌우',
+                jdkit_joystick_righttopbottom: '오른쪽 상하',
+                jdkit_led: 'LED',
+                jdkit_led_color_green: '초록색',
+                jdkit_led_color_orange: '오랜지색',
+                jdkit_led_turnoff: '끄기',
+                jdkit_led_turnon: '켜기',
+                jdkit_motor_leftbottom: '왼쪽아래',
+                jdkit_motor_lefttop: '왼쪽위',
+                jdkit_motor_rightbottom: '오른쪽아래',
+                jdkit_motor_righttop: '오른쪽위',
+                jdkit_tune_do: '도',
+                jdkit_tune_fa: '파',
+                jdkit_tune_la: '라',
+                jdkit_tune_mi: '미',
+                jdkit_tune_re: '레',
+                jdkit_tune_si: '시',
+                jdkit_tune_sol: '솔',
+            },
+            Menus: {
+                jdkit: '제이디키트',
+            },
+        },
+        en: {
+            template: {
+                jdkit_altitude: '드론을 %1 높이만큼 날리기 %2',
+                jdkit_button: '%1번 버튼 값 읽어오기',
+                jdkit_connect: '드론 연결 상태 읽어오기',
+                jdkit_emergency: '드론을 즉시 멈추기 %1',
+                jdkit_gyro: '보드 %1 기울기 값 읽어오기',
+                jdkit_joystick: '조이스틱 %1 읽기',
+                jdkit_led: '%1 LED %2  %3',
+                jdkit_motor: '%1 모터를 %2 세기로 돌리기 %3',
+                jdkit_ready: '드론 비행 준비 상태 읽어오기',
+                jdkit_rollpitch: '드론을 %1 방향 %2 세기로 움직이기 %3',
+                jdkit_throttle: '드론 프로펠러를 %1 만큼 세기로 돌리기 %2',
+                jdkit_tune: '%1 음을  %2 초동안 소리내기 %3',
+                jdkit_ultrasonic: '거리(초음파)값 읽어오기',
+                jdkit_yaw: '드론을 %1 만큼 회전하기 %2',
+            },
+            Blocks: {
+                jdkit_clockwise: '시계방향',
+                jdkit_counterclockwise: '반시계방향',
+                jdkit_gyro_frontrear: '앞뒤',
+                jdkit_gyro_leftright: '좌우',
+                jdkit_joystick_leftleftright: '왼쪽 좌우',
+                jdkit_joystick_lefttopbottom: '왼쪽 상하',
+                jdkit_joystick_rightleftright: '오른쪽 좌우',
+                jdkit_joystick_righttopbottom: '오른쪽 상하',
+                jdkit_led: 'LED',
+                jdkit_led_color_green: '초록색',
+                jdkit_led_color_orange: '오랜지색',
+                jdkit_led_turnoff: '끄기',
+                jdkit_led_turnon: '켜기',
+                jdkit_motor_leftbottom: '왼쪽아래',
+                jdkit_motor_lefttop: '왼쪽위',
+                jdkit_motor_rightbottom: '오른쪽아래',
+                jdkit_motor_righttop: '오른쪽위',
+                jdkit_tune_do: '도',
+                jdkit_tune_fa: '파',
+                jdkit_tune_la: '라',
+                jdkit_tune_mi: '미',
+                jdkit_tune_re: '레',
+                jdkit_tune_si: '시',
+                jdkit_tune_sol: '솔',
+            },
+            Menus: {
+                jdkit: 'JDKit',
+            },
+        },
+    };
+};
+
 Entry.JDKit.blockMenuBlocks = [
     'jdkit_led',
     'jdkit_tune',

@@ -85,6 +85,97 @@ Entry.iboard.blockMenuBlocks = [
     'iboard_toggle_led',
     'iboard_digital_pwm',
 ];
+Entry.iboard.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                iboard_button: '%1  버튼을 눌렀는가?',
+                iboard_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                iboard_get_analog_value: '아날로그 %1 번 센서값  ',
+                iboard_get_analog_value_map: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                iboard_get_digital: '디지털 %1 번 센서값  ',
+                iboard_led: 'LED %1 번을 %2 %3',
+                iboard_motor: '모터를 %2 으로 동작하기 %3',
+                iboard_pwm_led: 'LED %1 번의 밝기를 %2 (으)로 정하기 %3',
+                iboard_rgb_led: 'RGB LED의 %1 LED %2 %3',
+                iboard_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                iboard_toggle_led: '디지털 %1 번 핀 %2 %3',
+            },
+            Blocks: {
+                iboard_analog_number_0: 'A0',
+                iboard_analog_number_1: 'A1',
+                iboard_analog_number_2: 'A2',
+                iboard_analog_number_3: 'A3',
+                iboard_analog_number_4: 'A4',
+                iboard_analog_number_5: 'A5',
+                iboard_light: '빛센서가 ',
+                iboard_num_pin_1: 'LED 상태를',
+                iboard_num_pin_2: '번 스위치가',
+                iboard_num_pin_3: '아날로그',
+                iboard_num_pin_4: '번 ',
+                iboard_num_pin_5: '센서값',
+                iboard_string_1: '켜짐',
+                iboard_string_2: '꺼짐',
+                iboard_string_3: '밝음',
+                iboard_string_4: '어두움',
+                iboard_string_5: '눌림',
+                iboard_string_6: '열림',
+                iboard_switch: '스위치 ',
+                iboard_tilt: '기울기센서 상태가',
+            },
+            Device: {
+                iboard: '아이보드',
+            },
+            Menus: {
+                iboard: '아이보드',
+            },
+        },
+        en: {
+            template: {
+                iboard_button: 'Pressed %1 button?',
+                iboard_digital_pwm: 'Digital %1 Pin %2 %3',
+                iboard_get_analog_value: 'Analog %1 Sensor value  ',
+                iboard_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                iboard_get_digital: 'Digital %1 Sensor value  ',
+                iboard_led: 'Digital %1 Pin %2 %3',
+                iboard_motor: 'Digital %1 Pin %2 %3',
+                iboard_pwm_led: 'Digital %1 Pin %2 %3',
+                iboard_rgb_led: ' %1 LED %2 %3',
+                iboard_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                iboard_toggle_led: 'Digital %1 Pin %2 %3',
+            },
+            Blocks: {
+                iboard_analog_number_0: 'A0',
+                iboard_analog_number_1: 'A1',
+                iboard_analog_number_2: 'A2',
+                iboard_analog_number_3: 'A3',
+                iboard_analog_number_4: 'A4',
+                iboard_analog_number_5: 'A5',
+                iboard_light: 'Light sensor is ',
+                iboard_num_pin_1: 'LED status',
+                iboard_num_pin_2: 'switch',
+                iboard_num_pin_3: 'analogue',
+                iboard_num_pin_4: ' ',
+                iboard_num_pin_5: 'sensor value',
+                iboard_string_1: 'on',
+                iboard_string_2: 'off',
+                iboard_string_3: 'bright',
+                iboard_string_4: 'dark',
+                iboard_string_5: 'pressed',
+                iboard_string_6: 'opened',
+                iboard_switch: 'switch ',
+                iboard_tilt: 'Slope sensor status is',
+            },
+            Device: {
+                iboard: 'iboard',
+            },
+            Menus: {
+                iboard: 'iboard',
+            },
+        },
+    };
+};
+
 Entry.iboard.getBlocks = function() {
     return {
         //region iboard 아이보드
@@ -146,7 +237,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                    ],
                     value: '1',
                     fontSize: 11,
                 },
@@ -160,7 +254,10 @@ Entry.iboard.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['A0', '0'], ['A1', '1']],
+                                options: [
+                                    ['A0', '0'],
+                                    ['A1', '1'],
+                                ],
                                 value: '1',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -179,7 +276,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A2', '2'], ['A3', '3']],
+                    options: [
+                        ['A2', '2'],
+                        ['A3', '3'],
+                    ],
                     value: '2',
                     fontSize: 11,
                 },
@@ -193,7 +293,10 @@ Entry.iboard.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['A2', '2'], ['A3', '3']],
+                                options: [
+                                    ['A2', '2'],
+                                    ['A3', '3'],
+                                ],
                                 value: '2',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -212,7 +315,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A3', '3'], ['A4', '4']],
+                    options: [
+                        ['A3', '3'],
+                        ['A4', '4'],
+                    ],
                     value: '3',
                     fontSize: 11,
                 },
@@ -226,7 +332,10 @@ Entry.iboard.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['A3', '3'], ['A4', '4']],
+                                options: [
+                                    ['A3', '3'],
+                                    ['A4', '4'],
+                                ],
                                 value: '3',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -249,7 +358,11 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D2', '2'], ['D3', '3'], ['D4', '4']],
+                    options: [
+                        ['D2', '2'],
+                        ['D3', '3'],
+                        ['D4', '4'],
+                    ],
                     value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -276,7 +389,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D5', '5'], ['D6', '6']],
+                    options: [
+                        ['D5', '5'],
+                        ['D6', '6'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -303,7 +419,10 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['D10', '10'], ['D11', '11']],
+                    options: [
+                        ['D10', '10'],
+                        ['D11', '11'],
+                    ],
                     value: '10',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -330,7 +449,11 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨간', '5'], ['초록', '6'], ['파란', '9']],
+                    options: [
+                        ['빨간', '5'],
+                        ['초록', '6'],
+                        ['파란', '9'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -381,7 +504,12 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['정지', '0'], ['미풍', '100'], ['약풍', '170'], ['강풍', '255']],
+                    options: [
+                        ['정지', '0'],
+                        ['미풍', '100'],
+                        ['약풍', '170'],
+                        ['강풍', '255'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -435,7 +563,7 @@ Entry.iboard.getBlocks = function() {
                 var value3 = 1024;
                 var value4 = 100;
                 var value5 = 50;
-                var result = value1 * value2 / value3 * value4 - value5;
+                var result = ((value1 * value2) / value3) * value4 - value5;
                 return result;
             },
         },

@@ -215,6 +215,117 @@ Entry.MODI.blockMenuBlocks = [
     'modi_set_custom_speaker',
     'modi_print_display_by_value',
 ];
+Entry.MODI.setLanguage = function() {
+    return {
+        ko: {
+            template: {},
+            Blocks: {
+                modi_enviroment_bule: '파랑',
+                modi_enviroment_green: '초록',
+                modi_enviroment_humidity: '습도',
+                modi_enviroment_illuminance: '조도',
+                modi_enviroment_red: '빨강',
+                modi_enviroment_temperature: '온도',
+                modi_gyroscope_xAcceleratior: 'X축 가속',
+                modi_gyroscope_yAcceleratior: 'Y축 가속',
+                modi_gyroscope_zAcceleratior: 'Z축 가속',
+                modi_motor_angle: '각도',
+                modi_motor_speed: '속도',
+                modi_motor_torque: '회전',
+                modi_speaker_F_DO_5: '도5',
+                modi_speaker_F_DO_6: '도6',
+                modi_speaker_F_DO_7: '도7',
+                modi_speaker_F_DO_S_5: '도#5',
+                modi_speaker_F_DO_S_6: '도#6',
+                modi_speaker_F_DO_S_7: '도#7',
+                modi_speaker_F_MI_5: '미5',
+                modi_speaker_F_MI_6: '미6',
+                modi_speaker_F_MI_7: '미7',
+                modi_speaker_F_PA_5: '파5',
+                modi_speaker_F_PA_6: '파6',
+                modi_speaker_F_PA_7: '파7',
+                modi_speaker_F_PA_S_5: '파#5',
+                modi_speaker_F_PA_S_6: '파#6',
+                modi_speaker_F_PA_S_7: '파#7',
+                modi_speaker_F_RA_5: '라5',
+                modi_speaker_F_RA_6: '라6',
+                modi_speaker_F_RA_7: '라7',
+                modi_speaker_F_RA_S_5: '라#5',
+                modi_speaker_F_RA_S_6: '라#6',
+                modi_speaker_F_RA_S_7: '라#7',
+                modi_speaker_F_RE_5: '레5',
+                modi_speaker_F_RE_6: '레6',
+                modi_speaker_F_RE_7: '레7',
+                modi_speaker_F_RE_S_5: '라#5',
+                modi_speaker_F_RE_S_6: '레#6',
+                modi_speaker_F_RE_S_7: '레#7',
+                modi_speaker_F_SOL_5: '솔5',
+                modi_speaker_F_SOL_6: '솔6',
+                modi_speaker_F_SOL_7: '솔7',
+                modi_speaker_F_SOL_S_5: '솔#5',
+                modi_speaker_F_SOL_S_6: '솔#6',
+                modi_speaker_F_SOL_S_7: '솔#7',
+                modi_speaker_F_SO_5: '시5',
+                modi_speaker_F_SO_6: '시6',
+                modi_speaker_F_SO_7: '시7',
+            },
+        },
+        en: {
+            template: {},
+            Blocks: {
+                modi_enviroment_bule: 'Blue',
+                modi_enviroment_green: 'Green',
+                modi_enviroment_humidity: 'Humidity',
+                modi_enviroment_illuminance: 'Illuminance',
+                modi_enviroment_red: 'Red',
+                modi_enviroment_temperature: 'Temparature',
+                modi_gyroscope_xAcceleratior: 'X-axis acceleration',
+                modi_gyroscope_yAcceleratior: 'Y-axis acceleration',
+                modi_gyroscope_zAcceleratior: 'Z-axis acceleration',
+                modi_motor_angle: 'Angle',
+                modi_motor_speed: 'Speed',
+                modi_motor_torque: 'Torque',
+                modi_speaker_F_DO_5: 'DO 5',
+                modi_speaker_F_DO_6: 'DO 6',
+                modi_speaker_F_DO_7: 'DO 7',
+                modi_speaker_F_DO_S_5: 'DO #5',
+                modi_speaker_F_DO_S_6: 'DO #6',
+                modi_speaker_F_DO_S_7: 'DO #7',
+                modi_speaker_F_MI_5: 'MI 5',
+                modi_speaker_F_MI_6: 'MI 6',
+                modi_speaker_F_MI_7: 'MI 7',
+                modi_speaker_F_PA_5: 'FA 5',
+                modi_speaker_F_PA_6: 'FA 6',
+                modi_speaker_F_PA_7: 'FA 7',
+                modi_speaker_F_PA_S_5: 'FA #5',
+                modi_speaker_F_PA_S_6: 'FA #6',
+                modi_speaker_F_PA_S_7: 'FA #7',
+                modi_speaker_F_RA_5: 'LA 5',
+                modi_speaker_F_RA_6: 'LA 6',
+                modi_speaker_F_RA_7: 'LA 7',
+                modi_speaker_F_RA_S_5: 'LA #5',
+                modi_speaker_F_RA_S_6: 'LA #6',
+                modi_speaker_F_RA_S_7: 'LA #7',
+                modi_speaker_F_RE_5: 'RE 5',
+                modi_speaker_F_RE_6: 'RE 6',
+                modi_speaker_F_RE_7: 'RE 7',
+                modi_speaker_F_RE_S_5: 'LA #5',
+                modi_speaker_F_RE_S_6: 'RE #6',
+                modi_speaker_F_RE_S_7: 'RE #7',
+                modi_speaker_F_SOL_5: 'SOL 5',
+                modi_speaker_F_SOL_6: 'SOL 6',
+                modi_speaker_F_SOL_7: 'SOL 7',
+                modi_speaker_F_SOL_S_5: 'SOL #5',
+                modi_speaker_F_SOL_S_6: 'SOL #6',
+                modi_speaker_F_SOL_S_7: 'SOL #7',
+                modi_speaker_F_SO_5: 'TI 5',
+                modi_speaker_F_SO_6: 'TI 6',
+                modi_speaker_F_SO_7: 'TI 7',
+            },
+        },
+    };
+};
+
 //region modi 모디
 Entry.MODI.getBlocks = function() {
     return {
@@ -462,7 +573,12 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['Click', 2], ['Double Click', 3], ['Toggle', 5], ['Press', 4]],
+                    options: [
+                        ['Click', 2],
+                        ['Double Click', 3],
+                        ['Toggle', 5],
+                        ['Press', 4],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1058,9 +1174,9 @@ Entry.MODI.getBlocks = function() {
 
                 color = color.substring(1, 7);
                 var bigint = parseInt(color, 16);
-                var red = Math.round(((bigint >> 16) & 255) / 255 * 100);
-                var green = Math.round(((bigint >> 8) & 255) / 255 * 100);
-                var blue = Math.round((bigint & 255) / 255 * 100);
+                var red = Math.round((((bigint >> 16) & 255) / 255) * 100);
+                var green = Math.round((((bigint >> 8) & 255) / 255) * 100);
+                var blue = Math.round(((bigint & 255) / 255) * 100);
                 var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
