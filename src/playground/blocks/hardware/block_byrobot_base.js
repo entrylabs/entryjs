@@ -12,7 +12,6 @@
  *
  ***************************************************************************************/
 
-
 /***************************************************************************************
  *  장치 기본 정의
  ***************************************************************************************/
@@ -55,7 +54,6 @@ Entry.byrobot_base =
         }
     },
 
-
     /***************************************************************************************
      *  기능 함수
      ***************************************************************************************/
@@ -67,12 +65,10 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.buffer_clear;
     },
 
-
     fit(min, value, max)
     {
         return Math.max(Math.min(value, max), min);
     },
-
 
     /***************************************************************************************
      *  데이터 전송 함수 (Entry -> Hardware)
@@ -91,7 +87,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.battle_ir_message;
     },
 
-
     transferLightManual(target, flags, brightness)
     {
         Entry.hw.sendQueue.target = target;
@@ -105,7 +100,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.light_manual_brightness;
     },
 
-
     transferLightMode(target, mode, interval)
     {
         Entry.hw.sendQueue.target = target;
@@ -118,7 +112,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.light_mode_mode;
         delete Entry.hw.sendQueue.light_mode_interval;
     },
-
 
     transferLightModeColor(target, mode, interval, red, green, blue)
     {
@@ -139,7 +132,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.light_color_b;
     },
 
-
     transferLightEvent(target, event, interval, repeat)
     {
         Entry.hw.sendQueue.target = target;
@@ -154,7 +146,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.light_event_interval;
         delete Entry.hw.sendQueue.light_event_repeat;
     },
-
 
     transferLightEventColor(target, event, interval, repeat, red, green, blue)
     {
@@ -177,7 +168,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.light_color_b;
     },
 
-
     transferDisplayClearAll(target, pixel)
     {
         Entry.hw.sendQueue.target = target;
@@ -188,7 +178,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.target;
         delete Entry.hw.sendQueue.display_clear_all_pixel;
     },
-
 
     transferDisplayClear(target, pixel, x, y, width, height)
     {
@@ -209,7 +198,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_clear_pixel;
     },
 
-
     transferDisplayInvert(target, x, y, width, height)
     {
         Entry.hw.sendQueue.target = target;
@@ -227,7 +215,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_invert_height;
     },
 
-
     transferDisplayDrawPoint(target, x, y, pixel)
     {
         Entry.hw.sendQueue.target = target;
@@ -242,7 +229,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_point_y;
         delete Entry.hw.sendQueue.display_draw_point_pixel;
     },
-
 
     transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line)
     {
@@ -264,7 +250,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_line_pixel;
         delete Entry.hw.sendQueue.display_draw_line_line;
     },
-
 
     transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line)
     {
@@ -288,7 +273,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_rect_flagfill;
         delete Entry.hw.sendQueue.display_draw_rect_line;
     },
-
 
     transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill)
     {
@@ -463,7 +447,6 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.control_position_rotational_velocity;
     },
 
-
     /***************************************************************************************
      *  기능
      ***************************************************************************************/
@@ -473,7 +456,6 @@ Entry.byrobot_base =
     {
         return Entry.hw.portData[device];
     },
-
 
     getRgbFromString(stringColor)
     {
@@ -501,7 +483,6 @@ Entry.byrobot_base =
         return { r:red, g:green, b:blue };
     },
 
-    
     /***************************************************************************************
      *  블럭 연동 함수
      ***************************************************************************************/
@@ -840,8 +821,7 @@ Entry.byrobot_base =
     // 화면에 문자열 쓰기
     setDisplayDrawString(script, target, x, y, font, pixel, string)
     {
-        switch (this.checkFinish(script, 40))
-        {
+        switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
                     this.transferDisplayDrawString(target, x, y, font, pixel, string);

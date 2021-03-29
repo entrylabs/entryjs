@@ -3,7 +3,7 @@
 Entry.CODEino = {
     id: '1.3',
     name: 'CODEino',
-    url: 'http://www.codable.co.kr/page/?pid=codeino',
+    url: 'http://www.kcsi.co.kr/ko/bbs/content.php?co_id=CODEino1',
     imageName: 'codeino.png',
     title: {
         ko: '코드이노',
@@ -296,10 +296,7 @@ Entry.CODEino.blockMenuBlocks = [
 
     'CODEino_get_digital_value',
     'CODEino_set_digital_value',
-
     'CODEino_set_pwm_value',
-    'CODEino_get_analog_value',
-    'CODEino_convert_scale',
 
     'CODEino_default_neopixel_on',
     'CODEino_default_neopixel_setBrightness',
@@ -2261,7 +2258,7 @@ Entry.CODEino.getBlocks = function() {
                 if (!sq.SET) {
                     sq.SET = {};
                 }
-                var port = Entry.CODEino.customNeoPixelPin+9;
+
                 sq.SET[port] = {
                     type: Entry.CODEino.sensorTypes.CUSTOM_NEOPIXEL_POWER,
                     data: {
@@ -2309,7 +2306,6 @@ Entry.CODEino.getBlocks = function() {
             func: function(sprite, script) {
                 var value = script.getNumberValue('VALUE', script);
                 var sq = Entry.hw.sendQueue;
-                var port = Entry.CODEino.customNeoPixelPin+10;
                 if (!sq.SET) {
                     sq.SET = {};
                 }

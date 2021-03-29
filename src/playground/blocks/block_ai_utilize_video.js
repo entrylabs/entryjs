@@ -29,15 +29,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 size: 11,
             };
         },
-        getCameraOrder() {
-            return {
-                type: 'DropdownDynamic',
-                menuName: 'connectedCameras',
-                fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            };
-        },
         getNumbers() {
             return {
                 type: 'Dropdown',
@@ -291,30 +282,6 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             isNotFor: ['video'],
             events: {},
         },
-        video_change_cam: {
-            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-            skeleton: 'basic',
-            statements: [],
-            params: [params.getCameraOrder(), params.getCommonIndicator()],
-            events: {},
-            def: {
-                type: 'video_change_cam',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'video',
-            isNotFor: ['video'],
-            async func(sprite, script) {
-                const VALUE = script.getField('VALUE');
-                return await VideoUtils.changeSource(VALUE);
-            },
-            syntax: {
-                js: [],
-                py: [],
-            },
-        },
         video_check_webcam: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -330,8 +297,8 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
             },
             class: 'video',
             isNotFor: ['video'],
-            func(sprite, script) {
-                return VideoUtils.videoInputList.length > 0;
+            async func(sprite, script) {
+                return await VideoUtils.checkUserCamAvailable();
             },
             syntax: {
                 js: [],
@@ -523,7 +490,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     case 'face':
                         return VideoUtils.faces.length || 0;
                     case 'pose':
-                        return (VideoUtils.poses && VideoUtils.poses.predictions.length) || 0;
+                        return VideoUtils.poses.predictions.length || 0;
                     case 'object':
                         return VideoUtils.objects.length || 0;
                 }
@@ -556,6 +523,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 let result = false;
                 VideoUtils.objects.forEach((detected) => {
                     if (detected.class === target) {
+                        console.log(detected.class, target, detected.class === target);
                         result = true;
                     }
                 });
@@ -570,7 +538,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                 py: [],
             },
         },
-        // 원래는 video_is_model_detected 로 나가야 하나, 해당 부분에 있어서 기존 하위 호환성때문에... 이름을 못바꿈...
+
         video_is_model_loaded: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -589,14 +557,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     await VideoUtils.initialize();
                     return false;
                 }
-                switch (target) {
-                    case 'face':
-                        return VideoUtils.faces.length > 0;
-                    case 'pose':
-                        return VideoUtils.poses && VideoUtils.poses.predictions.length > 0;
-                    case 'object':
-                        return VideoUtils.objects.length > 0;
-                }
+                return VideoUtils.modelMountStatus[target];
             },
             paramsKeyMap: {
                 TARGET: 0,

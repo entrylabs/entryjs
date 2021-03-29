@@ -43,8 +43,37 @@ Entry.byrobot_controller_4 =
             Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
-};
 
+    // Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
+    // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
+    monitorTemplate: {
+        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
+        imgPath: "hw/byrobot_controller_4.png",      // 배경 이미지
+        width: 256,     // 이미지의 폭
+        height: 256,    // 이미지의 높이
+        */
+
+        // 모니터 화면 상단에 차례대로 나열하는 값
+        listPorts: {
+            joystick_left_x:                            { name: 'Left Joystick X',          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_y:                            { name: 'Left Joystick Y',          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_direction:                    { name: 'Left Joystick Direction',  type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_event:                        { name: 'Left Joystick Event',      type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_x:                           { name: 'Right Joystick X',         type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_y:                           { name: 'Right Joystick Y',         type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_direction:                   { name: 'Right Joystick Direction', type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_event:                       { name: 'Right Joystick Event',     type: 'input', pos: { x: 0, y: 0 } },
+            button_button:                              { name: 'Button',                   type: 'input', pos: { x: 0, y: 0 } },
+            button_event:                               { name: 'Button Event',             type: 'input', pos: { x: 0, y: 0 } },
+            entryhw_countTransferReserved:              { name: 'Transfer Buffer',          type: 'output', pos: { x: 0, y: 0 } },
+        },
+
+        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
+        ports: {},
+
+        mode: 'both', // 표시 모드
+    },
+};
 
 /***************************************************************************************
  *  언어 적용
@@ -54,20 +83,6 @@ Entry.byrobot_controller_4.setLanguage = function() {
         ko: {
             // ko.js에 작성하던 내용
             Blocks: {
-                // 정보창
-                monitor_joystick_left_x                             : '왼쪽 조이스틱 X',
-                monitor_joystick_left_y                             : '왼쪽 조이스틱 Y',
-                monitor_joystick_left_direction                     : '왼쪽 조이스틱 방향',
-                monitor_joystick_left_event                         : '왼쪽 조이스틱 이벤트',
-                monitor_joystick_right_x                            : '오른쪽 조이스틱 X',
-                monitor_joystick_right_y                            : '오른쪽 조이스틱 Y',
-                monitor_joystick_right_direction                    : '오른쪽 조이스틱 방향',
-                monitor_joystick_right_event                        : '오른쪽 조이스틱 이벤트',
-                monitor_button_button                               : '버튼',
-                monitor_button_event                                : '버튼 이벤트',
-                monitor_entryhw_countTransferReserved               : '전송 예정 데이터',
-
-                // 일반 블럭
                 common_light_color_red              : '빨강',
                 common_light_color_yellow           : '노랑',
                 common_light_color_green            : '초록',
@@ -233,20 +248,6 @@ Entry.byrobot_controller_4.setLanguage = function() {
 
         en: {
             Blocks: {
-                // 정보창
-                monitor_joystick_left_x                             : 'Left Joystick X',
-                monitor_joystick_left_y                             : 'Left Joystick Y',
-                monitor_joystick_left_direction                     : 'Left Joystick Direction',
-                monitor_joystick_left_event                         : 'Left Joystick Event',
-                monitor_joystick_right_x                            : 'Right Joystick X',
-                monitor_joystick_right_y                            : 'Right Joystick Y',
-                monitor_joystick_right_direction                    : 'Right Joystick Direction',
-                monitor_joystick_right_event                        : 'Right Joystick Event',
-                monitor_button_button                               : 'Button',
-                monitor_button_event                                : 'Button Event',
-                monitor_entryhw_countTransferReserved               : 'Transfer Buffer', 
-
-                // 일반 블럭
                 common_light_color_cottoncandy: 'cotton candy',
                 common_light_color_emerald: 'emerald',
                 common_light_color_lavender: 'lavender',
@@ -376,41 +377,6 @@ Entry.byrobot_controller_4.setLanguage = function() {
         }
     };
 };
-
-
-// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
-// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
-Entry.byrobot_controller_4.monitorTemplate = function()
-{
-    return {
-        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
-        imgPath: "hw/byrobot_controller_4.png",      // 배경 이미지
-        width: 256,     // 이미지의 폭
-        height: 256,    // 이미지의 높이
-        */
-
-        // 모니터 화면 상단에 차례대로 나열하는 값
-        listPorts: {
-            joystick_left_x:                { name: Lang.Blocks.monitor_joystick_left_x,                type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_y:                { name: Lang.Blocks.monitor_joystick_left_y,                type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_direction:        { name: Lang.Blocks.monitor_joystick_left_direction,        type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_event:            { name: Lang.Blocks.monitor_joystick_left_event,            type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_x:               { name: Lang.Blocks.monitor_joystick_right_x,               type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_y:               { name: Lang.Blocks.monitor_joystick_right_y,               type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_direction:       { name: Lang.Blocks.monitor_joystick_right_direction,       type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_event:           { name: Lang.Blocks.monitor_joystick_right_event,           type: 'input', pos: { x: 0, y: 0 } },
-            button_button:                  { name: Lang.Blocks.monitor_button_button,                  type: 'input', pos: { x: 0, y: 0 } },
-            button_event:                   { name: Lang.Blocks.monitor_button_event,                   type: 'input', pos: { x: 0, y: 0 } },
-            entryhw_countTransferReserved:  { name: Lang.Blocks.monitor_entryhw_countTransferReserved,  type: 'output', pos: { x: 0, y: 0 } },
-        },
-
-        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
-        ports: {},
-
-        mode: 'both', // 표시 모드
-    };
-};
-
 
 /***************************************************************************************
  *  엔트리에 등록할 블록들의 블록명(다른 장치의 블록 이름과 달라야 함)

@@ -1,7 +1,5 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable brace-style */
-/* eslint-disable max-len */
 'use strict';
+
 
 /***************************************************************************************
  *
@@ -33,21 +31,1244 @@ Entry.byrobot_petrone_v2_flight =
     setZero: function()
     {
         // 초기화
-        Entry.byrobot_petrone_v2_base.transferBufferClear();
+        this.transferBufferClear();
 
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
-        for (let i = 0; i < 1; i++)
+        for (var i = 0; i < 1; i++)
         {
-            Entry.byrobot_petrone_v2_base.transferCommand(0x30, 0x24, 0);       // 드론, command = 0x24 (Stop)
-            Entry.byrobot_petrone_v2_base.transferVibrator(0, 0, 0, 0);
-            Entry.byrobot_petrone_v2_base.transferBuzzer(0, 0, 0);
-            Entry.byrobot_petrone_v2_base.transferLightManual(0x30, 0xff, 0);   // LED 초기화(모두 꺼짐)
-            Entry.byrobot_petrone_v2_base.transferLightManual(0x31, 0xff, 0);   // LED 초기화(모두 꺼짐)
-            Entry.byrobot_petrone_v2_base.transferLightModeColor(0x30, 0x12, 200, 255, 0, 0); // LED 초기화(눈 빨강)
-            Entry.byrobot_petrone_v2_base.transferLightModeColor(0x30, 0x42, 200, 255, 0, 0); // LED 초기화(팔 빨강)
-            Entry.byrobot_petrone_v2_base.transferMotorSingle(0, 1, 0);         // 1번 모터방향 초기화(시계방향)
-            Entry.byrobot_petrone_v2_base.transferMotorSingle(1, 2, 0);         // 2번 모터방향 초기화(반시계방향)
+            this.transferCommand(0x30, 0x24, 0);       // 드론, command = 0x24 (Stop)
+            this.transferVibrator(0, 0, 0, 0);
+            this.transferBuzzer(0, 0, 0);
+            this.transferLightManual(0x30, 0xff, 0);   // LED 초기화(모두 꺼짐)
+            this.transferLightManual(0x31, 0xff, 0);   // LED 초기화(모두 꺼짐)
+            this.transferLightModeColor(0x30, 0x12, 200, 255, 0, 0); // LED 초기화(눈 빨강)
+            this.transferLightModeColor(0x30, 0x42, 200, 255, 0, 0); // LED 초기화(팔 빨강)
+            this.transferMotorSingle(0, 1, 0);         // 1번 모터방향 초기화(시계방향)
+            this.transferMotorSingle(1, 2, 0);         // 2번 모터방향 초기화(반시계방향)
+        }
+    },
+
+
+    // Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
+    // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
+    monitorTemplate:
+    {
+        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
+        imgPath: "hw/byrobot_petrone_v2_flight.png",      // 배경 이미지
+        width: 256,     // 이미지의 폭
+        height: 256,    // 이미지의 높이
+        */
+
+        // 모니터 화면 상단에 차례대로 나열하는 값
+        listPorts: {
+            // 팀 상태 보여주기
+            /*
+            state_modeVehicle:              {name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,             type: 'input',  pos: { x: 0, y: 0 }},
+            state_modeFlight:               {name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,              type: 'input',  pos: { x: 0, y: 0 }},
+            state_battery:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_state_battery,                  type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleRoll:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,                  type: 'input',  pos: { x: 0, y: 0 }},
+            imu_anglePitch:                 {name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,                 type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleYaw:                   {name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,                   type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accX:                       {name: Lang.Blocks.byrobot_petrone_v2_drone_accel_x,                        type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accY:                       {name: Lang.Blocks.byrobot_petrone_v2_drone_accel_y,                        type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accZ:                       {name: Lang.Blocks.byrobot_petrone_v2_drone_accel_z,                        type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroRoll:                   {name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll,                      type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroPitch:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch,                     type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroYaw:                    {name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw,                       type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_temperature:           {name: Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature,           type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_pressure:              {name: Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure,              type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionX:            {name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX,            type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionY:            {name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY,            type: 'input',  pos: { x: 0, y: 0 }},
+            range_bottom:                   {name: Lang.Blocks.byrobot_petrone_v2_drone_range_bottom,                   type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_direction:            {name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction,            type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_irdata:               {name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage,                      type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_x:                {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,           type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_y:                {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,           type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_direction:        {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,   type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_event:            {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_x:               {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,          type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_y:               {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,          type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_direction:       {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,  type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_event:           {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,      type: 'input',  pos: { x: 0, y: 0 }},
+            button_button:                  {name: Lang.Blocks.byrobot_petrone_v2_controller_button_button,             type: 'input',  pos: { x: 0, y: 0 }},
+            button_event:                   {name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,              type: 'input',  pos: { x: 0, y: 0 }},
+            entryhw_countTransferReserved:  {name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,      type: 'output', pos: { x: 0, y: 0 }},
+            // */
+            state_modeVehicle:              {name: 'Vehicle Mode',                  type: 'input',  pos: { x: 0, y: 0 }},
+            state_modeFlight:               {name: 'Flight Mode',                   type: 'input',  pos: { x: 0, y: 0 }},
+            state_battery:                  {name: 'Battery',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleRoll:                  {name: 'Roll',                          type: 'input',  pos: { x: 0, y: 0 }},
+            imu_anglePitch:                 {name: 'Pitch',                         type: 'input',  pos: { x: 0, y: 0 }},
+            imu_angleYaw:                   {name: 'Yaw',                           type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accX:                       {name: 'Accel X',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accY:                       {name: 'Accel Y',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_accZ:                       {name: 'Accel Z',                       type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroRoll:                   {name: 'Gyro Roll',                     type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroPitch:                  {name: 'Gyro Pitch',                    type: 'input',  pos: { x: 0, y: 0 }},
+            imu_gyroYaw:                    {name: 'Gyro Yaw',                      type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_temperature:           {name: 'Temperature(from Pressure)',    type: 'input',  pos: { x: 0, y: 0 }},
+            pressure_pressure:              {name: 'Pressure',                      type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionX:            {name: 'Position X',                    type: 'input',  pos: { x: 0, y: 0 }},
+            imageflow_positionY:            {name: 'Position Y',                    type: 'input',  pos: { x: 0, y: 0 }},
+            range_bottom:                   {name: 'Ground Range',                  type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_direction:            {name: 'IR Direction',                  type: 'input',  pos: { x: 0, y: 0 }},
+            irmessage_irdata:               {name: 'IR Data',                       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_x:                {name: 'Left Joystick X',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_y:                {name: 'Left Joystick Y',               type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_direction:        {name: 'Left Joystick Direction',       type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_left_event:            {name: 'Left Joystick Event',           type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_x:               {name: 'Right Joystick X',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_y:               {name: 'Right Joystick Y',              type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_direction:       {name: 'Right Joystick Direction',      type: 'input',  pos: { x: 0, y: 0 }},
+            joystick_right_event:           {name: 'Right Joystick Event',          type: 'input',  pos: { x: 0, y: 0 }},
+            button_button:                  {name: 'Button',                        type: 'input',  pos: { x: 0, y: 0 }},
+            button_event:                   {name: 'Button Event',                  type: 'input',  pos: { x: 0, y: 0 }},
+            entryhw_countTransferReserved:  {name: 'Transfer Buffer',               type: 'output', pos: { x: 0, y: 0 }},
+        },
+
+        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
+        ports: {},
+
+        mode: 'both', // 표시 모드
+    },
+
+
+    /***************************************************************************************
+     *  시간 지연 함수
+     ***************************************************************************************/
+
+
+    // 시간 지연
+    checkFinish: function(script, ms)
+    {
+        if (!script.isStart)
+        {
+            script.isStart = true;
+            script.timeFlag = 1;
+
+            var fps = Entry.FPS || 60;
+            var timeValue = 60 / fps * ms;
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, timeValue);
+
+            return 'Start';
+        }
+        else if (script.timeFlag == 1)
+        {
+            return 'Running';
+        }
+        else
+        {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            return 'Finish';
+        }
+    },
+
+
+    /***************************************************************************************
+     *  기능 함수
+     ***************************************************************************************/
+
+
+    transferBufferClear: function()
+    {
+        Entry.hw.setDigitalPortValue('buffer_clear', 0);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['buffer_clear'];
+    },
+
+
+    fit: function(min, value, max)
+    {
+        return Math.max(Math.min(value, max), min);
+    },
+
+
+
+    /***************************************************************************************
+     *  데이터 전송 함수 (Entry -> Hardware)
+     ***************************************************************************************/
+
+    // 데이터 전송
+    transferLightManual: function(target, flags, brightness)
+    {
+        // 범위 조정
+        target      = this.fit(0, target, 255);
+        flags       = this.fit(0, flags, 255);
+        brightness  = this.fit(0, brightness, 255);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('light_manual_flags', flags);
+        Entry.hw.setDigitalPortValue('light_manual_brightness', brightness);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['light_manual_flags'];
+        delete Entry.hw.sendQueue['light_manual_brightness'];
+    },
+
+
+    transferLightMode: function(target, mode, interval)
+    {
+        // 범위 조정
+        target = Math.max(target, 0);
+        target = Math.min(target, 255);
+        mode = Math.max(mode, 0);
+        mode = Math.min(mode, 255);
+        interval = Math.max(interval, 0);
+        interval = Math.min(interval, 65535);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('light_mode_mode', mode);
+        Entry.hw.setDigitalPortValue('light_mode_interval', interval);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['light_mode_mode'];
+        delete Entry.hw.sendQueue['light_mode_interval'];
+    },
+
+
+    transferLightModeColor: function(target, mode, interval, red, green, blue)
+    {
+        // 범위 조정
+        target      = this.fit(0, target,   255);
+        mode        = this.fit(0, mode,     255);
+        interval    = this.fit(0, interval, 65535);
+        red         = this.fit(0, red,      255);
+        green       = this.fit(0, green,    255);
+        blue        = this.fit(0, blue,     255);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target',              target);
+        Entry.hw.setDigitalPortValue('light_mode_mode',     mode);
+        Entry.hw.setDigitalPortValue('light_mode_interval', interval);
+        Entry.hw.setDigitalPortValue('light_color_r',       red);
+        Entry.hw.setDigitalPortValue('light_color_g',       green);
+        Entry.hw.setDigitalPortValue('light_color_b',       blue);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['light_mode_mode'];
+        delete Entry.hw.sendQueue['light_mode_interval'];
+        delete Entry.hw.sendQueue['light_color_r'];
+        delete Entry.hw.sendQueue['light_color_g'];
+        delete Entry.hw.sendQueue['light_color_b'];
+    },
+
+
+    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height)
+    {
+        if (clearAll)
+        {
+            // 전송
+            Entry.hw.setDigitalPortValue('target', target);
+            Entry.hw.setDigitalPortValue('display_clearall_pixel', pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue['target'];
+            delete Entry.hw.sendQueue['display_clearall_pixel'];
+        }
+        else
+        {
+            // 범위 조정
+            x      = this.fit(0, x, 128);
+            y      = this.fit(0, y, 64);
+            width  = this.fit(0, width, 128);
+            height = this.fit(0, height, 64);
+
+            // 전송
+            Entry.hw.setDigitalPortValue('target', target);
+            Entry.hw.setDigitalPortValue('display_clear_x', x);
+            Entry.hw.setDigitalPortValue('display_clear_y', y);
+            Entry.hw.setDigitalPortValue('display_clear_width', width);
+            Entry.hw.setDigitalPortValue('display_clear_height', height);
+            Entry.hw.setDigitalPortValue('display_clear_pixel', pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue['target'];
+            delete Entry.hw.sendQueue['display_clear_x'];
+            delete Entry.hw.sendQueue['display_clear_y'];
+            delete Entry.hw.sendQueue['display_clear_width'];
+            delete Entry.hw.sendQueue['display_clear_height'];
+            delete Entry.hw.sendQueue['display_clear_pixel'];
+        }
+    },
+
+
+    transferDisplayInvert: function(target, x, y, width, height)
+    {
+        // 범위 조정
+        x      = this.fit(0, x, 128);
+        y      = this.fit(0, y, 64);
+        width  = this.fit(0, width, 128);
+        height = this.fit(0, height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_invert_x', x);
+        Entry.hw.setDigitalPortValue('display_invert_y', y);
+        Entry.hw.setDigitalPortValue('display_invert_width', width);
+        Entry.hw.setDigitalPortValue('display_invert_height', height);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_invert_x'];
+        delete Entry.hw.sendQueue['display_invert_y'];
+        delete Entry.hw.sendQueue['display_invert_width'];
+        delete Entry.hw.sendQueue['display_invert_height'];
+    },
+
+
+    transferDisplayDrawPoint: function(target, x, y, pixel)
+    {
+        // 범위 조정
+        x = this.fit(0, x, 128);
+        y = this.fit(0, y, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_point_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_point_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_point_pixel', pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_point_x'];
+        delete Entry.hw.sendQueue['display_draw_point_y'];
+        delete Entry.hw.sendQueue['display_draw_point_pixel'];
+    },
+
+
+    transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel, line)
+    {
+        // 범위 조정
+        x1 = this.fit(0, x1, 128);
+        y1 = this.fit(0, y1, 64);
+        x2 = this.fit(0, x2, 128);
+        y2 = this.fit(0, y2, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_line_x1', x1);
+        Entry.hw.setDigitalPortValue('display_draw_line_y1', y1);
+        Entry.hw.setDigitalPortValue('display_draw_line_x2', x2);
+        Entry.hw.setDigitalPortValue('display_draw_line_y2', y2);
+        Entry.hw.setDigitalPortValue('display_draw_line_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_line_line', line);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_line_x1'];
+        delete Entry.hw.sendQueue['display_draw_line_y1'];
+        delete Entry.hw.sendQueue['display_draw_line_x2'];
+        delete Entry.hw.sendQueue['display_draw_line_y2'];
+        delete Entry.hw.sendQueue['display_draw_line_pixel'];
+        delete Entry.hw.sendQueue['display_draw_line_line'];
+    },
+
+
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill, line)
+    {
+        // 범위 조정
+        x      = this.fit(0, x, 128);
+        y      = this.fit(0, y, 64);
+        width  = this.fit(0, width, 128);
+        height = this.fit(0, height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_rect_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_rect_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_rect_width', width);
+        Entry.hw.setDigitalPortValue('display_draw_rect_height', height);
+        Entry.hw.setDigitalPortValue('display_draw_rect_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_rect_flagfill', flagFill);
+        Entry.hw.setDigitalPortValue('display_draw_rect_line', line);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_rect_x'];
+        delete Entry.hw.sendQueue['display_draw_rect_y'];
+        delete Entry.hw.sendQueue['display_draw_rect_width'];
+        delete Entry.hw.sendQueue['display_draw_rect_height'];
+        delete Entry.hw.sendQueue['display_draw_rect_pixel'];
+        delete Entry.hw.sendQueue['display_draw_rect_flagfill'];
+        delete Entry.hw.sendQueue['display_draw_rect_line'];
+    },
+
+
+    transferDisplayDrawCircle: function(target, x, y, radius, pixel, flagFill)
+    {
+        // 범위 조정
+        x      = this.fit(-50, x, 178);
+        y      = this.fit(-50, y, 114);
+        radius = this.fit(1, radius, 200);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_circle_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_circle_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_circle_radius', radius);
+        Entry.hw.setDigitalPortValue('display_draw_circle_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_circle_flagfill', flagFill);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_circle_x'];
+        delete Entry.hw.sendQueue['display_draw_circle_y'];
+        delete Entry.hw.sendQueue['display_draw_circle_radius'];
+        delete Entry.hw.sendQueue['display_draw_circle_pixel'];
+        delete Entry.hw.sendQueue['display_draw_circle_flagfill'];
+    },
+
+
+    transferDisplayDrawString: function(target, x, y, font, pixel, string)
+    {
+        // 범위 조정
+        x = this.fit(0, x, 120);
+        y = this.fit(0, y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_string_x', x);
+        Entry.hw.setDigitalPortValue('display_draw_string_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_string_font', font);
+        Entry.hw.setDigitalPortValue('display_draw_string_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_string_string', string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_string_x'];
+        delete Entry.hw.sendQueue['display_draw_string_y'];
+        delete Entry.hw.sendQueue['display_draw_string_font'];
+        delete Entry.hw.sendQueue['display_draw_string_pixel'];
+        delete Entry.hw.sendQueue['display_draw_string_string'];
+    },
+
+
+    transferDisplayDrawStringAlign: function(target, xStart, xEnd, y, align, font, pixel, string)
+    {
+        // 범위 조정
+        xStart = this.fit(0, xStart, 124);
+        xEnd   = this.fit(0, xEnd, 128)
+        y      = this.fit(0, y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_x_start', xStart);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_x_end', xEnd);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_y', y);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_align', align);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_font', font);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_pixel', pixel);
+        Entry.hw.setDigitalPortValue('display_draw_string_align_string', string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['display_draw_string_align_x_start'];
+        delete Entry.hw.sendQueue['display_draw_string_align_x_end'];
+        delete Entry.hw.sendQueue['display_draw_string_align_y'];
+        delete Entry.hw.sendQueue['display_draw_string_align_align'];
+        delete Entry.hw.sendQueue['display_draw_string_align_font'];
+        delete Entry.hw.sendQueue['display_draw_string_align_pixel'];
+        delete Entry.hw.sendQueue['display_draw_string_align_string'];
+    },
+
+
+    transferBuzzer: function(mode, value, time)
+    {
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x31);
+        Entry.hw.setDigitalPortValue('buzzer_mode', mode);
+        Entry.hw.setDigitalPortValue('buzzer_value', value);
+        Entry.hw.setDigitalPortValue('buzzer_time', time);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['buzzer_mode'];
+        delete Entry.hw.sendQueue['buzzer_value'];
+        delete Entry.hw.sendQueue['buzzer_time'];
+    },
+
+
+    transferVibrator: function(mode, timeOn, timeOff, timeRun)
+    {
+        // 범위 조정
+        timeOn  = this.fit(1, timeOn, 60000);
+        timeOff = this.fit(1, timeOff, 60000);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x31);
+        Entry.hw.setDigitalPortValue('vibrator_mode', mode);
+        Entry.hw.setDigitalPortValue('vibrator_on', timeOn);
+        Entry.hw.setDigitalPortValue('vibrator_off', timeOff);
+        Entry.hw.setDigitalPortValue('vibrator_total', timeRun);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['vibrator_mode'];
+        delete Entry.hw.sendQueue['vibrator_on'];
+        delete Entry.hw.sendQueue['vibrator_off'];
+        delete Entry.hw.sendQueue['vibrator_total'];
+    },
+
+
+    transferIrMessage: function(irdirection, irmessage)
+    {
+        // 범위 조정
+        irmessage = this.fit(-2147483647, irmessage, 2147483647);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('irmessage_direction', irdirection);
+        Entry.hw.setDigitalPortValue('irmessage_irdata', irmessage);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['irmessage_direction'];
+        delete Entry.hw.sendQueue['irmessage_irdata'];
+    },
+
+
+    transferMotorSingle: function(motorIndex, motorRotation, motorSpeed)
+    {
+        // 범위 조정
+        motorSpeed = this.fit(0, motorSpeed, 4096);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('motorsingle_target', motorIndex);
+        Entry.hw.setDigitalPortValue('motorsingle_rotation', motorRotation);
+        Entry.hw.setDigitalPortValue('motorsingle_value', motorSpeed);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['motorsingle_target'];
+        delete Entry.hw.sendQueue['motorsingle_rotation'];
+        delete Entry.hw.sendQueue['motorsingle_value'];
+    },
+
+
+    transferCommand: function(target, command, option)
+    {
+        // 전송
+        Entry.hw.setDigitalPortValue('target', target);
+        Entry.hw.setDigitalPortValue('command_command', command);
+        Entry.hw.setDigitalPortValue('command_option', option);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['command_command'];
+        delete Entry.hw.sendQueue['command_option'];
+    },
+
+
+    transferControlDouble: function(wheel, accel)
+    {
+        // 범위 조정
+        wheel = this.fit(-100, wheel, 100);
+        accel = this.fit(-100, accel, 100);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('control_wheel', wheel);
+        Entry.hw.setDigitalPortValue('control_accel', accel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['control_wheel'];
+        delete Entry.hw.sendQueue['control_accel'];
+    },
+
+
+    transferControlQuad: function(roll, pitch, yaw, throttle)
+    {
+        // 범위 조정
+        roll     = this.fit(-100, roll, 100);
+        pitch    = this.fit(-100, pitch, 100);
+        yaw      = this.fit(-100, yaw, 100);
+        throttle = this.fit(-100, throttle, 100);
+
+        // 전송
+        Entry.hw.setDigitalPortValue('target', 0x30);
+        Entry.hw.setDigitalPortValue('control_roll', roll);
+        Entry.hw.setDigitalPortValue('control_pitch', pitch);
+        Entry.hw.setDigitalPortValue('control_yaw', yaw);
+        Entry.hw.setDigitalPortValue('control_throttle', throttle);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue['target'];
+        delete Entry.hw.sendQueue['control_roll'];
+        delete Entry.hw.sendQueue['control_pitch'];
+        delete Entry.hw.sendQueue['control_yaw'];
+        delete Entry.hw.sendQueue['control_throttle'];
+    },
+
+
+    /***************************************************************************************
+     *  블럭 연동 함수
+     ***************************************************************************************/
+
+    // 데이터 읽기
+    getData: function(script, device)
+    {
+        return Entry.hw.portData[device];
+    },
+
+
+    // LED 수동 설정
+    setLightManual: function(script, target, flags, brightness)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferLightManual(target, flags, brightness);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // LED 수동 설정 - RGB 값 직접 지정
+    setLightModeColor: function(script, target, mode, interval, red, green, blue)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferLightModeColor(target, mode, interval, red, green, blue);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면 전체 지우기, 선택 영역 지우기
+    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 선택 영역 반전
+    setDisplayInvert: function(script, target, x, y, width, height)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayInvert(target, x, y, width, height);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 점 찍기
+    setDisplayDrawPoint: function(script, target, x, y, pixel)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawPoint(target, x, y, pixel);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 선 그리기
+    setDisplayDrawLine: function(script, target, x1, y1, x2, y2, pixel, line)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 사각형 그리기
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill, line)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 원 그리기
+    setDisplayDrawCircle: function(script, target, x, y, radius, pixel, flagFill)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 문자열 쓰기
+    setDisplayDrawString: function(script, target, x, y, font, pixel, string)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawString(target, x, y, font, pixel, string);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // OLED - 화면에 문자열 정렬하여 그리기
+    setDisplayDrawStringAlign: function(script, target, xStart, xEnd, y, align, font, pixel, string)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
+    /*
+        MuteInstantally     = 1,    // 묵음 즉시 적용
+        MuteContinually     = 2,    // 묵음 예약
+
+        ScaleInstantally    = 3,    // 음계 즉시 적용
+        ScaleContinually    = 4,    // 음계 예약
+
+        HzInstantally       = 5,    // 주파수 즉시 적용
+        HzContinually       = 6,    // 주파수 예약
+     */
+    // 정지
+    setBuzzerStop: function(script)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferBuzzer(0, 0, 0);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 묵음
+    setBuzzerMute: function(script, time, flagDelay, flagInstantly)
+    {
+        time = this.fit(0, time, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 2; // 묵음 연속
+                    if (flagInstantly) mode = 1; // 묵음 즉시
+
+                    this.transferBuzzer(mode, 0xee, time);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly)
+    {
+        time = this.fit(0, time, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 4; // Scale 연속
+                    if (flagInstantly) mode = 3; // Scale 즉시
+
+                    var scalecalc = octave * 12 + scale;
+
+                    this.transferBuzzer(mode, scalecalc, time);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setBuzzerHz: function(script, hz, time, flagDelay, flagInstantly)
+    {
+        time = this.fit(0, time, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 6; // Hz 연속
+                    if (flagInstantly) mode = 5; // Hz 즉시
+
+                    // 범위 조정
+                    hz = this.fit(1, hz, 63999);
+
+                    this.transferBuzzer(mode, hz, time);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    // 진동 제어
+    /*
+        Stop            = 0,    // 정지
+        Instantally     = 1,    // 즉시 적용
+        Continually     = 2,    // 예약
+     */
+    setVibratorStop: function(script)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferVibrator(0, 0, 0, 0);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
+    {
+        timeRun = this.fit(0, timeRun, 60000);
+
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = timeRun;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    var mode = 2; // 예약
+                    if (flagInstantly) mode = 1; // 즉시
+
+                    this.transferVibrator(mode, timeOn, timeOff, timeRun);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendCommand: function(script, target, command, option)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferCommand(target, command, option);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendIrMessage: function(script, irdirection, irmessage)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferIrMessage(irdirection, irmessage);
+                    // Light Event (transferLightEvent 만들어야 할 듯)
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendStop: function(script)
+    {
+        return this.sendCommand(script, 0x30, 0x24, 0);
+    },
+
+
+    setMotorSingle: function(script, motorIndex, motorRotation, motorSpeed)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    /*
+        None = 0,           // 없음
+
+        Flight = 0x10,      // 비행(가드 포함)
+        FlightNoGuard,      // 비행(가드 없음)
+        FlightFPV,          // 비행(FPV)
+
+        Drive = 0x20,       // 주행
+        DriveFPV,           // 주행(FPV)
+
+        Test = 0x30,        // 테스트
+     */
+    setModeVehicle: function(script, modeVehicle)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+            case 'Start':
+                {
+                    this.transferCommand(0x30, 0x10, modeVehicle);
+
+                    this.transferControlDouble(0, 0);
+                    this.transferControlQuad(0, 0, 0, 0);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    setEventFlight: function(script, eventFlight, time)
+    {
+        switch (this.checkFinish(script, time))
+        {
+            case 'Start':
+                {
+                    this.transferControlQuad(0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
+                    this.transferCommand(0x30, 0x22, eventFlight); // 0x22 : CommandType::FlightEvent
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay)
+    {
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    // 범위 조정
+                    value = this.fit(-100, value, 100);
+
+                    // 전송
+                    Entry.hw.setDigitalPortValue('target', 0x30);
+                    Entry.hw.setDigitalPortValue(controlTarget, value);
+
+                    Entry.hw.update();
+
+                    delete Entry.hw.sendQueue['target'];
+                    delete Entry.hw.sendQueue[controlTarget];
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                if (flagDelay)
+                {
+                    // 블럭을 빠져나갈 때 변경했던 값을 초기화
+
+                    // 전송
+                    Entry.hw.setDigitalPortValue('target', 0x30);
+                    Entry.hw.setDigitalPortValue(controlTarget, 0);
+
+                    Entry.hw.update();
+
+                    delete Entry.hw.sendQueue['target'];
+                    delete Entry.hw.sendQueue[controlTarget];
+                }
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
+
+    sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay)
+    {
+        var timeDelay = 40;
+        if (flagDelay) timeDelay = time;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start':
+                {
+                    this.transferControlQuad(roll, pitch, yaw, throttle);
+                }
+                return script;
+
+            case 'Running':
+                return script;
+
+            case 'Finish':
+                if (flagDelay)
+                {
+                    this.transferControlQuad(0, 0, 0, 0);
+                }
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
         }
     },
 };
@@ -57,6 +1278,7 @@ Entry.byrobot_petrone_v2_flight =
 /***************************************************************************************
  *  언어 적용
  ***************************************************************************************/
+// 
 Entry.byrobot_petrone_v2_flight.setLanguage = function ()
 {
     return {
@@ -201,7 +1423,7 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
                 "byrobot_petrone_v2_drone_state_mode_drive":            "자동차 동작 상태",
                 "byrobot_petrone_v2_drone_state_mode_flight":           "비행 동작 상태",
                 "byrobot_petrone_v2_drone_state_mode_system":           "시스템 모드",
-                "byrobot_petrone_v2_drone_state_mode_vehicle":          "Vehicle mode",
+                "byrobot_petrone_v2_drone_state_mode_vehicle":          "Vehicle Mode",
                 "byrobot_petrone_v2_drone_team":                    "팀 ",
                 "byrobot_petrone_v2_drone_team_blue":               "블루",
                 "byrobot_petrone_v2_drone_team_red":                "레드",
@@ -548,62 +1770,9 @@ Entry.byrobot_petrone_v2_flight.setLanguage = function ()
 };
 
 
-// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
-// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
-Entry.byrobot_petrone_v2_flight.monitorTemplate = function()
-{
-    return {
-        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
-        imgPath: "hw/byrobot_petrone_v2_flight.png",      // 배경 이미지
-        width: 256,     // 이미지의 폭
-        height: 256,    // 이미지의 높이
-        */
-
-        // 모니터 화면 상단에 차례대로 나열하는 값
-        listPorts: {
-            state_modeVehicle:              {name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,             type: 'input',  pos: { x: 0, y: 0 }},
-            state_modeFlight:               {name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,              type: 'input',  pos: { x: 0, y: 0 }},
-            state_battery:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_state_battery,                  type: 'input',  pos: { x: 0, y: 0 }},
-            imu_angleRoll:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,                  type: 'input',  pos: { x: 0, y: 0 }},
-            imu_anglePitch:                 {name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,                 type: 'input',  pos: { x: 0, y: 0 }},
-            imu_angleYaw:                   {name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,                   type: 'input',  pos: { x: 0, y: 0 }},
-            imu_accX:                       {name: Lang.Blocks.byrobot_petrone_v2_drone_accel_x,                        type: 'input',  pos: { x: 0, y: 0 }},
-            imu_accY:                       {name: Lang.Blocks.byrobot_petrone_v2_drone_accel_y,                        type: 'input',  pos: { x: 0, y: 0 }},
-            imu_accZ:                       {name: Lang.Blocks.byrobot_petrone_v2_drone_accel_z,                        type: 'input',  pos: { x: 0, y: 0 }},
-            imu_gyroRoll:                   {name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll,                      type: 'input',  pos: { x: 0, y: 0 }},
-            imu_gyroPitch:                  {name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch,                     type: 'input',  pos: { x: 0, y: 0 }},
-            imu_gyroYaw:                    {name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw,                       type: 'input',  pos: { x: 0, y: 0 }},
-            pressure_temperature:           {name: Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature,           type: 'input',  pos: { x: 0, y: 0 }},
-            pressure_pressure:              {name: Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure,              type: 'input',  pos: { x: 0, y: 0 }},
-            imageflow_positionX:            {name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX,            type: 'input',  pos: { x: 0, y: 0 }},
-            imageflow_positionY:            {name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY,            type: 'input',  pos: { x: 0, y: 0 }},
-            range_bottom:                   {name: Lang.Blocks.byrobot_petrone_v2_drone_range_bottom,                   type: 'input',  pos: { x: 0, y: 0 }},
-            irmessage_direction:            {name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction,            type: 'input',  pos: { x: 0, y: 0 }},
-            irmessage_irdata:               {name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage,                      type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_x:                {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,           type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_y:                {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,           type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_direction:        {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,   type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_left_event:            {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,       type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_x:               {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,          type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_y:               {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,          type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_direction:       {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,  type: 'input',  pos: { x: 0, y: 0 }},
-            joystick_right_event:           {name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,      type: 'input',  pos: { x: 0, y: 0 }},
-            button_button:                  {name: Lang.Blocks.byrobot_petrone_v2_controller_button_button,             type: 'input',  pos: { x: 0, y: 0 }},
-            button_event:                   {name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,              type: 'input',  pos: { x: 0, y: 0 }},
-            entryhw_countTransferReserved:  {name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,      type: 'output', pos: { x: 0, y: 0 }},
-        },
-
-        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
-        ports: {},
-
-        mode: 'both', // 표시 모드
-    };
-};
-
-
 
 /***************************************************************************************
- *  엔트리에 등록할 블록들의 이름
+ *  엔트리에 등록할 블록들의 블록명
  ***************************************************************************************/
 Entry.byrobot_petrone_v2_flight.blockMenuBlocks = [
     'byrobot_petrone_v2_flight_drone_value_attitude',
@@ -664,9 +1833,6 @@ Entry.byrobot_petrone_v2_flight.blockMenuBlocks = [
 
 
 
-/***************************************************************************************
- *  엔트리 블록 상세
- ***************************************************************************************/
 Entry.byrobot_petrone_v2_flight.getBlocks = function()
 {
     return {
@@ -1032,7 +2198,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_controller_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.setLightManual(script, 0x31, 0xff, 0);
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, 0xff, 0);
             },
         },
 
@@ -1107,7 +2273,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     case 'white':   red = 255;  green = 255;  blue = 255;   break;
                 }
 
-                return Entry.byrobot_petrone_v2_base.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 
@@ -1141,7 +2307,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             func: function(sprite, script) {
                 const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_petrone_v2_base.setLightManual(script, 0x31, flags, brightness);
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
             },
         },
 
@@ -1200,7 +2366,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var red = script.getNumberValue('RED');
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
-                return Entry.byrobot_petrone_v2_base.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 
@@ -1278,7 +2444,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_petrone_v2_base.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x31, mode, interval, red, green, blue);
             },
         },
 
@@ -1301,7 +2467,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_drone_light',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.setLightManual(script, 0x30, 0xff, 0);
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, 0xff, 0);
             },
         },
 
@@ -1374,7 +2540,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     case 'arm_blue':    mode = 0x42;    red = 0;    green = 0;    blue = 255;   break;
                 }
 
-                return Entry.byrobot_petrone_v2_base.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
 
@@ -1409,7 +2575,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             func: function(sprite, script) {
                 const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
-                return Entry.byrobot_petrone_v2_base.setLightManual(script, 0x30, flags, brightness);
+                return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
             },
         },
 
@@ -1480,7 +2646,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var green = script.getNumberValue('GREEN');
                 var blue = script.getNumberValue('BLUE');
                 var interval = script.getNumberValue('INTERVAL');
-                return Entry.byrobot_petrone_v2_base.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
 
@@ -1571,7 +2737,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     case 'lavender':        red = 80;   green = 0;      blue = 200; break;
                 }
 
-                return Entry.byrobot_petrone_v2_base.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
+                return Entry.byrobot_petrone_v2_flight.setLightModeColor(script, 0x30, mode, interval, red, green, blue);
             },
         },
 
@@ -1608,7 +2774,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_petrone_v2_base.setDisplayClearAll(script, 0x31, pixel);
+                return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
             },
         },
 
@@ -1664,7 +2830,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_petrone_v2_base.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
+                return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
             },
         },
 
@@ -1707,7 +2873,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var y = script.getNumberValue('Y');
                 var width = script.getNumberValue('WIDTH');
                 var height = script.getNumberValue('HEIGHT');
-                return Entry.byrobot_petrone_v2_base.setDisplayInvert(script, 0x31, x, y, width, height);
+                return Entry.byrobot_petrone_v2_flight.setDisplayInvert(script, 0x31, x, y, width, height);
             },
         },
 
@@ -1755,7 +2921,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var x = script.getNumberValue('X');
                 var y = script.getNumberValue('Y');
                 var pixel = parseInt(script.getField('PIXEL'));
-                return Entry.byrobot_petrone_v2_base.setDisplayDrawPoint(script, 0x31, x, y, pixel);
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawPoint(script, 0x31, x, y, pixel);
             },
         },
 
@@ -1826,7 +2992,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var y2 = script.getNumberValue('Y2');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_petrone_v2_base.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
             },
         },
 
@@ -1911,7 +3077,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
                 var line = parseInt(script.getField('LINE'));
-                return Entry.byrobot_petrone_v2_base.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
             },
         },
 
@@ -1977,7 +3143,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var radius = script.getNumberValue('RADIUS');
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
-                return Entry.byrobot_petrone_v2_base.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
             },
         },
 
@@ -2043,7 +3209,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_petrone_v2_base.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
             },
         },
 
@@ -2128,7 +3294,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
                 var string = script.getStringValue('STRING');
-                return Entry.byrobot_petrone_v2_base.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
+                return Entry.byrobot_petrone_v2_flight.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
             },
         },
 
@@ -2151,7 +3317,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_buzzer',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.setBuzzerStop(script);
+                return Entry.byrobot_petrone_v2_flight.setBuzzerStop(script);
             },
         },
 
@@ -2217,9 +3383,9 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var scale = parseInt(script.getField('SCALE'));
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_base.setBuzzerMute(script, 60000, false, true);
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(script, 60000, false, true);
                 else
-                    return Entry.byrobot_petrone_v2_base.setBuzzerScale(script, octave, scale, 60000, false, true);
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
             },
         },
 
@@ -2293,9 +3459,9 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_base.setBuzzerMute(script, time, true, true);
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(script, time, true, true);
                 else
-                    return Entry.byrobot_petrone_v2_base.setBuzzerScale(script, octave, scale, time, true, true);
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, true, true);
             },
         },
 
@@ -2369,9 +3535,9 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_base.setBuzzerMute(script, time, false, false);
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerMute(script, time, false, false);
                 else
-                    return Entry.byrobot_petrone_v2_base.setBuzzerScale(script, octave, scale, time, false, false);
+                    return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, false, false);
             },
         },
 
@@ -2401,7 +3567,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
-                return Entry.byrobot_petrone_v2_base.setBuzzerHz(script, hz, 60000, false, true);
+                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, 60000, false, true);
             },
         },
 
@@ -2435,7 +3601,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_petrone_v2_base.setBuzzerHz(script, hz, time, true, true);
+                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, true, true);
             },
         },
 
@@ -2469,7 +3635,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             func: function(sprite, script) {
                 var hz = parseInt(script.getNumberValue('HZ', script));
                 var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_petrone_v2_base.setBuzzerHz(script, hz, time, false, false);
+                return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, false, false);
             },
         },
 
@@ -2492,7 +3658,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_vibrator',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.setVibratorStop(script);
+                return Entry.byrobot_petrone_v2_flight.setVibratorStop(script);
             },
         },
 
@@ -2522,7 +3688,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                return Entry.byrobot_petrone_v2_base.setVibrator(script, timeOn, 0, timeOn, true, true);
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
             },
         },
 
@@ -2552,7 +3718,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                return Entry.byrobot_petrone_v2_base.setVibrator(script, timeOn, 0, timeOn, false, false);
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
             },
         },
 
@@ -2590,7 +3756,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
                 var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
-                return Entry.byrobot_petrone_v2_base.setVibrator(script, timeOn, timeOff, timeRun, true, true);
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
             },
         },
 
@@ -2628,7 +3794,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
                 var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
                 var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
-                return Entry.byrobot_petrone_v2_base.setVibrator(script, timeOn, timeOff, timeRun, false, false);
+                return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
             },
         },
 
@@ -2659,7 +3825,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             func: function(sprite, script) {
                 var irdirection = 0;
                 var irmessage = script.getNumberValue('IRMESSAGE', script);
-                return Entry.byrobot_petrone_v2_base.sendIrMessage(script, irdirection, irmessage);
+                return Entry.byrobot_petrone_v2_flight.sendIrMessage(script, irdirection, irmessage);
             },
         },
 
@@ -2682,7 +3848,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_motor',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.sendStop(script);
+                return Entry.byrobot_petrone_v2_flight.sendStop(script);
             },
         },
 
@@ -2727,7 +3893,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
-                return Entry.byrobot_petrone_v2_base.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
             },
         },
 
@@ -2766,7 +3932,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
-                return Entry.byrobot_petrone_v2_base.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
             },
         },
 
@@ -2824,7 +3990,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                     script.getNumberValue('MOTORSPEED', script)
                 );
 
-                return Entry.byrobot_petrone_v2_base.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+                return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
             },
         },
 
@@ -2862,7 +4028,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var vehicle = script.getField('VEHICLE');
-                return Entry.byrobot_petrone_v2_base.setModeVehicle(script, vehicle);
+                return Entry.byrobot_petrone_v2_flight.setModeVehicle(script, vehicle);
             },
         },
 
@@ -2885,7 +4051,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
+                return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
             },
         },
 
@@ -2908,7 +4074,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
+                return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
             },
         },
 
@@ -2931,7 +4097,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.sendStop(script);
+                return Entry.byrobot_petrone_v2_flight.sendStop(script);
             },
         },
 
@@ -2968,7 +4134,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
                 var coordinate = script.getField('COORDINATE');
-                return Entry.byrobot_petrone_v2_base.sendCommand(script, 0x30, 0x20, coordinate);
+                return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x20, coordinate);
             },
         },
 
@@ -2991,7 +4157,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
             class: 'byrobot_petrone_v2_flight_control_flight',
             isNotFor: ['byrobot_petrone_v2_flight'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_base.sendCommand(script, 0x30, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+                return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x22, 0xa0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
 
@@ -3038,7 +4204,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var controlTarget = script.getField('CONTROLTARGET');
                 var value = parseInt(script.getNumberValue('VALUE', script));
 
-                return Entry.byrobot_petrone_v2_base.sendControlQuadSingle(script, controlTarget, value, 0, false);
+                return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
             },
         },
 
@@ -3089,7 +4255,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var value = parseInt(script.getNumberValue('VALUE', script));
                 var time = parseInt(script.getNumberValue('TIME', script) * 1000);
 
-                return Entry.byrobot_petrone_v2_base.sendControlQuadSingle(script, controlTarget, value, time, true);
+                return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
             },
         },
 
@@ -3132,7 +4298,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var yaw = parseInt(script.getNumberValue('YAW', script));
                 var throttle = parseInt(script.getNumberValue('THROTTLE', script));
 
-                return Entry.byrobot_petrone_v2_base.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
+                return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
             },
         },
 
@@ -3179,7 +4345,7 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function()
                 var throttle = parseInt(script.getNumberValue('THROTTLE', script));
                 var time = parseInt(script.getNumberValue('TIME', script) * 1000);
 
-                return Entry.byrobot_petrone_v2_base.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
+                return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
             },
         },
         /* BYROBOT PetroneV2 Flight End */

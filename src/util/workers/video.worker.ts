@@ -56,13 +56,13 @@ async function processImage(repeat: boolean) {
             return;
         } else if (isRunning) {
             if (modelStatus.object) {
-                objectDetect(false);
+                await objectDetect(false);
             }
             if (modelStatus.pose) {
-                poseDetect(false);
+                await poseDetect(false);
             }
             if (modelStatus.face) {
-                faceDetect(false);
+                await faceDetect(false);
             }
         } else {
             return;
@@ -205,7 +205,6 @@ ctx.onmessage = async function(e: {
                     this.postMessage({ type: 'init', message: 'face' });
                 }),
             ]);
-            await warmup();
             this.postMessage({ type: 'init', message: 'warmup' });
 
             // console.log('video worker loaded');

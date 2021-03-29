@@ -50,7 +50,6 @@ Entry.Ozobot = {
 Entry.Ozobot.blockMenuBlocks = [
 	//region ozobot
 	'Ozobot_Sensor_floor_color',
-	'Ozobot_Sensor_line_color',
 	'Ozobot_Sensor_obstacle',
 	'Ozobot_Move_wheel',
 	'Ozobot_Move1',
@@ -58,7 +57,6 @@ Entry.Ozobot.blockMenuBlocks = [
 	'Ozobot_Rotate1',
 	'Ozobot_Rotate2',
 	'Ozobot_Move_stop',
-	'Ozobot_Line_trace',
 	'Ozobot_LED_head',
 	'Ozobot_LED_head_floor',
 	'Ozobot_LED_head_random',
@@ -116,42 +114,6 @@ Entry.Ozobot.getBlocks = function () {
 				var var1 = script.getNumberField('VALUE', script);
 				var pd = Entry.hw.portData;
 				if (var1 == pd.surface_color)
-					return true;
-				return false;
-			},
-		},
-		Ozobot_Sensor_line_color: {
-			color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			skeleton: 'basic_boolean_field',
-			template: '선 색깔 %1',
-			params: [
-				{
-					type: 'Dropdown',
-					options: [
-						['검은색', 0x00],
-						['빨간색', 0x01],
-						['초록색', 0x02],
-						['파란색', 0x04],
-					],
-					fontSize: 11,
-					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-					arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-				},
-			],
-			def: {
-				params: [0],
-				type: 'Ozobot_Sensor_line_color',
-			},
-			paramsKeyMap: {
-				VALUE: 0,
-			},
-			isNotFor: ['Ozobot Evo'],
-			class: 'Ozobot_Sensor',
-			func: function (sprite, script) {
-				var var1 = script.getNumberField('VALUE', script);
-				var pd = Entry.hw.portData;
-				if (var1 == pd.line_color)
 					return true;
 				return false;
 			},
@@ -714,74 +676,6 @@ Entry.Ozobot.getBlocks = function () {
 			},
 		},
 		// Control
-		Ozobot_Line_trace: {
-			color: EntryStatic.colorSet.block.default.HARDWARE,
-			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-			skeleton: 'basic',
-			fontColor: '#fff',
-			statements: [],
-			template: '선을 따라 이동하기 %1 %2',
-			params: [
-				{
-					type: 'Dropdown',
-					options: [
-						['시작', 0x01],
-						['멈춤', 0x00],
-					],
-					fontSize: 11,
-					bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-					arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-				},
-				{
-					type: 'Indicator',
-					img: 'block_icon/hardware_icon.svg',
-					size: 12,
-				},
-			],
-			events: {},
-			def: {
-				params: [1],
-				type: 'Ozobot_Line_trace',
-			},
-			paramsKeyMap: {
-				ON_OFF: 0,
-			},
-			class: 'Ozobot_Line_trace',
-			isNotFor: ['Ozobot Evo'],
-			func: function (sprite, script) {
-				var sq = Entry.hw.sendQueue;
-				var pd = Entry.hw.portData;
-				var var1 = script.getNumberField('ON_OFF', script);
-				if (!Entry.Ozobot.isStarted) {
-					sq.seq = Entry.Ozobot.sequance++;
-					sq.cat = 2;
-					sq.act = 5;
-					sq.pcnt = 1;
-					sq.p1 = var1;
-					Entry.Ozobot.isStarted = true;
-					Entry.Ozobot.state = OzobotState.STATE_READY;
-					return script;
-				} else {
-					switch (Entry.Ozobot.state) {
-						case OzobotState.STATE_READY:
-							var timer = setTimeout(() => {
-								Entry.Ozobot.state = OzobotState.STATE_DONE;
-							}, 100);
-							Entry.Ozobot.state = OzobotState.STATE_WAIT;
-							return script;
-							break;
-						case OzobotState.STATE_WAIT:
-							return script;
-							break;
-						case OzobotState.STATE_DONE:
-							Entry.Ozobot.isStarted = false;
-							return script.callReturn();
-							break;
-					}
-				}
-				return script;
-			},
-		},
 		Ozobot_LED_head: {
 			color: EntryStatic.colorSet.block.default.HARDWARE,
 			outerLine: EntryStatic.colorSet.block.darken.HARDWARE,

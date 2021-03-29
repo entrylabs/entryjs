@@ -70,7 +70,7 @@ class Executor {
                         this.valueMap = {};
                         this.valueState = {};
                         this.paused = false;
-                        if (returnVal === Entry.STATIC.CONTINUE || returnVal === this.scope) {
+                        if (returnVal === Entry.STATIC.CONTINUE) {
                             return;
                         }
                         if (this.scope.block && Entry.engine.isState('run')) {

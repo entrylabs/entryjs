@@ -79,6 +79,7 @@ module.exports = {
                 class: 'event',
                 isNotFor: [],
                 func(sprite, script) {
+                    console.log("ㅇㅇㅇ");
                     return script.callReturn();
                 },
                 event: 'keyPress',

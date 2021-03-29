@@ -32,7 +32,7 @@ Entry.Dash = {
     },
     id: '24.1',
     name: 'Dash',
-    url: 'https://clevermate.kr',
+    url: 'http://www.dashedu.kr/',
     imageName: 'dash.png',
     title: {
         ko: '대시',
@@ -89,7 +89,6 @@ Entry.Dash.getBlocks = function() {
                         ['어 어!', 0x02],
                         ['좋아', 0x03],
                         ['한숨..', 0x04],
-                        ['출발!', 0x1F],
                         ['짜잔!', 0x05],
                         ['위!', 0x06],
                         ['잘 가', 0x07],

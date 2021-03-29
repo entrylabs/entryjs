@@ -407,7 +407,7 @@ class mechatro {
                 class: 'MechatroStart',
                 isNotFor: ['mechatro'],
                 event: 'event_digital_input_is_falling',
-                events: {},
+                //events: {},
                 func(sprite, script) {
                     const portNo = script.getNumberField('PORT', script);
                     if (Entry.mechatro.eventState.FALLING[portNo]) {
