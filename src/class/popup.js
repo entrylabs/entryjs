@@ -46,7 +46,8 @@ Entry.Popup = class Popup {
                     Entry.engineContainer.firstChild
                 );
             } else if (Entry.type == 'minimize') {
-                Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
+                const wrapper = Entry.view_.querySelector('#entryCanvasWrapper');
+                wrapper.insertBefore(this.window_.lastChild, wrapper.firstChild);
             } else {
                 Entry.engineContainer.insertBefore(
                     this.window_.lastChild,

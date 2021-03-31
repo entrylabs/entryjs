@@ -82,13 +82,14 @@ Entry.init = function(container, options) {
         Entry.propertyPanel.select('helper');
     });
 
-    if (Entry.getBrowserType().substr(0, 2) === 'IE' && !window.flashaudio) {
-        createjs.FlashAudioPlugin.swfPath = `${this.mediaFilePath}media/`;
-        createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
-        window.flashaudio = true;
-    } else {
-        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
-    }
+    // if (Entry.getBrowserType().substr(0, 2) === 'IE' && !window.flashaudio) {
+    //     createjs.FlashAudioPlugin.swfPath = `${this.mediaFilePath}media/`;
+    //     createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
+    //     window.flashaudio = true;
+    // } else {
+    //     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
+    // }
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
 
     Entry.loadAudio_(
         [
@@ -440,7 +441,7 @@ Entry.stop = function() {
         return;
     }
     this.FPS = null;
-    Entry.engine.stop();
+    Entry?.engine?.stop();
 };
 
 /**

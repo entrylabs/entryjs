@@ -503,8 +503,13 @@ class TextCodingUtil {
 
         const activatedExpansionBlocks = Entry.expansionBlocks;
         const activatedUtilizeBlock = Entry.aiUtilizeBlocks;
-        const tables = Entry.playground.dataTable.tables;
-        if (activatedExpansionBlocks.length > 0 || activatedUtilizeBlock.length > 0 || Entry.aiLearning.isLoaded || tables.length > 0) {
+        const tables = Entry.playground.dataTable ? Entry.playground.dataTable.tables : [];
+        if (
+            activatedExpansionBlocks.length > 0 ||
+            activatedUtilizeBlock.length > 0 ||
+            Entry.aiLearning.isLoaded ||
+            tables.length > 0
+        ) {
             return {
                 message: Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
                 type: 'warning',

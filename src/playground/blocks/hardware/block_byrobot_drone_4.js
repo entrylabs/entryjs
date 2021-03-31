@@ -208,12 +208,12 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 drone_positionZ      : '위치 Z',
                 drone_control_quad_roll             : 'Roll',
                 drone_control_quad_pitch            : 'Pitch',
-                drone_control_quad_throttle         : 'Throttle',
                 drone_control_quad_yaw              : 'Yaw',
-                drone_control_quad_roll_left        : '왼쪽',
-                drone_control_quad_roll_right       : '오른쪽',
+                drone_control_quad_throttle         : 'Throttle',
                 drone_control_quad_pitch_backward   : '뒤',
                 drone_control_quad_pitch_forward    : '앞',
+                drone_control_quad_roll_left        : '왼쪽',
+                drone_control_quad_roll_right       : '오른쪽',
                 drone_control_quad_throttle_down    : '아래',
                 drone_control_quad_throttle_up      : '위',
                 drone_control_quad_yaw_ccw          : '반시계 방향',
@@ -390,53 +390,59 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 monitor_joystick_right_event                        : 'Right Joystick Event',
                 monitor_button_button                               : 'Button',
                 monitor_button_event                                : 'Button Event',
-                monitor_entryhw_countTransferReserved               : 'Transfer Buffer', 
+                monitor_entryhw_countTransferReserved               : 'Transfer Buffer',
 
                 // 일반 블럭
-                common_light_color_cottoncandy: 'cotton candy',
-                common_light_color_emerald: 'emerald',
-                common_light_color_lavender: 'lavender',
-                common_light_color_muscat: 'muscat',
-                common_light_color_strawberrymilk: 'strawberry milk',
-                common_light_color_sunset: 'sunset',
-                common_light_mode_hold: 'hold',
-                common_light_mode_dimming: 'dimming',
-                common_light_mode_flicker: 'flicker',
-                common_light_mode_flicker_double: 'flicker double',
-                common_light_brightness_all: 'all',
-                common_light_brightness_b100: 'brightness 100%',
-                common_light_brightness_b25: 'brightness 25%',
-                common_light_brightness_b50: 'brightness 50%',
-                common_light_brightness_b75: 'brightness 75%',
-                common_light_color_blue: 'blue',
-                common_light_color_cyan: 'cyan',
-                common_light_color_green: 'green',
-                common_light_color_magenta: 'magenta',
-                common_light_brightness_off: 'off',
-                common_light_brightness_on: 'on',
-                common_light_color_red: 'red',
-                common_light_color_white: 'white',
-                common_light_color_yellow: 'yellow',
-                common_left: 'left',
-                common_right: 'right',
-                common_roll: 'Roll',
-                common_pitch: 'Pitch',
-                common_yaw: 'Yaw',
-                common_throttle: 'Throttle',
-                controller_button: 'button',
-                controller_button_event: 'button event',
-                controller_button_front_left_up: 'Fromt left top button',
-                controller_button_front_left_down: 'Fromt left bottom button',
-                controller_button_front_right_up: 'Fromt right top button',
-                controller_button_front_right_down: 'Fromt right bottom button',
-                controller_button_top_left: 'Top left button',
-                controller_button_top_right: 'Top right button',
-                controller_button_center_up: 'Trim up button',
-                controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim right button',
-                controller_button_center_down: 'Trim down button',
-                controller_button_bottom_left: 'Bottom left button',
-                controller_button_bottom_right: 'Bottom right button',
+                common_light_color_red              : 'red',
+                common_light_color_yellow           : 'yellow',
+                common_light_color_green            : 'green',
+                common_light_color_cyan             : 'cyan',
+                common_light_color_blue             : 'blue',
+                common_light_color_magenta          : 'magenta',
+                common_light_color_white            : 'white',
+                common_light_color_cottoncandy      : 'cotton candy',
+                common_light_color_emerald          : 'emerald',
+                common_light_color_lavender         : 'lavender',
+                common_light_color_muscat           : 'muscat',
+                common_light_color_strawberrymilk   : 'strawberry milk',
+                common_light_color_sunset           : 'sunset',
+                common_light_mode_hold              : 'hold',
+                common_light_mode_flicker           : 'flicker',
+                common_light_mode_flicker_double    : 'flicker double',
+                common_light_mode_dimming           : 'dimming',
+                common_light_mode_sunrise           : 'sunrise',
+                common_light_mode_sunset            : 'sunset',
+                common_light_mode_rainbow           : 'rainbow',
+                common_light_mode_rainbow2          : 'rainbow2',
+                common_light_brightness_all         : 'all',
+                common_light_brightness_b100        : 'brightness 100%',
+                common_light_brightness_b25         : 'brightness 25%',
+                common_light_brightness_b50         : 'brightness 50%',
+                common_light_brightness_b75         : 'brightness 75%',
+                common_light_brightness_off         : 'off',
+                common_light_brightness_on          : 'on',
+                common_left     : 'left',
+                common_right    : 'right',
+                common_roll     : 'Roll',
+                common_pitch    : 'Pitch',
+                common_yaw      : 'Yaw',
+                common_throttle : 'Throttle',
+                common_drone                  : 'drone',
+                common_controller             : 'controller',
+                controller_button                   : 'button',
+                controller_button_event             : 'button event',
+                controller_button_front_left_top     : 'Front left top button',
+                controller_button_front_left_bottom  : 'Front left bottom button',
+                controller_button_front_right_top    : 'Front right top button',
+                controller_button_front_right_bottom : 'Front right bottom button',
+                controller_button_top_left      : 'Top left button',
+                controller_button_top_right     : 'Top right button',
+                controller_button_center_up     : 'Trim up button',
+                controller_button_center_left   : 'Trim left button',
+                controller_button_center_right  : 'Trim right button',
+                controller_button_center_down   : 'Trim down button',
+                controller_button_bottom_left   : 'Bottom left button',
+                controller_button_bottom_right  : 'Bottom right button',
                 controller_buzzer: 'buzzer',
                 controller_buzzer_a: 'A',
                 controller_buzzer_as: 'A#',
@@ -493,16 +499,16 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 drone_positionX: 'Position X',
                 drone_positionY: 'Position Y',
                 drone_positionZ: 'Position Z',
+                drone_control_quad_roll: 'Roll',
                 drone_control_quad_pitch: 'Pitch',
+                drone_control_quad_yaw: 'Yaw',
+                drone_control_quad_throttle: 'Throttle',
                 drone_control_quad_pitch_backward: 'Backward',
                 drone_control_quad_pitch_forward: 'Forward',
-                drone_control_quad_roll: 'Roll',
                 drone_control_quad_roll_left: 'Left',
                 drone_control_quad_roll_right: 'Right',
-                drone_control_quad_throttle: 'Throttle',
                 drone_control_quad_throttle_down: 'Down',
                 drone_control_quad_throttle_up: 'Up',
-                drone_control_quad_yaw: 'Yaw',
                 drone_control_quad_yaw_ccw: 'Counterclockwise',
                 drone_control_quad_yaw_cw: 'clockwise',
                 drone_headless_normal: 'Normal',
@@ -545,7 +551,7 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_controller_if_button_press: 'when press %1',
                 byrobot_drone_4_controller_if_joystick_direction: 'when %1 stick move to %2',
                 byrobot_drone_4_controller_light_color_input:  'Controller LED R %1, G %2, B %3 %4 %5 %6',
-                byrobot_drone_4_controller_light_color_select: 'Controller LED %1 %2 %3 %4',
+                byrobot_drone_4_controller_light_color_select: 'Controller LED Preset %1 %2 %3 %4',
                 byrobot_drone_4_controller_light_color_preset: 'Controller LED %1 %2 %3',
                 byrobot_drone_4_controller_light_manual_single_input: 'Controller LED %1 Lightness %2 %3',
                 byrobot_drone_4_controller_light_manual_single_off: 'Controller LED Off %1',
@@ -567,8 +573,8 @@ Entry.byrobot_drone_4.setLanguage = function() {
                 byrobot_drone_4_drone_control_quad_one_delay: 'Set %1 %2% %3 sec %4',
                 byrobot_drone_4_drone_control_position_one      : 'Move %2 meter(s) %1 to %3 m/s %4',
                 byrobot_drone_4_drone_control_position_turn     : 'Rotate %2 degree(s) %1 to %3 deg/s %4',
-                byrobot_drone_4_drone_control_position_location         : 'Move %2 meter(s) %1, %4 meter(s) $3, %6 meter(s) %5 to %7 m/s %8',
-                byrobot_drone_4_drone_control_position_location_turn    : 'Move %2 meter(s) %1, %4 meter(s) $3, %6 meter(s) %5 to %7 m/s, Rotate %9 degree(s) %8 to %10 deg/s %11',
+                byrobot_drone_4_drone_control_position_location         : 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s %8',
+                byrobot_drone_4_drone_control_position_location_turn    : 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s, Rotate %9 degree(s) %8 to %10 deg/s %11',
                 byrobot_drone_4_drone_light_manual_single_off: 'Drone LED Off %1',
                 byrobot_drone_4_drone_light_manual_single_input: 'Drone LED %1 lightness %2 %3',
                 byrobot_drone_4_drone_light_color_input:  'Drone LED R %1, G %2, B %3 %4 %5 %6',
@@ -718,7 +724,7 @@ Entry.byrobot_drone_4.blockMenuBlocks = [
     'byrobot_drone_4_drone_control_drone_landing',
     'byrobot_drone_4_drone_control_drone_stop',
     'byrobot_drone_4_drone_control_headless',
-    //'byrobot_drone_4_drone_control_drone_reset_heading',
+    'byrobot_drone_4_drone_control_drone_reset_heading',
     'byrobot_drone_4_drone_control_quad_one',
     'byrobot_drone_4_drone_control_quad_one_delay',
     'byrobot_drone_4_drone_control_quad',
@@ -2810,11 +2816,6 @@ Entry.byrobot_drone_4.getBlocks = function()
             },
         },
 
-        /*
-        // 2020.12.11
-        // E-Drone, 코딩 드론은 비행 중 헤딩 리셋을 막아둔 상태여서
-        // 헤딩 리셋 버튼을 사용할 수 없음
-        // 헤드리스 모드 시 이륙 방향이 0도로 결정됨
         byrobot_drone_4_drone_control_drone_reset_heading: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2834,7 +2835,6 @@ Entry.byrobot_drone_4.getBlocks = function()
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
             },
         },
-        // */
 
         byrobot_drone_4_drone_control_quad_one: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3058,8 +3058,13 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
-                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                let time = 0;
                 
+                if( speed > 0 )
+                {
+                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
+
                 let x = 0;
                 let y = 0;
                 let z = 0;
@@ -3123,7 +3128,12 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const time          = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                let time = 0;
+
+                if( speedYaw > 0 )
+                {
+                    time = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                }
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
             },
@@ -3211,7 +3221,13 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
-                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+
+                let time = 0;
+
+                if( speed > 0 )
+                {
+                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
             },
@@ -3323,9 +3339,20 @@ Entry.byrobot_drone_4.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                const timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
-                const time         = Math.max(timePosition, timeRotation);
+                let timePosition = 0;
+                let timeRotation = 0;
+
+                if( speed > 0 )
+                {
+                    timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
+
+                if( speedYaw > 0 )
+                {
+                    timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                }
+
+                const time = Math.max(timePosition, timeRotation);
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
             },

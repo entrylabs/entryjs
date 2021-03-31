@@ -87,6 +87,9 @@ Entry.BINGLES.setLanguage = function() {
                 bingles_oled: '얼굴 %1 번 표현 나타내기',
                 bingles_motorgo: '방향 %1 %2 초 움직이기',
             },
+            Menus: {
+                bingles: '빙글S',
+            },
         },
         en: {
             Blocks: {
@@ -117,6 +120,9 @@ Entry.BINGLES.setLanguage = function() {
                 bingles_buzzer: 'Play Tone %1 %2 for %3sec of Melody Playing',
                 bingles_oled: 'Set Facial Icon %1',
                 bingles_motorgo: 'Move Robot %1 %2 sec',
+            },
+            Menus: {
+                bingles: "bingles: 'BINGLE · S'",
             },
         },
     };
@@ -227,7 +233,10 @@ Entry.BINGLES.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.XBOT_High, 'HIGH'], [Lang.Blocks.XBOT_Low, 'LOW']],
+                    options: [
+                        [Lang.Blocks.XBOT_High, 'HIGH'],
+                        [Lang.Blocks.XBOT_Low, 'LOW'],
+                    ],
                     value: 'HIGH',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -337,7 +346,10 @@ Entry.BINGLES.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['0', '0'], ['1', '1']],
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

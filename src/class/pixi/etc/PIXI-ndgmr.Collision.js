@@ -22,7 +22,6 @@
   THE SOFTWARE.
 */
 
-
 /**
  * [original]
  * A Pixel Perfect Collision Detection for EaselJS Bitmap-Objects
@@ -32,10 +31,8 @@
  * A Pixel Perfect Collision Detection for entryjs PIXI.Sprite-Object
  *
  **/
-
-export let PIXICollision = {};
-const ndgmr = PIXICollision;
-
+import * as PIXI from 'pixi.js';
+const ndgmr = {};
 
 //--------- Class CollisionCanvas -------
 class CollisionCanvas {
@@ -52,32 +49,42 @@ class CollisionCanvas {
      * @param color css style color
      */
     __prepend(color) {
-        if (this._prepended) return;
+        if (this._prepended) {
+            return;
+        }
         this._prepended = true;
         $('body').prepend(this._canvas);
         $(this._canvas).css('border', `1px solid ${color}`);
     }
 
     render(obj, intersectRect) {
-        var tex = obj.internal_getOriginalTex();
-        if (!tex) return;
-        var fr = tex.frame;
-        if (!fr || fr.width === 0 || fr.height === 0) return;
-        if (!tex.baseTexture) return;
-        var source = tex.baseTexture.source;
-        if (!source) return;
+        const tex = obj.internal_getOriginalTex();
+        if (!tex) {
+            return;
+        }
+        const fr = tex.frame;
+        if (!fr || fr.width === 0 || fr.height === 0) {
+            return;
+        }
+        if (!tex.baseTexture) {
+            return;
+        }
+        const { source } = tex.baseTexture.resource || {};
+        if (!source) {
+            return;
+        }
 
-        var IR = intersectRect;
-        var canvas = this._canvas;
-        var ctx = this._ctx;
+        const IR = intersectRect;
+        const canvas = this._canvas;
+        const ctx = this._ctx;
 
         canvas.width = IR.width;
         canvas.height = IR.height;
 
         obj.toLocal(IR, null, _LP);
 
-        const {a, b, c, d} = obj.worldTransform;
-        ctx.setTransform(a, b, c, d, 0 ,0);
+        const { a, b, c, d } = obj.worldTransform;
+        ctx.setTransform(a, b, c, d, 0, 0);
         ctx.translate(-_LP.x, -_LP.y);
 
         ctx.drawImage(source, fr.x, fr.y, fr.width, fr.height, 0, 0, fr.width, fr.height);
@@ -87,17 +94,18 @@ class CollisionCanvas {
 
 //--------- end of Class CollisionCanvas -------
 
-
-var threshold = 1;
+const threshold = 1;
 
 /** @type PIXI.Rectangle; **/
-var _RECT1, _RECT2;
+let _RECT1;
+let _RECT2;
 
 /** @type PIXI.Point. for global to local point **/
-var _LP; //localPoint
+let _LP; //localPoint
 
 /** @type CollisionCanvas **/
-var canvas1, canvas2;
+let canvas1;
+let canvas2;
 
 /** @private  use only debug. **/
 ndgmr.___debugIntersectionRect = null;
@@ -111,8 +119,10 @@ ndgmr.initTempObject = function() {
 };
 
 function isContainer(obj) {
-    var isSprite = obj instanceof PIXI.Sprite;
-    if (isSprite) return false;
+    const isSprite = obj instanceof PIXI.Sprite;
+    if (isSprite) {
+        return false;
+    }
     return obj instanceof PIXI.Container;
 }
 
@@ -129,7 +139,7 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
         return false;
     }
 
-    var intersection = _checkRectCollisionForPIXIRect(_RECT1, _RECT2);
+    const intersection = _checkRectCollisionForPIXIRect(_RECT1, _RECT2);
 
     ndgmr.___debugIntersectionRect = intersection;
 
@@ -142,8 +152,8 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
         return intersection;
     }
 
-    var iw = intersection.width;
-    var ih = intersection.height;
+    const iw = intersection.width;
+    const ih = intersection.height;
 
     if (iw === 0 || ih === 0) {
         return false;
@@ -156,7 +166,8 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
 
     alphaThreshold = Math.min(0.99999, alphaThreshold || 0);
 
-    var imgData1, imgData2;
+    let imgData1;
+    let imgData2;
 
     if (
         !(imgData1 = canvas1.render(bitmap1, intersection)) ||
@@ -165,7 +176,7 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
         return false;
     }
 
-    var pixelIntersection = _compareAlphaValues(
+    const pixelIntersection = _compareAlphaValues(
         imgData1,
         imgData2,
         iw / threshold,
@@ -184,7 +195,6 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
     pixelIntersection.y2 += intersection.y;
 
     return pixelIntersection;
-
 };
 
 /**
@@ -195,10 +205,11 @@ ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) 
  * @private
  */
 function _collisionDistancePrecheck(ir1, ir2) {
-    return (Math.abs(ir2.x - ir1.x) < (ir1.x < ir2.x ? ir1.width : ir2.width) &&
-        Math.abs(ir2.y - ir1.y) < (ir1.y < ir2.y ? ir1.height : ir2.height));
+    return (
+        Math.abs(ir2.x - ir1.x) < (ir1.x < ir2.x ? ir1.width : ir2.width) &&
+        Math.abs(ir2.y - ir1.y) < (ir1.y < ir2.y ? ir1.height : ir2.height)
+    );
 }
-
 
 /**
  * TODO createjs 코드 인데.. 사용하느곳이 있는지 확인.
@@ -208,9 +219,9 @@ function _collisionDistancePrecheck(ir1, ir2) {
  * @return {null| Rect}
  */
 ndgmr.checkRectCollision = function(bitmap1, bitmap2) {
-    var b1, b2;
-    if (bitmap1 instanceof createjs.Container ||
-        bitmap2 instanceof createjs.Container) {
+    let b1;
+    let b2;
+    if (bitmap1 instanceof createjs.Container || bitmap2 instanceof createjs.Container) {
         b1 = bitmap1.getTransformedBounds();
         b2 = bitmap2.getTransformedBounds();
     } else {
@@ -229,16 +240,18 @@ function _checkRectCollisionForPIXIRect(b1, b2) {
     return ndgmr.calculateIntersection(b1, b2);
 }
 
-
 ndgmr.calculateIntersection = function(rect1, rect2) {
     // first we have to calculate the
     // center of each rectangle and half of
     // width and height
-    var dx, dy, r1 = {}, r2 = {};
-    r1.cx = rect1.x + (r1.hw = (rect1.width / 2));
-    r1.cy = rect1.y + (r1.hh = (rect1.height / 2));
-    r2.cx = rect2.x + (r2.hw = (rect2.width / 2));
-    r2.cy = rect2.y + (r2.hh = (rect2.height / 2));
+    let dx;
+    let dy;
+    const r1 = {};
+    const r2 = {};
+    r1.cx = rect1.x + (r1.hw = rect1.width / 2);
+    r1.cy = rect1.y + (r1.hh = rect1.height / 2);
+    r2.cx = rect2.x + (r2.hw = rect2.width / 2);
+    r2.cy = rect2.y + (r2.hh = rect2.height / 2);
 
     dx = Math.abs(r1.cx - r2.cx) - (r1.hw + r2.hw);
     dy = Math.abs(r1.cy - r2.cy) - (r1.hh + r2.hh);
@@ -251,31 +264,39 @@ ndgmr.calculateIntersection = function(rect1, rect2) {
             y: Math.max(rect1.y, rect2.y),
             width: dx,
             height: dy,
-            rect1: rect1,
-            rect2: rect2,
+            rect1,
+            rect2,
         };
     } else {
         return null;
     }
 };
 
-var _compareAlphaValues = function(imageData1, imageData2, width, height, alphaThreshold, getRect) {
-    var x, y, offset = 3,
-        pixelRect = { x: Infinity, y: Infinity, x2: -Infinity, y2: -Infinity };
+const _compareAlphaValues = function(
+    imageData1,
+    imageData2,
+    width,
+    height,
+    alphaThreshold,
+    getRect
+) {
+    let x;
+    let y;
+    let offset = 3;
+    const pixelRect = { x: Infinity, y: Infinity, x2: -Infinity, y2: -Infinity };
 
-    var _alphaThreshold = Math.round(alphaThreshold * 255) | 0,
-        _width = width | 0,
-        _height = height | 0,
-        _imgData1 = imageData1,
-        _imgData2 = imageData2;
-    var LEN1 = _imgData1.length;
-    var LEN2 = _imgData2.length;
+    const _alphaThreshold = Math.round(alphaThreshold * 255) | 0;
+    const _width = width | 0;
+    const _height = height | 0;
+    const _imgData1 = imageData1;
+    const _imgData2 = imageData2;
+    const LEN1 = _imgData1.length;
+    const LEN2 = _imgData2.length;
 
     // parsing through the pixels checking for an alpha match
     // TODO: intelligent parsing, not just from 0 to end!
     for (y = 0; y < _height; ++y) {
         for (x = 0; x < _width; ++x) {
-
             if (
                 LEN1 > offset + 1 &&
                 LEN2 > offset + 1 &&
@@ -283,12 +304,20 @@ var _compareAlphaValues = function(imageData1, imageData2, width, height, alphaT
                 _imgData2[offset] > _alphaThreshold
             ) {
                 if (getRect) {
-                    if (x < pixelRect.x) pixelRect.x = x;
-                    if (x > pixelRect.x2) pixelRect.x2 = x;
-                    if (y < pixelRect.y) pixelRect.y = y;
-                    if (y > pixelRect.y2) pixelRect.y2 = y;
+                    if (x < pixelRect.x) {
+                        pixelRect.x = x;
+                    }
+                    if (x > pixelRect.x2) {
+                        pixelRect.x2 = x;
+                    }
+                    if (y < pixelRect.y) {
+                        pixelRect.y = y;
+                    }
+                    if (y > pixelRect.y2) {
+                        pixelRect.y2 = y;
+                    }
                 } else {
-                    return { x: x, y: y, width: 1, height: 1 };
+                    return { x, y, width: 1, height: 1 };
                 }
             }
             offset += 4;
@@ -304,7 +333,4 @@ var _compareAlphaValues = function(imageData1, imageData2, width, height, alphaT
     return null;
 };
 
-
-
-
-
+export const PIXICollision = ndgmr;
