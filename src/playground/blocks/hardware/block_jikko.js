@@ -23,8 +23,13 @@ Entry.jikko = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO) {
+                    Entry.hw.sendQueue.SET[key].data = 200;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                } else {
+                    Entry.hw.sendQueue.SET[key].data = 0;
+                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+                }
             });
         }
         Entry.hw.update();
@@ -152,12 +157,15 @@ Entry.jikko.setLanguage = function() {
                 jikko_get_digital_pir: 'PIR %1 핀 센서 값',
                 jikko_set_digital_toggle: '디지털 %1 핀 %2 %3',
                 jikko_set_led_toggle: 'LED %1 핀 %2 %3',
-
                 jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
+
                 jikko_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
                 jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
                 jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
+
+                jikko_set_digital_dcmotor: 'DC모터 %1핀 %2 %3',
+                jikko_set_analog_dcmotor: 'DC모터(PWM %1 핀) 세기 %2 출력 (0 ~ 255) %3',
                 jikko_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 jikko_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
@@ -205,6 +213,9 @@ Entry.jikko.setLanguage = function() {
                 jikko_step_rotate: '%1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
                 jikko_step_rotate2: '%1 스텝모터 %2 으로 %3 도 회전하기 %4',
                 jikko_step_rotate3: '%1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
+
+                jikko_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
+                jikko_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
             },
         },
         en: {
@@ -303,6 +314,8 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_get_pullup',
     'jikko_get_button',
 
+    'jikko_set_digital_dcmotor',
+    'jikko_set_analog_dcmotor',
     'jikko_set_digital_servo',
     'jikko_set_digital_buzzer_toggle',
     'jikko_set_digital_buzzer_volume',
@@ -342,6 +355,9 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_step_rotate',
     'jikko_step_rotate2',
     'jikko_step_rotate3',
+
+    // 'jikko_get_digital_bluetooth',
+    // 'jikko_module_digital_bluetooth',
 ];
 Entry.jikko.getBlocks = function() {
     var tx;
@@ -1739,6 +1755,138 @@ Entry.jikko.getBlocks = function() {
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
             syntax: { js: [], py: ['jikko.get_analog_value(%1)'] },
+        },
+
+        jikko_set_digital_dcmotor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.jikko_set_digital_dcmotor,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_digital_basic',
+                    },
+                    {
+                        type: 'jikko_list_digital_toggle',
+                    },
+                    null,
+                ],
+                type: 'jikko_set_digital_dcmotor',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'jikkoSet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getValue('VALUE');
+
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
+                }
+                if (Entry.jikko.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.jikko.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.jikko.sensorTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['jikko.set_digital_dcmotor(%1, %2, %3, %4)'] },
+        },
+        jikko_set_analog_dcmotor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.jikko_set_analog_dcmotor,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'jikko_list_digital_pwm',
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'jikko_set_analog_dcmotor',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'jikkoSet',
+            isNotFor: ['jikko'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getNumberValue('VALUE');
+
+                value = Math.round(value);
+                value = Math.min(value, 255);
+                value = Math.max(value, 0);
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.jikko.sensorTypes.PWM,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['jikko.set_digital_dcmotor(%1, %2, %3, %4)'] },
         },
         jikko_get_sound_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -5307,100 +5455,6 @@ Entry.jikko.getBlocks = function() {
                 js: [],
                 py: [{}],
             },
-        },
-        jikko_module_digital_bluetooth: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            template: Lang.template.jikko_module_digital_bluetooth,
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: ['My Entry!!'],
-                    },
-                    null,
-                ],
-                type: 'jikko_module_digital_bluetooth',
-            },
-            paramsKeyMap: {
-                STRING: 0,
-            },
-            class: 'jikkoBlue',
-            isNotFor: ['jikko'],
-            func: function(sprite, script) {
-                var string = script.getValue('STRING');
-                var port = 3;
-                var text = [];
-
-                if (!script.isStart) {
-                    if (typeof string === 'string') {
-                        for (var i = 0; i < string.length; i++) {
-                            text[i] = string.charCodeAt(i);
-                        }
-                    } else {
-                        text[0] = string;
-                    }
-                    if (!Entry.hw.sendQueue['SET']) {
-                        Entry.hw.sendQueue['SET'] = {};
-                    }
-
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var fps = Entry.FPS || 60;
-                    var timeValue = (60 / fps) * 50;
-
-                    Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.jikko.sensorTypes.WRITE_BLUETOOTH,
-                        data: {
-                            text0: text[0],
-                            text1: text[1],
-                            text2: text[2],
-                            text3: text[3],
-                            text4: text[4],
-                            text5: text[5],
-                            text6: text[6],
-                            text7: text[7],
-                            text8: text[8],
-                            text9: text[9],
-                            text10: text[10],
-                            text11: text[11],
-                            text12: text[12],
-                            text13: text[13],
-                            text14: text[14],
-                            text15: text[15],
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, timeValue);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-            syntax: { js: [], py: ['jikko.module_digital_bluetooth(%1)'] },
         },
     };
 };

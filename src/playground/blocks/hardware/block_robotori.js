@@ -18,8 +18,8 @@ Entry.robotori = {
         AOUT6: 0,
         AOUT9: 0,
         SERVO: 90,
-        RIGHT_MOTOR: 0xFF,  //default stop
-        LEFT_MOTOR: 0xFF,   //default stop
+        RIGHT_MOTOR: 0xff, //default stop
+        LEFT_MOTOR: 0xff, //default stop
     },
     setZero: function() {
         //Entry.hw.sendQueue.readablePorts = [];
@@ -59,6 +59,91 @@ Entry.robotori = {
         },
         mode: 'both',
     },
+};
+
+Entry.robotori.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                robotori_digitalInput: '%1',
+                robotori_analogInput: '%1',
+                robotori_digitalOutput: '디지털 %1 핀, 출력 값 %2 %3',
+                robotori_analogOutput: '아날로그 %1 %2 %3',
+                robotori_servo: '서보모터 각도 %1 %2',
+                robotori_dc_direction: 'DC모터 %1 회전 %2 %3',
+            },
+            Blocks: {
+                robotori_D2_Input: '디지털 2번 핀 입력 값',
+                robotori_D3_Input: '디지털 3번 핀 입력 값',
+                robotori_A0_Input: '아날로그 0번 핀 입력 값',
+                robotori_A1_Input: '아날로그 1번 핀 입력 값',
+                robotori_A2_Input: '아날로그 2번 핀 입력 값',
+                robotori_A3_Input: '아날로그 3번 핀 입력 값',
+                robotori_A4_Input: '아날로그 4번 핀 입력 값',
+                robotori_A5_Input: '아날로그 5번 핀 입력 값',
+                robotori_digital: '디지털',
+                robotori_D10_Output: '10번',
+                robotori_D11_Output: '11번',
+                robotori_D12_Output: '12번',
+                robotori_D13_Output: '13번',
+                robotori_pin_OutputValue: '핀, 출력 값',
+                robotori_On: '켜짐',
+                robotori_Off: '꺼짐',
+                robotori_analog: '아날로그',
+                robotori_analog5: '5번 핀 출력 값',
+                robotori_analog6: '6번 핀 출력 값',
+                robotori_analog9: '9번 핀 출력 값',
+                robotori_Servo: '서보모터',
+                robotori_DC: 'DC모터',
+                robotori_DC_rightmotor: '오른쪽',
+                robotori_DC_leftmotor: '왼쪽',
+                robotori_DC_STOP: '정지',
+                robotori_DC_CW: '시계방향',
+                robotori_DC_CCW: '반시계방향',
+                robotori_DC_select: '회전',
+            },
+        },
+        en: {
+            template: {
+                robotori_digitalInput: '%1',
+                robotori_analogInput: '%1',
+                robotori_digitalOutput: 'Digital %1 PIN, Output Value %2 %3',
+                robotori_analogOutput: 'Analog %1 %2 %3',
+                robotori_servo: 'Servo Motor Angle %1 %2',
+                robotori_dc_direction: 'DC Motor %1 Direction %2 %3',
+            },
+            Blocks: {
+                robotori_D2_Input: 'Digital Pin 2 Input Value',
+                robotori_D3_Input: 'Digital Pin 3 Input Value',
+                robotori_A0_Input: 'Analog Pin 0 Input Value',
+                robotori_A1_Input: 'Analog Pin 1 Input Value',
+                robotori_A2_Input: 'Analog Pin 2 Input Value',
+                robotori_A3_Input: 'Analog Pin 3 Input Value',
+                robotori_A4_Input: 'Analog Pin 4 Input Value',
+                robotori_A5_Input: 'Analog Pin 5 Input Value',
+                robotori_digital: 'Digital',
+                robotori_D10_Output: 'Pin 10',
+                robotori_D11_Output: 'Pin 11',
+                robotori_D12_Output: 'Pin 12',
+                robotori_D13_Output: 'Pin 13',
+                robotori_pin_OutputValue: 'Output Value',
+                robotori_On: 'On',
+                robotori_Off: 'Off',
+                robotori_analog: 'Analog',
+                robotori_analog5: 'Pin 5 Output Value',
+                robotori_analog6: 'Pin 6 Output Value',
+                robotori_analog9: 'Pin 9 Output Value',
+                robotori_Servo: 'Servo Motor',
+                robotori_DC: 'DC Motor',
+                robotori_DC_rightmotor: 'Right',
+                robotori_DC_leftmotor: 'Left',
+                robotori_DC_STOP: 'Stop',
+                robotori_DC_CW: 'clockwise',
+                robotori_DC_CCW: 'anticlockwise',
+                robotori_DC_select: 'direction',
+            },
+        },
+    };
 };
 
 Entry.robotori.blockMenuBlocks = [
@@ -168,7 +253,10 @@ Entry.robotori.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.robotori_On, 'ON'], [Lang.Blocks.robotori_Off, 'OFF']],
+                    options: [
+                        [Lang.Blocks.robotori_On, 'ON'],
+                        [Lang.Blocks.robotori_Off, 'OFF'],
+                    ],
                     value: 'ON',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -196,33 +284,26 @@ Entry.robotori.getBlocks = function() {
                 var dev = script.getStringField('DEVICE', script);
                 var value = script.getStringField('VALUE', script);
 
-                if(dev == 'D10')
-                {
-                    if(value == 'ON'){
+                if (dev == 'D10') {
+                    if (value == 'ON') {
                         sq.D10 = 1;
                     } else {
                         sq.D10 = 0;
                     }
-                }
-                else if(dev == 'D11')
-                {
-                    if(value == 'ON'){
+                } else if (dev == 'D11') {
+                    if (value == 'ON') {
                         sq.D11 = 1;
                     } else {
                         sq.D11 = 0;
                     }
-                }
-                else if(dev == 'D12') 
-                {
-                    if(value == 'ON'){
+                } else if (dev == 'D12') {
+                    if (value == 'ON') {
                         sq.D12 = 1;
                     } else {
                         sq.D12 = 0;
                     }
-                }
-                else if(dev == 'D13') 
-                {
-                    if(value == 'ON'){
+                } else if (dev == 'D13') {
+                    if (value == 'ON') {
                         sq.D13 = 1;
                     } else {
                         sq.D13 = 0;

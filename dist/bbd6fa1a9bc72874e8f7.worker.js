@@ -8292,9 +8292,9 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_
 
 var _interopRequireDefault = __webpack_require__(121);
 
-var _slicedToArray2 = _interopRequireDefault(__webpack_require__(122));
+var _regenerator = _interopRequireDefault(__webpack_require__(122));
 
-var _regenerator = _interopRequireDefault(__webpack_require__(128));
+var _slicedToArray2 = _interopRequireDefault(__webpack_require__(124));
 
 var _asyncToGenerator2 = _interopRequireDefault(__webpack_require__(130));
 
@@ -8791,25 +8791,25 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(133));
       key: "infer",
       value: function () {
         var _infer = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(e, a, i) {
-          var d, s, n, l, t, o, _this$calculateMaxSco, _this$calculateMaxSco2, p, r, c, y, N;
+          var _d, s, n, l, t, o, _this$calculateMaxSco, _this$calculateMaxSco2, p, r, c, y, N;
 
           return _regenerator["default"].wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
-                  d = m.tidy(function () {
+                  _d = m.tidy(function () {
                     return e instanceof m.Tensor || (e = m.browser.fromPixels(e)), e.expandDims(0);
                   });
-                  s = d.shape[1];
-                  n = d.shape[2];
+                  s = _d.shape[1];
+                  n = _d.shape[2];
                   _context2.next = 5;
-                  return this.model.executeAsync(d);
+                  return this.model.executeAsync(_d);
 
                 case 5:
                   l = _context2.sent;
                   t = l[0].dataSync();
                   o = l[1].dataSync();
-                  d.dispose(), m.dispose(l);
+                  _d.dispose(), m.dispose(l);
                   _this$calculateMaxSco = this.calculateMaxScores(t, l[0].shape[1], l[0].shape[2]), _this$calculateMaxSco2 = (0, _slicedToArray2["default"])(_this$calculateMaxSco, 2), p = _this$calculateMaxSco2[0], r = _this$calculateMaxSco2[1], c = m.getBackend();
                   "webgl" === m.getBackend() && m.setBackend("cpu");
                   y = m.tidy(function () {
@@ -8834,7 +8834,7 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(133));
       }()
     }, {
       key: "buildDetectedObjects",
-      value: function buildDetectedObjects(e, a, m, d, s, n) {
+      value: function buildDetectedObjects(e, a, m, _d2, s, n) {
         var l = s.length,
             t = [];
 
@@ -8852,7 +8852,7 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(133));
           _l[0] = r, _l[1] = p, _l[2] = y - r, _l[3] = c - p, t.push({
             bbox: _l,
             "class": i[n[s[o]] + 1].displayName,
-            score: d[s[o]]
+            score: _d2[s[o]]
           });
         }
 
@@ -8862,7 +8862,7 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(133));
       key: "calculateMaxScores",
       value: function calculateMaxScores(e, a, m) {
         var i = [],
-            d = [];
+            _d3 = [];
 
         for (var s = 0; s < a; s++) {
           var _a = Number.MIN_VALUE,
@@ -8872,10 +8872,10 @@ var _typeof2 = _interopRequireDefault(__webpack_require__(133));
             e[s * m + _i] > _a && (_a = e[s * m + _i], n = _i);
           }
 
-          i[s] = _a, d[s] = n;
+          i[s] = _a, _d3[s] = n;
         }
 
-        return [i, d];
+        return [i, _d3];
       }
     }, {
       key: "detect",
@@ -9444,120 +9444,17 @@ function _interopRequireDefault(obj) {
 }
 
 module.exports = _interopRequireDefault;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 /* 122 */
 /***/ (function(module, exports, __webpack_require__) {
 
-var arrayWithHoles = __webpack_require__(123);
+module.exports = __webpack_require__(123);
 
-var iterableToArrayLimit = __webpack_require__(124);
-
-var unsupportedIterableToArray = __webpack_require__(125);
-
-var nonIterableRest = __webpack_require__(127);
-
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
-}
-
-module.exports = _slicedToArray;
 
 /***/ }),
 /* 123 */
-/***/ (function(module, exports) {
-
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
-}
-
-module.exports = _arrayWithHoles;
-
-/***/ }),
-/* 124 */
-/***/ (function(module, exports) {
-
-function _iterableToArrayLimit(arr, i) {
-  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
-  var _arr = [];
-  var _n = true;
-  var _d = false;
-  var _e = undefined;
-
-  try {
-    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
-      _arr.push(_s.value);
-
-      if (i && _arr.length === i) break;
-    }
-  } catch (err) {
-    _d = true;
-    _e = err;
-  } finally {
-    try {
-      if (!_n && _i["return"] != null) _i["return"]();
-    } finally {
-      if (_d) throw _e;
-    }
-  }
-
-  return _arr;
-}
-
-module.exports = _iterableToArrayLimit;
-
-/***/ }),
-/* 125 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var arrayLikeToArray = __webpack_require__(126);
-
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
-}
-
-module.exports = _unsupportedIterableToArray;
-
-/***/ }),
-/* 126 */
-/***/ (function(module, exports) {
-
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-
-  for (var i = 0, arr2 = new Array(len); i < len; i++) {
-    arr2[i] = arr[i];
-  }
-
-  return arr2;
-}
-
-module.exports = _arrayLikeToArray;
-
-/***/ }),
-/* 127 */
-/***/ (function(module, exports) {
-
-function _nonIterableRest() {
-  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-
-module.exports = _nonIterableRest;
-
-/***/ }),
-/* 128 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(129);
-
-
-/***/ }),
-/* 129 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -10311,6 +10208,116 @@ try {
 
 
 /***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayWithHoles = __webpack_require__(125);
+
+var iterableToArrayLimit = __webpack_require__(126);
+
+var unsupportedIterableToArray = __webpack_require__(127);
+
+var nonIterableRest = __webpack_require__(129);
+
+function _slicedToArray(arr, i) {
+  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+}
+
+module.exports = _slicedToArray;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports) {
+
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+module.exports = _arrayWithHoles;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+
+/***/ }),
+/* 126 */
+/***/ (function(module, exports) {
+
+function _iterableToArrayLimit(arr, i) {
+  if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+  var _e = undefined;
+
+  try {
+    for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+module.exports = _iterableToArrayLimit;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+
+/***/ }),
+/* 127 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var arrayLikeToArray = __webpack_require__(128);
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return arrayLikeToArray(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+}
+
+module.exports = _unsupportedIterableToArray;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+
+/***/ }),
+/* 128 */
+/***/ (function(module, exports) {
+
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+module.exports = _arrayLikeToArray;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+
+/***/ }),
+/* 129 */
+/***/ (function(module, exports) {
+
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+module.exports = _nonIterableRest;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
+
+/***/ }),
 /* 130 */
 /***/ (function(module, exports) {
 
@@ -10351,6 +10358,7 @@ function _asyncToGenerator(fn) {
 }
 
 module.exports = _asyncToGenerator;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 /* 131 */
@@ -10363,6 +10371,7 @@ function _classCallCheck(instance, Constructor) {
 }
 
 module.exports = _classCallCheck;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 /* 132 */
@@ -10385,6 +10394,7 @@ function _createClass(Constructor, protoProps, staticProps) {
 }
 
 module.exports = _createClass;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 /* 133 */
@@ -10397,16 +10407,21 @@ function _typeof(obj) {
     module.exports = _typeof = function _typeof(obj) {
       return typeof obj;
     };
+
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   } else {
     module.exports = _typeof = function _typeof(obj) {
       return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
     };
+
+    module.exports["default"] = module.exports, module.exports.__esModule = true;
   }
 
   return _typeof(obj);
 }
 
 module.exports = _typeof;
+module.exports["default"] = module.exports, module.exports.__esModule = true;
 
 /***/ }),
 /* 134 */
@@ -13459,7 +13474,7 @@ var tf_converter_esm = __webpack_require__(22);
 // CONCATENATED MODULE: ./node_modules/@tensorflow-models/posenet/dist/posenet.esm.js
 /**
     * @license
-    * Copyright 2019 Google LLC. All Rights Reserved.
+    * Copyright 2021 Google LLC. All Rights Reserved.
     * Licensed under the Apache License, Version 2.0 (the "License");
     * you may not use this file except in compliance with the License.
     * You may obtain a copy of the License at
@@ -13473,7 +13488,8 @@ var tf_converter_esm = __webpack_require__(22);
     * limitations under the License.
     * =============================================================================
     */
-var extendStatics=function(e,t){return(extendStatics=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n])})(e,t)};function __extends(e,t){function n(){this.constructor=e}extendStatics(e,t),e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)}var __assign=function(){return(__assign=Object.assign||function(e){for(var t,n=1,r=arguments.length;n<r;n++)for(var o in t=arguments[n])Object.prototype.hasOwnProperty.call(t,o)&&(e[o]=t[o]);return e}).apply(this,arguments)};function __awaiter(e,t,n,r){return new(n||(n=Promise))(function(o,i){function s(e){try{a(r.next(e))}catch(e){i(e)}}function u(e){try{a(r.throw(e))}catch(e){i(e)}}function a(e){e.done?o(e.value):new n(function(t){t(e.value)}).then(s,u)}a((r=r.apply(e,t||[])).next())})}function __generator(e,t){var n,r,o,i,s={label:0,sent:function(){if(1&o[0])throw o[1];return o[1]},trys:[],ops:[]};return i={next:u(0),throw:u(1),return:u(2)},"function"==typeof Symbol&&(i[Symbol.iterator]=function(){return this}),i;function u(i){return function(u){return function(i){if(n)throw new TypeError("Generator is already executing.");for(;s;)try{if(n=1,r&&(o=2&i[0]?r.return:i[0]?r.throw||((o=r.return)&&o.call(r),0):r.next)&&!(o=o.call(r,i[1])).done)return o;switch(r=0,o&&(i=[2&i[0],o.value]),i[0]){case 0:case 1:o=i;break;case 4:return s.label++,{value:i[1],done:!1};case 5:s.label++,r=i[1],i=[0];continue;case 7:i=s.ops.pop(),s.trys.pop();continue;default:if(!(o=(o=s.trys).length>0&&o[o.length-1])&&(6===i[0]||2===i[0])){s=0;continue}if(3===i[0]&&(!o||i[1]>o[0]&&i[1]<o[3])){s.label=i[1];break}if(6===i[0]&&s.label<o[1]){s.label=o[1],o=i;break}if(o&&s.label<o[2]){s.label=o[2],s.ops.push(i);break}o[2]&&s.ops.pop(),s.trys.pop();continue}i=t.call(e,s)}catch(e){i=[6,e],r=0}finally{n=o=0}if(5&i[0])throw i[1];return{value:i[0]?i[1]:void 0,done:!0}}([i,u])}}}var BaseModel=function(){function e(e,t){this.model=e,this.outputStride=t;var n=this.model.inputs[0].shape;tf_core_esm["util"].assert(-1===n[1]&&-1===n[2],function(){return"Input shape ["+n[1]+", "+n[2]+"] must both be equal to or -1"})}return e.prototype.predict=function(e){var t=this;return Object(tf_core_esm["tidy"])(function(){var n=t.preprocessInput(e.toFloat()).expandDims(0),r=t.model.predict(n).map(function(e){return e.squeeze([0])}),o=t.nameOutputResults(r);return{heatmapScores:o.heatmap.sigmoid(),offsets:o.offsets,displacementFwd:o.displacementFwd,displacementBwd:o.displacementBwd}})},e.prototype.dispose=function(){this.model.dispose()},e}(),MobileNet=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return __extends(t,e),t.prototype.preprocessInput=function(e){return Object(tf_core_esm["tidy"])(function(){return Object(tf_core_esm["div"])(e,127.5).sub(1)})},t.prototype.nameOutputResults=function(e){return{offsets:e[0],heatmap:e[1],displacementFwd:e[2],displacementBwd:e[3]}},t}(BaseModel);function half(e){return Math.floor(e/2)}var MaxHeap=function(){function e(e,t){this.priorityQueue=new Array(e),this.numberOfElements=-1,this.getElementValue=t}return e.prototype.enqueue=function(e){this.priorityQueue[++this.numberOfElements]=e,this.swim(this.numberOfElements)},e.prototype.dequeue=function(){var e=this.priorityQueue[0];return this.exchange(0,this.numberOfElements--),this.sink(0),this.priorityQueue[this.numberOfElements+1]=null,e},e.prototype.empty=function(){return-1===this.numberOfElements},e.prototype.size=function(){return this.numberOfElements+1},e.prototype.all=function(){return this.priorityQueue.slice(0,this.numberOfElements+1)},e.prototype.max=function(){return this.priorityQueue[0]},e.prototype.swim=function(e){for(;e>0&&this.less(half(e),e);)this.exchange(e,half(e)),e=half(e)},e.prototype.sink=function(e){for(;2*e<=this.numberOfElements;){var t=2*e;if(t<this.numberOfElements&&this.less(t,t+1)&&t++,!this.less(e,t))break;this.exchange(e,t),e=t}},e.prototype.getValueAt=function(e){return this.getElementValue(this.priorityQueue[e])},e.prototype.less=function(e,t){return this.getValueAt(e)<this.getValueAt(t)},e.prototype.exchange=function(e,t){var n=this.priorityQueue[e];this.priorityQueue[e]=this.priorityQueue[t],this.priorityQueue[t]=n},e}();function scoreIsMaximumInLocalWindow(e,t,n,r,o,i){for(var s=i.shape,u=s[0],a=s[1],l=!0,p=Math.max(n-o,0),c=Math.min(n+o+1,u),f=p;f<c;++f){for(var d=Math.max(r-o,0),h=Math.min(r+o+1,a),m=d;m<h;++m)if(i.get(f,m,e)>t){l=!1;break}if(!l)break}return l}function buildPartWithScoreQueue(e,t,n){for(var r=n.shape,o=r[0],i=r[1],s=r[2],u=new MaxHeap(o*i*s,function(e){return e.score}),a=0;a<o;++a)for(var l=0;l<i;++l)for(var p=0;p<s;++p){var c=n.get(a,l,p);c<e||scoreIsMaximumInLocalWindow(p,c,a,l,t,n)&&u.enqueue({score:c,part:{heatmapY:a,heatmapX:l,id:p}})}return u}var partNames=["nose","leftEye","rightEye","leftEar","rightEar","leftShoulder","rightShoulder","leftElbow","rightElbow","leftWrist","rightWrist","leftHip","rightHip","leftKnee","rightKnee","leftAnkle","rightAnkle"],NUM_KEYPOINTS=partNames.length,partIds=partNames.reduce(function(e,t,n){return e[t]=n,e},{}),connectedPartNames=[["leftHip","leftShoulder"],["leftElbow","leftShoulder"],["leftElbow","leftWrist"],["leftHip","leftKnee"],["leftKnee","leftAnkle"],["rightHip","rightShoulder"],["rightElbow","rightShoulder"],["rightElbow","rightWrist"],["rightHip","rightKnee"],["rightKnee","rightAnkle"],["leftShoulder","rightShoulder"],["leftHip","rightHip"]],poseChain=[["nose","leftEye"],["leftEye","leftEar"],["nose","rightEye"],["rightEye","rightEar"],["nose","leftShoulder"],["leftShoulder","leftElbow"],["leftElbow","leftWrist"],["leftShoulder","leftHip"],["leftHip","leftKnee"],["leftKnee","leftAnkle"],["nose","rightShoulder"],["rightShoulder","rightElbow"],["rightElbow","rightWrist"],["rightShoulder","rightHip"],["rightHip","rightKnee"],["rightKnee","rightAnkle"]],connectedPartIndices=connectedPartNames.map(function(e){var t=e[0],n=e[1];return[partIds[t],partIds[n]]}),partChannels=["left_face","right_face","right_upper_leg_front","right_lower_leg_back","right_upper_leg_back","left_lower_leg_front","left_upper_leg_front","left_upper_leg_back","left_lower_leg_back","right_feet","right_lower_leg_front","left_feet","torso_front","torso_back","right_upper_arm_front","right_upper_arm_back","right_lower_arm_back","left_lower_arm_front","left_upper_arm_front","left_upper_arm_back","left_lower_arm_back","right_hand","right_lower_arm_front","left_hand"];function getOffsetPoint(e,t,n,r){return{y:r.get(e,t,n),x:r.get(e,t,n+NUM_KEYPOINTS)}}function getImageCoords(e,t,n){var r=getOffsetPoint(e.heatmapY,e.heatmapX,e.id,n),o=r.y,i=r.x;return{x:e.heatmapX*t+i,y:e.heatmapY*t+o}}function clamp(e,t,n){return e<t?t:e>n?n:e}function squaredDistance(e,t,n,r){var o=n-e,i=r-t;return o*o+i*i}function addVectors(e,t){return{x:e.x+t.x,y:e.y+t.y}}var parentChildrenTuples=poseChain.map(function(e){var t=e[0],n=e[1];return[partIds[t],partIds[n]]}),parentToChildEdges=parentChildrenTuples.map(function(e){return e[1]}),childToParentEdges=parentChildrenTuples.map(function(e){return e[0]});function getDisplacement(e,t,n){var r=n.shape[2]/2;return{y:n.get(t.y,t.x,e),x:n.get(t.y,t.x,r+e)}}function getStridedIndexNearPoint(e,t,n,r){return{y:clamp(Math.round(e.y/t),0,n-1),x:clamp(Math.round(e.x/t),0,r-1)}}function traverseToTargetKeypoint(e,t,n,r,o,i,s,u){void 0===u&&(u=2);for(var a=r.shape,l=a[0],p=a[1],c=getDisplacement(e,getStridedIndexNearPoint(t.position,i,l,p),s),f=addVectors(t.position,c),d=0;d<u;d++){var h=getStridedIndexNearPoint(f,i,l,p),m=getOffsetPoint(h.y,h.x,n,o);f=addVectors({x:h.x*i,y:h.y*i},{x:m.x,y:m.y})}var g=getStridedIndexNearPoint(f,i,l,p),_=r.get(g.y,g.x,n);return{position:f,part:partNames[n],score:_}}function decodePose(e,t,n,r,o,i){var s=t.shape[2],u=parentToChildEdges.length,a=new Array(s),l=e.part,p=e.score,c=getImageCoords(l,r,n);a[l.id]={score:p,part:partNames[l.id],position:c};for(var f=u-1;f>=0;--f){var d=parentToChildEdges[f],h=childToParentEdges[f];a[d]&&!a[h]&&(a[h]=traverseToTargetKeypoint(f,a[d],h,t,n,r,i))}for(f=0;f<u;++f){d=childToParentEdges[f],h=parentToChildEdges[f];a[d]&&!a[h]&&(a[h]=traverseToTargetKeypoint(f,a[d],h,t,n,r,o))}return a}function withinNmsRadiusOfCorrespondingPoint(e,t,n,r){var o=n.x,i=n.y;return e.some(function(e){var n=e.keypoints[r].position;return squaredDistance(i,o,n.y,n.x)<=t})}function getInstanceScore(e,t,n){return n.reduce(function(n,r,o){var i=r.position,s=r.score;return withinNmsRadiusOfCorrespondingPoint(e,t,i,o)||(n+=s),n},0)/n.length}var kLocalMaximumRadius=1;function decodeMultiplePoses(e,t,n,r,o,i,s,u){void 0===s&&(s=.5),void 0===u&&(u=20);for(var a=[],l=buildPartWithScoreQueue(s,kLocalMaximumRadius,e),p=u*u;a.length<i&&!l.empty();){var c=l.dequeue();if(!withinNmsRadiusOfCorrespondingPoint(a,p,getImageCoords(c.part,o,t),c.part.id)){var f=decodePose(c,e,t,o,n,r),d=getInstanceScore(a,p,f);a.push({keypoints:f,score:d})}}return a}function mod(e,t){return Object(tf_core_esm["tidy"])(function(){var n=e.div(Object(tf_core_esm["scalar"])(t,"int32"));return e.sub(n.mul(Object(tf_core_esm["scalar"])(t,"int32")))})}function argmax2d(e){var t=e.shape,n=t[0],r=t[1],o=t[2];return Object(tf_core_esm["tidy"])(function(){var t=e.reshape([n*r,o]).argMax(0),i=t.div(Object(tf_core_esm["scalar"])(r,"int32")).expandDims(1),s=mod(t,r).expandDims(1);return Object(tf_core_esm["concat"])([i,s],1)})}function getPointsConfidence(e,t){for(var n=t.shape[0],r=new Float32Array(n),o=0;o<n;o++){var i=t.get(o,0),s=t.get(o,1);r[o]=e.get(i,s,o)}return r}function getOffsetPoint$1(e,t,n,r){return{y:r.get(e,t,n),x:r.get(e,t,n+NUM_KEYPOINTS)}}function getOffsetVectors(e,t){for(var n=[],r=0;r<NUM_KEYPOINTS;r++){var o=getOffsetPoint$1(e.get(r,0).valueOf(),e.get(r,1).valueOf(),r,t),i=o.x,s=o.y;n.push(s),n.push(i)}return Object(tf_core_esm["tensor2d"])(n,[NUM_KEYPOINTS,2])}function getOffsetPoints(e,t,n){return Object(tf_core_esm["tidy"])(function(){var r=getOffsetVectors(e,n);return e.toTensor().mul(Object(tf_core_esm["scalar"])(t,"int32")).toFloat().add(r)})}function decodeSinglePose(e,t,n){return __awaiter(this,void 0,void 0,function(){var r,o,i,s,u,a,l,p,c,f;return __generator(this,function(d){switch(d.label){case 0:return r=0,o=argmax2d(e),[4,Promise.all([e.buffer(),t.buffer(),o.buffer()])];case 1:return i=d.sent(),s=i[0],u=i[1],a=i[2],[4,(l=getOffsetPoints(a,n,u)).buffer()];case 2:return p=d.sent(),c=Array.from(getPointsConfidence(s,a)),f=c.map(function(e,t){return r+=e,{position:{y:p.get(t,0),x:p.get(t,1)},part:partNames[t],score:e}}),o.dispose(),l.dispose(),[2,{keypoints:f,score:r/f.length}]}})})}var MOBILENET_BASE_URL="https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/",RESNET50_BASE_URL="https://storage.googleapis.com/tfjs-models/savedmodel/posenet/resnet50/";function resNet50Checkpoint(e,t){var n="model-stride"+e+".json";return 4===t?RESNET50_BASE_URL+"float/"+n:RESNET50_BASE_URL+"quant"+t+"/"+n}function mobileNetCheckpoint(e,t,n){var r={1:"100",.75:"075",.5:"050"},o="model-stride"+e+".json";return 4===n?MOBILENET_BASE_URL+"float/"+r[t]+"/"+o:MOBILENET_BASE_URL+"quant"+n+"/"+r[t]+"/"+o}var imageNetMean=[-123.15,-115.9,-103.06],ResNet=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return __extends(t,e),t.prototype.preprocessInput=function(e){return e.add(imageNetMean)},t.prototype.nameOutputResults=function(e){var t=e[0],n=e[1];return{offsets:e[2],heatmap:e[3],displacementFwd:t,displacementBwd:n}},t}(BaseModel);function eitherPointDoesntMeetConfidence(e,t,n){return e<n||t<n}function getAdjacentKeyPoints(e,t){return connectedPartIndices.reduce(function(n,r){var o=r[0],i=r[1];return eitherPointDoesntMeetConfidence(e[o].score,e[i].score,t)?n:(n.push([e[o],e[i]]),n)},[])}var NEGATIVE_INFINITY=Number.NEGATIVE_INFINITY,POSITIVE_INFINITY=Number.POSITIVE_INFINITY;function getBoundingBox(e){return e.reduce(function(e,t){var n=e.maxX,r=e.maxY,o=e.minX,i=e.minY,s=t.position,u=s.x,a=s.y;return{maxX:Math.max(n,u),maxY:Math.max(r,a),minX:Math.min(o,u),minY:Math.min(i,a)}},{maxX:NEGATIVE_INFINITY,maxY:NEGATIVE_INFINITY,minX:POSITIVE_INFINITY,minY:POSITIVE_INFINITY})}function getBoundingBoxPoints(e){var t=getBoundingBox(e),n=t.minX,r=t.minY,o=t.maxX,i=t.maxY;return[{x:n,y:r},{x:o,y:r},{x:o,y:i},{x:n,y:i}]}function toTensorBuffers3D(e){return __awaiter(this,void 0,void 0,function(){return __generator(this,function(t){return[2,Promise.all(e.map(function(e){return e.buffer()}))]})})}function scalePose(e,t,n,r,o){return void 0===r&&(r=0),void 0===o&&(o=0),{score:e.score,keypoints:e.keypoints.map(function(e){var i=e.score,s=e.part,u=e.position;return{score:i,part:s,position:{x:u.x*n+o,y:u.y*t+r}}})}}function scalePoses(e,t,n,r,o){return void 0===r&&(r=0),void 0===o&&(o=0),1===n&&1===t&&0===r&&0===o?e:e.map(function(e){return scalePose(e,t,n,r,o)})}function flipPoseHorizontal(e,t){return{score:e.score,keypoints:e.keypoints.map(function(e){var n=e.score,r=e.part,o=e.position;return{score:n,part:r,position:{x:t-1-o.x,y:o.y}}})}}function flipPosesHorizontal(e,t){return t<=0?e:e.map(function(e){return flipPoseHorizontal(e,t)})}function toValidInputResolution(e,t){return isValidInputResolution(e,t)?e:Math.floor(e/t)*t+1}function validateInputResolution(e){tf_core_esm["util"].assert("number"==typeof e||"object"==typeof e,function(){return"Invalid inputResolution "+e+". Should be a number or an object with width and height"}),"object"==typeof e&&(tf_core_esm["util"].assert("number"==typeof e.width,function(){return"inputResolution.width has a value of "+e.width+" which is invalid; it must be a number"}),tf_core_esm["util"].assert("number"==typeof e.height,function(){return"inputResolution.height has a value of "+e.height+" which is invalid; it must be a number"}))}function getValidInputResolutionDimensions(e,t){return validateInputResolution(e),"object"==typeof e?[toValidInputResolution(e.height,t),toValidInputResolution(e.width,t)]:[toValidInputResolution(e,t),toValidInputResolution(e,t)]}var VALID_OUTPUT_STRIDES=[8,16,32];function assertValidOutputStride(e){tf_core_esm["util"].assert("number"==typeof e,function(){return"outputStride is not a number"}),tf_core_esm["util"].assert(VALID_OUTPUT_STRIDES.indexOf(e)>=0,function(){return"outputStride of "+e+" is invalid. It must be either 8, 16, or 32"})}function isValidInputResolution(e,t){return(e-1)%t==0}function assertValidResolution(e,t){tf_core_esm["util"].assert("number"==typeof e[0]&&"number"==typeof e[1],function(){return"both resolution values must be a number but had values "+e}),tf_core_esm["util"].assert(isValidInputResolution(e[0],t),function(){return"height of "+e[0]+" is invalid for output stride "+t+"."}),tf_core_esm["util"].assert(isValidInputResolution(e[1],t),function(){return"width of "+e[1]+" is invalid for output stride "+t+"."})}function getInputTensorDimensions(e){return e instanceof tf_core_esm["Tensor"]?[e.shape[0],e.shape[1]]:[e.height,e.width]}function toInputTensor(e){return e instanceof tf_core_esm["Tensor"]?e:tf_core_esm["browser"].fromPixels(e)}function padAndResizeTo(e,t){var n=t[0],r=t[1],o=getInputTensorDimensions(e),i=o[0],s=o[1],u=r/n,a=[0,0,0,0],l=a[0],p=a[1],c=a[2],f=a[3];return s/i<u?(l=0,p=0,c=Math.round(.5*(u*i-s)),f=Math.round(.5*(u*i-s))):(l=Math.round(.5*(1/u*s-i)),p=Math.round(.5*(1/u*s-i)),c=0,f=0),{resized:Object(tf_core_esm["tidy"])(function(){var t=toInputTensor(e);return(t=Object(tf_core_esm["pad3d"])(t,[[l,p],[c,f],[0,0]])).resizeBilinear([n,r])}),padding:{top:l,left:c,right:f,bottom:p}}}function scaleAndFlipPoses(e,t,n,r,o){var i=t[0],s=t[1],u=n[0],a=n[1],l=scalePoses(e,(i+r.top+r.bottom)/u,(s+r.left+r.right)/a,-r.top,-r.left);return o?flipPosesHorizontal(l,s):l}var MOBILENET_V1_CONFIG={architecture:"MobileNetV1",outputStride:16,multiplier:.75,inputResolution:257},VALID_ARCHITECTURE=["MobileNetV1","ResNet50"],VALID_STRIDE={MobileNetV1:[8,16,32],ResNet50:[32,16]},VALID_MULTIPLIER={MobileNetV1:[.5,.75,1],ResNet50:[1]},VALID_QUANT_BYTES=[1,2,4];function validateModelConfig(e){if(null==(e=e||MOBILENET_V1_CONFIG).architecture&&(e.architecture="MobileNetV1"),VALID_ARCHITECTURE.indexOf(e.architecture)<0)throw new Error("Invalid architecture "+e.architecture+". Should be one of "+VALID_ARCHITECTURE);if(null==e.inputResolution&&(e.inputResolution=257),validateInputResolution(e.inputResolution),null==e.outputStride&&(e.outputStride=16),VALID_STRIDE[e.architecture].indexOf(e.outputStride)<0)throw new Error("Invalid outputStride "+e.outputStride+". Should be one of "+VALID_STRIDE[e.architecture]+" for architecutre "+e.architecture+".");if(null==e.multiplier&&(e.multiplier=1),VALID_MULTIPLIER[e.architecture].indexOf(e.multiplier)<0)throw new Error("Invalid multiplier "+e.multiplier+". Should be one of "+VALID_MULTIPLIER[e.architecture]+" for architecutre "+e.architecture+".");if(null==e.quantBytes&&(e.quantBytes=4),VALID_QUANT_BYTES.indexOf(e.quantBytes)<0)throw new Error("Invalid quantBytes "+e.quantBytes+". Should be one of "+VALID_QUANT_BYTES+" for architecutre "+e.architecture+".");return e}var SINGLE_PERSON_INFERENCE_CONFIG={flipHorizontal:!1},MULTI_PERSON_INFERENCE_CONFIG={flipHorizontal:!1,maxDetections:5,scoreThreshold:.5,nmsRadius:20};function validateMultiPersonInputConfig(e){var t=e.maxDetections,n=e.scoreThreshold,r=e.nmsRadius;if(t<=0)throw new Error("Invalid maxDetections "+t+". Should be > 0");if(n<0||n>1)throw new Error("Invalid scoreThreshold "+n+". Should be in range [0.0, 1.0]");if(r<=0)throw new Error("Invalid nmsRadius "+r+".")}var PoseNet=function(){function e(e,t){assertValidOutputStride(e.outputStride),assertValidResolution(t,e.outputStride),this.baseModel=e,this.inputResolution=t}return e.prototype.estimateMultiplePoses=function(e,t){return void 0===t&&(t=MULTI_PERSON_INFERENCE_CONFIG),__awaiter(this,void 0,void 0,function(){var n,r,o,i,s,u,a,l,p,c,f,d,h,m,g,_,I,v,y,E,b;return __generator(this,function(N){switch(N.label){case 0:return n=__assign({},MULTI_PERSON_INFERENCE_CONFIG,t),validateMultiPersonInputConfig(t),r=this.baseModel.outputStride,o=this.inputResolution,i=getInputTensorDimensions(e),s=i[0],u=i[1],a=padAndResizeTo(e,o),l=a.resized,p=a.padding,c=this.baseModel.predict(l),f=c.heatmapScores,d=c.offsets,h=c.displacementFwd,m=c.displacementBwd,[4,toTensorBuffers3D([f,d,h,m])];case 1:return g=N.sent(),_=g[0],I=g[1],v=g[2],y=g[3],[4,decodeMultiplePoses(_,I,v,y,r,n.maxDetections,n.scoreThreshold,n.nmsRadius)];case 2:return E=N.sent(),b=scaleAndFlipPoses(E,[s,u],o,p,n.flipHorizontal),f.dispose(),d.dispose(),h.dispose(),m.dispose(),l.dispose(),[2,b]}})})},e.prototype.estimateSinglePose=function(e,t){return void 0===t&&(t=SINGLE_PERSON_INFERENCE_CONFIG),__awaiter(this,void 0,void 0,function(){var n,r,o,i,s,u,a,l,p,c,f,d,h,m,g,_;return __generator(this,function(I){switch(I.label){case 0:return n=__assign({},SINGLE_PERSON_INFERENCE_CONFIG,t),r=this.baseModel.outputStride,o=this.inputResolution,i=getInputTensorDimensions(e),s=i[0],u=i[1],a=padAndResizeTo(e,o),l=a.resized,p=a.padding,c=this.baseModel.predict(l),f=c.heatmapScores,d=c.offsets,h=c.displacementFwd,m=c.displacementBwd,[4,decodeSinglePose(f,d,r)];case 1:return g=I.sent(),_=scaleAndFlipPoses([g],[s,u],o,p,n.flipHorizontal),f.dispose(),d.dispose(),h.dispose(),m.dispose(),l.dispose(),[2,_[0]]}})})},e.prototype.estimatePoses=function(e,t){return __awaiter(this,void 0,void 0,function(){return __generator(this,function(n){switch(n.label){case 0:return"single-person"!==t.decodingMethod?[3,2]:[4,this.estimateSinglePose(e,t)];case 1:return[2,[n.sent()]];case 2:return[2,this.estimateMultiplePoses(e,t)]}})})},e.prototype.dispose=function(){this.baseModel.dispose()},e}();function loadMobileNet(e){return __awaiter(this,void 0,void 0,function(){var t,n,r,o,i,s,u;return __generator(this,function(a){switch(a.label){case 0:if(t=e.outputStride,n=e.quantBytes,r=e.multiplier,null==tf_core_esm)throw new Error("Cannot find TensorFlow.js. If you are using a <script> tag, please also include @tensorflow/tfjs on the page before using this\n        model.");return o=mobileNetCheckpoint(t,r,n),[4,Object(tf_converter_esm["loadGraphModel"])(e.modelUrl||o)];case 1:return i=a.sent(),s=new MobileNet(i,t),u=getValidInputResolutionDimensions(e.inputResolution,s.outputStride),[2,new PoseNet(s,u)]}})})}function loadResNet(e){return __awaiter(this,void 0,void 0,function(){var t,n,r,o,i,s;return __generator(this,function(u){switch(u.label){case 0:if(t=e.outputStride,n=e.quantBytes,null==tf_core_esm)throw new Error("Cannot find TensorFlow.js. If you are using a <script> tag, please also include @tensorflow/tfjs on the page before using this\n        model.");return r=resNet50Checkpoint(t,n),[4,Object(tf_converter_esm["loadGraphModel"])(e.modelUrl||r)];case 1:return o=u.sent(),i=new ResNet(o,t),s=getValidInputResolutionDimensions(e.inputResolution,i.outputStride),[2,new PoseNet(i,s)]}})})}function load(e){return void 0===e&&(e=MOBILENET_V1_CONFIG),__awaiter(this,void 0,void 0,function(){return __generator(this,function(t){return"ResNet50"===(e=validateModelConfig(e)).architecture?[2,loadResNet(e)]:"MobileNetV1"===e.architecture?[2,loadMobileNet(e)]:[2,null]})})}var version="2.2.1";
+var extendStatics=function(e,t){return(extendStatics=Object.setPrototypeOf||{__proto__:[]}instanceof Array&&function(e,t){e.__proto__=t}||function(e,t){for(var n in t)t.hasOwnProperty(n)&&(e[n]=t[n])})(e,t)};function __extends(e,t){function n(){this.constructor=e}extendStatics(e,t),e.prototype=null===t?Object.create(t):(n.prototype=t.prototype,new n)}var __assign=function(){return(__assign=Object.assign||function(e){for(var t,n=1,r=arguments.length;n<r;n++)for(var o in t=arguments[n])Object.prototype.hasOwnProperty.call(t,o)&&(e[o]=t[o]);return e}).apply(this,arguments)};function __awaiter(e,t,n,r){return new(n||(n=Promise))(function(o,i){function s(e){try{a(r.next(e))}catch(e){i(e)}}function u(e){try{a(r.throw(e))}catch(e){i(e)}}function a(e){e.done?o(e.value):new n(function(t){t(e.value)}).then(s,u)}a((r=r.apply(e,t||[])).next())})}function __generator(e,t){var n,r,o,i,s={label:0,sent:function(){if(1&o[0])throw o[1];return o[1]},trys:[],ops:[]};return i={next:u(0),throw:u(1),return:u(2)},"function"==typeof Symbol&&(i[Symbol.iterator]=function(){return this}),i;function u(i){return function(u){return function(i){if(n)throw new TypeError("Generator is already executing.");for(;s;)try{if(n=1,r&&(o=2&i[0]?r.return:i[0]?r.throw||((o=r.return)&&o.call(r),0):r.next)&&!(o=o.call(r,i[1])).done)return o;switch(r=0,o&&(i=[2&i[0],o.value]),i[0]){case 0:case 1:o=i;break;case 4:return s.label++,{value:i[1],done:!1};case 5:s.label++,r=i[1],i=[0];continue;case 7:i=s.ops.pop(),s.trys.pop();continue;default:if(!(o=(o=s.trys).length>0&&o[o.length-1])&&(6===i[0]||2===i[0])){s=0;continue}if(3===i[0]&&(!o||i[1]>o[0]&&i[1]<o[3])){s.label=i[1];break}if(6===i[0]&&s.label<o[1]){s.label=o[1],o=i;break}if(o&&s.label<o[2]){s.label=o[2],s.ops.push(i);break}o[2]&&s.ops.pop(),s.trys.pop();continue}i=t.call(e,s)}catch(e){i=[6,e],r=0}finally{n=o=0}if(5&i[0])throw i[1];return{value:i[0]?i[1]:void 0,done:!0}}([i,u])}}}var BaseModel=function(){function e(e,t){this.model=e,this.outputStride=t;var n=this.model.inputs[0].shape;tf_core_esm["util"].assert(-1===n[1]&&-1===n[2],function(){return"Input shape ["+n[1]+", "+n[2]+"] must both be equal to or -1"})}return e.prototype.predict=function(e){var t=this;return Object(tf_core_esm["tidy"])(function(){var n=t.preprocessInput(Object(tf_core_esm["cast"])(e,"float32")),r=Object(tf_core_esm["expandDims"])(n,0),o=t.model.predict(r).map(function(e){return Object(tf_core_esm["squeeze"])(e,[0])}),i=t.nameOutputResults(o);return{heatmapScores:Object(tf_core_esm["sigmoid"])(i.heatmap),offsets:i.offsets,displacementFwd:i.displacementFwd,displacementBwd:i.displacementBwd}})},e.prototype.dispose=function(){this.model.dispose()},e}(),MobileNet=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return __extends(t,e),t.prototype.preprocessInput=function(e){return Object(tf_core_esm["tidy"])(function(){return Object(tf_core_esm["sub"])(Object(tf_core_esm["div"])(e,127.5),1)})},t.prototype.nameOutputResults=function(e){return{offsets:e[0],heatmap:e[1],displacementFwd:e[2],displacementBwd:e[3]}},t}(BaseModel);function half(e){return Math.floor(e/2)}var MaxHeap=function(){function e(e,t){this.priorityQueue=new Array(e),this.numberOfElements=-1,this.getElementValue=t}return e.prototype.enqueue=function(e){this.priorityQueue[++this.numberOfElements]=e,this.swim(this.numberOfElements)},e.prototype.dequeue=function(){var e=this.priorityQueue[0];return this.exchange(0,this.numberOfElements--),this.sink(0),this.priorityQueue[this.numberOfElements+1]=null,e},e.prototype.empty=function(){return-1===this.numberOfElements},e.prototype.size=function(){return this.numberOfElements+1},e.prototype.all=function(){return this.priorityQueue.slice(0,this.numberOfElements+1)},e.prototype.max=function(){return this.priorityQueue[0]},e.prototype.swim=function(e){for(;e>0&&this.less(half(e),e);)this.exchange(e,half(e)),e=half(e)},e.prototype.sink=function(e){for(;2*e<=this.numberOfElements;){var t=2*e;if(t<this.numberOfElements&&this.less(t,t+1)&&t++,!this.less(e,t))break;this.exchange(e,t),e=t}},e.prototype.getValueAt=function(e){return this.getElementValue(this.priorityQueue[e])},e.prototype.less=function(e,t){return this.getValueAt(e)<this.getValueAt(t)},e.prototype.exchange=function(e,t){var n=this.priorityQueue[e];this.priorityQueue[e]=this.priorityQueue[t],this.priorityQueue[t]=n},e}();function scoreIsMaximumInLocalWindow(e,t,n,r,o,i){for(var s=i.shape,u=s[0],a=s[1],l=!0,p=Math.max(n-o,0),c=Math.min(n+o+1,u),d=p;d<c;++d){for(var f=Math.max(r-o,0),h=Math.min(r+o+1,a),m=f;m<h;++m)if(i.get(d,m,e)>t){l=!1;break}if(!l)break}return l}function buildPartWithScoreQueue(e,t,n){for(var r=n.shape,o=r[0],i=r[1],s=r[2],u=new MaxHeap(o*i*s,function(e){return e.score}),a=0;a<o;++a)for(var l=0;l<i;++l)for(var p=0;p<s;++p){var c=n.get(a,l,p);c<e||scoreIsMaximumInLocalWindow(p,c,a,l,t,n)&&u.enqueue({score:c,part:{heatmapY:a,heatmapX:l,id:p}})}return u}var partNames=["nose","leftEye","rightEye","leftEar","rightEar","leftShoulder","rightShoulder","leftElbow","rightElbow","leftWrist","rightWrist","leftHip","rightHip","leftKnee","rightKnee","leftAnkle","rightAnkle"],NUM_KEYPOINTS=partNames.length,partIds=partNames.reduce(function(e,t,n){return e[t]=n,e},{}),connectedPartNames=[["leftHip","leftShoulder"],["leftElbow","leftShoulder"],["leftElbow","leftWrist"],["leftHip","leftKnee"],["leftKnee","leftAnkle"],["rightHip","rightShoulder"],["rightElbow","rightShoulder"],["rightElbow","rightWrist"],["rightHip","rightKnee"],["rightKnee","rightAnkle"],["leftShoulder","rightShoulder"],["leftHip","rightHip"]],poseChain=[["nose","leftEye"],["leftEye","leftEar"],["nose","rightEye"],["rightEye","rightEar"],["nose","leftShoulder"],["leftShoulder","leftElbow"],["leftElbow","leftWrist"],["leftShoulder","leftHip"],["leftHip","leftKnee"],["leftKnee","leftAnkle"],["nose","rightShoulder"],["rightShoulder","rightElbow"],["rightElbow","rightWrist"],["rightShoulder","rightHip"],["rightHip","rightKnee"],["rightKnee","rightAnkle"]],connectedPartIndices=connectedPartNames.map(function(e){var t=e[0],n=e[1];return[partIds[t],partIds[n]]}),partChannels=["left_face","right_face","right_upper_leg_front","right_lower_leg_back","right_upper_leg_back","left_lower_leg_front","left_upper_leg_front","left_upper_leg_back","left_lower_leg_back","right_feet","right_lower_leg_front","left_feet","torso_front","torso_back","right_upper_arm_front","right_upper_arm_back","right_lower_arm_back","left_lower_arm_front","left_upper_arm_front","left_upper_arm_back","left_lower_arm_back","right_hand","right_lower_arm_front","left_hand"];function getOffsetPoint(e,t,n,r){return{y:r.get(e,t,n),x:r.get(e,t,n+NUM_KEYPOINTS)}}function getImageCoords(e,t,n){var r=getOffsetPoint(e.heatmapY,e.heatmapX,e.id,n),o=r.y,i=r.x;return{x:e.heatmapX*t+i,y:e.heatmapY*t+o}}function clamp(e,t,n){return e<t?t:e>n?n:e}function squaredDistance(e,t,n,r){var o=n-e,i=r-t;return o*o+i*i}function addVectors(e,t){return{x:e.x+t.x,y:e.y+t.y}}var parentChildrenTuples=poseChain.map(function(e){var t=e[0],n=e[1];return[partIds[t],partIds[n]]}),parentToChildEdges=parentChildrenTuples.map(function(e){return e[1]}),childToParentEdges=parentChildrenTuples.map(function(e){return e[0]});function getDisplacement(e,t,n){var r=n.shape[2]/2;return{y:n.get(t.y,t.x,e),x:n.get(t.y,t.x,r+e)}}function getStridedIndexNearPoint(e,t,n,r){return{y:clamp(Math.round(e.y/t),0,n-1),x:clamp(Math.round(e.x/t),0,r-1)}}function traverseToTargetKeypoint(e,t,n,r,o,i,s,u){void 0===u&&(u=2);for(var a=r.shape,l=a[0],p=a[1],c=getDisplacement(e,getStridedIndexNearPoint(t.position,i,l,p),s),d=addVectors(t.position,c),f=0;f<u;f++){var h=getStridedIndexNearPoint(d,i,l,p),m=getOffsetPoint(h.y,h.x,n,o);d=addVectors({x:h.x*i,y:h.y*i},{x:m.x,y:m.y})}var g=getStridedIndexNearPoint(d,i,l,p),_=r.get(g.y,g.x,n);return{position:d,part:partNames[n],score:_}}function decodePose(e,t,n,r,o,i){var s=t.shape[2],u=parentToChildEdges.length,a=new Array(s),l=e.part,p=e.score,c=getImageCoords(l,r,n);a[l.id]={score:p,part:partNames[l.id],position:c};for(var d=u-1;d>=0;--d){var f=parentToChildEdges[d],h=childToParentEdges[d];a[f]&&!a[h]&&(a[h]=traverseToTargetKeypoint(d,a[f],h,t,n,r,i))}for(d=0;d<u;++d){f=childToParentEdges[d],h=parentToChildEdges[d];a[f]&&!a[h]&&(a[h]=traverseToTargetKeypoint(d,a[f],h,t,n,r,o))}return a}function withinNmsRadiusOfCorrespondingPoint(e,t,n,r){var o=n.x,i=n.y;return e.some(function(e){var n=e.keypoints[r].position;return squaredDistance(i,o,n.y,n.x)<=t})}function getInstanceScore(e,t,n){return n.reduce(function(n,r,o){var i=r.position,s=r.score;return withinNmsRadiusOfCorrespondingPoint(e,t,i,o)||(n+=s),n},0)/n.length}var kLocalMaximumRadius=1;function decodeMultiplePoses(e,t,n,r,o,i,s,u){void 0===s&&(s=.5),void 0===u&&(u=20);for(var a=[],l=buildPartWithScoreQueue(s,kLocalMaximumRadius,e),p=u*u;a.length<i&&!l.empty();){var c=l.dequeue();if(!withinNmsRadiusOfCorrespondingPoint(a,p,getImageCoords(c.part,o,t),c.part.id)){var d=decodePose(c,e,t,o,n,r),f=getInstanceScore(a,p,d);a.push({keypoints:d,score:f})}}return a}function mod(e,t){return Object(tf_core_esm["tidy"])(function(){var n=Object(tf_core_esm["div"])(e,Object(tf_core_esm["scalar"])(t,"int32"));return Object(tf_core_esm["sub"])(e,Object(tf_core_esm["mul"])(n,Object(tf_core_esm["scalar"])(t,"int32")))})}function argmax2d(e){var t=e.shape,n=t[0],r=t[1],o=t[2];return Object(tf_core_esm["tidy"])(function(){var t=Object(tf_core_esm["reshape"])(e,[n*r,o]),i=Object(tf_core_esm["argMax"])(t,0),s=Object(tf_core_esm["expandDims"])(Object(tf_core_esm["div"])(i,Object(tf_core_esm["scalar"])(r,"int32")),1),u=Object(tf_core_esm["expandDims"])(mod(i,r),1);return Object(tf_core_esm["concat"])([s,u],1)})}function getPointsConfidence(e,t){for(var n=t.shape[0],r=new Float32Array(n),o=0;o<n;o++){var i=t.get(o,0),s=t.get(o,1);r[o]=e.get(i,s,o)}return r}function getOffsetPoint$1(e,t,n,r){return{y:r.get(e,t,n),x:r.get(e,t,n+NUM_KEYPOINTS)}}function getOffsetVectors(e,t){for(var n=[],r=0;r<NUM_KEYPOINTS;r++){var o=getOffsetPoint$1(e.get(r,0).valueOf(),e.get(r,1).valueOf(),r,t),i=o.x,s=o.y;n.push(s),n.push(i)}return Object(tf_core_esm["tensor2d"])(n,[NUM_KEYPOINTS,2])}function getOffsetPoints(e,t,n){return Object(tf_core_esm["tidy"])(function(){var r=getOffsetVectors(e,n);return Object(tf_core_esm["add"])(Object(tf_core_esm["cast"])(Object(tf_core_esm["mul"])(e.toTensor(),Object(tf_core_esm["scalar"])(t,"int32")),"float32"),r)})}function decodeSinglePose(e,t,n){return __awaiter(this,void 0,void 0,function(){var r,o,i,s,u,a,l,p,c,d;return __generator(this,function(f){switch(f.label){case 0:return r=0,o=argmax2d(e),[4,Promise.all([e.buffer(),t.buffer(),o.buffer()])];case 1:return i=f.sent(),s=i[0],u=i[1],a=i[2],[4,(l=getOffsetPoints(a,n,u)).buffer()];case 2:return p=f.sent(),c=Array.from(getPointsConfidence(s,a)),d=c.map(function(e,t){return r+=e,{position:{y:p.get(t,0),x:p.get(t,1)},part:partNames[t],score:e}}),o.dispose(),l.dispose(),[2,{keypoints:d,score:r/d.length}]}})})}var MOBILENET_BASE_URL="https://storage.googleapis.com/tfjs-models/savedmodel/posenet/mobilenet/",RESNET50_BASE_URL="https://storage.googleapis.com/tfjs-models/savedmodel/posenet/resnet50/";function resNet50Checkpoint(e,t){var n="model-stride"+e+".json";return 4===t?RESNET50_BASE_URL+"float/"+n:RESNET50_BASE_URL+"quant"+t+"/"+n}function mobileNetCheckpoint(e,t,n){var r={1:"100",.75:"075",.5:"050"},o="model-stride"+e+".json";return 4===n?MOBILENET_BASE_URL+"float/"+r[t]+"/"+o:MOBILENET_BASE_URL+"quant"+n+"/"+r[t]+"/"+o}var imageNetMean=[-123.15,-115.9,-103.06],ResNet=function(e){function t(){return null!==e&&e.apply(this,arguments)||this}return __extends(t,e),t.prototype.preprocessInput=function(e){return Object(tf_core_esm["add"])(e,imageNetMean)},t.prototype.nameOutputResults=function(e){var t=e[0],n=e[1];return{offsets:e[2],heatmap:e[3],displacementFwd:t,displacementBwd:n}},t}(BaseModel);function eitherPointDoesntMeetConfidence(e,t,n){return e<n||t<n}function getAdjacentKeyPoints(e,t){return connectedPartIndices.reduce(function(n,r){var o=r[0],i=r[1];return eitherPointDoesntMeetConfidence(e[o].score,e[i].score,t)?n:(n.push([e[o],e[i]]),n)},[])}var NEGATIVE_INFINITY=Number.NEGATIVE_INFINITY,POSITIVE_INFINITY=Number.POSITIVE_INFINITY;function getBoundingBox(e){return e.reduce(function(e,t){var n=e.maxX,r=e.maxY,o=e.minX,i=e.minY,s=t.position,u=s.x,a=s.y;return{maxX:Math.max(n,u),maxY:Math.max(r,a),minX:Math.min(o,u),minY:Math.min(i,a)}},{maxX:NEGATIVE_INFINITY,maxY:NEGATIVE_INFINITY,minX:POSITIVE_INFINITY,minY:POSITIVE_INFINITY})}function getBoundingBoxPoints(e){var t=getBoundingBox(e),n=t.minX,r=t.minY,o=t.maxX,i=t.maxY;return[{x:n,y:r},{x:o,y:r},{x:o,y:i},{x:n,y:i}]}function toTensorBuffers3D(e){return __awaiter(this,void 0,void 0,function(){return __generator(this,function(t){return[2,Promise.all(e.map(function(e){return e.buffer()}))]})})}function scalePose(e,t,n,r,o){return void 0===r&&(r=0),void 0===o&&(o=0),{score:e.score,keypoints:e.keypoints.map(function(e){var i=e.score,s=e.part,u=e.position;return{score:i,part:s,position:{x:u.x*n+o,y:u.y*t+r}}})}}function scalePoses(e,t,n,r,o){return void 0===r&&(r=0),void 0===o&&(o=0),1===n&&1===t&&0===r&&0===o?e:e.map(function(e){return scalePose(e,t,n,r,o)})}function flipPoseHorizontal(e,t){return{score:e.score,keypoints:e.keypoints.map(function(e){var n=e.score,r=e.part,o=e.position;return{score:n,part:r,position:{x:t-1-o.x,y:o.y}}})}}function flipPosesHorizontal(e,t){return t<=0?e:e.map(function(e){return flipPoseHorizontal(e,t)})}function toValidInputResolution(e,t){return isValidInputResolution(e,t)?e:Math.floor(e/t)*t+1}function validateInputResolution(e){tf_core_esm["util"].assert("number"==typeof e||"object"==typeof e,function(){return"Invalid inputResolution "+e+". Should be a number or an object with width and height"}),"object"==typeof e&&(tf_core_esm["util"].assert("number"==typeof e.width,function(){return"inputResolution.width has a value of "+e.width+" which is invalid; it must be a number"}),tf_core_esm["util"].assert("number"==typeof e.height,function(){return"inputResolution.height has a value of "+e.height+" which is invalid; it must be a number"}))}function getValidInputResolutionDimensions(e,t){return validateInputResolution(e),"object"==typeof e?[toValidInputResolution(e.height,t),toValidInputResolution(e.width,t)]:[toValidInputResolution(e,t),toValidInputResolution(e,t)]}var VALID_OUTPUT_STRIDES=[8,16,32];function assertValidOutputStride(e){tf_core_esm["util"].assert("number"==typeof e,function(){return"outputStride is not a number"}),tf_core_esm["util"].assert(VALID_OUTPUT_STRIDES.indexOf(e)>=0,function(){return"outputStride of "+e+" is invalid. It must be either 8, 16, or 32"})}function isValidInputResolution(e,t){return(e-1)%t==0}function assertValidResolution(e,t){tf_core_esm["util"].assert("number"==typeof e[0]&&"number"==typeof e[1],function(){return"both resolution values must be a number but had values "+e}),tf_core_esm["util"].assert(isValidInputResolution(e[0],t),function(){return"height of "+e[0]+" is invalid for output stride "+t+"."}),tf_core_esm["util"].assert(isValidInputResolution(e[1],t),function(){return"width of "+e[1]+" is invalid for output stride "+t+"."})}function getInputTensorDimensions(e){return e instanceof tf_core_esm["Tensor"]?[e.shape[0],e.shape[1]]:[e.height,e.width]}function toInputTensor(e){return e instanceof tf_core_esm["Tensor"]?e:tf_core_esm["browser"].fromPixels(e)}function padAndResizeTo(e,t){var n=t[0],r=t[1],o=getInputTensorDimensions(e),i=o[0],s=o[1],u=r/n,a=[0,0,0,0],l=a[0],p=a[1],c=a[2],d=a[3];return s/i<u?(l=0,p=0,c=Math.round(.5*(u*i-s)),d=Math.round(.5*(u*i-s))):(l=Math.round(.5*(1/u*s-i)),p=Math.round(.5*(1/u*s-i)),c=0,d=0),{resized:Object(tf_core_esm["tidy"])(function(){var t=toInputTensor(e);return t=Object(tf_core_esm["pad3d"])(t,[[l,p],[c,d],[0,0]]),tf_core_esm["image"].resizeBilinear(t,[n,r])}),padding:{top:l,left:c,right:d,bottom:p}}}function scaleAndFlipPoses(e,t,n,r,o){var i=t[0],s=t[1],u=n[0],a=n[1],l=scalePoses(e,(i+r.top+r.bottom)/u,(s+r.left+r.right)/a,-r.top,-r.left);return o?flipPosesHorizontal(l,s):l}var MOBILENET_V1_CONFIG={architecture:"MobileNetV1",outputStride:16,multiplier:.75,inputResolution:257},VALID_ARCHITECTURE=["MobileNetV1","ResNet50"],VALID_STRIDE={MobileNetV1:[8,16,32],ResNet50:[32,16]},VALID_MULTIPLIER={MobileNetV1:[.5,.75,1],ResNet50:[1]},VALID_QUANT_BYTES=[1,2,4];function validateModelConfig(e){if(null==(e=e||MOBILENET_V1_CONFIG).architecture&&(e.architecture="MobileNetV1"),VALID_ARCHITECTURE.indexOf(e.architecture)<0)throw new Error("Invalid architecture "+e.architecture+". Should be one of "+VALID_ARCHITECTURE);if(null==e.inputResolution&&(e.inputResolution=257),validateInputResolution(e.inputResolution),null==e.outputStride&&(e.outputStride=16),VALID_STRIDE[e.architecture].indexOf(e.outputStride)<0)throw new Error("Invalid outputStride "+e.outputStride+". Should be one of "+VALID_STRIDE[e.architecture]+" for architecture "+e.architecture+".");if(null==e.multiplier&&(e.multiplier=1),VALID_MULTIPLIER[e.architecture].indexOf(e.multiplier)<0)throw new Error("Invalid multiplier "+e.multiplier+". Should be one of "+VALID_MULTIPLIER[e.architecture]+" for architecture "+e.architecture+".");if(null==e.quantBytes&&(e.quantBytes=4),VALID_QUANT_BYTES.indexOf(e.quantBytes)<0)throw new Error("Invalid quantBytes "+e.quantBytes+". Should be one of "+VALID_QUANT_BYTES+" for architecture "+e.architecture+".");if("MobileNetV1"===e.architecture&&32===e.outputStride&&1!==e.multiplier)throw new Error("When using an output stride of 32, you must select 1 as the multiplier.");return e}var SINGLE_PERSON_INFERENCE_CONFIG={flipHorizontal:!1},MULTI_PERSON_INFERENCE_CONFIG={flipHorizontal:!1,maxDetections:5,scoreThreshold:.5,nmsRadius:20};function validateMultiPersonInputConfig(e){var t=e.maxDetections,n=e.scoreThreshold,r=e.nmsRadius;if(t<=0)throw new Error("Invalid maxDetections "+t+". Should be > 0");if(n<0||n>1)throw new Error("Invalid scoreThreshold "+n+". Should be in range [0.0, 1.0]");if(r<=0)throw new Error("Invalid nmsRadius "+r+".")}var PoseNet=function(){function e(e,t){assertValidOutputStride(e.outputStride),assertValidResolution(t,e.outputStride),this.baseModel=e,this.inputResolution=t}return e.prototype.estimateMultiplePoses=function(e,t){return void 0===t&&(t=MULTI_PERSON_INFERENCE_CONFIG),__awaiter(this,void 0,void 0,function(){var n,r,o,i,s,u,a,l,p,c,d,f,h,m,g,_,I,v,y,E,b;return __generator(this,function(N){switch(N.label){case 0:return n=__assign({},MULTI_PERSON_INFERENCE_CONFIG,t),validateMultiPersonInputConfig(t),r=this.baseModel.outputStride,o=this.inputResolution,i=getInputTensorDimensions(e),s=i[0],u=i[1],a=padAndResizeTo(e,o),l=a.resized,p=a.padding,c=this.baseModel.predict(l),d=c.heatmapScores,f=c.offsets,h=c.displacementFwd,m=c.displacementBwd,[4,toTensorBuffers3D([d,f,h,m])];case 1:return g=N.sent(),_=g[0],I=g[1],v=g[2],y=g[3],[4,decodeMultiplePoses(_,I,v,y,r,n.maxDetections,n.scoreThreshold,n.nmsRadius)];case 2:return E=N.sent(),b=scaleAndFlipPoses(E,[s,u],o,p,n.flipHorizontal),d.dispose(),f.dispose(),h.dispose(),m.dispose(),l.dispose(),[2,b]}})})},e.prototype.estimateSinglePose=function(e,t){return void 0===t&&(t=SINGLE_PERSON_INFERENCE_CONFIG),__awaiter(this,void 0,void 0,function(){var n,r,o,i,s,u,a,l,p,c,d,f,h,m,g,_;return __generator(this,function(I){switch(I.label){case 0:return n=__assign({},SINGLE_PERSON_INFERENCE_CONFIG,t),r=this.baseModel.outputStride,o=this.inputResolution,i=getInputTensorDimensions(e),s=i[0],u=i[1],a=padAndResizeTo(e,o),l=a.resized,p=a.padding,c=this.baseModel.predict(l),d=c.heatmapScores,f=c.offsets,h=c.displacementFwd,m=c.displacementBwd,[4,decodeSinglePose(d,f,r)];case 1:return g=I.sent(),_=scaleAndFlipPoses([g],[s,u],o,p,n.flipHorizontal),d.dispose(),f.dispose(),h.dispose(),m.dispose(),l.dispose(),[2,_[0]]}})})},e.prototype.estimatePoses=function(e,t){return __awaiter(this,void 0,void 0,function(){return __generator(this,function(n){switch(n.label){case 0:return"single-person"!==t.decodingMethod?[3,2]:[4,this.estimateSinglePose(e,t)];case 1:return[2,[n.sent()]];case 2:return[2,this.estimateMultiplePoses(e,t)]}})})},e.prototype.dispose=function(){this.baseModel.dispose()},e}();function loadMobileNet(e){return __awaiter(this,void 0,void 0,function(){var t,n,r,o,i,s,u;return __generator(this,function(a){switch(a.label){case 0:if(t=e.outputStride,n=e.quantBytes,r=e.multiplier,null==tf_core_esm)throw new Error("Cannot find TensorFlow.js. If you are using a <script> tag, please also include @tensorflow/tfjs on the page before using this\n        model.");return o=mobileNetCheckpoint(t,r,n),[4,Object(tf_converter_esm["loadGraphModel"])(e.modelUrl||o)];case 1:return i=a.sent(),s=new MobileNet(i,t),u=getValidInputResolutionDimensions(e.inputResolution,s.outputStride),[2,new PoseNet(s,u)]}})})}function loadResNet(e){return __awaiter(this,void 0,void 0,function(){var t,n,r,o,i,s;return __generator(this,function(u){switch(u.label){case 0:if(t=e.outputStride,n=e.quantBytes,null==tf_core_esm)throw new Error("Cannot find TensorFlow.js. If you are using a <script> tag, please also include @tensorflow/tfjs on the page before using this\n        model.");return r=resNet50Checkpoint(t,n),[4,Object(tf_converter_esm["loadGraphModel"])(e.modelUrl||r)];case 1:return o=u.sent(),i=new ResNet(o,t),s=getValidInputResolutionDimensions(e.inputResolution,i.outputStride),[2,new PoseNet(i,s)]}})})}function load(e){return void 0===e&&(e=MOBILENET_V1_CONFIG),__awaiter(this,void 0,void 0,function(){return __generator(this,function(t){return"ResNet50"===(e=validateModelConfig(e)).architecture?[2,loadResNet(e)]:"MobileNetV1"===e.architecture?[2,loadMobileNet(e)]:[2,null]})})}var version="2.2.2";
+//# sourceMappingURL=posenet.esm.js.map
 
 // EXTERNAL MODULE: ./node_modules/@tensorflow-models/coco-ssd/dist/coco-ssd.es2017.esm.min.js
 var coco_ssd_es2017_esm_min = __webpack_require__(113);

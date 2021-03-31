@@ -17,16 +17,16 @@ Entry.Blacksmith = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) {
-                if(Entry.hw.sendQueue.SET[key].type==Entry.Blacksmith.sensorTypes.DCMOTOR){
-                    Entry.hw.sendQueue.SET[key].data.value1=0;
+                if (Entry.hw.sendQueue.SET[key].type == Entry.Blacksmith.sensorTypes.DCMOTOR) {
+                    Entry.hw.sendQueue.SET[key].data.value1 = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                }else{
+                } else {
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
             });
         }
-        Entry.hw.sendQueue.GET={};
+        Entry.hw.sendQueue.GET = {};
         Entry.hw.update();
     },
     sensorTypes: {
@@ -45,7 +45,7 @@ Entry.Blacksmith = {
         RGBLED: 12,
         DCMOTOR: 13,
         OLED: 14,
-        PIR : 15,
+        PIR: 15,
     },
     toneTable: {
         '0': 0,
@@ -92,6 +92,8 @@ Entry.Blacksmith.setLanguage = function() {
                 blacksmith_dcmotor_direction_reverse: '역방향',
                 blacksmith_btData_select_number: '숫자',
                 blacksmith_btData_select_character: '문자',
+                blacksmith_set_digital_lcd: 'LCD화면 %1 줄에 %2 나타내기 %3',
+                blacksmith_set_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
                 blacksmith_get_analog_value: '아날로그 %1 번 핀 센서 값',
                 blacksmith_get_analog_mapping:
                     '아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
@@ -112,6 +114,15 @@ Entry.Blacksmith.setLanguage = function() {
                 blacksmith_module_digital_lcd: 'LCD화면 %1 줄에 %2 나타내기 %3',
                 blacksmith_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
                 blacksmith_module_digital_oled: 'OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4',
+            },
+            Blocks: {
+                blacksmith_toggle_on: '켜기',
+                blacksmith_toggle_off: '끄기',
+                blacksmith_lcd_first_line: '첫 번째',
+                blacksmith_lcd_seconds_line: '두 번째',
+            },
+            Menus: {
+                blacksmith: '대장장이 보드',
             },
         },
         en: {
@@ -140,6 +151,15 @@ Entry.Blacksmith.setLanguage = function() {
                 blacksmith_module_digital_lcd: 'LCD %1 line %2 appear %3',
                 blacksmith_module_digital_bluetooth: 'Bluetooth TX 3 Pin %1 data send %2',
                 blacksmith_module_digital_oled: 'OLED X codinate %1 Y coodinate %2 appear %3 %4',
+            },
+            Blocks: {
+                blacksmith_toggle_on: 'on',
+                blacksmith_toggle_off: 'off',
+                blacksmith_lcd_first_line: 'first',
+                blacksmith_lcd_seconds_line: 'seconds',
+            },
+            Menus: {
+                blacksmith: 'Blacksmith Board',
             },
         },
     };
@@ -615,16 +635,13 @@ Entry.Blacksmith.getBlocks = function() {
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_digital_bluetooth,
             statements: [],
-            params: [
-            ],
+            params: [],
             events: {},
             def: {
-                params: [
-                ],
+                params: [],
                 type: 'blacksmith_get_digital_bluetooth',
             },
-            paramsKeyMap: {
-            },
+            paramsKeyMap: {},
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
             func: function(sprite, script) {
@@ -642,7 +659,7 @@ Entry.Blacksmith.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                return getString ? getString.slice(0,getString.length-1) : ' ';
+                return getString ? getString.slice(0, getString.length - 1) : ' ';
             },
             syntax: { js: [], py: ['blacksmith.get_digital_bluetooth()'] },
         },
@@ -742,9 +759,9 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                if(Entry.hw.sendQueue.SET[port]){
+                if (Entry.hw.sendQueue.SET[port]) {
                     return Entry.hw.sendQueue.SET[port].data;
-                }else{
+                } else {
                     Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.DIGITAL] = {
                         port: port,
                         time: new Date().getTime(),
@@ -1406,7 +1423,7 @@ Entry.Blacksmith.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * 50;
+                    var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][line] = {
                         type: Entry.Blacksmith.sensorTypes.LCD,
@@ -1523,7 +1540,7 @@ Entry.Blacksmith.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * 50;
+                    var timeValue = (60 / fps) * 50;
 
                     coodinate_x = Math.min(coodinate_x, 127);
                     coodinate_x = Math.max(coodinate_x, 0);
@@ -1624,7 +1641,7 @@ Entry.Blacksmith.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * 50;
+                    var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][port] = {
                         type: Entry.Blacksmith.sensorTypes.WRITE_BLUETOOTH,

@@ -39,6 +39,20 @@ Entry.Cobl.blockMenuBlocks = [
     'cobl_external_led',
     'cobl_7_segment',
 ];
+Entry.Cobl.setLanguage = function() {
+    return {
+        ko: {
+            Menus: {
+                cobl: '코블',
+            },
+        },
+        en: {
+            Menus: {
+                cobl: 'Cobl',
+            },
+        },
+    };
+};
 Entry.Cobl.getBlocks = function() {
     return {
         //region cobl 코블
@@ -191,7 +205,10 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -229,7 +246,10 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -264,7 +284,10 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -299,7 +322,11 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -355,7 +382,11 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -576,21 +607,34 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1.시계방향', '1'], ['2.반시계방향', '2'], ['3.정지', '3']],
+                    options: [
+                        ['1.시계방향', '1'],
+                        ['2.반시계방향', '2'],
+                        ['3.정지', '3'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4'], ['5', '5']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -645,7 +689,10 @@ Entry.Cobl.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
