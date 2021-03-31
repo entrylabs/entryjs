@@ -137,6 +137,45 @@ Entry.Creamo.blockMenuBlocks = [
     'creamo_toggle_pwm',
     'creamo_toggle_motor',
 ];
+Entry.Creamo.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                creamo_get_number_sensor_value: '가변저항_블록 %1 번 센서값  ',
+                creamo_get_port_number: '%1',
+                creamo_get_pwm_port_number: '%1  ',
+                creamo_motor_port_number: '%1',
+                creamo_toggle_led: 'LED_블록 %1 번 핀 %2 %3',
+                creamo_toggle_motor: 'Motor_블록 %1 번 핀 %2 %3',
+                creamo_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+            },
+            Menus: {
+                creamo: '크리모',
+            },
+            Device: {
+                creamo: '크리모',
+            },
+        },
+        en: {
+            template: {
+                creamo_get_number_sensor_value: 'PWM_Block %1 Sensor value',
+                creamo_get_port_number: '%1',
+                creamo_get_pwm_port_number: '%1',
+                creamo_motor_port_number: '%1',
+                creamo_toggle_led: 'LED_Block %1 Pin %2 %3',
+                creamo_toggle_motor: 'Motor_Block %1 pin %2 %3',
+                creamo_toggle_pwm: 'Digital %1 Pin %2 %3',
+            },
+            Menus: {
+                creamo: 'creamo',
+            },
+            Device: {
+                creamo: 'creamo',
+            },
+        },
+    };
+};
+
 Entry.Creamo.getBlocks = function() {
     return {
         //region creamo
@@ -162,7 +201,11 @@ Entry.Creamo.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['7', '7'], ['8', '8'], ['12', '12']],
+                    options: [
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['12', '12'],
+                    ],
                     value: '7',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -187,7 +230,11 @@ Entry.Creamo.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['7', '7'], ['8', '8'], ['12', '12']],
+                                options: [
+                                    ['7', '7'],
+                                    ['8', '8'],
+                                    ['12', '12'],
+                                ],
                                 value: '7',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -241,7 +288,10 @@ Entry.Creamo.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['6', '6'], ['9', '9']],
+                    options: [
+                        ['6', '6'],
+                        ['9', '9'],
+                    ],
                     value: '6',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -266,7 +316,10 @@ Entry.Creamo.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['6', '6'], ['9', '9']],
+                                options: [
+                                    ['6', '6'],
+                                    ['9', '9'],
+                                ],
                                 value: '6',
                                 fontSize: 11,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -350,7 +403,11 @@ Entry.Creamo.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['5', '5'], ['6', '6'], ['9', '9']],
+                    options: [
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['9', '9'],
+                    ],
                     value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -375,7 +432,11 @@ Entry.Creamo.getBlocks = function() {
                         textParams: [
                             {
                                 type: 'Dropdown',
-                                options: [['5', '5'], ['6', '6'], ['9', '9']],
+                                options: [
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['9', '9'],
+                                ],
                                 value: '3',
                                 fontSize: 11,
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

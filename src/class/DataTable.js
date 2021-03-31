@@ -147,10 +147,12 @@ class DataTable {
     saveTable = ({ selected }) => {
         this.setSource(selected);
         Entry.playground.reloadPlayground();
+        Entry.creationChangedEvent.notify();
     };
 
     removeTable = (index) => {
         this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
+        Entry.creationChangedEvent.notify();
     };
 
     show(data) {
@@ -202,7 +204,7 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            let data = table || { name: Lang.Workspace.data_table };
+            const data = table || { name: Lang.Workspace.data_table };
             data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
             const isDataTableSource = data instanceof DataTableSource;
             this.#tables.push(isDataTableSource ? data : new DataTableSource(data));
