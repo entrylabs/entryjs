@@ -2010,6 +2010,16 @@ Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
             true
         );
         Entry.engine.hideAllAudioPanel();
+    }
+    if (message === 'OfflineError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            toast || [
+                Lang.Workspace.check_runtime_error,
+                Lang.Workspace.offline_not_compatible_error,
+            ],
+            true
+        );
     } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
@@ -2037,6 +2047,14 @@ Entry.Utils.IncompatibleError = function(message, toast) {
 };
 Entry.Utils.IncompatibleError.prototype = new Error();
 Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
+
+Entry.Utils.OfflineError = function(message, toast) {
+    this.name = 'OfflineError';
+    this.message = message || 'OfflineError';
+    this.toast = toast || null;
+};
+Entry.Utils.OfflineError.prototype = new Error();
+Entry.Utils.OfflineError.prototype.constructor = Entry.Utils.OfflineError;
 
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());

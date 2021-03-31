@@ -1,10 +1,12 @@
 name: Entry Build and Deploy
 
 on:
-    push:
-        branches:
-            - develop2
-
+  push:
+    branches:
+      - 'deploy/**'
+      - master
+      - develop-hw
+      - develop2
 jobs:
     build-and-deploy:
         runs-on: ubuntu-18.04

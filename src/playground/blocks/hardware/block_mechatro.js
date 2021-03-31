@@ -27,89 +27,84 @@ class mechatro {
 
         this.monitorTemplate = {
             imgPath: 'hw/transparent.png',
-            width: 605,
+            width: 500,
             height: 434,
             listPorts: {
                 '2': {
-                    name: `${Lang.Hw.port_en} 2 ${Lang.Hw.port_ko}`,
+                    name: ` D2 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '4': {
-                    name: `${Lang.Hw.port_en} 4 ${Lang.Hw.port_ko}`,
+                    name: ` D4 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '5': {
-                    name: `${Lang.Hw.port_en} 5 ${Lang.Hw.port_ko}`,
+                    name: ` D5 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '6': {
-                    name: `${Lang.Hw.port_en} 6 ${Lang.Hw.port_ko}`,
+                    name: ` D6 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '7': {
-                    name: `${Lang.Hw.port_en} 7 ${Lang.Hw.port_ko}`,
+                    name: ` D7 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '10': {
-                    name: `${Lang.Hw.port_en} 10 ${Lang.Hw.port_ko}`,
+                    name: ` D10 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '14': {
-                    name: `${Lang.Hw.port_en} a0 ${Lang.Hw.port_ko}`,
+                    name: `MA current`,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '15': {
-                    name: `${Lang.Hw.port_en} a1 ${Lang.Hw.port_ko}`,
+                    name: ` MB current `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '16': {
-                    name: `${Lang.Hw.port_en} a2 ${Lang.Hw.port_ko}`,
+                    name: ` A2 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '17': {
-                    name: `${Lang.Hw.port_en} a3 ${Lang.Hw.port_ko}`,
+                    name: ` A3 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '18': {
-                    name: `${Lang.Hw.port_en} a4 ${Lang.Hw.port_ko}`,
+                    name: ` A4 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '19': {
-                    name: `${Lang.Hw.port_en} a5 ${Lang.Hw.port_ko}`,
+                    name: ` A5 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '20': {
-                    name: `${Lang.Hw.port_en} a6 ${Lang.Hw.port_ko}`,
+                    name: ` A6 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
                 '21': {
-                    name: `${Lang.Hw.port_en} a7 ${Lang.Hw.port_ko}`,
+                    name: ` A7 `,
                     type: 'input',
                     pos: { x: 0, y: 0 },
                 },
-                //M3: {
-                //    name: `${Lang.Hw.port_en} MA ` + `모터 속도`,
-                //    type: 'input',
-                //    pos: { x: 0, y: 0 },
-                //},
-                //M11: {
-                //    name: `${Lang.Hw.port_en} MB ` + `모터 속도`,
-                //    type: 'input',
-                //    pos: { x: 0, y: 0 },
-                //},
+                com: {
+                    name: ` inform `,
+                    type: 'input',
+                    pos: { x: 0, y: 0 },
+                },
             },
             mode: 'both',
         };
