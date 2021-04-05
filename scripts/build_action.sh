@@ -15,12 +15,13 @@ if [ "$branchName" = "master" ]
 then
     git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
 else     
-    if git show-ref --quiet refs/remotes/origin/"$deployName"; then
-        git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
-    else 
-        git clone "https://github.com/$GITHUB_REPOSITORY" build
-        git checkout -b "$deployName"
-    fi
+    git clone "https://github.com/$GITHUB_REPOSITORY" build
+    #if git show-ref --quiet refs/remotes/origin/"$deployName"; then
+    #    git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
+    #else 
+    #    git clone "https://github.com/$GITHUB_REPOSITORY" build
+    #    git checkout -b "$deployName"
+    #fi
 fi
 rm -rf build/**/* || exit 0
 cp -r dist build/
