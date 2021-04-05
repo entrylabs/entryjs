@@ -25,8 +25,7 @@ then
 #    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     echo "deploy branch's name is $deployName"
-    git checkout -b "$deployName"
-    git push --delete origin "$deployName"
+    git push --delete "https://${GH_TOKEN}@github.com/$GITHUB_REPOSITORY" "$deployName"
     git add .
     git commit -m "Entry Js deploy $deployName"
     #git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" "$deployName"
