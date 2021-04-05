@@ -25,10 +25,10 @@ then
 #    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     echo "deploy branch's name is $deployName"
-    git checkout -b "$deployName"
-    git push --delete "https://${GH_TOKEN}@${GH_REF}" "$deployName"
+    #git checkout -b "$deployName"
+    #git push --delete "https://${GH_TOKEN}@${GH_REF}" "$deployName"
     git add .
     git commit -m "Entry Js deploy $deployName"
-    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" "$deployName"
+    #git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" "$deployName"
 fi
 #curl -d '{"tag_name": "v$DATEFMT","target_commitish": "build","name": "v$DATEFMT","body": "Description of the release","draft": false,"prerelease": false}' -X POST "https://developer.github.com/v3/repos/kimokim/entryjs/releases"
