@@ -23,7 +23,6 @@ else
     fi
 fi
 rm -rf build/**/* || exit 0
-npm run dist
 cp -r dist build/
 cp -r extern build/
 cp -r images build/
