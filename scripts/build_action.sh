@@ -13,7 +13,13 @@ if [ "$branchName" = "master" ]
 then
     git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
 else     
-    git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
+    exists=`git show-ref refs/remotes/origin/$deployName`
+    if [ -n "$exists" ]; then
+        git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
+    else 
+        git clone "https://github.com/$GITHUB_REPOSITORY" build
+        git checkout -b "$deployName"
+    fi
 fi
 rm -rf build/**/* || exit 0
 npm run dist
