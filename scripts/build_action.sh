@@ -4,8 +4,17 @@ set -e # 에러 발생 시 스크립트 중단
 git config --global user.name "Entry Dev";
 git config --global user.email "entrydev@nts-corp.com";
 
+branchName=${GITHUB_REF##*/}
+deployName="dist/$branchName"
+
 export NODE_ENV=production
-git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
+
+if [ "$branchName" = "master" ]
+then
+    git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
+else     
+    git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
+fi
 rm -rf build/**/* || exit 0
 npm run dist
 cp -r dist build/
