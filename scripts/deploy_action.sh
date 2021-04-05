@@ -15,8 +15,7 @@ git config user.name "Entry Dev"
 git config user.email "entrydev@nts-corp.com"
 
 echo "target branch's name is $branchName"
-echo "v3.$DATEFMT.${GITHUB_RUN_NUMBER}" -m "build v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}"
-echo "https://github.com/$GITHUB_REPOSITORY"
+echo "https://${TEST}@github.com/$GITHUB_REPOSITORY"
 if [ "$branchName" = "master" ]
 then
     echo "deploy to build branch"
