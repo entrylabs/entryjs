@@ -15,7 +15,7 @@ git config user.name "Entry Dev"
 git config user.email "entrydev@nts-corp.com"
 
 echo "target branch's name is $branchName"
-echo "https://${TEST}@github.com/$GITHUB_REPOSITORY"
+echo "https://${secrets.TEST}@github.com/$GITHUB_REPOSITORY"
 if [ "$branchName" = "master" ]
 then
     echo "deploy to build branch"
@@ -25,7 +25,7 @@ then
 #    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     echo "deploy branch's name is $deployName"
-    git push --delete "https://${GH_TOKEN}@github.com/$GITHUB_REPOSITORY" "$deployName"
+    git push --delete "https://${secrets.GH_TOKEN}@github.com/$GITHUB_REPOSITORY" "$deployName"
     git add .
     git commit -m "Entry Js deploy $deployName"
     #git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" "$deployName"
