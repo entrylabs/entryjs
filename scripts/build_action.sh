@@ -13,8 +13,7 @@ if [ "$branchName" = "master" ]
 then
     git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
 else     
-    exists=`git show-ref refs/remotes/origin/$deployName`
-    if [ -n "$exists" ]; then
+    if git show-ref --quiet refs/remotes/origin/"$deployName"; then
         git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
     else 
         git clone "https://github.com/$GITHUB_REPOSITORY" build
