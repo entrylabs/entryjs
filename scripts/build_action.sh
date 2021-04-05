@@ -7,6 +7,8 @@ git config --global user.email "entrydev@nts-corp.com";
 branchName=${GITHUB_REF##*/}
 deployName="dist/$branchName"
 
+ls -al
+ls dist
 export NODE_ENV=production
 
 if [ "$branchName" = "master" ]
