@@ -42,6 +42,9 @@ jobs:
               run: |
                   sh ./scripts/build_action.sh
             - name: Execute deploy.sh
+              env:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                TEST: ${{ secrets.TEST }}
               run: |
                   sh ./scripts/deploy_action.sh
             - name: Push Changes into build branch
