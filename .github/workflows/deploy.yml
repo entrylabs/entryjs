@@ -7,6 +7,7 @@ on:
       - master
       - develop-hw
       - develop2
+      - develop
       
 jobs:
     build-and-deploy:
