@@ -31,10 +31,10 @@ Entry.byrobot_base =
 
         if (!script.isStart)
         {
-            script.isStart = true;
+            script.isStart  = true;
             script.timeFlag = 1;
 
-            const fps = Entry.FPS || 60;
+            const fps       = Entry.FPS || 60;
             const timeValue = (60 / fps) * _ms;
 
             setTimeout(() => {
@@ -83,7 +83,7 @@ Entry.byrobot_base =
     transferIrMessage(target, irmessage)
     {
         // 전송
-        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.target            = target;
         Entry.hw.sendQueue.battle_ir_message = irmessage;
 
         Entry.hw.update();
@@ -95,8 +95,8 @@ Entry.byrobot_base =
 
     transferLightManual(target, flags, brightness)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.light_manual_flags = flags;
+        Entry.hw.sendQueue.target                  = target;
+        Entry.hw.sendQueue.light_manual_flags      = flags;
         Entry.hw.sendQueue.light_manual_brightness = brightness;
 
         Entry.hw.update();
@@ -109,8 +109,8 @@ Entry.byrobot_base =
 
     transferLightMode(target, mode, interval)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.light_mode_mode = mode;
+        Entry.hw.sendQueue.target              = target;
+        Entry.hw.sendQueue.light_mode_mode     = mode;
         Entry.hw.sendQueue.light_mode_interval = interval;
 
         Entry.hw.update();
@@ -123,12 +123,12 @@ Entry.byrobot_base =
 
     transferLightModeColor(target, mode, interval, red, green, blue)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.light_mode_mode = mode;
+        Entry.hw.sendQueue.target              = target;
+        Entry.hw.sendQueue.light_mode_mode     = mode;
         Entry.hw.sendQueue.light_mode_interval = interval;
-        Entry.hw.sendQueue.light_color_r = red;
-        Entry.hw.sendQueue.light_color_g = green;
-        Entry.hw.sendQueue.light_color_b = blue;
+        Entry.hw.sendQueue.light_color_r       = red;
+        Entry.hw.sendQueue.light_color_g       = green;
+        Entry.hw.sendQueue.light_color_b       = blue;
 
         Entry.hw.update();
 
@@ -143,10 +143,10 @@ Entry.byrobot_base =
 
     transferLightEvent(target, event, interval, repeat)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.light_event_event = event;
+        Entry.hw.sendQueue.target               = target;
+        Entry.hw.sendQueue.light_event_event    = event;
         Entry.hw.sendQueue.light_event_interval = interval;
-        Entry.hw.sendQueue.light_event_repeat = repeat;
+        Entry.hw.sendQueue.light_event_repeat   = repeat;
 
         Entry.hw.update();
 
@@ -159,13 +159,13 @@ Entry.byrobot_base =
 
     transferLightEventColor(target, event, interval, repeat, red, green, blue)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.light_event_event = event;
+        Entry.hw.sendQueue.target               = target;
+        Entry.hw.sendQueue.light_event_event    = event;
         Entry.hw.sendQueue.light_event_interval = interval;
-        Entry.hw.sendQueue.light_event_repeat = repeat;
-        Entry.hw.sendQueue.light_color_r = red;
-        Entry.hw.sendQueue.light_color_g = green;
-        Entry.hw.sendQueue.light_color_b = blue;
+        Entry.hw.sendQueue.light_event_repeat   = repeat;
+        Entry.hw.sendQueue.light_color_r        = red;
+        Entry.hw.sendQueue.light_color_g        = green;
+        Entry.hw.sendQueue.light_color_b        = blue;
 
         Entry.hw.update();
 
@@ -181,7 +181,7 @@ Entry.byrobot_base =
 
     transferDisplayClearAll(target, pixel)
     {
-        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.target                  = target;
         Entry.hw.sendQueue.display_clear_all_pixel = pixel;
 
         Entry.hw.update();
@@ -193,12 +193,12 @@ Entry.byrobot_base =
 
     transferDisplayClear(target, pixel, x, y, width, height)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_clear_x = x;
-        Entry.hw.sendQueue.display_clear_y = y;
-        Entry.hw.sendQueue.display_clear_width = width;
+        Entry.hw.sendQueue.target               = target;
+        Entry.hw.sendQueue.display_clear_x      = x;
+        Entry.hw.sendQueue.display_clear_y      = y;
+        Entry.hw.sendQueue.display_clear_width  = width;
         Entry.hw.sendQueue.display_clear_height = height;
-        Entry.hw.sendQueue.display_clear_pixel = pixel;
+        Entry.hw.sendQueue.display_clear_pixel  = pixel;
 
         Entry.hw.update();
 
@@ -213,10 +213,10 @@ Entry.byrobot_base =
 
     transferDisplayInvert(target, x, y, width, height)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_invert_x = x;
-        Entry.hw.sendQueue.display_invert_y = y;
-        Entry.hw.sendQueue.display_invert_width = width;
+        Entry.hw.sendQueue.target                = target;
+        Entry.hw.sendQueue.display_invert_x      = x;
+        Entry.hw.sendQueue.display_invert_y      = y;
+        Entry.hw.sendQueue.display_invert_width  = width;
         Entry.hw.sendQueue.display_invert_height = height;
 
         Entry.hw.update();
@@ -231,9 +231,9 @@ Entry.byrobot_base =
 
     transferDisplayDrawPoint(target, x, y, pixel)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_draw_point_x = x;
-        Entry.hw.sendQueue.display_draw_point_y = y;
+        Entry.hw.sendQueue.target                   = target;
+        Entry.hw.sendQueue.display_draw_point_x     = x;
+        Entry.hw.sendQueue.display_draw_point_y     = y;
         Entry.hw.sendQueue.display_draw_point_pixel = pixel;
 
         Entry.hw.update();
@@ -247,13 +247,13 @@ Entry.byrobot_base =
 
     transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_draw_line_x1 = x1;
-        Entry.hw.sendQueue.display_draw_line_y1 = y1;
-        Entry.hw.sendQueue.display_draw_line_x2 = x2;
-        Entry.hw.sendQueue.display_draw_line_y2 = y2;
+        Entry.hw.sendQueue.target                  = target;
+        Entry.hw.sendQueue.display_draw_line_x1    = x1;
+        Entry.hw.sendQueue.display_draw_line_y1    = y1;
+        Entry.hw.sendQueue.display_draw_line_x2    = x2;
+        Entry.hw.sendQueue.display_draw_line_y2    = y2;
         Entry.hw.sendQueue.display_draw_line_pixel = pixel;
-        Entry.hw.sendQueue.display_draw_line_line = line;
+        Entry.hw.sendQueue.display_draw_line_line  = line;
 
         Entry.hw.update();
 
@@ -269,14 +269,14 @@ Entry.byrobot_base =
 
     transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_draw_rect_x = x;
-        Entry.hw.sendQueue.display_draw_rect_y = y;
-        Entry.hw.sendQueue.display_draw_rect_width = width;
-        Entry.hw.sendQueue.display_draw_rect_height = height;
-        Entry.hw.sendQueue.display_draw_rect_pixel = pixel;
+        Entry.hw.sendQueue.target                     = target;
+        Entry.hw.sendQueue.display_draw_rect_x        = x;
+        Entry.hw.sendQueue.display_draw_rect_y        = y;
+        Entry.hw.sendQueue.display_draw_rect_width    = width;
+        Entry.hw.sendQueue.display_draw_rect_height   = height;
+        Entry.hw.sendQueue.display_draw_rect_pixel    = pixel;
         Entry.hw.sendQueue.display_draw_rect_flagfill = flagFill;
-        Entry.hw.sendQueue.display_draw_rect_line = line;
+        Entry.hw.sendQueue.display_draw_rect_line     = line;
 
         Entry.hw.update();
 
@@ -293,11 +293,11 @@ Entry.byrobot_base =
 
     transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_draw_circle_x = x;
-        Entry.hw.sendQueue.display_draw_circle_y = y;
-        Entry.hw.sendQueue.display_draw_circle_radius = radius;
-        Entry.hw.sendQueue.display_draw_circle_pixel = pixel;
+        Entry.hw.sendQueue.target                       = target;
+        Entry.hw.sendQueue.display_draw_circle_x        = x;
+        Entry.hw.sendQueue.display_draw_circle_y        = y;
+        Entry.hw.sendQueue.display_draw_circle_radius   = radius;
+        Entry.hw.sendQueue.display_draw_circle_pixel    = pixel;
         Entry.hw.sendQueue.display_draw_circle_flagfill = flagFill;
 
         Entry.hw.update();
@@ -312,11 +312,11 @@ Entry.byrobot_base =
 
     transferDisplayDrawString(target, x, y, font, pixel, string)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.display_draw_string_x = x;
-        Entry.hw.sendQueue.display_draw_string_y = y;
-        Entry.hw.sendQueue.display_draw_string_font = font;
-        Entry.hw.sendQueue.display_draw_string_pixel = pixel;
+        Entry.hw.sendQueue.target                     = target;
+        Entry.hw.sendQueue.display_draw_string_x      = x;
+        Entry.hw.sendQueue.display_draw_string_y      = y;
+        Entry.hw.sendQueue.display_draw_string_font   = font;
+        Entry.hw.sendQueue.display_draw_string_pixel  = pixel;
         Entry.hw.sendQueue.display_draw_string_string = string;
 
         Entry.hw.update();
@@ -331,14 +331,14 @@ Entry.byrobot_base =
 
     transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string)
     {
-        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.target                            = target;
         Entry.hw.sendQueue.display_draw_string_align_x_start = xStart;
-        Entry.hw.sendQueue.display_draw_string_align_x_end = xEnd;
-        Entry.hw.sendQueue.display_draw_string_align_y = y;
-        Entry.hw.sendQueue.display_draw_string_align_align = align;
-        Entry.hw.sendQueue.display_draw_string_align_font = font;
-        Entry.hw.sendQueue.display_draw_string_align_pixel = pixel;
-        Entry.hw.sendQueue.display_draw_string_align_string = string;
+        Entry.hw.sendQueue.display_draw_string_align_x_end   = xEnd;
+        Entry.hw.sendQueue.display_draw_string_align_y       = y;
+        Entry.hw.sendQueue.display_draw_string_align_align   = align;
+        Entry.hw.sendQueue.display_draw_string_align_font    = font;
+        Entry.hw.sendQueue.display_draw_string_align_pixel   = pixel;
+        Entry.hw.sendQueue.display_draw_string_align_string  = string;
 
         Entry.hw.update();
 
@@ -354,10 +354,10 @@ Entry.byrobot_base =
 
     transferBuzzer(target, mode, value, time)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.buzzer_mode = mode;
+        Entry.hw.sendQueue.target       = target;
+        Entry.hw.sendQueue.buzzer_mode  = mode;
         Entry.hw.sendQueue.buzzer_value = value;
-        Entry.hw.sendQueue.buzzer_time = time;
+        Entry.hw.sendQueue.buzzer_time  = time;
 
         Entry.hw.update();
 
@@ -369,10 +369,10 @@ Entry.byrobot_base =
 
     transferVibrator(target, mode, timeOn, timeOff, timeRun)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.vibrator_mode = mode;
-        Entry.hw.sendQueue.vibrator_on = timeOn;
-        Entry.hw.sendQueue.vibrator_off = timeOff;
+        Entry.hw.sendQueue.target         = target;
+        Entry.hw.sendQueue.vibrator_mode  = mode;
+        Entry.hw.sendQueue.vibrator_on    = timeOn;
+        Entry.hw.sendQueue.vibrator_off   = timeOff;
         Entry.hw.sendQueue.vibrator_total = timeRun;
 
         Entry.hw.update();
@@ -387,10 +387,10 @@ Entry.byrobot_base =
 
     transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.motorsingle_target = motorIndex;
+        Entry.hw.sendQueue.target               = target;
+        Entry.hw.sendQueue.motorsingle_target   = motorIndex;
         Entry.hw.sendQueue.motorsingle_rotation = motorRotation;
-        Entry.hw.sendQueue.motorsingle_value = motorSpeed;
+        Entry.hw.sendQueue.motorsingle_value    = motorSpeed;
 
         Entry.hw.update();
 
@@ -402,9 +402,9 @@ Entry.byrobot_base =
 
     transferMotorSingleV(target, motorIndex, motorSpeed)
     {
-        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.target             = target;
         Entry.hw.sendQueue.motorsingle_target = motorIndex;
-        Entry.hw.sendQueue.motorsingle_value = motorSpeed;
+        Entry.hw.sendQueue.motorsingle_value  = motorSpeed;
 
         Entry.hw.update();
 
@@ -415,9 +415,9 @@ Entry.byrobot_base =
 
     transferCommand(target, command, option)
     {
-        Entry.hw.sendQueue.target = target;
+        Entry.hw.sendQueue.target          = target;
         Entry.hw.sendQueue.command_command = command;
-        Entry.hw.sendQueue.command_option = option;
+        Entry.hw.sendQueue.command_option  = option;
 
         Entry.hw.update();
 
@@ -428,10 +428,10 @@ Entry.byrobot_base =
 
     transferControlQuad(target, roll, pitch, yaw, throttle)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.control_quad8_roll = roll;
-        Entry.hw.sendQueue.control_quad8_pitch = pitch;
-        Entry.hw.sendQueue.control_quad8_yaw = yaw;
+        Entry.hw.sendQueue.target                 = target;
+        Entry.hw.sendQueue.control_quad8_roll     = roll;
+        Entry.hw.sendQueue.control_quad8_pitch    = pitch;
+        Entry.hw.sendQueue.control_quad8_yaw      = yaw;
         Entry.hw.sendQueue.control_quad8_throttle = throttle;
 
         Entry.hw.update();
@@ -445,12 +445,12 @@ Entry.byrobot_base =
 
     transferControlPosition(target, x, y, z, velocity, heading, rotationalVelocity)
     {
-        Entry.hw.sendQueue.target = target;
-        Entry.hw.sendQueue.control_position_x = x;
-        Entry.hw.sendQueue.control_position_y = y;
-        Entry.hw.sendQueue.control_position_z = z;
-        Entry.hw.sendQueue.control_position_velocity = velocity;
-        Entry.hw.sendQueue.control_position_heading = heading;
+        Entry.hw.sendQueue.target                               = target;
+        Entry.hw.sendQueue.control_position_x                   = x;
+        Entry.hw.sendQueue.control_position_y                   = y;
+        Entry.hw.sendQueue.control_position_z                   = z;
+        Entry.hw.sendQueue.control_position_velocity            = velocity;
+        Entry.hw.sendQueue.control_position_heading             = heading;
         Entry.hw.sendQueue.control_position_rotational_velocity = rotationalVelocity;
 
         Entry.hw.update();
@@ -478,25 +478,25 @@ Entry.byrobot_base =
 
     getRgbFromString(stringColor)
     {
-        let red = 0;
+        let red   = 0;
         let green = 0;
-        let blue = 0;
+        let blue  = 0;
 
         switch (stringColor)
         {
-            case 'red':             { red = 255;  green = 0;    blue = 0;   }   break;
-            case 'green':           { red = 0;    green = 255;  blue = 0;   }   break;
-            case 'blue':            { red = 0;    green = 0;    blue = 255; }   break;
-            case 'cyan':            { red = 0;    green = 255;  blue = 255; }   break;
-            case 'magenta':         { red = 255;  green = 0;    blue = 255; }   break;
-            case 'yellow':          { red = 255;  green = 255;  blue = 0;   }   break;
-            case 'white':           { red = 255;  green = 255;  blue = 255; }   break;
-            case 'sunset':          { red = 255;  green = 100;  blue = 0;   }   break;
-            case 'cottonCandy':     { red = 20;   green = 250;  blue = 150; }   break;
-            case 'muscat':          { red = 70;   green = 255;  blue = 0;   }   break;
-            case 'strawberryMilk':  { red = 150;  green = 60;   blue = 20;  }   break;
-            case 'emerald':         { red = 0;    green = 255;  blue = 30;  }   break;
-            case 'lavender':        { red = 80;   green = 0;    blue = 200; }   break;
+            case 'red'           : { red = 255;  green = 0;    blue = 0;   }   break;
+            case 'green'         : { red = 0;    green = 255;  blue = 0;   }   break;
+            case 'blue'          : { red = 0;    green = 0;    blue = 255; }   break;
+            case 'cyan'          : { red = 0;    green = 255;  blue = 255; }   break;
+            case 'magenta'       : { red = 255;  green = 0;    blue = 255; }   break;
+            case 'yellow'        : { red = 255;  green = 255;  blue = 0;   }   break;
+            case 'white'         : { red = 255;  green = 255;  blue = 255; }   break;
+            case 'sunset'        : { red = 255;  green = 100;  blue = 0;   }   break;
+            case 'cottonCandy'   : { red = 20;   green = 250;  blue = 150; }   break;
+            case 'muscat'        : { red = 70;   green = 255;  blue = 0;   }   break;
+            case 'strawberryMilk': { red = 150;  green = 60;   blue = 20;  }   break;
+            case 'emerald'       : { red = 0;    green = 255;  blue = 30;  }   break;
+            case 'lavender'      : { red = 80;   green = 0;    blue = 200; }   break;
         }
 
         return { r:red, g:green, b:blue };
@@ -1018,9 +1018,9 @@ Entry.byrobot_base =
 
     // 진동 제어
     /*
-        Stop            = 0,    // 정지
-        Instantally     = 1,    // 즉시 적용
-        Continually     = 2,    // 예약
+        Stop        = 0,   // 정지
+        Instantally = 1,   // 즉시 적용
+        Continually = 2,   // 예약
      */
     setVibratorStop(script, target)
     {
@@ -1180,8 +1180,8 @@ Entry.byrobot_base =
         {
             case 'Start':
                 {
-                    Entry.hw.sendQueue.target = target;
-                    Entry.hw.sendQueue[controlTarget] = value;
+                    Entry.hw.sendQueue.target           = target;
+                    Entry.hw.sendQueue[controlTarget]   = value;
 
                     Entry.hw.update();
 
@@ -1197,8 +1197,8 @@ Entry.byrobot_base =
                 if (flagDelay)
                 {
                     // 블럭을 빠져나갈 때 변경했던 값을 초기화
-                    Entry.hw.sendQueue.target = target;
-                    Entry.hw.sendQueue[controlTarget] = 0;
+                    Entry.hw.sendQueue.target           = target;
+                    Entry.hw.sendQueue[controlTarget]   = 0;
 
                     Entry.hw.update();
 
