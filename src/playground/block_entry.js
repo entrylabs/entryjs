@@ -375,32 +375,32 @@ function getBlocks() {
                 ],
             },
         },
-        download_guide: {
-            skeleton: 'clickable_text',
-            skeletonOptions: {
-                box: {
-                    offsetX: 3,
-                },
-            },
-            isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            class: 'arduino_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.download_guide,
-                    color: EntryStatic.colorSet.common.TEXT,
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hw.downloadGuide();
-                    },
-                ],
-            },
-        },
+        // download_guide: {
+        //     skeleton: 'clickable_text',
+        //     skeletonOptions: {
+        //         box: {
+        //             offsetX: 3,
+        //         },
+        //     },
+        //     isNotFor: ['arduinoDisconnected'],
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     class: 'arduino_default',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.download_guide,
+        //             color: EntryStatic.colorSet.common.TEXT,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     events: {
+        //         mousedown: [
+        //             function() {
+        //                 Entry.hw.downloadGuide();
+        //             },
+        //         ],
+        //     },
+        // },
         arduino_download_source: {
             skeleton: 'clickable_text',
             skeletonOptions: {
