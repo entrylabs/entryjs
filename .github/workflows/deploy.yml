@@ -8,7 +8,7 @@ on:
       - develop-hw
       - develop2
       - develop
-      
+
 jobs:
     build-and-deploy:
         runs-on: ubuntu-18.04
