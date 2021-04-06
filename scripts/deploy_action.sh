@@ -15,7 +15,7 @@ git config user.name "Entry Dev"
 git config user.email "entrydev@nts-corp.com"
 
 echo "target branch's name is $branchName"
-
+echo "https://${TEST}@github.com/$GITHUB_REPOSITORY"
 if [ "$branchName" = "master" ]
 then
     echo "deploy to build branch"
@@ -25,10 +25,11 @@ then
 #    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     echo "deploy branch's name is $deployName"
-    git checkout -b "$deployName"
-#    git push --delete "https://${GH_TOKEN}@${GH_REF}" "$deployName"
+    if git show-ref --quiet refs/remotes/origin/"$deployName"; then
+        git push --delete "https://${github_token}@github.com/$GITHUB_REPOSITORY" "$deployName"
+    fi    
     git add .
     git commit -m "Entry Js deploy $deployName"
-#    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" "$deployName"
+    #git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" "$deployName"
 fi
 #curl -d '{"tag_name": "v$DATEFMT","target_commitish": "build","name": "v$DATEFMT","body": "Description of the release","draft": false,"prerelease": false}' -X POST "https://developer.github.com/v3/repos/kimokim/entryjs/releases"
