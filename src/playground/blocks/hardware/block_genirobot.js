@@ -53,9 +53,9 @@ function getAngleStepTime(angle){
 }
 
 Entry.GENIBOT = {
-    id: 'FF.FF',
+    id: '44.1',
     name: 'genibot',
-    url: 'http://www.arduino.cc/',
+    url: 'https://www.arduino.cc/',
     imageName: 'arduino.png',
     title: {
         ko: '지니봇',
@@ -113,11 +113,7 @@ Entry.GENIBOT = {
         };*/
         //ack = 0;
     },
-    // dataHandler: function(data) {
-    //     console.log("dataHandler",data);
-    // },
     afterReceive: async function(pd) {
-        // console.log("HELLO I received",pd);
         if(pd['log']){
             const a = pd['log'];
             if(!arraysEqual(a.data,lastData)){
@@ -127,118 +123,12 @@ Entry.GENIBOT = {
 
         }
         if (pd['BUTTON']) {
-            // const a = pd['BUTTON']
-            // if(a.data.length ==25 || a.data.length ==29)
-
             Entry.engine.fireEvent('buttonPressed');
         }
         if(pd['LOGGER'] && pd['LOGGER'].list.length > 0){
             console.log("pd['LOGGER']",pd['LOGGER']);
         }
-        // await sleep(1000);
-        // delete pd.BUTTON;
-
     },
-    // monitorTemplate: {
-    //     imgPath: 'hw/arduino.png',
-    //     width: 605,
-    //     height: 434,
-    //     listPorts: {
-    //         '2': {
-    //             name: `${Lang.Hw.port_en} 2 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '3': {
-    //             name: `${Lang.Hw.port_en} 3 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '4': {
-    //             name: `${Lang.Hw.port_en} 4 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '5': {
-    //             name: `${Lang.Hw.port_en} 5 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '6': {
-    //             name: `${Lang.Hw.port_en} 6 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '7': {
-    //             name: `${Lang.Hw.port_en} 7 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '8': {
-    //             name: `${Lang.Hw.port_en} 8 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '9': {
-    //             name: `${Lang.Hw.port_en} 9 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '10': {
-    //             name: `${Lang.Hw.port_en} 10 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '11': {
-    //             name: `${Lang.Hw.port_en} 11 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '12': {
-    //             name: `${Lang.Hw.port_en} 12 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         '13': {
-    //             name: `${Lang.Hw.port_en} 13 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         a0: {
-    //             name: `${Lang.Hw.port_en} A0 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         a1: {
-    //             name: `${Lang.Hw.port_en} A1 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         a2: {
-    //             name: `${Lang.Hw.port_en} A2 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         a3: {
-    //             name: `${Lang.Hw.port_en} A3 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         a4: {
-    //             name: `${Lang.Hw.port_en} A4 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //         a5: {
-    //             name: `${Lang.Hw.port_en} A5 ${Lang.Hw.port_ko}`,
-    //             type: 'input',
-    //             pos: { x: 0, y: 0 },
-    //         },
-    //     },
-    //     mode: 'both',
-    // },
-
-
 };
 const ko = {
     'genibot.speed': '속력을 %1 (으)로 정하기',
@@ -476,7 +366,7 @@ Entry.GENIBOT.blockMenuBlocks = [
     'setLedColor',
     'setLedColorName',
     'setSpeakerVolume',
-    // 'setTempo',
+    'setTempo',
     'setInstrument',
     'playNote',
     'playNoteKey',
@@ -1316,7 +1206,6 @@ Entry.GENIBOT.getBlocks = function() {
                     const SIDE = script.getStringField('SIDE', script);
                     const COLOR = script.getStringField('COLOR', script);
                     const COLOR_BRIGHTNESS = script.getStringField('COLOR_BRIGHTNESS', script);
-                    // const COLOR_BRIGHTNESS = script.getNumberValue('COLOR_BRIGHTNESS', script);
                     console.log('SIDE', SIDE);
                     console.log('COLOR', COLOR);
                     console.log('COLOR_BRIGHTNESS', COLOR_BRIGHTNESS);
@@ -1475,7 +1364,6 @@ Entry.GENIBOT.getBlocks = function() {
             paramsKeyMap: {
                 INSTRUMENT: 0,
             },
-
             class: 'geni_output',
             isNotFor:['genibot'],
             func(sprite, script) {
@@ -1565,7 +1453,6 @@ Entry.GENIBOT.getBlocks = function() {
                 BEATS: 0,
                 NOTE: 1,
             },
-
             class: 'geni_output',
             isNotFor:['genibot'],
             func(sprite, script) {
@@ -1674,15 +1561,9 @@ Entry.GENIBOT.getBlocks = function() {
                     }
                 }
                 console.log(ROBOT_VERSION);
-                // var result;
-                // if ($.isPlainObject(portData)) {
-                //     result = portData.siValue || 0;
-                // }
                 return OIDCODE;
             },
         },
-
-        //endregion
     };
 };
 
