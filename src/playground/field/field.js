@@ -370,6 +370,8 @@ Entry.Field = class Field {
         // 마이크로비트 전용
         else if (this instanceof Entry.FieldLed) {
             return 'led';
+        } else if (this instanceof Entry.FieldLed2) {
+            return 'led2';
         }
     }
 

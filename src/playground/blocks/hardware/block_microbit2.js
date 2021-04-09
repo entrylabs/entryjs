@@ -29,6 +29,7 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_get_led',
             'microbit2_show_preset_image',
             'microbit2_show_custom_image',
+            'microbit2_show_full_brightness_custom_image',
         ];
         this.commandStatus = {};
         this.commandValue = {};
@@ -108,7 +109,8 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_led: 'LED X:%1 Y:%2 밝기 %3 로 세팅 %4',
                     microbit2_get_led: 'LED X:%1 Y:%2 값',
                     microbit2_show_preset_image: '%1 모양 보여주기',
-                    microbit2_show_custom_image: 'LED %1 로 출력하기 %2',
+                    microbit2_show_custom_image: '밝기를 포함한 LED %1 로 출력하기 %2',
+                    microbit2_show_full_brightness_custom_image: 'LED 가장 밝게 %1 로 출력하기 %2',
                 },
                 Blocks: {
                     microbit_2_HEART: '하트',
@@ -181,7 +183,9 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_led: 'SET LED at X:%1 Y:%2 as brightness %3 %4',
                     microbit2_get_led: 'Get LED X:%1 Y:%2 brightness',
                     microbit2_show_preset_image: 'Show %1 shape',
-                    microbit2_show_custom_image: 'Show %1 shape %2',
+                    microbit2_show_custom_image: 'Show %1 shape with brightness %2',
+                    microbit2_show_full_brightness_custom_image:
+                        'Show %1 shape with full brightness %2',
                 },
                 Blocks: {
                     microbit_2_HEART: 'Heart',
@@ -503,7 +507,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 statements: [],
                 params: [
                     {
-                        type: 'Led',
+                        type: 'Led2',
                     },
                     {
                         type: 'Indicator',
@@ -527,7 +531,52 @@ Entry.Microbit2 = new (class Microbit2 {
                         processedValue[i] = value[i].join();
                     }
                     const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
-                    console.log(parsedPayload);
+                    this.requestCommandWithResponse(
+                        script.entity.id,
+                        functionKeys.SET_CUSTOM_IMAGE,
+                        parsedPayload
+                    );
+                },
+            },
+            microbit2_show_full_brightness_custom_image: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Led',
+                        defaultStatus: [
+                            [0, 0, 0, 0, 0],
+                            [0, 1, 0, 1, 0],
+                            [0, 0, 0, 0, 0],
+                            [1, 0, 0, 0, 1],
+                            [0, 1, 1, 1, 0],
+                        ],
+                        defaultValue: 9,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbit2Led',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_show_full_brightness_custom_image',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    const value = script.getField('VALUE');
+                    const processedValue = [];
+                    for (const i in value) {
+                        processedValue[i] = value[i].join();
+                    }
+                    const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
                     this.requestCommandWithResponse(
                         script.entity.id,
                         functionKeys.SET_CUSTOM_IMAGE,

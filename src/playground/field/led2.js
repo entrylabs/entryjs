@@ -7,7 +7,7 @@ import { LedPicker } from '@entrylabs/tool';
 /*
  *
  */
-Entry.FieldLed = class FieldLed extends Entry.Field {
+Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
     constructor(content, blockView, index) {
         super(content, blockView, index);
         this._block = blockView.block;
@@ -28,10 +28,10 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
         this.setValue(
             this.getValue() || [
                 [0, 0, 0, 0, 0],
-                [0, 1, 0, 1, 0],
+                [0, 9, 0, 9, 0],
                 [0, 0, 0, 0, 0],
-                [1, 0, 0, 0, 1],
-                [0, 1, 1, 1, 0],
+                [9, 0, 0, 0, 9],
+                [0, 9, 9, 9, 0],
             ]
         );
         /*
@@ -171,7 +171,7 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
                     }
                     this._attachDisposeEvent();
                 },
-                withLevel: false,
+                withLevel: true,
             },
             container: this.optionGroup[0],
         }).on('change', (value) => {
