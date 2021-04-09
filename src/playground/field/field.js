@@ -364,10 +364,12 @@ Entry.Field = class Field {
             return 'dropdownExtra';
         } else if (this instanceof Entry.FieldKeyboard) {
             return 'keyboard';
-        } else if (this instanceof Entry.FieldLed) {
-            return 'led';
         } else if (this instanceof Entry.FieldDynamicText) {
             return 'dynamicText';
+        }
+        // 마이크로비트 전용
+        else if (this instanceof Entry.FieldLed) {
+            return 'led';
         }
     }
 
