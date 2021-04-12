@@ -86,19 +86,18 @@ Entry.Microbit2 = new (class Microbit2 {
                 type: command,
                 payload,
             };
+
             this.commandStatus[codeId] = 'pending';
             Entry.hw.sendQueue.codeId = codeId;
             Entry.hw.update();
             throw new Entry.Utils.AsyncError();
-        } else if (this.commandStatus[codeId] === 'pending' && !this.commandValue[codeId]) {
+        } else if (this.commandStatus[codeId] === 'pending') {
             // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
             throw new Entry.Utils.AsyncError();
         } else if (this.commandStatus[codeId] === 'completed') {
             // 두 번째 이상의 진입시도이며 pending 도 아닌 경우
             // 블록 func 로직에서 다음 데이터를 처리한다.
-            console.log('remove :', codeId);
             delete this.commandStatus[codeId];
-            console.log(this.commandStatus);
         }
     }
 
@@ -110,7 +109,6 @@ Entry.Microbit2 = new (class Microbit2 {
         if (portData.recentlyWaitDone) {
             console.log('RECEIVE FROM HW ,', portData);
         }
-
         if (portData) {
             let codeId = portData.recentlyWaitDone;
             let value = portData.result;
