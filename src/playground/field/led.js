@@ -172,6 +172,8 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
                     this._attachDisposeEvent();
                 },
                 withLevel: false,
+                maxBrightness: this._contents.maxBrightness,
+                defaultStatus: this._contents.defaultStatus,
             },
             container: this.optionGroup[0],
         }).on('change', (value) => {

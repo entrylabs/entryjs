@@ -10,6 +10,7 @@ import { LedPicker } from '@entrylabs/tool';
 Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
     constructor(content, blockView, index) {
         super(content, blockView, index);
+        this.props = { content, blockView, index };
         this._block = blockView.block;
         this._blockView = blockView;
         const board = blockView.getBoard();
@@ -44,10 +45,9 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
     }
 
     renderLed() {
-        let ledStatus = this.getValue();
+        const ledStatus = this.getValue();
         const ledDist = 3;
         const ledOffset = 0.5;
-
         ledStatus.map((leds, x_pos) => {
             return leds.map((led, y_pos) => {
                 if (this._rect[`${x_pos}`][`${y_pos}`]) {
