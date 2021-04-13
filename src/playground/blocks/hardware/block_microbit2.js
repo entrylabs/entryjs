@@ -144,10 +144,6 @@ Entry.Microbit2 = new (class Microbit2 {
         const codeId = this.generateCodeId(id, type, payload);
         if (!this.commandStatus[codeId]) {
             // 첫 진입시 무조건 AsyncError
-            console.log('SEND TO HW : ', {
-                type,
-                payload,
-            });
             Entry.hw.sendQueue = {
                 type,
                 payload,
@@ -172,9 +168,6 @@ Entry.Microbit2 = new (class Microbit2 {
     }
 
     afterReceive(portData) {
-        if (portData.recentlyWaitDone) {
-            console.log('RECEIVE FROM HW ,', portData);
-        }
         if (portData) {
             let codeId = portData.recentlyWaitDone;
             let value = portData.result;
@@ -339,6 +332,38 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_UMBRELLA: '우산',
                     microbit_2_SNAKE: '뱀',
                 },
+                Helper: {
+                    microbit2_get_analog: 'test',
+                    microbit2_set_analog: 'test',
+                    microbit2_get_digital: 'test',
+                    microbit2_set_digital: 'test',
+                    microbit2_screen_toggle: 'test',
+                    microbit2_set_led: 'test',
+                    microbit2_get_led: 'test',
+                    microbit2_show_preset_image: 'test',
+                    microbit2_show_custom_image: 'test',
+                    microbit2_show_full_brightness_custom_image: 'test',
+                    microbit2_show_string: 'test',
+                    microbit2_reset_screen: 'test',
+                    microbit2_radio_toggle: 'test',
+                    microbit2_radio_setting: 'test',
+                    microbit2_radio_send: 'test',
+                    microbit2_radio_received: 'test',
+                    microbit2_speaker_toggle: 'test',
+                    microbit2_change_tempo: 'test',
+                    microbit2_set_tone: 'test',
+                    microbit2_play_preset_music: 'test',
+                    microbit2_play_sound_effect: 'test',
+                    microbit2_get_btn: 'test',
+                    microbit2_get_logo: 'test',
+                    microbit2_get_gesture: 'test',
+                    microbit2_get_direction: 'test',
+                    microbit2_get_field_strength: 'test',
+                    microbit2_get_field_strength_axis: 'test',
+                    microbit2_get_light_level: 'test',
+                    microbit2_get_temperature: 'test',
+                    microbit2_get_sound_level: 'test',
+                },
             },
             en: {
                 template: {
@@ -482,6 +507,38 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_SKULL: 'Skull',
                     microbit_2_UMBRELLA: 'Umbrella',
                     microbit_2_SNAKE: 'Snake',
+                },
+                Helper: {
+                    microbit2_get_analog: 'test',
+                    microbit2_set_analog: 'test',
+                    microbit2_get_digital: 'test',
+                    microbit2_set_digital: 'test',
+                    microbit2_screen_toggle: 'test',
+                    microbit2_set_led: 'test',
+                    microbit2_get_led: 'test',
+                    microbit2_show_preset_image: 'test',
+                    microbit2_show_custom_image: 'test',
+                    microbit2_show_full_brightness_custom_image: 'test',
+                    microbit2_show_string: 'test',
+                    microbit2_reset_screen: 'test',
+                    microbit2_radio_toggle: 'test',
+                    microbit2_radio_setting: 'test',
+                    microbit2_radio_send: 'test',
+                    microbit2_radio_received: 'test',
+                    microbit2_speaker_toggle: 'test',
+                    microbit2_change_tempo: 'test',
+                    microbit2_set_tone: 'test',
+                    microbit2_play_preset_music: 'test',
+                    microbit2_play_sound_effect: 'test',
+                    microbit2_get_btn: 'test',
+                    microbit2_get_logo: 'test',
+                    microbit2_get_gesture: 'test',
+                    microbit2_get_direction: 'test',
+                    microbit2_get_field_strength: 'test',
+                    microbit2_get_field_strength_axis: 'test',
+                    microbit2_get_light_level: 'test',
+                    microbit2_get_temperature: 'test',
+                    microbit2_get_sound_level: 'test',
                 },
             },
         };
@@ -941,12 +998,6 @@ Entry.Microbit2 = new (class Microbit2 {
                 class: 'microbit2Led',
                 isNotFor: ['microbit2'],
                 def: {
-                    params: [
-                        {
-                            type: 'text',
-                            params: this.defaultLed,
-                        },
-                    ],
                     type: 'microbit2_show_custom_image',
                 },
                 paramsKeyMap: {
@@ -989,12 +1040,6 @@ Entry.Microbit2 = new (class Microbit2 {
                 class: 'microbit2Led',
                 isNotFor: ['microbit2'],
                 def: {
-                    params: [
-                        {
-                            type: 'text',
-                            params: this.defaultLed,
-                        },
-                    ],
                     type: 'microbit2_show_full_brightness_custom_image',
                 },
                 paramsKeyMap: {
@@ -1551,7 +1596,6 @@ Entry.Microbit2 = new (class Microbit2 {
                 paramsKeyMap: { VALUE: 0 },
                 func: (sprite, script) => {
                     const value = script.getStringValue('VALUE');
-                    console.log('=======', value);
                     const reqOptions = {
                         id: script.entity.id,
                         command: functionKeys.SET_RADIO,
