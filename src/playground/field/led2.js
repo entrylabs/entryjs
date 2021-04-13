@@ -48,7 +48,8 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
         const ledStatus = this.getValue();
         const ledDist = 3;
         const ledOffset = 0.5;
-        ledStatus.map((leds, x_pos) => {
+        const currentStatus = ledStatus.params || ledStatus;
+        currentStatus.map((leds, x_pos) => {
             return leds.map((led, y_pos) => {
                 if (this._rect[`${x_pos}`][`${y_pos}`]) {
                     this._rect[`${x_pos}`][`${y_pos}`].remove();
@@ -61,7 +62,7 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
                     height: ledDist - ledOffset,
                     rx: 0.5,
                     ry: 0.5,
-                    fill: ledStatus[x_pos][y_pos] ? '#ffffff' : '#00b6b1',
+                    fill: currentStatus[x_pos][y_pos] ? '#ffffff' : '#00b6b1',
                 }));
             });
         });
