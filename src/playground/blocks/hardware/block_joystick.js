@@ -6,8 +6,8 @@ Entry.joystick = {
     url: 'http://www.kocoafab.cc/',
     imageName: 'joystick.png',
     title: {
-        "ko": "조이스틱 센서 쉴드",
-        "en": "Joystick Sensor Shield"
+        ko: '조이스틱 센서 쉴드',
+        en: 'Joystick Sensor Shield',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -24,7 +24,7 @@ Entry.joystick = {
         }
         Entry.hw.update();
     },
-	sensorTypes: {
+    sensorTypes: {
         ALIVE: 0,
         DIGITAL: 1,
         ANALOG: 2,
@@ -73,67 +73,67 @@ Entry.joystick.setLanguage = function() {
     return {
         ko: {
             template: {
+                joystick_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                joystick_get_digital_value: '디지털 %1 번 센서값  ',
+                joystick_toggle_led: '디지털 %1 번 핀 %2 %3',
+                joystick_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                joystick_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
                 joystick_get_analog_value: '아날로그 %1 번 센서값',
-                joystick_get_analog_value_map:
-                    '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                joystick_get_ultrasonic_value:
-                    '울트라소닉 Trig %1 Echo %2 센서값',
+                joystick_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                joystick_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
                 joystick_toggle_led: '디지털 %1 번 핀 %2 %3',
                 joystick_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                joystick_set_tone:
-                    '피에조부저를 %1 %2 음으로 %3 초 연주하기 %4',
-                joystick_set_servo:
-                    '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                joystick_set_tone: '피에조부저를 %1 %2 음으로 %3 초 연주하기 %4',
+                joystick_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 joystick_get_digital: '디지털 %1 번 센서값',
-		joystick_is_button_pressed: '%1 버튼이 눌렸는가?',
-		joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
-		joystick_get_sensor_value: '%1 의 측정값',
-		joystick_toggle_motor: '진동모터 %1 %2',
-		joystick_toggle_shield_led: '%1 번째 LED를 %2 %3',
-		joystick_get_led_number: '%1',
-            }
+                joystick_is_button_pressed: '%1 버튼이 눌렸는가?',
+                joystick_get_joystick_value: '조이스틱을 %1 으로 움직였는가?',
+                joystick_get_sensor_value: '%1 의 측정값',
+                joystick_toggle_motor: '진동모터 %1 %2',
+                joystick_toggle_shield_led: '%1 번째 LED를 %2 %3',
+                joystick_get_led_number: '%1',
+            },
         },
         en: {
             template: {
+                joystick_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                joystick_get_digital_value: 'Digital %1 Sensor value  ',
+                joystick_toggle_led: 'Digital %1 Pin %2 %3',
+                joystick_toggle_pwm: 'Digital %1 Pin %2 %3',
+                joystick_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
                 joystick_get_analog_value: 'Analog %1 Sensor value',
-                joystick_get_analog_value_map:
-                    'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                joystick_get_ultrasonic_value:
-                    'Read ultrasonic sensor trig pin %1 echo pin %2',
+                joystick_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                joystick_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
                 joystick_toggle_led: 'Digital %1 Pin %2 %3',
                 joystick_digital_pwm: 'Digital %1 Pin %2 %3',
-                joystick_set_tone:
-                    'Play tone on note %1 octave %2 beat %3 %4',
+                joystick_set_tone: 'Play tone on note %1 octave %2 beat %3 %4',
                 joystick_set_servo: 'Set servo pin %1 angle as %2 %3',
                 joystick_get_digital: 'Digital %1 Sensor value',
-		joystick_is_button_pressed: 'button pressed %1',
-		joystick_get_joystick_value: 'when the joystick move to %1',
-		joystick_get_sensor_value: '%1 value',
-		joystick_toggle_motor: 'vibrator motor %1 %2',
-		joystick_toggle_shield_led: '%2 the sensorshield %1 LED %3',
-		joystick_get_led_number: '%1',
-            }
+                joystick_is_button_pressed: 'button pressed %1',
+                joystick_get_joystick_value: 'when the joystick move to %1',
+                joystick_get_sensor_value: '%1 value',
+                joystick_toggle_motor: 'vibrator motor %1 %2',
+                joystick_toggle_shield_led: '%2 the sensorshield %1 LED %3',
+                joystick_get_led_number: '%1',
+            },
         },
     };
 };
 
 Entry.joystick.blockMenuBlocks = [
-	'joystick_get_analog_value',
-	'joystick_get_analog_value_map',
-	'joystick_get_ultrasonic_value',
-	'joystick_get_digital',
-	'joystick_toggle_led',
-	'joystick_digital_pwm',
-	'joystick_set_servo',
-	'joystick_toggle_shield_led',
-	'joystick_set_tone',
-	'joystick_toggle_motor',
-	'joystick_is_button_pressed',
-	'joystick_get_joystick_value',
-	'joystick_get_sensor_value',
-
-
-	
+    'joystick_get_analog_value',
+    'joystick_get_analog_value_map',
+    'joystick_get_ultrasonic_value',
+    'joystick_get_digital',
+    'joystick_toggle_led',
+    'joystick_digital_pwm',
+    'joystick_set_servo',
+    'joystick_toggle_shield_led',
+    'joystick_set_tone',
+    'joystick_toggle_motor',
+    'joystick_is_button_pressed',
+    'joystick_get_joystick_value',
+    'joystick_get_sensor_value',
 ];
 
 Entry.joystick.getBlocks = function() {
@@ -190,10 +190,8 @@ Entry.joystick.getBlocks = function() {
                                 ],
                                 value: '0',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.joystick_analog_list[0]',
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.joystick_analog_list[0]',
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
@@ -336,10 +334,8 @@ Entry.joystick.getBlocks = function() {
                 var isFloat = false;
 
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -451,9 +447,7 @@ Entry.joystick.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.joystick.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.joystick.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -509,15 +503,13 @@ Entry.joystick.getBlocks = function() {
             func: function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if(name === 'joystick') {
+                if (name === 'joystick') {
                     var port = script.getNumberValue('PORT', script);
                     var DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue['GET']) {
                         Entry.hw.sendQueue['GET'] = {};
                     }
-                    Entry.hw.sendQueue['GET'][
-                        Entry.joystick.sensorTypes.DIGITAL
-                    ] = {
+                    Entry.hw.sendQueue['GET'][Entry.joystick.sensorTypes.DIGITAL] = {
                         port: port,
                         time: new Date().getTime(),
                     };
@@ -769,9 +761,7 @@ Entry.joystick.getBlocks = function() {
                                 ],
                                 value: 'C',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringValueUpperCase,
+                                converter: Entry.block.converters.returnStringValueUpperCase,
                             },
                         ],
                         keyOption: 'joystick_tone_list',
@@ -915,9 +905,7 @@ Entry.joystick.getBlocks = function() {
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
-						
-                        note = Entry.joystick.toneTable[note];
+                    if (!Entry.Utils.isNumber(note)) note = Entry.joystick.toneTable[note];
 
                     if (note < 0) {
                         note = 0;
@@ -1091,7 +1079,7 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-		joystick_is_button_pressed: {
+        joystick_is_button_pressed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -1107,7 +1095,7 @@ Entry.joystick.getBlocks = function() {
                         ['파랑', '17'],
                         ['왼쪽 위', '4'],
                         ['오른쪽 위', '5'],
-			['조이스틱', '10'],
+                        ['조이스틱', '10'],
                     ],
                     value: '16',
                     fontSize: 11,
@@ -1128,15 +1116,13 @@ Entry.joystick.getBlocks = function() {
             func: function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if(name === 'joystick') {
-                    var port = script.getNumberField('PORT', script)
+                if (name === 'joystick') {
+                    var port = script.getNumberField('PORT', script);
                     var DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue['GET']) {
                         Entry.hw.sendQueue['GET'] = {};
                     }
-                    Entry.hw.sendQueue['GET'][
-                        Entry.joystick.sensorTypes.DIGITAL
-                    ] = {
+                    Entry.hw.sendQueue['GET'][Entry.joystick.sensorTypes.DIGITAL] = {
                         port: port,
                         time: new Date().getTime(),
                     };
@@ -1161,13 +1147,13 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-		joystick_get_joystick_value: {
+        joystick_get_joystick_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
-             params: [
+            params: [
                 {
                     type: 'Dropdown',
                     options: [
@@ -1175,7 +1161,7 @@ Entry.joystick.getBlocks = function() {
                         ['왼쪽', '2'],
                         ['위', '3'],
                         ['아래', '4'],
-			['오른쪽 위', '5'],
+                        ['오른쪽 위', '5'],
                         ['오른쪽 아래', '6'],
                         ['왼쪽 위', '7'],
                         ['왼쪽 아래', '8'],
@@ -1197,27 +1183,27 @@ Entry.joystick.getBlocks = function() {
             class: 'joysticksensor',
             isNotFor: ['joystick'],
             func: function(sprite, script) {
-		var stick = script.getNumberField('STICK', script)
+                var stick = script.getNumberField('STICK', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
-		if(stick === 1 && ANALOG[0] > 800) {
-			return 1;
-		} else if(stick === 2 && ANALOG[0] < 100) {
-			return 1;
-		} else if(stick === 3 && ANALOG[1] > 800) {
-			return 1;
-		} else if(stick === 4 && ANALOG[1] < 100) {
-			return 1;
-		} else if(stick === 5 && ANALOG[0] > 700 && ANALOG[1] > 700) {
-			return 1;
-		} else if(stick === 6 && ANALOG[0] > 700 && ANALOG[1] < 300) {
-			return 1;
-		} else if(stick === 7 && ANALOG[0] < 300 && ANALOG[1] > 700) {
-			return 1;
-		} else if(stick === 8 && ANALOG[0] < 300 && ANALOG[1] < 300) {
-			return 1;
-		} else { 
-			return 0;
-		}
+                if (stick === 1 && ANALOG[0] > 800) {
+                    return 1;
+                } else if (stick === 2 && ANALOG[0] < 100) {
+                    return 1;
+                } else if (stick === 3 && ANALOG[1] > 800) {
+                    return 1;
+                } else if (stick === 4 && ANALOG[1] < 100) {
+                    return 1;
+                } else if (stick === 5 && ANALOG[0] > 700 && ANALOG[1] > 700) {
+                    return 1;
+                } else if (stick === 6 && ANALOG[0] > 700 && ANALOG[1] < 300) {
+                    return 1;
+                } else if (stick === 7 && ANALOG[0] < 300 && ANALOG[1] > 700) {
+                    return 1;
+                } else if (stick === 8 && ANALOG[0] < 300 && ANALOG[1] < 300) {
+                    return 1;
+                } else {
+                    return 0;
+                }
             },
             syntax: {
                 js: [],
@@ -1235,15 +1221,15 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-		joystick_get_sensor_value: {
+        joystick_get_sensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
-				{
-					type: 'Dropdown',
+                {
+                    type: 'Dropdown',
                     options: [
                         ['가변저항', '1'],
                         ['빛감지센서', '2'],
@@ -1252,27 +1238,27 @@ Entry.joystick.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-				}
+                },
             ],
             events: {},
             def: {
-				params: [null],
+                params: [null],
                 type: 'joystick_get_sensor_value',
             },
             paramsKeyMap: {
-				PORT: 0,
+                PORT: 0,
             },
             class: 'joysticksensor',
             isNotFor: ['joystick'],
             func: function(sprite, script) {
-                var port = script.getNumberField('PORT', script)
-				if(port === 1) {
-					port = 'A4';
-				} else if(port === 2) {
-					port = 'A5';
-				} else {
-					port = '0';
-				}
+                var port = script.getNumberField('PORT', script);
+                if (port === 1) {
+                    port = 'A4';
+                } else if (port === 2) {
+                    port = 'A5';
+                } else {
+                    port = '0';
+                }
                 var ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
@@ -1293,7 +1279,7 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-		joystick_toggle_motor: {
+        joystick_toggle_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1364,7 +1350,7 @@ Entry.joystick.getBlocks = function() {
                 ],
             },
         },
-		joystick_get_led_number: {
+        joystick_get_led_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1401,7 +1387,7 @@ Entry.joystick.getBlocks = function() {
                 py: [],
             },
         },
-		joystick_toggle_shield_led: {
+        joystick_toggle_shield_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1410,7 +1396,7 @@ Entry.joystick.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-					defaultType: 'number'
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
@@ -1425,15 +1411,15 @@ Entry.joystick.getBlocks = function() {
             events: {},
             def: {
                 params: [
-			{
-                        	type: 'joystick_get_led_number',
-				params: [null],
-                    	},
-                    	{
-                      	  	type: 'arduino_get_digital_toggle',
-                     	   	params: ['on'],
-                  	},
-                 	   	null,
+                    {
+                        type: 'joystick_get_led_number',
+                        params: [null],
+                    },
+                    {
+                        type: 'arduino_get_digital_toggle',
+                        params: ['on'],
+                    },
+                    null,
                 ],
                 type: 'joystick_toggle_shield_led',
             },
@@ -1445,19 +1431,19 @@ Entry.joystick.getBlocks = function() {
             isNotFor: ['joystick'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT');
-		if(port === '1') {
-			port = 2;
-		} else if (port === '2') {
-			port = 3;
-		} else if (port === '3') {
-			port = 11;
-		} else if (port === '4') {
-			port = 12;
-		} else if (port === '5') {
-			port = 13;
-		} else {
-			port = null;
-		}
+                if (port === '1') {
+                    port = 2;
+                } else if (port === '2') {
+                    port = 3;
+                } else if (port === '3') {
+                    port = 11;
+                } else if (port === '4') {
+                    port = 12;
+                } else if (port === '5') {
+                    port = 13;
+                } else {
+                    port = null;
+                }
                 var value = script.getValue('VALUE');
 
                 if (typeof value === 'string') {

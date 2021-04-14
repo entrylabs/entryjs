@@ -101,7 +101,7 @@ export class SceneTextures implements ISceneTextures {
     }
 
     putImage(info: AtlasImageLoadingInfo, forceUpdateBaseTexture: boolean): void {
-        let tex: EntryTexture = this._path_tex_map.getValue(info.path);
+        const tex: EntryTexture = this._path_tex_map.getValue(info.path);
         if (!tex) {
             return;
         }

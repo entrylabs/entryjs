@@ -91,6 +91,20 @@ Entry.Codestar.blockMenuBlocks = [
     'codestar_temperature',
     'codestar_tilt',
 ];
+Entry.Codestar.setLanguage = function() {
+    return {
+        ko: {
+            Menus: {
+                codestar: '코드스타',
+            },
+        },
+        en: {
+            Menus: {
+                codestar: 'Codestar',
+            },
+        },
+    };
+};
 Entry.Codestar.getBlocks = function() {
     return {
         //region codestar 코드스타
@@ -103,14 +117,20 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨간색', 7], ['파란색', 8]],
+                    options: [
+                        ['빨간색', 7],
+                        ['파란색', 8],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -149,7 +169,11 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['빨간색', 9], ['초록색', 10], ['파란색', 11]],
+                    options: [
+                        ['빨간색', 9],
+                        ['초록색', 10],
+                        ['파란색', 11],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -194,7 +218,10 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -365,7 +392,12 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['앞으로', '0'], ['뒤로', '1'], ['왼쪽', '2'], ['오른쪽', '3']],
+                    options: [
+                        ['앞으로', '0'],
+                        ['뒤로', '1'],
+                        ['왼쪽', '2'],
+                        ['오른쪽', '3'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -416,7 +448,10 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['왼쪽', '0'], ['오른쪽', '1']],
+                    options: [
+                        ['왼쪽', '0'],
+                        ['오른쪽', '1'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -511,7 +546,12 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A4', '4'], ['A5', '5'], ['A7', '7']],
+                    options: [
+                        ['A0', '0'],
+                        ['A4', '4'],
+                        ['A5', '5'],
+                        ['A7', '7'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -562,7 +602,12 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']],
+                    options: [
+                        ['A0', '0'],
+                        ['A1', '1'],
+                        ['A4', '4'],
+                        ['A5', '5'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -633,7 +678,11 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['x', 'x'], ['y', 'y'], ['z', 'z']],
+                    options: [
+                        ['x', 'x'],
+                        ['y', 'y'],
+                        ['z', 'z'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -668,7 +717,11 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['x', 'x'], ['y', 'y'], ['z', 'z']],
+                    options: [
+                        ['x', 'x'],
+                        ['y', 'y'],
+                        ['z', 'z'],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,

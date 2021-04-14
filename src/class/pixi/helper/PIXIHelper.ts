@@ -1,38 +1,36 @@
-import DestroyOptions = PIXI.DestroyOptions;
-import Texture = PIXI.Texture;
+import { Sprite, Container, Texture, Graphics } from 'pixi.js';
 import { PIXISprite } from '../plugins/PIXISprite';
+import { PIXITempStore } from '../etc/PIXITempStore';
+import { PIXIText } from '../text/PIXIText';
 
-export class PIXIGraphics extends PIXI.Graphics {
+export class PIXIGraphics extends Graphics {
     destroyed: boolean = false;
 
-    destroy(options?: DestroyOptions | boolean) {
+    destroy(options?: any) {
         this.destroyed = true;
         super.destroy(options);
     }
 }
 
-let PIXITempStore: any = require('../etc/PIXITempStore').PIXITempStore;
-let PIXIText: any = require('../text/PIXIText').PIXIText;
-
 export default class PIXIHelper {
-    static sprite(debugName?: string, texture?: Texture): PIXI.Sprite {
+    static sprite(debugName?: string, texture?: Texture): Sprite {
         return new PIXISprite(texture);
     }
 
-    static container(debugName?: string): PIXI.Container {
-        return new PIXI.Container();
+    static container(debugName?: string): Container {
+        return new Container();
     }
 
     static text(str: string, font: string, color: string, textBaseline: string, textAlign: string) {
         // console.log(str, font);
-        var reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
-        var result: any[] = reg.exec(font) || [];
-        var fontName = result[4] || 'NanumGothic';
-        var size = result[1] || '10pt';
+        const reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
+        const result: any[] = reg.exec(font) || [];
+        const fontName = result[4] || 'NanumGothic';
+        const size = result[1] || '10pt';
 
         const nColor = parseInt(color.replace('#', '0x')) || 0;
         // var t = new PIXI.Text(str, {
-        var t = new PIXIText(str, {
+        const t = new PIXIText(str, {
             fontFamily: fontName,
             fontSize: size,
             fill: nColor,
@@ -47,7 +45,7 @@ export default class PIXIHelper {
 
     static getOffScreenCanvas(forceHTMLCanvas: boolean = false): HTMLCanvasElement {
         forceHTMLCanvas = true;
-        var WIN: any = window;
+        const WIN: any = window;
         if (!forceHTMLCanvas && 'OffscreenCanvas' in WIN) {
             return new WIN.OffscreenCanvas(1, 1);
         } else {
@@ -70,7 +68,7 @@ export default class PIXIHelper {
     }
 
     static randomRGBAString(alpha: number = 0.3): string {
-        var rr = this._rand255;
+        const rr = this._rand255;
         return `rgba(${rr()},${rr()},${rr()},${alpha})`;
     }
 
@@ -83,31 +81,31 @@ export default class PIXIHelper {
      * @param {PIXI.DisplayObject} target
      */
     static getTransformBound(target: any) {
-        var bounds = target.getLocalBounds(PIXITempStore.rect);
+        const bounds = target.getLocalBounds(PIXITempStore.rect1);
 
-        var x = bounds.x,
-            y = bounds.y,
-            width = bounds.width,
-            height = bounds.height;
-        var mtx = PIXITempStore.matrix1;
-        target.localTransform.copy(mtx);
+        let x = bounds.x;
+        let y = bounds.y;
+        const width = bounds.width;
+        const height = bounds.height;
+        const mtx = PIXITempStore.matrix1;
+        target.localTransform.copyTo(mtx);
 
         if (x || y) {
-            var mat2 = PIXITempStore.matrix2.identity().translate(-x, -y);
+            const mat2 = PIXITempStore.matrix2.identity().translate(-x, -y);
             mtx.append(mat2);
         }
 
-        var x_a = width * mtx.a,
-            x_b = width * mtx.b;
-        var y_c = height * mtx.c,
-            y_d = height * mtx.d;
-        var tx = mtx.tx,
-            ty = mtx.ty;
+        const x_a = width * mtx.a;
+        const x_b = width * mtx.b;
+        const y_c = height * mtx.c;
+        const y_d = height * mtx.d;
+        const tx = mtx.tx;
+        const ty = mtx.ty;
 
-        var minX = tx,
-            maxX = tx,
-            minY = ty,
-            maxY = ty;
+        let minX = tx;
+        let maxX = tx;
+        let minY = ty;
+        let maxY = ty;
 
         if ((x = x_a + tx) < minX) {
             minX = x;

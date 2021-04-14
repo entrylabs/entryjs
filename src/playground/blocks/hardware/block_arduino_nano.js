@@ -82,6 +82,9 @@ Entry.ArduinoNano.setLanguage = function() {
                 arduino_nano_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 arduino_nano_get_digital: '디지털 %1 번 센서값',
             },
+            Device: {
+                arduinonano: '아두이노 Nano',
+            },
         },
         en: {
             template: {

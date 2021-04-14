@@ -378,6 +378,37 @@ Entry.memaker.blockMenuBlocks = [
     'memaker_lcd_command',
     // memaker Added 2017-10-01
 ];
+
+Entry.memaker.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                memaker_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                memaker_get_analog_value: '아날로그 %1 번 센서값',
+                memaker_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                memaker_get_digital: '디지털 %1 번 센서값',
+                memaker_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 센서값',
+                memaker_set_lcd: '1602 문자 LCD %1 행 , %2열에 %3 출력하기 %4',
+                memaker_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                memaker_toggle_led: '디지털 %1 번 핀 %2 %3',
+                memaker_lcd_command: '1602 문자 LCD %1 명령실행하기 %2',
+            },
+        },
+        en: {
+            template: {
+                memaker_digital_pwm: 'Digital %1 Pin %2 %3',
+                memaker_get_analog_value: 'Analog %1 Sensor value',
+                memaker_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                memaker_get_digital: 'Digital %1 Sensor value',
+                memaker_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                memaker_set_lcd: '1602 LCD Row %1, Column %2 Value %3 %4',
+                memaker_set_servo: 'Set servo pin %1 angle as %3',
+                memaker_toggle_led: 'Digital %1 Pin %2 %3',
+                memaker_lcd_command: '1602 LCD Command %1 execute %2',
+            },
+        },
+    };
+};
 Entry.memaker.getBlocks = function() {
     return {
         //region memaker 미메이커
@@ -833,7 +864,10 @@ Entry.memaker.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['LINE1', '0'], ['LINE2', '1']],
+                    options: [
+                        ['LINE1', '0'],
+                        ['LINE2', '1'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -973,7 +1007,7 @@ Entry.memaker.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = 60 / fps * 50;
+                    var timeValue = (60 / fps) * 50;
 
                     Entry.hw.sendQueue['SET'][line] = {
                         type: Entry.memaker.sensorTypes.LCD,
@@ -1024,7 +1058,11 @@ Entry.memaker.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['LCD_BLUE', '0'], ['LCD_GREEN', '1'], ['LCD_CLEAR', '2']],
+                    options: [
+                        ['LCD_BLUE', '0'],
+                        ['LCD_GREEN', '1'],
+                        ['LCD_CLEAR', '2'],
+                    ],
                     value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
