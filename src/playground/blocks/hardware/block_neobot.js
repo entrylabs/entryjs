@@ -50,9 +50,9 @@ Entry.Neobot.setLanguage = function() {
                 neobot_sensor_convert_scale: '%1 센서값 %2 ~ %3 를 %4 ~ %5 (으)로 바꾼 값',
 
                 neobot_compare_symbol: '%1',
-                neobot_decision_sensor_is_over: '%1 의 센서값이 %2 %3',
+                neobot_decision_sensor_is_over: "%1 의 센서값이 %2 %3",
                 neobot_decision_equal_with_sensor: '%1 에 연결한 컬러센서가 %2 을 감지함',
-                neobot_remote_button: '리모컨의 %1 버튼을 누름',
+                neobot_remote_button : "리모컨의 %1 버튼을 누름",
 
                 get_motor_speed: '%1',
                 neobot_left_motor: '왼쪽 모터를 %1 %2 의 속도로 회전 %3',
@@ -80,44 +80,44 @@ Entry.Neobot.setLanguage = function() {
             },
             Blocks: {
                 //for dropdown
-                neobot_port_1: 'IN1',
-                neobot_port_2: 'IN2',
-                neobot_port_3: 'IN3',
-                neobot_port_4: 'IN4',
-                neobot_port_bat: '배터리',
-                neobot_port_remot: '리모컨',
-                neobot_color_white: '흰색',
-                neobot_color_red: '빨간색',
-                neobot_color_yellow: '노란색',
-                neobot_color_green: '초록색(연두색)',
-                neobot_color_blue: '파란색',
-                neobot_direction_forward: '앞으로',
-                neobot_direction_backward: '뒤로',
-                neobot_sound_silent: '무음',
-                neobot_sound_do: '도',
-                neobot_sound_do_shop: '도#',
-                neobot_sound_re: '레',
-                neobot_sound_re_shop: '레#',
-                neobot_sound_mi: '미',
-                neobot_sound_fa: '파',
-                neobot_sound_fa_shop: '파#',
-                neobot_sound_so: '솔',
-                neobot_sound_so_shop: '솔#',
-                neobot_sound_la: '라',
-                neobot_sound_la_shop: '라#',
-                neobot_sound_ti: '시',
-                neobot_sound_half_note: '2분 음표',
-                neobot_sound_quarter_note: '4분 음표',
-                neobot_sound_eighth_note: '8븐 음표',
-                neobot_sound_sixteenth_note: '16분 음표',
-                neobot_sensor_infrared: '적외선센서',
-                neobot_sensor_light: '빛센서',
-                neobot_sensor_sound: '소리센서',
-                neobot_compare_symbol1: '＝',
-                neobot_compare_symbol2: '＞',
-                neobot_compare_symbol3: '＜',
-                neobot_compare_symbol4: '≥',
-                neobot_compare_symbol5: '≤',
+                neobot_port_1 : "IN1",
+                neobot_port_2 : "IN2",
+                neobot_port_3 : "IN3",
+                neobot_port_4 : "IN4",
+                neobot_port_bat : "배터리",
+                neobot_port_remot : "리모컨",
+                neobot_color_white : "흰색",
+                neobot_color_red : "빨간색",
+                neobot_color_yellow : "노란색",
+                neobot_color_green : "초록색(연두색)",
+                neobot_color_blue : "파란색",
+                neobot_direction_forward : "앞으로",
+                neobot_direction_backward : "뒤로",
+                neobot_sound_silent : "무음",
+                neobot_sound_do : "도",
+                neobot_sound_do_shop : "도#",
+                neobot_sound_re : "레",
+                neobot_sound_re_shop : "레#",
+                neobot_sound_mi : "미",
+                neobot_sound_fa : "파",
+                neobot_sound_fa_shop : "파#",
+                neobot_sound_so : "솔",
+                neobot_sound_so_shop : "솔#",
+                neobot_sound_la : "라",
+                neobot_sound_la_shop:"라#",
+                neobot_sound_ti : "시",
+                neobot_sound_half_note : "2분 음표",
+                neobot_sound_quarter_note : "4분 음표",
+                neobot_sound_eighth_note : "8븐 음표",
+                neobot_sound_sixteenth_note : "16분 음표",
+                neobot_sensor_infrared : '적외선센서',
+                neobot_sensor_light : '빛센서',
+                neobot_sensor_sound : '소리센서',
+                neobot_compare_symbol1 : '＝',
+                neobot_compare_symbol2 : '＞',
+                neobot_compare_symbol3 : '＜',
+                neobot_compare_symbol4 : '≥',
+                neobot_compare_symbol5 : '≤',
                 neobot_remote_btn_a: 'A',
                 neobot_remote_btn_b: 'B',
                 neobot_remote_btn_c: 'C',
@@ -200,19 +200,19 @@ Entry.Neobot.setLanguage = function() {
                 neobot_degree_170: '170도',
                 neobot_degree_175: '175도',
                 neobot_degree_180: '180도',
-            },
+            }
         },
         en: {
             // en.js에 작성하던 내용
             template: {
                 neobot_sensor_value: '%1 value',
                 neobot_sensor_connect_external: 'the %2 value connected %1',
-                neobot_sensor_convert_scale: 'the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5',
+                neobot_sensor_convert_scale: "the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5",
 
                 neobot_compare_symbol: '%1',
-                neobot_decision_sensor_is_over: '%1 sensor value %2 %3',
-                neobot_decision_equal_with_sensor: 'being detected %2 by %1 color sensor',
-                neobot_remote_button: 'pressing button %1 of remote controller',
+                neobot_decision_sensor_is_over: "%1 sensor value %2 %3",
+                neobot_decision_equal_with_sensor: "being detected %2 by %1 color sensor",
+                neobot_remote_button : 'pressing button %1 of remote controller',
 
                 get_motor_speed: '%1',
                 neobot_left_motor: 'Rotate the left motor in %2 for speed %1 %3',
@@ -236,7 +236,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_servo_stop: 'Stop the %1 servo motor %2',
 
                 neobot_play_note_for: 'Make a sound the melody %1 to %2 octave(s) as %3 %4',
-                neobot_play_note_with_sensor: 'Play the melody as %2 ~ %3 value of %1 sensor in the controller %4',
+                neobot_play_note_with_sensor: "Play the melody as %2 ~ %3 value of %1 sensor in the controller %4",
             },
             Blocks: {
                 //for dropdown
@@ -270,14 +270,14 @@ Entry.Neobot.setLanguage = function() {
                 neobot_sound_quarter_note: 'a quarter note',
                 neobot_sound_eighth_note: 'a eighth note',
                 neobot_sound_sixteenth_note: 'a sixteenth note',
-                neobot_sensor_infrared: 'IR sensor',
-                neobot_sensor_light: 'light sensor',
-                neobot_sensor_sound: 'sound sensor',
-                neobot_compare_symbol1: '＝',
-                neobot_compare_symbol2: '＞',
-                neobot_compare_symbol3: '＜',
-                neobot_compare_symbol4: '≥',
-                neobot_compare_symbol5: '≤',
+                neobot_sensor_infrared : 'IR sensor',
+                neobot_sensor_light : 'light sensor',
+                neobot_sensor_sound : 'sound sensor',
+                neobot_compare_symbol1 : '＝',
+                neobot_compare_symbol2 : '＞',
+                neobot_compare_symbol3 : '＜',
+                neobot_compare_symbol4 : '≥',
+                neobot_compare_symbol5 : '≤',
                 neobot_remote_btn_a: 'A',
                 neobot_remote_btn_b: 'B',
                 neobot_remote_btn_c: 'C',
@@ -445,7 +445,7 @@ Entry.Neobot.getBlocks = function() {
         },
 
         // un-used. use if required pluggable block.
-        neobot_compare_symbol: {
+        neobot_compare_symbol :{
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -478,7 +478,7 @@ Entry.Neobot.getBlocks = function() {
             class: 'neobot_value',
             isNotFor: ['neobot'],
             func: function(sprite, script) {
-                return script.getStringField('SYMBOL');
+                return  script.getStringField('SYMBOL');
             },
         },
 
@@ -685,19 +685,19 @@ Entry.Neobot.getBlocks = function() {
                 var value = Entry.parseNumber(script.getStringValue('VALUE'));
 
                 if (symbol == '=') {
-                    if (sensor == value) return true;
+                    if(sensor == value) return true;
                     else return false;
                 } else if (symbol == '>') {
-                    if (sensor > value) return true;
+                    if(sensor > value) return true;
                     else return false;
                 } else if (symbol == '<') {
-                    if (sensor < value) return true;
+                    if(sensor < value) return true;
                     else return false;
                 } else if (symbol == '>=') {
-                    if (sensor >= value) return true;
+                    if(sensor >= value) return true;
                     else return false;
                 } else if (symbol == '<=') {
-                    if (sensor <= value) return true;
+                    if(sensor <= value) return true;
                     else return false;
                 }
                 return false;
@@ -819,9 +819,9 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 var key = script.getNumberField('KEY');
                 var value = Entry.hw.portData['IR'];
-                if (key >= 5 && key <= 8)
+                if(key >= 5 && key <= 8)
                     key -= 4;
-                if (key == value) {
+                if(key == value){
                     return true;
                 } else {
                     return false;
@@ -893,7 +893,6 @@ Entry.Neobot.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -1105,7 +1104,7 @@ Entry.Neobot.getBlocks = function() {
                 DIRECTION_LEFT: 0,
                 SPEED_LEFT: 1,
                 DIRECTION_RIGHT: 2,
-                SPEED_RIGHT: 3,
+                SPEED_RIGHT:3
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
@@ -1219,7 +1218,7 @@ Entry.Neobot.getBlocks = function() {
                             break;
                     }
 
-                    if (duration == 0)
+                    if(duration == 0)
                         return script.callReturn();
 
                     script.isStart = true;
@@ -1440,7 +1439,7 @@ Entry.Neobot.getBlocks = function() {
             },
         },
 
-        neobot_output_led_type1: {
+        neobot_output_led_type1 : {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1521,7 +1520,7 @@ Entry.Neobot.getBlocks = function() {
                     var duration = script.getNumberField('DURATION', script);
 
                     Entry.hw.sendQueue[port] = value;
-                    if (duration == 0) {
+                    if(duration == 0) {
                         return script.callReturn();
                     }
 
@@ -1542,7 +1541,7 @@ Entry.Neobot.getBlocks = function() {
                 }
             },
         },
-        neobot_output_led_on: {
+        neobot_output_led_on : {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1582,7 +1581,7 @@ Entry.Neobot.getBlocks = function() {
                 return script.callReturn();
             },
         },
-        neobot_output_led_off: {
+        neobot_output_led_off : {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2112,7 +2111,7 @@ Entry.Neobot.getBlocks = function() {
                 DEGREE: 0,
                 PORT: 1,
                 DIRECTION: 2,
-                SPEED: 3,
+                SPEED: 3
             },
             class: 'neobot_servo',
             isNotFor: ['neobot'],
@@ -2141,10 +2140,10 @@ Entry.Neobot.getBlocks = function() {
                             Entry.hw.sendQueue['OUT1'] = 0xFA - speed;
                             Entry.hw.sendQueue['OUT2'] = 0xFA - speed;
                             setTimeout(function() { // for degree
-                                if (degree > 180) {
+                                if(degree > 180) {
                                     degree = 180;
                                 }
-                                if (degree < 0) {
+                                if (degree < 0){
                                     degree = 0;
                                 }
                                 degree = degree + 0x01;
@@ -2169,10 +2168,10 @@ Entry.Neobot.getBlocks = function() {
                         setTimeout(function() { // for speed
                             Entry.hw.sendQueue[port] = 0xFA - speed;
                             setTimeout(function() { // for degree
-                                if (degree > 180) {
+                                if(degree > 180) {
                                     degree = 180;
                                 }
-                                if (degree < 0) {
+                                if (degree < 0){
                                     degree = 0;
                                 }
                                 degree = degree + 0x01;
@@ -2257,7 +2256,7 @@ Entry.Neobot.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
                 DIRECTION: 1,
-                SPEED: 2,
+                SPEED: 2
             },
             class: 'neobot_servo',
             isNotFor: ['neobot'],
