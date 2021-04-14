@@ -53,6 +53,7 @@ Entry.Microbit2 = new (class Microbit2 {
         this.name = 'microbit2';
         this.communicationType = 'manual';
         this.blockMenuBlocks = [
+            'microbit2_test_set_tone',
             'microbit2_get_analog',
             'microbit2_set_analog',
             'microbit2_get_digital',
@@ -222,6 +223,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_radio_setting: '라디오 채널을 %1로 변경 %2',
                     microbit2_radio_send: '라디오로 %1 전송 %2',
                     microbit2_radio_received: '라디오 수신값',
+                    microbit2_test_set_tone: '%1 옥타브 %2 를 %3 로 연주하기 %4',
                 },
                 Blocks: {
                     DADADADUM: '운명 교향곡',
@@ -398,6 +400,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_radio_setting: 'Set Radio Channel to %1 %2',
                     microbit2_radio_send: 'Send %1 over Radio %2',
                     microbit2_radio_received: 'Received Radio Value',
+                    microbit2_test_set_tone: '%1 옥타브 %2 를 %3 로 연주하기 %4',
                 },
                 Blocks: {
                     DADADADUM: 'Beethoven 5th Symphony',
@@ -1887,6 +1890,76 @@ Entry.Microbit2 = new (class Microbit2 {
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
                     return parsedResponse[1];
+                },
+            },
+            microbit2_test_set_tone: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [1, 1],
+                            [2, 2],
+                            [3, 3],
+                            [4, 4],
+                            [5, 5],
+                        ],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'MusicScale',
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['4', 16],
+                            ['2', 8],
+                            ['1', 4],
+                            ['1/2', 2],
+                            ['1/4', 1],
+                        ],
+                        value: 4,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbit2Test',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_test_set_tone',
+                },
+                paramsKeyMap: {
+                    OCTAVE: 0,
+                    SCALE: 1,
+                    NOTE: 2,
+                },
+                func: (sprite, script) => {
+                    const scale = script.getField('SCALE');
+                    const octave = script.getField('OCTAVE');
+                    const note = script.getField('NOTE');
+
+                    const parsedPayload = `${scale}${octave}:${note}`;
+
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command: functionKeys.PLAY_TONE,
+                        payload: parsedPayload,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
                 },
             },
         };

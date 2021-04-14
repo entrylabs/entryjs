@@ -372,6 +372,8 @@ Entry.Field = class Field {
             return 'led';
         } else if (this instanceof Entry.FieldLed2) {
             return 'led2';
+        } else if (this instanceof Entry.FieldMusicScale) {
+            return 'musicScale';
         }
     }
 

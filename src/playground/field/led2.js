@@ -54,7 +54,6 @@ Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
                 if (this._rect[`${x_pos}`][`${y_pos}`]) {
                     this._rect[`${x_pos}`][`${y_pos}`].remove();
                 }
-
                 return (this._rect[`${x_pos}`][`${y_pos}`] = this.svgGroup.elem('rect', {
                     x: y_pos * ledDist + 4,
                     y: x_pos * ledDist - 8 + ledOffset,
