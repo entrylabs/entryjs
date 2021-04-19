@@ -202,7 +202,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_reset_screen: '화면 지우기 %1',
                     microbit2_screen_toggle: '화면 %1 %2',
                     microbit2_speaker_toggle: '스피커 %1 %2',
-                    microbit2_set_tone: '%1 를 %2 로 연주하기 %3',
+                    microbit2_set_tone: '%1 를 %2 박자만큼 연주하기 %3',
                     microbit2_play_preset_music: '%1 음악 재생하기 %2',
                     microbit2_play_sound_effect: ' %1 효과음 재생하기 %2',
                     microbit2_get_btn: '%1 버튼이 눌렸는가?',
