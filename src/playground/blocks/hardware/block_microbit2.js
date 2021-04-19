@@ -202,7 +202,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_reset_screen: '화면 지우기 %1',
                     microbit2_screen_toggle: '화면 %1 %2',
                     microbit2_speaker_toggle: '스피커 %1 %2',
-                    microbit2_set_tone: '%1옥타브 %2%3 음을 %4 박자 연주하기 %5',
+                    microbit2_set_tone: '%1 를 %2 로 연주하기 %3',
                     microbit2_play_preset_music: '%1 음악 재생하기 %2',
                     microbit2_play_sound_effect: ' %1 효과음 재생하기 %2',
                     microbit2_get_btn: '%1 버튼이 눌렸는가?',
@@ -223,9 +223,9 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_radio_setting: '라디오 채널을 %1로 변경 %2',
                     microbit2_radio_send: '라디오로 %1 전송 %2',
                     microbit2_radio_received: '라디오 수신값',
-                    microbit2_test_set_tone: '%1 옥타브 %2 를 %3 로 연주하기 %4',
                 },
                 Blocks: {
+                    octave: '옥타브',
                     DADADADUM: '운명 교향곡',
                     ENTERTAINER: '엔터테이너',
                     PRELUDE: '바흐 프렐류드 1번',
@@ -335,36 +335,37 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_SNAKE: '뱀',
                 },
                 Helper: {
-                    microbit2_get_analog: 'test',
-                    microbit2_set_analog: 'test',
-                    microbit2_get_digital: 'test',
-                    microbit2_set_digital: 'test',
-                    microbit2_screen_toggle: 'test',
-                    microbit2_set_led: 'test',
-                    microbit2_get_led: 'test',
-                    microbit2_show_preset_image: 'test',
-                    microbit2_show_custom_image: 'test',
-                    microbit2_show_full_brightness_custom_image: 'test',
-                    microbit2_show_string: 'test',
-                    microbit2_reset_screen: 'test',
-                    microbit2_radio_toggle: 'test',
-                    microbit2_radio_setting: 'test',
-                    microbit2_radio_send: 'test',
-                    microbit2_radio_received: 'test',
-                    microbit2_speaker_toggle: 'test',
-                    microbit2_change_tempo: 'test',
-                    microbit2_set_tone: 'test',
-                    microbit2_play_preset_music: 'test',
-                    microbit2_play_sound_effect: 'test',
-                    microbit2_get_btn: 'test',
-                    microbit2_get_logo: 'test',
-                    microbit2_get_gesture: 'test',
-                    microbit2_get_direction: 'test',
-                    microbit2_get_field_strength: 'test',
-                    microbit2_get_field_strength_axis: 'test',
-                    microbit2_get_light_level: 'test',
-                    microbit2_get_temperature: 'test',
-                    microbit2_get_sound_level: 'test',
+                    microbit2_get_analog: '핀의 아날로그 값(0 ~ 1023)을 불러옵니다.',
+                    microbit2_set_analog: '핀에 아날로그 값(0 ~ 1023)을 입력합니다.',
+                    microbit2_get_digital: '핀에 디지털 값(0 ~ 1)을 입력합니다.',
+                    microbit2_set_digital: '핀에 디지털 값(0 ~ 1)을 불러옵니다.',
+                    microbit2_screen_toggle: 'LED기능을 켜거나 끕니다.',
+                    microbit2_set_led: 'LED의 밝기를 조절합니다.',
+                    microbit2_get_led: 'LED의 밝기를 가져옵니다.',
+                    microbit2_show_preset_image: 'LED에 미리 설정된 이미지를 보여줍니다.',
+                    microbit2_show_custom_image: 'LED에 원하는 이미지를 보여줍니다.',
+                    microbit2_show_full_brightness_custom_image:
+                        'LED에 원하는 이미지를 밝기 값을 최대로 하여 보여줍니다.',
+                    microbit2_show_string: 'LED에 영어 문자열을 보여줍니다.',
+                    microbit2_reset_screen: 'LED를 초기화 합니다.',
+                    microbit2_radio_toggle: '라디오를 켜거나 끕니다.',
+                    microbit2_radio_setting: '라디오의 채널을 변경합니다.',
+                    microbit2_radio_send: '라디오를 통해 값을 전송합니다.',
+                    microbit2_radio_received: '전송 받은 라디오 값을 불러옵니다.',
+                    microbit2_speaker_toggle: '스피커를 켜거나 끕니다.',
+                    microbit2_change_tempo: '음악의 박자를 변경합니다.',
+                    microbit2_set_tone: '음을 재생합니다.',
+                    microbit2_play_preset_music: '미리 설정된 음악을 재생합니다.',
+                    microbit2_play_sound_effect: '미리 설정된 효과음을 재생합니다.',
+                    microbit2_get_btn: '버튼이 눌렸는가를 확인합니다.',
+                    microbit2_get_logo: '로고가 눌렸는가를 확인합니다.',
+                    microbit2_get_gesture: '현재 동작을 확인합니다.',
+                    microbit2_get_direction: '현재 나침반 값을 불러옵니다.',
+                    microbit2_get_field_strength: '현재 자기장 강도를 불러옵니다.',
+                    microbit2_get_field_strength_axis: '각 축별 현재 자기장 강도를 불러옵니다.',
+                    microbit2_get_light_level: '빛센서 값을 불러옵니다(0 ~ 255).',
+                    microbit2_get_temperature: '온도 센서 값을 불러옵니다(C).',
+                    microbit2_get_sound_level: '현재 소리 강도를 불러옵니다(0~255).',
                 },
             },
             en: {
@@ -379,7 +380,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_reset_screen: 'Reset Screen %1',
                     microbit2_screen_toggle: 'Turn Screen %1 %2',
                     microbit2_speaker_toggle: 'Turn Speaker %1 %2',
-                    microbit2_set_tone: 'Play %2 at octave %1 for %3 beat %4',
+                    microbit2_set_tone: 'Play %1 with duration %2 %3',
                     microbit2_play_preset_music: 'Play %1 %2',
                     microbit2_play_sound_effect: 'Play effect %1 %2',
                     microbit2_get_btn: 'is %1 button pressed?',
@@ -400,9 +401,9 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_radio_setting: 'Set Radio Channel to %1 %2',
                     microbit2_radio_send: 'Send %1 over Radio %2',
                     microbit2_radio_received: 'Received Radio Value',
-                    microbit2_test_set_tone: '%1 옥타브 %2 를 %3 로 연주하기 %4',
                 },
                 Blocks: {
+                    octave: 'octave',
                     DADADADUM: 'Beethoven 5th Symphony',
                     ENTERTAINER: 'The Entertainer',
                     PRELUDE: 'First Prelude, J.S.Bach’s 48 Preludes and Fugues',
@@ -512,36 +513,37 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_SNAKE: 'Snake',
                 },
                 Helper: {
-                    microbit2_get_analog: 'test',
-                    microbit2_set_analog: 'test',
-                    microbit2_get_digital: 'test',
-                    microbit2_set_digital: 'test',
-                    microbit2_screen_toggle: 'test',
-                    microbit2_set_led: 'test',
-                    microbit2_get_led: 'test',
-                    microbit2_show_preset_image: 'test',
-                    microbit2_show_custom_image: 'test',
-                    microbit2_show_full_brightness_custom_image: 'test',
-                    microbit2_show_string: 'test',
-                    microbit2_reset_screen: 'test',
-                    microbit2_radio_toggle: 'test',
-                    microbit2_radio_setting: 'test',
-                    microbit2_radio_send: 'test',
-                    microbit2_radio_received: 'test',
-                    microbit2_speaker_toggle: 'test',
-                    microbit2_change_tempo: 'test',
-                    microbit2_set_tone: 'test',
-                    microbit2_play_preset_music: 'test',
-                    microbit2_play_sound_effect: 'test',
-                    microbit2_get_btn: 'test',
-                    microbit2_get_logo: 'test',
-                    microbit2_get_gesture: 'test',
-                    microbit2_get_direction: 'test',
-                    microbit2_get_field_strength: 'test',
-                    microbit2_get_field_strength_axis: 'test',
-                    microbit2_get_light_level: 'test',
-                    microbit2_get_temperature: 'test',
-                    microbit2_get_sound_level: 'test',
+                    microbit2_get_analog: 'Returns analog value of selected pin',
+                    microbit2_set_analog: 'Set analog input to selected pin',
+                    microbit2_get_digital: 'Returns digital value of selected pin',
+                    microbit2_set_digital: 'Set digital input to selected pin',
+                    microbit2_screen_toggle: 'Toggles Screen',
+                    microbit2_set_led: 'Set led to selected column, row',
+                    microbit2_get_led: 'Returns status of selected led',
+                    microbit2_show_preset_image: 'Shows preset image',
+                    microbit2_show_custom_image: 'Shows custom image with brightness level',
+                    microbit2_show_full_brightness_custom_image:
+                        'Shows custom image with maximum brightness level',
+                    microbit2_show_string: 'Print English letter/word/sentence',
+                    microbit2_reset_screen: 'Resets Screen',
+                    microbit2_radio_toggle: 'Toggles Radio',
+                    microbit2_radio_setting: 'Changes Radio channel',
+                    microbit2_radio_send: 'Send value through radio',
+                    microbit2_radio_received: 'Returns values received through radio',
+                    microbit2_speaker_toggle: 'Toggles Speaker',
+                    microbit2_change_tempo: 'Change tempo of music/tone',
+                    microbit2_set_tone: 'Play Specified Tone through speaker',
+                    microbit2_play_preset_music: 'Play preset music',
+                    microbit2_play_sound_effect: 'Play preset sound effect',
+                    microbit2_get_btn: 'Returns True if selected button is pressed',
+                    microbit2_get_logo: 'Returns True if logo is touched',
+                    microbit2_get_gesture: 'Returns current gesture',
+                    microbit2_get_direction: 'Returns compass direction',
+                    microbit2_get_field_strength: 'Returns magnetic field strength',
+                    microbit2_get_field_strength_axis: 'Returns magnetic field strength by axis',
+                    microbit2_get_light_level: 'Returns light level(0 ~ 255)',
+                    microbit2_get_temperature: 'Returns temperature in Celcius(C)',
+                    microbit2_get_sound_level: 'Returns sound level (0~255)',
                 },
             },
         };
@@ -1283,47 +1285,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [1, 1],
-                            [2, 2],
-                            [3, 3],
-                            [4, 4],
-                            [5, 5],
-                        ],
-                        value: 1,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.rest, 'R'],
-                            [Lang.Blocks.do, 'C'],
-                            [Lang.Blocks.re, 'D'],
-                            [Lang.Blocks.mi, 'E'],
-                            [Lang.Blocks.fa, 'F'],
-                            [Lang.Blocks.sol, 'G'],
-                            [Lang.Blocks.la, 'A'],
-                            [Lang.Blocks.ti, 'B'],
-                        ],
-                        value: 'C',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.sharp, '#'],
-                            [Lang.Blocks.normal, 'normal'],
-                            [Lang.Blocks.flat, 'b'],
-                        ],
-                        value: 'normal',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'MusicScale',
                     },
                     {
                         type: 'Dropdown',
@@ -1346,21 +1308,19 @@ Entry.Microbit2 = new (class Microbit2 {
                     },
                 ],
                 events: {},
-                class: 'microbit2Sound',
+                class: 'microbit2Test',
                 isNotFor: ['microbit2'],
                 def: {
                     type: 'microbit2_set_tone',
                 },
-                paramsKeyMap: { OCTAVE: 0, TONE: 1, ADDITIONAL: 2, DURATION: 3 },
+                paramsKeyMap: {
+                    SCALE: 0,
+                    NOTE: 1,
+                },
                 func: (sprite, script) => {
-                    const octave = script.getField('OCTAVE');
-                    let tone = script.getField('TONE');
-                    const duration = script.getField('DURATION');
-                    const additional = script.getField('ADDITIONAL');
-                    if (additional !== 'normal') {
-                        tone += additional;
-                    }
-                    const parsedPayload = `${tone}${octave}:${duration}`;
+                    const scale = script.getField('SCALE');
+                    const note = script.getField('NOTE');
+                    const parsedPayload = `${scale}:${note}`;
 
                     const reqOptions = {
                         id: script.entity.id,
@@ -1890,76 +1850,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
                     return parsedResponse[1];
-                },
-            },
-            microbit2_test_set_tone: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [1, 1],
-                            [2, 2],
-                            [3, 3],
-                            [4, 4],
-                            [5, 5],
-                        ],
-                        value: 1,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'MusicScale',
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            ['4', 16],
-                            ['2', 8],
-                            ['1', 4],
-                            ['1/2', 2],
-                            ['1/4', 1],
-                        ],
-                        value: 4,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                class: 'microbit2Test',
-                isNotFor: ['microbit2'],
-                def: {
-                    type: 'microbit2_test_set_tone',
-                },
-                paramsKeyMap: {
-                    OCTAVE: 0,
-                    SCALE: 1,
-                    NOTE: 2,
-                },
-                func: (sprite, script) => {
-                    const scale = script.getField('SCALE');
-                    const octave = script.getField('OCTAVE');
-                    const note = script.getField('NOTE');
-
-                    const parsedPayload = `${scale}${octave}:${note}`;
-
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command: functionKeys.PLAY_TONE,
-                        payload: parsedPayload,
-                    };
-                    this.requestCommandWithResponse(reqOptions);
-                    const parsedResponse = this.getResponse(reqOptions);
                 },
             },
         };

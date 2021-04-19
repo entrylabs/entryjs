@@ -25,7 +25,7 @@ Entry.FieldMusicScale = class FieldMusicScale extends Entry.Field {
         this._textColor = textColor || '#FFFFFF';
         this._bgColor = bgColor;
         this._index = index;
-        this.setValue(this.getValue() || 'C');
+        this.setValue(this.getValue() || 'C1');
 
         this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
 
@@ -151,7 +151,9 @@ Entry.FieldMusicScale = class FieldMusicScale extends Entry.Field {
             class: 'entry-widget-music-scale',
             parent: $('body'),
         });
-
+        const currentValue = this.getValue();
+        const scale = currentValue.substr(0, currentValue.length - 1);
+        const octave = currentValue[currentValue.length - 1];
         this.optionWidget = new MusicScale({
             type: 'musicScaleWidget',
             data: {
@@ -160,13 +162,15 @@ Entry.FieldMusicScale = class FieldMusicScale extends Entry.Field {
                 onOutsideClick: () => {
                     this.destroyOption();
                 },
-                value: this.getValue(),
+                scale: scale || 'C',
+                octave: octave || 1,
             },
             container: this.optionGroup[0],
         }).on('click', (eventName, value) => {
             let prevValue = String(this.getValue());
             switch (eventName) {
-                case 'buttonPressed':
+                case 'changedValue':
+                    console.log(value);
                     if (prevValue === '0' && _.includes(['0', '.'], value) === false) {
                         prevValue = '';
                     }
@@ -246,7 +250,9 @@ Entry.FieldMusicScale = class FieldMusicScale extends Entry.Field {
         const textValue = this.getValue();
         const newValue = this._convert(textValue, this.getValue());
         if (this.getTextValue() !== newValue) {
-            this.textElement.textContent = newValue;
+            const scale = newValue.substr(0, newValue.length - 1);
+            const octave = newValue[newValue.length - 1];
+            this.textElement.textContent = `${octave} ${Lang.Blocks.octave} ${scale}`;
         }
     }
 
