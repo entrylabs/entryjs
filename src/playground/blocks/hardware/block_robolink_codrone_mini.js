@@ -733,7 +733,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                         [Lang.Blocks.drone_information_sensor_orientation, 'state_sensorOrientation'],
                         [Lang.Blocks.drone_information_battery, 'state_battery'],
                     ],
-                    value     : 'drone_information_state',                     // 초기 선택항목 지정
+                    value     : 'state_modeFlight',                     // 초기 선택항목 지정
                     fontSize  : 11,
                     bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
