@@ -1308,7 +1308,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     },
                 ],
                 events: {},
-                class: 'microbit2Test',
+                class: 'microbit2Sound',
                 isNotFor: ['microbit2'],
                 def: {
                     type: 'microbit2_set_tone',

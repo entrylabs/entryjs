@@ -170,7 +170,6 @@ Entry.FieldMusicScale = class FieldMusicScale extends Entry.Field {
             let prevValue = String(this.getValue());
             switch (eventName) {
                 case 'changedValue':
-                    console.log(value);
                     if (prevValue === '0' && _.includes(['0', '.'], value) === false) {
                         prevValue = '';
                     }
