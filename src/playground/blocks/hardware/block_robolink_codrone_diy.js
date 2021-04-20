@@ -128,6 +128,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 common_throttle                         : 'Throttle',
                 common_drone                            : '드론',
                 common_controller                       : '조종기',
+                common_button_button                    : '버튼 입력',
+                common_button_event                     : '버튼 상태',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -231,7 +233,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_trim_yaw_decrease                 : '요 감소',
                 drone_trim_throttle_increase            : '쓰로틀 증가',
                 drone_trim_throttle_decrease            : '쓰로틀 감소',
-                drone_trim_reset                        : '미세조정 초기화',
+                drone_trim_reset                        : '초기화',
                 drone_control_quad_roll                 : 'Roll',
                 drone_control_quad_pitch                : 'Pitch',
                 drone_control_quad_yaw                  : 'Yaw',
@@ -288,8 +290,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_controller_light_color_preset       : '조종기 LED %1 %2 %3',
                 robolink_codrone_diy_controller_light_manual_single_input: '조종기 LED %1 밝기 %2 %3',
                 robolink_codrone_diy_controller_light_manual_single_off  : '조종기 LED 끄기 %1',
-                robolink_codrone_diy_controller_value_button             : '',
-                robolink_codrone_diy_controller_value_button_event       : '',
+                robolink_codrone_diy_controller_value_button             : '%1',
+                robolink_codrone_diy_controller_value_button_event       : '%1',
                 robolink_codrone_diy_controller_value_joystick_left      : '%1',
                 robolink_codrone_diy_controller_value_joystick_right     : '%1',
                 robolink_codrone_diy_controller_vibrator_off             : '진동 끄기 %1',
@@ -297,8 +299,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_controller_vibrator_on_delay        : '진동 %1초 켜기 %2',
                 robolink_codrone_diy_controller_vibrator_on_reserve      : '진동 %1초 예약 %2',
                 robolink_codrone_diy_controller_vibrator_reserve         : '진동 %1초 켜기, %2초 끄기를 %3초 예약 %4',
-                robolink_codrone_diy_drone_trim_direction                : '재주넘기 %1 %2',
-                robolink_codrone_diy_drone_trim                          : '재주넘기 Roll %1%, Pitch %2% 설정 %3',
+                robolink_codrone_diy_drone_trim_direction                : '미세조정 %1 %2',
+                robolink_codrone_diy_drone_trim                          : '미세조정 Roll %1, Pitch %2 %3',
                 robolink_codrone_diy_drone_speed                         : '속도 %1 %2',
                 robolink_codrone_diy_drone_flip                          : '재주넘기 %1 %2',
                 robolink_codrone_diy_drone_sensor_reset                  : '센서 초기화 %1',
@@ -474,6 +476,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 common_throttle                         : 'Throttle',
                 common_drone                            : 'drone',
                 common_controller                       : 'controller',
+                common_button_button                    : 'button input',
+                common_button_event                     : 'button state',
                 controller_button                       : 'button',
                 controller_button_event                 : 'button event',
                 controller_button_front_left_top        : 'Front left top button',
@@ -635,6 +639,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_controller_light_manual_single_input: 'Controller LED %1 Lightness %2 %3',
                 robolink_codrone_diy_controller_light_manual_single_off  : 'Controller LED Off %1',
                 robolink_codrone_diy_controller_value_button             : '%1',
+                robolink_codrone_diy_controller_value_button_event       : '%1',
                 robolink_codrone_diy_controller_value_joystick_left      : '%1',
                 robolink_codrone_diy_controller_value_joystick_right     : '%1',
                 robolink_codrone_diy_controller_vibrator_off             : 'Vibrator Off %1',
@@ -699,6 +704,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_controller_light_manual_single_input: '',
                 robolink_codrone_diy_controller_light_manual_single_off  : '',
                 robolink_codrone_diy_controller_value_button             : '',
+                robolink_codrone_diy_controller_value_button_event       : '',
                 robolink_codrone_diy_controller_value_joystick_left      : '',
                 robolink_codrone_diy_controller_value_joystick_right     : '',
                 robolink_codrone_diy_controller_vibrator_delay           : '',
@@ -811,6 +817,7 @@ Entry.robolink_codrone_diy.blockMenuBlocks = [
     'robolink_codrone_diy_drone_value_sensor',
     'robolink_codrone_diy_drone_value_etc',
     'robolink_codrone_diy_controller_value_button',
+    'robolink_codrone_diy_controller_value_button_event',
     'robolink_codrone_diy_controller_value_joystick_left',
     'robolink_codrone_diy_controller_value_joystick_right',
     'robolink_codrone_diy_controller_if_button_press',
@@ -1073,10 +1080,14 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             skeleton  : 'basic_string_field',
             statements: [],
             params    : [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.common_button_button,
+                },
             ],
             events: {},
             def   : {
-                params: [],
+                params: [null],
                 type  : 'robolink_codrone_diy_controller_value_button',
             },
             paramsKeyMap: {
@@ -1095,10 +1106,14 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             skeleton  : 'basic_string_field',
             statements: [],
             params    : [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.common_button_event,
+                },
             ],
             events: {},
             def   : {
-                params: [],
+                params: [null],
                 type  : 'robolink_codrone_diy_controller_value_button_event',
             },
             paramsKeyMap: {
@@ -3168,7 +3183,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             },
             paramsKeyMap: {
             },
-            class   : 'flip',
+            class   : 'sensor',
             isNotFor: ['robolink_codrone_diy'],
             func(sprite, script) {
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x05, 0);
