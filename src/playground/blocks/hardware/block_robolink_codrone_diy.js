@@ -3186,7 +3186,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             class   : 'sensor',
             isNotFor: ['robolink_codrone_diy'],
             func(sprite, script) {
-                return Entry.byrobot_base.sendCommand(script, 0x10, 0x05, 0);
+                return Entry.byrobot_base.sendCommand(script, 0x10, 0x05, 0, 3000);
             },
         },
 

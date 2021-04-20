@@ -1146,9 +1146,9 @@ Entry.byrobot_base =
     },
 
 
-    sendCommand(script, target, command, option = 0)
+    sendCommand(script, target, command, option = 0, timeDelay = 40)
     {
-        switch (this.checkFinish(script, 40))
+        switch (this.checkFinish(script, timeDelay))
         {
             case 'Start': 
                 {
