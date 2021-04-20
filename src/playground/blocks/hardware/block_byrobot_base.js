@@ -18,7 +18,7 @@
  *  장치 기본 정의
  ***************************************************************************************/
 
-Entry.byrobot_base =
+Entry.byrobot_base = 
 {
     /***************************************************************************************
      *  시간 지연 함수
@@ -79,7 +79,7 @@ Entry.byrobot_base =
      *  데이터 전송 함수 (Entry -> Hardware)
      ***************************************************************************************/
 
-    // 데이터 전송
+    // -- IR -----------------------------------------------------------------------------
     transferIrMessage(target, irmessage)
     {
         // 전송
@@ -93,6 +93,7 @@ Entry.byrobot_base =
     },
 
 
+    // -- Light -----------------------------------------------------------------------------
     transferLightManual(target, flags, brightness)
     {
         Entry.hw.sendQueue.target                  = target;
@@ -179,6 +180,7 @@ Entry.byrobot_base =
     },
 
 
+    // -- Display -----------------------------------------------------------------------------
     transferDisplayClearAll(target, pixel)
     {
         Entry.hw.sendQueue.target                  = target;
@@ -310,6 +312,7 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_circle_flagfill;
     },
 
+
     transferDisplayDrawString(target, x, y, font, pixel, string)
     {
         Entry.hw.sendQueue.target                     = target;
@@ -328,6 +331,7 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_string_pixel;
         delete Entry.hw.sendQueue.display_draw_string_string;
     },
+
 
     transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string)
     {
@@ -352,6 +356,8 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.display_draw_string_align_string;
     },
 
+
+    // -- Buzzer -----------------------------------------------------------------------------
     transferBuzzer(target, mode, value, time)
     {
         Entry.hw.sendQueue.target       = target;
@@ -367,6 +373,8 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.buzzer_time;
     },
 
+
+    // -- Vibrator -----------------------------------------------------------------------------
     transferVibrator(target, mode, timeOn, timeOff, timeRun)
     {
         Entry.hw.sendQueue.target         = target;
@@ -385,6 +393,7 @@ Entry.byrobot_base =
     },
 
 
+    // -- MotorSingle -----------------------------------------------------------------------------
     transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed)
     {
         Entry.hw.sendQueue.target               = target;
@@ -400,6 +409,7 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.motorsingle_value;
     },
 
+
     transferMotorSingleV(target, motorIndex, motorSpeed)
     {
         Entry.hw.sendQueue.target             = target;
@@ -413,6 +423,8 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.motorsingle_value;
     },
 
+
+    // -- Command -----------------------------------------------------------------------------
     transferCommand(target, command, option)
     {
         Entry.hw.sendQueue.target          = target;
@@ -426,6 +438,27 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.command_option;
     },
 
+
+    // -- Trim -----------------------------------------------------------------------------
+    transferTrim(target, roll, pitch, yaw, throttle)
+    {
+        Entry.hw.sendQueue.target        = target;
+        Entry.hw.sendQueue.trim_roll     = roll;
+        Entry.hw.sendQueue.trim_pitch    = pitch;
+        Entry.hw.sendQueue.trim_yaw      = yaw;
+        Entry.hw.sendQueue.trim_throttle = throttle;
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue.target;
+        delete Entry.hw.sendQueue.trim_roll;
+        delete Entry.hw.sendQueue.trim_pitch;
+        delete Entry.hw.sendQueue.trim_yaw;
+        delete Entry.hw.sendQueue.trim_throttle;
+    },
+
+
+    // -- Control -----------------------------------------------------------------------------
     transferControlQuad(target, roll, pitch, yaw, throttle)
     {
         Entry.hw.sendQueue.target                 = target;
@@ -442,6 +475,7 @@ Entry.byrobot_base =
         delete Entry.hw.sendQueue.control_quad8_yaw;
         delete Entry.hw.sendQueue.control_quad8_throttle;
     },
+
 
     transferControlPosition(target, x, y, z, velocity, heading, rotationalVelocity)
     {
@@ -502,418 +536,441 @@ Entry.byrobot_base =
         return { r:red, g:green, b:blue };
     },
 
-    
+
+
     /***************************************************************************************
      *  블럭 연동 함수
      ***************************************************************************************/
 
+    // -- IR -----------------------------------------------------------------------------
     // IR 데이터 송신
     setIrMessage(script, target, irmessage)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferIrMessage(target, irmessage);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
+
+    // -- Light -----------------------------------------------------------------------------
     // LED 수동 설정
     setLightManual(script, target, flags, brightness)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferLightManual(target, flags, brightness);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // LED 모드 설정
     setLightMode(script, target, mode, interval)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferLightMode(target, mode, interval);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // LED 모드 설정, RGB
     setLightModeColor(script, target, mode, interval, red, green, blue)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferLightModeColor(target, mode, interval, red, green, blue);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // LED 모드 설정, RGB
     setLightModeColorString(script, target, mode, interval, stringColor)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     const color = this.getRgbFromString(stringColor);
                     this.transferLightModeColor(target, mode, interval, color.r, color.g, color.b);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // LED 이벤트 설정
     setLightEvent(script, target, mode, interval, repeat)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferLightEvent(target, mode, interval, repeat);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // LED 이벤트 설정, RGB
     setLightEventColor(script, target, mode, interval, repeat, red, green, blue)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferLightEventColor(target, mode, interval, repeat, red, green, blue);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // LED 이벤트 설정, RGB
     setLightEventColorString(script, target, mode, interval, repeat, stringColor)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     const color = this.getRgbFromString(stringColor);
                     this.transferLightEventColor(target, mode, interval, repeat, color.r, color.g, color.b);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
+
+    // -- Display -----------------------------------------------------------------------------
     // 화면 전체 지우기, 선택 영역 지우기
     setDisplayClearAll(script, target, pixel)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayClearAll(target, pixel);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면 전체 지우기, 선택 영역 지우기
     setDisplayClear(script, target, pixel, x, y, width, height)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayClear(target, pixel, x, y, width, height);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 선택 영역 반전
     setDisplayInvert(script, target, x, y, width, height)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayInvert(target, x, y, width, height);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면에 점 찍기
     setDisplayDrawPoint(script, target, x, y, pixel)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayDrawPoint(target, x, y, pixel);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면에 선 그리기
     setDisplayDrawLine(script, target, x1, y1, x2, y2, pixel, line)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면에 사각형 그리기
     setDisplayDrawRect(script, target, x, y, width, height, pixel, flagFill, line)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면에 원 그리기
     setDisplayDrawCircle(script, target, x, y, radius, pixel, flagFill)
     {
         switch (this.checkFinish(script, 40)) {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면에 문자열 쓰기
     setDisplayDrawString(script, target, x, y, font, pixel, string)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayDrawString(target, x, y, font, pixel, string);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 화면에 문자열 정렬하여 그리기
     setDisplayDrawStringAlign(script, target, xStart, xEnd, y, align, font, pixel, string)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
+
+    // -- Buzzer -----------------------------------------------------------------------------
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
     /*
-        MuteInstantally     = 1,    // 묵음 즉시 적용
-        MuteContinually     = 2,    // 묵음 예약
+        MuteInstantally = 1,   // 묵음 즉시 적용
+        MuteContinually = 2,   // 묵음 예약
 
-        ScaleInstantally    = 3,    // 음계 즉시 적용
-        ScaleContinually    = 4,    // 음계 예약
+        ScaleInstantally = 3,   // 음계 즉시 적용
+        ScaleContinually = 4,   // 음계 예약
 
-        HzInstantally       = 5,    // 주파수 즉시 적용
-        HzContinually       = 6,    // 주파수 예약
+        HzInstantally = 5,   // 주파수 즉시 적용
+        HzContinually = 6,   // 주파수 예약
      */
     // 정지
     setBuzzerStop(script, target)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferBuzzer(target, 0, 0, 0);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     // 묵음
     setBuzzerMute(script, target, time, flagDelay, flagInstantly)
@@ -926,9 +983,9 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
-                    let mode = 2; // 묵음 연속
+                    let mode = 2;  // 묵음 연속
                     if (flagInstantly)
                     {
                         mode = 1;
@@ -938,16 +995,17 @@ Entry.byrobot_base =
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     setBuzzerScale(script, target, octave, scale, time, flagDelay, flagInstantly)
     {
@@ -959,9 +1017,9 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
-                    let mode = 4; // Scale 연속
+                    let mode = 4;  // Scale 연속
                     if (flagInstantly)
                     {
                         mode = 3;
@@ -973,16 +1031,17 @@ Entry.byrobot_base =
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     setBuzzerHz(script, target, hz, time, flagDelay, flagInstantly)
     {
@@ -994,9 +1053,9 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
-                    let mode = 6; // Hz 연속
+                    let mode = 6;  // Hz 연속
                     if (flagInstantly)
                     {
                         mode = 5;
@@ -1005,17 +1064,19 @@ Entry.byrobot_base =
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
+
+    // -- Vibrator -----------------------------------------------------------------------------
     // 진동 제어
     /*
         Stop        = 0,   // 정지
@@ -1026,22 +1087,23 @@ Entry.byrobot_base =
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferVibrator(target, 0, 0, 0, 0);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     setVibrator(script, target, timeOn, timeOff, timeRun, flagDelay, flagInstantly)
     {
@@ -1053,121 +1115,154 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
-                    let mode = 2; // 예약
+                    let mode = 2;  // 예약
                     if (flagInstantly)
                     {
-                        mode = 1; // 즉시
+                        mode = 1;  // 즉시
                     }
 
                     this.transferVibrator(target, mode, timeOn, timeOff, timeRun);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
+
+    // -- Command -----------------------------------------------------------------------------
     sendStop(script, target)
     {
         return this.sendCommand(script, target, 0x01);
     },
 
+
     sendCommand(script, target, command, option = 0)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferCommand(target, command, option);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
+
+    // -- MotorSingle -----------------------------------------------------------------------------
     setMotorSingleRV(script, target, motorIndex, motorRotation, motorSpeed)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferMotorSingleRV(target, motorIndex, motorRotation, motorSpeed);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
+
 
     setMotorSingleV(script, target, motorIndex, motorSpeed)
     {
         switch (this.checkFinish(script, 40))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferMotorSingleV(target, motorIndex, motorSpeed);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
 
+    // -- EventFlight -----------------------------------------------------------------------------
     setEventFlight(script, target, eventFlight, time)
     {
         switch (this.checkFinish(script, time))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferControlQuad(0, 0, 0, 0); // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
                     this.transferCommand(target, 0x07, eventFlight); // 0x07 : CommandType::FlightEvent
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
 
 
+    // -- Trim -----------------------------------------------------------------------------
+    sendTrim(script, target, roll, pitch, yaw, throttle)
+    {
+        let timeDelay = 40;
+
+        switch (this.checkFinish(script, timeDelay))
+        {
+            case 'Start': 
+                {
+                    this.transferTrim(target, roll, pitch, yaw, throttle);
+                }
+                return script;
+
+            case 'Running': 
+                return script;
+
+            case 'Finish':
+                return script.callReturn();
+
+            default: 
+                return script.callReturn();
+        }
+    },
+
+
+    // -- Control -----------------------------------------------------------------------------
     sendControlQuadSingle(script, target, controlTarget, value, time = 40, flagDelay = false)
     {
         let timeDelay = 40;
@@ -1178,7 +1273,7 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     Entry.hw.sendQueue.target           = target;
                     Entry.hw.sendQueue[controlTarget]   = value;
@@ -1190,10 +1285,10 @@ Entry.byrobot_base =
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 if (flagDelay)
                 {
                     // 블럭을 빠져나갈 때 변경했던 값을 초기화
@@ -1207,7 +1302,7 @@ Entry.byrobot_base =
                 }
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
@@ -1223,23 +1318,23 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferControlQuad(target, roll, pitch, yaw, throttle);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 if (flagDelay)
                 {
                     this.transferControlQuad(target, 0, 0, 0, 0);
                 }
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
@@ -1255,20 +1350,20 @@ Entry.byrobot_base =
 
         switch (this.checkFinish(script, timeDelay))
         {
-            case 'Start':
+            case 'Start': 
                 {
                     this.transferControlQuad(target, 0, 0, 0, 0);
                     this.transferControlPosition(target, x, y, z, velocity, heading, rotationalVelocity);
                 }
                 return script;
 
-            case 'Running':
+            case 'Running': 
                 return script;
 
-            case 'Finish':
+            case 'Finish': 
                 return script.callReturn();
 
-            default:
+            default: 
                 return script.callReturn();
         }
     },
