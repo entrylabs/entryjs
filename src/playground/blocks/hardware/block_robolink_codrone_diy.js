@@ -246,8 +246,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_control_quad_throttle_up          : '위',
                 drone_control_quad_yaw_ccw              : '반시계 방향',
                 drone_control_quad_yaw_cw               : '시계 방향',
-                drone_headless_normal                   : '끄기',
-                drone_headless_headless                 : '켜기',
+                drone_headless_off                      : '끄기',
+                drone_headless_on                       : '켜기',
                 drone_light_color_body                  : '몸체',
                 drone_light_manual_body_blue            : '파랑',
                 drone_light_manual_body_green           : '초록',
@@ -264,7 +264,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_state_control_speed               : '제어 속도',
                 drone_state_sensor_orientation          : '센서 방향',
                 drone_state_battery                     : '배터리',
-                entryhw_count_transfer_reserved         : '전송 예약된 데이터 수',
+                entry_hw_count_transfer_reserved         : '전송 예약된 데이터 수',
             },
 
             template: {
@@ -300,7 +300,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_controller_vibrator_on_reserve      : '진동 %1초 예약 %2',
                 robolink_codrone_diy_controller_vibrator_reserve         : '진동 %1초 켜기, %2초 끄기를 %3초 예약 %4',
                 robolink_codrone_diy_drone_trim_direction                : '미세조정 %1 %2',
-                robolink_codrone_diy_drone_trim                          : '미세조정 Roll %1, Pitch %2 %3',
+                robolink_codrone_diy_drone_trim                          : '미세조정 롤 %1, 피치 %2 %3',
                 robolink_codrone_diy_drone_speed                         : '속도 %1 %2',
                 robolink_codrone_diy_drone_flip                          : '재주넘기 %1 %2',
                 robolink_codrone_diy_drone_sensor_reset                  : '센서 초기화 %1',
@@ -594,8 +594,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_control_quad_throttle_up          : 'Up',
                 drone_control_quad_yaw_ccw              : 'Counterclockwise',
                 drone_control_quad_yaw_cw               : 'clockwise',
-                drone_headless_normal                   : 'Off',
-                drone_headless_headless                 : 'On',
+                drone_headless_off                      : 'Off',
+                drone_headless_on                       : 'On',
                 drone_light_color_body                  : 'Body',
                 drone_light_manual_body_blue            : 'Blue',
                 drone_light_manual_body_green           : 'Green',
@@ -612,7 +612,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_state_control_speed               : 'Speed',
                 drone_state_sensor_orientation          : 'Sensor direction',
                 drone_state_battery                     : 'Battery',
-                entryhw_count_transfer_reserved         : 'Reserved data for transfer',
+                entry_hw_count_transfer_reserved        : 'Reserved data for transfer',
             },
 
             template: {
@@ -1095,7 +1095,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['robolink_codrone_diy'],
             func(sprite, script) {
-                return Entry.hw.portData[script.getField('button_button')];
+                return Entry.hw.portData['button_button'];
             },
         },
 
@@ -1121,7 +1121,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['robolink_codrone_diy'],
             func(sprite, script) {
-                return Entry.hw.portData[script.getField('button_event')];
+                return Entry.hw.portData['button_event'];
             },
         },
 
@@ -2953,8 +2953,8 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_headless_headless, '1'],
-                        [Lang.Blocks.drone_headless_normal, '2'],
+                        [Lang.Blocks.drone_headless_on, '1'],
+                        [Lang.Blocks.drone_headless_off, '2'],
                     ],
                     value     : '2',
                     fontSize  : 11,
@@ -3035,10 +3035,10 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             func(sprite, script) {
                 const direction = script.getField('DIRECTION');
 
-                let r = trim_roll;
-                let p = trim_pitch;
-                let y = trim_yaw;
-                let t = trim_throttle;
+                let r = Entry.hw.portData['trim_roll'];
+                let p = Entry.hw.portData['trim_pitch'];
+                let y = Entry.hw.portData['trim_yaw'];
+                let t = Entry.hw.portData['trim_throttle'];
 
                 const interval = 5;
 
@@ -3085,8 +3085,8 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             func(sprite, script) {
                 const r = script.getNumberValue('ROLL');
                 const p = script.getNumberValue('PITCH');
-                const y = trim_yaw;
-                const t = trim_throttle;
+                const y = Entry.hw.portData['trim_yaw'];
+                const t = Entry.hw.portData['trim_throttle'];
 
                 return Entry.byrobot_base.sendTrim(script, 0x10, r, p, y, t);
             },
