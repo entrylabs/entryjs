@@ -1012,10 +1012,10 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_range_height, 'informationAssembledForEntry_rangeHeight'],
-                        [Lang.Blocks.drone_altitude, 'informationAssembledForEntry_altitude'],
+                        [Lang.Blocks.drone_range_height, 'altitude_rangeHeight'],
+                        [Lang.Blocks.drone_altitude, 'altitude_altitude'],
                     ],
-                    value     : 'informationAssembledForEntry_rangeHeight',    // 초기 선택항목 지정
+                    value     : 'altitude_rangeHeight',    // 초기 선택항목 지정
                     fontSize  : 11,
                     bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,

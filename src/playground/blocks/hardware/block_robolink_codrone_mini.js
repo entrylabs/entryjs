@@ -65,9 +65,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 monitor_altitude_temperature                    : '온도',
                 monitor_altitude_pressure                       : '기압',
                 monitor_altitude_altitude                       : '해발 고도',
-                monitor_position_x                              : '위치 X',
-                monitor_position_y                              : '위치 Y',
-                monitor_position_z                              : '위치 Z',
                 monitor_motion_accelX                           : '가속도 X',
                 monitor_motion_accelY                           : '가속도 Y',
                 monitor_motion_accelZ                           : '가속도 Z',
@@ -203,9 +200,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 drone_attitude_pitch                    : '피치',
                 drone_attitude_roll                     : '롤',
                 drone_attitude_yaw                      : '요우',
-                drone_positionX                         : '위치 X',
-                drone_positionY                         : '위치 Y',
-                drone_positionZ                         : '위치 Z',
                 drone_level_1                           : '레벨 1',
                 drone_level_2                           : '레벨 2',
                 drone_level_3                           : '레벨 3',
@@ -243,7 +237,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 drone_motor_rotation_clockwise          : '시계 방향',
                 drone_motor_rotation_counterclockwise   : '반시계 방향',
                 drone_altitude                          : '해발고도',
-                drone_range_height                      : '바닥과의 거리',
                 drone_state_mode_system                 : '시스템 모드',
                 drone_state_mode_flight                 : '비행 동작 상태',
                 drone_state_mode_control_flight         : '비행 제어 모드',
@@ -252,7 +245,7 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 drone_state_control_speed               : '제어 속도',
                 drone_state_sensor_orientation          : '센서 방향',
                 drone_state_battery                     : '배터리',
-                entry_hw_count_transfer_reserved         : '전송 예약된 데이터 수',
+                entry_hw_count_transfer_reserved        : '전송 예약된 데이터 수',
             },
 
             template: {
@@ -298,7 +291,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_motorsingle_input             : '드론 %1번 모터를 %2(으)로 회전 %3',
                 robolink_codrone_mini_drone_information                   : '%1',
                 robolink_codrone_mini_drone_sensor                        : '%1',
-                robolink_codrone_mini_drone_value_position                : '%1',
                 robolink_codrone_mini_drone_value_sensor                  : '%1',
                 robolink_codrone_mini_drone_value_etc                     : '%1',
             },
@@ -347,7 +339,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_information                   : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
                 robolink_codrone_mini_drone_value_etc                     : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
                 robolink_codrone_mini_drone_sensor                        : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                robolink_codrone_mini_drone_value_position                : "<br>드론 위치와 관련된 값들을 반환합니다.(단위:m)<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#위치</font>",
                 robolink_codrone_mini_drone_value_sensor                  : "<br>드론 거리 및 고도 센서와 관련된 값들을 반환합니다(단위:m)<br>거리 센서의 유효 측정 거리는 2m입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#거리센서</font> <font color='dodgerblue'>#대기압</font>",
             },
         },
@@ -365,9 +356,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 monitor_altitude_temperature                    : 'Temperature',
                 monitor_altitude_pressure                       : 'Pressure',
                 monitor_altitude_altitude                       : 'Altitude',
-                monitor_position_x                              : 'Position X',
-                monitor_position_y                              : 'Position Y',
-                monitor_position_z                              : 'Position Z',
                 monitor_motion_accelX                           : 'Accel X',
                 monitor_motion_accelY                           : 'Accel Y',
                 monitor_motion_accelZ                           : 'Accel Z',
@@ -503,9 +491,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 drone_attitude_pitch                    : 'Attitude Pitch',
                 drone_attitude_roll                     : 'Attitude Roll',
                 drone_attitude_yaw                      : 'Attitude Yaw',
-                drone_positionX                         : 'Position X',
-                drone_positionY                         : 'Position Y',
-                drone_positionZ                         : 'Position Z',
                 drone_level_1                           : 'Level 1',
                 drone_level_2                           : 'Level 2',
                 drone_level_3                           : 'Level 2',
@@ -543,7 +528,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 drone_motor_rotation_clockwise          : 'Clockwise',
                 drone_motor_rotation_counterclockwise   : 'Counterclockwise',
                 drone_altitude                          : 'Altitude',
-                drone_range_height                      : 'Height',
                 drone_state_mode_system                 : 'System Mode',
                 drone_state_mode_flight                 : 'Flight Mode',
                 drone_state_mode_control_flight         : 'Flight Control Mode',
@@ -598,7 +582,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_motorsingle_input             : 'No. %1 Motor rotate for %2 %3',
                 robolink_codrone_mini_drone_information                   : '%1',
                 robolink_codrone_mini_drone_sensor                        : '%1',
-                robolink_codrone_mini_drone_value_position                : '%1',
                 robolink_codrone_mini_drone_value_sensor                  : '%1',
                 robolink_codrone_mini_drone_value_etc                     : '%1',
             },
@@ -647,7 +630,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_information                   : '',
                 robolink_codrone_mini_drone_value_etc                     : '',
                 robolink_codrone_mini_drone_sensor                        : '',
-                robolink_codrone_mini_drone_value_position                : '',
                 robolink_codrone_mini_drone_value_sensor                  : '',
             },
         },
@@ -688,9 +670,6 @@ Entry.robolink_codrone_mini.monitorTemplate = function () {
             motion_angleYaw              : { name: Lang.Blocks.monitor_motion_angleYaw, type: 'input', pos: { x: 0, y: 0 } },
             trim_roll                    : { name: Lang.Blocks.monitor_trim_roll, type: 'input', pos: { x: 0, y: 0 } },
             trim_pitch                   : { name: Lang.Blocks.monitor_trim_pitch, type: 'input', pos: { x: 0, y: 0 } },
-            position_x                   : { name: Lang.Blocks.monitor_position_x, type: 'input', pos: { x: 0, y: 0 } },
-            position_y                   : { name: Lang.Blocks.monitor_position_y, type: 'input', pos: { x: 0, y: 0 } },
-            position_z                   : { name: Lang.Blocks.monitor_position_z, type: 'input', pos: { x: 0, y: 0 } },
             joystick_left_x              : { name: Lang.Blocks.monitor_joystick_left_x, type: 'input', pos: { x: 0, y: 0 } },
             joystick_left_y              : { name: Lang.Blocks.monitor_joystick_left_y, type: 'input', pos: { x: 0, y: 0 } },
             joystick_left_direction      : { name: Lang.Blocks.monitor_joystick_left_direction, type: 'input', pos: { x: 0, y: 0 } },
@@ -718,7 +697,6 @@ Entry.robolink_codrone_mini.monitorTemplate = function () {
 Entry.robolink_codrone_mini.blockMenuBlocks = [
     'robolink_codrone_mini_drone_information',
     'robolink_codrone_mini_drone_sensor',
-    'robolink_codrone_mini_drone_value_position',
     'robolink_codrone_mini_drone_value_sensor',
     'robolink_codrone_mini_drone_value_etc',
     'robolink_codrone_mini_controller_value_button',
@@ -741,10 +719,6 @@ Entry.robolink_codrone_mini.blockMenuBlocks = [
     'robolink_codrone_mini_drone_control_quad_one_delay',
     'robolink_codrone_mini_drone_control_quad',
     'robolink_codrone_mini_drone_control_quad_delay',
-    'robolink_codrone_mini_drone_control_position_one',
-    'robolink_codrone_mini_drone_control_position_turn',
-    'robolink_codrone_mini_drone_control_position_location',
-    'robolink_codrone_mini_drone_control_position_location_turn',
     'robolink_codrone_mini_drone_motor_stop',
     'robolink_codrone_mini_drone_motorsingle',
     'robolink_codrone_mini_drone_motorsingle_input',
@@ -813,6 +787,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             },
         },
 
+
         robolink_codrone_mini_drone_sensor: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
             outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
@@ -856,39 +831,6 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             },
         },
 
-        robolink_codrone_mini_drone_value_position: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic_string_field',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_positionX, 'informationAssembledForEntry_positionX'],
-                        [Lang.Blocks.drone_positionY, 'informationAssembledForEntry_positionY'],
-                        [Lang.Blocks.drone_positionZ, 'informationAssembledForEntry_positionZ'],
-                    ],
-                    value     : 'informationAssembledForEntry_positionX',      // 초기 선택항목 지정
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def   : {
-                params: [null],
-                type  : 'robolink_codrone_mini_drone_value_position',
-            },
-            paramsKeyMap: {
-                DEVICE: 0,
-            },
-            class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                return Entry.hw.portData[script.getField('DEVICE')];
-            },
-        },
 
         robolink_codrone_mini_drone_value_sensor: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
@@ -897,15 +839,8 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             statements: [],
             params    : [
                 {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_range_height, 'informationAssembledForEntry_rangeHeight'],
-                        [Lang.Blocks.drone_altitude, 'informationAssembledForEntry_altitude'],
-                    ],
-                    value     : 'informationAssembledForEntry_rangeHeight',    // 초기 선택항목 지정
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Text',
+                    text: Lang.Blocks.drone_altitude,
                 },
             ],
             events: {},
@@ -914,15 +849,15 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                 type  : 'robolink_codrone_mini_drone_value_sensor',
             },
             paramsKeyMap: {
-                DEVICE: 0,
             },
             class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
             isNotFor: ['robolink_codrone_mini'],
             func(sprite, script) {
-                return Entry.hw.portData[script.getField('DEVICE')];
+                return Entry.hw.portData['altitude_altitude'];
             },
         },
 
+        
         robolink_codrone_mini_drone_value_etc: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
             outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2506,340 +2441,6 @@ Entry.robolink_codrone_mini.getBlocks = function () {
         },
 
 
-        robolink_codrone_mini_drone_control_position_one: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_pitch_forward, 'pitch_forward'],
-                        [Lang.Blocks.drone_control_quad_pitch_backward, 'pitch_backward'],
-                        [Lang.Blocks.drone_control_quad_roll_left, 'roll_left'],
-                        [Lang.Blocks.drone_control_quad_roll_right, 'roll_right'],
-                        [Lang.Blocks.drone_control_quad_throttle_up, 'throttle_up'],
-                        [Lang.Blocks.drone_control_quad_throttle_down, 'throttle_down'],
-                    ],
-                    value     : 'pitch_forward',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [null, { type: 'number', params: ['1'] }, { type: 'number', params: ['1'] }, null],
-                type  : 'robolink_codrone_mini_drone_control_position_one',
-            },
-            paramsKeyMap: {
-                CONTROLDIRECTION: 0,
-                DISTANCE        : 1,
-                SPEED           : 2,
-            },
-            class   : 'control_position',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const controlDirection = script.getField('CONTROLDIRECTION');
-                const distance         = script.getNumberValue('DISTANCE');
-                const speed            = script.getNumberValue('SPEED');
-                let   time             = 0;
-
-                if (speed > 0) {
-                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                }
-
-                let x = 0;
-                let y = 0;
-                let z = 0;
-
-                switch (controlDirection) {
-                    case    'pitch_forward': x  = distance; break;
-                    case    'pitch_backward': x = -distance; break;
-                    case    'roll_left': y      = distance; break;
-                    case    'roll_right': y     = -distance; break;
-                    case    'throttle_up': z    = distance; break;
-                    default: z                  = -distance; break;
-                }
-
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
-            },
-        },
-
-
-        robolink_codrone_mini_drone_control_position_turn: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_yaw_cw, '-1'],
-                        [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    null,
-                    { type: 'number', params: ['90'] },
-                    { type: 'number', params: ['45'] },
-                    null
-                ],
-                type: 'robolink_codrone_mini_drone_control_position_turn',
-            },
-            paramsKeyMap: {
-                DIRECTION_YAW: 0,
-                DEGREE_YAW   : 1,
-                SPEED_YAW    : 2,
-            },
-            class   : 'control_position',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const directionYaw = script.getNumberValue('DIRECTION_YAW');
-                const degree       = script.getNumberValue('DEGREE_YAW');
-                const yaw          = directionYaw * degree;
-                const speedYaw     = script.getNumberValue('SPEED_YAW');
-
-                let time = 0;
-
-                if (speedYaw > 0) {
-                    time = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
-                }
-
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
-            },
-        },
-
-
-        robolink_codrone_mini_drone_control_position_location: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_pitch_forward, '+1'],
-                        [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_roll_left, '+1'],
-                        [Lang.Blocks.drone_control_quad_roll_right, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_throttle_up, '+1'],
-                        [Lang.Blocks.drone_control_quad_throttle_down, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    null,
-                    { type: 'number', params: ['1'] },
-                    null,
-                    { type: 'number', params: ['0'] },
-                    null,
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['1'] },
-                    null],
-                type: 'robolink_codrone_mini_drone_control_position_location',
-            },
-            paramsKeyMap: {
-                DIRECTION_PITCH   : 0,
-                DISTANCE_PITCH    : 1,
-                DIRECTION_ROLL    : 2,
-                DISTANCE_ROLL     : 3,
-                DIRECTION_THROTTLE: 4,
-                DISTANCE_THROTTLE : 5,
-                SPEED             : 6
-            },
-            class   : 'control_position',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const directionPitch    = script.getNumberValue('DIRECTION_PITCH');
-                const directionRoll     = script.getNumberValue('DIRECTION_ROLL');
-                const directionThrottle = script.getNumberValue('DIRECTION_THROTTLE');
-
-                const x = directionPitch * script.getNumberValue('DISTANCE_PITCH');
-                const y = directionRoll * script.getNumberValue('DISTANCE_ROLL');
-                const z = directionThrottle * script.getNumberValue('DISTANCE_THROTTLE');
-
-                const distance = Math.sqrt((x * x) + (y * y) + (z * z));
-
-                const speed = script.getNumberValue('SPEED');
-
-                let time = 0;
-
-                if (speed > 0) {
-                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                }
-
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
-            },
-        },
-
-
-        robolink_codrone_mini_drone_control_position_location_turn: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_pitch_forward, '+1'],
-                        [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_roll_left, '+1'],
-                        [Lang.Blocks.drone_control_quad_roll_right, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_throttle_up, '+1'],
-                        [Lang.Blocks.drone_control_quad_throttle_down, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_yaw_cw, '-1'],
-                        [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    null,
-                    { type: 'number', params: ['1'] },
-                    null,
-                    { type: 'number', params: ['0'] },
-                    null,
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['1'] },
-                    null,
-                    { type: 'number', params: ['90'] },
-                    { type: 'number', params: ['45'] },
-                    null],
-                type: 'robolink_codrone_mini_drone_control_position_location_turn',
-            },
-            paramsKeyMap: {
-                DIRECTION_PITCH   : 0,
-                DISTANCE_PITCH    : 1,
-                DIRECTION_ROLL    : 2,
-                DISTANCE_ROLL     : 3,
-                DIRECTION_THROTTLE: 4,
-                DISTANCE_THROTTLE : 5,
-                SPEED             : 6,
-                DIRECTION_YAW     : 7,
-                DEGREE_YAW        : 8,
-                SPEED_YAW         : 9,
-            },
-            class   : 'control_position',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const directionPitch    = script.getNumberValue('DIRECTION_PITCH');
-                const directionRoll     = script.getNumberValue('DIRECTION_ROLL');
-                const directionThrottle = script.getNumberValue('DIRECTION_THROTTLE');
-
-                const x = directionPitch * script.getNumberValue('DISTANCE_PITCH');
-                const y = directionRoll * script.getNumberValue('DISTANCE_ROLL');
-                const z = directionThrottle * script.getNumberValue('DISTANCE_THROTTLE');
-
-                const distance = Math.sqrt((x * x) + (y * y) + (z * z));
-                const speed    = script.getNumberValue('SPEED');
-
-                const directionYaw = script.getNumberValue('DIRECTION_YAW');
-                const degree       = script.getNumberValue('DEGREE_YAW');
-                const yaw          = directionYaw * degree;
-                const speedYaw     = script.getNumberValue('SPEED_YAW');
-
-                let timePosition = 0;
-                let timeRotation = 0;
-
-                if (speed > 0) {
-                    timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                }
-
-                if (speedYaw > 0) {
-                    timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
-                }
-
-                const time = Math.max(timePosition, timeRotation);
-
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
-            },
-        },
     };
 };
 
