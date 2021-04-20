@@ -27,10 +27,12 @@ Entry.robolink_codrone_diy =
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (let i = 0; i < 1; i++) {
-            if (Entry.hw.portData['state_modeFlight'] == 0x10) {
+            if (Entry.hw.portData['state_modeFlight'] == 0x10)
+            {
                 Entry.byrobot_base.transferCommand(0x10, 0x01, 0); // 드론, command = 0x01 (Stop)
             }
-            else {
+            else
+            {
                 Entry.byrobot_base.transferCommand(0x10, 0x07, 0x12); // 0x12 : FlightEvent::Landing
             }
             Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
@@ -220,7 +222,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_positionZ                         : '위치 Z',
                 drone_level_1                           : '레벨 1',
                 drone_level_2                           : '레벨 2',
-                drone_level_3                           : '레벨 2',
+                drone_level_3                           : '레벨 3',
                 drone_flip_forward                      : '앞',
                 drone_flip_rear                         : '뒤',
                 drone_flip_left                         : '왼쪽',
@@ -1692,14 +1694,14 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_mode_hold, '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker, '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double, '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming, '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise, '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset, '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow, '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2, '9'],   // BodyRainbow2        = 0x29
+                        [Lang.Blocks.common_light_mode_hold, '2'],              // BodyHold            = 0x22
+                        [Lang.Blocks.common_light_mode_flicker, '3'],           // BodyFlicker         = 0x23
+                        [Lang.Blocks.common_light_mode_flicker_double, '4'],    // BodyFlickerDouble   = 0x24
+                        [Lang.Blocks.common_light_mode_dimming, '5'],           // BodyDimming         = 0x25
+                        [Lang.Blocks.common_light_mode_sunrise, '6'],           // BodyS8unrise        = 0x26
+                        [Lang.Blocks.common_light_mode_sunset, '7'],            // BodySunset          = 0x27
+                        [Lang.Blocks.common_light_mode_rainbow, '8'],           // BodyRainbow         = 0x28
+                        [Lang.Blocks.common_light_mode_rainbow2, '9'],          // BodyRainbow2        = 0x29
                     ],
                     value     : '2',
                     fontSize  : 11,
@@ -1772,14 +1774,14 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.common_light_mode_hold, '2'],   // BodyHold            = 0x22
-                        [Lang.Blocks.common_light_mode_flicker, '3'],   // BodyFlicker         = 0x23
-                        [Lang.Blocks.common_light_mode_flicker_double, '4'],   // BodyFlickerDouble   = 0x24
-                        [Lang.Blocks.common_light_mode_dimming, '5'],   // BodyDimming         = 0x25
-                        [Lang.Blocks.common_light_mode_sunrise, '6'],   // BodyS8unrise        = 0x26
-                        [Lang.Blocks.common_light_mode_sunset, '7'],   // BodySunset          = 0x27
-                        [Lang.Blocks.common_light_mode_rainbow, '8'],   // BodyRainbow         = 0x28
-                        [Lang.Blocks.common_light_mode_rainbow2, '9'],   // BodyRainbow2        = 0x29
+                        [Lang.Blocks.common_light_mode_hold, '2'],              // BodyHold            = 0x22
+                        [Lang.Blocks.common_light_mode_flicker, '3'],           // BodyFlicker         = 0x23
+                        [Lang.Blocks.common_light_mode_flicker_double, '4'],    // BodyFlickerDouble   = 0x24
+                        [Lang.Blocks.common_light_mode_dimming, '5'],           // BodyDimming         = 0x25
+                        [Lang.Blocks.common_light_mode_sunrise, '6'],           // BodyS8unrise        = 0x26
+                        [Lang.Blocks.common_light_mode_sunset, '7'],            // BodySunset          = 0x27
+                        [Lang.Blocks.common_light_mode_rainbow, '8'],           // BodyRainbow         = 0x28
+                        [Lang.Blocks.common_light_mode_rainbow2, '9'],          // BodyRainbow2        = 0x29
                     ],
                     value     : '2',
                     fontSize  : 11,
@@ -2334,6 +2336,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 return Entry.byrobot_base.setBuzzerStop(script, 0x20);
             },
         },
+
 
         robolink_codrone_diy_controller_buzzer_scale: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
