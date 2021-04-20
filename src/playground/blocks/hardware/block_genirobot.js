@@ -77,7 +77,6 @@ Entry.GENIBOT = {
             let minutes = today.getMinutes();  // 분
             let seconds = today.getSeconds();  // 초
             let milliseconds = today.getMilliseconds();
-            console.log("startTime:"+ hours + ':' + minutes + ':' + seconds + ':' + milliseconds);
 
             setTimeout(() => {
                 script.is_start = false;
@@ -87,7 +86,6 @@ Entry.GENIBOT = {
                 let minutes = today.getMinutes();  // 분
                 let seconds = today.getSeconds();  // 초
                 let milliseconds = today.getMilliseconds();
-                console.log("delayTime:"+ hours + ':' + minutes + ':' + seconds + ':' + milliseconds);
             }, waitTime);
     
             return script;
@@ -98,27 +96,14 @@ Entry.GENIBOT = {
     
             return script.callReturn();
         }
-    },
-    setZero() {
-        // Entry.hw.sendQueue.readablePorts = [];
-        // for (let port = 0; port < 20; port++) {
-        //     Entry.hw.sendQueue[port] = 0;
-        //     Entry.hw.sendQueue.readablePorts.push(port);
-        // }
-        // Entry.hw.update();
-        /*Entry.hw.sendQueue.SET_LED_COLOR = {
-            'SIDE': 0xff,
-            'COLOR': [0, 0, 255],
-            'ACK': ack++,
-        };*/
-        //ack = 0;
+    },setZero() {
+
     },
     afterReceive: async function(pd) {
         if(pd['log']){
             const a = pd['log'];
             if(!arraysEqual(a.data,lastData)){
                 lastData = a.data;
-                console.log(count++,")\n",lastData);
             }
 
         }
@@ -541,8 +526,7 @@ Entry.GENIBOT.getBlocks = function() {
                 return Entry.GENIBOT.postDelayBlockHandler(script, () => {
                     const direction = script.getStringField('DIRECTION', script);
                     const distance = script.getStringField('DISTANCE', script);
-                    console.log('moveDistance');
-                    
+                  
                     if (direction && distance) {
                         Entry.hw.sendQueue.MOVE_DISTANCE = {
                             'DIRECTION': direction,
@@ -619,7 +603,7 @@ Entry.GENIBOT.getBlocks = function() {
                 return Entry.GENIBOT.postDelayBlockHandler(script, () => {
                     const direction = script.getStringField('DIRECTION', script);
                     const angle = script.getStringField('ANGLE', script);
-                    console.log('turnAngle');
+                
                     if (direction && angle) {
                         Entry.hw.sendQueue.TURN_ANGLE = {
                             'DIRECTION': direction,
@@ -802,8 +786,7 @@ Entry.GENIBOT.getBlocks = function() {
             isNotFor:['genibot'],
             func(sprite, script) {
                 return Entry.GENIBOT.postDelayBlockHandler(script, () => {
-                    console.log(script.getStringField('VELOCITY', script));
-                    console.log(script.getStringField('DISTANCE', script));
+     
                     const VELOCITY = script.getStringField('VELOCITY', script);
                     const DISTANCE_ANY = script.getValue('DISTANCE')
                     const DISTANCE = script.getNumberValue('DISTANCE')//Field('DISTANCE', script);
@@ -881,9 +864,7 @@ Entry.GENIBOT.getBlocks = function() {
             isNotFor:['genibot'],
             func(sprite, script) {
                 return Entry.GENIBOT.postDelayBlockHandler(script, () => {
-                    console.log(script.getStringField('VELOCITY', script));
-                    console.log(script.getStringField('ANGLE', script));
-
+         
                     const VELOCITY = script.getStringField('VELOCITY', script);
                     const ANGLE_ANY = script.getValue('ANGLE')
                     const ANGLE = script.getNumberValue('ANGLE', script);
@@ -1206,11 +1187,9 @@ Entry.GENIBOT.getBlocks = function() {
                     const SIDE = script.getStringField('SIDE', script);
                     const COLOR = script.getStringField('COLOR', script);
                     const COLOR_BRIGHTNESS = script.getStringField('COLOR_BRIGHTNESS', script);
-                    console.log('SIDE', SIDE);
-                    console.log('COLOR', COLOR);
-                    console.log('COLOR_BRIGHTNESS', COLOR_BRIGHTNESS);
+                    
                     if (SIDE && COLOR && COLOR_BRIGHTNESS) {
-                        console.log('LED_NAME', script);
+                        
 
                         Entry.hw.sendQueue.SET_LED_COLOR_NAME = {
                             'LED': SIDE,
@@ -1369,10 +1348,7 @@ Entry.GENIBOT.getBlocks = function() {
             func(sprite, script) {
                 return Entry.GENIBOT.postDelayBlockHandler(script, () => {
                     const INSTRUMENT = script.getStringField('INSTRUMENT', script);
-                    console.log('INSTRUMENT', INSTRUMENT);
-                    if (INSTRUMENT) {
-                        console.log('INSTRUMENT', script);
-
+                    if (INSTRUMENT) {          
                         Entry.hw.sendQueue.SET_INSTRUMENT = {
                             'INSTRUMENT': INSTRUMENT,
                             'ACK': ack++,
@@ -1470,7 +1446,6 @@ Entry.GENIBOT.getBlocks = function() {
                         };
                         Entry.hw.update();
                     }
-
                     return (countNoteLength(noteId) * 1000);
                 });
             }
@@ -1503,11 +1478,9 @@ Entry.GENIBOT.getBlocks = function() {
             isNotFor: ['genibot'],
             func(sprite, script){
                 let port = script.getStringField('PORT');
-                console.log("port",port);
                 const ACC_TILT = Entry.hw.getDigitalPortValue('ACC_TILT');
                 const value = ACC_TILT['a' + port.toUpperCase()];
 
-                console.log('value', value);
                 return value || 0;
             },
         },
@@ -1560,7 +1533,6 @@ Entry.GENIBOT.getBlocks = function() {
                         OIDCODE = -8;
                     }
                 }
-                console.log(ROBOT_VERSION);
                 return OIDCODE;
             },
         },

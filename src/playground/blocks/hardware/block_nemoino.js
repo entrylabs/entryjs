@@ -32,6 +32,29 @@ Entry.nemoino.blockMenuBlocks = [
     'nemoino_convert_scale',
 ];
 
+Entry.nemoino.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                nemoino_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                nemoino_get_digital_value: '디지털 %1 번 센서값  ',
+                nemoino_toggle_led: '디지털 %1 번 핀 %2 %3',
+                nemoino_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                nemoino_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+            },
+        },
+        en: {
+            template: {
+                nemoino_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                nemoino_get_digital_value: 'Digital %1 Sensor value  ',
+                nemoino_toggle_led: 'Digital %1 Pin %2 %3',
+                nemoino_toggle_pwm: 'Digital %1 Pin %2 %3',
+                nemoino_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+            },
+        },
+    };
+};
+
 Entry.nemoino.getBlocks = function() {
     return {
         //region nemoino 네모이노
@@ -84,7 +107,10 @@ Entry.nemoino.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['소리큼', 'GREAT'], ['소리작음', 'SMALL']],
+                    options: [
+                        ['소리큼', 'GREAT'],
+                        ['소리작음', 'SMALL'],
+                    ],
                     value: 'GREAT',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -215,7 +241,11 @@ Entry.nemoino.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['X', '3'], ['Y', '4'], ['Z', '5']],
+                    options: [
+                        ['X', '3'],
+                        ['Y', '4'],
+                        ['Z', '5'],
+                    ],
                     value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

@@ -8,14 +8,14 @@ Entry.NeobotGameTheme = {
         en: 'NEOCODING GameTheme',
     },
     LOCAL_MAP: [
-		'JoystickX',
-		'JoystickY',
-		'GyroX',
-		'GyroY',
-		'Acceleration',
-		'BtnPressEvent',
-		'JoystickPressEvent',
-		'JoystickMoveEvent'
+        'JoystickX',
+        'JoystickY',
+        'GyroX',
+        'GyroY',
+        'Acceleration',
+        'BtnPressEvent',
+        'JoystickPressEvent',
+        'JoystickMoveEvent',
     ],
     setZero: function() {
         Entry.hw.update();
@@ -25,30 +25,30 @@ Entry.NeobotGameTheme = {
         width: 700,
         height: 700,
         listPorts: {
-            JoystickX: { 
-                name: 'JoystickX', 
+            JoystickX: {
+                name: 'JoystickX',
                 type: 'input',
-                pos: { x: 0, y: 0 }
+                pos: { x: 0, y: 0 },
             },
             JoystickY: {
                 name: 'JoystickY',
-                type: 'input', 
-                pos: { x: 0, y: 0 } 
+                type: 'input',
+                pos: { x: 0, y: 0 },
             },
             GyroX: {
-                name: 'GyroX', 
-                type: 'input', 
-                pos: { x: 0, y: 0 } 
+                name: 'GyroX',
+                type: 'input',
+                pos: { x: 0, y: 0 },
             },
             GyroY: {
-                name: 'GyroY', 
-                type: 'input', 
-                pos: { x: 0, y: 0 }
+                name: 'GyroY',
+                type: 'input',
+                pos: { x: 0, y: 0 },
             },
             Acceleration: {
-                name: 'Accel', 
-                type: 'input', 
-                pos: { x: 0, y: 0 } 
+                name: 'Accel',
+                type: 'input',
+                pos: { x: 0, y: 0 },
             },
         },
         ports: {
@@ -100,7 +100,7 @@ Entry.NeobotGameTheme = {
         s = s.replace(/^\s*|\s*$/g, '');
         if (s == '' || isNaN(s)) return false;
         return true;
-    }
+    },
 };
 
 Entry.NeobotGameTheme.setLanguage = function() {
@@ -108,7 +108,7 @@ Entry.NeobotGameTheme.setLanguage = function() {
         ko: {
             template: {
                 // class neobot_value
-                neobot_gyro_value: '자이로 %1 값', 
+                neobot_gyro_value: '자이로 %1 값',
                 neobot_joystick_value: '조이스틱 %1 값',
                 neobot_crash_value: '가속값',
                 neobot_random_value: '%1 랜덤값',
@@ -142,16 +142,16 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 neobot_joystick_dir_left: '왼쪽',
                 neobot_joystick_dir_up: '위',
                 neobot_joystick_dir_down: '아래',
-                
+
                 neobot_button_a: 'A',
                 neobot_button_b: 'B',
                 neobot_button_c: 'C',
-                
+
                 neobot_gyro_dir_left: '왼쪽',
                 neobot_gyro_dir_right: '오른쪽',
                 neobot_gyro_dir_front: '앞쪽',
                 neobot_gyro_dir_rear: '뒤쪽',
-                
+
                 neobot_degree_0: '0',
                 neobot_degree_5: '5',
                 neobot_degree_10: '10',
@@ -189,7 +189,7 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 neobot_degree_170: '170',
                 neobot_degree_175: '175',
                 neobot_degree_180: '180',
-                
+
                 neobot_joystick_x: '조이스틱 X',
                 neobot_joystick_y: '조이스틱 Y',
                 neobot_gyro_x: '자이로센서 X',
@@ -207,12 +207,12 @@ Entry.NeobotGameTheme.setLanguage = function() {
 
                 neobot_joystick_coord: '조이스틱 위치',
                 neobot_gyro_coord: '자이로센서 위치',
-            }
+            },
         },
         en: {
             template: {
                 // class neobot_value
-                neobot_gyro_value: 'Gyro sensor value %1', 
+                neobot_gyro_value: 'Gyro sensor value %1',
                 neobot_joystick_value: 'Joystick position %1',
                 neobot_crash_value: 'Impact value',
                 neobot_random_value: 'Random position %1',
@@ -246,16 +246,16 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 neobot_joystick_dir_left: 'left',
                 neobot_joystick_dir_up: 'up',
                 neobot_joystick_dir_down: 'down',
-                
+
                 neobot_button_a: 'A',
                 neobot_button_b: 'B',
                 neobot_button_c: 'C',
-                
+
                 neobot_gyro_dir_left: 'left',
                 neobot_gyro_dir_right: 'right',
                 neobot_gyro_dir_front: 'forward',
                 neobot_gyro_dir_rear: 'backward',
-                
+
                 neobot_degree_0: '0',
                 neobot_degree_5: '5',
                 neobot_degree_10: '10',
@@ -293,12 +293,12 @@ Entry.NeobotGameTheme.setLanguage = function() {
                 neobot_degree_170: '170',
                 neobot_degree_175: '175',
                 neobot_degree_180: '180',
-                
+
                 neobot_joystick_x: 'joystick X',
                 neobot_joystick_y: 'joystick Y',
                 neobot_gyro_x: 'gyro sensor X',
                 neobot_gyro_y: 'gyro sensor Y',
-                
+
                 neobot_compare_left_bigger: '>',
                 neobot_compare_equal: '=',
                 neobot_compare_right_bigger: '<',
@@ -371,7 +371,7 @@ Entry.NeobotGameTheme.getBlocks = function() {
             },
             syntax: { js: [], py: ['NeobotGameTheme.gyro_value(%1)'] },
         },
-    
+
         neobot_joystick_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -503,15 +503,15 @@ Entry.NeobotGameTheme.getBlocks = function() {
             func: function(sprite, script) {
                 var move = script.getNumberField('MOVE');
                 var value = Entry.hw.portData['JoystickMoveEvent'];
-                
-                if ( move == '1' && value == '1' ) return true;
-                else if ( move == '2' && value =='3' ) return true;
-                else if ( move == '3' && (value == '5' || value == '6') ) return true;
-                else if ( move == '4' && (value == '7' || value == '8') ) return true;
+
+                if (move == '1' && value == '1') return true;
+                else if (move == '2' && value == '3') return true;
+                else if (move == '3' && (value == '5' || value == '6')) return true;
+                else if (move == '4' && (value == '7' || value == '8')) return true;
                 else return false;
             },
         },
-        
+
         neobot_judge_joystick_direction: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -757,9 +757,7 @@ Entry.NeobotGameTheme.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                ],
+                params: [null],
                 type: 'neobot_judge_gyro_direction_angle',
             },
             paramsKeyMap: {
@@ -776,20 +774,16 @@ Entry.NeobotGameTheme.getBlocks = function() {
 
                 switch (direction) {
                     case 1: // 왼쪽
-                        if (gyroX < -80)
-                            isTilted = true;
+                        if (gyroX < -80) isTilted = true;
                         break;
                     case 2: // 오른쪽
-                        if (gyroX > 80) 
-                            isTilted = true;
+                        if (gyroX > 80) isTilted = true;
                         break;
                     case 3: // 앞
-                        if (gyroY > 45)
-                            isTilted = true;
+                        if (gyroY > 45) isTilted = true;
                         break;
                     case 4: // 뒤
-                        if (gyroY < -45)
-                            isTilted = true;
+                        if (gyroY < -45) isTilted = true;
                         break;
                 }
 
@@ -858,7 +852,8 @@ Entry.NeobotGameTheme.getBlocks = function() {
                 var targetValue = script.getNumberValue('VALUE');
 
                 var ret = false;
-                var portValue = ( axis == 'X' ? Entry.hw.portData['JoystickX'] : Entry.hw.portData['JoystickY'] );
+                var portValue =
+                    axis == 'X' ? Entry.hw.portData['JoystickX'] : Entry.hw.portData['JoystickY'];
                 switch (compare) {
                     case '>':
                         if (portValue > targetValue) ret = true;
@@ -873,7 +868,7 @@ Entry.NeobotGameTheme.getBlocks = function() {
                         else ret = false;
                         break;
                 }
-                
+
                 return ret;
             },
         },
@@ -939,7 +934,7 @@ Entry.NeobotGameTheme.getBlocks = function() {
                         else ret = false;
                         break;
                 }
-                
+
                 return ret;
             },
         },
@@ -984,12 +979,12 @@ Entry.NeobotGameTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.neobot_joystick,   'Joystick'],
-                        [Lang.Blocks.neobot_gyro,       'Gyro'],
+                        [Lang.Blocks.neobot_joystick, 'Joystick'],
+                        [Lang.Blocks.neobot_gyro, 'Gyro'],
                         [Lang.Blocks.neobot_joystick_x, 'JX'],
                         [Lang.Blocks.neobot_joystick_y, 'JY'],
-                        [Lang.Blocks.neobot_gyro_x,     'GX'],
-                        [Lang.Blocks.neobot_gyro_y,     'GY'],
+                        [Lang.Blocks.neobot_gyro_x, 'GX'],
+                        [Lang.Blocks.neobot_gyro_y, 'GY'],
                     ],
                     value: 'Joystick',
                     fontSize: 11,
@@ -1009,12 +1004,12 @@ Entry.NeobotGameTheme.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null, 
+                    null,
                     {
                         type: 'get_move_method',
                         id: 'm100',
                     },
-                    null
+                    null,
                 ],
                 type: 'neobot_locate',
             },
@@ -1027,7 +1022,7 @@ Entry.NeobotGameTheme.getBlocks = function() {
             func(sprite, script) {
                 const targetDevice = script.getField('DEVICE', script);
                 const targetMethod = script.getStringValue('METHOD', script);
-                
+
                 var targetX;
                 var targetY;
 
@@ -1063,10 +1058,10 @@ Entry.NeobotGameTheme.getBlocks = function() {
                 var targetY = (targetDevice == 'Joystick' 
                 ? Entry.hw.portData['JoystickY'] : Entry.hw.portData['GyroY']
                 ); */
-                
+
                 var distX = targetX - sprite.getX();
                 var distY = targetY - sprite.getY();
-                
+
                 const isNumber = Entry.NeobotGameTheme.isNumber(targetMethod);
                 // 드롭다운 제거 후 별도 숫자, 센서 값 등을 입력한 경우
                 if (isNumber) {
@@ -1077,38 +1072,28 @@ Entry.NeobotGameTheme.getBlocks = function() {
                         if (distX === 0 && distY === 0) {
                             angle = sprite.getDirection() + sprite.getRotation();
                         } else if (distX >= 0) {
-                            angle = -Math.atan(distY / distX) / Math.PI * 180 + 90;
+                            angle = (-Math.atan(distY / distX) / Math.PI) * 180 + 90;
                         } else {
-                            angle = -Math.atan(distY / distX) / Math.PI * 180 + 270;
+                            angle = (-Math.atan(distY / distX) / Math.PI) * 180 + 270;
                         }
                         sprite.setX(
                             sprite.getX() +
-                            Number(targetMethod) *
-                            Math.cos(
-                                (angle - 90) /
-                                180 *
-                                Math.PI
-                                )
+                                Number(targetMethod) * Math.cos(((angle - 90) / 180) * Math.PI)
                         );
                         sprite.setY(
                             sprite.getY() -
-                            Number(targetMethod) *
-                            Math.sin(
-                                (angle - 90) /
-                                    180 *
-                                    Math.PI
-                                )
+                                Number(targetMethod) * Math.sin(((angle - 90) / 180) * Math.PI)
                         );
-
                     } else {
                         sprite.setX(targetX);
                         sprite.setY(targetY);
                     }
                     return script.callReturn();
-                } else { // 드롭다운 값을 선택한 경우
+                } else {
+                    // 드롭다운 값을 선택한 경우
                     if (targetMethod == 'Distance') {
-                        sprite.setX(sprite.getX() + distX/50);
-                        sprite.setY(sprite.getY() + distY/50);
+                        sprite.setX(sprite.getX() + distX / 50);
+                        sprite.setY(sprite.getY() + distY / 50);
                         return script.callReturn();
                     } else {
                         sprite.setX(targetX);
@@ -1157,10 +1142,14 @@ Entry.NeobotGameTheme.getBlocks = function() {
             isNotFor: ['neobot_game_theme'],
             func(sprite, script) {
                 const targetDevice = script.getField('DEVICE', script);
-                var targetX = (targetDevice == 'Joystick' 
-                        ? Entry.hw.portData['JoystickX'] : Entry.hw.portData['GyroX'] );
-                var targetY = (targetDevice == 'Joystick' 
-                        ? Entry.hw.portData['JoystickY'] : Entry.hw.portData['GyroY'] );
+                var targetX =
+                    targetDevice == 'Joystick'
+                        ? Entry.hw.portData['JoystickX']
+                        : Entry.hw.portData['GyroX'];
+                var targetY =
+                    targetDevice == 'Joystick'
+                        ? Entry.hw.portData['JoystickY']
+                        : Entry.hw.portData['GyroY'];
                 const spriteX = sprite.getX();
                 const spriteY = sprite.getY();
                 let deltaX = targetX - spriteX;
@@ -1170,21 +1159,19 @@ Entry.NeobotGameTheme.getBlocks = function() {
                 if (deltaX === 0 && deltaY === 0) {
                     value = sprite.getDirection() + sprite.getRotation();
                 } else if (deltaX >= 0) {
-                    value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
+                    value = (-Math.atan(deltaY / deltaX) / Math.PI) * 180 + 90;
                 } else {
-                    value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
+                    value = (-Math.atan(deltaY / deltaX) / Math.PI) * 180 + 270;
                 }
                 if (this.entity.parent.getRotateMethod() === 'free') {
                     const nativeDirection = sprite.getDirection() + sprite.getRotation();
                     sprite.setRotation(sprite.getRotation() + value - nativeDirection);
                 } else {
-                    sprite.setDirection(value);   
+                    sprite.setDirection(value);
                 }
                 return script.callReturn();
             },
-            
         },
-
     }; // end getBlocks
 };
 

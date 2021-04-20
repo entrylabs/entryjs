@@ -55,71 +55,8 @@ Entry.byrobot_drone_8 =
             Entry.byrobot_base.transferLightModeColor(0x20, 0x22, 200, 255, 0, 0); // LED 초기화(조종기)
         }
     },
-
-    // Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
-    // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
-    monitorTemplate: {
-        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
-        imgPath: "hw/byrobot_drone_8.png",      // 배경 이미지
-        width: 256,     // 이미지의 폭
-        height: 256,    // 이미지의 높이
-        */
-
-        // 모니터 화면 상단에 차례대로 나열하는 값
-        listPorts: {
-            state_modeFlight:                           { name: 'Flight Mode',              type: 'input', pos: { x: 0, y: 0 } },
-            state_modeControlFlight:                    { name: 'Control Flight Mode',      type: 'input', pos: { x: 0, y: 0 } },
-            state_modeMovement:                         { name: 'Movement Mode',            type: 'input', pos: { x: 0, y: 0 } },
-            state_headless:                             { name: 'Headless',                 type: 'input', pos: { x: 0, y: 0 } },
-            state_controlSpeed:                         { name: 'Control Speed',            type: 'input', pos: { x: 0, y: 0 } },
-            state_sensorOrientation:                    { name: 'Sensor Orientation',       type: 'input', pos: { x: 0, y: 0 } },
-            state_battery:                              { name: 'Battery',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_accelX:                              { name: 'Accel X',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_accelY:                              { name: 'Accel Y',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_accelZ:                              { name: 'Accel Z',                  type: 'input', pos: { x: 0, y: 0 } },
-            motion_gyroRoll:                            { name: 'Gyro Roll',                type: 'input', pos: { x: 0, y: 0 } },
-            motion_gyroPitch:                           { name: 'Gyro Pitch',               type: 'input', pos: { x: 0, y: 0 } },
-            motion_gyroYaw:                             { name: 'Gyro Yaw',                 type: 'input', pos: { x: 0, y: 0 } },
-            motion_angleRoll:                           { name: 'Roll',                     type: 'input', pos: { x: 0, y: 0 } },
-            motion_anglePitch:                          { name: 'Pitch',                    type: 'input', pos: { x: 0, y: 0 } },
-            motion_angleYaw:                            { name: 'Yaw',                      type: 'input', pos: { x: 0, y: 0 } },
-            range_front:                                { name: 'Range Front',              type: 'input', pos: { x: 0, y: 0 } },
-            range_bottom:                               { name: 'Range Bottom',             type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontHue:                         { name: 'Front Hue',                type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontSaturation:                  { name: 'Front Saturation',         type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontValue:                       { name: 'Front Value',              type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontLightness:                   { name: 'Front Lightness',          type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearHue:                          { name: 'Rear Hue',                 type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearSaturation:                   { name: 'Rear Saturation',          type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearValue:                        { name: 'Rear Value',               type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearLightness:                    { name: 'Rear Lightness',           type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_frontColor:                       { name: 'Front Color',              type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_rearColor:                        { name: 'Rear Color',               type: 'input', pos: { x: 0, y: 0 } },
-            cardColor_card:                             { name: 'Card',                     type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionX:     { name: 'Position X',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionY:     { name: 'Position Y',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_positionZ:     { name: 'Position Z',               type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_altitude:      { name: 'Altitude',                 type: 'input', pos: { x: 0, y: 0 } },
-            informationAssembledForEntry_rangeHeight:   { name: 'Height',                   type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_x:                            { name: 'Left Joystick X',          type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_y:                            { name: 'Left Joystick Y',          type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_direction:                    { name: 'Left Joystick Direction',  type: 'input', pos: { x: 0, y: 0 } },
-            joystick_left_event:                        { name: 'Left Joystick Event',      type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_x:                           { name: 'Right Joystick X',         type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_y:                           { name: 'Right Joystick Y',         type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_direction:                   { name: 'Right Joystick Direction', type: 'input', pos: { x: 0, y: 0 } },
-            joystick_right_event:                       { name: 'Right Joystick Event',     type: 'input', pos: { x: 0, y: 0 } },
-            button_button:                              { name: 'Button',                   type: 'input', pos: { x: 0, y: 0 } },
-            button_event:                               { name: 'Button Event',             type: 'input', pos: { x: 0, y: 0 } },
-            entryhw_countTransferReserved:              { name: 'Transfer Buffer',          type: 'output', pos: { x: 0, y: 0 } },
-        },
-
-        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
-        ports: {},
-
-        mode: 'both', // 표시 모드
-    },
 };
+
 
 /***************************************************************************************
  *  언어 적용
@@ -129,6 +66,54 @@ Entry.byrobot_drone_8.setLanguage = function() {
         ko: {
             // ko.js에 작성하던 내용
             Blocks: {
+                // 정보창
+                monitor_state_modeFlight                            : '비행 모드',
+                monitor_state_modeControlFlight                     : '비행 제어기 모드',
+                monitor_state_modeMovement                          : '이동 상태',
+                monitor_state_headless                              : '헤드리스',
+                monitor_state_controlSpeed                          : '제어 속도',
+                monitor_state_sensorOrientation                     : '센서 방향',
+                monitor_state_battery                               : '배터리',
+                monitor_motion_accelX                               : '가속도 X',
+                monitor_motion_accelY                               : '가속도 Y',
+                monitor_motion_accelZ                               : '가속도 Z',
+                monitor_motion_gyroRoll                             : '자이로 Roll',
+                monitor_motion_gyroPitch                            : '자이로 Pitch',
+                monitor_motion_gyroYaw                              : '자이로 Yaw',
+                monitor_motion_angleRoll                            : '자세 Roll',
+                monitor_motion_anglePitch                           : '자세 Pitch',
+                monitor_motion_angleYaw                             : '자세 Yaw',
+                monitor_range_front                                 : '정면 거리 센서',
+                monitor_range_bottom                                : '바닥 거리 센서',
+                monitor_cardColor_frontHue                          : '카드 위 색상',
+                monitor_cardColor_frontSaturation                   : '카드 위 채도',
+                monitor_cardColor_frontValue                        : '카드 위 명도',
+                monitor_cardColor_frontLightness                    : '카드 위 밝기',
+                monitor_cardColor_rearHue                           : '카드 아래 색상',
+                monitor_cardColor_rearSaturation                    : '카드 아래 채도',
+                monitor_cardColor_rearValue                         : '카드 아래 명도',
+                monitor_cardColor_rearLightness                     : '카드 아래 밝기',
+                monitor_cardColor_frontColor                        : '카드 위 색',
+                monitor_cardColor_rearColor                         : '카드 아래 색',
+                monitor_cardColor_card                              : '카드',
+                monitor_informationAssembledForEntry_positionX      : '위치 X',
+                monitor_informationAssembledForEntry_positionY      : '위치 Y',
+                monitor_informationAssembledForEntry_positionZ      : '위치 Z',
+                monitor_informationAssembledForEntry_altitude       : '고도',
+                monitor_informationAssembledForEntry_rangeHeight    : '거리 센서의 높이',
+                monitor_joystick_left_x                             : '왼쪽 조이스틱 X',
+                monitor_joystick_left_y                             : '왼쪽 조이스틱 Y',
+                monitor_joystick_left_direction                     : '왼쪽 조이스틱 방향',
+                monitor_joystick_left_event                         : '왼쪽 조이스틱 이벤트',
+                monitor_joystick_right_x                            : '오른쪽 조이스틱 X',
+                monitor_joystick_right_y                            : '오른쪽 조이스틱 Y',
+                monitor_joystick_right_direction                    : '오른쪽 조이스틱 방향',
+                monitor_joystick_right_event                        : '오른쪽 조이스틱 이벤트',
+                monitor_button_button                               : '버튼',
+                monitor_button_event                                : '버튼 이벤트',
+                monitor_entryhw_countTransferReserved               : '전송 예정 데이터',
+
+                // 일반 블럭
                 common_light_color_red              : '빨강',
                 common_light_color_yellow           : '노랑',
                 common_light_color_green            : '초록',
@@ -238,12 +223,12 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_positionZ      : '위치 Z',
                 drone_control_quad_roll             : 'Roll',
                 drone_control_quad_pitch            : 'Pitch',
-                drone_control_quad_throttle         : 'Throttle',
                 drone_control_quad_yaw              : 'Yaw',
-                drone_control_quad_roll_left        : '왼쪽',
-                drone_control_quad_roll_right       : '오른쪽',
+                drone_control_quad_throttle         : 'Throttle',
                 drone_control_quad_pitch_backward   : '뒤',
                 drone_control_quad_pitch_forward    : '앞',
+                drone_control_quad_roll_left        : '왼쪽',
+                drone_control_quad_roll_right       : '오른쪽',
                 drone_control_quad_throttle_down    : '아래',
                 drone_control_quad_throttle_up      : '위',
                 drone_control_quad_yaw_ccw          : '반시계 방향',
@@ -402,50 +387,104 @@ Entry.byrobot_drone_8.setLanguage = function() {
 
         en: {
             Blocks: {
-                common_light_color_cottoncandy: 'cotton candy',
-                common_light_color_emerald: 'emerald',
-                common_light_color_lavender: 'lavender',
-                common_light_color_muscat: 'muscat',
-                common_light_color_strawberrymilk: 'strawberry milk',
-                common_light_color_sunset: 'sunset',
-                common_light_mode_hold: 'hold',
-                common_light_mode_dimming: 'dimming',
-                common_light_mode_flicker: 'flicker',
-                common_light_mode_flicker_double: 'flicker double',
-                common_light_brightness_all: 'all',
-                common_light_brightness_b100: 'brightness 100%',
-                common_light_brightness_b25: 'brightness 25%',
-                common_light_brightness_b50: 'brightness 50%',
-                common_light_brightness_b75: 'brightness 75%',
-                common_light_color_blue: 'blue',
-                common_light_color_cyan: 'cyan',
-                common_light_color_green: 'green',
-                common_light_color_magenta: 'magenta',
-                common_light_brightness_off: 'off',
-                common_light_brightness_on: 'on',
-                common_light_color_red: 'red',
-                common_light_color_white: 'white',
-                common_light_color_yellow: 'yellow',
-                common_left: 'left',
-                common_right: 'right',
-                common_roll: 'Roll',
-                common_pitch: 'Pitch',
-                common_yaw: 'Yaw',
-                common_throttle: 'Throttle',
-                controller_button: 'button',
-                controller_button_event: 'button event',
-                controller_button_front_left_up: 'Fromt left top button',
-                controller_button_front_left_down: 'Fromt left bottom button',
-                controller_button_front_right_up: 'Fromt right top button',
-                controller_button_front_right_down: 'Fromt right bottom button',
-                controller_button_top_left: 'Top left button',
-                controller_button_top_right: 'Top right button',
-                controller_button_center_up: 'Trim up button',
-                controller_button_center_left: 'Trim left button',
-                controller_button_center_right: 'Trim right button',
-                controller_button_center_down: 'Trim down button',
-                controller_button_bottom_left: 'Bottom left button',
-                controller_button_bottom_right: 'Bottom right button',
+                // 정보창
+                monitor_state_modeFlight                            : 'Flight Mode',
+                monitor_state_modeControlFlight                     : 'Control Flight Mode',
+                monitor_state_modeMovement                          : 'Movement Mode',
+                monitor_state_headless                              : 'Headless',
+                monitor_state_controlSpeed                          : 'Control Speed',
+                monitor_state_sensorOrientation                     : 'Sensor Orientation',
+                monitor_state_battery                               : 'Battery',
+                monitor_motion_accelX                               : 'Accel X',
+                monitor_motion_accelY                               : 'Accel Y',
+                monitor_motion_accelZ                               : 'Accel Z',
+                monitor_motion_gyroRoll                             : 'Gyro Roll',
+                monitor_motion_gyroPitch                            : 'Gyro Pitch',
+                monitor_motion_gyroYaw                              : 'Gyro Yaw',
+                monitor_motion_angleRoll                            : 'Roll',
+                monitor_motion_anglePitch                           : 'Pitch',
+                monitor_motion_angleYaw                             : 'Yaw',
+                monitor_range_front                                 : 'Range Front',
+                monitor_range_bottom                                : 'Range Bottom',
+                monitor_cardColor_frontHue                          : 'Front Hue',
+                monitor_cardColor_frontSaturation                   : 'Front Saturation',
+                monitor_cardColor_frontValue                        : 'Front Value',
+                monitor_cardColor_frontLightness                    : 'Front Lightness',
+                monitor_cardColor_rearHue                           : 'Rear Hue',
+                monitor_cardColor_rearSaturation                    : 'Rear Saturation',
+                monitor_cardColor_rearValue                         : 'Rear Value',
+                monitor_cardColor_rearLightness                     : 'Rear Lightness',
+                monitor_cardColor_frontColor                        : 'Front Color',
+                monitor_cardColor_rearColor                         : 'Rear Color',
+                monitor_cardColor_card                              : 'Card',
+                monitor_informationAssembledForEntry_positionX      : 'Position X',
+                monitor_informationAssembledForEntry_positionY      : 'Position Y',
+                monitor_informationAssembledForEntry_positionZ      : 'Position Z',
+                monitor_informationAssembledForEntry_altitude       : 'Altitude',
+                monitor_informationAssembledForEntry_rangeHeight    : 'Height',
+                monitor_joystick_left_x                             : 'Left Joystick X',
+                monitor_joystick_left_y                             : 'Left Joystick Y',
+                monitor_joystick_left_direction                     : 'Left Joystick Direction',
+                monitor_joystick_left_event                         : 'Left Joystick Event',
+                monitor_joystick_right_x                            : 'Right Joystick X',
+                monitor_joystick_right_y                            : 'Right Joystick Y',
+                monitor_joystick_right_direction                    : 'Right Joystick Direction',
+                monitor_joystick_right_event                        : 'Right Joystick Event',
+                monitor_button_button                               : 'Button',
+                monitor_button_event                                : 'Button Event',
+                monitor_entryhw_countTransferReserved               : 'Transfer Buffer',
+
+                // 일반 블럭
+                common_light_color_red              : 'red',
+                common_light_color_yellow           : 'yellow',
+                common_light_color_green            : 'green',
+                common_light_color_cyan             : 'cyan',
+                common_light_color_blue             : 'blue',
+                common_light_color_magenta          : 'magenta',
+                common_light_color_white            : 'white',
+                common_light_color_cottoncandy      : 'cotton candy',
+                common_light_color_emerald          : 'emerald',
+                common_light_color_lavender         : 'lavender',
+                common_light_color_muscat           : 'muscat',
+                common_light_color_strawberrymilk   : 'strawberry milk',
+                common_light_color_sunset           : 'sunset',
+                common_light_mode_hold              : 'hold',
+                common_light_mode_flicker           : 'flicker',
+                common_light_mode_flicker_double    : 'flicker double',
+                common_light_mode_dimming           : 'dimming',
+                common_light_mode_sunrise           : 'sunrise',
+                common_light_mode_sunset            : 'sunset',
+                common_light_mode_rainbow           : 'rainbow',
+                common_light_mode_rainbow2          : 'rainbow2',
+                common_light_brightness_all         : 'all',
+                common_light_brightness_b100        : 'brightness 100%',
+                common_light_brightness_b25         : 'brightness 25%',
+                common_light_brightness_b50         : 'brightness 50%',
+                common_light_brightness_b75         : 'brightness 75%',
+                common_light_brightness_off         : 'off',
+                common_light_brightness_on          : 'on',
+                common_left     : 'left',
+                common_right    : 'right',
+                common_roll     : 'Roll',
+                common_pitch    : 'Pitch',
+                common_yaw      : 'Yaw',
+                common_throttle : 'Throttle',
+                common_drone                  : 'drone',
+                common_controller             : 'controller',
+                controller_button                   : 'button',
+                controller_button_event             : 'button event',
+                controller_button_front_left_top     : 'Front left top button',
+                controller_button_front_left_bottom  : 'Front left bottom button',
+                controller_button_front_right_top    : 'Front right top button',
+                controller_button_front_right_bottom : 'Front right bottom button',
+                controller_button_top_left      : 'Top left button',
+                controller_button_top_right     : 'Top right button',
+                controller_button_center_up     : 'Trim up button',
+                controller_button_center_left   : 'Trim left button',
+                controller_button_center_right  : 'Trim right button',
+                controller_button_center_down   : 'Trim down button',
+                controller_button_bottom_left   : 'Bottom left button',
+                controller_button_bottom_right  : 'Bottom right button',
                 controller_buzzer: 'buzzer',
                 controller_buzzer_a: 'A',
                 controller_buzzer_as: 'A#',
@@ -502,16 +541,16 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_positionX: 'Position X',
                 drone_positionY: 'Position Y',
                 drone_positionZ: 'Position Z',
+                drone_control_quad_roll: 'Roll',
                 drone_control_quad_pitch: 'Pitch',
+                drone_control_quad_yaw: 'Yaw',
+                drone_control_quad_throttle: 'Throttle',
                 drone_control_quad_pitch_backward: 'Backward',
                 drone_control_quad_pitch_forward: 'Forward',
-                drone_control_quad_roll: 'Roll',
                 drone_control_quad_roll_left: 'Left',
                 drone_control_quad_roll_right: 'Right',
-                drone_control_quad_throttle: 'Throttle',
                 drone_control_quad_throttle_down: 'Down',
                 drone_control_quad_throttle_up: 'Up',
-                drone_control_quad_yaw: 'Yaw',
                 drone_control_quad_yaw_ccw: 'Counterclockwise',
                 drone_control_quad_yaw_cw: 'clockwise',
                 drone_headless_normal: 'Normal',
@@ -536,19 +575,19 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 drone_cardcolor_front_color         : 'Front Card Color',
                 drone_cardcolor_rear_color          : 'Rear Card Color',
                 drone_cardcolor_card                : 'Card',
-                drone_state_mode_system: 'System Mode',
-                drone_state_mode_flight: 'Flight Mode',
-                drone_state_mode_control_flight : 'Flight Control Mode',
-                drone_state_mode_movement       : 'mode movement',
-                drone_state_headless: 'Headless',
-                drone_state_control_speed       : 'Speed',
-                drone_state_sensor_orientation  : 'Sensor direction',
-                drone_state_battery: 'Battery',
-                entryhw_count_transfer_reserved: 'Reserved data for transfer',
+                drone_state_mode_system             : 'System Mode',
+                drone_state_mode_flight             : 'Flight Mode',
+                drone_state_mode_control_flight     : 'Flight Control Mode',
+                drone_state_mode_movement           : 'mode movement',
+                drone_state_headless                : 'Headless',
+                drone_state_control_speed           : 'Speed',
+                drone_state_sensor_orientation      : 'Sensor direction',
+                drone_state_battery                 : 'Battery',
+                entryhw_count_transfer_reserved     : 'Reserved data for transfer',
             },
 
             template: {
-                byrobot_drone_8_controller_buzzer_hz: '%1 play Buzzer %2 Hz sound %2',
+                byrobot_drone_8_controller_buzzer_hz: '%1 play Buzzer %2 Hz sound %3',
                 byrobot_drone_8_controller_buzzer_hz_delay: '%1 play Buzzer %2 Hz sound for %3 second %4',
                 byrobot_drone_8_controller_buzzer_hz_reserve: '%1 reserve to play Buzzer %2 Hz for %3 second %4',
                 byrobot_drone_8_controller_buzzer_off: '%1 turn off the buzzer %2',
@@ -559,10 +598,10 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_display_clear_all: 'clear controller display with %1 color %2',
                 byrobot_drone_8_controller_display_draw_circle: 'draw a circle x:%1, y:%2, radius:%3, %4, %5, %6',
                 byrobot_drone_8_controller_display_draw_line: 'draw a line x1:%1, y1:%2, x2:%3, y2:%4, %5, %6 %7',
-                byrobot_drone_8_controller_display_draw_point: 'draw a point in controller display  x:%1, y:%2, color:%3 %4',
-                byrobot_drone_8_controller_display_draw_rect: 'draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
-                byrobot_drone_8_controller_display_draw_string: 'draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6',
-                byrobot_drone_8_controller_display_draw_string_align: 'draw aligned string in controller display x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
+                byrobot_drone_8_controller_display_draw_point: 'draw a point x:%1, y:%2, color:%3 %4',
+                byrobot_drone_8_controller_display_draw_rect: 'draw a rectangle x:%1, y:%2, width:%3, height:%4, %5, %6, %7 %8',
+                byrobot_drone_8_controller_display_draw_string: 'draw a string x:%1, y:%2, font size:%3, %4, input:%5, %6',
+                byrobot_drone_8_controller_display_draw_string_align: 'draw aligned string x1:%1, x2:%2, y:%3, align:%4, font size:%5, %6, input:%7, %8',
                 byrobot_drone_8_controller_if_button_press: 'when press %1',
                 byrobot_drone_8_controller_if_joystick_direction: 'when %1 stick move to %2',
                 byrobot_drone_8_controller_light_color_input:  'Controller LED R %1, G %2, B %3 %4 %5 %6',
@@ -572,8 +611,8 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_controller_light_manual_single_off: 'Controller LED Off %1',
                 byrobot_drone_8_controller_value_button: '%1',
                 byrobot_drone_8_controller_value_joystick: '%1',
-                byrobot_drone_8_controller_vibrator_off: 'Vibrator Off %1',
                 byrobot_drone_8_controller_vibrator_delay: 'Vibrator %1 sec On, %2 sec Off for %3 sec run %4',
+                byrobot_drone_8_controller_vibrator_off: 'Vibrator Off %1',
                 byrobot_drone_8_controller_vibrator_on_delay: 'Vibrator %1 sec on %2',
                 byrobot_drone_8_controller_vibrator_on_reserve: 'Vibrator %1 sec reserve %2',
                 byrobot_drone_8_controller_vibrator_reserve: 'Vibrator %1 sec On, %2 sec Off for %3 sec reserve %4',
@@ -581,20 +620,20 @@ Entry.byrobot_drone_8.setLanguage = function() {
                 byrobot_drone_8_drone_control_drone_landing: 'Landing %1',
                 byrobot_drone_8_drone_control_drone_reset_heading: 'Reset heading %1',
                 byrobot_drone_8_drone_control_drone_stop: 'Stop flight %1',
-                byrobot_drone_8_drone_control_drone_takeoff: 'Landing %1',
-                byrobot_drone_8_drone_control_quad: 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5',
-                byrobot_drone_8_drone_control_quad_delay: 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% for %5sec %6',
+                byrobot_drone_8_drone_control_drone_takeoff: 'Takeoff %1',
                 byrobot_drone_8_drone_control_quad_one: 'Set %1 %2% %3',
                 byrobot_drone_8_drone_control_quad_one_delay: 'Set %1 %2% %3 sec %4',
+                byrobot_drone_8_drone_control_quad: 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5',
+                byrobot_drone_8_drone_control_quad_delay: 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% for %5sec %6',
                 byrobot_drone_8_drone_control_position_one      : 'Move %2 meter(s) %1 to %3 m/s %4',
                 byrobot_drone_8_drone_control_position_turn     : 'Rotate %2 degree(s) %1 to %3 deg/s %4',
-                byrobot_drone_8_drone_control_position_location         : 'Move %2 meter(s) %1, %4 meter(s) $3, %6 meter(s) %5 to %7 m/s %8',
-                byrobot_drone_8_drone_control_position_location_turn    : 'Move %2 meter(s) %1, %4 meter(s) $3, %6 meter(s) %5 to %7 m/s, Rotate %9 degree(s) %8 to %10 deg/s %11',
-                byrobot_drone_8_drone_light_manual_single_off: 'Drone LED Off %1',
-                byrobot_drone_8_drone_light_manual_single_input: 'Drone LED %1 lightness %2 %3',
+                byrobot_drone_8_drone_control_position_location         : 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s %8',
+                byrobot_drone_8_drone_control_position_location_turn    : 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s, Rotate %9 degree(s) %8 to %10 deg/s %11',
                 byrobot_drone_8_drone_light_color_input:  'Drone LED R %1, G %2, B %3 %4 %5 %6',
                 byrobot_drone_8_drone_light_color_select: 'Drone LED Preset %1 %2 %3 %4',
                 byrobot_drone_8_drone_light_color_preset: 'Drone LED %1 %2 %3',
+                byrobot_drone_8_drone_light_manual_single_input: 'Drone LED %1 lightness %2 %3',
+                byrobot_drone_8_drone_light_manual_single_off: 'Drone LED Off %1',
                 byrobot_drone_8_drone_motor_stop: 'Motor stop %1',
                 byrobot_drone_8_drone_motorsingle: 'No. %1 Motor rotate for %2 %3',
                 byrobot_drone_8_drone_motorsingle_input: 'No. %1 Motor rotate for %2 %3',
@@ -667,6 +706,75 @@ Entry.byrobot_drone_8.setLanguage = function() {
         },
     };
 };
+
+
+// Entry 좌측 하단 하드웨어 모니터 화면에 표시하는 속성
+// listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
+Entry.byrobot_drone_8.monitorTemplate = function()
+{
+    return {
+        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
+        imgPath: "hw/byrobot_drone_8.png",      // 배경 이미지
+        width: 256,     // 이미지의 폭
+        height: 256,    // 이미지의 높이
+        */
+
+        // 모니터 화면 상단에 차례대로 나열하는 값
+        listPorts: {
+            state_modeFlight:                           { name: Lang.Blocks.monitor_state_modeFlight,                          type: 'input', pos: { x: 0, y: 0 } },
+            state_modeControlFlight:                    { name: Lang.Blocks.monitor_state_modeControlFlight,                   type: 'input', pos: { x: 0, y: 0 } },
+            state_modeMovement:                         { name: Lang.Blocks.monitor_state_modeMovement,                        type: 'input', pos: { x: 0, y: 0 } },
+            state_headless:                             { name: Lang.Blocks.monitor_state_headless,                            type: 'input', pos: { x: 0, y: 0 } },
+            state_controlSpeed:                         { name: Lang.Blocks.monitor_state_controlSpeed,                        type: 'input', pos: { x: 0, y: 0 } },
+            state_sensorOrientation:                    { name: Lang.Blocks.monitor_state_sensorOrientation,                   type: 'input', pos: { x: 0, y: 0 } },
+            state_battery:                              { name: Lang.Blocks.monitor_state_battery,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_accelX:                              { name: Lang.Blocks.monitor_motion_accelX,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_accelY:                              { name: Lang.Blocks.monitor_motion_accelY,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_accelZ:                              { name: Lang.Blocks.monitor_motion_accelZ,                             type: 'input', pos: { x: 0, y: 0 } },
+            motion_gyroRoll:                            { name: Lang.Blocks.monitor_motion_gyroRoll,                           type: 'input', pos: { x: 0, y: 0 } },
+            motion_gyroPitch:                           { name: Lang.Blocks.monitor_motion_gyroPitch,                          type: 'input', pos: { x: 0, y: 0 } },
+            motion_gyroYaw:                             { name: Lang.Blocks.monitor_motion_gyroYaw,                            type: 'input', pos: { x: 0, y: 0 } },
+            motion_angleRoll:                           { name: Lang.Blocks.monitor_motion_angleRoll,                          type: 'input', pos: { x: 0, y: 0 } },
+            motion_anglePitch:                          { name: Lang.Blocks.monitor_motion_anglePitch,                         type: 'input', pos: { x: 0, y: 0 } },
+            motion_angleYaw:                            { name: Lang.Blocks.monitor_motion_angleYaw,                           type: 'input', pos: { x: 0, y: 0 } },
+            range_front:                                { name: Lang.Blocks.monitor_range_front,                               type: 'input', pos: { x: 0, y: 0 } },
+            range_bottom:                               { name: Lang.Blocks.monitor_range_bottom,                              type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontHue:                         { name: Lang.Blocks.monitor_cardColor_frontHue,                        type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontSaturation:                  { name: Lang.Blocks.monitor_cardColor_frontSaturation,                 type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontValue:                       { name: Lang.Blocks.monitor_cardColor_frontValue,                      type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontLightness:                   { name: Lang.Blocks.monitor_cardColor_frontLightness,                  type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearHue:                          { name: Lang.Blocks.monitor_cardColor_rearHue,                         type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearSaturation:                   { name: Lang.Blocks.monitor_cardColor_rearSaturation,                  type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearValue:                        { name: Lang.Blocks.monitor_cardColor_rearValue,                       type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearLightness:                    { name: Lang.Blocks.monitor_cardColor_rearLightness,                   type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_frontColor:                       { name: Lang.Blocks.monitor_cardColor_frontColor,                      type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_rearColor:                        { name: Lang.Blocks.monitor_cardColor_rearColor,                       type: 'input', pos: { x: 0, y: 0 } },
+            cardColor_card:                             { name: Lang.Blocks.monitor_cardColor_card,                            type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_positionX:     { name: Lang.Blocks.monitor_informationAssembledForEntry_positionX,    type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_positionY:     { name: Lang.Blocks.monitor_informationAssembledForEntry_positionY,    type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_positionZ:     { name: Lang.Blocks.monitor_informationAssembledForEntry_positionZ,    type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_altitude:      { name: Lang.Blocks.monitor_informationAssembledForEntry_altitude,     type: 'input', pos: { x: 0, y: 0 } },
+            informationAssembledForEntry_rangeHeight:   { name: Lang.Blocks.monitor_informationAssembledForEntry_rangeHeight,  type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_x:                            { name: Lang.Blocks.monitor_joystick_left_x,                           type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_y:                            { name: Lang.Blocks.monitor_joystick_left_y,                           type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_direction:                    { name: Lang.Blocks.monitor_joystick_left_direction,                   type: 'input', pos: { x: 0, y: 0 } },
+            joystick_left_event:                        { name: Lang.Blocks.monitor_joystick_left_event,                       type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_x:                           { name: Lang.Blocks.monitor_joystick_right_x,                          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_y:                           { name: Lang.Blocks.monitor_joystick_right_y,                          type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_direction:                   { name: Lang.Blocks.monitor_joystick_right_direction,                  type: 'input', pos: { x: 0, y: 0 } },
+            joystick_right_event:                       { name: Lang.Blocks.monitor_joystick_right_event,                      type: 'input', pos: { x: 0, y: 0 } },
+            button_button:                              { name: Lang.Blocks.monitor_button_button,                             type: 'input', pos: { x: 0, y: 0 } },
+            button_event:                               { name: Lang.Blocks.monitor_button_event,                              type: 'input', pos: { x: 0, y: 0 } },
+            entryhw_countTransferReserved:              { name: Lang.Blocks.monitor_entryhw_countTransferReserved,             type: 'output', pos: { x: 0, y: 0 } },
+        },
+
+        // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
+        ports: {},
+
+        mode: 'both', // 표시 모드
+    };
+};
+
 
 /***************************************************************************************
  *  엔트리에 등록할 블록들의 블록명(다른 장치의 블록 이름과 달라야 함)
@@ -770,6 +878,30 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.attitude(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_attitude_roll,   'motion_angleRoll'],
+                                    [Lang.Blocks.drone_attitude_pitch,  'motion_anglePitch'],
+                                    [Lang.Blocks.drone_attitude_yaw,    'motion_angleYaw'],
+                                ],
+                                value: 'motion_angleRoll',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_value_motion: {
@@ -808,6 +940,33 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.motion(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_accel_x,     'motion_accelX'],
+                                    [Lang.Blocks.drone_accel_y,     'motion_accelY'],
+                                    [Lang.Blocks.drone_accel_z,     'motion_accelZ'],
+                                    [Lang.Blocks.drone_gyro_roll,   'motion_gyroRoll'],
+                                    [Lang.Blocks.drone_gyro_pitch,  'motion_gyroPitch'],
+                                    [Lang.Blocks.drone_gyro_yaw,    'motion_gyroYaw'],
+                                ],
+                                value: 'motion_accelX', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_value_position: {
@@ -843,6 +1002,30 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.position(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_positionX,       'informationAssembledForEntry_positionX'],
+                                    [Lang.Blocks.drone_positionY,       'informationAssembledForEntry_positionY'],
+                                    [Lang.Blocks.drone_positionZ,       'informationAssembledForEntry_positionZ'],
+                                ],
+                                value: 'informationAssembledForEntry_positionX', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_value_sensor: {
@@ -877,6 +1060,30 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.sensor(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_range_front,     'range_front'],
+                                    [Lang.Blocks.drone_range_height,    'informationAssembledForEntry_rangeHeight'],
+                                    [Lang.Blocks.drone_altitude,        'informationAssembledForEntry_altitude'],
+                                ],
+                                value: 'range_front', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -921,6 +1128,38 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.card(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_cardcolor_front_color,            'cardColor_frontColor'],
+                                    [Lang.Blocks.drone_cardcolor_rear_color,             'cardColor_rearColor'],
+                                    [Lang.Blocks.drone_cardcolor_card,                   'cardColor_card'],
+                                    [Lang.Blocks.drone_cardcolor_front_hue,              'cardColor_frontHue'],
+                                    [Lang.Blocks.drone_cardcolor_front_saturation,       'cardColor_frontSaturation'],
+                                    [Lang.Blocks.drone_cardcolor_front_value,            'cardColor_frontValue'],
+                                    [Lang.Blocks.drone_cardcolor_front_lightness,        'cardColor_frontLightness'],
+                                    [Lang.Blocks.drone_cardcolor_rear_hue,               'cardColor_rearHue'],
+                                    [Lang.Blocks.drone_cardcolor_rear_saturation,        'cardColor_rearSaturation'],
+                                    [Lang.Blocks.drone_cardcolor_rear_value,             'cardColor_rearValue'],
+                                    [Lang.Blocks.drone_cardcolor_rear_lightness,         'cardColor_rearLightness'],
+                                ],
+                                value: 'cardColor_frontColor', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_value_etc: {
@@ -960,6 +1199,34 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.state(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_state_mode_flight,           'state_modeFlight'],
+                                    [Lang.Blocks.drone_state_mode_control_flight,   'state_modeControlFlight'],
+                                    [Lang.Blocks.drone_state_mode_movement,         'state_modeMovement'],
+                                    [Lang.Blocks.drone_state_headless,              'state_headless'],
+                                    [Lang.Blocks.drone_state_control_speed,         'state_controlSpeed'],
+                                    [Lang.Blocks.drone_state_sensor_orientation,    'state_sensorOrientation'],
+                                    [Lang.Blocks.drone_state_battery,               'state_battery'],
+                                ],
+                                value: 'state_battery', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_value_button: {
@@ -993,6 +1260,29 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.button(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_button,         'button_button'],
+                                    [Lang.Blocks.controller_button_event,   'button_event'],
+                                ],
+                                value: 'button_button', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1033,6 +1323,35 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.hw.portData[script.getField('DEVICE')];
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.joystick(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_joystick_left_x,            'joystick_left_x'],
+                                    [Lang.Blocks.controller_joystick_left_y,            'joystick_left_y'],
+                                    [Lang.Blocks.controller_joystick_left_direction,    'joystick_left_direction'],
+                                    [Lang.Blocks.controller_joystick_left_event,        'joystick_left_event'],
+                                    [Lang.Blocks.controller_joystick_right_x,           'joystick_right_x'],
+                                    [Lang.Blocks.controller_joystick_right_y,           'joystick_right_y'],
+                                    [Lang.Blocks.controller_joystick_right_direction,   'joystick_right_direction'],
+                                    [Lang.Blocks.controller_joystick_right_event,       'joystick_right_event'],
+                                ],
+                                value: 'joystick_left_x', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1087,7 +1406,39 @@ Entry.byrobot_drone_8.getBlocks = function()
                     return false;
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.button_pressed(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_button_front_left_top,      '1'],
+                                    [Lang.Blocks.controller_button_front_left_bottom,   '2'],
+                                    [Lang.Blocks.controller_button_front_right_top,     '4'],
+                                    [Lang.Blocks.controller_button_front_right_bottom,  '8'],
+                                    [Lang.Blocks.controller_button_top_left,            '16'],
+                                    [Lang.Blocks.controller_button_top_right,           '32'],
+                                    [Lang.Blocks.controller_button_center_up,           '64'],
+                                    [Lang.Blocks.controller_button_center_left,         '128'],
+                                    [Lang.Blocks.controller_button_center_right,        '256'],
+                                    [Lang.Blocks.controller_button_center_down,         '512'],
+                                    [Lang.Blocks.controller_button_bottom_left,         '1024'],
+                                    [Lang.Blocks.controller_button_bottom_right,        '2048'],
+                                ],
+                                value: '1', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_if_joystick_direction: {
@@ -1152,6 +1503,48 @@ Entry.byrobot_drone_8.getBlocks = function()
                     return false;
                 }
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.joystick_direction(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_left, 'joystick_left_direction'],
+                                    [Lang.Blocks.common_right, 'joystick_right_direction'],
+                                ],
+                                value: 'joystick_left_direction', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_joystick_direction_left_up,     '17'],
+                                    [Lang.Blocks.controller_joystick_direction_up,          '18'],
+                                    [Lang.Blocks.controller_joystick_direction_right_up,    '20'],
+                                    [Lang.Blocks.controller_joystick_direction_left,        '33'],
+                                    [Lang.Blocks.controller_joystick_direction_center,      '34'],
+                                    [Lang.Blocks.controller_joystick_direction_right,       '36'],
+                                    [Lang.Blocks.controller_joystick_direction_left_down,   '65'],
+                                    [Lang.Blocks.controller_joystick_direction_down,        '66'],
+                                    [Lang.Blocks.controller_joystick_direction_right_down,  '68'],
+                                ],
+                                value: '34', // 초기 선택항목 지정
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_light_manual_single_off: {
@@ -1171,6 +1564,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.setLightManual(script, 0x20, 0xffff, 0);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.light_off()',
+                    },
+                ],
             },
         },
 
@@ -1237,6 +1638,55 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.light_color_preset(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_color_red,            'red'],
+                                    [Lang.Blocks.common_light_color_green,          'green'],
+                                    [Lang.Blocks.common_light_color_blue,           'blue'],
+                                    [Lang.Blocks.common_light_color_yellow,         'yellow'],
+                                    [Lang.Blocks.common_light_color_magenta,        'magenta'],
+                                    [Lang.Blocks.common_light_color_cyan,           'cyan'],
+                                    [Lang.Blocks.common_light_color_white,          'white'],
+                                    [Lang.Blocks.common_light_color_sunset,         'sunset'],
+                                    [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
+                                    [Lang.Blocks.common_light_color_muscat,         'muscat'],
+                                    [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
+                                    [Lang.Blocks.common_light_color_emerald,        'emerald'],
+                                    [Lang.Blocks.common_light_color_lavender,       'lavender'],
+                                ],
+                                value: 'red',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_brightness_on,    '220'],
+                                    [Lang.Blocks.common_light_brightness_off,   '0'],
+                                    [Lang.Blocks.common_light_brightness_b25,   '75'],
+                                    [Lang.Blocks.common_light_brightness_b50,   '125'],
+                                    [Lang.Blocks.common_light_brightness_b75,   '200'],
+                                    [Lang.Blocks.common_light_brightness_b100,  '255'],
+                                ],
+                                value: '220',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_light_manual_single_input: {
@@ -1269,6 +1719,24 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_base.setLightManual(script, 0x20, flags, brightness);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.light_color_manual(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1330,6 +1798,50 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const green     = script.getNumberValue('GREEN');
                 const blue      = script.getNumberValue('BLUE');
                 return Entry.byrobot_base.setLightModeColor(script, 0x20, mode, interval, red, green, blue);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.light_color_input(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
+                                    [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
+                                    [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
+                                    [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
+                                    [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
+                                    [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
+                                    [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
+                                    [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1400,6 +1912,61 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x20, mode, interval, colorString);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.light_color_select(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_color_red,            'red'],
+                                    [Lang.Blocks.common_light_color_green,          'green'],
+                                    [Lang.Blocks.common_light_color_blue,           'blue'],
+                                    [Lang.Blocks.common_light_color_yellow,         'yellow'],
+                                    [Lang.Blocks.common_light_color_magenta,        'magenta'],
+                                    [Lang.Blocks.common_light_color_cyan,           'cyan'],
+                                    [Lang.Blocks.common_light_color_white,          'white'],
+                                    [Lang.Blocks.common_light_color_sunset,         'sunset'],
+                                    [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
+                                    [Lang.Blocks.common_light_color_muscat,         'muscat'],
+                                    [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
+                                    [Lang.Blocks.common_light_color_emerald,        'emerald'],
+                                    [Lang.Blocks.common_light_color_lavender,       'lavender'],
+                                ],
+                                value: 'red',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
+                                    [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
+                                    [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
+                                    [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
+                                    [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
+                                    [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
+                                    [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
+                                    [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_light_manual_single_off: {
@@ -1419,6 +1986,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.setLightManual(script, 0x10, 0xff, 0);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.light_off()',
+                    },
+                ],
             },
         },
 
@@ -1485,6 +2060,55 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x10, mode, interval, colorString);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.light_color_preset(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_color_red,            'red'],
+                                    [Lang.Blocks.common_light_color_green,          'green'],
+                                    [Lang.Blocks.common_light_color_blue,           'blue'],
+                                    [Lang.Blocks.common_light_color_yellow,         'yellow'],
+                                    [Lang.Blocks.common_light_color_magenta,        'magenta'],
+                                    [Lang.Blocks.common_light_color_cyan,           'cyan'],
+                                    [Lang.Blocks.common_light_color_white,          'white'],
+                                    [Lang.Blocks.common_light_color_sunset,         'sunset'],
+                                    [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
+                                    [Lang.Blocks.common_light_color_muscat,         'muscat'],
+                                    [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
+                                    [Lang.Blocks.common_light_color_emerald,        'emerald'],
+                                    [Lang.Blocks.common_light_color_lavender,       'lavender'],
+                                ],
+                                value: 'red',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_brightness_on,    '220'],
+                                    [Lang.Blocks.common_light_brightness_off,   '0'],
+                                    [Lang.Blocks.common_light_brightness_b25,   '75'],
+                                    [Lang.Blocks.common_light_brightness_b50,   '125'],
+                                    [Lang.Blocks.common_light_brightness_b75,   '200'],
+                                    [Lang.Blocks.common_light_brightness_b100,  '255'],
+                                ],
+                                value: '200',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_light_manual_single_input: {
@@ -1517,6 +2141,24 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const flags      = parseInt(script.getStringValue('FLAGS'));
                 const brightness = script.getNumberValue('BRIGHTNESS');
                 return Entry.byrobot_base.setLightManual(script, 0x10, flags, brightness);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.light_color_manual(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1578,6 +2220,50 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const blue     = script.getNumberValue('BLUE');
                 const interval = script.getNumberValue('INTERVAL');
                 return Entry.byrobot_base.setLightModeColor(script, 0x10, mode, interval, red, green, blue);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.light_color_input(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
+                                    [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
+                                    [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
+                                    [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
+                                    [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
+                                    [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
+                                    [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
+                                    [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1648,6 +2334,61 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const colorString = script.getField('COLOR');
                 return Entry.byrobot_base.setLightModeColorString(script, 0x10, mode, interval, colorString);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.light_color_select(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_color_red,            'red'],
+                                    [Lang.Blocks.common_light_color_green,          'green'],
+                                    [Lang.Blocks.common_light_color_blue,           'blue'],
+                                    [Lang.Blocks.common_light_color_yellow,         'yellow'],
+                                    [Lang.Blocks.common_light_color_magenta,        'magenta'],
+                                    [Lang.Blocks.common_light_color_cyan,           'cyan'],
+                                    [Lang.Blocks.common_light_color_white,          'white'],
+                                    [Lang.Blocks.common_light_color_sunset,         'sunset'],
+                                    [Lang.Blocks.common_light_color_cottoncandy,    'cottonCandy'],
+                                    [Lang.Blocks.common_light_color_muscat,         'muscat'],
+                                    [Lang.Blocks.common_light_color_strawberrymilk, 'strawberryMilk'],
+                                    [Lang.Blocks.common_light_color_emerald,        'emerald'],
+                                    [Lang.Blocks.common_light_color_lavender,       'lavender'],
+                                ],
+                                value: 'red',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_light_mode_hold,            '2'],   // BodyHold            = 0x22
+                                    [Lang.Blocks.common_light_mode_flicker,         '3'],   // BodyFlicker         = 0x23
+                                    [Lang.Blocks.common_light_mode_flicker_double,  '4'],   // BodyFlickerDouble   = 0x24
+                                    [Lang.Blocks.common_light_mode_dimming,         '5'],   // BodyDimming         = 0x25
+                                    [Lang.Blocks.common_light_mode_sunrise,         '6'],   // BodyS8unrise        = 0x26
+                                    [Lang.Blocks.common_light_mode_sunset,          '7'],   // BodySunset          = 0x27
+                                    [Lang.Blocks.common_light_mode_rainbow,         '8'],   // BodyRainbow         = 0x28
+                                    [Lang.Blocks.common_light_mode_rainbow2,        '9'],   // BodyRainbow2        = 0x29
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_display_clear_all: {
@@ -1683,6 +2424,28 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 const pixel = parseInt(script.getField('PIXEL'), 10);
                 return Entry.byrobot_base.setDisplayClearAll(script, 0x20, pixel);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_clear_all(%1)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1739,6 +2502,44 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const pixel = parseInt(script.getField('PIXEL'), 10);
                 return Entry.byrobot_base.setDisplayClear(script, 0x20, pixel, x, y, width, height);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_clear(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_display_draw_point: {
@@ -1785,6 +2586,36 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const y     = script.getNumberValue('Y');
                 const pixel = parseInt(script.getField('PIXEL'), 10);
                 return Entry.byrobot_base.setDisplayDrawPoint(script, 0x20, x, y, pixel);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_draw_point(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1855,6 +2686,57 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const pixel = parseInt(script.getField('PIXEL'), 10);
                 const line  = parseInt(script.getField('LINE'), 10);
                 return Entry.byrobot_base.setDisplayDrawLine(script, 0x20, x1, y1, x2, y2, pixel, line);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_draw_line(%1, %2, %3, %4, %5, %6)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_line_solid, '0'],
+                                    [Lang.Blocks.controller_display_line_dotted, '1'],
+                                    [Lang.Blocks.controller_display_line_dashed, '2'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -1940,6 +2822,69 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const line     = parseInt(script.getField('LINE'), 10);
                 return Entry.byrobot_base.setDisplayDrawRect(script, 0x20, x, y, width, height, pixel, flagFill, line);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_draw_rect(%1, %2, %3, %4, %5, %6)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_flagfill_off, '0'],
+                                    [Lang.Blocks.controller_display_flagfill_on, '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_line_solid, '0'],
+                                    [Lang.Blocks.controller_display_line_dotted, '1'],
+                                    [Lang.Blocks.controller_display_line_dashed, '2'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_display_draw_circle: {
@@ -2005,6 +2950,52 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const flagFill = parseInt(script.getField('FLAGFILL'), 10);
                 return Entry.byrobot_base.setDisplayDrawCircle(script, 0x20, x, y, radius, pixel, flagFill);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_draw_circle(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_flagfill_off, '0'],
+                                    [Lang.Blocks.controller_display_flagfill_on, '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_display_draw_string: {
@@ -2069,6 +3060,52 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const pixel  = parseInt(script.getField('PIXEL'), 10);
                 const string = script.getStringValue('STRING');
                 return Entry.byrobot_base.setDisplayDrawString(script, 0x20, x, y, font, pixel, string);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_draw_string(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_font_5x8, '0'],
+                                    [Lang.Blocks.controller_display_font_10x16, '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -2154,6 +3191,69 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const string    = script.getStringValue('STRING');
                 return Entry.byrobot_base.setDisplayDrawStringAlign(script, 0x20, xStart, xEnd, y, align, font, pixel, string);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.display_draw_string_align(%1, %2, %3, %4, %5, %6, %7)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_align_left, '0'],
+                                    [Lang.Blocks.controller_display_align_center, '1'],
+                                    [Lang.Blocks.controller_display_align_right, '2'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_font_5x8, '0'],
+                                    [Lang.Blocks.controller_display_font_10x16, '1'],
+                                ],
+                                value: '1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_display_pixel_black, '0'],
+                                    [Lang.Blocks.controller_display_pixel_white, '1'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_buzzer_off: {
@@ -2189,6 +3289,28 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 const target = parseInt(script.getStringValue('TARGET'));
                 return Entry.byrobot_base.setBuzzerStop(script, target);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_off(%1)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -2273,6 +3395,69 @@ Entry.byrobot_drone_8.getBlocks = function()
                 } else {
                     return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, 60000, false, true);
                 }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_scale(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '0'],
+                                    ['2', '1'],
+                                    ['3', '2'],
+                                    ['4', '3'],
+                                    ['5', '4'],
+                                    ['6', '5'],
+                                    ['7', '6'],
+                                    ['8', '7'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_buzzer_mute, '-1'],
+                                    [Lang.Blocks.controller_buzzer_c,    '0'],
+                                    [Lang.Blocks.controller_buzzer_cs,   '1'],
+                                    [Lang.Blocks.controller_buzzer_d,    '2'],
+                                    [Lang.Blocks.controller_buzzer_ds,   '3'],
+                                    [Lang.Blocks.controller_buzzer_e,    '4'],
+                                    [Lang.Blocks.controller_buzzer_f,    '5'],
+                                    [Lang.Blocks.controller_buzzer_fs,   '6'],
+                                    [Lang.Blocks.controller_buzzer_g,    '7'],
+                                    [Lang.Blocks.controller_buzzer_gs,   '8'],
+                                    [Lang.Blocks.controller_buzzer_a,    '9'],
+                                    [Lang.Blocks.controller_buzzer_as,   '10'],
+                                    [Lang.Blocks.controller_buzzer_b,    '11'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -2367,6 +3552,73 @@ Entry.byrobot_drone_8.getBlocks = function()
                     return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, time, true, true);
                 }
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_scale_delay(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '0'],
+                                    ['2', '1'],
+                                    ['3', '2'],
+                                    ['4', '3'],
+                                    ['5', '4'],
+                                    ['6', '5'],
+                                    ['7', '6'],
+                                    ['8', '7'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_buzzer_mute, '-1'],
+                                    [Lang.Blocks.controller_buzzer_c,    '0'],
+                                    [Lang.Blocks.controller_buzzer_cs,   '1'],
+                                    [Lang.Blocks.controller_buzzer_d,    '2'],
+                                    [Lang.Blocks.controller_buzzer_ds,   '3'],
+                                    [Lang.Blocks.controller_buzzer_e,    '4'],
+                                    [Lang.Blocks.controller_buzzer_f,    '5'],
+                                    [Lang.Blocks.controller_buzzer_fs,   '6'],
+                                    [Lang.Blocks.controller_buzzer_g,    '7'],
+                                    [Lang.Blocks.controller_buzzer_gs,   '8'],
+                                    [Lang.Blocks.controller_buzzer_a,    '9'],
+                                    [Lang.Blocks.controller_buzzer_as,   '10'],
+                                    [Lang.Blocks.controller_buzzer_b,    '11'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_buzzer_scale_reserve: {
@@ -2460,6 +3712,73 @@ Entry.byrobot_drone_8.getBlocks = function()
                     return Entry.byrobot_base.setBuzzerScale(script, target, octave, scale, time, false, false);
                 }
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_scale_reserve(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['1', '0'],
+                                    ['2', '1'],
+                                    ['3', '2'],
+                                    ['4', '3'],
+                                    ['5', '4'],
+                                    ['6', '5'],
+                                    ['7', '6'],
+                                    ['8', '7'],
+                                ],
+                                value: '4',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.controller_buzzer_mute, '-1'],
+                                    [Lang.Blocks.controller_buzzer_c,    '0'],
+                                    [Lang.Blocks.controller_buzzer_cs,   '1'],
+                                    [Lang.Blocks.controller_buzzer_d,    '2'],
+                                    [Lang.Blocks.controller_buzzer_ds,   '3'],
+                                    [Lang.Blocks.controller_buzzer_e,    '4'],
+                                    [Lang.Blocks.controller_buzzer_f,    '5'],
+                                    [Lang.Blocks.controller_buzzer_fs,   '6'],
+                                    [Lang.Blocks.controller_buzzer_g,    '7'],
+                                    [Lang.Blocks.controller_buzzer_gs,   '8'],
+                                    [Lang.Blocks.controller_buzzer_a,    '9'],
+                                    [Lang.Blocks.controller_buzzer_as,   '10'],
+                                    [Lang.Blocks.controller_buzzer_b,    '11'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_buzzer_hz: {
@@ -2498,6 +3817,32 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const target = parseInt(script.getStringValue('TARGET'));
                 const hz = script.getNumberValue('HZ');
                 return Entry.byrobot_base.setBuzzerHz(script, target, hz, 60000, false, true);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_hz(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -2540,6 +3885,36 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, true, true);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_hz_delay(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -2588,6 +3963,36 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_base.setBuzzerHz(script, target, hz, time, false, false);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.buzzer_hz_reserve(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.common_drone, '0x10'],
+                                    [Lang.Blocks.common_controller, '0x20'],
+                                ],
+                                value: '0x20',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_vibrator_off: {
@@ -2607,6 +4012,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.setVibratorStop(script, 0x20);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.vibrator_off()',
+                    },
+                ],
             },
         },
 
@@ -2634,6 +4047,20 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const timeOn = script.getNumberValue('TIMEON') * 1000;
                 return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, 0, timeOn, true, true);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.vibrator_on_delay(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_vibrator_on_reserve: {
@@ -2659,6 +4086,20 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 const timeOn = script.getNumberValue('TIMEON') * 1000;
                 return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, 0, timeOn, false, false);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.vibrator_on_reserve(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -2697,6 +4138,28 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const timeRun = script.getNumberValue('TIMERUN') * 1000;
                 return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, timeOff, timeRun, true, true);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.vibrator_delay(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_controller_vibrator_reserve: {
@@ -2734,6 +4197,28 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const timeRun = script.getNumberValue('TIMERUN') * 1000;
                 return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, timeOff, timeRun, false, false);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Controller.vibrator_reserve(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_motor_stop: {
@@ -2753,6 +4238,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.sendStop(script, 0x10);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.motor_stop()',
+                    },
+                ],
             },
         },
 
@@ -2791,6 +4284,29 @@ Entry.byrobot_drone_8.getBlocks = function()
 
                 return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.motor_single(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [['1(FR)', '0'], ['2(RR)', '1'], ['3(RL)', '2'], ['4(FL)', '3']],
+                                value: '0',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_motorsingle_input: {
@@ -2821,6 +4337,24 @@ Entry.byrobot_drone_8.getBlocks = function()
 
                 return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.motor_single_input(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_control_drone_takeoff: {
@@ -2840,6 +4374,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.setEventFlight(script, 0x10, 0x11, 5000); // 0x11 : FlightEvent::TakeOff
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.takeoff()',
+                    },
+                ],
             },
         },
 
@@ -2861,6 +4403,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             {
                 return Entry.byrobot_base.setEventFlight(script, 0x10, 0x12, 5000); // 0x12 : FlightEvent::Landing
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.landing()',
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_control_drone_stop: {
@@ -2880,6 +4430,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.sendStop(script, 0x10);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.stop()',
+                    },
+                ],
             },
         },
 
@@ -2917,6 +4475,28 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const headless = script.getField('HEADLESS');
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x03, headless);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.headless(%1)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_headless_headless, '1'],
+                                    [Lang.Blocks.drone_headless_normal,   '2'],
+                                ],
+                                value: '2',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_control_drone_reset_heading: {
@@ -2936,6 +4516,14 @@ Entry.byrobot_drone_8.getBlocks = function()
             func(sprite, script)
             {
                 return Entry.byrobot_base.sendCommand(script, 0x10, 0x07, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.reset_heading()',
+                    },
+                ],
             },
         },
 
@@ -2978,6 +4566,34 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const value = script.getNumberValue('VALUE');
 
                 return Entry.byrobot_base.sendControlQuadSingle(script, 0x10, controlTarget, value, 0, false);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_quad_one(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_roll,     'control_quad8_roll'],
+                                    [Lang.Blocks.drone_control_quad_pitch,    'control_quad8_pitch'],
+                                    [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
+                                    [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
+                                ],
+                                value: 'control_quad8_pitch',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -3029,6 +4645,38 @@ Entry.byrobot_drone_8.getBlocks = function()
 
                 return Entry.byrobot_base.sendControlQuadSingle(script, 0x10, controlTarget, value, time, true);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_quad_one_delay(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_roll,     'control_quad8_roll'],
+                                    [Lang.Blocks.drone_control_quad_pitch,    'control_quad8_pitch'],
+                                    [Lang.Blocks.drone_control_quad_yaw,      'control_quad8_yaw'],
+                                    [Lang.Blocks.drone_control_quad_throttle, 'control_quad8_throttle'],
+                                ],
+                                value: 'control_quad8_pitch',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_control_quad: {
@@ -3070,6 +4718,32 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const throttle = script.getNumberValue('THROTTLE');
 
                 return Entry.byrobot_base.sendControlQuad(script, 0x10, roll, pitch, yaw, throttle, 0, false);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_quad(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -3117,6 +4791,36 @@ Entry.byrobot_drone_8.getBlocks = function()
 
                 return Entry.byrobot_base.sendControlQuad(script, 0x10, roll, pitch, yaw, throttle, time, true);
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_quad_delay(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
 
         byrobot_drone_8_drone_control_position_one: {
@@ -3161,23 +4865,62 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance = script.getNumberValue('DISTANCE');
                 const speed = script.getNumberValue('SPEED');
-                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-				
-				let x = 0;
-				let y = 0;
-				let z = 0;
+                let time = 0;
+                
+                if( speed > 0 )
+                {
+                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
+
+                let x = 0;
+                let y = 0;
+                let z = 0;
 
                 switch( controlDirection )
                 {
-                    case 'pitch_forward':   x = distance;	break;
-                    case 'pitch_backward':  x = -distance;	break;
-                    case 'roll_left':       y = distance;	break;
-                    case 'roll_right':      y = -distance;	break;
-                    case 'throttle_up':     z = distance;	break;
-                    default:                z = -distance;	break;
+                    case 'pitch_forward':   x = distance;   break;
+                    case 'pitch_backward':  x = -distance;  break;
+                    case 'roll_left':       y = distance;   break;
+                    case 'roll_right':      y = -distance;  break;
+                    case 'throttle_up':     z = distance;   break;
+                    default:                z = -distance;  break;
                 }
 
-				return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_position_one(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_pitch_forward,  'pitch_forward'],
+                                    [Lang.Blocks.drone_control_quad_pitch_backward, 'pitch_backward'],
+                                    [Lang.Blocks.drone_control_quad_roll_left,      'roll_left'],
+                                    [Lang.Blocks.drone_control_quad_roll_right,     'roll_right'],
+                                    [Lang.Blocks.drone_control_quad_throttle_up,    'throttle_up'],
+                                    [Lang.Blocks.drone_control_quad_throttle_down,  'throttle_down'],
+                                ],
+                                value: 'pitch_forward',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -3226,9 +4969,44 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const time          = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                let time = 0;
 
-                Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
+                if( speedYaw > 0 )
+                {
+                    time = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                }
+
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, 0, 0, 0, 0, yaw, speedYaw, time, true);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_position_turn(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_yaw_cw,  '-1'],
+                                    [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -3314,9 +5092,77 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
-                const time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+
+                let time = 0;
+
+                if( speed > 0 )
+                {
+                    time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_position_location(%1, %2, %3, %4, %5, %6, %7)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_pitch_forward,  '+1'],
+                                    [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_roll_left,      '+1'],
+                                    [Lang.Blocks.drone_control_quad_roll_right,     '-1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_throttle_up,    '+1'],
+                                    [Lang.Blocks.drone_control_quad_throttle_down,  '-1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
 
@@ -3426,10 +5272,104 @@ Entry.byrobot_drone_8.getBlocks = function()
                 const yaw           = directionYaw * degree;
                 const speedYaw      = script.getNumberValue('SPEED_YAW');
 
-                const timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                const timeRotation = Math.abs(degree / speedYaw) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                let timePosition = 0;
+                let timeRotation = 0;
 
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, Math.max(timePosition, timeRotation), true);
+                if( speed > 0 )
+                {
+                    timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
+                }
+
+                if( speedYaw > 0 )
+                {
+                    timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
+                }
+
+                const time = Math.max(timePosition, timeRotation);
+
+                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Drone.control_position_location_turn(%1, %2, %3, %4, %5, %6, %7, %8, %9, %10)',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_pitch_forward,  '+1'],
+                                    [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_roll_left,      '+1'],
+                                    [Lang.Blocks.drone_control_quad_roll_right,     '-1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_throttle_up,    '+1'],
+                                    [Lang.Blocks.drone_control_quad_throttle_down,  '-1'],
+                                ],
+                                value: '+1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.drone_control_quad_yaw_cw,  '-1'],
+                                    [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
+                                ],
+                                value: '-1',
+                                fontSize: 11,
+                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
             },
         },
     };

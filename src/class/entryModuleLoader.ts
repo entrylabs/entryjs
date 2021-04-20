@@ -56,8 +56,6 @@ class EntryModuleLoader {
      * @param moduleObject 하드웨어 모듈. 여타 하드웨어 모듈 파일 참조
      */
     registerHardwareModule(moduleObject: EntryHardwareBlockModule) {
-        console.log("registerHardwareModule");
-        
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }

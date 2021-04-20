@@ -90,6 +90,16 @@ Entry.EV3.setLanguage = function() {
                 ev3_motor_degrees: '%1 의 값을 %2 으로  %3 도 만큼 회전 %4',
                 ev3_status_led: 'LED 색깔을 %1 (으)로 정하기 %2',
             },
+            Blocks: {
+                ev3_ccw: '반시계',
+                ev3_cw: '시계',
+            },
+            Menus: {
+                ev3: 'EV3',
+            },
+            Device: {
+                ev3: 'EV3',
+            },
         },
         en: {
             template: {
@@ -101,6 +111,16 @@ Entry.EV3.setLanguage = function() {
                 ev3_motor_power_on_time: "%1's value for %2seconds %3 printed %4",
                 ev3_motor_degrees: "%1's value in %2 direction turn %3 degrees %4",
                 ev3_status_led: 'Set status light to %1 %2',
+            },
+            Blocks: {
+                ev3_ccw: 'CCW',
+                ev3_cw: 'CW',
+            },
+            Menus: {
+                ev3: 'EV3',
+            },
+            Device: {
+                ev3: 'EV3',
             },
         },
     };
@@ -127,7 +147,12 @@ Entry.EV3.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -135,7 +160,12 @@ Entry.EV3.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['RGB', 'RGB'], ['R', 'R'], ['G', 'G'], ['B', 'B']],
+                    options: [
+                        ['RGB', 'RGB'],
+                        ['R', 'R'],
+                        ['G', 'G'],
+                        ['B', 'B'],
+                    ],
                     value: 'RGB',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -201,7 +231,12 @@ Entry.EV3.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -236,7 +271,12 @@ Entry.EV3.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
+                    options: [
+                        ['A', 'A'],
+                        ['B', 'B'],
+                        ['C', 'C'],
+                        ['D', 'D'],
+                    ],
                     value: 'A',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -244,7 +284,10 @@ Entry.EV3.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ev3_cw, 'CW'], [Lang.Blocks.ev3_ccw, 'CCW']],
+                    options: [
+                        [Lang.Blocks.ev3_cw, 'CW'],
+                        [Lang.Blocks.ev3_ccw, 'CCW'],
+                    ],
                     value: 'CW',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -305,7 +348,12 @@ Entry.EV3.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
+                    options: [
+                        ['A', 'A'],
+                        ['B', 'B'],
+                        ['C', 'C'],
+                        ['D', 'D'],
+                    ],
                     value: 'A',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -358,7 +406,12 @@ Entry.EV3.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['A', 'A'], ['B', 'B'], ['C', 'C'], ['D', 'D']],
+                    options: [
+                        ['A', 'A'],
+                        ['B', 'B'],
+                        ['C', 'C'],
+                        ['D', 'D'],
+                    ],
                     value: 'A',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -446,7 +499,12 @@ Entry.EV3.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['1', '1'], ['2', '2'], ['3', '3'], ['4', '4']],
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                    ],
                     value: '1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

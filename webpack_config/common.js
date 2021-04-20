@@ -40,6 +40,7 @@ module.exports = {
                     test: path.resolve(__dirname, '..', 'node_modules'),
                     exclude: [
                         path.resolve(__dirname, '..', 'node_modules/skmeans'),
+                        path.resolve(__dirname, '..', 'node_modules/mini-signals'),
                         path.resolve(__dirname, '..', 'node_modules/@tensorflow-models/coco-ssd')
                     ],
                 },

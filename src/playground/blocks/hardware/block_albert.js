@@ -1,13 +1,13 @@
 'use strict';
 
 function AlbertSchoolController() {
-	this.prevDirection = 0;
-	this.prevDirectionFinal = 0;
-	this.directionCount = 0;
-	this.directionCountFinal = 0;
-	this.positionCount = 0;
-	this.positionCountFinal = 0;
-	this.isBackward = false;
+    this.prevDirection = 0;
+    this.prevDirectionFinal = 0;
+    this.directionCount = 0;
+    this.directionCountFinal = 0;
+    this.positionCount = 0;
+    this.positionCountFinal = 0;
+    this.isBackward = false;
 }
 
 AlbertSchoolController.prototype.PI = 3.14159265;
@@ -33,288 +33,335 @@ AlbertSchoolController.prototype.MINIMUM_WHEEL_SPEED = 18;
 AlbertSchoolController.prototype.MINIMUM_WHEEL_SPEED_FINE = 15;
 
 AlbertSchoolController.prototype.clear = function() {
-	this.prevDirection = 0;
-	this.prevDirectionFinal = 0;
-	this.directionCount = 0;
-	this.directionCountFinal = 0;
-	this.positionCount = 0;
-	this.positionCountFinal = 0;
+    this.prevDirection = 0;
+    this.prevDirectionFinal = 0;
+    this.directionCount = 0;
+    this.directionCountFinal = 0;
+    this.positionCount = 0;
+    this.positionCountFinal = 0;
 };
 
 AlbertSchoolController.prototype.setBackward = function(backward) {
-	this.isBackward = backward;
+    this.isBackward = backward;
 };
 
-AlbertSchoolController.prototype.controlAngleInitial = function(wheels, currentRadian, targetRadian) {
-	if(this.isBackward) {
-		currentRadian += this.PI;
-	}
-	var diff = this.validateRadian(targetRadian - currentRadian);
-	var mag = Math.abs(diff);
-	if (mag < this.ORIENTATION_TOLERANCE_ROUGH) return true;
-	
-	var direction = diff > 0 ? 1 : -1;
-	if(mag < this.ORIENTATION_TOLERANCE_ROUGH_LARGE && direction * this.prevDirection < 0) return true;
-	this.prevDirection = direction;
-	
-	var value = 0;
-	if(diff > 0) {
-		value = Math.log(1 + mag) * this.GAIN_ANGLE;
-		if(value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
-	} else {
-		value = -Math.log(1 + mag) * this.GAIN_ANGLE;
-		if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
-	}
-	value = parseInt(value);
-	wheels.left = -value;
-	wheels.right = value;
-	return false;
+AlbertSchoolController.prototype.controlAngleInitial = function(
+    wheels,
+    currentRadian,
+    targetRadian
+) {
+    if (this.isBackward) {
+        currentRadian += this.PI;
+    }
+    var diff = this.validateRadian(targetRadian - currentRadian);
+    var mag = Math.abs(diff);
+    if (mag < this.ORIENTATION_TOLERANCE_ROUGH) return true;
+
+    var direction = diff > 0 ? 1 : -1;
+    if (mag < this.ORIENTATION_TOLERANCE_ROUGH_LARGE && direction * this.prevDirection < 0)
+        return true;
+    this.prevDirection = direction;
+
+    var value = 0;
+    if (diff > 0) {
+        value = Math.log(1 + mag) * this.GAIN_ANGLE;
+        if (value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
+    } else {
+        value = -Math.log(1 + mag) * this.GAIN_ANGLE;
+        if (value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
+    }
+    value = parseInt(value);
+    wheels.left = -value;
+    wheels.right = value;
+    return false;
 };
 
 AlbertSchoolController.prototype.controlAngleFinal = function(wheels, currentRadian, targetRadian) {
-	var diff = this.validateRadian(targetRadian - currentRadian);
-	var mag = Math.abs(diff);
-	if(mag < this.ORIENTATION_TOLERANCE_FINAL) return true;
+    var diff = this.validateRadian(targetRadian - currentRadian);
+    var mag = Math.abs(diff);
+    if (mag < this.ORIENTATION_TOLERANCE_FINAL) return true;
 
-	var direction = diff > 0 ? 1 : -1;
-	if(mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE && direction * this.prevDirectionFinal < 0) return true;
-	if(mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE && direction * this.prevDirectionFinal < 0) {
-		if(++this.directionCountFinal > 3) return true;
-	}
-	this.prevDirectionFinal = direction;
-	
-	var value = 0;
-	if(diff > 0) {
-		value = Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
-		if(value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
-	} else {
-		value = -Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
-		if(value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
-	}
-	value = parseInt(value);
-	wheels.left = -value;
-	wheels.right = value;
-	return false;
+    var direction = diff > 0 ? 1 : -1;
+    if (mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE && direction * this.prevDirectionFinal < 0)
+        return true;
+    if (
+        mag < this.ORIENTATION_TOLERANCE_FINAL_LARGE_LARGE &&
+        direction * this.prevDirectionFinal < 0
+    ) {
+        if (++this.directionCountFinal > 3) return true;
+    }
+    this.prevDirectionFinal = direction;
+
+    var value = 0;
+    if (diff > 0) {
+        value = Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
+        if (value < this.MINIMUM_WHEEL_SPEED) value = this.MINIMUM_WHEEL_SPEED;
+    } else {
+        value = -Math.log(1 + mag) * this.GAIN_ANGLE_FINE;
+        if (value > -this.MINIMUM_WHEEL_SPEED) value = -this.MINIMUM_WHEEL_SPEED;
+    }
+    value = parseInt(value);
+    wheels.left = -value;
+    wheels.right = value;
+    return false;
 };
 
-AlbertSchoolController.prototype.controlPositionFine = function(wheels, currentX, currentY, currentRadian, targetX, targetY) {
-	var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
-	if(this.isBackward) {
-		currentRadian += this.PI;
-	}
-	var diff = this.validateRadian(targetRadian - currentRadian);
-	var mag = Math.abs(diff);
-	var ex = targetX - currentX;
-	var ey = targetY - currentY;
-	var dist = Math.sqrt(ex * ex + ey * ey);
-	if(dist < this.POSITION_TOLERANCE_FINE) return true;
-	if(dist < this.POSITION_TOLERANCE_FINE_LARGE) {
-		if (++this.positionCountFinal > 5) {
-			this.positionCountFinal = 0;
-			return true;
-		}
-	}
-	var value = 0;
-	if (diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION_FINE;
-	else value = -Math.log(1 + mag) * this.GAIN_POSITION_FINE;
-	if(this.isBackward) {
-		value = -value;
-	}
-	value = parseInt(value);
-	wheels.left = this.MINIMUM_WHEEL_SPEED_FINE - value;
-	wheels.right = this.MINIMUM_WHEEL_SPEED_FINE + value;
-	if(this.isBackward) {
-		wheels.left = -wheels.left;
-		wheels.right = -wheels.right;
-	}
-	return false;
+AlbertSchoolController.prototype.controlPositionFine = function(
+    wheels,
+    currentX,
+    currentY,
+    currentRadian,
+    targetX,
+    targetY
+) {
+    var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
+    if (this.isBackward) {
+        currentRadian += this.PI;
+    }
+    var diff = this.validateRadian(targetRadian - currentRadian);
+    var mag = Math.abs(diff);
+    var ex = targetX - currentX;
+    var ey = targetY - currentY;
+    var dist = Math.sqrt(ex * ex + ey * ey);
+    if (dist < this.POSITION_TOLERANCE_FINE) return true;
+    if (dist < this.POSITION_TOLERANCE_FINE_LARGE) {
+        if (++this.positionCountFinal > 5) {
+            this.positionCountFinal = 0;
+            return true;
+        }
+    }
+    var value = 0;
+    if (diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+    else value = -Math.log(1 + mag) * this.GAIN_POSITION_FINE;
+    if (this.isBackward) {
+        value = -value;
+    }
+    value = parseInt(value);
+    wheels.left = this.MINIMUM_WHEEL_SPEED_FINE - value;
+    wheels.right = this.MINIMUM_WHEEL_SPEED_FINE + value;
+    if (this.isBackward) {
+        wheels.left = -wheels.left;
+        wheels.right = -wheels.right;
+    }
+    return false;
 };
 
-AlbertSchoolController.prototype.controlPosition = function(wheels, currentX, currentY, currentRadian, targetX, targetY) {
-	var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
-	if(this.isBackward) {
-		currentRadian += this.PI;
-	}
-	var diff = this.validateRadian(targetRadian - currentRadian);
-	var mag = Math.abs(diff);
-	var ex = targetX - currentX;
-	var ey = targetY - currentY;
-	var dist = Math.sqrt(ex * ex + ey * ey);
-	if(dist < this.POSITION_TOLERANCE_ROUGH) return true;
-	if(dist < this.POSITION_TOLERANCE_ROUGH_LARGE) {
-		if(++this.positionCount > 10) {
-			this.positionCount = 0;
-			return true;
-		}
-	} else {
-		this.positionCount = 0;
-	}
-	if(mag < 0.01) {
-		wheels.left = this.STRAIGHT_SPEED;
-		wheels.right = this.STRAIGHT_SPEED;
-	} else {
-		var base = (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) * this.GAIN_BASE_SPEED;
-		if(base > this.MAX_BASE_SPEED) base = this.MAX_BASE_SPEED;
-		
-		var value = 0;
-		if(diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION;
-		else value = -Math.log(1 + mag) * this.GAIN_POSITION;
-		if(this.isBackward) {
-			value = -value;
-		}
-		base = parseInt(base);
-		value = parseInt(value);
-		wheels.left = base - value;
-		wheels.right = base + value;
-	}
-	if(this.isBackward) {
-		wheels.left = -wheels.left;
-		wheels.right = -wheels.right;
-	}
-	return false;
+AlbertSchoolController.prototype.controlPosition = function(
+    wheels,
+    currentX,
+    currentY,
+    currentRadian,
+    targetX,
+    targetY
+) {
+    var targetRadian = Math.atan2(targetY - currentY, targetX - currentX);
+    if (this.isBackward) {
+        currentRadian += this.PI;
+    }
+    var diff = this.validateRadian(targetRadian - currentRadian);
+    var mag = Math.abs(diff);
+    var ex = targetX - currentX;
+    var ey = targetY - currentY;
+    var dist = Math.sqrt(ex * ex + ey * ey);
+    if (dist < this.POSITION_TOLERANCE_ROUGH) return true;
+    if (dist < this.POSITION_TOLERANCE_ROUGH_LARGE) {
+        if (++this.positionCount > 10) {
+            this.positionCount = 0;
+            return true;
+        }
+    } else {
+        this.positionCount = 0;
+    }
+    if (mag < 0.01) {
+        wheels.left = this.STRAIGHT_SPEED;
+        wheels.right = this.STRAIGHT_SPEED;
+    } else {
+        var base = (this.MINIMUM_WHEEL_SPEED + 0.5 / mag) * this.GAIN_BASE_SPEED;
+        if (base > this.MAX_BASE_SPEED) base = this.MAX_BASE_SPEED;
+
+        var value = 0;
+        if (diff > 0) value = Math.log(1 + mag) * this.GAIN_POSITION;
+        else value = -Math.log(1 + mag) * this.GAIN_POSITION;
+        if (this.isBackward) {
+            value = -value;
+        }
+        base = parseInt(base);
+        value = parseInt(value);
+        wheels.left = base - value;
+        wheels.right = base + value;
+    }
+    if (this.isBackward) {
+        wheels.left = -wheels.left;
+        wheels.right = -wheels.right;
+    }
+    return false;
 };
 
 AlbertSchoolController.prototype.validateRadian = function(radian) {
-	if(radian > this.PI) return radian - this.PI2;
-	else if(radian < -this.PI) return radian + this.PI2;
-	return radian;
+    if (radian > this.PI) return radian - this.PI2;
+    else if (radian < -this.PI) return radian + this.PI2;
+    return radian;
 };
 
 AlbertSchoolController.prototype.toRadian = function(degree) {
-	return degree * 3.14159265 / 180.0;
+    return (degree * 3.14159265) / 180.0;
 };
 
 function AlbertSchoolNavigator() {
-	this.controller = new AlbertSchoolController();
-	this.mode = 0;
-	this.state = 0;
-	this.initialized = false;
-	this.boardWidth = 0;
-	this.boardHeight = 0;
-	this.currentX = -1;
-	this.currentY = -1;
-	this.currentTheta = -200;
-	this.targetX = -1;
-	this.targetY = -1;
-	this.targetTheta = -200;
-	this.wheels = { completed: false, left: 0, right: 0 };
+    this.controller = new AlbertSchoolController();
+    this.mode = 0;
+    this.state = 0;
+    this.initialized = false;
+    this.boardWidth = 0;
+    this.boardHeight = 0;
+    this.currentX = -1;
+    this.currentY = -1;
+    this.currentTheta = -200;
+    this.targetX = -1;
+    this.targetY = -1;
+    this.targetTheta = -200;
+    this.wheels = { completed: false, left: 0, right: 0 };
 }
 
 AlbertSchoolNavigator.prototype.clear = function() {
-	this.mode = 0;
-	this.state = 0;
-	this.initialized = false;
-	this.currentX = -1;
-	this.currentY = -1;
-	this.currentTheta = -200;
-	this.targetX = -1;
-	this.targetY = -1;
-	this.targetTheta = -200;
-	this.wheels.completed = false;
-	this.wheels.left = 0;
-	this.wheels.right = 0;
-	this.controller.clear();
+    this.mode = 0;
+    this.state = 0;
+    this.initialized = false;
+    this.currentX = -1;
+    this.currentY = -1;
+    this.currentTheta = -200;
+    this.targetX = -1;
+    this.targetY = -1;
+    this.targetTheta = -200;
+    this.wheels.completed = false;
+    this.wheels.left = 0;
+    this.wheels.right = 0;
+    this.controller.clear();
 };
 
 AlbertSchoolNavigator.prototype.getBoardWidth = function() {
-	return this.boardWidth;
+    return this.boardWidth;
 };
 
 AlbertSchoolNavigator.prototype.getBoardHeight = function() {
-	return this.boardHeight;
+    return this.boardHeight;
 };
 
 AlbertSchoolNavigator.prototype.setBoardSize = function(width, height) {
-	this.boardWidth = width;
-	this.boardHeight = height;
+    this.boardWidth = width;
+    this.boardHeight = height;
 };
 
 AlbertSchoolNavigator.prototype.setBackward = function(backward) {
-	this.controller.setBackward(backward);
+    this.controller.setBackward(backward);
 };
 
 AlbertSchoolNavigator.prototype.moveTo = function(x, y) {
-	this.clear();
-	this.targetX = x;
-	this.targetY = y;
-	this.state = 1;
-	this.mode = 1;
+    this.clear();
+    this.targetX = x;
+    this.targetY = y;
+    this.state = 1;
+    this.mode = 1;
 };
 
 AlbertSchoolNavigator.prototype.turnTo = function(deg) {
-	this.clear();
-	this.targetTheta = deg;
-	this.state = 1;
-	this.mode = 2;
+    this.clear();
+    this.targetTheta = deg;
+    this.state = 1;
+    this.mode = 2;
 };
 
 AlbertSchoolNavigator.prototype.handleSensory = function(sensory) {
-	if(this.mode == 1) {
-		var x = sensory.positionX;
-		var y = sensory.positionY;
-		if(x >= 0) this.currentX = x;
-		if(y >= 0) this.currentY = y;
-		this.currentTheta = sensory.orientation;
-		switch(this.state) {
-			case 1: {
-				if(this.initialized == false) {
-					if(this.currentX < 0 || this.currentY < 0) {
-						this.wheels.left = 20;
-						this.wheels.right = -20;
-					} else {
-						this.initialized = true;
-					}
-				}
-				if(this.initialized) {
-					var currentRadian = this.controller.toRadian(this.currentTheta);
-					var dx = this.targetX - this.currentX;
-					var dy = this.targetY - this.currentY;
-					var targetRadian = Math.atan2(dy, dx);
-					if(this.controller.controlAngleInitial(this.wheels, currentRadian, targetRadian)) {
-						this.state = 2;
-					}
-				}
-				break;
-			}
-			case 2: {
-				var currentRadian = this.controller.toRadian(this.currentTheta);
-				if(this.controller.controlPosition(this.wheels, this.currentX, this.currentY, currentRadian, this.targetX, this.targetY)) {
-					this.state = 3;
-				}
-				break;
-			}
-			case 3: {
-				var currentRadian = this.controller.toRadian(this.currentTheta);
-				if(this.controller.controlPositionFine(this.wheels, this.currentX, this.currentY, currentRadian, this.targetX, this.targetY)) {
-					this.clear();
-					this.wheels.completed = true;
-				}
-				break;
-			}
-		}
-	} else if(this.mode == 2) {
-		this.currentTheta = sensory.orientation;
-		switch(this.state) {
-			case 1: {
-				var currentRadian = this.controller.toRadian(this.currentTheta);
-				var targetRadian = this.controller.toRadian(this.targetTheta);
-				if(this.controller.controlAngleInitial(this.wheels, currentRadian, targetRadian)) {
-					this.state = 2;
-				}
-				break;
-			}
-			case 2: {
-				var currentRadian = this.controller.toRadian(this.currentTheta);
-				var targetRadian = this.controller.toRadian(this.targetTheta);
-				if(this.controller.controlAngleFinal(this.wheels, currentRadian, targetRadian)) {
-					this.clear();
-					this.wheels.completed = true;
-				}
-				break;
-			}
-		}
-	}
-	return this.wheels;
+    if (this.mode == 1) {
+        var x = sensory.positionX;
+        var y = sensory.positionY;
+        if (x >= 0) this.currentX = x;
+        if (y >= 0) this.currentY = y;
+        this.currentTheta = sensory.orientation;
+        switch (this.state) {
+            case 1: {
+                if (this.initialized == false) {
+                    if (this.currentX < 0 || this.currentY < 0) {
+                        this.wheels.left = 20;
+                        this.wheels.right = -20;
+                    } else {
+                        this.initialized = true;
+                    }
+                }
+                if (this.initialized) {
+                    var currentRadian = this.controller.toRadian(this.currentTheta);
+                    var dx = this.targetX - this.currentX;
+                    var dy = this.targetY - this.currentY;
+                    var targetRadian = Math.atan2(dy, dx);
+                    if (
+                        this.controller.controlAngleInitial(
+                            this.wheels,
+                            currentRadian,
+                            targetRadian
+                        )
+                    ) {
+                        this.state = 2;
+                    }
+                }
+                break;
+            }
+            case 2: {
+                var currentRadian = this.controller.toRadian(this.currentTheta);
+                if (
+                    this.controller.controlPosition(
+                        this.wheels,
+                        this.currentX,
+                        this.currentY,
+                        currentRadian,
+                        this.targetX,
+                        this.targetY
+                    )
+                ) {
+                    this.state = 3;
+                }
+                break;
+            }
+            case 3: {
+                var currentRadian = this.controller.toRadian(this.currentTheta);
+                if (
+                    this.controller.controlPositionFine(
+                        this.wheels,
+                        this.currentX,
+                        this.currentY,
+                        currentRadian,
+                        this.targetX,
+                        this.targetY
+                    )
+                ) {
+                    this.clear();
+                    this.wheels.completed = true;
+                }
+                break;
+            }
+        }
+    } else if (this.mode == 2) {
+        this.currentTheta = sensory.orientation;
+        switch (this.state) {
+            case 1: {
+                var currentRadian = this.controller.toRadian(this.currentTheta);
+                var targetRadian = this.controller.toRadian(this.targetTheta);
+                if (this.controller.controlAngleInitial(this.wheels, currentRadian, targetRadian)) {
+                    this.state = 2;
+                }
+                break;
+            }
+            case 2: {
+                var currentRadian = this.controller.toRadian(this.currentTheta);
+                var targetRadian = this.controller.toRadian(this.targetTheta);
+                if (this.controller.controlAngleFinal(this.wheels, currentRadian, targetRadian)) {
+                    this.clear();
+                    this.wheels.completed = true;
+                }
+                break;
+            }
+        }
+    }
+    return this.wheels;
 };
 
 function AlbertSchoolRobot(index) {
@@ -391,8 +438,7 @@ AlbertSchoolRobot.prototype.afterReceive = function(pd) {
     this.handleSensory();
 };
 
-AlbertSchoolRobot.prototype.afterSend = function(sq) {
-};
+AlbertSchoolRobot.prototype.afterSend = function(sq) {};
 
 AlbertSchoolRobot.prototype.setMotoring = function(motoring) {
     this.motoring = motoring;
@@ -433,7 +479,7 @@ AlbertSchoolRobot.prototype.__cancelWheel = function() {
 };
 
 AlbertSchoolRobot.prototype.__getNavigator = function() {
-    if(this.navigator == undefined) {
+    if (this.navigator == undefined) {
         this.navigator = new AlbertSchoolNavigator();
     }
     return this.navigator;
@@ -441,7 +487,7 @@ AlbertSchoolRobot.prototype.__getNavigator = function() {
 
 AlbertSchoolRobot.prototype.__cancelNavigation = function() {
     this.navigationCallback = undefined;
-    if(this.navigator) {
+    if (this.navigator) {
         this.navigator.clear();
     }
 };
@@ -464,15 +510,15 @@ AlbertSchoolRobot.prototype.__cancelNote = function() {
 };
 
 AlbertSchoolRobot.prototype.handleSensory = function() {
-    if(this.navigationCallback) {
-        if(this.navigator) {
+    if (this.navigationCallback) {
+        if (this.navigator) {
             var result = this.navigator.handleSensory(this.sensory);
             this.motoring.leftWheel = result.left;
             this.motoring.rightWheel = result.right;
-            if(result.completed) {
+            if (result.completed) {
                 var callback = this.navigationCallback;
                 this.__cancelNavigation();
-                if(callback) callback();
+                if (callback) callback();
             }
         }
     }
@@ -509,32 +555,79 @@ AlbertSchoolRobot.prototype.checkBoolean = function(script) {
     var sensory = this.sensory;
     var value = 0;
     var dev = script.getField('DEVICE');
-    if(dev.startsWith('TILT')) {
-        if(sensory.tilt === undefined) {
-            if(sensory.accelerationZ < 2048 && sensory.accelerationX > 2048 && sensory.accelerationY > -1024 && sensory.accelerationY < 1024) value = 1;
-            else if(sensory.accelerationZ < 2048 && sensory.accelerationX < -2048 && sensory.accelerationY > -1024 && sensory.accelerationY < 1024) value = -1;
-            else if(sensory.accelerationZ < 2048 && sensory.accelerationY > 2048 && sensory.accelerationX > -1024 && sensory.accelerationX < 1024) value = 2;
-            else if(sensory.accelerationZ < 2048 && sensory.accelerationY < -2048 && sensory.accelerationX > -1024 && sensory.accelerationX < 1024) value = -2;
-            else if(sensory.accelerationZ > 3072 && sensory.accelerationX > -2048 && sensory.accelerationX < 2048 && sensory.accelerationY > -2048 && sensory.accelerationY < 2048) value = 3;
-            else if(sensory.accelerationZ < -3072 && sensory.accelerationX > -1024 && sensory.accelerationX < 1024 && sensory.accelerationY > -1024 && sensory.accelerationY < 1024) value = -3;
+    if (dev.startsWith('TILT')) {
+        if (sensory.tilt === undefined) {
+            if (
+                sensory.accelerationZ < 2048 &&
+                sensory.accelerationX > 2048 &&
+                sensory.accelerationY > -1024 &&
+                sensory.accelerationY < 1024
+            )
+                value = 1;
+            else if (
+                sensory.accelerationZ < 2048 &&
+                sensory.accelerationX < -2048 &&
+                sensory.accelerationY > -1024 &&
+                sensory.accelerationY < 1024
+            )
+                value = -1;
+            else if (
+                sensory.accelerationZ < 2048 &&
+                sensory.accelerationY > 2048 &&
+                sensory.accelerationX > -1024 &&
+                sensory.accelerationX < 1024
+            )
+                value = 2;
+            else if (
+                sensory.accelerationZ < 2048 &&
+                sensory.accelerationY < -2048 &&
+                sensory.accelerationX > -1024 &&
+                sensory.accelerationX < 1024
+            )
+                value = -2;
+            else if (
+                sensory.accelerationZ > 3072 &&
+                sensory.accelerationX > -2048 &&
+                sensory.accelerationX < 2048 &&
+                sensory.accelerationY > -2048 &&
+                sensory.accelerationY < 2048
+            )
+                value = 3;
+            else if (
+                sensory.accelerationZ < -3072 &&
+                sensory.accelerationX > -1024 &&
+                sensory.accelerationX < 1024 &&
+                sensory.accelerationY > -1024 &&
+                sensory.accelerationY < 1024
+            )
+                value = -3;
             else value = 0;
         } else {
             value = sensory.tilt;
         }
-        switch(dev) {
-            case 'TILT_FORWARD': return value == 1;
-            case 'TILT_BACKWARD': return value == -1;
-            case 'TILT_LEFT': return value == 2;
-            case 'TILT_RIGHT': return value == -2;
-            case 'TILT_FLIP': return value == 3;
-            case 'TILT_NOT': return value == -3;
+        switch (dev) {
+            case 'TILT_FORWARD':
+                return value == 1;
+            case 'TILT_BACKWARD':
+                return value == -1;
+            case 'TILT_LEFT':
+                return value == 2;
+            case 'TILT_RIGHT':
+                return value == -2;
+            case 'TILT_FLIP':
+                return value == 3;
+            case 'TILT_NOT':
+                return value == -3;
         }
         return false;
     } else {
         switch (dev) {
-            case 'BATTERY_NORMAL': return sensory.batteryState === 2;
-            case 'BATTERY_LOW': return sensory.batteryState === 1;
-            case 'BATTERY_EMPTY': return sensory.batteryState === 0;
+            case 'BATTERY_NORMAL':
+                return sensory.batteryState === 2;
+            case 'BATTERY_LOW':
+                return sensory.batteryState === 1;
+            case 'BATTERY_EMPTY':
+                return sensory.batteryState === 0;
         }
         return false;
     }
@@ -543,7 +636,9 @@ AlbertSchoolRobot.prototype.checkBoolean = function(script) {
 AlbertSchoolRobot.prototype.checkHandFound = function(script) {
     this.__setModule();
     var sensory = this.sensory;
-    return sensory.handFound === undefined ? sensory.leftProximity > 40 || sensory.rightProximity > 40 : sensory.handFound;
+    return sensory.handFound === undefined
+        ? sensory.leftProximity > 40 || sensory.rightProximity > 40
+        : sensory.handFound;
 };
 
 AlbertSchoolRobot.prototype.checkOid = function(script) {
@@ -551,7 +646,7 @@ AlbertSchoolRobot.prototype.checkOid = function(script) {
     var sensory = this.sensory;
     var oid = script.getField('OID', script);
     var value = script.getNumberValue('VALUE');
-    if(oid == 'FRONT') return sensory.frontOid == value;
+    if (oid == 'FRONT') return sensory.frontOid == value;
     else return sensory.backOid == value;
 };
 
@@ -792,7 +887,7 @@ AlbertSchoolRobot.prototype.setBoardSize = function(script) {
     var height = script.getNumberValue('HEIGHT');
     width = parseInt(width);
     height = parseInt(height);
-    if(width && height && width > 0 && height > 0) {
+    if (width && height && width > 0 && height > 0) {
         var navi = this.__getNavigator();
         navi.setBoardSize(width, height);
         motoring.padWidth = width;
@@ -814,7 +909,14 @@ AlbertSchoolRobot.prototype.moveToOnBoard = function(script) {
         x = parseInt(x);
         y = parseInt(y);
         var navi = this.__getNavigator();
-        if((typeof x == 'number') && (typeof y == 'number') && x >= 0 && x < navi.getBoardWidth() && y >= 0 && y < navi.getBoardHeight()) {
+        if (
+            typeof x == 'number' &&
+            typeof y == 'number' &&
+            x >= 0 &&
+            x < navi.getBoardWidth() &&
+            y >= 0 &&
+            y < navi.getBoardHeight()
+        ) {
             this.motoring.motion = 0;
             navi.setBackward(toward == 'BACKWARD');
             navi.moveTo(x, y);
@@ -842,7 +944,7 @@ AlbertSchoolRobot.prototype.setOrientationToOnBoard = function(script) {
         this.__cancelWheel();
         var degree = script.getNumberValue('DEGREE');
         degree = parseInt(degree);
-        if(typeof degree == 'number') {
+        if (typeof degree == 'number') {
             var navi = this.__getNavigator();
             this.motoring.motion = 0;
             navi.setBackward(false);
@@ -918,14 +1020,14 @@ AlbertSchoolRobot.prototype.clearEye = function(script) {
 AlbertSchoolRobot.prototype.turnBodyLed = function(script) {
     this.__setModule();
     var value = script.getField('VALUE');
-    this.motoring.bodyLed = (value == 'ON') ? 1 : 0;
+    this.motoring.bodyLed = value == 'ON' ? 1 : 0;
     return script.callReturn();
 };
 
 AlbertSchoolRobot.prototype.turnFrontLed = function(script) {
     this.__setModule();
     var value = script.getField('VALUE');
-    this.motoring.frontLed = (value == 'ON') ? 1 : 0;
+    this.motoring.frontLed = value == 'ON' ? 1 : 0;
     return script.callReturn();
 };
 
@@ -1201,17 +1303,17 @@ AlbertSchoolRobot.prototype.changeTempo = function(script) {
 Entry.Albert = {
     robot: undefined,
     getRobot() {
-        if(Entry.Albert.robot == undefined) Entry.Albert.robot = new AlbertSchoolRobot(0);
+        if (Entry.Albert.robot == undefined) Entry.Albert.robot = new AlbertSchoolRobot(0);
         Entry.Albert.robot.setMotoring(Entry.hw.sendQueue);
         return Entry.Albert.robot;
     },
     setZero() {
-        if(Entry.Albert.robot) Entry.Albert.robot.setZero();
+        if (Entry.Albert.robot) Entry.Albert.robot.setZero();
         Entry.hw.update();
     },
     afterReceive(pd) {
         var robot = Entry.Albert.getRobot();
-        if(robot) robot.afterReceive(pd);
+        if (robot) robot.afterReceive(pd);
     },
     id: '2.5',
     name: 'albert',
@@ -1366,19 +1468,34 @@ Entry.Albert.setLanguage = () => ({
             albert_rest_for: '%1 박자 쉬기 %2',
             albert_change_tempo_by: '연주 속도를 %1 만큼 바꾸기 %2',
             albert_set_tempo_to: '연주 속도를 %1 BPM으로 정하기 %2',
+            albert_move_forward: '앞으로 이동하기 %1',
+            albert_move_backward: '뒤로 이동하기 %1',
+            albert_turn_around: '%1 으로 돌기 %2',
+            albert_set_led_to: '%1 %2 으로 정하기 %3',
+            albert_clear_led: '%1 %2',
+            albert_change_wheels_by: '%1 %2 %3',
+            albert_set_wheels_to: '%1 %2 %3',
         },
         Helper: {
-            albert_value: '왼쪽 근접 센서: 왼쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>오른쪽 근접 센서: 오른쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: -8192 ~ 8191, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 가속도: 가속도 센서의 Y축 값 (값의 범위: -8192 ~ 8191, 초기값: 0) 로봇의 왼쪽 방향이 Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -8192 ~ 8191, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.<br/>앞쪽 OID: 앞쪽 OID 센서의 값 (값의 범위: -1 ~ 65535, 초기값: -1)<br/>뒤쪽 OID: 뒤쪽 OID 센서의 값 (값의 범위: -1 ~ 65535, 초기값: -1)<br/>x 위치: 말판 위에서 로봇의 위치 x좌표 값 (값의 범위: -1 ~ 39999, 초기값: -1)<br/>y 위치: 말판 위에서 로봇의 위치 y좌표 값 (값의 범위: -1 ~ 39999, 초기값: -1)<br/>방향: 말판 위에서 로봇의 방향 값 (값의 범위: -179 ~ 180, 초기값: -200)<br/>밝기: 밝기 센서의 값 (값의 범위: 0 ~ 65535, 초기값: 0) 밝을 수록 값이 커집니다.<br/>온도: 로봇 내부의 온도 값 (값의 범위: 섭씨 -40 ~ 88도, 초기값: 0)<br/>신호 세기: 블루투스 무선 통신의 신호 세기 (값의 범위: -128 ~ 0 dBm, 초기값: 0) 신호의 세기가 셀수록 값이 커집니다.',
-            albert_hand_found: "근접 센서 앞에 손 또는 물체가 있으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
-            albert_is_oid_value: "앞쪽/뒤쪽 OID 센서가 감지한 OID 값이 입력한 숫자와 같으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
-            albert_boolean: "앞으로 기울임: 앞으로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>뒤로 기울임: 뒤로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>왼쪽으로 기울임: 왼쪽으로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>오른쪽으로 기울임: 오른쪽으로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>거꾸로 뒤집음: 거꾸로 뒤집었으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>기울이지 않음: 기울이지 않았으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 정상: 배터리 잔량이 충분하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 부족: 배터리 잔량이 부족하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 없음: 배터리 잔량이 없으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            albert_value:
+                '왼쪽 근접 센서: 왼쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>오른쪽 근접 센서: 오른쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>x축 가속도: 가속도 센서의 X축 값 (값의 범위: -8192 ~ 8191, 초기값: 0) 로봇이 전진하는 방향이 X축의 양수 방향입니다.<br/>y축 가속도: 가속도 센서의 Y축 값 (값의 범위: -8192 ~ 8191, 초기값: 0) 로봇의 왼쪽 방향이 Y축의 양수 방향입니다.<br/>z축 가속도: 가속도 센서의 Z축 값 (값의 범위: -8192 ~ 8191, 초기값: 0) 로봇의 위쪽 방향이 Z축의 양수 방향입니다.<br/>앞쪽 OID: 앞쪽 OID 센서의 값 (값의 범위: -1 ~ 65535, 초기값: -1)<br/>뒤쪽 OID: 뒤쪽 OID 센서의 값 (값의 범위: -1 ~ 65535, 초기값: -1)<br/>x 위치: 말판 위에서 로봇의 위치 x좌표 값 (값의 범위: -1 ~ 39999, 초기값: -1)<br/>y 위치: 말판 위에서 로봇의 위치 y좌표 값 (값의 범위: -1 ~ 39999, 초기값: -1)<br/>방향: 말판 위에서 로봇의 방향 값 (값의 범위: -179 ~ 180, 초기값: -200)<br/>밝기: 밝기 센서의 값 (값의 범위: 0 ~ 65535, 초기값: 0) 밝을 수록 값이 커집니다.<br/>온도: 로봇 내부의 온도 값 (값의 범위: 섭씨 -40 ~ 88도, 초기값: 0)<br/>신호 세기: 블루투스 무선 통신의 신호 세기 (값의 범위: -128 ~ 0 dBm, 초기값: 0) 신호의 세기가 셀수록 값이 커집니다.',
+            albert_hand_found:
+                "근접 센서 앞에 손 또는 물체가 있으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            albert_is_oid_value:
+                "앞쪽/뒤쪽 OID 센서가 감지한 OID 값이 입력한 숫자와 같으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            albert_boolean:
+                "앞으로 기울임: 앞으로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>뒤로 기울임: 뒤로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>왼쪽으로 기울임: 왼쪽으로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>오른쪽으로 기울임: 오른쪽으로 기울였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>거꾸로 뒤집음: 거꾸로 뒤집었으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>기울이지 않음: 기울이지 않았으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 정상: 배터리 잔량이 충분하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 부족: 배터리 잔량이 부족하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 없음: 배터리 잔량이 없으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
             albert_move_forward_for_secs: '입력한 시간(초)만큼 앞으로 이동합니다.',
             albert_move_backward_for_secs: '입력한 시간(초)만큼 뒤로 이동합니다.',
             albert_turn_for_secs: '입력한 시간(초)만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
-            albert_change_both_wheels_by: '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
-            albert_set_both_wheels_to: '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
-            albert_change_wheel_by: '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
-            albert_set_wheel_to: '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            albert_change_both_wheels_by:
+                '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            albert_set_both_wheels_to:
+                '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            albert_change_wheel_by:
+                '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            albert_set_wheel_to:
+                '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
             albert_stop: '양쪽 바퀴를 정지합니다.',
             albert_set_pad_size_to: '말판의 폭과 높이를 입력한 값으로 설정합니다.',
             albert_move_to_x_y_on_board: '밑판 위에서 입력한 x, y 위치로 이동합니다.',
@@ -1388,13 +1505,16 @@ Entry.Albert.setLanguage = () => ({
             albert_body_led: '몸통 LED를 켜거나 끕니다.',
             albert_front_led: '앞쪽 LED를 켜거나 끕니다.',
             albert_beep: '버저 소리를 짧게 냅니다.',
-            albert_change_buzzer_by: '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 둘째 자리까지 입력할 수 있습니다.',
-            albert_set_buzzer_to: '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 둘째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 버저 소리를 끕니다.',
+            albert_change_buzzer_by:
+                '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 둘째 자리까지 입력할 수 있습니다.',
+            albert_set_buzzer_to:
+                '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 둘째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 버저 소리를 끕니다.',
             albert_clear_buzzer: '버저 소리를 끕니다.',
             albert_play_note: '선택한 계이름과 옥타브의 음을 계속 소리 냅니다.',
             albert_play_note_for: '선택한 계이름과 옥타브의 음을 입력한 박자만큼 소리 냅니다.',
             albert_rest_for: '입력한 박자만큼 쉽니다.',
-            albert_change_tempo_by: '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
+            albert_change_tempo_by:
+                '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
             albert_set_tempo_to: '연주하거나 쉬는 속도를 입력한 BPM(분당 박자 수)으로 설정합니다.',
         },
         Blocks: {
@@ -1449,6 +1569,9 @@ Entry.Albert.setLanguage = () => ({
             ROBOID_note_a_sharp: '라♯(시♭)',
             ROBOID_note_b: '시',
         },
+        Menus: {
+            albert: '알버트',
+        },
     },
     en: {
         template: {
@@ -1480,36 +1603,57 @@ Entry.Albert.setLanguage = () => ({
             albert_rest_for: 'rest for %1 beats %2',
             albert_change_tempo_by: 'change tempo by %1 %2',
             albert_set_tempo_to: 'set tempo to %1 bpm %2',
+            albert_move_forward: 'move forward %1',
+            albert_move_backward: 'move backward %1',
+            albert_turn_around: 'turn %1 %2',
+            albert_set_led_to: 'set %1 led %2 %3',
+            albert_clear_led: 'clear %1 led %2',
+            albert_change_wheels_by: '%1 %2 %3',
+            albert_set_wheels_to: '%1 %2 %3',
         },
         Helper: {
-            albert_value: "left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>front oid: value of front oid sensor (range: -1 ~ 65535, initial value: -1)<br/>rear oid: value of rear oid sensor (range: -1 ~ 65535, initial value: -1)<br/>x position: x-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>y position: y-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>orientation: orientation angle value (degree) of robot on the board (range: -179 ~ 180, initial value: -200)<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.",
-            albert_hand_found: 'If there is a hand or object in front of the proximity sensor, true, otherwise false',
-            albert_is_oid_value: 'If the oid value detected by the oid sensor is equal to the entered number, true, otherwise false.',
-            albert_boolean: "tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false",
+            albert_value:
+                "left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>front oid: value of front oid sensor (range: -1 ~ 65535, initial value: -1)<br/>rear oid: value of rear oid sensor (range: -1 ~ 65535, initial value: -1)<br/>x position: x-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>y position: y-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>orientation: orientation angle value (degree) of robot on the board (range: -179 ~ 180, initial value: -200)<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.",
+            albert_hand_found:
+                'If there is a hand or object in front of the proximity sensor, true, otherwise false',
+            albert_is_oid_value:
+                'If the oid value detected by the oid sensor is equal to the entered number, true, otherwise false.',
+            albert_boolean:
+                'tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
             albert_move_forward_for_secs: 'Moves forward for the entered seconds.',
             albert_move_backward_for_secs: 'Moves backward for the entered seconds.',
             albert_turn_for_secs: 'Turns left/right in place for the entered seconds.',
-            albert_change_both_wheels_by: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            albert_set_both_wheels_to: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
-            albert_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            albert_set_wheel_to: 'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            albert_change_both_wheels_by:
+                'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            albert_set_both_wheels_to:
+                'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            albert_change_wheel_by:
+                'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            albert_set_wheel_to:
+                'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             albert_stop: 'Stops both wheels.',
             albert_set_pad_size_to: 'Sets the width and height of the board.',
             albert_move_to_x_y_on_board: 'Moves to the entered x, y position on the board.',
-            albert_set_orientation_on_board: 'Turns toward the entered angle (degrees) on the board.',
+            albert_set_orientation_on_board:
+                'Turns toward the entered angle (degrees) on the board.',
             albert_set_eye_to: 'Turns left/right/both eyes to the selected color.',
             albert_clear_eye: 'Turns off the left/right/both eyes.',
             albert_body_led: 'Turns on/off the body led.',
             albert_front_led: 'Turns on/off the front led.',
             albert_beep: 'Plays beep sound.',
-            albert_change_buzzer_by: 'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
-            albert_set_buzzer_to: 'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
+            albert_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
+            albert_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
             albert_clear_buzzer: 'Turns off buzzer sound.',
             albert_play_note: 'It sounds the selected tone and octave.',
-            albert_play_note_for: 'It sounds the selected tone and octave as much as the beat you entered.',
+            albert_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
             albert_rest_for: 'Rests as much as the beat you entered.',
-            albert_change_tempo_by: 'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
-            albert_set_tempo_to: 'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            albert_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            albert_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
         },
         Blocks: {
             ROBOID_sensor_left_proximity: 'left proximity',
@@ -1563,6 +1707,9 @@ Entry.Albert.setLanguage = () => ({
             ROBOID_note_a_sharp: 'A♯(B♭)',
             ROBOID_note_b: 'B',
         },
+        Menus: {
+            albert: 'albert',
+        },
     },
     jp: {
         template: {
@@ -1596,34 +1743,48 @@ Entry.Albert.setLanguage = () => ({
             albert_set_tempo_to: 'テンポを%1BPMにする %2',
         },
         Helper: {
-            albert_value: "left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>front oid: value of front oid sensor (range: -1 ~ 65535, initial value: -1)<br/>rear oid: value of rear oid sensor (range: -1 ~ 65535, initial value: -1)<br/>x position: x-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>y position: y-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>orientation: orientation angle value (degree) of robot on the board (range: -179 ~ 180, initial value: -200)<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.",
-            albert_hand_found: 'If there is a hand or object in front of the proximity sensor, true, otherwise false',
-            albert_is_oid_value: 'If the oid value detected by the oid sensor is equal to the entered number, true, otherwise false.',
-            albert_boolean: "tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false",
+            albert_value:
+                "left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>front oid: value of front oid sensor (range: -1 ~ 65535, initial value: -1)<br/>rear oid: value of rear oid sensor (range: -1 ~ 65535, initial value: -1)<br/>x position: x-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>y position: y-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>orientation: orientation angle value (degree) of robot on the board (range: -179 ~ 180, initial value: -200)<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.",
+            albert_hand_found:
+                'If there is a hand or object in front of the proximity sensor, true, otherwise false',
+            albert_is_oid_value:
+                'If the oid value detected by the oid sensor is equal to the entered number, true, otherwise false.',
+            albert_boolean:
+                'tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
             albert_move_forward_for_secs: 'Moves forward for the entered seconds.',
             albert_move_backward_for_secs: 'Moves backward for the entered seconds.',
             albert_turn_for_secs: 'Turns left/right in place for the entered seconds.',
-            albert_change_both_wheels_by: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            albert_set_both_wheels_to: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
-            albert_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            albert_set_wheel_to: 'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            albert_change_both_wheels_by:
+                'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            albert_set_both_wheels_to:
+                'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            albert_change_wheel_by:
+                'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            albert_set_wheel_to:
+                'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             albert_stop: 'Stops both wheels.',
             albert_set_pad_size_to: 'Sets the width and height of the board.',
             albert_move_to_x_y_on_board: 'Moves to the entered x, y position on the board.',
-            albert_set_orientation_on_board: 'Turns toward the entered angle (degrees) on the board.',
+            albert_set_orientation_on_board:
+                'Turns toward the entered angle (degrees) on the board.',
             albert_set_eye_to: 'Turns left/right/both eyes to the selected color.',
             albert_clear_eye: 'Turns off the left/right/both eyes.',
             albert_body_led: 'Turns on/off the body led.',
             albert_front_led: 'Turns on/off the front led.',
             albert_beep: 'Plays beep sound.',
-            albert_change_buzzer_by: 'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
-            albert_set_buzzer_to: 'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
+            albert_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
+            albert_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
             albert_clear_buzzer: 'Turns off buzzer sound.',
             albert_play_note: 'It sounds the selected tone and octave.',
-            albert_play_note_for: 'It sounds the selected tone and octave as much as the beat you entered.',
+            albert_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
             albert_rest_for: 'Rests as much as the beat you entered.',
-            albert_change_tempo_by: 'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
-            albert_set_tempo_to: 'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            albert_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            albert_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
         },
         Blocks: {
             ROBOID_sensor_left_proximity: '左近接センサー',
@@ -1710,34 +1871,48 @@ Entry.Albert.setLanguage = () => ({
             albert_set_tempo_to: 'set tempo to %1 bpm %2',
         },
         Helper: {
-            albert_value: "left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>front oid: value of front oid sensor (range: -1 ~ 65535, initial value: -1)<br/>rear oid: value of rear oid sensor (range: -1 ~ 65535, initial value: -1)<br/>x position: x-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>y position: y-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>orientation: orientation angle value (degree) of robot on the board (range: -179 ~ 180, initial value: -200)<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.",
-            albert_hand_found: 'If there is a hand or object in front of the proximity sensor, true, otherwise false',
-            albert_is_oid_value: 'If the oid value detected by the oid sensor is equal to the entered number, true, otherwise false.',
-            albert_boolean: "tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false",
+            albert_value:
+                "left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>x acceleration: x-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The direction in which the robot moves forward is the positive direction of the x axis.<br/>y acceleration: y-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The left direction of the robot is the positive direction of the y axis.<br/>z acceleration: z-axis value of acceleration sensor (range: -8192 to 8191, initial value: 0) The upward direction of the robot is the positive direction of the z axis.<br/>front oid: value of front oid sensor (range: -1 ~ 65535, initial value: -1)<br/>rear oid: value of rear oid sensor (range: -1 ~ 65535, initial value: -1)<br/>x position: x-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>y position: y-coordinate value of robot's position on the board (range: -1 ~ 39999, initial value: -1)<br/>orientation: orientation angle value (degree) of robot on the board (range: -179 ~ 180, initial value: -200)<br/>light: value of light sensor (range: 0 to 65535, initial value: 0) The brighter, the larger the value.<br/>temperature: temperature value inside the robot (range: -40 to 88 degrees Celsius, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.",
+            albert_hand_found:
+                'If there is a hand or object in front of the proximity sensor, true, otherwise false',
+            albert_is_oid_value:
+                'If the oid value detected by the oid sensor is equal to the entered number, true, otherwise false.',
+            albert_boolean:
+                'tilt forward: If tilted forward, true, otherwise false<br/>tilt backward: If tilted backward, true, otherwise false<br/>tilt left: If tilted to the left, true, otherwise false<br/>tilt right: If tilted to the right, true, otherwise false<br/>tilt flip: If upside-down, true, otherwise false<br/>not tilt: If not tilted, true, otherwise false<br/>battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
             albert_move_forward_for_secs: 'Moves forward for the entered seconds.',
             albert_move_backward_for_secs: 'Moves backward for the entered seconds.',
             albert_turn_for_secs: 'Turns left/right in place for the entered seconds.',
-            albert_change_both_wheels_by: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            albert_set_both_wheels_to: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
-            albert_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            albert_set_wheel_to: 'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            albert_change_both_wheels_by:
+                'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            albert_set_both_wheels_to:
+                'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            albert_change_wheel_by:
+                'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            albert_set_wheel_to:
+                'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             albert_stop: 'Stops both wheels.',
             albert_set_pad_size_to: 'Sets the width and height of the board.',
             albert_move_to_x_y_on_board: 'Moves to the entered x, y position on the board.',
-            albert_set_orientation_on_board: 'Turns toward the entered angle (degrees) on the board.',
+            albert_set_orientation_on_board:
+                'Turns toward the entered angle (degrees) on the board.',
             albert_set_eye_to: 'Turns left/right/both eyes to the selected color.',
             albert_clear_eye: 'Turns off the left/right/both eyes.',
             albert_body_led: 'Turns on/off the body led.',
             albert_front_led: 'Turns on/off the front led.',
             albert_beep: 'Plays beep sound.',
-            albert_change_buzzer_by: 'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
-            albert_set_buzzer_to: 'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
+            albert_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to two decimal places.',
+            albert_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to two decimal places. Entering the number 0 turns off the buzzer sound.',
             albert_clear_buzzer: 'Turns off buzzer sound.',
             albert_play_note: 'It sounds the selected tone and octave.',
-            albert_play_note_for: 'It sounds the selected tone and octave as much as the beat you entered.',
+            albert_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
             albert_rest_for: 'Rests as much as the beat you entered.',
-            albert_change_tempo_by: 'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
-            albert_set_tempo_to: 'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            albert_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            albert_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
         },
         Blocks: {
             ROBOID_sensor_left_proximity: 'left proximity',
@@ -1868,7 +2043,7 @@ Entry.Albert.getBlocks = function() {
             isNotFor: ['albert'],
             func: function(sprite, script) {
                 var robot = Entry.Albert.getRobot();
-                if(robot) return robot.getValue(script);
+                if (robot) return robot.getValue(script);
             },
             syntax: {
                 js: [],
@@ -3275,11 +3450,7 @@ Entry.Albert.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    '4',
-                    null,
-                ],
+                params: [null, '4', null],
                 type: 'albert_play_note',
             },
             paramsKeyMap: {

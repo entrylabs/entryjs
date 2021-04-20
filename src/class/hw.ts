@@ -118,8 +118,6 @@ export default class Hardware {
      * @param moduleObject
      */
     setExternalModule(moduleObject: EntryHardwareBlockModule) {
-        console.log("HW ",moduleObject);
-        
         this.hwModule = moduleObject;
         this.hwModuleType = HardwareModuleType.module;
         this._banClassAllHardware();
@@ -132,9 +130,6 @@ export default class Hardware {
      * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
      */
     refreshHardwareBlockMenu() {
-        console.log("refreshHardwareBlockMenu",this.hwModule);
-        // console.log('Entry.HARDWARE_LIST',Entry.HARDWARE_LIST);
-        
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
 
@@ -324,8 +319,7 @@ export default class Hardware {
         if (data.company === undefined) {
             return;
         }
-        // console.log("checkDevice",data);
-        
+
         const key = `${this._convertHexToString(data.company)}.${this._convertHexToString(
             data.model
         )}`;
@@ -339,8 +333,6 @@ export default class Hardware {
 
         this.currentDeviceKey = key;
         this.hwModule = Entry.HARDWARE_LIST[key];
-        console.log("hwModule",this.hwModule);
-        
         if (!this.hwModule) {
             return;
         }
@@ -451,15 +443,6 @@ export default class Hardware {
             this.portData = portData;
             this.checkDevice(portData);
             this._updatePortData(portData);
-            // console.log("GININ");
-            // console.log(this.hwModule);
-            if(portData.BUTTON){
-                // console.log("portData",portData.BUTTON);
-                // console.log(this.hwModule);
-            }
-                
-            
-            
             if (this.hwModule && this.hwModule.afterReceive) {
                 this.hwModule.afterReceive(portData);
             }
