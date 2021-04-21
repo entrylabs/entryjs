@@ -36,7 +36,6 @@ Entry.robolink_codrone_mini =
                 Entry.byrobot_base.transferCommand(0x10, 0x07, 0x12); // 0x12 : FlightEvent::Landing
             }
             Entry.byrobot_base.transferBuzzer(0x20, 0, 0, 0);
-            Entry.byrobot_base.transferVibrator(0x20, 0, 0, 0, 0);
             Entry.byrobot_base.transferLightManual(0x10, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightManual(0x20, 0xffff, 0); // LED 초기화(모두 꺼짐)
             Entry.byrobot_base.transferLightModeColor(0x10, 0x22, 200, 255, 0, 0); // LED 초기화(드론)
@@ -262,11 +261,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_value_button_event       : '%1',
                 robolink_codrone_mini_controller_value_joystick_left      : '%1',
                 robolink_codrone_mini_controller_value_joystick_right     : '%1',
-                robolink_codrone_mini_controller_vibrator_off             : '진동 끄기 %1',
-                robolink_codrone_mini_controller_vibrator_delay           : '진동 %1초 켜기, %2초 끄기를 %3초 실행 %4',
-                robolink_codrone_mini_controller_vibrator_on_delay        : '진동 %1초 켜기 %2',
-                robolink_codrone_mini_controller_vibrator_on_reserve      : '진동 %1초 예약 %2',
-                robolink_codrone_mini_controller_vibrator_reserve         : '진동 %1초 켜기, %2초 끄기를 %3초 예약 %4',
                 robolink_codrone_mini_drone_trim_direction                : '미세조정 %1 %2',
                 robolink_codrone_mini_drone_trim                          : '미세조정 롤 %1, 피치 %2 %3',
                 robolink_codrone_mini_drone_speed                         : '속도 %1 %2',
@@ -309,11 +303,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_value_button_event       : "<br>조종기 버튼 중 현재 사용 중인 버튼의 입력 상태를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 robolink_codrone_mini_controller_value_joystick_left      : "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 robolink_codrone_mini_controller_value_joystick_right     : "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br>조이스틱 방향은 가로x세로 = 3x3 = 총9방향입니다.<br>위(왼쪽=17, 가운데=18, 오른쪽=20)<br>중간(왼쪽=33, 센터=34, 오른쪽=36)<br>아래(왼쪽=65, 가운데=66, 오른쪽=68)<br>기본값은 센터=34입니다.<br><br>조이스틱 이벤트는 값이 있을때 2, 없으면 0, 진입 1, 벗어남 3입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
-                robolink_codrone_mini_controller_vibrator_delay           : "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
-                robolink_codrone_mini_controller_vibrator_off             : "<br>진동을 끕니다. 예약된 진동이 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동끄기</font>",
-                robolink_codrone_mini_controller_vibrator_on_delay        : "<br>진동을 지정한 시간동안 켭니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
-                robolink_codrone_mini_controller_vibrator_on_reserve      : "<br>진동을 지정한 시간동안 켜는 것을 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
-                robolink_codrone_mini_controller_vibrator_reserve         : "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
                 robolink_codrone_mini_drone_trim_direction                : "<br>드론 미세 조정 설정을 현재 값에서 5단위로 증가시키거나 감소시킵니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
                 robolink_codrone_mini_drone_trim                          : "<br>드론 미세 조정 설정을 변경합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
                 robolink_codrone_mini_drone_speed                         : "<br>드론 이동 속도를 변경합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
@@ -553,11 +542,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_value_button_event       : '%1',
                 robolink_codrone_mini_controller_value_joystick_left      : '%1',
                 robolink_codrone_mini_controller_value_joystick_right     : '%1',
-                robolink_codrone_mini_controller_vibrator_off             : 'Vibrator Off %1',
-                robolink_codrone_mini_controller_vibrator_delay           : 'Vibrator %1 sec On, %2 sec Off for %3 sec run %4',
-                robolink_codrone_mini_controller_vibrator_on_delay        : 'Vibrator %1 sec on %2',
-                robolink_codrone_mini_controller_vibrator_on_reserve      : 'Vibrator %1 sec reserve %2',
-                robolink_codrone_mini_controller_vibrator_reserve         : 'Vibrator %1 sec On, %2 sec Off for %3 sec reserve %4',
                 robolink_codrone_mini_drone_trim_direction                : 'Trim %1 %2',
                 robolink_codrone_mini_drone_trim                          : 'Trim Roll %1%, Pitch %2% %3',
                 robolink_codrone_mini_drone_speed                         : 'Speed %1 %2',
@@ -600,11 +584,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_value_button_event       : '',
                 robolink_codrone_mini_controller_value_joystick_left      : '',
                 robolink_codrone_mini_controller_value_joystick_right     : '',
-                robolink_codrone_mini_controller_vibrator_delay           : '',
-                robolink_codrone_mini_controller_vibrator_off             : '',
-                robolink_codrone_mini_controller_vibrator_on_delay        : '',
-                robolink_codrone_mini_controller_vibrator_on_reserve      : '',
-                robolink_codrone_mini_controller_vibrator_reserve         : '',
                 robolink_codrone_mini_drone_trim_direction                : '',
                 robolink_codrone_mini_drone_trim                          : '',
                 robolink_codrone_mini_drone_speed                         : '',
@@ -734,11 +713,6 @@ Entry.robolink_codrone_mini.blockMenuBlocks = [
     'robolink_codrone_mini_controller_buzzer_hz',
     'robolink_codrone_mini_controller_buzzer_hz_delay',
     'robolink_codrone_mini_controller_buzzer_hz_reserve',
-    'robolink_codrone_mini_controller_vibrator_off',
-    'robolink_codrone_mini_controller_vibrator_on_delay',
-    'robolink_codrone_mini_controller_vibrator_on_reserve',
-    'robolink_codrone_mini_controller_vibrator_delay',
-    'robolink_codrone_mini_controller_vibrator_reserve',
 ];
 
 
@@ -1717,152 +1691,6 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
                 return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_vibrator_off: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [{ type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 }],
-            events    : {},
-            def       : {
-                params: [null],
-                type  : 'robolink_codrone_mini_controller_vibrator_off',
-            },
-            paramsKeyMap: {},
-            class       : 'vibrator',
-            isNotFor    : ['robolink_codrone_mini'],
-            func(sprite, script) {
-                return Entry.byrobot_base.setVibratorStop(script, 0x20);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_vibrator_on_delay: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [{ type: 'text', params: ['1'] }, null],
-                type  : 'robolink_codrone_mini_controller_vibrator_on_delay',
-            },
-            paramsKeyMap: {
-                TIMEON: 0,
-            },
-            class   : 'vibrator',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const timeOn = script.getNumberValue('TIMEON') * 1000;
-                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, 0, timeOn, true, true);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_vibrator_on_reserve: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [{ type: 'text', params: ['1'] }, null],
-                type  : 'robolink_codrone_mini_controller_vibrator_on_reserve',
-            },
-            paramsKeyMap: {
-                TIMEON: 0,
-            },
-            class   : 'vibrator',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const timeOn = script.getNumberValue('TIMEON') * 1000;
-                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, 0, timeOn, false, false);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_vibrator_delay: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    { type: 'text', params: ['0.3'] },
-                    { type: 'text', params: ['0.3'] },
-                    { type: 'text', params: ['1'] },
-                    null,
-                ],
-                type: 'robolink_codrone_mini_controller_vibrator_delay',
-            },
-            paramsKeyMap: {
-                TIMEON : 0,
-                TIMEOFF: 1,
-                TIMERUN: 2,
-            },
-            class   : 'vibrator',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const timeOn  = script.getNumberValue('TIMEON') * 1000;
-                const timeOff = script.getNumberValue('TIMEOFF') * 1000;
-                const timeRun = script.getNumberValue('TIMERUN') * 1000;
-                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, timeOff, timeRun, true, true);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_vibrator_reserve: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    { type: 'text', params: ['0.3'] },
-                    { type: 'text', params: ['0.3'] },
-                    { type: 'text', params: ['1'] },
-                    null,
-                ],
-                type: 'robolink_codrone_mini_controller_vibrator_reserve',
-            },
-            paramsKeyMap: {
-                TIMEON : 0,
-                TIMEOFF: 1,
-                TIMERUN: 2,
-            },
-            class   : 'vibrator',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const timeOn  = script.getNumberValue('TIMEON') * 1000;
-                const timeOff = script.getNumberValue('TIMEOFF') * 1000;
-                const timeRun = script.getNumberValue('TIMERUN') * 1000;
-                return Entry.byrobot_base.setVibrator(script, 0x20, timeOn, timeOff, timeRun, false, false);
             },
         },
 
