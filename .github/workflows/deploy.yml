@@ -7,46 +7,51 @@ on:
       - master
       - develop-hw
       - develop2
-      
+      - develop
+
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js 10.x
-        uses: actions/setup-node@v1
-        env:
-          NODE_OPTIONS: '--max-old-space-size=4096'
-          TOOL_NODE_FLAGS: '--max-old-space-size=4096'
-        with:
-          node-version: '10.x'
-      - uses: bahmutov/npm-install@v1
-      - name: entry build
-        env:
-          NODE_OPTIONS: '--max-old-space-size=4096'
-          TOOL_NODE_FLAGS: '--max-old-space-size=4096'
-        run: |
-          npm run prod
-      - name: Define branch name
-        id: target_branch
-        shell: bash
-        run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
-      - uses: haya14busa/action-cond@v1
-        id: deploy_branch
-        with:
-          cond: ${{ steps.target_branch.outputs.branch == 'master' }}
-          if_true: 'build'
-          if_false: dist/${{ steps.target_branch.outputs.branch }}
-      - name: Execute build.sh
-        run: |
-          sh ./scripts/build_action.sh
-      - name: Execute deploy.sh
-        run: |
-          sh ./scripts/deploy_action.sh
-      - name: Push Changes into build branch
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          force: true
-          directory: ./build
-          branch: ${{ steps.deploy_branch.outputs.value }}
+    build-and-deploy:
+        runs-on: ubuntu-18.04
+        steps:
+            - uses: actions/checkout@v2
+            - name: Use Node.js 10.x
+              uses: actions/setup-node@v1
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
+                  TOOL_NODE_FLAGS: '--max-old-space-size=4096'
+              with:
+                  node-version: '10.x'
+            - uses: bahmutov/npm-install@v1
+            - name: entry build
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
+                  TOOL_NODE_FLAGS: '--max-old-space-size=4096'
+              run: |
+                  npm run prod
+            - name: Define branch name
+              id: target_branch
+              shell: bash
+              run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
+            - uses: haya14busa/action-cond@v1
+              id: deploy_branch
+              with:
+                  cond: ${{ steps.target_branch.outputs.branch == 'master' }}
+                  if_true: 'build'
+                  if_false: dist/${{ steps.target_branch.outputs.branch }}
+            - name: Execute build.sh
+              run: |
+                  sh ./scripts/build_action.sh
+            - name: Execute deploy.sh
+              env:
+                github_token: ${{ secrets.GH_TOKEN }}
+                TEST: ${{ secrets.TEST }}
+                TEST2: ${{ secrets.TEST2 }}                
+              run: |
+                  sh ./scripts/deploy_action.sh
+            - name: Push Changes into build branch
+              uses: ad-m/github-push-action@master
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  force: true
+                  directory: ./build
+                  branch: ${{ steps.deploy_branch.outputs.value }}

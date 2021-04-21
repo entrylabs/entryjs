@@ -9,14 +9,21 @@ deployName="dist/$branchName"
 
 export NODE_ENV=production
 
-if [ "$branchName" = "master" ]
-then
-    git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
-else     
-    git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
-fi
+#if [ "$branchName" = "master" ]
+#then
+    #git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
+#else     
+    #git clone "https://github.com/$GITHUB_REPOSITORY" build
+    #if git show-ref --quiet refs/remotes/origin/"$deployName"; then
+    #    git clone -b "$deployName" "https://github.com/$GITHUB_REPOSITORY" build
+    #else 
+    #    git clone "https://github.com/$GITHUB_REPOSITORY" build
+    #    git checkout -b "$deployName"
+    #fi
+#fi
+
+git clone -b build "https://github.com/$GITHUB_REPOSITORY" build
 rm -rf build/**/* || exit 0
-npm run dist
 cp -r dist build/
 cp -r extern build/
 cp -r images build/
