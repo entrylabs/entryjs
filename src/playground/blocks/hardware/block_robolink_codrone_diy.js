@@ -903,7 +903,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             params    : [
                 {
                     type: 'Text',
-                    text: Lang.Blocks.common_button_button,
+                    text: Lang.Blocks.common_button_event,
                 },
             ],
             events: {},
