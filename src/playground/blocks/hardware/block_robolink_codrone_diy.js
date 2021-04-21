@@ -159,19 +159,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 controller_buzzer_g                     : '솔',
                 controller_buzzer_gs                    : '솔#',
                 controller_buzzer_mute                  : '쉼',
-                controller_display_align_center         : '가운데',
-                controller_display_align_left           : '왼쪽',
-                controller_display_align_right          : '오른쪽',
-                controller_display_flagfill_off         : '채우지 않음',
-                controller_display_flagfill_on          : '채움',
-                controller_display_font_10x16           : '큼',
-                controller_display_font_5x8             : '작음',
-                controller_display_line_dashed          : '파선',
-                controller_display_line_dotted          : '점선',
-                controller_display_line_solid           : '실선',
-                controller_display_pixel_black          : '검은색',
-                controller_display_pixel_white          : '흰색',
-                controller_display_pixel_inverse        : '반전',
                 controller_joystick_direction_left_up   : '왼쪽 위',
                 controller_joystick_direction_up        : '위',
                 controller_joystick_direction_right_up  : '오른쪽 위',
@@ -302,7 +289,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_light_manual_single_input     : '드론 LED %1 밝기 %2 %3',
                 robolink_codrone_diy_drone_light_manual_single_off       : '드론 LED 끄기 %1',
                 robolink_codrone_diy_drone_motor_stop                    : '드론 모터 정지 %1',
-                robolink_codrone_diy_drone_motorsingle                   : '드론 %1번 모터를 %2(으)로 회전 %3',
                 robolink_codrone_diy_drone_motorsingle_input             : '드론 %1번 모터를 %2(으)로 회전 %3',
                 robolink_codrone_diy_drone_information                   : '드론 정보 %1',
                 robolink_codrone_diy_drone_sensor                        : '센서값 %1',
@@ -347,7 +333,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_light_manual_single_input     : "<br>드론 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255) 또는 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>각각의 비트는 LED를 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 robolink_codrone_diy_drone_light_manual_single_off       : "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
                 robolink_codrone_diy_drone_motor_stop                    : "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
-                robolink_codrone_diy_drone_motorsingle                   : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 robolink_codrone_diy_drone_motorsingle_input             : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 robolink_codrone_diy_drone_information                   : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
                 robolink_codrone_diy_drone_sensor                        : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
@@ -593,7 +578,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_light_manual_single_input     : 'Drone LED %1 lightness %2 %3',
                 robolink_codrone_diy_drone_light_manual_single_off       : 'Drone LED Off %1',
                 robolink_codrone_diy_drone_motor_stop                    : 'Motor stop %1',
-                robolink_codrone_diy_drone_motorsingle                   : 'No. %1 Motor rotate for %2 %3',
                 robolink_codrone_diy_drone_motorsingle_input             : 'No. %1 Motor rotate for %2 %3',
                 robolink_codrone_diy_drone_information                   : 'Drone information %1',
                 robolink_codrone_diy_drone_sensor                        : 'Sensor %1',
@@ -638,7 +622,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_light_manual_single_input     : '',
                 robolink_codrone_diy_drone_light_manual_single_off       : '',
                 robolink_codrone_diy_drone_motor_stop                    : '',
-                robolink_codrone_diy_drone_motorsingle                   : '',
                 robolink_codrone_diy_drone_motorsingle_input             : '',
                 robolink_codrone_diy_drone_information                   : '',
                 robolink_codrone_diy_drone_sensor                        : '',
@@ -739,13 +722,12 @@ Entry.robolink_codrone_diy.blockMenuBlocks = [
     'robolink_codrone_diy_drone_control_position_location',
     'robolink_codrone_diy_drone_control_position_location_turn',
     'robolink_codrone_diy_drone_motor_stop',
-    'robolink_codrone_diy_drone_motorsingle',
     'robolink_codrone_diy_drone_motorsingle_input',
     'robolink_codrone_diy_drone_light_manual_single_off',
     'robolink_codrone_diy_drone_light_manual_single_input',
     'robolink_codrone_diy_drone_light_color_preset',
-    'robolink_codrone_diy_drone_light_color_input',
     'robolink_codrone_diy_drone_light_color_select',
+    'robolink_codrone_diy_drone_light_color_input',
     'robolink_codrone_diy_controller_buzzer_off',
     'robolink_codrone_diy_controller_buzzer_scale',
     'robolink_codrone_diy_controller_buzzer_scale_delay',
@@ -1716,43 +1698,6 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             isNotFor    : ['robolink_codrone_diy'],
             func(sprite, script) {
                 return Entry.byrobot_base.sendStop(script, 0x10);
-            },
-        },
-
-
-        robolink_codrone_diy_drone_motorsingle: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type      : 'Dropdown',
-                    options   : [['1(FR)', '0'], ['2(RR)', '1'], ['3(RL)', '2'], ['4(FL)', '3']],
-                    value     : '0',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [null, { type: 'text', params: ['120'] }, null],
-                type  : 'robolink_codrone_diy_drone_motorsingle',
-            },
-            paramsKeyMap: {
-                MOTORINDEX: 0,
-                MOTORSPEED: 1,
-            },
-            class   : 'motor',
-            isNotFor: ['robolink_codrone_diy'],
-            func(sprite, script) {
-                const motorIndex = parseInt(script.getField('MOTORINDEX'), 10);
-                const motorSpeed = script.getNumberValue('MOTORSPEED');
-
-                return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
         },
 
