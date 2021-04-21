@@ -1304,6 +1304,7 @@ Entry.GENIBOT.getBlocks = function() {
                         };
                         Entry.hw.update();
                     }
+                    music.tempo = TEMPO;
                     return 100;
                 });
             }
@@ -1446,7 +1447,7 @@ Entry.GENIBOT.getBlocks = function() {
                         };
                         Entry.hw.update();
                     }
-                    return (countNoteLength(noteId) * 1000);
+                    return (countNoteLength(noteId) * 1000)+100;
                 });
             }
         },
