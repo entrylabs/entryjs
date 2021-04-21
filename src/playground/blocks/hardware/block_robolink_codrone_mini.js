@@ -164,14 +164,10 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 controller_joystick_direction_left_down : '왼쪽 아래',
                 controller_joystick_direction_down      : '아래',
                 controller_joystick_direction_right_down: '오른쪽 아래',
-                controller_joystick_left_direction      : '왼쪽 조이스틱 방향',
-                controller_joystick_left_event          : '왼쪽 조이스틱 이벤트',
-                controller_joystick_left_x              : '왼쪽 조이스틱 가로축',
-                controller_joystick_left_y              : '왼쪽 조이스틱 세로축',
-                controller_joystick_right_direction     : '오른쪽 조이스틱 방향',
-                controller_joystick_right_event         : '오른쪽 조이스틱 이벤트',
-                controller_joystick_right_x             : '오른쪽 조이스틱 가로축',
-                controller_joystick_right_y             : '오른쪽 조이스틱 세로축',
+                controller_joystick_direction           : '방향',
+                controller_joystick_event               : '이벤트',
+                controller_joystick_x                   : '가로축',
+                controller_joystick_y                   : '세로축',
                 drone_information_state                 : '비행 상태',
                 drone_information_control               : '제어 방식',
                 drone_information_movement              : '동작 상태',
@@ -257,10 +253,10 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_buzzer_scale_reserve     : '%1 옥타브 %2을(를) %3초 예약 %4',
                 robolink_codrone_mini_controller_if_button_press          : '조종기 %1 눌렀을 때',
                 robolink_codrone_mini_controller_if_joystick_direction    : '조종기 %1 조이스틱 %2 (으)로 움직였을 때',
-                robolink_codrone_mini_controller_value_button             : '%1',
-                robolink_codrone_mini_controller_value_button_event       : '%1',
-                robolink_codrone_mini_controller_value_joystick_left      : '%1',
-                robolink_codrone_mini_controller_value_joystick_right     : '%1',
+                robolink_codrone_mini_controller_value_button             : '버튼 상태',
+                robolink_codrone_mini_controller_value_button_event       : '버튼 이벤트',
+                robolink_codrone_mini_controller_value_joystick_left      : '왼쪽 조이스틱 %1',
+                robolink_codrone_mini_controller_value_joystick_right     : '오른쪽 조이스틱 %1',
                 robolink_codrone_mini_drone_trim_direction                : '미세조정 %1 %2',
                 robolink_codrone_mini_drone_trim                          : '미세조정 롤 %1, 피치 %2 %3',
                 robolink_codrone_mini_drone_speed                         : '속도 %1 %2',
@@ -281,12 +277,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_light_manual_single_input     : '드론 LED %1 밝기 %2 %3',
                 robolink_codrone_mini_drone_light_manual_single_off       : '드론 LED 끄기 %1',
                 robolink_codrone_mini_drone_motor_stop                    : '드론 모터 정지 %1',
-                robolink_codrone_mini_drone_motorsingle                   : '드론 %1번 모터를 %2(으)로 회전 %3',
                 robolink_codrone_mini_drone_motorsingle_input             : '드론 %1번 모터를 %2(으)로 회전 %3',
-                robolink_codrone_mini_drone_information                   : '%1',
-                robolink_codrone_mini_drone_sensor                        : '%1',
-                robolink_codrone_mini_drone_value_sensor                  : '%1',
-                robolink_codrone_mini_drone_value_etc                     : '%1',
+                robolink_codrone_mini_drone_information                   : '드론 정보 %1',
+                robolink_codrone_mini_drone_sensor                        : '센서값 %1',
             },
 
             Helper: {
@@ -323,12 +316,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_light_manual_single_input     : "<br>드론 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255) 또는 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>각각의 비트는 LED를 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 robolink_codrone_mini_drone_light_manual_single_off       : "<br>드론의 모든 LED를 끕니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED끄기</font>",
                 robolink_codrone_mini_drone_motor_stop                    : "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
-                robolink_codrone_mini_drone_motorsingle                   : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 robolink_codrone_mini_drone_motorsingle_input             : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 robolink_codrone_mini_drone_information                   : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
-                robolink_codrone_mini_drone_value_etc                     : "<br>드론 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
                 robolink_codrone_mini_drone_sensor                        : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                robolink_codrone_mini_drone_value_sensor                  : "<br>드론 거리 및 고도 센서와 관련된 값들을 반환합니다(단위:m)<br>거리 센서의 유효 측정 거리는 2m입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#거리센서</font> <font color='dodgerblue'>#대기압</font>",
             },
         },
 
@@ -445,14 +435,10 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 controller_joystick_direction_left_down : 'Left Bottom',
                 controller_joystick_direction_down      : 'Bottom',
                 controller_joystick_direction_right_down: 'Right Bottom',
-                controller_joystick_left_direction      : 'left joystick direction',
-                controller_joystick_left_event          : 'left joystick event',
-                controller_joystick_left_x              : 'left joystick X',
-                controller_joystick_left_y              : 'left joystick Y',
-                controller_joystick_right_direction     : 'right joystick direction',
-                controller_joystick_right_event         : 'right joystick event',
-                controller_joystick_right_x             : 'right joystick X',
-                controller_joystick_right_y             : 'right joystick Y',
+                controller_joystick_direction           : 'direction',
+                controller_joystick_event               : 'event',
+                controller_joystick_x                   : 'X',
+                controller_joystick_y                   : 'Y',
                 drone_information_state                 : 'State',
                 drone_information_control               : 'Control mode',
                 drone_information_movement              : 'Movement',
@@ -538,10 +524,10 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_buzzer_scale_reserve     : 'reserve to play %1 octave %2 for %3 second %4',
                 robolink_codrone_mini_controller_if_button_press          : 'when press %1',
                 robolink_codrone_mini_controller_if_joystick_direction    : 'when %1 stick move to %2',
-                robolink_codrone_mini_controller_value_button             : '%1',
-                robolink_codrone_mini_controller_value_button_event       : '%1',
-                robolink_codrone_mini_controller_value_joystick_left      : '%1',
-                robolink_codrone_mini_controller_value_joystick_right     : '%1',
+                robolink_codrone_mini_controller_value_button             : 'button flag',
+                robolink_codrone_mini_controller_value_button_event       : 'button event',
+                robolink_codrone_mini_controller_value_joystick_left      : 'Left joystick %1',
+                robolink_codrone_mini_controller_value_joystick_right     : 'Right joystick %1',
                 robolink_codrone_mini_drone_trim_direction                : 'Trim %1 %2',
                 robolink_codrone_mini_drone_trim                          : 'Trim Roll %1%, Pitch %2% %3',
                 robolink_codrone_mini_drone_speed                         : 'Speed %1 %2',
@@ -562,12 +548,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_light_manual_single_input     : 'Drone LED %1 lightness %2 %3',
                 robolink_codrone_mini_drone_light_manual_single_off       : 'Drone LED Off %1',
                 robolink_codrone_mini_drone_motor_stop                    : 'Motor stop %1',
-                robolink_codrone_mini_drone_motorsingle                   : 'No. %1 Motor rotate for %2 %3',
                 robolink_codrone_mini_drone_motorsingle_input             : 'No. %1 Motor rotate for %2 %3',
-                robolink_codrone_mini_drone_information                   : '%1',
-                robolink_codrone_mini_drone_sensor                        : '%1',
-                robolink_codrone_mini_drone_value_sensor                  : '%1',
-                robolink_codrone_mini_drone_value_etc                     : '%1',
+                robolink_codrone_mini_drone_information                   : 'Drone information %1',
+                robolink_codrone_mini_drone_sensor                        : 'Sensor %1',
             },
 
             Helper: {
@@ -607,9 +590,7 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_drone_motorsingle                   : '',
                 robolink_codrone_mini_drone_motorsingle_input             : '',
                 robolink_codrone_mini_drone_information                   : '',
-                robolink_codrone_mini_drone_value_etc                     : '',
                 robolink_codrone_mini_drone_sensor                        : '',
-                robolink_codrone_mini_drone_value_sensor                  : '',
             },
         },
     };
@@ -676,8 +657,6 @@ Entry.robolink_codrone_mini.monitorTemplate = function () {
 Entry.robolink_codrone_mini.blockMenuBlocks = [
     'robolink_codrone_mini_drone_information',
     'robolink_codrone_mini_drone_sensor',
-    'robolink_codrone_mini_drone_value_sensor',
-    'robolink_codrone_mini_drone_value_etc',
     'robolink_codrone_mini_controller_value_button',
     'robolink_codrone_mini_controller_value_button_event',
     'robolink_codrone_mini_controller_value_joystick_left',
@@ -699,13 +678,12 @@ Entry.robolink_codrone_mini.blockMenuBlocks = [
     'robolink_codrone_mini_drone_control_quad',
     'robolink_codrone_mini_drone_control_quad_delay',
     'robolink_codrone_mini_drone_motor_stop',
-    'robolink_codrone_mini_drone_motorsingle',
     'robolink_codrone_mini_drone_motorsingle_input',
     'robolink_codrone_mini_drone_light_manual_single_off',
     'robolink_codrone_mini_drone_light_manual_single_input',
     'robolink_codrone_mini_drone_light_color_preset',
-    'robolink_codrone_mini_drone_light_color_input',
     'robolink_codrone_mini_drone_light_color_select',
+    'robolink_codrone_mini_drone_light_color_input',
     'robolink_codrone_mini_controller_buzzer_off',
     'robolink_codrone_mini_controller_buzzer_scale',
     'robolink_codrone_mini_controller_buzzer_scale_delay',
@@ -805,85 +783,17 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             },
         },
 
-
-        robolink_codrone_mini_drone_value_sensor: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic_string_field',
-            statements: [],
-            params    : [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.drone_altitude,
-                },
-            ],
-            events: {},
-            def   : {
-                params: [null],
-                type  : 'robolink_codrone_mini_drone_value_sensor',
-            },
-            paramsKeyMap: {
-            },
-            class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                return Entry.hw.portData['altitude_altitude'];
-            },
-        },
-
         
-        robolink_codrone_mini_drone_value_etc: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic_string_field',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_state_mode_flight, 'state_modeFlight'],
-                        [Lang.Blocks.drone_state_mode_control_flight, 'state_modeControlFlight'],
-                        [Lang.Blocks.drone_state_mode_movement, 'state_modeMovement'],
-                        [Lang.Blocks.drone_state_headless, 'state_headless'],
-                        [Lang.Blocks.drone_state_control_speed, 'state_controlSpeed'],
-                        [Lang.Blocks.drone_state_sensor_orientation, 'state_sensorOrientation'],
-                        [Lang.Blocks.drone_state_battery, 'state_battery'],
-                    ],
-                    value     : 'state_battery',                               // 초기 선택항목 지정
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def   : {
-                params: [null],
-                type  : 'robolink_codrone_mini_drone_value_etc',
-            },
-            paramsKeyMap: {
-                DEVICE: 0,
-            },
-            class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                return Entry.hw.portData[script.getField('DEVICE')];
-            },
-        },
-
         robolink_codrone_mini_controller_value_button: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
             outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton  : 'basic_string_field',
             statements: [],
             params    : [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.common_button_button,
-                },
             ],
             events: {},
             def   : {
-                params: [null],
+                params: [],
                 type  : 'robolink_codrone_mini_controller_value_button',
             },
             paramsKeyMap: {
@@ -902,14 +812,10 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             skeleton  : 'basic_string_field',
             statements: [],
             params    : [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.common_button_event,
-                },
             ],
             events: {},
             def   : {
-                params: [null],
+                params: [],
                 type  : 'robolink_codrone_mini_controller_value_button_event',
             },
             paramsKeyMap: {
@@ -931,10 +837,10 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.controller_joystick_left_x, 'joystick_left_x'],
-                        [Lang.Blocks.controller_joystick_left_y, 'joystick_left_y'],
-                        [Lang.Blocks.controller_joystick_left_direction, 'joystick_left_direction'],
-                        [Lang.Blocks.controller_joystick_left_event, 'joystick_left_event'],
+                        [Lang.Blocks.controller_joystick_x, 'joystick_left_x'],
+                        [Lang.Blocks.controller_joystick_y, 'joystick_left_y'],
+                        [Lang.Blocks.controller_joystick_direction, 'joystick_left_direction'],
+                        [Lang.Blocks.controller_joystick_event, 'joystick_left_event'],
                     ],
                     value     : 'joystick_left_x',                             // 초기 선택항목 지정
                     fontSize  : 11,
@@ -967,10 +873,10 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.controller_joystick_right_x, 'joystick_right_x'],
-                        [Lang.Blocks.controller_joystick_right_y, 'joystick_right_y'],
-                        [Lang.Blocks.controller_joystick_right_direction, 'joystick_right_direction'],
-                        [Lang.Blocks.controller_joystick_right_event, 'joystick_right_event'],
+                        [Lang.Blocks.controller_joystick_x, 'joystick_right_x'],
+                        [Lang.Blocks.controller_joystick_y, 'joystick_right_y'],
+                        [Lang.Blocks.controller_joystick_direction, 'joystick_right_direction'],
+                        [Lang.Blocks.controller_joystick_event, 'joystick_right_event'],
                     ],
                     value     : 'joystick_right_x',                             // 초기 선택항목 지정
                     fontSize  : 11,
@@ -1711,43 +1617,6 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             isNotFor    : ['robolink_codrone_mini'],
             func(sprite, script) {
                 return Entry.byrobot_base.sendStop(script, 0x10);
-            },
-        },
-
-
-        robolink_codrone_mini_drone_motorsingle: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type      : 'Dropdown',
-                    options   : [['1(FR)', '0'], ['2(RR)', '1'], ['3(RL)', '2'], ['4(FL)', '3']],
-                    value     : '0',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [null, { type: 'text', params: ['120'] }, null],
-                type  : 'robolink_codrone_mini_drone_motorsingle',
-            },
-            paramsKeyMap: {
-                MOTORINDEX: 0,
-                MOTORSPEED: 1,
-            },
-            class   : 'motor',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const motorIndex = parseInt(script.getField('MOTORINDEX'), 10);
-                const motorSpeed = script.getNumberValue('MOTORSPEED');
-
-                return Entry.byrobot_base.setMotorSingleV(script, 0x10, motorIndex, motorSpeed);
             },
         },
 
