@@ -249,6 +249,7 @@ Entry.Neobot.setLanguage = function() {
 
                 neobot_sensor_value: '%1 value',
                 neobot_sensor_connect_external: 'the %2 value connected %1',
+
                 neobot_sensor_convert_scale:
                     'the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5',
 
@@ -988,7 +989,13 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 var speed = Entry.parseNumber(script.getStringValue('SPEED'));
                 var direction = script.getNumberField('DIRECTION');
-                Entry.hw.sendQueue['DCL'] = speed + direction;
+
+                // added 210324
+                if (speed === '0') speed = 0;
+                speed = Math.max(speed, 0);
+                speed = Math.min(speed, 15);
+
+                Entry.hw.sendQueue['DCL'] = direction + speed;
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Neobot.turn_left(%1, %2)'] },
@@ -1066,6 +1073,12 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 var speed = Entry.parseNumber(script.getStringValue('SPEED'));
                 var direction = script.getNumberField('DIRECTION');
+
+                // added 210324
+                if (speed === '0') speed = 0;
+                speed = Math.max(speed, 0);
+                speed = Math.min(speed, 15);
+
                 Entry.hw.sendQueue['DCR'] = speed + direction;
                 return script.callReturn();
             },
@@ -1168,6 +1181,16 @@ Entry.Neobot.getBlocks = function() {
                 var direction_left = script.getNumberField('DIRECTION_LEFT');
                 var speed_right = Entry.parseNumber(script.getStringValue('SPEED_RIGHT'));
                 var direction_right = script.getNumberField('DIRECTION_RIGHT');
+
+                // added 210324
+                if (speed_left === '0') speed_left = 0;
+                speed_left = Math.max(speed_left, 0);
+                speed_left = Math.min(speed_left, 15);
+
+                if (speed_right === '0') speed_right = 0;
+                speed_right = Math.max(speed_right, 0);
+                speed_right = Math.min(speed_right, 15);
+
                 Entry.hw.sendQueue['DCL'] = speed_left + direction_left;
                 Entry.hw.sendQueue['DCR'] = speed_right + direction_right;
                 return script.callReturn();
@@ -1246,6 +1269,11 @@ Entry.Neobot.getBlocks = function() {
                     var speed = Entry.parseNumber(script.getStringValue('SPEED'));
                     var direction = script.getNumberField('DIRECTION');
                     var duration = script.getNumberField('DURATION');
+
+                    // added 210324
+                    if (speed === '0') speed = 0;
+                    speed = Math.max(speed, 0);
+                    speed = Math.min(speed, 15);
 
                     switch (direction) {
                         case 1:
@@ -1365,14 +1393,14 @@ Entry.Neobot.getBlocks = function() {
 
                 sensorValue = sensorValue - min;
                 value = Math.round(sensorValue / sectionUnit);
-                
+
                 if(value > 15)
                     value = 15;
                 else (value < 0)
                     value = 0;
 
                 switch (motor) {
-                    case 1: 
+                    case 1:
                     Entry.hw.sendQueue['DCL'] = 0x10 + value;
                     Entry.hw.sendQueue['DCR'] = 0x10 + value;
                     break;
@@ -2043,8 +2071,8 @@ Entry.Neobot.getBlocks = function() {
                 if (!script.isStart) {
                     var port = script.getStringField('PORT', script);
                     if (port == 'ALL') {
-                        Entry.hw.sendQueue['OUT1'] = 0xba;
-                        Entry.hw.sendQueue['OUT2'] = 0xba;
+                        Entry.hw.sendQueue['OUT1'] = 0xBA;
+                        Entry.hw.sendQueue['OUT2'] = 0xBA;
 
                         script.isStart = true;
                         script.timeFlag = 1;
@@ -2054,7 +2082,7 @@ Entry.Neobot.getBlocks = function() {
                             script.timeFlag = 0;
                         }, 200);
                     } else {
-                        Entry.hw.sendQueue[port] = 0xba;
+                        Entry.hw.sendQueue[port] = 0xBA;
 
                         script.isStart = true;
                         script.timeFlag = 1;
@@ -2166,12 +2194,12 @@ Entry.Neobot.getBlocks = function() {
                     if (port == 'ALL') {
                         switch (direction) {
                             case 1:
-                                Entry.hw.sendQueue['OUT1'] = 0xbc;
-                                Entry.hw.sendQueue['OUT2'] = 0xbc;
+                                Entry.hw.sendQueue['OUT1'] = 0xBC;
+                                Entry.hw.sendQueue['OUT2'] = 0xBC;
                                 break;
                             case 2:
-                                Entry.hw.sendQueue['OUT1'] = 0xbd;
-                                Entry.hw.sendQueue['OUT2'] = 0xbd;
+                                Entry.hw.sendQueue['OUT1'] = 0xBD;
+                                Entry.hw.sendQueue['OUT2'] = 0xBD;
                                 break;
                         }
 
@@ -2199,10 +2227,10 @@ Entry.Neobot.getBlocks = function() {
                     } else {
                         switch (direction) {
                             case 1:
-                                Entry.hw.sendQueue[port] = 0xbc;
+                                Entry.hw.sendQueue[port] = 0xBC;
                                 break;
                             case 2:
-                                Entry.hw.sendQueue[port] = 0xbd;
+                                Entry.hw.sendQueue[port] = 0xBD;
                                 break;
                         }
 
@@ -2312,21 +2340,21 @@ Entry.Neobot.getBlocks = function() {
                 if (port == 'ALL') {
                     switch (direction) {
                         case 1:
-                            Entry.hw.sendQueue['OUT1'] = 0xc0 + (speed + 0x01);
-                            Entry.hw.sendQueue['OUT2'] = 0xc0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT1'] = 0xC0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT2'] = 0xC0 + (speed + 0x01);
                             break;
                         case 2:
-                            Entry.hw.sendQueue['OUT1'] = 0xd0 + (speed + 0x01);
-                            Entry.hw.sendQueue['OUT2'] = 0xd0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT1'] = 0xD0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT2'] = 0xD0 + (speed + 0x01);
                             break;
                     }
                 } else {
                     switch (direction) {
                         case 1:
-                            Entry.hw.sendQueue[port] = 0xc0 + (speed + 0x01);
+                            Entry.hw.sendQueue[port] = 0xC0 + (speed + 0x01);
                             break;
                         case 2:
-                            Entry.hw.sendQueue[port] = 0xd0 + (speed + 0x01);
+                            Entry.hw.sendQueue[port] = 0xD0 + (speed + 0x01);
                             break;
                     }
                 }
@@ -2380,401 +2408,401 @@ Entry.Neobot.getBlocks = function() {
         },
 
         /*   // deprecated by cky 191205
-        neobot_servo_turn_type1: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.neobot_servo_dir_1, '1'],
-                        [Lang.Blocks.neobot_servo_dir_2, '2'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                    180,
-                    null,
-                ],
-                type: 'neobot_servo_turn_type1',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                DIRECTION: 1,
-                DEGREE: 2
-            },
-            class: 'neobot_servo',
-            isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    var direction = script.getNumberField('DIRECTION');
-                    var value = script.getNumberValue('DEGREE');
-                    
-                    switch (direction) {
-                        case 1:
-                        Entry.hw.sendQueue[port] = 0xBC;
-                        break;
-                        case 2:
-                        Entry.hw.sendQueue[port] = 0xBD;
-                        break;
-                    }
-                    
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        if(value > 180) {
-                            value = 180;
-                        }
-                        if (value < 0){
-                            value = 0;
-                        }
-                        value = value + 1;
-                        Entry.hw.sendQueue[port] = value;
-                        setTimeout(function() {
-                            script.timeFlag = 0;
-                        }, 1000);
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        },
-        // deprecated by cky 191205
-        neobot_servo_turn_type2: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    180,
-                    null,
-                ],
-                type: 'neobot_servo_turn_type2',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                DEGREE: 1
-            },
-            class: 'neobot_servo',
-            isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    var value = script.getNumberValue('DEGREE');
-                    
-                    if(value > 0xB4) {
-                        value = 0xB4;
-                    }
-                    if (value < 0x00){
-                        value = 0x00;
-                    }
-                    value = value + 0x01;
-                    Entry.hw.sendQueue[port] = value;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        },
+          neobot_servo_turn_type1: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic',
+              statements: [],
+              params: [
+                  {
+                      type: 'Dropdown',
+                      options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
+                      value: 'OUT1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Dropdown',
+                      options: [
+                          [Lang.Blocks.neobot_servo_dir_1, '1'],
+                          [Lang.Blocks.neobot_servo_dir_2, '2'],
+                      ],
+                      value: '1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Block',
+                      accept: 'string',
+                  },
+                  {
+                      type: 'Indicator',
+                      img: 'block_icon/hardware_icon.svg',
+                      size: 12,
+                  },
+              ],
+              events: {},
+              def: {
+                  params: [
+                      null,
+                      null,
+                      180,
+                      null,
+                  ],
+                  type: 'neobot_servo_turn_type1',
+              },
+              paramsKeyMap: {
+                  PORT: 0,
+                  DIRECTION: 1,
+                  DEGREE: 2
+              },
+              class: 'neobot_servo',
+              isNotFor: ['neobot'],
+              func: function(sprite, script) {
+                  if (!script.isStart) {
+                      var port = script.getStringField('PORT', script);
+                      var direction = script.getNumberField('DIRECTION');
+                      var value = script.getNumberValue('DEGREE');
 
-        // deprecated by cky 191205
-        neobot_servo_turn_type4: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['100%', '0'],
-                        ['90%', '1'],
-                        ['80%', '2'],
-                        ['70%', '3'],
-                        ['60%', '4'],
-                        ['50%', '5'],
-                        ['40%', '6'],
-                        ['30%', '7'],
-                        ['20%', '8'],
-                        ['10%', '9'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                    null,
-                ],
-                type: 'neobot_servo_turn_type4',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                LEVEL: 1,
-            },
-            class: 'neobot_servo',
-            isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    var level = script.getNumberField('LEVEL');
-                    Entry.hw.sendQueue[port] = 0xFA - level;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        },
+                      switch (direction) {
+                          case 1:
+                          Entry.hw.sendQueue[port] = 0xBC;
+                          break;
+                          case 2:
+                          Entry.hw.sendQueue[port] = 0xBD;
+                          break;
+                      }
 
-        // deprecated by cky 191205
-        neobot_servo_turn_type5: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.neobot_servo_dir_1, '1'],
-                        [Lang.Blocks.neobot_servo_dir_2, '2'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['100%', '0'],
-                        ['90%', '1'],
-                        ['80%', '2'],
-                        ['70%', '3'],
-                        ['60%', '4'],
-                        ['50%', '5'],
-                        ['40%', '6'],
-                        ['30%', '7'],
-                        ['20%', '8'],
-                        ['10%', '9'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                    null,
-                    null,
-                ],
-                type: 'neobot_servo_turn_type5',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                DIRECTION: 1,
-                LEVEL: 2,
-            },
-            class: 'neobot_servo',
-            isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    var direction = script.getNumberField('DIRECTION');
-                    var level = script.getNumberField('LEVEL');
-    
-                    switch (direction) {
-                        case 1:
-                            Entry.hw.sendQueue[port] = 0xCA - level;
-                            break;
-                        case 2:
-                            Entry.hw.sendQueue[port] = 0xDA - level;
-                            break;
-                    }
-                    
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        },
+                      script.isStart = true;
+                      script.timeFlag = 1;
+                      setTimeout(function() {
+                          if(value > 180) {
+                              value = 180;
+                          }
+                          if (value < 0){
+                              value = 0;
+                          }
+                          value = value + 1;
+                          Entry.hw.sendQueue[port] = value;
+                          setTimeout(function() {
+                              script.timeFlag = 0;
+                          }, 1000);
+                      }, 200);
+                      return script;
+                  } else if (script.timeFlag == 1) {
+                      return script;
+                  } else {
+                      delete script.timeFlag;
+                      delete script.isStart;
+                      Entry.engine.isContinue = false;
+                      return script.callReturn();
+                  }
+              },
+          },
+          // deprecated by cky 191205
+          neobot_servo_turn_type2: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic',
+              statements: [],
+              params: [
+                  {
+                      type: 'Dropdown',
+                      options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
+                      value: 'OUT1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Block',
+                      accept: 'string',
+                  },
+                  {
+                      type: 'Indicator',
+                      img: 'block_icon/hardware_icon.svg',
+                      size: 12,
+                  },
+              ],
+              events: {},
+              def: {
+                  params: [
+                      null,
+                      180,
+                      null,
+                  ],
+                  type: 'neobot_servo_turn_type2',
+              },
+              paramsKeyMap: {
+                  PORT: 0,
+                  DEGREE: 1
+              },
+              class: 'neobot_servo',
+              isNotFor: ['neobot'],
+              func: function(sprite, script) {
+                  if (!script.isStart) {
+                      var port = script.getStringField('PORT', script);
+                      var value = script.getNumberValue('DEGREE');
 
-        // deprecated by cky 191205
-        neobot_servo_mode_manual: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
-                    value: 'OUT1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    null,
-                    null,
-                ],
-                type: 'neobot_servo_mode_manual',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'neobot_servo',
-            isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                if (!script.isStart) {
-                    var port = script.getStringField('PORT', script);
-                    
-                    Entry.hw.sendQueue[port] = 0x00;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function() {
-                        timeFlag = 0;
-                    }, 200);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    Entry.engine.isContinue = false;
-                    return script.callReturn();
-                }
-            },
-        }, */
+                      if(value > 0xB4) {
+                          value = 0xB4;
+                      }
+                      if (value < 0x00){
+                          value = 0x00;
+                      }
+                      value = value + 0x01;
+                      Entry.hw.sendQueue[port] = value;
+                      script.isStart = true;
+                      script.timeFlag = 1;
+                      setTimeout(function() {
+                          script.timeFlag = 0;
+                      }, 200);
+                      return script;
+                  } else if (script.timeFlag == 1) {
+                      return script;
+                  } else {
+                      delete script.timeFlag;
+                      delete script.isStart;
+                      Entry.engine.isContinue = false;
+                      return script.callReturn();
+                  }
+              },
+          },
+
+          // deprecated by cky 191205
+          neobot_servo_turn_type4: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic',
+              statements: [],
+              params: [
+                  {
+                      type: 'Dropdown',
+                      options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
+                      value: 'OUT1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Dropdown',
+                      options: [
+                          ['100%', '0'],
+                          ['90%', '1'],
+                          ['80%', '2'],
+                          ['70%', '3'],
+                          ['60%', '4'],
+                          ['50%', '5'],
+                          ['40%', '6'],
+                          ['30%', '7'],
+                          ['20%', '8'],
+                          ['10%', '9'],
+                      ],
+                      value: '0',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Indicator',
+                      img: 'block_icon/hardware_icon.svg',
+                      size: 12,
+                  },
+              ],
+              events: {},
+              def: {
+                  params: [
+                      null,
+                      null,
+                      null,
+                  ],
+                  type: 'neobot_servo_turn_type4',
+              },
+              paramsKeyMap: {
+                  PORT: 0,
+                  LEVEL: 1,
+              },
+              class: 'neobot_servo',
+              isNotFor: ['neobot'],
+              func: function(sprite, script) {
+                  if (!script.isStart) {
+                      var port = script.getStringField('PORT', script);
+                      var level = script.getNumberField('LEVEL');
+                      Entry.hw.sendQueue[port] = 0xFA - level;
+                      script.isStart = true;
+                      script.timeFlag = 1;
+                      setTimeout(function() {
+                          script.timeFlag = 0;
+                      }, 200);
+                      return script;
+                  } else if (script.timeFlag == 1) {
+                      return script;
+                  } else {
+                      delete script.timeFlag;
+                      delete script.isStart;
+                      Entry.engine.isContinue = false;
+                      return script.callReturn();
+                  }
+              },
+          },
+
+          // deprecated by cky 191205
+          neobot_servo_turn_type5: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic',
+              statements: [],
+              params: [
+                  {
+                      type: 'Dropdown',
+                      options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
+                      value: 'OUT1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Dropdown',
+                      options: [
+                          [Lang.Blocks.neobot_servo_dir_1, '1'],
+                          [Lang.Blocks.neobot_servo_dir_2, '2'],
+                      ],
+                      value: '1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Dropdown',
+                      options: [
+                          ['100%', '0'],
+                          ['90%', '1'],
+                          ['80%', '2'],
+                          ['70%', '3'],
+                          ['60%', '4'],
+                          ['50%', '5'],
+                          ['40%', '6'],
+                          ['30%', '7'],
+                          ['20%', '8'],
+                          ['10%', '9'],
+                      ],
+                      value: '0',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Indicator',
+                      img: 'block_icon/hardware_icon.svg',
+                      size: 12,
+                  },
+              ],
+              events: {},
+              def: {
+                  params: [
+                      null,
+                      null,
+                      null,
+                      null,
+                  ],
+                  type: 'neobot_servo_turn_type5',
+              },
+              paramsKeyMap: {
+                  PORT: 0,
+                  DIRECTION: 1,
+                  LEVEL: 2,
+              },
+              class: 'neobot_servo',
+              isNotFor: ['neobot'],
+              func: function(sprite, script) {
+                  if (!script.isStart) {
+                      var port = script.getStringField('PORT', script);
+                      var direction = script.getNumberField('DIRECTION');
+                      var level = script.getNumberField('LEVEL');
+
+                      switch (direction) {
+                          case 1:
+                              Entry.hw.sendQueue[port] = 0xCA - level;
+                              break;
+                          case 2:
+                              Entry.hw.sendQueue[port] = 0xDA - level;
+                              break;
+                      }
+
+                      script.isStart = true;
+                      script.timeFlag = 1;
+                      setTimeout(function() {
+                          script.timeFlag = 0;
+                      }, 200);
+                      return script;
+                  } else if (script.timeFlag == 1) {
+                      return script;
+                  } else {
+                      delete script.timeFlag;
+                      delete script.isStart;
+                      Entry.engine.isContinue = false;
+                      return script.callReturn();
+                  }
+              },
+          },
+
+          // deprecated by cky 191205
+          neobot_servo_mode_manual: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic',
+              statements: [],
+              params: [
+                  {
+                      type: 'Dropdown',
+                      options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT3', 'OUT3']],
+                      value: 'OUT1',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+                  {
+                      type: 'Indicator',
+                      img: 'block_icon/hardware_icon.svg',
+                      size: 12,
+                  },
+              ],
+              events: {},
+              def: {
+                  params: [
+                      null,
+                      null,
+                  ],
+                  type: 'neobot_servo_mode_manual',
+              },
+              paramsKeyMap: {
+                  PORT: 0,
+              },
+              class: 'neobot_servo',
+              isNotFor: ['neobot'],
+              func: function(sprite, script) {
+                  if (!script.isStart) {
+                      var port = script.getStringField('PORT', script);
+
+                      Entry.hw.sendQueue[port] = 0x00;
+                      script.isStart = true;
+                      script.timeFlag = 1;
+                      setTimeout(function() {
+                          timeFlag = 0;
+                      }, 200);
+                      return script;
+                  } else if (script.timeFlag == 1) {
+                      return script;
+                  } else {
+                      delete script.timeFlag;
+                      delete script.isStart;
+                      Entry.engine.isContinue = false;
+                      return script.callReturn();
+                  }
+              },
+          }, */
 
         //endregion neobot 네오봇
     };

@@ -4,7 +4,7 @@ Entry.NeobotPurple = {
     id: '5.5',
     name: 'neobot_purple',
     url: 'http://www.neobot.co.kr',
-    imageName: 'neobot.png',
+    imageName: 'neobot_purple.png',
     title: {
         ko: 'NEW 네오봇 Purple',
         en: 'NEW NEOBOT Purple',
@@ -18,7 +18,7 @@ Entry.NeobotPurple = {
         Entry.hw.update();
     },
     monitorTemplate: {
-        imgPath: 'hw/neobot.png',
+        imgPath: 'hw/neobot_purple.png',
         width: 700,
         height: 700,
         listPorts: {
