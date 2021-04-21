@@ -253,8 +253,8 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_buzzer_scale_reserve     : '%1 옥타브 %2을(를) %3초 예약 %4',
                 robolink_codrone_mini_controller_if_button_press          : '조종기 %1 눌렀을 때',
                 robolink_codrone_mini_controller_if_joystick_direction    : '조종기 %1 조이스틱 %2 (으)로 움직였을 때',
-                robolink_codrone_mini_controller_value_button             : '버튼 상태',
-                robolink_codrone_mini_controller_value_button_event       : '버튼 이벤트',
+                robolink_codrone_mini_controller_value_button             : '%1',
+                robolink_codrone_mini_controller_value_button_event       : '%1',
                 robolink_codrone_mini_controller_value_joystick_left      : '왼쪽 조이스틱 %1',
                 robolink_codrone_mini_controller_value_joystick_right     : '오른쪽 조이스틱 %1',
                 robolink_codrone_mini_drone_trim_direction                : '미세조정 %1 %2',
@@ -524,8 +524,8 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 robolink_codrone_mini_controller_buzzer_scale_reserve     : 'reserve to play %1 octave %2 for %3 second %4',
                 robolink_codrone_mini_controller_if_button_press          : 'when press %1',
                 robolink_codrone_mini_controller_if_joystick_direction    : 'when %1 stick move to %2',
-                robolink_codrone_mini_controller_value_button             : 'button flag',
-                robolink_codrone_mini_controller_value_button_event       : 'button event',
+                robolink_codrone_mini_controller_value_button             : '%1',
+                robolink_codrone_mini_controller_value_button_event       : '%1',
                 robolink_codrone_mini_controller_value_joystick_left      : 'Left joystick %1',
                 robolink_codrone_mini_controller_value_joystick_right     : 'Right joystick %1',
                 robolink_codrone_mini_drone_trim_direction                : 'Trim %1 %2',
@@ -790,10 +790,14 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             skeleton  : 'basic_string_field',
             statements: [],
             params    : [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.common_button_button,
+                },
             ],
             events: {},
             def   : {
-                params: [],
+                params: [null],
                 type  : 'robolink_codrone_mini_controller_value_button',
             },
             paramsKeyMap: {
@@ -812,10 +816,14 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             skeleton  : 'basic_string_field',
             statements: [],
             params    : [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.common_button_event,
+                },
             ],
             events: {},
             def   : {
-                params: [],
+                params: [null],
                 type  : 'robolink_codrone_mini_controller_value_button_event',
             },
             paramsKeyMap: {
