@@ -570,7 +570,7 @@ export default class Hardware {
             return;
         }
 
-        Object.values(Entry.HARDWARE_LIST).forEach((hardware) => {
+        Object.values(Entry.HARDWARE_LIST).forEach((hardware: any) => {
             blockMenu.banClass(hardware.name, true);
         });
     }
@@ -628,11 +628,11 @@ export default class Hardware {
                             if (dontShowChecked) {
                                 localStorage.setItem('skipNoticeHWOldVersion', 'true');
                             }
-                            resolve();
+                            resolve(null);
                         }
                     );
             } else {
-                resolve();
+                resolve(null);
             }
         });
     }

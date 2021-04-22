@@ -1,8 +1,7 @@
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
-import Rectangle = PIXI.Rectangle;
-import BaseTexture = PIXI.BaseTexture;
+import { Texture, RenderTexture, Rectangle, BaseTexture } from 'pixi.js';
 
-export class EntryTextureBase extends PIXI.Texture {
+export class EntryTextureBase extends Texture {
     public textureScaleFactorX: number;
     public textureScaleFactorY: number;
 
@@ -13,10 +12,12 @@ export class EntryTextureBase extends PIXI.Texture {
         this.textureScaleFactorY = imageRect.scaleFactorY;
     }
 
-    assignTextureScaleFactor(target: PIXI.RenderTexture) {
-        const tex: any = target;
-        //textureScaleFactor 변수 네이밍을 여기저기서 쓰지 않으려고 메서드를 만듬.
-        tex.textureScaleFactorX = this.textureScaleFactorX;
-        tex.textureScaleFactorY = this.textureScaleFactorY;
+    assignTextureScaleFactor(target: RenderTexture) {
+        if (target) {
+            const tex: any = target;
+            //textureScaleFactor 변수 네이밍을 여기저기서 쓰지 않으려고 메서드를 만듬.
+            tex.textureScaleFactorX = this.textureScaleFactorX;
+            tex.textureScaleFactorY = this.textureScaleFactorY;
+        }
     }
 }

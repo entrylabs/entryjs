@@ -6349,6 +6349,33 @@ LineRobot.prototype.followLineUntil = function(script) {
     }
 };
 
+LineRobot.prototype.followLineUntilIntersection = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(9); // LINE_TRACER_MODE_UNTIL_CROSS
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
 LineRobot.prototype.crossIntersection = function(script) {
     this.__setModule();
     if (!script.isStart) {
@@ -8375,8 +8402,8 @@ CheeseHatColorLedMatrix.prototype.__KO_JONG = [ [], [0], [0, 0], [0, 9], [2], [2
 
 CheeseHatColorLedMatrix.prototype.__drawString = function(data, tx, ty, text, len, color) {
     let t, width = 0, blank, index, shape;
-    for(let i = 0; i < len; ++i) {
-        t = text.charCodeAt(i);
+    for(let j = 0; j < len; ++j) {
+        t = text.charCodeAt(j);
         if(t == 32) {
             blank = true;
             tx += 5;
@@ -8464,7 +8491,7 @@ CheeseHatColorLedMatrix.prototype.__drawString = function(data, tx, ty, text, le
                 tx += 2;
                 width += 2;
             } else {
-                shape = CHEESE_HAT_ALPHABETS[text.charAt(i)];
+                shape = CHEESE_HAT_ALPHABETS[text.charAt(j)];
                 if(shape) {
                     this.__drawShape(data, tx, ty, shape.data, shape.width - 1, color);
                     tx += shape.width;
@@ -8592,9 +8619,8 @@ CheeseHatColorLedMatrix.prototype.drawBackgroundPattern = function(x, y, pattern
         for(const i in candidates) {
             candidate = candidates[i];
             if(candidate) {
-                this.__drawPattern(data, tx, ty, candidate[3], candidate[0], candidate[2], color);
+                this.__drawPattern(data, tx, i, candidate[3], candidate[0], candidate[2], color);
             }
-            ++ ty;
         }
         return true;
     }
@@ -9808,8 +9834,8 @@ CheeseHat.prototype.handleSensory = function(recv) {
     }
 };
 
-CheeseHat.prototype.handleRequest = function() {
-    if(this.__hat && this.__hat.handleRequest) this.__hat.handleRequest();
+CheeseHat.prototype.handleRequest = function(sent) {
+    if(this.__hat && this.__hat.handleRequest) this.__hat.handleRequest(sent);
 };
 
 /**CheeseRobot**/

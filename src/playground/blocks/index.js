@@ -49,8 +49,12 @@ Entry.EXPANSION_BLOCK_LIST = {
 function getBlockObject(items) {
     const blockObject = {};
     items.forEach((item) => {
-        if ('getBlocks' in item) {
-            Object.assign(blockObject, item.getBlocks());
+        try {
+            if ('getBlocks' in item) {
+                Object.assign(blockObject, item.getBlocks());
+            }
+        } catch (err) {
+            console.log(err, item);
         }
     });
     return blockObject;

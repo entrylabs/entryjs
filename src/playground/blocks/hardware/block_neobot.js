@@ -45,6 +45,15 @@ Entry.Neobot.setLanguage = function() {
     return {
         ko: {
             template: {
+                neobot_turn_left: '왼쪽모터를 %1 %2 회전 %3',
+                neobot_stop_left: '왼쪽모터 정지 %1',
+                neobot_turn_right: '오른쪽모터를 %1 %2 회전 %3',
+                neobot_stop_right: '오른쪽모터 정지 %1',
+                neobot_run_motor: '%1 모터를  %2 초간 %3 %4 %5',
+                neobot_servo_1: 'SERVO1에 연결된 서보모터를 %1 속도로 %2 로 이동 %3',
+                neobot_servo_2: 'SERVO2에 연결된 서보모터를 %1 속도로 %2 로 이동 %3',
+                neobot_set_sensor_value: '%1 번 포트의 값을 %2 %3',
+
                 neobot_sensor_value: '%1 값',
                 neobot_sensor_connect_external: '%1 에 연결한 %2 값',
                 neobot_sensor_convert_scale: '%1 센서값 %2 ~ %3 를 %4 ~ %5 (으)로 바꾼 값',
@@ -76,7 +85,29 @@ Entry.Neobot.setLanguage = function() {
                 neobot_servo_stop: '%1 Servo모터 멈추기 %2',
 
                 neobot_play_note_for: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
-                neobot_play_note_with_sensor: '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
+                neobot_play_note_with_sensor:
+                    '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
+            },
+            Helper: {
+                neobot_sensor_value:
+                    'IN1 ~ IN3 포트 및 리모컨에서 입력되는 값 그리고 배터리 정보를 0부터 255의 숫자로 표시합니다.',
+                neobot_sensor_convert_scale:
+                    '선택한 포트 입력값의 변화를 특정범위의 값으로 표현범위를 조절할 수 있습니다.',
+                neobot_left_motor: 'L모터 포트에 연결한 모터의 회전방향 및 속도를 설정합니다.',
+                neobot_stop_left_motor: 'L모터 포트에 연결한 모터를 정지합니다.',
+                neobot_right_motor: 'R모터 포트에 연결한 모터의 회전방향 및 속도를 설정합니다.',
+                neobot_stop_right_motor: 'R모터 포트에 연결한 모터를 정지합니다.',
+                neobot_all_motor:
+                    'L모터 및 R모터 포트에 2개 모터를 연결하여 바퀴로 활용할 때 전, 후, 좌, 우 이동 방향 및 속도, 시간을 설정할 수 있습니다.',
+                neobot_stop_all_motor: 'L모터 및 R모터에 연결한 모터를 모두 정지합니다.',
+                neobot_set_servo:
+                    'OUT1 ~ OUT3에 서보모터를 연결했을 때 0도 ~ 180도 범위 내에서 각도를 조절할 수 있습니다.',
+                neobot_set_output:
+                    'OUT1 ~ OUT3에 라이팅블록 및 전자회로를 연결했을 때 출력 전압을 설정할 수 있습니다.</br>0은 0V, 1 ~ 255는 2.4 ~ 4.96V의 전압을 나타냅니다.',
+                neobot_set_fnd: 'FND로 0~99 까지의 숫자를 표시할 수 있습니다.',
+                neobot_set_fnd_off: 'FND에 표시한 숫자를 끌 수 있습니다.',
+                neobot_play_note_for:
+                    '주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.',
             },
             Blocks: {
                 //for dropdown
@@ -205,9 +236,22 @@ Entry.Neobot.setLanguage = function() {
         en: {
             // en.js에 작성하던 내용
             template: {
+                neobot_turn_left: 'Rotate left motor %1 %2 %3',
+                neobot_stop_left: 'Stop left motor %1',
+                neobot_turn_right: 'Rotate right motor %1 %2 %3',
+                neobot_stop_right: 'Stop right motor %1',
+                neobot_run_motor: 'Run %1 motor for %2 secs',
+                neobot_servo_1:
+                    'Move the servo motor connected to SERVO1 to %2 with the speed of %1 %3',
+                neobot_servo_2:
+                    'Move the servo motor connected to SERVO2 to %2 with the speed of %1 %3',
+                neobot_set_sensor_value: '%1 value of the port to %2 %3',
+
                 neobot_sensor_value: '%1 value',
                 neobot_sensor_connect_external: 'the %2 value connected %1',
-                neobot_sensor_convert_scale: 'the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5',
+
+                neobot_sensor_convert_scale:
+                    'the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5',
 
                 neobot_compare_symbol: '%1',
                 neobot_decision_sensor_is_over: '%1 sensor value %2 %3',
@@ -219,7 +263,8 @@ Entry.Neobot.setLanguage = function() {
                 neobot_stop_left_motor: 'Stop the left motor %1',
                 neobot_right_motor: 'Rotate the right motor in %2 for speed %1 %3',
                 neobot_stop_right_motor: 'Stop right motor %1',
-                neobot_both_motor: 'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
+                neobot_both_motor:
+                    'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
                 neobot_all_motor: 'Rotate both motors %2 speed %1 for %3 second(s) %4',
                 neobot_stop_all_motor: 'Stop both motors %1',
                 neobot_robot: 'Go %1 the robot %2',
@@ -236,7 +281,31 @@ Entry.Neobot.setLanguage = function() {
                 neobot_servo_stop: 'Stop the %1 servo motor %2',
 
                 neobot_play_note_for: 'Make a sound the melody %1 to %2 octave(s) as %3 %4',
-                neobot_play_note_with_sensor: 'Play the melody as %2 ~ %3 value of %1 sensor in the controller %4',
+                neobot_play_note_with_sensor:
+                    'Play the melody as %2 ~ %3 value of %1 sensor in the controller %4',
+            },
+            Helper: {
+                neobot_sensor_value:
+                    'Indicates the input value from ports IN1 - IN3 and the battery information as number from 0 to 255.',
+                neobot_sensor_convert_scale:
+                    "The expressed scale of the selected port's change of input value as the value of a particular scale can be adjusted.",
+                neobot_left_motor:
+                    'Sets the wheel direction and speed of the motor connected to L motor port.',
+                neobot_stop_left_motor: 'Stops the motor connected to L motor port.',
+                neobot_right_motor:
+                    'Sets the wheel direction and speed of the motor connected to R motor port.',
+                neobot_stop_right_motor: 'Stops the motor connected to R motor port.',
+                neobot_all_motor:
+                    'The speed, time, and direction towards front, back, left and right, when connecting 2 motors to L and R motor ports can be set and used as wheels. ',
+                neobot_stop_all_motor: 'Stops the motor connected to both L and R motor ports.',
+                neobot_set_servo:
+                    'The angle within 0 - 180 degrees when connecting servo motor to OUT1 - OUT3 can be adjusted',
+                neobot_set_output:
+                    'The output voltage when connecting lighting block and electronic circuit to OUT1 - OUT3 can be set.</br>0 indicates 0V, and 1 ~ 255 indicates 2.4 ~ 4.96V.',
+                neobot_set_fnd: 'Numbers from 0 to 99 with FND can be indicated.',
+                neobot_set_fnd_off: 'Number indicated on FND can be turned off.',
+                neobot_play_note_for:
+                    'Notes in semitone units of the melody can be played by utilizing frequency oscillation. ',
             },
             Blocks: {
                 //for dropdown
@@ -819,8 +888,7 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 var key = script.getNumberField('KEY');
                 var value = Entry.hw.portData['IR'];
-                if (key >= 5 && key <= 8)
-                    key -= 4;
+                if (key >= 5 && key <= 8) key -= 4;
                 if (key == value) {
                     return true;
                 } else {
@@ -893,7 +961,6 @@ Entry.Neobot.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
-                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -1219,8 +1286,7 @@ Entry.Neobot.getBlocks = function() {
                             break;
                     }
 
-                    if (duration == 0)
-                        return script.callReturn();
+                    if (duration == 0) return script.callReturn();
 
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -1401,10 +1467,7 @@ Entry.Neobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_robot',
             },
             paramsKeyMap: {
@@ -1775,7 +1838,7 @@ Entry.Neobot.getBlocks = function() {
                     sq.SND = value;
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, 1 / duration * 2000);
+                    }, (1 / duration) * 2000);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -1886,7 +1949,7 @@ Entry.Neobot.getBlocks = function() {
                     sq.SND = value;
                     setTimeout(function() {
                         script.timeFlag = 0;
-                    }, 1 / 4 * 2000);
+                    }, (1 / 4) * 2000);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -1978,7 +2041,11 @@ Entry.Neobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    options: [
+                        ['OUT1', 'OUT1'],
+                        ['OUT2', 'OUT2'],
+                        ['OUT1&2', 'ALL'],
+                    ],
                     value: 'OUT1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1992,10 +2059,7 @@ Entry.Neobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_servo_init',
             },
             paramsKeyMap: {
@@ -2052,7 +2116,11 @@ Entry.Neobot.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    options: [
+                        ['OUT1', 'OUT1'],
+                        ['OUT2', 'OUT2'],
+                        ['OUT1&2', 'ALL'],
+                    ],
                     value: 'OUT1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2137,10 +2205,12 @@ Entry.Neobot.getBlocks = function() {
 
                         script.isStart = true;
                         script.timeFlag = 1;
-                        setTimeout(function() { // for speed
-                            Entry.hw.sendQueue['OUT1'] = 0xFA - speed;
-                            Entry.hw.sendQueue['OUT2'] = 0xFA - speed;
-                            setTimeout(function() { // for degree
+                        setTimeout(function() {
+                            // for speed
+                            Entry.hw.sendQueue['OUT1'] = 0xfa - speed;
+                            Entry.hw.sendQueue['OUT2'] = 0xfa - speed;
+                            setTimeout(function() {
+                                // for degree
                                 if (degree > 180) {
                                     degree = 180;
                                 }
@@ -2166,9 +2236,11 @@ Entry.Neobot.getBlocks = function() {
 
                         script.isStart = true;
                         script.timeFlag = 1;
-                        setTimeout(function() { // for speed
-                            Entry.hw.sendQueue[port] = 0xFA - speed;
-                            setTimeout(function() { // for degree
+                        setTimeout(function() {
+                            // for speed
+                            Entry.hw.sendQueue[port] = 0xfa - speed;
+                            setTimeout(function() {
+                                // for degree
                                 if (degree > 180) {
                                     degree = 180;
                                 }
@@ -2202,7 +2274,11 @@ Entry.Neobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    options: [
+                        ['OUT1', 'OUT1'],
+                        ['OUT2', 'OUT2'],
+                        ['OUT1&2', 'ALL'],
+                    ],
                     value: 'OUT1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2246,12 +2322,7 @@ Entry.Neobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                    null,
-                    null,
-                ],
+                params: [null, null, null, null],
                 type: 'neobot_servo_rotate',
             },
             paramsKeyMap: {
@@ -2298,7 +2369,11 @@ Entry.Neobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['OUT1', 'OUT1'], ['OUT2', 'OUT2'], ['OUT1&2', 'ALL']],
+                    options: [
+                        ['OUT1', 'OUT1'],
+                        ['OUT2', 'OUT2'],
+                        ['OUT1&2', 'ALL'],
+                    ],
                     value: 'OUT1',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2312,10 +2387,7 @@ Entry.Neobot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_servo_stop',
             },
             paramsKeyMap: {
@@ -2326,10 +2398,10 @@ Entry.Neobot.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getStringField('PORT', script);
                 if (port == 'ALL') {
-                    Entry.hw.sendQueue['OUT1'] = 0xFE;
-                    Entry.hw.sendQueue['OUT2'] = 0xFE;
+                    Entry.hw.sendQueue['OUT1'] = 0xfe;
+                    Entry.hw.sendQueue['OUT2'] = 0xfe;
                 } else {
-                    Entry.hw.sendQueue[port] = 0xFE;
+                    Entry.hw.sendQueue[port] = 0xfe;
                 }
                 return script.callReturn();
             },

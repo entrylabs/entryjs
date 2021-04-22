@@ -157,18 +157,27 @@ Entry.Zerone.setLanguage = () => ({
             zerone_set_tempo_to: '연주 속도를 %1 BPM으로 정하기 %2',
         },
         Helper: {
-            zerone_is_gesture: "선택한 제스처를 제스처 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
-            zerone_touching_color: "선택한 색깔을 컬러 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
-            zerone_boolean: "배터리 정상: 배터리 잔량이 충분하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 부족: 배터리 잔량이 부족하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 없음: 배터리 잔량이 없으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
-            zerone_value: '왼쪽 근접 센서: 왼쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>오른쪽 근접 센서: 오른쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>앞쪽 근접 센서: 앞쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>뒤쪽 근접 센서: 뒤쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>제스처: 제스처 센서가 감지한 제스처의 번호 (값의 범위: -1 ~ 6, 초기값: -1)<br/>색깔 번호: 컬러 센서가 감지한 색깔의 번호 (값의 범위: -1 ~ 6, 초기값: -1)<br/>색깔 R: 컬러 센서가 감지한 색깔의 빨간색(R) 성분 (값의 범위: 0 ~ 255, 초기값: 0)<br/>색깔 G: 컬러 센서가 감지한 색깔의 초록색(G) 성분 (값의 범위: 0 ~ 255, 초기값: 0)<br/>색깔 B: 컬러 센서가 감지한 색깔의 파란색(B) 성분 (값의 범위: 0 ~ 255, 초기값: 0)<br/>신호 세기: 블루투스 무선 통신의 신호 세기 (값의 범위: -128 ~ 0 dBm, 초기값: 0) 신호의 세기가 셀수록 값이 커집니다.',
+            zerone_is_gesture:
+                "선택한 제스처를 제스처 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            zerone_touching_color:
+                "선택한 색깔을 컬러 센서가 감지하였으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            zerone_boolean:
+                "배터리 정상: 배터리 잔량이 충분하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 부족: 배터리 잔량이 부족하면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.<br/>배터리 없음: 배터리 잔량이 없으면 '참'으로 판단하고, 아니면 '거짓'으로 판단합니다.",
+            zerone_value:
+                '왼쪽 근접 센서: 왼쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>오른쪽 근접 센서: 오른쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>앞쪽 근접 센서: 앞쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>뒤쪽 근접 센서: 뒤쪽 근접 센서의 값 (값의 범위: 0 ~ 255, 초기값: 0)<br/>제스처: 제스처 센서가 감지한 제스처의 번호 (값의 범위: -1 ~ 6, 초기값: -1)<br/>색깔 번호: 컬러 센서가 감지한 색깔의 번호 (값의 범위: -1 ~ 6, 초기값: -1)<br/>색깔 R: 컬러 센서가 감지한 색깔의 빨간색(R) 성분 (값의 범위: 0 ~ 255, 초기값: 0)<br/>색깔 G: 컬러 센서가 감지한 색깔의 초록색(G) 성분 (값의 범위: 0 ~ 255, 초기값: 0)<br/>색깔 B: 컬러 센서가 감지한 색깔의 파란색(B) 성분 (값의 범위: 0 ~ 255, 초기값: 0)<br/>신호 세기: 블루투스 무선 통신의 신호 세기 (값의 범위: -128 ~ 0 dBm, 초기값: 0) 신호의 세기가 셀수록 값이 커집니다.',
             zerone_start_sensor: '센서의 모드를 제스처 센서와 컬러 센서 중에서 선택합니다.',
             zerone_move_forward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 앞으로 이동합니다.',
             zerone_move_backward_unit: '입력한 거리(cm)/시간(초)/펄스만큼 뒤로 이동합니다.',
-            zerone_turn_unit_in_place: '입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
-            zerone_change_both_wheels_by: '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
-            zerone_set_both_wheels_to: '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
-            zerone_change_wheel_by: '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
-            zerone_set_wheel_to: '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            zerone_turn_unit_in_place:
+                '입력한 각도(도)/시간(초)/펄스만큼 왼쪽/오른쪽 방향으로 제자리에서 회전합니다.',
+            zerone_change_both_wheels_by:
+                '왼쪽과 오른쪽 바퀴의 현재 속도 값(%)에 입력한 값을 각각 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            zerone_set_both_wheels_to:
+                '왼쪽과 오른쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 각각 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
+            zerone_change_wheel_by:
+                '왼쪽/오른쪽/양쪽 바퀴의 현재 속도 값(%)에 입력한 값을 더합니다. 더한 결과가 양수 값이면 바퀴가 앞으로 회전하고, 음수 값이면 뒤로 회전합니다.',
+            zerone_set_wheel_to:
+                '왼쪽/오른쪽/양쪽 바퀴의 속도를 입력한 값(-100 ~ 100%)으로 설정합니다. 양수 값을 입력하면 바퀴가 앞으로 회전하고, 음수 값을 입력하면 뒤로 회전합니다. 숫자 0을 입력하면 정지합니다.',
             zerone_stop: '양쪽 바퀴를 정지합니다.',
             zerone_set_led_to: '선택한 LED를 선택한 색깔로 켭니다.',
             zerone_pick_led: '선택한 LED를 선택한 색깔로 켭니다.',
@@ -176,14 +185,18 @@ Entry.Zerone.setLanguage = () => ({
             zerone_set_led_to_rgb: '선택한 LED의 R, G, B 값을 입력한 값으로 각각 설정합니다.',
             zerone_clear_led: '선택한 LED를 끕니다.',
             zerone_play_sound_times: '선택한 소리를 입력한 횟수만큼 재생합니다.',
-            zerone_play_sound_times_until_done: '선택한 소리를 입력한 횟수만큼 재생하고, 재생이 완료될 때까지 기다립니다.',
-            zerone_change_buzzer_by: '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 첫째 자리까지 입력할 수 있습니다.',
-            zerone_set_buzzer_to: '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 첫째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 소리를 끕니다.',
+            zerone_play_sound_times_until_done:
+                '선택한 소리를 입력한 횟수만큼 재생하고, 재생이 완료될 때까지 기다립니다.',
+            zerone_change_buzzer_by:
+                '버저 소리의 현재 음 높이(Hz)에 입력한 값을 더합니다. 소수점 첫째 자리까지 입력할 수 있습니다.',
+            zerone_set_buzzer_to:
+                '버저 소리의 음 높이를 입력한 값(Hz)으로 설정합니다. 소수점 첫째 자리까지 입력할 수 있습니다. 숫자 0을 입력하면 소리를 끕니다.',
             zerone_clear_sound: '소리를 끕니다.',
             zerone_play_note: '선택한 계이름과 옥타브의 음을 계속 소리 냅니다.',
             zerone_play_note_for: '선택한 계이름과 옥타브의 음을 입력한 박자만큼 소리 냅니다.',
             zerone_rest_for: '입력한 박자만큼 쉽니다.',
-            zerone_change_tempo_by: '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
+            zerone_change_tempo_by:
+                '연주하거나 쉬는 속도의 현재 BPM(분당 박자 수)에 입력한 값을 더합니다.',
             zerone_set_tempo_to: '연주하거나 쉬는 속도를 입력한 BPM(분당 박자 수)으로 설정합니다.',
         },
         Blocks: {
@@ -302,34 +315,53 @@ Entry.Zerone.setLanguage = () => ({
             zerone_set_tempo_to: 'set tempo to %1 bpm %2',
         },
         Helper: {
-            zerone_is_gesture: 'If the gesture sensor detects the selected gesture, true, otherwise false.',
-            zerone_touching_color: 'If the color sensor detects the selected color, true, otherwise false.',
-            zerone_boolean: "battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false",
-            zerone_value: 'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>front proximity: value of front proximity sensor (range: 0 to 255, initial value: 0)<br/>rear proximity: value of rear proximity sensor (range: 0 to 255, initial value: 0)<br/>gesture: gesture number detected by the gesture sensor (range: -1 ~ 6, initial value: -1)<br/>color number: color number detected by the color sensor (range: -1 to 6, initial value: -1)<br/>color r: red component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color g: green component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color b: blue component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.',
-            zerone_start_sensor: 'Selects the sensor mode between the gesture sensor and the color sensor.',
+            zerone_is_gesture:
+                'If the gesture sensor detects the selected gesture, true, otherwise false.',
+            zerone_touching_color:
+                'If the color sensor detects the selected color, true, otherwise false.',
+            zerone_boolean:
+                'battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
+            zerone_value:
+                'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>front proximity: value of front proximity sensor (range: 0 to 255, initial value: 0)<br/>rear proximity: value of rear proximity sensor (range: 0 to 255, initial value: 0)<br/>gesture: gesture number detected by the gesture sensor (range: -1 ~ 6, initial value: -1)<br/>color number: color number detected by the color sensor (range: -1 to 6, initial value: -1)<br/>color r: red component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color g: green component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color b: blue component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.',
+            zerone_start_sensor:
+                'Selects the sensor mode between the gesture sensor and the color sensor.',
             zerone_move_forward_unit: 'Moves forward for the number of cm/seconds/pulses entered.',
-            zerone_move_backward_unit: 'Moves backward for the number of cm/seconds/pulses entered.',
-            zerone_turn_unit_in_place: 'Turns left/right in place for the number of degrees/seconds/pulses entered.',
-            zerone_change_both_wheels_by: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            zerone_set_both_wheels_to: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
-            zerone_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            zerone_set_wheel_to: 'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            zerone_move_backward_unit:
+                'Moves backward for the number of cm/seconds/pulses entered.',
+            zerone_turn_unit_in_place:
+                'Turns left/right in place for the number of degrees/seconds/pulses entered.',
+            zerone_change_both_wheels_by:
+                'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            zerone_set_both_wheels_to:
+                'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            zerone_change_wheel_by:
+                'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            zerone_set_wheel_to:
+                'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             zerone_stop: 'Stops both wheels.',
             zerone_set_led_to: 'Turns the selected LED to the selected color.',
             zerone_pick_led: 'Turns the selected LED to the selected color.',
-            zerone_change_led_by_rgb: 'Adds the entered values to the current R, G, B values of the selected LED, respectively.',
-            zerone_set_led_to_rgb: 'Sets the R, G, B values of the selected LED to the entered values.',
+            zerone_change_led_by_rgb:
+                'Adds the entered values to the current R, G, B values of the selected LED, respectively.',
+            zerone_set_led_to_rgb:
+                'Sets the R, G, B values of the selected LED to the entered values.',
             zerone_clear_led: 'Turns off the selected LED.',
             zerone_play_sound_times: 'Plays the selected sound as many times as entered.',
-            zerone_play_sound_times_until_done: 'Plays the selected sound as many times as entered, and waits for completion.',
-            zerone_change_buzzer_by: 'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to one decimal place.',
-            zerone_set_buzzer_to: 'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to one decimal place. Entering the number 0 turns off the buzzer sound.',
+            zerone_play_sound_times_until_done:
+                'Plays the selected sound as many times as entered, and waits for completion.',
+            zerone_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to one decimal place.',
+            zerone_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to one decimal place. Entering the number 0 turns off the buzzer sound.',
             zerone_clear_sound: 'Turns off sound.',
             zerone_play_note: 'It sounds the selected tone and octave.',
-            zerone_play_note_for: 'It sounds the selected tone and octave as much as the beat you entered.',
+            zerone_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
             zerone_rest_for: 'Rests as much as the beat you entered.',
-            zerone_change_tempo_by: 'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
-            zerone_set_tempo_to: 'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            zerone_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            zerone_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
         },
         Blocks: {
             ROBOID_monitor_buzzer: 'buzzer',
@@ -447,34 +479,53 @@ Entry.Zerone.setLanguage = () => ({
             zerone_set_tempo_to: 'テンポを%1BPMにする %2',
         },
         Helper: {
-            zerone_is_gesture: 'If the gesture sensor detects the selected gesture, true, otherwise false.',
-            zerone_touching_color: 'If the color sensor detects the selected color, true, otherwise false.',
-            zerone_boolean: "battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false",
-            zerone_value: 'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>front proximity: value of front proximity sensor (range: 0 to 255, initial value: 0)<br/>rear proximity: value of rear proximity sensor (range: 0 to 255, initial value: 0)<br/>gesture: gesture number detected by the gesture sensor (range: -1 ~ 6, initial value: -1)<br/>color number: color number detected by the color sensor (range: -1 to 6, initial value: -1)<br/>color r: red component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color g: green component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color b: blue component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.',
-            zerone_start_sensor: 'Selects the sensor mode between the gesture sensor and the color sensor.',
+            zerone_is_gesture:
+                'If the gesture sensor detects the selected gesture, true, otherwise false.',
+            zerone_touching_color:
+                'If the color sensor detects the selected color, true, otherwise false.',
+            zerone_boolean:
+                'battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
+            zerone_value:
+                'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>front proximity: value of front proximity sensor (range: 0 to 255, initial value: 0)<br/>rear proximity: value of rear proximity sensor (range: 0 to 255, initial value: 0)<br/>gesture: gesture number detected by the gesture sensor (range: -1 ~ 6, initial value: -1)<br/>color number: color number detected by the color sensor (range: -1 to 6, initial value: -1)<br/>color r: red component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color g: green component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color b: blue component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.',
+            zerone_start_sensor:
+                'Selects the sensor mode between the gesture sensor and the color sensor.',
             zerone_move_forward_unit: 'Moves forward for the number of cm/seconds/pulses entered.',
-            zerone_move_backward_unit: 'Moves backward for the number of cm/seconds/pulses entered.',
-            zerone_turn_unit_in_place: 'Turns left/right in place for the number of degrees/seconds/pulses entered.',
-            zerone_change_both_wheels_by: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            zerone_set_both_wheels_to: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
-            zerone_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            zerone_set_wheel_to: 'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            zerone_move_backward_unit:
+                'Moves backward for the number of cm/seconds/pulses entered.',
+            zerone_turn_unit_in_place:
+                'Turns left/right in place for the number of degrees/seconds/pulses entered.',
+            zerone_change_both_wheels_by:
+                'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            zerone_set_both_wheels_to:
+                'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            zerone_change_wheel_by:
+                'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            zerone_set_wheel_to:
+                'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             zerone_stop: 'Stops both wheels.',
             zerone_set_led_to: 'Turns the selected LED to the selected color.',
             zerone_pick_led: 'Turns the selected LED to the selected color.',
-            zerone_change_led_by_rgb: 'Adds the entered values to the current R, G, B values of the selected LED, respectively.',
-            zerone_set_led_to_rgb: 'Sets the R, G, B values of the selected LED to the entered values.',
+            zerone_change_led_by_rgb:
+                'Adds the entered values to the current R, G, B values of the selected LED, respectively.',
+            zerone_set_led_to_rgb:
+                'Sets the R, G, B values of the selected LED to the entered values.',
             zerone_clear_led: 'Turns off the selected LED.',
             zerone_play_sound_times: 'Plays the selected sound as many times as entered.',
-            zerone_play_sound_times_until_done: 'Plays the selected sound as many times as entered, and waits for completion.',
-            zerone_change_buzzer_by: 'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to one decimal place.',
-            zerone_set_buzzer_to: 'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to one decimal place. Entering the number 0 turns off the buzzer sound.',
+            zerone_play_sound_times_until_done:
+                'Plays the selected sound as many times as entered, and waits for completion.',
+            zerone_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to one decimal place.',
+            zerone_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to one decimal place. Entering the number 0 turns off the buzzer sound.',
             zerone_clear_sound: 'Turns off sound.',
             zerone_play_note: 'It sounds the selected tone and octave.',
-            zerone_play_note_for: 'It sounds the selected tone and octave as much as the beat you entered.',
+            zerone_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
             zerone_rest_for: 'Rests as much as the beat you entered.',
-            zerone_change_tempo_by: 'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
-            zerone_set_tempo_to: 'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            zerone_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            zerone_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
         },
         Blocks: {
             ROBOID_monitor_buzzer: 'ブザー',
@@ -592,34 +643,53 @@ Entry.Zerone.setLanguage = () => ({
             zerone_set_tempo_to: 'set tempo to %1 bpm %2',
         },
         Helper: {
-            zerone_is_gesture: 'If the gesture sensor detects the selected gesture, true, otherwise false.',
-            zerone_touching_color: 'If the color sensor detects the selected color, true, otherwise false.',
-            zerone_boolean: "battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false",
-            zerone_value: 'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>front proximity: value of front proximity sensor (range: 0 to 255, initial value: 0)<br/>rear proximity: value of rear proximity sensor (range: 0 to 255, initial value: 0)<br/>gesture: gesture number detected by the gesture sensor (range: -1 ~ 6, initial value: -1)<br/>color number: color number detected by the color sensor (range: -1 to 6, initial value: -1)<br/>color r: red component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color g: green component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color b: blue component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.',
-            zerone_start_sensor: 'Selects the sensor mode between the gesture sensor and the color sensor.',
+            zerone_is_gesture:
+                'If the gesture sensor detects the selected gesture, true, otherwise false.',
+            zerone_touching_color:
+                'If the color sensor detects the selected color, true, otherwise false.',
+            zerone_boolean:
+                'battery normal: If the battery is enough, true, otherwise false<br/>battery low: If the battery is low, true, otherwise false<br/>battery empty: If the battery is empty, true, otherwise false',
+            zerone_value:
+                'left proximity: value of left proximity sensor (range: 0 to 255, initial value: 0)<br/>right proximity: value of right proximity sensor (range: 0 to 255, initial value: 0)<br/>front proximity: value of front proximity sensor (range: 0 to 255, initial value: 0)<br/>rear proximity: value of rear proximity sensor (range: 0 to 255, initial value: 0)<br/>gesture: gesture number detected by the gesture sensor (range: -1 ~ 6, initial value: -1)<br/>color number: color number detected by the color sensor (range: -1 to 6, initial value: -1)<br/>color r: red component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color g: green component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>color b: blue component of color detected by the color sensor (range: 0 ~ 255, initial value: 0)<br/>signal strength: signal strength of Bluetooth communication (range: -128 to 0 dBm, initial value: 0) As the signal strength increases, the value increases.',
+            zerone_start_sensor:
+                'Selects the sensor mode between the gesture sensor and the color sensor.',
             zerone_move_forward_unit: 'Moves forward for the number of cm/seconds/pulses entered.',
-            zerone_move_backward_unit: 'Moves backward for the number of cm/seconds/pulses entered.',
-            zerone_turn_unit_in_place: 'Turns left/right in place for the number of degrees/seconds/pulses entered.',
-            zerone_change_both_wheels_by: 'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            zerone_set_both_wheels_to: 'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
-            zerone_change_wheel_by: 'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
-            zerone_set_wheel_to: 'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            zerone_move_backward_unit:
+                'Moves backward for the number of cm/seconds/pulses entered.',
+            zerone_turn_unit_in_place:
+                'Turns left/right in place for the number of degrees/seconds/pulses entered.',
+            zerone_change_both_wheels_by:
+                'Adds the entered values to the current velocity values (%) of the left and right wheels respectively. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            zerone_set_both_wheels_to:
+                'Sets the velocity of the left and right wheels to the entered values (-100 to 100%), respectively. If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
+            zerone_change_wheel_by:
+                'Adds the entered value to the current velocity value (%) of the left/right/both wheels. If the result is positive, the wheel rotates forward; if negative, the wheel rotates backward.',
+            zerone_set_wheel_to:
+                'Sets the velocity of the left/right/both wheels to the entered value (-100 to 100%). If you enter a positive value, the wheel rotates forward. If you enter a negative value, the wheel rotates backward. Entering the number 0 stops it.',
             zerone_stop: 'Stops both wheels.',
             zerone_set_led_to: 'Turns the selected LED to the selected color.',
             zerone_pick_led: 'Turns the selected LED to the selected color.',
-            zerone_change_led_by_rgb: 'Adds the entered values to the current R, G, B values of the selected LED, respectively.',
-            zerone_set_led_to_rgb: 'Sets the R, G, B values of the selected LED to the entered values.',
+            zerone_change_led_by_rgb:
+                'Adds the entered values to the current R, G, B values of the selected LED, respectively.',
+            zerone_set_led_to_rgb:
+                'Sets the R, G, B values of the selected LED to the entered values.',
             zerone_clear_led: 'Turns off the selected LED.',
             zerone_play_sound_times: 'Plays the selected sound as many times as entered.',
-            zerone_play_sound_times_until_done: 'Plays the selected sound as many times as entered, and waits for completion.',
-            zerone_change_buzzer_by: 'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to one decimal place.',
-            zerone_set_buzzer_to: 'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to one decimal place. Entering the number 0 turns off the buzzer sound.',
+            zerone_play_sound_times_until_done:
+                'Plays the selected sound as many times as entered, and waits for completion.',
+            zerone_change_buzzer_by:
+                'Adds the entered value to the current pitch (Hz) of the buzzer sound. You can enter up to one decimal place.',
+            zerone_set_buzzer_to:
+                'Sets the pitch of the buzzer sound to the entered value (Hz). You can enter up to one decimal place. Entering the number 0 turns off the buzzer sound.',
             zerone_clear_sound: 'Turns off sound.',
             zerone_play_note: 'It sounds the selected tone and octave.',
-            zerone_play_note_for: 'It sounds the selected tone and octave as much as the beat you entered.',
+            zerone_play_note_for:
+                'It sounds the selected tone and octave as much as the beat you entered.',
             zerone_rest_for: 'Rests as much as the beat you entered.',
-            zerone_change_tempo_by: 'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
-            zerone_set_tempo_to: 'Sets the playing or resting speed to the entered BPM (beats per minute).',
+            zerone_change_tempo_by:
+                'Adds the entered value to the current BPM (beats per minute) of the playing or resting speed.',
+            zerone_set_tempo_to:
+                'Sets the playing or resting speed to the entered BPM (beats per minute).',
         },
         Blocks: {
             ROBOID_monitor_buzzer: 'buzzer',
@@ -1033,10 +1103,7 @@ Entry.Zerone.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'zerone_start_sensor',
             },
             paramsKeyMap: {

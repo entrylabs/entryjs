@@ -10,42 +10,40 @@ export class PIXIDragHelper {
         const C = PIXIDragHelper;
         const CE = this._convertEvent;
 
-        function _onMove(e){
+        function _onMove(e) {
             target.emit(C.MOVE, CE(e));
         }
 
-        function _onUp(e){
+        function _onUp(e) {
             target.emit(C.UP, CE(e));
-            target.off("pointermove", _onMove);
+            target.off('pointermove', _onMove);
         }
 
         function _onDown(e) {
             target.emit(C.DOWN, CE(e));
-            target.on("pointermove", _onMove);
+            target.on('pointermove', _onMove);
         }
 
-        target.on("pointerdown", _onDown);
-        target.on("pointerup", _onUp);
-        target.on("pointerupoutside", _onUp);
-        target.on("pointercancel", _onUp);
+        target.on('pointerdown', _onDown);
+        target.on('pointerup', _onUp);
+        target.on('pointerupoutside', _onUp);
+        target.on('pointercancel', _onUp);
     }
 
     static _convertEvent(e) {
-        let g = e.data.global;
+        const g = e.data.global;
         return {
             target: e.target,
             currentTarget: e.currentTarget,
             stageX: g.x,
             stageY: g.y,
             rawX: g.x,
-            rawY: g.y
+            rawY: g.y,
         };
     }
-
 }
 
-PIXIDragHelper.DOWN = "__pointerdown";
-PIXIDragHelper.MOVE = "__pointermove";
-PIXIDragHelper.UP = "__pointerup";
-PIXIDragHelper.OVER = "pointerover";
-
+PIXIDragHelper.DOWN = '__pointerdown';
+PIXIDragHelper.MOVE = '__pointermove';
+PIXIDragHelper.UP = '__pointerup';
+PIXIDragHelper.OVER = 'pointerover';

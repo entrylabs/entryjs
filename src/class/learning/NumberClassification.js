@@ -299,8 +299,8 @@ function eudist(a, b) {
     return sum;
 }
 
-function convertTableToKnnData(tableData) {
-    const { select = [[0], [1]], data: table } = tableData;
+function convertTableToKnnData(tableData = {}) {
+    const { select = [[0], [1]], data: table = [] } = tableData;
     const [attr, predict] = select;
     return table.reduce((accumulator, row) => {
         const { data = [], labels = [] } = accumulator;
