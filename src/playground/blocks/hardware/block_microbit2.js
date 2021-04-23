@@ -27,6 +27,7 @@ const functionKeys = {
     GET_BTN: 'get-btn',
     CHANGE_TEMPO: 'change-tempo',
     GET_LOGO: 'get-touch',
+    GET_ACC: 'get-acc',
     GET_GESTURE: 'get-gesture',
     GET_DIRECTION: 'direction',
     GET_FIELD_STRENGTH: 'field-strength',
@@ -39,6 +40,8 @@ const functionKeys = {
     RADIO_ON: 'radio-on',
     RADIO_OFF: 'radio-off',
     SETTING_RADIO: 'radio-setting',
+    SET_SERVO_MILLI: 'write-period',
+    SET_SERVO_MICRO: 'write-micro-period',
 };
 
 Entry.Microbit2 = new (class Microbit2 {
@@ -63,7 +66,6 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_get_led',
             'microbit2_show_preset_image',
             'microbit2_show_custom_image',
-            'microbit2_show_full_brightness_custom_image',
             'microbit2_show_string',
             'microbit2_reset_screen',
             'microbit2_radio_toggle',
@@ -77,32 +79,34 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_play_sound_effect',
             'microbit2_get_btn',
             'microbit2_get_logo',
+            'microbit2_get_acc',
             'microbit2_get_gesture',
             'microbit2_get_direction',
-            'microbit2_get_field_strength',
             'microbit2_get_field_strength_axis',
             'microbit2_get_light_level',
             'microbit2_get_temperature',
             'microbit2_get_sound_level',
+            'microbit2_set_pwm_milli',
+            'microbit2_set_pwm_micro',
         ];
         this.commandStatus = {};
         this.commandValue = {};
         this.digitalPins = [
-            [8, 8],
-            [9, 9],
-            [12, 12],
-            [13, 13],
-            [14, 14],
-            [15, 15],
-            [16, 16],
+            ['P8', 8],
+            ['P9', 9],
+            ['P12', 12],
+            ['P13', 13],
+            ['P14', 14],
+            ['P15', 15],
+            ['P16', 16],
         ];
         this.analogPins = [
-            [0, 0],
-            [1, 1],
-            [2, 2],
-            [3, 3],
-            [4, 4],
-            [10, 10],
+            ['P0', 0],
+            ['P1', 1],
+            ['P2', 2],
+            ['P3', 3],
+            ['P4', 4],
+            ['P10', 10],
         ];
         this.ledRows = [
             [0, 0],
@@ -193,38 +197,51 @@ Entry.Microbit2 = new (class Microbit2 {
         return {
             ko: {
                 template: {
-                    microbit2_set_led: 'LED X:%1 Y:%2 밝기 %3 로 세팅 %4',
-                    microbit2_get_led: 'LED X:%1 Y:%2 값',
-                    microbit2_show_preset_image: '%1 모양 보여주기 %2',
-                    microbit2_show_custom_image: '밝기를 포함하여 LED %1 로 출력하기 %2',
-                    microbit2_show_full_brightness_custom_image: '가장 밝게 LED %1 로 출력하기 %2',
+                    microbit2_set_led: 'LED의 X: %1 Y: %2 를 밝기 %3 (으)로 정하기 %4',
+                    microbit2_get_led: 'LED의 X: %1 Y: %2 밝기 값',
+                    microbit2_show_preset_image: 'LED에 %1 모양 켜기 %2',
+                    microbit2_show_custom_image: 'LED %1 켜기 %2',
                     microbit2_show_string: '%1 출력하기 %2',
-                    microbit2_reset_screen: '화면 지우기 %1',
-                    microbit2_screen_toggle: '화면 %1 %2',
-                    microbit2_speaker_toggle: '스피커 %1 %2',
-                    microbit2_set_tone: '%1 를 %2 박자만큼 연주하기 %3',
-                    microbit2_play_preset_music: '%1 음악 재생하기 %2',
-                    microbit2_play_sound_effect: ' %1 효과음 재생하기 %2',
+                    microbit2_reset_screen: 'LED 모두 지우기 %1',
+                    microbit2_screen_toggle: 'LED 기능 %1 %2',
+                    microbit2_speaker_toggle: '스피커 기능 %1 %2',
+                    microbit2_set_tone: '%1 음을 %2 박만큼 연주하기 %3',
+                    microbit2_play_preset_music: '%1 음악을 연주하기 %2',
+                    microbit2_play_sound_effect: '%1 효과음을 연주하기 %2',
                     microbit2_get_btn: '%1 버튼이 눌렸는가?',
-                    microbit2_change_tempo: '박자를 %1 비트의 %2 bpm으로 변경 %3',
+                    microbit2_change_tempo: '연주 속도를 %1 박에 %2 BPM으로 정하기 %3',
                     microbit2_get_logo: '로고를 터치했는가?',
-                    microbit2_get_gesture: '현재 움직임',
+                    microbit2_get_acc: '%1 의 가속도 값',
+                    microbit2_get_gesture: '움직임이 %1 인가?',
                     microbit2_get_direction: '나침반 방향',
-                    microbit2_get_field_strength: '자기장 세기',
                     microbit2_get_field_strength_axis: '%1 축의 자기장 세기',
                     microbit2_get_light_level: '빛 센서 값',
-                    microbit2_get_temperature: '온도 센서 값',
-                    microbit2_get_sound_level: '소리 세기 값',
-                    microbit2_get_analog: '아날로그 핀 %1 값',
-                    microbit2_set_analog: '아날로그 핀 %1 에 %2값 설정 %3',
-                    microbit2_get_digital: '디지털 핀 %1 값',
-                    microbit2_set_digital: '디지털 핀 %1 에 %2값 설정 %3',
-                    microbit2_radio_toggle: '라디오 %1 %2',
-                    microbit2_radio_setting: '라디오 채널을 %1로 변경 %2',
-                    microbit2_radio_send: '라디오로 %1 전송 %2',
-                    microbit2_radio_received: '라디오 수신값',
+                    microbit2_get_temperature: '온도 값',
+                    microbit2_get_sound_level: '마이크 소리 크기 값',
+                    microbit2_get_analog: '핀 %1 번 아날로그 값',
+                    microbit2_set_analog: '핀 %1 에 아날로그 값 %2 를 출력하기 %3',
+                    microbit2_get_digital: '핀 %1 번 디지털 값',
+                    microbit2_set_digital: '핀 %1 에 디지털 값 %2 를 출력하기 %3',
+                    microbit2_radio_toggle: '라디오 기능 %1 %2',
+                    microbit2_radio_setting: '라디오 채널을 %1 (으)로 바꾸기 %2',
+                    microbit2_radio_send: '라디오로 %1 송신하기 %2',
+                    microbit2_radio_received: '라디오 수신 값',
+                    microbit2_set_pwm_milli: '핀 %1 에 서보 펄스 폭을 %2 밀리초로 설정하기 %3',
+                    microbit2_set_pwm_micro: '핀 %1 에 서보 펄스 폭을 %2 마이크로초로 설정하기 %3',
                 },
                 Blocks: {
+                    scalar: '스칼라',
+                    up: '위',
+                    down: '아래',
+                    left: '왼쪽',
+                    right: '오른쪽',
+                    face_up: '앞면',
+                    face_down: '뒷면',
+                    freefall: '자유 낙하',
+                    '3g': '3G',
+                    '6g': '6G',
+                    '8g': '8G',
+                    shake: '흔들림',
                     octave: '옥타브',
                     DADADADUM: '운명 교향곡',
                     ENTERTAINER: '엔터테이너',
@@ -299,7 +316,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_ARROW_N: '북쪽',
                     microbit_2_ARROW_NE: '북동쪽',
                     microbit_2_ARROW_E: '동쪽',
-                    microbit_2_ARROW_SE: '동남쪽',
+                    microbit_2_ARROW_SE: '남동쪽',
                     microbit_2_ARROW_S: '남쪽',
                     microbit_2_ARROW_SW: '남서쪽',
                     microbit_2_ARROW_W: '서쪽',
@@ -316,14 +333,14 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_MUSIC_CROTCHET: '4분음표',
                     microbit_2_MUSIC_QUAVER: '8분음표',
                     microbit_2_MUSIC_QUAVERS: '8분음표 2개',
-                    microbit_2_PITCHFORK: '포크',
-                    microbit_2_XMAS: '크리스마스',
+                    microbit_2_PITCHFORK: '쇠스랑',
+                    microbit_2_XMAS: '크리스마스 트리',
                     microbit_2_PACMAN: '팩맨',
                     microbit_2_TARGET: '목표',
                     microbit_2_TSHIRT: '티셔츠',
                     microbit_2_ROLLERSKATE: '롤러스케이트',
                     microbit_2_DUCK: '오리',
-                    microbit_2_HOUSE: '말',
+                    microbit_2_HOUSE: '집',
                     microbit_2_TORTOISE: '거북이',
                     microbit_2_BUTTERFLY: '나비',
                     microbit_2_STICKFIGURE: '스틱맨',
@@ -344,8 +361,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_led: 'LED의 밝기를 가져옵니다.',
                     microbit2_show_preset_image: 'LED에 미리 설정된 이미지를 보여줍니다.',
                     microbit2_show_custom_image: 'LED에 원하는 이미지를 보여줍니다.',
-                    microbit2_show_full_brightness_custom_image:
-                        'LED에 원하는 이미지를 밝기 값을 최대로 하여 보여줍니다.',
                     microbit2_show_string: 'LED에 영어 문자열을 보여줍니다.',
                     microbit2_reset_screen: 'LED를 초기화 합니다.',
                     microbit2_radio_toggle: '라디오를 켜거나 끕니다.',
@@ -361,11 +376,12 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_logo: '로고가 눌렸는가를 확인합니다.',
                     microbit2_get_gesture: '현재 동작을 확인합니다.',
                     microbit2_get_direction: '현재 나침반 값을 불러옵니다.',
-                    microbit2_get_field_strength: '현재 자기장 강도를 불러옵니다.',
                     microbit2_get_field_strength_axis: '각 축별 현재 자기장 강도를 불러옵니다.',
                     microbit2_get_light_level: '빛센서 값을 불러옵니다(0 ~ 255).',
                     microbit2_get_temperature: '온도 센서 값을 불러옵니다(C).',
                     microbit2_get_sound_level: '현재 소리 강도를 불러옵니다(0~255).',
+                    microbit2_set_pwm_milli: '해당 핀에 PWM 값을 밀리초 단위로 설정합니다',
+                    microbit2_set_pwm_micro: '해당 핀에 PWM 값을 마이크로초 단위로 설정합니다',
                 },
             },
             en: {
@@ -374,8 +390,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_led: 'LED X:%1 Y:%2 brightness',
                     microbit2_show_preset_image: 'Show %1 shape %2',
                     microbit2_show_custom_image: 'Show %1 shape with brightness %2',
-                    microbit2_show_full_brightness_custom_image:
-                        'Show %1 shape with full brightness %2',
                     microbit2_show_string: '%1 appear %2',
                     microbit2_reset_screen: 'Reset Screen %1',
                     microbit2_screen_toggle: 'Turn Screen %1 %2',
@@ -386,9 +400,9 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_btn: 'is %1 button pressed?',
                     microbit2_change_tempo: 'Change tempo to %1 beat and %2 bpm %3',
                     microbit2_get_logo: 'is Logo Touched',
+                    microbit2_get_acc: 'Accelerometer value of %1',
                     microbit2_get_gesture: 'Current Gesture',
                     microbit2_get_direction: 'Compass Direction',
-                    microbit2_get_field_strength: 'Field Strength',
                     microbit2_get_field_strength_axis: 'Field Strength of %1 axis',
                     microbit2_get_light_level: 'Light Level',
                     microbit2_get_temperature: 'Temperature',
@@ -401,8 +415,22 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_radio_setting: 'Set Radio Channel to %1 %2',
                     microbit2_radio_send: 'Send %1 over Radio %2',
                     microbit2_radio_received: 'Received Radio Value',
+                    microbit2_set_pwm_milli: 'Set PWM at %1 of %2 ms %3',
+                    microbit2_set_pwm_micro: 'Set PWM at %1 of %2 us %3',
                 },
                 Blocks: {
+                    scalar: 'Scalar',
+                    up: 'Up',
+                    down: 'Down',
+                    left: 'Left',
+                    right: 'Right',
+                    face_up: 'Face Up',
+                    face_down: 'Face Down',
+                    freefall: 'Free Fall',
+                    '3g': '3G',
+                    '6g': '6G',
+                    '8g': '8G',
+                    shake: 'Shake',
                     octave: 'octave',
                     DADADADUM: 'Beethoven 5th Symphony',
                     ENTERTAINER: 'The Entertainer',
@@ -522,8 +550,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_led: 'Returns status of selected led',
                     microbit2_show_preset_image: 'Shows preset image',
                     microbit2_show_custom_image: 'Shows custom image with brightness level',
-                    microbit2_show_full_brightness_custom_image:
-                        'Shows custom image with maximum brightness level',
                     microbit2_show_string: 'Print English letter/word/sentence',
                     microbit2_reset_screen: 'Resets Screen',
                     microbit2_radio_toggle: 'Toggles Radio',
@@ -539,11 +565,12 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_logo: 'Returns True if logo is touched',
                     microbit2_get_gesture: 'Returns current gesture',
                     microbit2_get_direction: 'Returns compass direction',
-                    microbit2_get_field_strength: 'Returns magnetic field strength',
                     microbit2_get_field_strength_axis: 'Returns magnetic field strength by axis',
                     microbit2_get_light_level: 'Returns light level(0 ~ 255)',
                     microbit2_get_temperature: 'Returns temperature in Celcius(C)',
                     microbit2_get_sound_level: 'Returns sound level (0~255)',
+                    microbit2_set_pwm_milli: 'Set PWM value as ms at selected pin',
+                    microbit2_set_pwm_micro: 'Set PWM value as us at selected pin',
                 },
             },
         };
@@ -557,14 +584,6 @@ Entry.Microbit2 = new (class Microbit2 {
 
     getBlocks = function() {
         return {
-            // microbit2_get_analog: 'Analog Pin %1 Value',
-            // microbit2_set_analog: 'Set %2 to Analog Pin %1 %3',
-            // microbit2_get_digital: 'Digital Pin %1 Value',
-            // microbit2_set_digital: 'Set %2 to Digital pin %1 %3',
-            // GET_ANALOG: 'get-analog',
-            // GET_DIGITAL: 'get-digital',
-            // SET_ANALOG: 'set-analog',
-            // SET_DIGITAL: 'set-digital',
             microbit2_get_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -681,7 +700,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const reqOptions = {
                         id: script.entity.id,
                         command: functionKeys.SET_ANALOG,
-                        payload: value,
+                        payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -748,39 +767,22 @@ Entry.Microbit2 = new (class Microbit2 {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: this.ledRows,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                         value: 0,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                     {
-                        type: 'Dropdown',
-                        options: this.ledRows,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                         value: 0,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [0, 0],
-                            [1, 1],
-                            [2, 2],
-                            [3, 3],
-                            [4, 4],
-                            [5, 5],
-                            [6, 6],
-                            [7, 7],
-                            [8, 8],
-                            [9, 9],
-                        ],
-                        value: 0,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: 9,
                     },
                     {
                         type: 'Indicator',
@@ -792,6 +794,20 @@ Entry.Microbit2 = new (class Microbit2 {
                 class: 'microbit2Led',
                 isNotFor: ['microbit2'],
                 def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['9'],
+                        },
+                    ],
                     type: 'microbit2_set_led',
                 },
                 paramsKeyMap: {
@@ -800,9 +816,12 @@ Entry.Microbit2 = new (class Microbit2 {
                     VALUE: 2,
                 },
                 func: (sprite, script) => {
-                    const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 9));
-                    const x = Math.round(_clamp(script.getNumberValue('X'), 0, 4));
-                    const y = Math.round(_clamp(script.getNumberValue('Y'), 0, 4));
+                    const value = script.getNumberValue('VALUE');
+                    const x = script.getNumberValue('X');
+                    const y = script.getNumberValue('Y');
+                    if (x < 0 || y < 0 || x > 4 || y > 4 || value < 0 || value > 9) {
+                        return;
+                    }
                     const data = {
                         type: functionKeys.SET_LED,
                         data: {
@@ -830,26 +849,32 @@ Entry.Microbit2 = new (class Microbit2 {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: this.ledRows,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                         value: 0,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                     {
-                        type: 'Dropdown',
-                        options: this.ledRows,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                         value: 0,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                 ],
                 events: {},
                 class: 'microbit2Led',
                 isNotFor: ['microbit2'],
                 def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['0'],
+                        },
+                    ],
                     type: 'microbit2_get_led',
                 },
                 paramsKeyMap: {
@@ -857,8 +882,11 @@ Entry.Microbit2 = new (class Microbit2 {
                     Y: 1,
                 },
                 func: (sprite, script) => {
-                    const x = _clamp(script.getNumberValue('X'), 0, 4);
-                    const y = _clamp(script.getNumberValue('Y'), 0, 4);
+                    const x = script.getNumberValue('X');
+                    const y = script.getNumberValue('Y');
+                    if (x < 0 || y < 0 || x > 4 || y > 4) {
+                        return;
+                    }
                     const parsedPayload = `${x};${y}`;
 
                     const reqOptions = {
@@ -902,26 +930,6 @@ Entry.Microbit2 = new (class Microbit2 {
                             [Lang.Blocks.microbit_2_MEH, 11],
                             [Lang.Blocks.microbit_2_YES, 12],
                             [Lang.Blocks.microbit_2_NO, 13],
-                            [Lang.Blocks.microbit_2_CLOCK1, 14],
-                            [Lang.Blocks.microbit_2_CLOCK2, 15],
-                            [Lang.Blocks.microbit_2_CLOCK3, 16],
-                            [Lang.Blocks.microbit_2_CLOCK4, 17],
-                            [Lang.Blocks.microbit_2_CLOCK5, 18],
-                            [Lang.Blocks.microbit_2_CLOCK6, 19],
-                            [Lang.Blocks.microbit_2_CLOCK7, 20],
-                            [Lang.Blocks.microbit_2_CLOCK8, 21],
-                            [Lang.Blocks.microbit_2_CLOCK9, 22],
-                            [Lang.Blocks.microbit_2_CLOCK10, 23],
-                            [Lang.Blocks.microbit_2_CLOCK11, 24],
-                            [Lang.Blocks.microbit_2_CLOCK12, 25],
-                            [Lang.Blocks.microbit_2_ARROW_N, 26],
-                            [Lang.Blocks.microbit_2_ARROW_NE, 27],
-                            [Lang.Blocks.microbit_2_ARROW_E, 28],
-                            [Lang.Blocks.microbit_2_ARROW_SE, 29],
-                            [Lang.Blocks.microbit_2_ARROW_S, 30],
-                            [Lang.Blocks.microbit_2_ARROW_SW, 31],
-                            [Lang.Blocks.microbit_2_ARROW_W, 32],
-                            [Lang.Blocks.microbit_2_ARROW_NW, 33],
                             [Lang.Blocks.microbit_2_TRIANGLE, 34],
                             [Lang.Blocks.microbit_2_TRIANGLE_LEFT, 35],
                             [Lang.Blocks.microbit_2_CHESSBOARD, 36],
@@ -951,6 +959,26 @@ Entry.Microbit2 = new (class Microbit2 {
                             [Lang.Blocks.microbit_2_SKULL, 60],
                             [Lang.Blocks.microbit_2_UMBRELLA, 61],
                             [Lang.Blocks.microbit_2_SNAKE, 62],
+                            [Lang.Blocks.microbit_2_CLOCK1, 14],
+                            [Lang.Blocks.microbit_2_CLOCK2, 15],
+                            [Lang.Blocks.microbit_2_CLOCK3, 16],
+                            [Lang.Blocks.microbit_2_CLOCK4, 17],
+                            [Lang.Blocks.microbit_2_CLOCK5, 18],
+                            [Lang.Blocks.microbit_2_CLOCK6, 19],
+                            [Lang.Blocks.microbit_2_CLOCK7, 20],
+                            [Lang.Blocks.microbit_2_CLOCK8, 21],
+                            [Lang.Blocks.microbit_2_CLOCK9, 22],
+                            [Lang.Blocks.microbit_2_CLOCK10, 23],
+                            [Lang.Blocks.microbit_2_CLOCK11, 24],
+                            [Lang.Blocks.microbit_2_CLOCK12, 25],
+                            [Lang.Blocks.microbit_2_ARROW_N, 26],
+                            [Lang.Blocks.microbit_2_ARROW_NE, 27],
+                            [Lang.Blocks.microbit_2_ARROW_E, 28],
+                            [Lang.Blocks.microbit_2_ARROW_SE, 29],
+                            [Lang.Blocks.microbit_2_ARROW_S, 30],
+                            [Lang.Blocks.microbit_2_ARROW_SW, 31],
+                            [Lang.Blocks.microbit_2_ARROW_W, 32],
+                            [Lang.Blocks.microbit_2_ARROW_NW, 33],
                         ],
                         value: 0,
                         fontSize: 11,
@@ -1015,49 +1043,6 @@ Entry.Microbit2 = new (class Microbit2 {
                         processedValue[i] = value[i].join();
                     }
                     const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command: functionKeys.SET_CUSTOM_IMAGE,
-                        payload: parsedPayload,
-                    };
-                    this.requestCommandWithResponse(reqOptions);
-                    const parsedResponse = this.getResponse(reqOptions);
-                },
-            },
-            microbit2_show_full_brightness_custom_image: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Led',
-                        defaultStatus: this.defaultLed,
-                        maxBrightness: 9,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                class: 'microbit2Led',
-                isNotFor: ['microbit2'],
-                def: {
-                    type: 'microbit2_show_full_brightness_custom_image',
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                func: (sprite, script) => {
-                    const value = script.getField('VALUE');
-                    const processedValue = [];
-                    for (const i in value) {
-                        processedValue[i] = value[i].join();
-                    }
-                    const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
-
                     const reqOptions = {
                         id: script.entity.id,
                         command: functionKeys.SET_CUSTOM_IMAGE,
@@ -1667,28 +1652,96 @@ Entry.Microbit2 = new (class Microbit2 {
                     } else return 0;
                 },
             },
-            microbit2_get_gesture: {
+            microbit2_get_acc: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#ffffff',
                 skeleton: 'basic_string_field',
                 statements: [],
-                params: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['X', 'x'],
+                            ['Y', 'y'],
+                            ['Z', 'z'],
+                            [Lang.Blocks.scalar, 'mag'],
+                        ],
+                        value: 'x',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                class: 'microbit2Sensor',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_get_acc',
+                },
+                paramsKeyMap: {
+                    AXIS: 0,
+                },
+                func: (sprite, script) => {
+                    const axis = script.getField('AXIS');
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command: functionKeys.GET_ACC,
+                        payload: axis,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
+                    return parsedResponse[1];
+                },
+            },
+            microbit2_get_gesture: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.up, 'up'],
+                            [Lang.Blocks.down, 'down'],
+                            [Lang.Blocks.left, 'left'],
+                            [Lang.Blocks.right, 'right'],
+                            [Lang.Blocks.face_up, 'face up'],
+                            [Lang.Blocks.face_down, 'face down'],
+                            [Lang.Blocks.freefall, 'freefall'],
+                            [Lang.Blocks['3g'], '3g'],
+                            [Lang.Blocks['6g'], '6g'],
+                            [Lang.Blocks['8g'], '8g'],
+                            [Lang.Blocks['shake'], 'shake'],
+                        ],
+                        value: 'up',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
                 events: {},
                 class: 'microbit2Sensor',
                 isNotFor: ['microbit2'],
                 def: {
                     type: 'microbit2_get_gesture',
                 },
-                paramsKeyMap: {},
+                paramsKeyMap: { GESTURE: 0 },
                 func: (sprite, script) => {
+                    const gesture = script.getField('GESTURE');
+
                     const reqOptions = {
                         id: script.entity.id,
                         command: functionKeys.GET_GESTURE,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
-                    return parsedResponse[1];
+                    if (gesture === parsedResponse[1]) {
+                        return true;
+                    }
+                    return false;
                 },
             },
             microbit2_get_direction: {
@@ -1715,30 +1768,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     return parsedResponse[1];
                 },
             },
-            microbit2_get_field_strength: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                fontColor: '#ffffff',
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [],
-                events: {},
-                class: 'microbit2Sensor',
-                isNotFor: ['microbit2'],
-                def: {
-                    type: 'microbit2_get_field_strength',
-                },
-                paramsKeyMap: {},
-                func: (sprite, script) => {
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command: functionKeys.GET_FIELD_STRENGTH,
-                    };
-                    this.requestCommandWithResponse(reqOptions);
-                    const parsedResponse = this.getResponse(reqOptions);
-                    return parsedResponse[1];
-                },
-            },
             microbit2_get_field_strength_axis: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1752,6 +1781,7 @@ Entry.Microbit2 = new (class Microbit2 {
                             ['X', 'x'],
                             ['Y', 'y'],
                             ['Z', 'z'],
+                            [Lang.Blocks.scalar, 'mag'],
                         ],
                         value: 'x',
                         fontSize: 11,
@@ -1850,6 +1880,108 @@ Entry.Microbit2 = new (class Microbit2 {
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
                     return parsedResponse[1];
+                },
+            },
+            microbit2_set_pwm_milli: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: this.analogPins,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbit2Servo',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_set_pwm_milli',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pin = script.getValue('PIN');
+                    const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
+
+                    const parsedPayload = `${pin};${value}`;
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command: functionKeys.SET_SERVO_MILLI,
+                        payload: parsedPayload,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
+                    return;
+                },
+            },
+            microbit2_set_pwm_micro: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: this.analogPins,
+                        value: 0,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbit2Servo',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_set_pwm_micro',
+                },
+                paramsKeyMap: {
+                    PIN: 0,
+                    VALUE: 1,
+                },
+                func: (sprite, script) => {
+                    const pin = script.getValue('PIN');
+                    const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
+
+                    const parsedPayload = `${pin};${value}`;
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command: functionKeys.SET_SERVO_MICRO,
+                        payload: parsedPayload,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
+                    return;
                 },
             },
         };
