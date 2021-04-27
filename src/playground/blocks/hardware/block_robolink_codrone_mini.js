@@ -1288,7 +1288,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                     }
                     else
                     {
-                        return Entry.byrobot_base.setBuzzerMute(script, 0x20, 40, false, false);
+                        return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, false, false);
                     }
                 } else {
                     if (wait == 1)
@@ -1297,7 +1297,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                     }
                     else
                     {
-                        return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, 40, false, false);
+                        return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, false, false);
                     }
                 }
             },
@@ -1353,7 +1353,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                 }
                 else
                 {
-                    return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, 40, false, false);
+                    return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
                 }
             },
         },
