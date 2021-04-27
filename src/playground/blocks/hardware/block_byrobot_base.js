@@ -1025,9 +1025,9 @@ Entry.byrobot_base =
                         mode = 3;
                     } // Scale 즉시
 
-                    const scalecalc = octave * 12 + scale;
+                    const scale_index = octave * 12 + scale;
 
-                    this.transferBuzzer(target, mode, scalecalc, time);
+                    this.transferBuzzer(target, mode, scale_index, time);
                 }
                 return script;
 
