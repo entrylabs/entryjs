@@ -1330,7 +1330,6 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             params    : [
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
                 {
                     type   : 'Dropdown',
                     options: [
