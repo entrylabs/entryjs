@@ -120,6 +120,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 common_controller                       : '조종기',
                 common_button_button                    : '버튼 입력',
                 common_button_event                     : '버튼 상태',
+                common_wait                             : '기다리기',
+                common_next                             : '넘어가기',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -194,10 +196,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_level_1                           : '레벨 1',
                 drone_level_2                           : '레벨 2',
                 drone_level_3                           : '레벨 3',
-                drone_flip_forward                      : '앞',
-                drone_flip_rear                         : '뒤',
-                drone_flip_left                         : '왼쪽',
-                drone_flip_right                        : '오른쪽',
                 drone_trim_roll_increase                : '롤 증가',
                 drone_trim_roll_decrease                : '롤 감소',
                 drone_trim_pitch_increase               : '피치 증가',
@@ -257,7 +255,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_trim_direction                : '미세조정 %1 %2',
                 robolink_codrone_diy_drone_trim                          : '미세조정 롤 %1, 피치 %2 %3',
                 robolink_codrone_diy_drone_speed                         : '속도 %1 %2',
-                robolink_codrone_diy_drone_flip                          : '재주넘기 %1 %2',
                 robolink_codrone_diy_drone_sensor_reset                  : '센서 초기화 %1',
                 robolink_codrone_diy_drone_control_headless              : '헤드리스 %1 %2',
                 robolink_codrone_diy_drone_control_drone_landing         : '착륙하기 %1',
@@ -268,10 +265,9 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_control_quad_one_delay        : '드론 %1 %2% %3 초 실행 %4',
                 robolink_codrone_diy_drone_control_quad                  : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% 정하기 %5',
                 robolink_codrone_diy_drone_control_quad_delay            : '드론 Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5초 실행 %6',
-                robolink_codrone_diy_drone_control_position_one          : '드론 %1(으)로 %2m를 %3m/s로 이동 %4',
-                robolink_codrone_diy_drone_control_position_turn         : '드론 %1(으)로 %2도를 %3deg/s로 회전 %4',
-                robolink_codrone_diy_drone_control_position_location     : '드론 %1 %2m, %3 %4m, %5 %6m를 %7m/s로 이동 %8',
-                robolink_codrone_diy_drone_control_position_location_turn: '드론 %1 %2m, %3 %4m, %5 %6m를 %7m/s로 이동, %8 %9도를 %10deg/s로 회전 %11',
+                robolink_codrone_diy_drone_control_position_one          : '드론 %1(으)로 %2m를 %3m/s로 이동 %4 %5',
+                robolink_codrone_diy_drone_control_position_turn         : '드론 %1(으)로 %2도를 %3deg/s로 회전 %4 %5',
+                robolink_codrone_diy_drone_control_position_location     : '드론 %1 %2m, %3 %4m, %5 %6m를 %7m/s로 이동 %8 %9',
                 robolink_codrone_diy_drone_light_color_input             : '드론 LED R %1, G %2, B %3 %4 %5 %6',
                 robolink_codrone_diy_drone_light_color_select            : '드론 LED %1 %2 %3 %4',
                 robolink_codrone_diy_drone_light_manual_single_input     : '드론 LED %1 밝기 %2 %3',
@@ -280,7 +276,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_motor_single                  : '드론 %1번 모터를 %2(으)로 회전 %3',
                 robolink_codrone_diy_drone_information                   : '드론 정보 %1',
                 robolink_codrone_diy_drone_sensor                        : '센서값 %1',
-                robolink_codrone_diy_drone_value_position                : '위치 %1',
             },
 
             Helper: {
@@ -300,7 +295,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_trim_direction                : "<br>드론 미세 조정 설정을 현재 값에서 5단위로 증가시키거나 감소시킵니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
                 robolink_codrone_diy_drone_trim                          : "<br>드론 미세 조정 설정을 변경합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
                 robolink_codrone_diy_drone_speed                         : "<br>드론 이동 속도를 변경합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
-                robolink_codrone_diy_drone_flip                          : "<br>드론을 지정한 방향으로 공중 회전합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#재주넘/font>",
                 robolink_codrone_diy_drone_sensor_reset                  : "<br>드론의 자이로 바이어스와 트림 설정을 초기화합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#초기화/font>",
                 robolink_codrone_diy_drone_control_headless              : "<br>드론 좌표 기준을 변경합니다. 헤드리스 켜기로 하면 '이륙 시'와 '방향초기화'를 했을 때 드론이 바라보는 방향이 0도로 고정됩니다. 이 때에는 Yaw를 조작하여 드론이 다른 방향을 보게 하여도 처음 지정한 방향을 기준으로 움직입니다. 사용자가 바라보는 방향과 드론의 기준 방향이 같을 때 조작하기 편리한 장점이 있습니다.<br>헤드리스 끄기를 선택하면 드론이 바라보는 방향이 0도가 됩니다. 드론의 움직임에 따라 방향이 계속 바뀌기 때문에 익숙해지기 전까지는 사용하기 어려울 수 있습니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#좌표기준</font>",
                 robolink_codrone_diy_drone_control_drone_landing         : "<br>드론을 착륙시킵니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#착륙</font>",
@@ -314,7 +308,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_control_position_one          : "<br>드론의 방향과 거리, 이동 속도를 지정하여 지정한 위치로 이동합니다. 거리를 속도로 나누어 얻은 시간에 1.2를 곱한 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#이동</font> <font color='forestgreen'>#시간지연</font>",
                 robolink_codrone_diy_drone_control_position_turn         : "<br>드론의 회전 방향과 각도, 회전 속도를 지정하여 지정한 각도로 회전합니다. 목표 각도를 회전 속도로 나누어 얻은 시간에 1.2를 곱한 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#회전</font> <font color='forestgreen'>#시간지연</font>",
                 robolink_codrone_diy_drone_control_position_location     : "<br>드론의 X, Y, Z 축의 방향과 거리, 이동 속도를 설정하여 지정한 위치로 이동합니다. 거리를 속도로 나누어 얻은 시간에 1.2를 곱한 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#이동</font> <font color='forestgreen'>#시간지연</font>",
-                robolink_codrone_diy_drone_control_position_location_turn: "<br>드론의 X, Y, Z 축의 방향과 거리, 이동 속도, 회전 방향과 목표 각도, 회전 속도를 설정하여 지정한 위치로의 이동과 회전을 실행합니다. 거리를 속도로 나누어 얻은 시간에 1.2를 곱한 시간 또는 목표 각도를 회전 속도로 나누어 얻은 시간에 1.2를 곱한 시간 중에 긴 시간만큼 해당 블럭에 머뭅니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#이동</font> <font color='forestgreen'>#시간지연</font>",
                 robolink_codrone_diy_drone_light_color_input             : "<br>빛의 삼원색인 Red, Green, Blue 값을 지정하여 드론의 눈 또는 팔 LED의 색상을 원하는대로 만들 수 있습니다.<br>10진수(0 ~ 255) 값을 사용합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 robolink_codrone_diy_drone_light_color_select            : "<br>RGB 색지정 블록을 이용해서 만들 수 있는<br> 드론 LED 예시입니다.<br>RGB 색지정 블록을 이용해서 멋진 색깔을<br> 다양하게 만들어보세요.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
                 robolink_codrone_diy_drone_light_manual_single_input     : "<br>드론 LED를 조작하는데 사용합니다.<br>10진수(0 ~ 255) 또는 16진수(0x00 ~ 0xFF) 값을 사용할 수 있습니다.<br>각각의 비트는 LED를 선택하는 스위치 역할을 합니다.<br>밝기 값은 0 ~ 255 사이의 값을 사용할 수 있습니다.<br>값이 커질수록 더 밝아집니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#LED제어</font>",
@@ -322,8 +315,7 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_motor_stop                    : "<br>모든 모터의 작동을 정지합니다.<br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터정지</font>",
                 robolink_codrone_diy_drone_motor_single                  : "<br>모터 제어 블럭입니다.<br>모터의 순서는 12시 방향부터 차례대로 1(앞 오른쪽), 2(뒤 오른쪽), 3(뒤 왼쪽), 4(앞 왼쪽) 입니다.<br>모터 회전에 사용 가능한 값의 범위는 0 ~ 4095입니다. <br><br><font color='crimson'>#드론</font> <font color='dodgerblue'>#모터제어</font>",
                 robolink_codrone_diy_drone_information                   : "<br>드론의 현재 자세를 각도로 반환합니다. Roll은 좌우 기울기(-90 ~ 90), Pitch는 앞뒤 기울기(-90 ~ 90), Yaw는 회전 각도(-180 ~ 180) 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#자세</font>",
-                robolink_codrone_diy_drone_sensor                        : "<br>드론 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
-                robolink_codrone_diy_drone_value_position                : "<br>드론 위치와 관련된 값들을 반환합니다.(단위:m)<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#위치</font>",
+                robolink_codrone_diy_drone_sensor                        : "<br>드론 센서와 관련된 값들을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font>",
             },
         },
 
@@ -470,10 +462,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 drone_level_1                           : 'Level 1',
                 drone_level_2                           : 'Level 2',
                 drone_level_3                           : 'Level 2',
-                drone_flip_forward                      : 'Forward',
-                drone_flip_rear                         : 'Rear',
-                drone_flip_left                         : 'Left',
-                drone_flip_right                        : 'Right',
                 drone_trim_roll_increase                : 'Roll increase',
                 drone_trim_roll_decrease                : 'Roll decrease',
                 drone_trim_pitch_increase               : 'Pitch increase',
@@ -533,7 +521,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_trim_direction                : 'Trim %1 %2',
                 robolink_codrone_diy_drone_trim                          : 'Trim Roll %1%, Pitch %2% %3',
                 robolink_codrone_diy_drone_speed                         : 'Speed %1 %2',
-                robolink_codrone_diy_drone_flip                          : 'Flip %1 %2',
                 robolink_codrone_diy_drone_sensor_reset                  : 'Sensor reset %1',
                 robolink_codrone_diy_drone_control_headless              : 'Headless %1 %2',
                 robolink_codrone_diy_drone_control_drone_landing         : 'Landing %1',
@@ -544,10 +531,9 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_control_quad_one_delay        : 'Set %1 %2% %3 sec %4',
                 robolink_codrone_diy_drone_control_quad                  : 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% %5',
                 robolink_codrone_diy_drone_control_quad_delay            : 'Set Roll %1%, Pitch %2%, Yaw %3%, Throttle %4% for %5sec %6',
-                robolink_codrone_diy_drone_control_position_one          : 'Move %2 meter(s) %1 to %3 m/s %4',
-                robolink_codrone_diy_drone_control_position_turn         : 'Rotate %2 degree(s) %1 to %3 deg/s %4',
-                robolink_codrone_diy_drone_control_position_location     : 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s %8',
-                robolink_codrone_diy_drone_control_position_location_turn: 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s, Rotate %9 degree(s) %8 to %10 deg/s %11',
+                robolink_codrone_diy_drone_control_position_one          : 'Move %2 meter(s) %1 to %3 m/s %4 %5',
+                robolink_codrone_diy_drone_control_position_turn         : 'Rotate %2 degree(s) %1 to %3 deg/s %4 %5',
+                robolink_codrone_diy_drone_control_position_location     : 'Move %2 meter(s) %1, %4 meter(s) %3, %6 meter(s) %5 to %7 m/s %8 %9',
                 robolink_codrone_diy_drone_light_color_input             : 'Drone LED R %1, G %2, B %3 %4 %5 %6',
                 robolink_codrone_diy_drone_light_color_select            : 'Drone LED %1 %2 %3 %4',
                 robolink_codrone_diy_drone_light_manual_single_input     : 'Drone LED %1 lightness %2 %3',
@@ -556,7 +542,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_motor_single                  : 'No. %1 Motor rotate for %2 %3',
                 robolink_codrone_diy_drone_information                   : 'Drone information %1',
                 robolink_codrone_diy_drone_sensor                        : 'Sensor %1',
-                robolink_codrone_diy_drone_value_position                : 'Position %1',
             },
 
             Helper: {
@@ -576,7 +561,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_trim_direction                : '',
                 robolink_codrone_diy_drone_trim                          : '',
                 robolink_codrone_diy_drone_speed                         : '',
-                robolink_codrone_diy_drone_flip                          : '',
                 robolink_codrone_diy_drone_sensor_reset                  : '',
                 robolink_codrone_diy_drone_control_headless              : '',
                 robolink_codrone_diy_drone_control_drone_landing         : '',
@@ -590,7 +574,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_control_position_one          : '',
                 robolink_codrone_diy_drone_control_position_turn         : '',
                 robolink_codrone_diy_drone_control_position_location     : '',
-                robolink_codrone_diy_drone_control_position_location_turn: '',
                 robolink_codrone_diy_drone_light_color_input             : '',
                 robolink_codrone_diy_drone_light_color_select            : '',
                 robolink_codrone_diy_drone_light_manual_single_input     : '',
@@ -599,7 +582,6 @@ Entry.robolink_codrone_diy.setLanguage = function () {
                 robolink_codrone_diy_drone_motor_single                  : '',
                 robolink_codrone_diy_drone_information                   : '',
                 robolink_codrone_diy_drone_sensor                        : '',
-                robolink_codrone_diy_drone_value_position                : '',
             },
         },
     };
@@ -670,7 +652,6 @@ Entry.robolink_codrone_diy.monitorTemplate = function () {
 Entry.robolink_codrone_diy.blockMenuBlocks = [
     'robolink_codrone_diy_drone_information',
     'robolink_codrone_diy_drone_sensor',
-    'robolink_codrone_diy_drone_value_position',
     'robolink_codrone_diy_controller_value_button',
     'robolink_codrone_diy_controller_value_button_event',
     'robolink_codrone_diy_controller_value_joystick_left',
@@ -683,7 +664,6 @@ Entry.robolink_codrone_diy.blockMenuBlocks = [
     'robolink_codrone_diy_drone_trim_direction',
     'robolink_codrone_diy_drone_trim',
     'robolink_codrone_diy_drone_speed',
-    'robolink_codrone_diy_drone_flip',
     'robolink_codrone_diy_drone_sensor_reset',
     'robolink_codrone_diy_drone_control_headless',
     'robolink_codrone_diy_drone_control_drone_reset_heading',
@@ -694,7 +674,6 @@ Entry.robolink_codrone_diy.blockMenuBlocks = [
     'robolink_codrone_diy_drone_control_position_one',
     'robolink_codrone_diy_drone_control_position_turn',
     'robolink_codrone_diy_drone_control_position_location',
-    'robolink_codrone_diy_drone_control_position_location_turn',
     'robolink_codrone_diy_drone_motor_stop',
     'robolink_codrone_diy_drone_motor_single',
     'robolink_codrone_diy_drone_light_manual_single_off',
@@ -766,21 +745,17 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 {
                     type   : 'Dropdown',
                     options: [
-                        [Lang.Blocks.drone_accel_x, 'motion_accelX'],
-                        [Lang.Blocks.drone_accel_y, 'motion_accelY'],
-                        [Lang.Blocks.drone_accel_z, 'motion_accelZ'],
-                        [Lang.Blocks.drone_gyro_roll, 'motion_gyroRoll'],
-                        [Lang.Blocks.drone_gyro_pitch, 'motion_gyroPitch'],
-                        [Lang.Blocks.drone_gyro_yaw, 'motion_gyroYaw'],
                         [Lang.Blocks.drone_attitude_roll, 'motion_angleRoll'],
                         [Lang.Blocks.drone_attitude_pitch, 'motion_anglePitch'],
                         [Lang.Blocks.drone_attitude_yaw, 'motion_angleYaw'],
-                        [Lang.Blocks.drone_sensor_temperature, 'altitude_temperature'],
                         [Lang.Blocks.drone_range_height, 'altitude_rangeHeight'],
+                        [Lang.Blocks.drone_position_x, 'informationAssembledForEntry_positionX'],
+                        [Lang.Blocks.drone_position_y, 'informationAssembledForEntry_positionY'],
+                        [Lang.Blocks.drone_position_z, 'informationAssembledForEntry_positionZ'],
+                        [Lang.Blocks.drone_sensor_temperature, 'altitude_temperature'],
                         [Lang.Blocks.drone_sensor_pressure, 'altitude_pressure'],
-                        [Lang.Blocks.drone_sensor_altitude, 'altitude_altitude'],
                     ],
-                    value     : 'motion_accelX',                               // 초기 선택항목 지정
+                    value     : 'motion_angleRoll',     // 초기 선택항목 지정
                     fontSize  : 11,
                     bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -790,41 +765,6 @@ Entry.robolink_codrone_diy.getBlocks = function () {
             def   : {
                 params: [null],
                 type  : 'robolink_codrone_diy_drone_sensor',
-            },
-            paramsKeyMap: {
-                DEVICE: 0,
-            },
-            class   : 'monitor',                  // 같은 이름인 객체들이 그룹으로 형성됨
-            isNotFor: ['robolink_codrone_diy'],
-            func(sprite, script) {
-                return Entry.hw.portData[script.getField('DEVICE')];
-            },
-        },
-
-
-        robolink_codrone_diy_drone_value_position: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic_string_field',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_position_x, 'informationAssembledForEntry_positionX'],
-                        [Lang.Blocks.drone_position_y, 'informationAssembledForEntry_positionY'],
-                        [Lang.Blocks.drone_position_z, 'informationAssembledForEntry_positionZ'],
-                    ],
-                    value     : 'informationAssembledForEntry_positionX',      // 초기 선택항목 지정
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def   : {
-                params: [null],
-                type  : 'robolink_codrone_diy_drone_value_position',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1903,44 +1843,6 @@ Entry.robolink_codrone_diy.getBlocks = function () {
         },
 
 
-        robolink_codrone_diy_drone_flip: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_flip_forward, 0x14],
-                        [Lang.Blocks.drone_flip_rear,    0x15],
-                        [Lang.Blocks.drone_flip_left,    0x16],
-                        [Lang.Blocks.drone_flip_right,   0x17],
-                    ],
-                    value     : 0x14,
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [null, null],
-                type  : 'robolink_codrone_diy_drone_flip',
-            },
-            paramsKeyMap: {
-                DIRECTION: 0,
-            },
-            class   : 'flip',
-            isNotFor: ['robolink_codrone_diy'],
-            func(sprite, script) {
-                const direction = script.getField('DIRECTION');
-                return Entry.byrobot_base.sendCommand(script, 0x10, 0x07, direction);
-            },
-        },
-
-
         robolink_codrone_diy_drone_sensor_reset: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
             outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2167,17 +2069,29 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
+                {
+                    type   : 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_next, 0],
+                        [Lang.Blocks.common_wait, 1],
+                    ],
+                    value     : 0,
+                    fontSize  : 11,
+                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
             def   : {
-                params: [null, { type: 'number', params: ['1'] }, { type: 'number', params: ['1'] }, null],
+                params: [null, { type: 'number', params: ['1'] }, { type: 'number', params: ['1'] }, null, null],
                 type  : 'robolink_codrone_diy_drone_control_position_one',
             },
             paramsKeyMap: {
                 CONTROLDIRECTION: 0,
                 DISTANCE        : 1,
                 SPEED           : 2,
+                WAIT            : 3,
             },
             class   : 'control_position',
             isNotFor: ['robolink_codrone_diy'],
@@ -2185,9 +2099,10 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 const controlDirection = script.getField('CONTROLDIRECTION');
                 const distance         = script.getNumberValue('DISTANCE');
                 const speed            = script.getNumberValue('SPEED');
-                let   time             = 0;
+                const wait             = script.getNumberValue('WAIT');
+                let   time             = 40;
 
-                if (speed > 0) {
+                if (speed > 0 && wait == 1) {
                     time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
                 }
 
@@ -2228,6 +2143,17 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
+                {
+                    type   : 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_next, 0],
+                        [Lang.Blocks.common_wait, 1],
+                    ],
+                    value     : 0,
+                    fontSize  : 11,
+                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
@@ -2236,6 +2162,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                     null,
                     { type: 'number', params: ['90'] },
                     { type: 'number', params: ['45'] },
+                    null,
                     null
                 ],
                 type: 'robolink_codrone_diy_drone_control_position_turn',
@@ -2244,6 +2171,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 DIRECTION_YAW: 0,
                 DEGREE_YAW   : 1,
                 SPEED_YAW    : 2,
+                WAIT         : 3,
             },
             class   : 'control_position',
             isNotFor: ['robolink_codrone_diy'],
@@ -2252,10 +2180,11 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 const degree       = script.getNumberValue('DEGREE_YAW');
                 const yaw          = directionYaw * degree;
                 const speedYaw     = script.getNumberValue('SPEED_YAW');
+                const wait         = script.getNumberValue('WAIT');
 
-                let time = 0;
+                let time = 40;
 
-                if (speedYaw > 0) {
+                if (speedYaw > 0 && wait == 1) {
                     time = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
                 }
 
@@ -2307,6 +2236,17 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 },
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
+                {
+                    type   : 'Dropdown',
+                    options: [
+                        [Lang.Blocks.common_next, 0],
+                        [Lang.Blocks.common_wait, 1],
+                    ],
+                    value     : 0,
+                    fontSize  : 11,
+                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
@@ -2319,7 +2259,9 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                     null,
                     { type: 'number', params: ['0'] },
                     { type: 'number', params: ['1'] },
-                    null],
+                    null,
+                    null
+                ],
                 type: 'robolink_codrone_diy_drone_control_position_location',
             },
             paramsKeyMap: {
@@ -2329,7 +2271,8 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 DISTANCE_ROLL     : 3,
                 DIRECTION_THROTTLE: 4,
                 DISTANCE_THROTTLE : 5,
-                SPEED             : 6
+                SPEED             : 6,
+                WAIT              : 7,
             },
             class   : 'control_position',
             isNotFor: ['robolink_codrone_diy'],
@@ -2345,137 +2288,15 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                 const distance = Math.sqrt((x * x) + (y * y) + (z * z));
 
                 const speed = script.getNumberValue('SPEED');
+                const wait  = script.getNumberValue('WAIT');
 
-                let time = 0;
+                let time = 40;
 
-                if (speed > 0) {
+                if (speed > 0 && wait == 1) {
                     time = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
                 }
 
                 return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, 0, 0, time, true);
-            },
-        },
-
-
-        robolink_codrone_diy_drone_control_position_location_turn: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_pitch_forward, '+1'],
-                        [Lang.Blocks.drone_control_quad_pitch_backward, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_roll_left, '+1'],
-                        [Lang.Blocks.drone_control_quad_roll_right, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_throttle_up, '+1'],
-                        [Lang.Blocks.drone_control_quad_throttle_down, '-1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.drone_control_quad_yaw_cw, '-1'],
-                        [Lang.Blocks.drone_control_quad_yaw_ccw, '+1'],
-                    ],
-                    value     : '+1',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    null,
-                    { type: 'number', params: ['1'] },
-                    null,
-                    { type: 'number', params: ['0'] },
-                    null,
-                    { type: 'number', params: ['0'] },
-                    { type: 'number', params: ['1'] },
-                    null,
-                    { type: 'number', params: ['90'] },
-                    { type: 'number', params: ['45'] },
-                    null],
-                type: 'robolink_codrone_diy_drone_control_position_location_turn',
-            },
-            paramsKeyMap: {
-                DIRECTION_PITCH   : 0,
-                DISTANCE_PITCH    : 1,
-                DIRECTION_ROLL    : 2,
-                DISTANCE_ROLL     : 3,
-                DIRECTION_THROTTLE: 4,
-                DISTANCE_THROTTLE : 5,
-                SPEED             : 6,
-                DIRECTION_YAW     : 7,
-                DEGREE_YAW        : 8,
-                SPEED_YAW         : 9,
-            },
-            class   : 'control_position',
-            isNotFor: ['robolink_codrone_diy'],
-            func(sprite, script) {
-                const directionPitch    = script.getNumberValue('DIRECTION_PITCH');
-                const directionRoll     = script.getNumberValue('DIRECTION_ROLL');
-                const directionThrottle = script.getNumberValue('DIRECTION_THROTTLE');
-
-                const x = directionPitch * script.getNumberValue('DISTANCE_PITCH');
-                const y = directionRoll * script.getNumberValue('DISTANCE_ROLL');
-                const z = directionThrottle * script.getNumberValue('DISTANCE_THROTTLE');
-
-                const distance = Math.sqrt((x * x) + (y * y) + (z * z));
-                const speed    = script.getNumberValue('SPEED');
-
-                const directionYaw = script.getNumberValue('DIRECTION_YAW');
-                const degree       = script.getNumberValue('DEGREE_YAW');
-                const yaw          = directionYaw * degree;
-                const speedYaw     = script.getNumberValue('SPEED_YAW');
-
-                let timePosition = 0;
-                let timeRotation = 0;
-
-                if (speed > 0) {
-                    timePosition = Math.abs(distance / speed) * 1000 + Math.min(1000 * speed, 3000) + 3000;
-                }
-
-                if (speedYaw > 0) {
-                    timeRotation = Math.abs(degree / speedYaw) * 2 * 1000 + 3000;
-                }
-
-                const time = Math.max(timePosition, timeRotation);
-
-                return Entry.byrobot_base.sendControlPosition(script, 0x10, x, y, z, speed, yaw, speedYaw, time, true);
             },
         },
     };
