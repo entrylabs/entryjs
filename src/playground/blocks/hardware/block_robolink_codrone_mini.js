@@ -144,6 +144,8 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 controller_buzzer_g                     : '솔',
                 controller_buzzer_gs                    : '솔#',
                 controller_buzzer_mute                  : '쉼',
+                controller_buzzer_play                  : '연주',
+                controller_buzzer_reserve               : '예약',
                 controller_joystick_direction_left_up   : '왼쪽 위',
                 controller_joystick_direction_up        : '위',
                 controller_joystick_direction_right_up  : '오른쪽 위',
@@ -233,13 +235,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
             },
 
             template: {
-                robolink_codrone_mini_controller_buzzer_hz                : '%1Hz 소리를 연주 %2',
-                robolink_codrone_mini_controller_buzzer_hz_delay          : '%1Hz 소리를 %2초 연주 %3',
-                robolink_codrone_mini_controller_buzzer_hz_reserve        : '%1Hz 소리를 %2초 예약 %3',
                 robolink_codrone_mini_controller_buzzer_off               : '버저 끄기 %1',
-                robolink_codrone_mini_controller_buzzer_scale             : '%1 옥타브 %2을(를) 연주 %3',
-                robolink_codrone_mini_controller_buzzer_scale_delay       : '%1 옥타브 %2을(를) %3초 연주 %4',
-                robolink_codrone_mini_controller_buzzer_scale_reserve     : '%1 옥타브 %2을(를) %3초 예약 %4',
+                robolink_codrone_mini_controller_buzzer_hz                : '%1Hz 소리를 %2초 %3 %4',
+                robolink_codrone_mini_controller_buzzer_scale             : '%1 옥타브 %2을(를) %3초 %4 %5',
                 robolink_codrone_mini_controller_if_button_press          : '조종기 %1 눌렀을 때',
                 robolink_codrone_mini_controller_if_joystick_direction    : '조종기 %1 조이스틱 %2 (으)로 움직였을 때',
                 robolink_codrone_mini_controller_value_button             : '%1',
@@ -271,13 +269,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
             },
 
             Helper: {
-                robolink_codrone_mini_controller_buzzer_hz                : "<br>지정한 주파수의 소리를 계속해서 연주합니다(최대 60초). 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#즉시</font>",
-                robolink_codrone_mini_controller_buzzer_hz_delay          : "<br>지정한 주파수의 소리를 지정한 시간동안 연주합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
-                robolink_codrone_mini_controller_buzzer_hz_reserve        : "<br>지정한 주파수의 소리를 지정한 시간동안 연주하도록 예약합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭은 소리가 나도록 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#예약</font>",
                 robolink_codrone_mini_controller_buzzer_off               : "<br>버저 작동을 중단합니다. 예약된 소리가 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저끄기</font>",
-                robolink_codrone_mini_controller_buzzer_scale             : "<br>지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font>",
-                robolink_codrone_mini_controller_buzzer_scale_delay       : "<br>지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
-                robolink_codrone_mini_controller_buzzer_scale_reserve     : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#예약</font>",
+                robolink_codrone_mini_controller_buzzer_hz                : "<br>지정한 주파수의 소리를 지정한 시간동안 연주하거나 예약합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭에서 연주를 선택할 경우 소리를 즉시 연주하고, 연주를 명령한 시간동안 기다립니다. 예약을 선택한 경우에는 소리를 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font>",
+                robolink_codrone_mini_controller_buzzer_scale             : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하거나 예약합니다. 이 블럭에서 연주를 선택할 경우 소리를 즉시 연주하고, 연주를 명령한 시간동안 기다립니다. 예약을 선택한 경우에는 소리를 예약하고, 바로 다음 블럭으로 넘어갑니다.  예약은 최대 12개까지 누적할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font>",
                 robolink_codrone_mini_controller_if_button_press          : "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 robolink_codrone_mini_controller_if_joystick_direction    : "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 robolink_codrone_mini_controller_value_button             : "<br>조종기 전체 버튼 입력 상태를 비트 플래그로 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
@@ -402,6 +396,8 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 controller_buzzer_g                     : 'G',
                 controller_buzzer_gs                    : 'G#',
                 controller_buzzer_mute                  : 'mute',
+                controller_buzzer_play                  : 'play',
+                controller_buzzer_reserve               : 'reserve',
                 controller_joystick_direction_left_up   : 'Left top',
                 controller_joystick_direction_up        : 'Top',
                 controller_joystick_direction_right_up  : 'Right top',
@@ -491,13 +487,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
             },
 
             template: {
-                robolink_codrone_mini_controller_buzzer_hz                : 'play %1 Hz sound %2',
-                robolink_codrone_mini_controller_buzzer_hz_delay          : 'play %1 Hz sound for %2 second %3',
-                robolink_codrone_mini_controller_buzzer_hz_reserve        : 'reserve to play %1 Hz for %2 second %3',
                 robolink_codrone_mini_controller_buzzer_off               : 'turn off the buzzer %1',
-                robolink_codrone_mini_controller_buzzer_scale             : 'play %1 octave %2 %3',
-                robolink_codrone_mini_controller_buzzer_scale_delay       : 'play %1 octave %2 for %3 second %4',
-                robolink_codrone_mini_controller_buzzer_scale_reserve     : 'reserve to play %1 octave %2 for %3 second %4',
+                robolink_codrone_mini_controller_buzzer_hz                : '%3 %1 Hz for %2 second %4',
+                robolink_codrone_mini_controller_buzzer_scale             : '%4 %1 octave %2 for %3 second %5',
                 robolink_codrone_mini_controller_if_button_press          : 'when press %1',
                 robolink_codrone_mini_controller_if_joystick_direction    : 'when %1 stick move to %2',
                 robolink_codrone_mini_controller_value_button             : '%1',
@@ -529,13 +521,9 @@ Entry.robolink_codrone_mini.setLanguage = function () {
             },
 
             Helper: {
-                robolink_codrone_mini_controller_buzzer_hz                : '',
-                robolink_codrone_mini_controller_buzzer_hz_delay          : '',
-                robolink_codrone_mini_controller_buzzer_hz_reserve        : '',
                 robolink_codrone_mini_controller_buzzer_off               : '',
+                robolink_codrone_mini_controller_buzzer_hz                : '',
                 robolink_codrone_mini_controller_buzzer_scale             : '',
-                robolink_codrone_mini_controller_buzzer_scale_delay       : '',
-                robolink_codrone_mini_controller_buzzer_scale_reserve     : '',
                 robolink_codrone_mini_controller_if_button_press          : '',
                 robolink_codrone_mini_controller_if_joystick_direction    : '',
                 robolink_codrone_mini_controller_value_button             : '',
@@ -1236,89 +1224,18 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                     type   : 'Dropdown',
                     options: [
                         [Lang.Blocks.controller_buzzer_mute, '-1'],
-                        [Lang.Blocks.controller_buzzer_c, '0'],
+                        [Lang.Blocks.controller_buzzer_c,  '0'],
                         [Lang.Blocks.controller_buzzer_cs, '1'],
-                        [Lang.Blocks.controller_buzzer_d, '2'],
+                        [Lang.Blocks.controller_buzzer_d,  '2'],
                         [Lang.Blocks.controller_buzzer_ds, '3'],
-                        [Lang.Blocks.controller_buzzer_e, '4'],
-                        [Lang.Blocks.controller_buzzer_f, '5'],
+                        [Lang.Blocks.controller_buzzer_e,  '4'],
+                        [Lang.Blocks.controller_buzzer_f,  '5'],
                         [Lang.Blocks.controller_buzzer_fs, '6'],
-                        [Lang.Blocks.controller_buzzer_g, '7'],
+                        [Lang.Blocks.controller_buzzer_g,  '7'],
                         [Lang.Blocks.controller_buzzer_gs, '8'],
-                        [Lang.Blocks.controller_buzzer_a, '9'],
+                        [Lang.Blocks.controller_buzzer_a,  '9'],
                         [Lang.Blocks.controller_buzzer_as, '10'],
-                        [Lang.Blocks.controller_buzzer_b, '11'],
-                    ],
-                    value     : '0',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [null, null, null],
-                type  : 'robolink_codrone_mini_controller_buzzer_scale',
-            },
-            paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE : 1,
-            },
-            class   : 'buzzer',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'), 10);
-                const scale  = parseInt(script.getField('SCALE'), 10);
-
-                if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, 60000, false, true);
-                } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, 60000, false, true);
-                }
-            },
-        },
-
-
-        robolink_codrone_mini_controller_buzzer_scale_delay: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        ['1', '0'],
-                        ['2', '1'],
-                        ['3', '2'],
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
-                    value     : '4',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.controller_buzzer_mute, '-1'],
-                        [Lang.Blocks.controller_buzzer_c, '0'],
-                        [Lang.Blocks.controller_buzzer_cs, '1'],
-                        [Lang.Blocks.controller_buzzer_d, '2'],
-                        [Lang.Blocks.controller_buzzer_ds, '3'],
-                        [Lang.Blocks.controller_buzzer_e, '4'],
-                        [Lang.Blocks.controller_buzzer_f, '5'],
-                        [Lang.Blocks.controller_buzzer_fs, '6'],
-                        [Lang.Blocks.controller_buzzer_g, '7'],
-                        [Lang.Blocks.controller_buzzer_gs, '8'],
-                        [Lang.Blocks.controller_buzzer_a, '9'],
-                        [Lang.Blocks.controller_buzzer_as, '10'],
-                        [Lang.Blocks.controller_buzzer_b, '11'],
+                        [Lang.Blocks.controller_buzzer_b,  '11'],
                     ],
                     value     : '0',
                     fontSize  : 11,
@@ -1326,6 +1243,17 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 { type: 'Block', accept: 'string' },
+                {
+                    type   : 'Dropdown',
+                    options: [
+                        [Lang.Blocks.controller_buzzer_play,    1],
+                        [Lang.Blocks.controller_buzzer_reserve, 0],
+                    ],
+                    value     : 1,
+                    fontSize  : 11,
+                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
@@ -1335,13 +1263,15 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                     null,
                     { type: 'text', params: ['1'] },
                     null,
+                    null
                 ],
-                type: 'robolink_codrone_mini_controller_buzzer_scale_delay',
+                type: 'robolink_codrone_mini_controller_buzzer_scale',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
                 SCALE : 1,
                 TIME  : 2,
+                WAIT  : 3,
             },
             class   : 'buzzer',
             isNotFor: ['robolink_codrone_mini'],
@@ -1349,90 +1279,26 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                 const octave = parseInt(script.getField('OCTAVE'), 10);
                 const scale  = parseInt(script.getField('SCALE'), 10);
                 const time   = script.getNumberValue('TIME') * 1000;
+                const wait   = script.getNumberValue('WAIT');
 
                 if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, true, true);
+                    if (wait == 1)
+                    {
+                        return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, true, true);
+                    }
+                    else
+                    {
+                        return Entry.byrobot_base.setBuzzerMute(script, 0x20, 40, false, false);
+                    }
                 } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, true, true);
-                }
-            },
-        },
-
-
-        robolink_codrone_mini_controller_buzzer_scale_reserve: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        ['1', '0'],
-                        ['2', '1'],
-                        ['3', '2'],
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
-                    value     : '4',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type   : 'Dropdown',
-                    options: [
-                        [Lang.Blocks.controller_buzzer_mute, '-1'],
-                        [Lang.Blocks.controller_buzzer_c, '0'],
-                        [Lang.Blocks.controller_buzzer_cs, '1'],
-                        [Lang.Blocks.controller_buzzer_d, '2'],
-                        [Lang.Blocks.controller_buzzer_ds, '3'],
-                        [Lang.Blocks.controller_buzzer_e, '4'],
-                        [Lang.Blocks.controller_buzzer_f, '5'],
-                        [Lang.Blocks.controller_buzzer_fs, '6'],
-                        [Lang.Blocks.controller_buzzer_g, '7'],
-                        [Lang.Blocks.controller_buzzer_gs, '8'],
-                        [Lang.Blocks.controller_buzzer_a, '9'],
-                        [Lang.Blocks.controller_buzzer_as, '10'],
-                        [Lang.Blocks.controller_buzzer_b, '11'],
-                    ],
-                    value     : '0',
-                    fontSize  : 11,
-                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [
-                    null,
-                    null,
-                    { type: 'text', params: ['1'] },
-                    null,
-                ],
-                type: 'robolink_codrone_mini_controller_buzzer_scale_reserve',
-            },
-            paramsKeyMap: {
-                OCTAVE: 0,
-                SCALE : 1,
-                TIME  : 2,
-            },
-            class   : 'buzzer',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const octave = parseInt(script.getField('OCTAVE'), 10);
-                const scale  = parseInt(script.getField('SCALE'), 10);
-                const time   = script.getNumberValue('TIME') * 1000;
-
-                if (scale == -1) {
-                    return Entry.byrobot_base.setBuzzerMute(script, 0x20, time, false, false);
-                } else {
-                    return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, false, false);
+                    if (wait == 1)
+                    {
+                        return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, time, true, true);
+                    }
+                    else
+                    {
+                        return Entry.byrobot_base.setBuzzerScale(script, 0x20, octave, scale, 40, false, false);
+                    }
                 }
             },
         },
@@ -1445,62 +1311,19 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             statements: [],
             params    : [
                 { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [{ type: 'text', params: ['1000'] }, null],
-                type  : 'robolink_codrone_mini_controller_buzzer_hz',
-            },
-            paramsKeyMap: {
-                HZ: 0,
-            },
-            class   : 'buzzer',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const hz = script.getNumberValue('HZ');
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, 60000, false, true);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_buzzer_hz_delay: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
                 { type: 'Block', accept: 'string' },
                 { type: 'Block', accept: 'string' },
-                { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
-            ],
-            events: {},
-            def   : {
-                params: [{ type: 'text', params: ['1000'] }, { type: 'text', params: ['1'] }, null],
-                type  : 'robolink_codrone_mini_controller_buzzer_hz_delay',
-            },
-            paramsKeyMap: {
-                HZ  : 0,
-                TIME: 1,
-            },
-            class   : 'buzzer',
-            isNotFor: ['robolink_codrone_mini'],
-            func(sprite, script) {
-                const hz   = script.getNumberValue('HZ');
-                const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, true, true);
-            },
-        },
-
-
-        robolink_codrone_mini_controller_buzzer_hz_reserve: {
-            color     : EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton  : 'basic',
-            statements: [],
-            params    : [
-                { type: 'Block', accept: 'string' },
-                { type: 'Block', accept: 'string' },
+                {
+                    type   : 'Dropdown',
+                    options: [
+                        [Lang.Blocks.controller_buzzer_play,    1],
+                        [Lang.Blocks.controller_buzzer_reserve, 0],
+                    ],
+                    value     : 1,
+                    fontSize  : 11,
+                    bgColor   : EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
                 { type: 'Indicator', img: 'block_icon/hardware_icon.svg', size: 12 },
             ],
             events: {},
@@ -1509,19 +1332,30 @@ Entry.robolink_codrone_mini.getBlocks = function () {
                     { type: 'text', params: ['1000'] },
                     { type: 'text', params: ['1'] },
                     null,
+                    null,
                 ],
-                type: 'robolink_codrone_mini_controller_buzzer_hz_reserve',
+                type: 'robolink_codrone_mini_controller_buzzer_hz',
             },
             paramsKeyMap: {
-                HZ  : 0,
-                TIME: 1,
+                HZ   : 0,
+                TIME : 1,
+                WAIT : 2,
             },
             class   : 'buzzer',
             isNotFor: ['robolink_codrone_mini'],
             func(sprite, script) {
                 const hz   = script.getNumberValue('HZ');
                 const time = script.getNumberValue('TIME') * 1000;
-                return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, false, false);
+                const wait   = script.getNumberValue('WAIT');
+                
+                if (wait == 1)
+                {
+                    return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, time, true, true);
+                }
+                else
+                {
+                    return Entry.byrobot_base.setBuzzerHz(script, 0x20, hz, 40, false, false);
+                }
             },
         },
 

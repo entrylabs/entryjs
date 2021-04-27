@@ -278,8 +278,8 @@ Entry.robolink_codrone_diy.setLanguage = function () {
 
             Helper: {
                 robolink_codrone_diy_controller_buzzer_off               : "<br>버저 작동을 중단합니다. 예약된 소리가 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저끄기</font>",
-                robolink_codrone_diy_controller_buzzer_hz                : "<br>지정한 주파수의 소리를 지정한 시간동안 연주하거나 예약합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭은 소리가 나도록 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font> <font color='peru'>#예약</font>",
-                robolink_codrone_diy_controller_buzzer_scale             : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하도록 예약합니다. 이 블럭은 소리가 나도록 예약하고 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다. 이 블럭은 주로 버저 소리와 함께 다른 행동을 동시에 할 때 사용합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#예약</font>",
+                robolink_codrone_diy_controller_buzzer_hz                : "<br>지정한 주파수의 소리를 지정한 시간동안 연주하거나 예약합니다. 권장 사용 범위는 250 ~ 8000 입니다. 4옥타브를 기준으로 도(261), 도#(277), 레(293), 레#(311), 미(329), 파(349), 파#(370), 솔(392), 솔#(415), 라(440), 라#(466), 시(493)입니다. 여기에서 한 옥타브를 올라갈 때마다 주파수 값이 두 배가 됩니다. 한 옥타브를 내려갈 때에는 주파수 값이 절반이 됩니다. 예를 들면 3옥타브의 도는 130.8128Hz, 4옥타브의 도는 261.6256Hz, 5옥타브의 도는 523.2511Hz 입니다. 이 블럭에서 연주를 선택할 경우 소리를 즉시 연주하고, 연주를 명령한 시간동안 기다립니다. 예약을 선택한 경우에는 소리를 예약하고, 바로 다음 블럭으로 넘어갑니다. 예약은 최대 12개까지 누적할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#주파수</font>",
+                robolink_codrone_diy_controller_buzzer_scale             : "<br>지정한 옥타브의 음을 지정한 시간동안 연주하거나 예약합니다. 이 블럭에서 연주를 선택할 경우 소리를 즉시 연주하고, 연주를 명령한 시간동안 기다립니다. 예약을 선택한 경우에는 소리를 예약하고, 바로 다음 블럭으로 넘어갑니다.  예약은 최대 12개까지 누적할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font>",
                 robolink_codrone_diy_controller_if_button_press          : "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
                 robolink_codrone_diy_controller_if_joystick_direction    : "<br>조종기의 조이스틱을 지정한 방향으로 움직였을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
                 robolink_codrone_diy_controller_value_button             : "<br>조종기 전체 버튼 입력 상태를 비트 플래그로 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
@@ -1322,9 +1322,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
         },
 
 
-
-
-        robolink_codrone_diy_controller_buzzer_hz_reserve: {
+        robolink_codrone_diy_controller_buzzer_hz: {
             color     : EntryStatic.colorSet.block.default.HARDWARE,
             outerLine : EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton  : 'basic',
@@ -1354,7 +1352,7 @@ Entry.robolink_codrone_diy.getBlocks = function () {
                     null,
                     null,
                 ],
-                type: 'robolink_codrone_diy_controller_buzzer_hz_reserve',
+                type: 'robolink_codrone_diy_controller_buzzer_hz',
             },
             paramsKeyMap: {
                 HZ   : 0,
