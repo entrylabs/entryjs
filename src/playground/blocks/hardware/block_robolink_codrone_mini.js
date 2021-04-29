@@ -84,8 +84,8 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 value_joystick_right_y                : '오른쪽 조이스틱 Y',
                 value_joystick_right_direction        : '오른쪽 조이스틱 방향',
                 value_joystick_right_event            : '오른쪽 조이스틱 이벤트',
-                value_button_button                   : '버튼',
-                value_button_event                    : '버튼 이벤트',
+                value_button_button                   : '버튼 입력',
+                value_button_event                    : '버튼 상태',
                 value_entry_hw_count_transfer_reserved: '전송 예정 데이터',
 
                 // 일반 블럭
@@ -115,8 +115,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 common_right                            : '오른쪽',
                 common_drone                            : '드론',
                 common_controller                       : '조종기',
-                common_button_button                    : '버튼 입력',
-                common_button_event                     : '버튼 상태',
                 controller_button                       : '버튼',
                 controller_button_event                 : '버튼 이벤트',
                 controller_button_front_left_top        : '전면 왼쪽 상단 버튼',
@@ -330,8 +328,6 @@ Entry.robolink_codrone_mini.setLanguage = function () {
                 common_right                            : 'right',
                 common_drone                            : 'drone',
                 common_controller                       : 'controller',
-                common_button_button                    : 'button input',
-                common_button_event                     : 'button state',
                 controller_button                       : 'button',
                 controller_button_event                 : 'button event',
                 controller_button_front_left_top        : 'Front left top button',
@@ -679,7 +675,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             params    : [
                 {
                     type: 'Text',
-                    text: Lang.Blocks.common_button_button,
+                    text: Lang.Blocks.value_button_button,
                 },
             ],
             events: {},
@@ -710,7 +706,7 @@ Entry.robolink_codrone_mini.getBlocks = function () {
             params    : [
                 {
                     type: 'Text',
-                    text: Lang.Blocks.common_button_event,
+                    text: Lang.Blocks.value_button_event,
                 },
             ],
             events: {},
