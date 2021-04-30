@@ -5,11 +5,9 @@ const _get = require('lodash/get');
 const _merge = require('lodash/merge');
 const _clamp = require('lodash/clamp');
 const { version } = require('@babel/core');
-const EntryModuleLoader = require('../../../class/entryModuleLoader');
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
-        console.log('CREATE NEW');
         this.functionKeys = {
             GET_ANALOG: 'get-analog',
             GET_DIGITAL: 'get-digital',
@@ -288,8 +286,8 @@ Entry.Microbit2 = new (class Microbit2 {
             [9, 0, 0, 0, 9],
             [0, 9, 9, 9, 0],
         ];
-        this.blockMenuBlocks = [...this.version1Blocks];
-        this.version = '1';
+        this.blockMenuBlocks = [...this.version2Blocks];
+        this.version = '2';
     }
 
     setZero() {
@@ -350,9 +348,13 @@ Entry.Microbit2 = new (class Microbit2 {
                     return;
                 }
                 const major = version[0];
+
                 if (this.version !== major) {
-                    this.version = Number(major);
-                    for (let block in this.blockMenuBlocks) {
+                    const workspace = Entry.getMainWS();
+                    const blockMenu = workspace && workspace.blockMenu;
+                    this.version = major;
+                    // remove prev blocks
+                    for (let block of this.blockMenuBlocks) {
                         delete Entry.block[block];
                     }
 
@@ -361,6 +363,12 @@ Entry.Microbit2 = new (class Microbit2 {
                     } else {
                         this.blockMenuBlocks = this.version2Blocks;
                     }
+                    // re-add blocks
+                    const blocks = this.getBlocks();
+                    for (let block of this.blockMenuBlocks) {
+                        Entry.block[block] = blocks[block];
+                    }
+                    Entry.hw.refreshHardwareBlockMenu();
                 }
             } else if (codeId) {
                 if (codeId.indexOf('reset') > -1) {
@@ -960,7 +968,7 @@ Entry.Microbit2 = new (class Microbit2 {
     }
 
     getBlocks = function() {
-        return {
+        const blocks = {
             microbit2_get_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2382,6 +2390,12 @@ Entry.Microbit2 = new (class Microbit2 {
                 },
             },
         };
+        if (this.version === '1') {
+            delete blocks.microbit2_get_logo;
+            delete blocks.microbit2_play_sound_effect;
+            delete blocks.microbit2_speaker_toggle;
+        }
+        return blocks;
     };
 })();
 
