@@ -4,188 +4,190 @@ const _set = require('lodash/set');
 const _get = require('lodash/get');
 const _merge = require('lodash/merge');
 const _clamp = require('lodash/clamp');
-
-const functionKeys = {
-    GET_ANALOG: 'get-analog',
-    GET_DIGITAL: 'get-digital',
-    SET_ANALOG: 'set-analog',
-    SET_DIGITAL: 'set-digital',
-    SET_LED: 'set-pixel',
-    GET_LED: 'get-pixel',
-    RESET: 'reset',
-    PRESET_IMAGE: 'pre-image',
-    SET_CUSTOM_IMAGE: 'custom-image',
-    SET_STRING: 'print',
-    RESET_SCREEN: 'display-clear',
-    DISPLAY_ON: 'display-on',
-    DISPLAY_OFF: 'display-off',
-    SPEAKER_ON: 'speaker-on',
-    SPEAKER_OFF: 'speaker-off',
-    PLAY_TONE: 'play-tone',
-    PLAY_SOUND: 'pre-sound',
-    PLAY_MELODY: 'pre-melody',
-    GET_BTN: 'get-btn',
-    CHANGE_TEMPO: 'change-tempo',
-    GET_LOGO: 'get-touch',
-    GET_ACC: 'get-acc',
-    GET_GESTURE: 'get-gesture',
-    GET_DIRECTION: 'direction',
-    GET_FIELD_STRENGTH: 'field-strength',
-    GET_FIELD_STRENGTH_AXIS: 'field-axis-strength',
-    GET_LIGHT_LEVEL: 'light-level',
-    GET_TEMPERATURE: 'temperature',
-    GET_SOUND_LEVEL: 'sound-level',
-    SET_RADIO: 'radio-send',
-    GET_RADIO: 'radio-receive',
-    RADIO_ON: 'radio-on',
-    RADIO_OFF: 'radio-off',
-    SETTING_RADIO: 'radio-setting',
-    SET_SERVO_MILLI: 'write-period',
-    SET_SERVO_MICRO: 'write-micro-period',
-    SET_SERVO_ANGLE: 'servo-write',
-};
-
-const presetImage = [
-    // Image.HEART
-    '09090:99999:99999:09990:00900',
-    // Image.HEART_SMALL,
-    '00000:09090:09990:00900:00000',
-    // Image.HAPPY,
-    '00000:09090:00000:90009:09990',
-    // Image.SMILE,
-    '00000:00000:00000:90009:09990',
-    // Image.SAD,
-    '00000:09090:00000:09990:90009',
-    // Image.CONFUSED,
-    '00000:09090:00000:09090:90909',
-    // Image.ANGRY,
-    '90009:09090:00000:99999:90909',
-    // Image.ASLEEP,
-    '00000:99099:00000:09990:00000',
-    // Image.SURPRISED,
-    '09090:00000:00900:09090:00900',
-    // Image.SILLY,
-    '90009:00000:99999:00909:00999',
-    // Image.FABULOUS,
-    '99999:99099:00000:09090:09990',
-    // Image.MEH,
-    '09090:00000:00090:00900:09000',
-    // Image.YES,
-    '00000:00009:00090:90900:09000',
-    // Image.NO,
-    '90009:09090:00900:09090:90009',
-    // Image.CLOCK1,
-    '00090:00090:00900:00000:00000',
-    // Image.CLOCK2,
-    '00000:00990:00900:00000:00000',
-    // Image.CLOCK3,
-    '00000:00000:00999:00000:00000',
-    // Image.CLOCK4,
-    '00000:00000:00900:00990:00000',
-    // Image.CLOCK5,
-    '00000:00000:00900:00090:00090',
-    // Image.CLOCK6,
-    '00000:00000:00900:00900:00900',
-    // Image.CLOCK7,
-    '00000:00000:00900:09000:09000',
-    // Image.CLOCK8,
-    '00000:00000:00900:99000:00000',
-    // Image.CLOCK9,
-    '00000:00000:99900:00000:00000',
-    // Image.CLOCK10,
-    '00000:09900:00900:00000:00000',
-    // Image.CLOCK11,
-    '09000:09000:00900:00000:00000',
-    // Image.CLOCK12,
-    '00900:00900:00900:00000:00000',
-    // Image.ARROW_N,
-    '00900:09990:90909:00900:00900',
-    // Image.ARROW_NE,
-    '00999:00099:00909:09000:90000',
-    // Image.ARROW_E,
-    '00900:00090:99999:00090:00900',
-    // Image.ARROW_SE,
-    '90000:09000:00909:00099:00999',
-    // Image.ARROW_S,
-    '00900:00900:90909:09990:00900',
-    // Image.ARROW_SW,
-    '00009:00090:90900:99000:99900',
-    // Image.ARROW_W,
-    '00900:09000:99999:09000:00900',
-    // Image.ARROW_NW,
-    '99900:99000:90900:00090:00009',
-    // Image.TRIANGLE,
-    '00000:00900:09090:99999:00000',
-    // Image.TRIANGLE_LEFT,
-    '90000:99000:90900:90090:99999',
-    // Image.CHESSBOARD,
-    '09090:90909:09090:90909:09090',
-    // Image.DIAMOND,
-    '00900:09090:90009:09090:00900',
-    // Image.DIAMOND_SMALL,
-    '00000:00900:09090:00900:00000',
-    // Image.SQUARE,
-    '99999:90009:90009:90009:99999',
-    // Image.SQUARE_SMALL,
-    '00000:09990:09090:09990:00000',
-    // Image.RABBIT,
-    '90900:90900:99990:99090:99990',
-    // Image.COW,
-    '90009:90009:99999:09990:00900',
-    // Image.MUSIC_CROTCHET,
-    '00900:00900:00900:99900:99900',
-    // Image.MUSIC_QUAVER,
-    '00900:00990:00909:99900:99900',
-    // Image.MUSIC_QUAVERS,
-    '09999:09009:09009:99099:99099',
-    // Image.PITCHFORK,
-    '90909:90909:99999:00900:00900',
-    // Image.XMAS,
-    '00900:09990:00900:09990:99999',
-    // Image.PACMAN,
-    '099999:99090:99900:99990:09999',
-    // Image.TARGET,
-    '00900:09990:99099:09990:00900',
-    // Image.TSHIRT,
-    '99099:99999:09990:09990:09990',
-    // Image.ROLLERSKATE,
-    '00099:00099:99999:99999:09090',
-    // Image.DUCK,
-    '00990:99900:09999:09990:00000',
-    // Image.HOUSE,
-    '00900:09990:99999:09990:09090',
-    // Image.TORTOISE,
-    '00000:09990:99999:09090:00000',
-    // Image.BUTTERFLY,
-    '99099:99999:00900:99999:99099',
-    // Image.STICKFIGURE,
-    '00900:99999:00900:09090:90009',
-    // Image.GHOST,
-    '99999:90909:99999:99999:90909',
-    // Image.SWORD,
-    '00900:00900:00900:09990:00900',
-    // Image.GIRAFFE,
-    '99000:09000:09000:09990:09090',
-    // Image.SKULL,
-    '09990:90909:99999:09990:09990',
-    // Image.UMBRELLA,
-    '09990:99999:00900:90900:09900',
-    // Image.SNAKE,
-    '99000:99099:09090:09990:00000',
-];
+const { version } = require('@babel/core');
+const EntryModuleLoader = require('../../../class/entryModuleLoader');
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
+        console.log('CREATE NEW');
+        this.functionKeys = {
+            GET_ANALOG: 'get-analog',
+            GET_DIGITAL: 'get-digital',
+            SET_ANALOG: 'set-analog',
+            SET_DIGITAL: 'set-digital',
+            SET_LED: 'set-pixel',
+            GET_LED: 'get-pixel',
+            RESET: 'reset',
+            PRESET_IMAGE: 'pre-image',
+            SET_CUSTOM_IMAGE: 'custom-image',
+            SET_STRING: 'print',
+            RESET_SCREEN: 'display-clear',
+            DISPLAY_ON: 'display-on',
+            DISPLAY_OFF: 'display-off',
+            SPEAKER_ON: 'speaker-on',
+            SPEAKER_OFF: 'speaker-off',
+            PLAY_TONE: 'play-tone',
+            PLAY_SOUND: 'pre-sound',
+            PLAY_MELODY: 'pre-melody',
+            GET_BTN: 'get-btn',
+            CHANGE_TEMPO: 'change-tempo',
+            GET_LOGO: 'get-touch',
+            GET_ACC: 'get-acc',
+            GET_GESTURE: 'get-gesture',
+            GET_DIRECTION: 'direction',
+            GET_FIELD_STRENGTH: 'field-strength',
+            GET_FIELD_STRENGTH_AXIS: 'field-axis-strength',
+            GET_LIGHT_LEVEL: 'light-level',
+            GET_TEMPERATURE: 'temperature',
+            GET_SOUND_LEVEL: 'sound-level',
+            SET_RADIO: 'radio-send',
+            GET_RADIO: 'radio-receive',
+            RADIO_ON: 'radio-on',
+            RADIO_OFF: 'radio-off',
+            SETTING_RADIO: 'radio-setting',
+            SET_SERVO_MILLI: 'write-period',
+            SET_SERVO_MICRO: 'write-micro-period',
+            SET_SERVO_ANGLE: 'servo-write',
+        };
+
+        this.presetImage = [
+            // Image.HEART
+            '09090:99999:99999:09990:00900',
+            // Image.HEART_SMALL,
+            '00000:09090:09990:00900:00000',
+            // Image.HAPPY,
+            '00000:09090:00000:90009:09990',
+            // Image.SMILE,
+            '00000:00000:00000:90009:09990',
+            // Image.SAD,
+            '00000:09090:00000:09990:90009',
+            // Image.CONFUSED,
+            '00000:09090:00000:09090:90909',
+            // Image.ANGRY,
+            '90009:09090:00000:99999:90909',
+            // Image.ASLEEP,
+            '00000:99099:00000:09990:00000',
+            // Image.SURPRISED,
+            '09090:00000:00900:09090:00900',
+            // Image.SILLY,
+            '90009:00000:99999:00909:00999',
+            // Image.FABULOUS,
+            '99999:99099:00000:09090:09990',
+            // Image.MEH,
+            '09090:00000:00090:00900:09000',
+            // Image.YES,
+            '00000:00009:00090:90900:09000',
+            // Image.NO,
+            '90009:09090:00900:09090:90009',
+            // Image.CLOCK1,
+            '00090:00090:00900:00000:00000',
+            // Image.CLOCK2,
+            '00000:00990:00900:00000:00000',
+            // Image.CLOCK3,
+            '00000:00000:00999:00000:00000',
+            // Image.CLOCK4,
+            '00000:00000:00900:00990:00000',
+            // Image.CLOCK5,
+            '00000:00000:00900:00090:00090',
+            // Image.CLOCK6,
+            '00000:00000:00900:00900:00900',
+            // Image.CLOCK7,
+            '00000:00000:00900:09000:09000',
+            // Image.CLOCK8,
+            '00000:00000:00900:99000:00000',
+            // Image.CLOCK9,
+            '00000:00000:99900:00000:00000',
+            // Image.CLOCK10,
+            '00000:09900:00900:00000:00000',
+            // Image.CLOCK11,
+            '09000:09000:00900:00000:00000',
+            // Image.CLOCK12,
+            '00900:00900:00900:00000:00000',
+            // Image.ARROW_N,
+            '00900:09990:90909:00900:00900',
+            // Image.ARROW_NE,
+            '00999:00099:00909:09000:90000',
+            // Image.ARROW_E,
+            '00900:00090:99999:00090:00900',
+            // Image.ARROW_SE,
+            '90000:09000:00909:00099:00999',
+            // Image.ARROW_S,
+            '00900:00900:90909:09990:00900',
+            // Image.ARROW_SW,
+            '00009:00090:90900:99000:99900',
+            // Image.ARROW_W,
+            '00900:09000:99999:09000:00900',
+            // Image.ARROW_NW,
+            '99900:99000:90900:00090:00009',
+            // Image.TRIANGLE,
+            '00000:00900:09090:99999:00000',
+            // Image.TRIANGLE_LEFT,
+            '90000:99000:90900:90090:99999',
+            // Image.CHESSBOARD,
+            '09090:90909:09090:90909:09090',
+            // Image.DIAMOND,
+            '00900:09090:90009:09090:00900',
+            // Image.DIAMOND_SMALL,
+            '00000:00900:09090:00900:00000',
+            // Image.SQUARE,
+            '99999:90009:90009:90009:99999',
+            // Image.SQUARE_SMALL,
+            '00000:09990:09090:09990:00000',
+            // Image.RABBIT,
+            '90900:90900:99990:99090:99990',
+            // Image.COW,
+            '90009:90009:99999:09990:00900',
+            // Image.MUSIC_CROTCHET,
+            '00900:00900:00900:99900:99900',
+            // Image.MUSIC_QUAVER,
+            '00900:00990:00909:99900:99900',
+            // Image.MUSIC_QUAVERS,
+            '09999:09009:09009:99099:99099',
+            // Image.PITCHFORK,
+            '90909:90909:99999:00900:00900',
+            // Image.XMAS,
+            '00900:09990:00900:09990:99999',
+            // Image.PACMAN,
+            '099999:99090:99900:99990:09999',
+            // Image.TARGET,
+            '00900:09990:99099:09990:00900',
+            // Image.TSHIRT,
+            '99099:99999:09990:09990:09990',
+            // Image.ROLLERSKATE,
+            '00099:00099:99999:99999:09090',
+            // Image.DUCK,
+            '00990:99900:09999:09990:00000',
+            // Image.HOUSE,
+            '00900:09990:99999:09990:09090',
+            // Image.TORTOISE,
+            '00000:09990:99999:09090:00000',
+            // Image.BUTTERFLY,
+            '99099:99999:00900:99999:99099',
+            // Image.STICKFIGURE,
+            '00900:99999:00900:09090:90009',
+            // Image.GHOST,
+            '99999:90909:99999:99999:90909',
+            // Image.SWORD,
+            '00900:00900:00900:09990:00900',
+            // Image.GIRAFFE,
+            '99000:09000:09000:09990:09090',
+            // Image.SKULL,
+            '09990:90909:99999:09990:09990',
+            // Image.UMBRELLA,
+            '09990:99999:00900:90900:09900',
+            // Image.SNAKE,
+            '99000:99099:09090:09990:00000',
+        ];
         this.id = '22.3';
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit2.png';
         this.title = {
-            en: 'Microbit v1+v2',
-            ko: '마이크로빗 v1+v2',
+            en: 'Microbit v2',
+            ko: '마이크로빗 v2',
         };
         this.name = 'microbit2';
         this.communicationType = 'manual';
-        this.blockMenuBlocks = [
+        this.version2Blocks = [
             'microbit2_get_analog',
             'microbit2_set_analog',
             'microbit2_get_digital',
@@ -208,6 +210,36 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_play_sound_effect',
             'microbit2_get_btn',
             'microbit2_get_logo',
+            'microbit2_get_acc',
+            'microbit2_get_gesture',
+            'microbit2_get_direction',
+            'microbit2_get_field_strength_axis',
+            'microbit2_get_light_level',
+            'microbit2_get_temperature',
+            'microbit2_get_sound_level',
+            'microbit2_set_servo',
+            'microbit2_set_pwm',
+        ];
+        this.version1Blocks = [
+            'microbit2_get_analog',
+            'microbit2_set_analog',
+            'microbit2_get_digital',
+            'microbit2_set_digital',
+            'microbit2_screen_toggle',
+            'microbit2_set_led',
+            'microbit2_get_led',
+            'microbit2_show_preset_image',
+            'microbit2_show_custom_image',
+            'microbit2_show_string',
+            'microbit2_reset_screen',
+            'microbit2_radio_toggle',
+            'microbit2_radio_setting',
+            'microbit2_radio_send',
+            'microbit2_radio_received',
+            'microbit2_change_tempo',
+            'microbit2_set_tone',
+            'microbit2_play_preset_music',
+            'microbit2_get_btn',
             'microbit2_get_acc',
             'microbit2_get_gesture',
             'microbit2_get_direction',
@@ -256,11 +288,13 @@ Entry.Microbit2 = new (class Microbit2 {
             [9, 0, 0, 0, 9],
             [0, 9, 9, 9, 0],
         ];
+        this.blockMenuBlocks = [...this.version1Blocks];
+        this.version = '1';
     }
 
     setZero() {
         // 엔트리 정지시 하드웨어 초기화 로직
-        this.requestCommand(functionKeys.RESET);
+        this.requestCommand(this.functionKeys.RESET);
         this.commandStatus = {};
         this.commandValue = {};
     }
@@ -310,7 +344,25 @@ Entry.Microbit2 = new (class Microbit2 {
         if (portData) {
             let codeId = portData.recentlyWaitDone;
             let value = portData.result;
-            if (codeId) {
+            if (value && value.indexOf('localdata') > -1) {
+                const version = value.split(';')[1];
+                if (!version) {
+                    return;
+                }
+                const major = version[0];
+                if (this.version !== major) {
+                    this.version = Number(major);
+                    for (let block in this.blockMenuBlocks) {
+                        delete Entry.block[block];
+                    }
+
+                    if (this.version === 1) {
+                        this.blockMenuBlocks = this.version1Blocks;
+                    } else {
+                        this.blockMenuBlocks = this.version2Blocks;
+                    }
+                }
+            } else if (codeId) {
                 if (codeId.indexOf('reset') > -1) {
                     this.commandStatus = {};
                     this.commandValue = {};
@@ -938,7 +990,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const value = script.getValue('VALUE');
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_ANALOG,
+                        command: this.functionKeys.GET_ANALOG,
                         payload: value,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -973,7 +1025,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const value = script.getValue('VALUE');
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_DIGITAL,
+                        command: this.functionKeys.GET_DIGITAL,
                         payload: value,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1024,7 +1076,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${pin};${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_ANALOG,
+                        command: this.functionKeys.SET_ANALOG,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1077,7 +1129,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${pin};${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_DIGITAL,
+                        command: this.functionKeys.SET_DIGITAL,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1148,7 +1200,7 @@ Entry.Microbit2 = new (class Microbit2 {
                         return;
                     }
                     const data = {
-                        type: functionKeys.SET_LED,
+                        type: this.functionKeys.SET_LED,
                         data: {
                             x,
                             y,
@@ -1159,7 +1211,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${x};${y};${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_LED,
+                        command: this.functionKeys.SET_LED,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1216,7 +1268,7 @@ Entry.Microbit2 = new (class Microbit2 {
 
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_LED,
+                        command: this.functionKeys.GET_LED,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1327,10 +1379,10 @@ Entry.Microbit2 = new (class Microbit2 {
                 },
                 func: (sprite, script) => {
                     const value = _clamp(script.getNumberValue('VALUE'), 0, 62);
-                    const parsedPayload = `${presetImage[value]}`;
+                    const parsedPayload = `${this.presetImage[value]}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_CUSTOM_IMAGE,
+                        command: this.functionKeys.SET_CUSTOM_IMAGE,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1370,7 +1422,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_CUSTOM_IMAGE,
+                        command: this.functionKeys.SET_CUSTOM_IMAGE,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1417,7 +1469,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     );
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_STRING,
+                        command: this.functionKeys.SET_STRING,
                         payload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1446,7 +1498,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.RESET_SCREEN,
+                        command: this.functionKeys.RESET_SCREEN,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -1461,10 +1513,10 @@ Entry.Microbit2 = new (class Microbit2 {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.plot, functionKeys.DISPLAY_ON],
-                            [Lang.Blocks.unplot, functionKeys.DISPLAY_OFF],
+                            [Lang.Blocks.plot, this.functionKeys.DISPLAY_ON],
+                            [Lang.Blocks.unplot, this.functionKeys.DISPLAY_OFF],
                         ],
-                        value: functionKeys.DISPLAY_ON,
+                        value: this.functionKeys.DISPLAY_ON,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1501,10 +1553,10 @@ Entry.Microbit2 = new (class Microbit2 {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.on, functionKeys.SPEAKER_ON],
-                            [Lang.Blocks.off, functionKeys.SPEAKER_OFF],
+                            [Lang.Blocks.on, this.functionKeys.SPEAKER_ON],
+                            [Lang.Blocks.off, this.functionKeys.SPEAKER_OFF],
                         ],
-                        value: functionKeys.SPEAKER_ON,
+                        value: this.functionKeys.SPEAKER_ON,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1581,7 +1633,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${beat};${bpm}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.CHANGE_TEMPO,
+                        command: this.functionKeys.CHANGE_TEMPO,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1634,7 +1686,7 @@ Entry.Microbit2 = new (class Microbit2 {
 
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.PLAY_TONE,
+                        command: this.functionKeys.PLAY_TONE,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1708,7 +1760,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.PLAY_MELODY,
+                        command: this.functionKeys.PLAY_MELODY,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1761,7 +1813,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.PLAY_SOUND,
+                        command: this.functionKeys.PLAY_SOUND,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1777,10 +1829,10 @@ Entry.Microbit2 = new (class Microbit2 {
                     {
                         type: 'Dropdown',
                         options: [
-                            [Lang.Blocks.on, functionKeys.RADIO_ON],
-                            [Lang.Blocks.off, functionKeys.RADIO_OFF],
+                            [Lang.Blocks.on, this.functionKeys.RADIO_ON],
+                            [Lang.Blocks.off, this.functionKeys.RADIO_OFF],
                         ],
-                        value: functionKeys.RADIO_ON,
+                        value: this.functionKeys.RADIO_ON,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1840,7 +1892,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const channel = Math.round(_clamp(script.getNumberValue('CHANNEL'), 0, 83));
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SETTING_RADIO,
+                        command: this.functionKeys.SETTING_RADIO,
                         payload: channel,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1874,7 +1926,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const value = script.getStringValue('VALUE');
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_RADIO,
+                        command: this.functionKeys.SET_RADIO,
                         payload: value,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -1898,7 +1950,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_RADIO,
+                        command: this.functionKeys.GET_RADIO,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -1939,7 +1991,7 @@ Entry.Microbit2 = new (class Microbit2 {
 
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_BTN,
+                        command: this.functionKeys.GET_BTN,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -1970,7 +2022,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_LOGO,
+                        command: this.functionKeys.GET_LOGO,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -2014,7 +2066,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const axis = script.getField('AXIS');
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_ACC,
+                        command: this.functionKeys.GET_ACC,
                         payload: axis,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -2062,7 +2114,7 @@ Entry.Microbit2 = new (class Microbit2 {
 
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_GESTURE,
+                        command: this.functionKeys.GET_GESTURE,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -2089,7 +2141,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_DIRECTION,
+                        command: this.functionKeys.GET_DIRECTION,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -2130,7 +2182,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const axis = script.getField('AXIS');
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_FIELD_STRENGTH,
+                        command: this.functionKeys.GET_FIELD_STRENGTH,
                         payload: axis,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -2155,7 +2207,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_LIGHT_LEVEL,
+                        command: this.functionKeys.GET_LIGHT_LEVEL,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -2179,7 +2231,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_TEMPERATURE,
+                        command: this.functionKeys.GET_TEMPERATURE,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -2203,7 +2255,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 func: (sprite, script) => {
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.GET_SOUND_LEVEL,
+                        command: this.functionKeys.GET_SOUND_LEVEL,
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
@@ -2264,13 +2316,13 @@ Entry.Microbit2 = new (class Microbit2 {
                     const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
                     const command =
                         unit === 'milli'
-                            ? functionKeys.SET_SERVO_MILLI
-                            : functionKeys.SET_SERVO_MICRO;
+                            ? this.functionKeys.SET_SERVO_MILLI
+                            : this.functionKeys.SET_SERVO_MICRO;
 
                     const parsedPayload = `${pin};${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_SERVO_MILLI,
+                        command: this.functionKeys.SET_SERVO_MILLI,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -2321,7 +2373,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedPayload = `${pin};${value}`;
                     const reqOptions = {
                         id: script.entity.id,
-                        command: functionKeys.SET_SERVO_ANGLE,
+                        command: this.functionKeys.SET_SERVO_ANGLE,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
