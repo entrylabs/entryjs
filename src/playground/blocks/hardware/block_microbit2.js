@@ -181,73 +181,10 @@ Entry.Microbit2 = new (class Microbit2 {
         this.imageName = 'microbit2.png';
         this.title = {
             en: 'Microbit v2',
-            ko: '마이크로빗 v2',
+            ko: '마이크로비트 v2',
         };
         this.name = 'microbit2';
         this.communicationType = 'manual';
-        this.version2Blocks = [
-            'microbit2_get_analog',
-            'microbit2_set_analog',
-            'microbit2_get_digital',
-            'microbit2_set_digital',
-            'microbit2_screen_toggle',
-            'microbit2_set_led',
-            'microbit2_get_led',
-            'microbit2_show_preset_image',
-            'microbit2_show_custom_image',
-            'microbit2_show_string',
-            'microbit2_reset_screen',
-            'microbit2_radio_toggle',
-            'microbit2_radio_setting',
-            'microbit2_radio_send',
-            'microbit2_radio_received',
-            'microbit2_speaker_toggle',
-            'microbit2_change_tempo',
-            'microbit2_set_tone',
-            'microbit2_play_preset_music',
-            'microbit2_play_sound_effect',
-            'microbit2_get_btn',
-            'microbit2_get_logo',
-            'microbit2_get_acc',
-            'microbit2_get_gesture',
-            'microbit2_get_direction',
-            'microbit2_get_field_strength_axis',
-            'microbit2_get_light_level',
-            'microbit2_get_temperature',
-            'microbit2_get_sound_level',
-            'microbit2_set_servo',
-            'microbit2_set_pwm',
-        ];
-        this.version1Blocks = [
-            'microbit2_get_analog',
-            'microbit2_set_analog',
-            'microbit2_get_digital',
-            'microbit2_set_digital',
-            'microbit2_screen_toggle',
-            'microbit2_set_led',
-            'microbit2_get_led',
-            'microbit2_show_preset_image',
-            'microbit2_show_custom_image',
-            'microbit2_show_string',
-            'microbit2_reset_screen',
-            'microbit2_radio_toggle',
-            'microbit2_radio_setting',
-            'microbit2_radio_send',
-            'microbit2_radio_received',
-            'microbit2_change_tempo',
-            'microbit2_set_tone',
-            'microbit2_play_preset_music',
-            'microbit2_get_btn',
-            'microbit2_get_acc',
-            'microbit2_get_gesture',
-            'microbit2_get_direction',
-            'microbit2_get_field_strength_axis',
-            'microbit2_get_light_level',
-            'microbit2_get_temperature',
-            'microbit2_get_sound_level',
-            'microbit2_set_servo',
-            'microbit2_set_pwm',
-        ];
         this.commandStatus = {};
         this.commandValue = {};
         this.digitalPins = [
@@ -286,7 +223,41 @@ Entry.Microbit2 = new (class Microbit2 {
             [9, 0, 0, 0, 9],
             [0, 9, 9, 9, 0],
         ];
-        this.blockMenuBlocks = [...this.version2Blocks];
+        this.blockMenuBlocks = [
+            'microbit2_common_title',
+            'microbit2_get_analog',
+            'microbit2_set_analog',
+            'microbit2_get_digital',
+            'microbit2_set_digital',
+            'microbit2_screen_toggle',
+            'microbit2_set_led',
+            'microbit2_get_led',
+            'microbit2_show_preset_image',
+            'microbit2_show_custom_image',
+            'microbit2_show_string',
+            'microbit2_reset_screen',
+            'microbit2_radio_toggle',
+            'microbit2_radio_setting',
+            'microbit2_radio_send',
+            'microbit2_radio_received',
+            'microbit2_change_tempo',
+            'microbit2_set_tone',
+            'microbit2_play_preset_music',
+            'microbit2_get_btn',
+            'microbit2_get_acc',
+            'microbit2_get_gesture',
+            'microbit2_get_direction',
+            'microbit2_get_field_strength_axis',
+            'microbit2_get_light_level',
+            'microbit2_get_temperature',
+            'microbit2_get_sound_level',
+            'microbit2_set_servo',
+            'microbit2_set_pwm',
+            'microbit2_v2_title',
+            'microbit2_get_logo',
+            'microbit2_speaker_toggle',
+            'microbit2_play_sound_effect',
+        ];
         this.version = '2';
     }
 
@@ -348,27 +319,8 @@ Entry.Microbit2 = new (class Microbit2 {
                     return;
                 }
                 const major = version[0];
-
                 if (this.version !== major) {
-                    const workspace = Entry.getMainWS();
-                    const blockMenu = workspace && workspace.blockMenu;
                     this.version = major;
-                    // remove prev blocks
-                    for (let block of this.blockMenuBlocks) {
-                        delete Entry.block[block];
-                    }
-
-                    if (this.version === 1) {
-                        this.blockMenuBlocks = this.version1Blocks;
-                    } else {
-                        this.blockMenuBlocks = this.version2Blocks;
-                    }
-                    // re-add blocks
-                    const blocks = this.getBlocks();
-                    for (let block of this.blockMenuBlocks) {
-                        Entry.block[block] = blocks[block];
-                    }
-                    Entry.hw.refreshHardwareBlockMenu();
                 }
             } else if (codeId) {
                 if (codeId.indexOf('reset') > -1) {
@@ -422,6 +374,8 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_sound_level: '마이크 소리 크기 값',
                     microbit2_set_servo: '핀 %1 에 서보 모터 각도를 %2 로 정하기 %3',
                     microbit2_set_pwm: '핀 %1 에 서보 펄스 폭을 %2 %3초로 설정하기 %4',
+                    microbit2_common_title: '마이크로비트 공통',
+                    microbit2_v2_title: '마이크로비트 V2 전용',
                 },
                 Blocks: {
                     octave: '옥타브',
@@ -574,6 +528,9 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_servo: '선택한 핀에 서보 모터 각도를 입력한 값으로 정합니다.',
                     microbit2_set_pwm: '선택한 핀의 서보 펄스폭을 선택한 시간으로 정합니다.',
                 },
+                Msgs: {
+                    microbit2_compatible_error: '마이크로비트 V2에서만 사용할 수 있는 블록입니다.',
+                },
             },
             en: {
                 template: {
@@ -608,6 +565,8 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_sound_level: 'microphone volume value',
                     microbit2_set_servo: 'set servo pin %1 angle to %2 %3',
                     microbit2_set_pwm: 'set servo pin %1 pulse to %2 %3 %4',
+                    microbit2_common_title: 'Common Blocks',
+                    microbit2_v2_title: 'v2 Only',
                 },
                 Blocks: {
                     octave: 'octave',
@@ -769,6 +728,10 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_pwm:
                         'Sets the servo pulse to the entered time on the selected pin.',
                 },
+                Msgs: {
+                    microbit2_compatible_error:
+                        'The corresponding block is not compatible to Microbit V1',
+                },
             },
             jp: {
                 template: {
@@ -803,6 +766,8 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_get_sound_level: 'マイク音の大きさ',
                     microbit2_set_servo: 'ピン ％1 に サーボモーターの角度を ％2 に設定する %3',
                     microbit2_set_pwm: 'ピン ％1 にサーボパルス幅を2にする %4',
+                    microbit2_common_title: 'Common Blocks',
+                    microbit2_v2_title: 'v2 Only',
                 },
                 Blocks: {
                     octave: 'オクターブ',
@@ -957,6 +922,9 @@ Entry.Microbit2 = new (class Microbit2 {
                         '選択したピンにサーボモーターの角度を入力した値で設定します。',
                     microbit2_set_pwm: '選択したピンのサーボパルス幅を選択した値にします。',
                 },
+                Msgs: {
+                    microbit2_compatible_error: '対応するブロックはMicrobitV1と互換性がありません',
+                },
             },
         };
     }
@@ -968,7 +936,45 @@ Entry.Microbit2 = new (class Microbit2 {
     }
 
     getBlocks = function() {
-        const blocks = {
+        return {
+            microbit2_common_title: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: '#333333',
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.microbit2_common_title,
+                        color: '#333333',
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'microbit2_common_title',
+                },
+                class: 'microbit2_title',
+                isNotFor: ['microbit2'],
+                events: {},
+            },
+            microbit2_v2_title: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: '#333333',
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.microbit2_v2_title,
+                        color: '#333333',
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'microbit2_v2_title',
+                },
+                class: 'microbit2_title',
+                isNotFor: ['microbit2'],
+                events: {},
+            },
             microbit2_get_analog: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1552,46 +1558,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedResponse = this.getResponse(reqOptions);
                 },
             },
-            microbit2_speaker_toggle: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.on, this.functionKeys.SPEAKER_ON],
-                            [Lang.Blocks.off, this.functionKeys.SPEAKER_OFF],
-                        ],
-                        value: this.functionKeys.SPEAKER_ON,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                class: 'microbit2Sound',
-                isNotFor: ['microbit2'],
-                def: {
-                    type: 'microbit2_speaker_toggle',
-                },
-                paramsKeyMap: { VALUE: 0 },
-                func: (sprite, script) => {
-                    const command = script.getField('VALUE');
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command,
-                    };
-                    this.requestCommandWithResponse(reqOptions);
-                    const parsedResponse = this.getResponse(reqOptions);
-                },
-            },
+
             microbit2_change_tempo: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1769,59 +1736,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     const reqOptions = {
                         id: script.entity.id,
                         command: this.functionKeys.PLAY_MELODY,
-                        payload: parsedPayload,
-                    };
-                    this.requestCommandWithResponse(reqOptions);
-                    const parsedResponse = this.getResponse(reqOptions);
-                },
-            },
-            microbit2_play_sound_effect: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                fontColor: '#ffffff',
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.GIGGLE, 21],
-                            [Lang.Blocks.HAPPY, 22],
-                            [Lang.Blocks.HELLO, 23],
-                            [Lang.Blocks.MYSTERIOUS, 24],
-                            [Lang.Blocks.SAD, 25],
-                            [Lang.Blocks.SLIDE, 26],
-                            [Lang.Blocks.SOARING, 27],
-                            [Lang.Blocks.SPRING, 28],
-                            [Lang.Blocks.TWINKLE, 29],
-                            [Lang.Blocks.YAWN, 30],
-                        ],
-                        value: 21,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                class: 'microbit2Sound',
-                isNotFor: ['microbit2'],
-                def: {
-                    type: 'microbit2_play_sound_effect',
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                func: (sprite, script) => {
-                    const value = _clamp(script.getNumberValue('VALUE'), 21, 30);
-                    const parsedPayload = `${value}`;
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command: this.functionKeys.PLAY_SOUND,
                         payload: parsedPayload,
                     };
                     this.requestCommandWithResponse(reqOptions);
@@ -2009,33 +1923,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     } else if (parsedResponse[1] == '2' && value == 'b') {
                         return 1;
                     } else if (parsedResponse[1] == '3' && value == 'ab') {
-                        return 1;
-                    } else return 0;
-                },
-            },
-            microbit2_get_logo: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                fontColor: '#ffffff',
-                skeleton: 'basic_boolean_field',
-                statements: [],
-                params: [],
-                events: {},
-                class: 'microbit2Sensor',
-                isNotFor: ['microbit2'],
-                def: {
-                    type: 'microbit2_get_logo',
-                },
-                paramsKeyMap: {},
-                func: (sprite, script) => {
-                    const reqOptions = {
-                        id: script.entity.id,
-                        command: this.functionKeys.GET_LOGO,
-                    };
-                    this.requestCommandWithResponse(reqOptions);
-                    const parsedResponse = this.getResponse(reqOptions);
-
-                    if (parsedResponse[1] == '1') {
                         return 1;
                     } else return 0;
                 },
@@ -2389,13 +2276,142 @@ Entry.Microbit2 = new (class Microbit2 {
                     return;
                 },
             },
+            microbit2_get_logo: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [],
+                events: {},
+                class: 'microbit2v2',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_get_logo',
+                },
+                paramsKeyMap: {},
+                func: (sprite, script) => {
+                    if (this.version === '1') {
+                        throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                            Lang.Msgs.microbit2_compatible_error,
+                        ]);
+                    }
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command: this.functionKeys.GET_LOGO,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
+
+                    if (parsedResponse[1] == '1') {
+                        return 1;
+                    } else return 0;
+                },
+            },
+            microbit2_speaker_toggle: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.on, this.functionKeys.SPEAKER_ON],
+                            [Lang.Blocks.off, this.functionKeys.SPEAKER_OFF],
+                        ],
+                        value: this.functionKeys.SPEAKER_ON,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbit2v2',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_speaker_toggle',
+                },
+                paramsKeyMap: { VALUE: 0 },
+                func: (sprite, script) => {
+                    if (this.version === '1') {
+                        throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                            Lang.Msgs.microbit2_compatible_error,
+                        ]);
+                    }
+                    const command = script.getField('VALUE');
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
+                },
+            },
+            microbit2_play_sound_effect: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.GIGGLE, 21],
+                            [Lang.Blocks.HAPPY, 22],
+                            [Lang.Blocks.HELLO, 23],
+                            [Lang.Blocks.MYSTERIOUS, 24],
+                            [Lang.Blocks.SAD, 25],
+                            [Lang.Blocks.SLIDE, 26],
+                            [Lang.Blocks.SOARING, 27],
+                            [Lang.Blocks.SPRING, 28],
+                            [Lang.Blocks.TWINKLE, 29],
+                            [Lang.Blocks.YAWN, 30],
+                        ],
+                        value: 21,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                class: 'microbit2v2',
+                isNotFor: ['microbit2'],
+                def: {
+                    type: 'microbit2_play_sound_effect',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                func: (sprite, script) => {
+                    if (this.version === '1') {
+                        throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                            Lang.Msgs.microbit2_compatible_error,
+                        ]);
+                    }
+                    const value = _clamp(script.getNumberValue('VALUE'), 21, 30);
+                    const parsedPayload = `${value}`;
+                    const reqOptions = {
+                        id: script.entity.id,
+                        command: this.functionKeys.PLAY_SOUND,
+                        payload: parsedPayload,
+                    };
+                    this.requestCommandWithResponse(reqOptions);
+                    const parsedResponse = this.getResponse(reqOptions);
+                },
+            },
         };
-        if (this.version === '1') {
-            delete blocks.microbit2_get_logo;
-            delete blocks.microbit2_play_sound_effect;
-            delete blocks.microbit2_speaker_toggle;
-        }
-        return blocks;
     };
 })();
 
