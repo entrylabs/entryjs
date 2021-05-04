@@ -96,13 +96,15 @@ class DataTable {
         return _findIndex(this.#tables, { id });
     }
 
-    addSource(table) {
+    addSource(table, view = true) {
         let data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
 
         this.#tables.push(table instanceof DataTableSource ? table : new DataTableSource(table));
         this.hide();
-        this.show({ list: this.dataTables, selectedIndex: this.dataTables.length - 1 });
+        if (view) {
+            this.show({ list: this.dataTables, selectedIndex: this.dataTables.length - 1 });
+        }
     }
 
     addSources(tables = []) {
