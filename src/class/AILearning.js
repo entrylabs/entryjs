@@ -120,7 +120,7 @@ export default class AILearning {
                 type,
                 recordTime,
             });
-        } else if(type === 'number') {
+        } else if (type === 'number') {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new NumberClassification({ 
                 name,
@@ -300,10 +300,13 @@ function createDataTable(classes, name) {
             data = JSON.parse(data);
         }
         if (!DataTable.getSource(data.id)) {
-            DataTable.addSource({
-                ...data, 
-                name:`${data.name}-${name}-${Lang.AiLearning.trained_table_postfix}`
-            }, false);
+            DataTable.addSource(
+                {
+                    ...data, 
+                    name: `${data.name}-${name}-${Lang.AiLearning.trained_table_postfix}`
+                }, 
+                false
+            );
         }
         return data;
     } catch (e) {

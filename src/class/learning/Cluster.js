@@ -32,9 +32,9 @@ class Cluster {
     constructor(params = {}) {
          // 정지시 data 초기화.
          Entry.addEventListener('stop', () => {
-            this.init({...params});
+            this.init({ ...params });
         });
-        this.init({...params});
+        this.init({ ...params });
     }
 
     init({ name, result, table, trainParam }) {
