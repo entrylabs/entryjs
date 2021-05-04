@@ -28,7 +28,15 @@ class NumberClassification {
     #fields = [];
     #predictField = [];
 
-    constructor({ name, url, table, trainParam }) {
+    constructor(params = {}) {
+        // 정지시 data 초기화.
+        Entry.addEventListener('stop', () => {
+            this.init({ ...params });
+        });
+        this.init({ ...params });
+    }
+
+    init({ name, url, table, trainParam }) {
         this.#view = new LearningView({ name, status: 0 });
         this.#name = name;
         this.#trainParam = trainParam;
@@ -49,6 +57,15 @@ class NumberClassification {
             this.#chartEnable = true;
         }
         this.load(`/uploads/${url}/model.json`);
+    }
+
+    setTable() {
+        const tableSource = Entry.playground.dataTable.getSource(this.#table.id);
+        if (this.#table.fields.length !== tableSource.fields.length) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
+            throw Error(Lang.AiLearning.train_param_error);
+        }
+        this.#table.data = tableSource.rows;
     }
 
     destroy() {
@@ -122,6 +139,7 @@ class NumberClassification {
     }
 
     train() {
+        this.setTable();
         this.#trainCallback(1);
         this.#isTrained = false;
         const { data: trainData, labels } = convertTableToKnnData(this.#table);

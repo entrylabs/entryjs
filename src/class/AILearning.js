@@ -5,6 +5,7 @@ import Classification, { classes as ClassificationClasses } from './learning/Cla
 import NumberClassification, {
     classes as NumberClassificationClasses,
 } from './learning/NumberClassification';
+import DataTable from './DataTable';
 
 const banClasses = [
     ...ClusterClasses,
@@ -119,8 +120,8 @@ export default class AILearning {
                 type,
                 recordTime,
             });
-        } else if(type === 'number'){
-            this.#tableData = tableData || createDataTable(classes);
+        } else if (type === 'number') {
+            this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new NumberClassification({ 
                 name,
                 result,
@@ -130,7 +131,7 @@ export default class AILearning {
             });
             this.#labels = this.#module.getLabels();
         } else if (type === 'cluster') {
-            this.#tableData = tableData || createDataTable(classes);
+            this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new Cluster({ 
                 name,
                 result,
@@ -138,7 +139,7 @@ export default class AILearning {
                 table: this.#tableData,
             });
         } else if (type === 'regression') {
-            this.#tableData = tableData || createDataTable(classes);
+            this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new Regression({ 
                 name,
                 result,
@@ -287,18 +288,27 @@ function getBlockMenu(playground) {
     return blockMenu;
 }
 
-function createDataTable(classes) {
+function createDataTable(classes, name) {
     if(!classes.length) {
         return ;
     }
     try {
         const [{ samples }] = classes;
-        const [{ data }] = samples;
+        const [sample = {}] = samples || [];
+        let data = sample.data;
         if (typeof data === 'string') {
-            return JSON.parse(data);
-        } else {
-            return data;
+            data = JSON.parse(data);
         }
+        if (!DataTable.getSource(data.id)) {
+            DataTable.addSource(
+                {
+                    ...data,
+                    name: `${data.name}-${name}-${Lang.AiLearning.trained_table_postfix}`,
+                },
+                false
+            );
+        }
+        return data;
     } catch (e) {
         console.log('set table error', e);
     }
