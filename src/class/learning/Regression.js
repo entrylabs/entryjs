@@ -72,7 +72,7 @@ class Regression {
 
     setTable() {
         const tableSource = Entry.playground.dataTable.getSource(this.#table.id);
-        if (this.#table.fields.length !== tableSource.fields.length) {
+        if (this.#table.fields.length !== tableSource.fieldsInfo.length) {
             Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
             throw Error(Lang.AiLearning.train_param_error);
         }
