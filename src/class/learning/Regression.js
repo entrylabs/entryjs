@@ -6,6 +6,7 @@ import LearningView from './LearningView';
 import Chart from './Chart';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import DataTable from '../DataTable';
 
 export const classes = [
     'ai_learning_train',
@@ -71,8 +72,8 @@ class Regression {
     }
 
     setTable() {
-        const tableSource = Entry.playground.dataTable.getSource(this.#table.id);
-        if (this.#table.fields.length !== tableSource.fieldsInfo.length) {
+        const tableSource = DataTable.getSource(this.#table.id);
+        if (this.#table.fieldsInfo.length !== tableSource.fields.length) {
             Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
             throw Error(Lang.AiLearning.train_param_error);
         }
