@@ -301,10 +301,7 @@ function createDataTable(classes, name) {
         }
         if (!DataTable.getSource(data.id)) {
             DataTable.addSource(
-                {
-                    ...data,
-                    name: `${data.name}-${name}-${Lang.AiLearning.trained_table_postfix}`,
-                },
+                data,
                 false
             );
         }
