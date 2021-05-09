@@ -85,7 +85,7 @@ class DataTable {
             console.warn('empty argument');
             return null;
         }
-        return _find(this.#tables, { id });
+        return _find(this.#tables, { id }) || _find(this.#tables, { _id: id });
     }
 
     getIndex({ id }) {
