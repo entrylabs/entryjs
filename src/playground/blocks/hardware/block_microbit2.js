@@ -276,6 +276,12 @@ Entry.Microbit2 = new (class Microbit2 {
         };
         Entry.hw.update();
     }
+    waitMilliSec(milli) {
+        this.blockReq = true;
+        setTimeout(() => {
+            this.blockReq = false;
+        }, milli);
+    }
 
     /**
      * command 요청 후 데이터 송수신이 끝날 때까지 대기한다.
@@ -283,6 +289,9 @@ Entry.Microbit2 = new (class Microbit2 {
      * @param payload
      */
     requestCommandWithResponse({ id, command: type, payload }) {
+        if (this.blockReq) {
+            throw new Entry.Utils.AsyncError();
+        }
         const codeId = this.generateCodeId(id, type, payload);
         if (!this.commandStatus[codeId]) {
             // 첫 진입시 무조건 AsyncError
@@ -1730,6 +1739,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
+                    this.waitMilliSec(500);
                 },
             },
             microbit2_radio_toggle: {
