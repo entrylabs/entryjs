@@ -7,9 +7,10 @@ import { LedPicker } from '@entrylabs/tool';
 /*
  *
  */
-Entry.FieldLed = class FieldLed extends Entry.Field {
+Entry.FieldLed2 = class FieldLed2 extends Entry.Field {
     constructor(content, blockView, index) {
         super(content, blockView, index);
+        this.props = { content, blockView, index };
         this._block = blockView.block;
         this._blockView = blockView;
         const board = blockView.getBoard();
@@ -28,10 +29,10 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
         this.setValue(
             this.getValue() || [
                 [0, 0, 0, 0, 0],
-                [0, 1, 0, 1, 0],
+                [0, 9, 0, 9, 0],
                 [0, 0, 0, 0, 0],
-                [1, 0, 0, 0, 1],
-                [0, 1, 1, 1, 0],
+                [9, 0, 0, 0, 9],
+                [0, 9, 9, 9, 0],
             ]
         );
         /*
@@ -53,7 +54,6 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
                 if (this._rect[`${x_pos}`][`${y_pos}`]) {
                     this._rect[`${x_pos}`][`${y_pos}`].remove();
                 }
-
                 return (this._rect[`${x_pos}`][`${y_pos}`] = this.svgGroup.elem('rect', {
                     x: y_pos * ledDist + 4,
                     y: x_pos * ledDist - 8 + ledOffset,
@@ -171,9 +171,7 @@ Entry.FieldLed = class FieldLed extends Entry.Field {
                     }
                     this._attachDisposeEvent();
                 },
-                withLevel: false,
-                maxBrightness: this._contents.maxBrightness,
-                defaultStatus: this._contents.defaultStatus,
+                withLevel: true,
             },
             container: this.optionGroup[0],
         }).on('change', (value) => {
