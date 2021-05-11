@@ -744,11 +744,11 @@ Entry.Hasseam.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['4'],
+                        params: ['16'],
                     },
                     {
                         type: 'text',
-                        params: ['5'],
+                        params: ['17'],
                     },
                 ],
                 type: 'hasseam_get_digital_ultrasonic',
