@@ -23,7 +23,7 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
  위 라이브러리들은 모두 오픈소스로 배포되며, 직접 다운로드 받거나 [npm](http://npmjs.org), [bower](http://bower.io)등을 이용해 설치할 수 있습니다.
 
 ### 자바스크립트 라이브러리
- 
+
 ```html
 <!-- 써드파티 라이브러리들 -->
 <script type="text/javascript" src="${LIBDIR}/PreloadJS/lib/preloadjs-0.6.0.min.js"></script>
