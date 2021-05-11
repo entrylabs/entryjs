@@ -236,7 +236,7 @@ Entry.BlockView = class BlockView {
                 if (param[param.length - 1] === ' ') {
                     param = param.substring(0, param.length - 1);
                 }
-                if (!param.length) {
+                if (!param || !param.length) {
                     return;
                 }
 
@@ -244,6 +244,9 @@ Entry.BlockView = class BlockView {
                 if (parsingRet) {
                     const paramIndex = parsingRet[1] - 1;
                     param = params[paramIndex];
+                    if (!param) {
+                        return;
+                    }
                     const field = new Entry[`Field${param.type}`](
                         param,
                         this,
