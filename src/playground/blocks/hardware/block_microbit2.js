@@ -1624,6 +1624,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     const parsedResponse = this.getResponse(reqOptions);
                 },
             },
+
             microbit2_set_tone: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1675,6 +1676,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     };
                     this.requestCommandWithResponse(reqOptions);
                     const parsedResponse = this.getResponse(reqOptions);
+                    return;
                 },
             },
             microbit2_play_preset_music: {
