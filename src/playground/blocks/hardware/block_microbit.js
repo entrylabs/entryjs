@@ -11,7 +11,7 @@ Entry.Microbit = new (class Microbit {
         this.imageName = 'microbit.png';
         this.title = {
             en: 'Microbit',
-            ko: '마이크로비트',
+            ko: '마이크로빗',
         };
         this.name = 'microbit';
         this.blockIds = {};
@@ -167,11 +167,7 @@ Entry.Microbit.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['켜기', 'on'],
-                        ['끄기', 'off'],
-                        ['반전', 'toggle'],
-                    ],
+                    options: [['켜기', 'on'], ['끄기', 'off'], ['반전', 'toggle']],
                     value: 'on',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -406,11 +402,7 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['P0', 7],
-                        ['P1', 8],
-                        ['P2', 9],
-                    ],
+                    options: [['P0', 7], ['P1', 8], ['P2', 9]],
                     value: 7,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -461,11 +453,7 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['P0', 7],
-                        ['P1', 8],
-                        ['P2', 9],
-                    ],
+                    options: [['P0', 7], ['P1', 8], ['P2', 9]],
                     value: 7,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -596,11 +584,7 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['P0', 7],
-                        ['P1', 8],
-                        ['P2', 9],
-                    ],
+                    options: [['P0', 7], ['P1', 8], ['P2', 9]],
                     value: 7,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -651,10 +635,7 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A', 1],
-                        ['B', 2],
-                    ],
+                    options: [['A', 1], ['B', 2]],
                     value: 1,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -760,12 +741,7 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['x축', 0],
-                        ['y축', 1],
-                        ['z축', 2],
-                        ['크기', 3],
-                    ],
+                    options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
                     value: 'x',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

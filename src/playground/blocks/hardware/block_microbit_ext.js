@@ -55,7 +55,7 @@ Entry.MicrobitExt = new (class MicrobitExt {
         this.imageName = 'microbit_ext.png';
         this.title = {
             en: 'MicrobitExt',
-            ko: '마이크로비트 확장',
+            ko: '마이크로빗 확장',
         };
         this.name = 'microbitExt';
         this.communicationType = 'manual';

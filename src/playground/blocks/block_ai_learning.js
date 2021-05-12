@@ -1357,8 +1357,8 @@ module.exports = {
                 isNotFor: ['number_learning_attr_3'],
                 async func(sprite, script) {
                     const x = script.getNumberValue('ATTR1', script);
-                    const y = script.getNumberValue('ATTR2', script);
-                    const z = script.getNumberValue('ATTR3', script);
+                    const y = script.getNumberValue('ATTR3', script);
+                    const z = script.getNumberValue('ATTR5', script);
                     await Entry.aiLearning.predict([x, y, z]);
                     const [{ className }] = Entry.aiLearning.getPredictResult();
                     return className;
