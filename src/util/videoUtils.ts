@@ -232,8 +232,10 @@ class VideoUtils implements MediaUtilsInterface {
                 height: this.CANVAS_HEIGHT,
             });
             console.time('test');
-            const isOffline = window.location.href.indexOf('entry-offline');
-            if (isOffline > -1) {
+            const isOffline =
+                window.location.href.indexOf('entry-offline') > -1 ||
+                window.location.href.indexOf('file://') > -1;
+            if (isOffline) {
                 var OFFLINE_PATH = window.weightsPath();
             }
             if (this.isChrome) {
