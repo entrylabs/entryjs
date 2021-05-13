@@ -236,7 +236,6 @@ class VideoUtils implements MediaUtilsInterface {
             if (isOffline > -1) {
                 var OFFLINE_PATH = window.weightsPath();
             }
-            alert(OFFLINE_PATH);
             if (this.isChrome) {
                 this.worker = new VideoWorker();
                 this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
