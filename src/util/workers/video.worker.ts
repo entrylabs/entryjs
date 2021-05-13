@@ -174,7 +174,7 @@ ctx.onmessage = async function(e: {
                 Canvas: OffscreenCanvas,
                 createCanvasElement: () => new OffscreenCanvas(dimension.width, dimension.height),
             });
-
+            alert(weightsUrl);
             offCanvas = new OffscreenCanvas(dimension.width, dimension.height);
             // 각각의 모델 pre-load
             await Promise.all([
@@ -199,6 +199,7 @@ ctx.onmessage = async function(e: {
                         // console.log('coco model loaded');
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
+
                 Promise.all([
                     faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
                     faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
