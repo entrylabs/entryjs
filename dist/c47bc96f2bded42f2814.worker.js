@@ -13726,7 +13726,7 @@ function poseDetect(force) {
 }
 ctx.onmessage = function (e) {
     return video_worker_awaiter(this, void 0, void 0, function () {
-        var type, _a, image, ctx_1, _b, target, mode, targetMode;
+        var type, _a, weightPath, image, ctx_1, _b, target, mode, targetMode;
         var _this = this;
         return video_worker_generator(this, function (_c) {
             switch (_c.label) {
@@ -13746,6 +13746,10 @@ ctx.onmessage = function (e) {
                 case 1:
                     dimension.width = e.data.width;
                     dimension.height = e.data.height;
+                    weightPath = e.data.localPath;
+                    if (weightPath) {
+                        weightsUrl = "file://" + weightPath;
+                    }
                     commonjs["env"].setEnv(commonjs["env"].createNodejsEnv());
                     // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
                     commonjs["env"].monkeyPatch({
@@ -13779,10 +13783,15 @@ ctx.onmessage = function (e) {
                                 commonjs["nets"].faceLandmark68Net.loadFromUri(weightsUrl),
                                 commonjs["nets"].ageGenderNet.loadFromUri(weightsUrl),
                                 commonjs["nets"].faceExpressionNet.loadFromUri(weightsUrl),
-                            ]).then(function () {
+                            ])
+                                .then(function () {
                                 faceLoaded = true;
                                 _this.postMessage({ type: 'init', message: 'face' });
+                            })
+                                .catch(function (e) {
+                                console.log(e);
                             }),
+                            ,
                         ])];
                 case 2:
                     // 각각의 모델 pre-load
