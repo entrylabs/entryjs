@@ -49,11 +49,11 @@ type DetectedObject = {
 type IndicatorType = 'pose' | 'face' | 'object';
 
 export const getInputList = async () => {
-    if (navigator.mediaDevices) {
+    if(navigator.mediaDevices) {
         return (await navigator.mediaDevices.enumerateDevices()) || [];
     }
     return [];
-};
+}
 
 class VideoUtils implements MediaUtilsInterface {
     // 비디오 캔버스 크기에 쓰이는 공통 밸류
@@ -232,11 +232,6 @@ class VideoUtils implements MediaUtilsInterface {
                 height: this.CANVAS_HEIGHT,
             });
             console.time('test');
-            const isOffline = window.location.href.indexOf('entry-offline');
-            if (isOffline > -1) {
-                var OFFLINE_PATH = window.location.href.substring(0, isOffline + 13);
-            }
-            console.log(OFFLINE_PATH);
             if (this.isChrome) {
                 this.worker = new VideoWorker();
                 this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
@@ -277,20 +272,11 @@ class VideoUtils implements MediaUtilsInterface {
                             break;
                     }
                 };
-                const toBeSent: {
-                    type: string;
-                    width: number;
-                    height: number;
-                    localPath?: string;
-                } = {
+                this.worker.postMessage({
                     type: 'init',
                     width: this.CANVAS_WIDTH,
                     height: this.CANVAS_HEIGHT,
-                };
-                if (isOffline) {
-                    toBeSent.localPath = OFFLINE_PATH;
-                }
-                this.worker.postMessage(toBeSent);
+                });
                 Entry.dispatchEvent('showVideoLoadingScreen');
             } else {
                 const weightsUrl = `${window.location.origin}/lib/entry-js/weights`;

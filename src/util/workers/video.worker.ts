@@ -25,8 +25,7 @@ type FlipStatus = {
 let mobileNet: any = null;
 let coco: any = null;
 let faceLoaded: boolean = false;
-let weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
-console.log(self.location);
+const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
 
 // 메인 스레드에서 전달받은 이미지 프레임 반영용 캔버스
 let offCanvas: OffscreenCanvas = null;
@@ -164,10 +163,7 @@ ctx.onmessage = async function(e: {
         case 'init':
             dimension.width = e.data.width;
             dimension.height = e.data.height;
-            const weightPath = e.data.localPath;
-            if (weightPath) {
-                weightsUrl = `${weightPath}/node_modules/entry-js/weights`;
-            }
+
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({
@@ -200,23 +196,14 @@ ctx.onmessage = async function(e: {
                         this.postMessage({ type: 'init', message: 'object' });
                     }),
                 Promise.all([
-                    // faceapi.nets.tinyFaceDetector.loadFromDisk('../../../weights'),
-                    // faceapi.nets.faceLandmark68Net.loadFromDisk('../../../weights'),
-                    // faceapi.nets.ageGenderNet.loadFromDisk('../../../weights'),
-                    // faceapi.nets.faceExpressionNet.loadFromDisk('../../../weights'),
                     faceapi.nets.tinyFaceDetector.loadFromUri(weightsUrl),
                     faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
                     faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
                     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-                ])
-                    .then(() => {
-                        faceLoaded = true;
-                        this.postMessage({ type: 'init', message: 'face' });
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                    }),
-                ,
+                ]).then(() => {
+                    faceLoaded = true;
+                    this.postMessage({ type: 'init', message: 'face' });
+                }),
             ]);
             await warmup();
             this.postMessage({ type: 'init', message: 'warmup' });
