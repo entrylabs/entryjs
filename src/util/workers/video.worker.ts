@@ -167,14 +167,13 @@ ctx.onmessage = async function(e: {
             if (weightPath) {
                 weightsUrl = `file://${weightPath}`;
             }
-            console.log(weightsUrl);
             faceapi.env.setEnv(faceapi.env.createNodejsEnv());
             // MonkeyPatch때문에 생기는 TypeError, 의도된 방향이므로 수정 하지 말것
             faceapi.env.monkeyPatch({
                 Canvas: OffscreenCanvas,
                 createCanvasElement: () => new OffscreenCanvas(dimension.width, dimension.height),
             });
-            alert(weightsUrl);
+
             offCanvas = new OffscreenCanvas(dimension.width, dimension.height);
             // 각각의 모델 pre-load
             await Promise.all([
