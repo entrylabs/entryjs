@@ -249,20 +249,20 @@ Entry.Altino.setLanguage = function() {
                 ALTINO_dot_line_8: 'Line-8',
             },
             template: {
-                ALTINO_analogValue: 'altino %1 sensor value',
-                ALTINO_stopAll: 'Stop %1°%2',
-                ALTINO_dot_display: 'Display %1 %2',
-                ALTINO_dot_display_line: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
-                ALTINO_dot_display_hex: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9',
-                ALTINO_dot_display_matrix_on: 'Display On X:%1 Y:%2 %3',
-                ALTINO_dot_display_matrix_off: 'Display Off X:%1 Y:%2 %3',
-                ALTINO_light: 'Light %1 %2 %3',
-                ALTINO_light_hex: 'Light %1 %2 %3',
-                ALTINO_sound_hex: 'Sound %1 %2',
-                ALTINO_rear_wheel: 'Go L:%1 R:%2%3',
-                ALTINO_sound: 'Sound %1 %2 %3',
-                ALTINO_steering_hex: 'Steering %1%2',
-                ALTINO_steering: 'Steering %1°%2',
+                altino_analogValue: 'Altino %1 sensor value',
+                altino_stopAll: 'Stop %1°%2',
+                altino_dot_display: 'Display %1 %2',
+                altino_dot_display_line: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9 %10',
+                altino_dot_display_hex: 'Display %1 %2 %3 %4 %5 %6 %7 %8 %9',
+                altino_dot_display_matrix_on: 'Display On X:%1 Y:%2 %3',
+                altino_dot_display_matrix_off: 'Display Off X:%1 Y:%2 %3',
+                altino_light: 'Light %1 %2 %3',
+                altino_light_hex: 'Light %1 %2 %3',
+                altino_sound_hex: 'Sound %1 %2',
+                altino_rear_wheel: 'Go L:%1 R:%2%3',
+                altino_sound: 'Sound %1 %2 %3',
+                altino_steering_hex: 'Steering %1%2',
+                altino_steering: 'Steering %1°%2',
             },
         },
     };
@@ -416,7 +416,7 @@ Entry.Altino.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['Altino.stop(%1)'] },
+            syntax: { js: [],  py: ['Altino.stop(%1)']},
         },
         altino_steering: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -519,7 +519,8 @@ Entry.Altino.getBlocks = function() {
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                sq.steering = script.getNumberValue('steerVal');
+                console.log(parseInt(Number(script.getStringValue('steerVal')), 10));
+                sq.steering = parseInt(Number(script.getStringValue('steerVal')), 10);
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Altino.steering_hex(%1)'] },
@@ -558,7 +559,7 @@ Entry.Altino.getBlocks = function() {
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                sq.note = script.getNumberValue('soundVal');
+                sq.note = parseInt(Number(script.getStringValue('soundVal')), 10);
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Altino.sound_hex(%1)'] },
@@ -588,11 +589,11 @@ Entry.Altino.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['400'],
+                        params: ['300'],
                     },
                     {
                         type: 'text',
-                        params: ['400'],
+                        params: ['300'],
                     },
                     null,
                 ],
@@ -1058,8 +1059,8 @@ Entry.Altino.getBlocks = function() {
             isNotFor: ['altino'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                var msb = script.getNumberValue('MSB');
-                var lsb = script.getNumberValue('LSB');
+                var msb = parseInt(Number(script.getStringValue('MSB')), 10);
+                var lsb = parseInt(Number(script.getStringValue('LSB')), 10);
 
                 sq.led2 = (msb & 0xc0) | (sq.led2 & 0x3f);
                 sq.led = lsb;
@@ -1103,7 +1104,8 @@ Entry.Altino.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var str = script.getStringValue('VALUE');
-                sq.ascii = str.charCodeAt(0);
+                var code = str.charCodeAt(0) | 0x80;
+                sq.ascii = code;
 
                 return script.callReturn();
             },
@@ -1442,14 +1444,14 @@ Entry.Altino.getBlocks = function() {
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.ascii = 0;
-                sq.dot1 = script.getNumberValue('VALUE8');
-                sq.dot2 = script.getNumberValue('VALUE7');
-                sq.dot3 = script.getNumberValue('VALUE6');
-                sq.dot4 = script.getNumberValue('VALUE5');
-                sq.dot5 = script.getNumberValue('VALUE4');
-                sq.dot6 = script.getNumberValue('VALUE3');
-                sq.dot7 = script.getNumberValue('VALUE2');
-                sq.dot8 = script.getNumberValue('VALUE1');
+                sq.dot1 = parseInt(Number(script.getStringValue('VALUE8')), 10);
+                sq.dot2 = parseInt(Number(script.getStringValue('VALUE7')), 10);
+                sq.dot3 = parseInt(Number(script.getStringValue('VALUE6')), 10);
+                sq.dot4 = parseInt(Number(script.getStringValue('VALUE5')), 10);
+                sq.dot5 = parseInt(Number(script.getStringValue('VALUE4')), 10);
+                sq.dot6 = parseInt(Number(script.getStringValue('VALUE3')), 10);
+                sq.dot7 = parseInt(Number(script.getStringValue('VALUE2')), 10);
+                sq.dot8 = parseInt(Number(script.getStringValue('VALUE1')), 10);
 
                 return script.callReturn();
             },
