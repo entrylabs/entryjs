@@ -72,6 +72,7 @@ class CloudVariableExtension {
             });
             socket.on('welcome', ({ variables = [], isOffline }) => {
                 try {
+                    variables.forEach(this.#applyValue);
                     this.#data = new dmet(variables);
                 } catch (e) {
                     console.warn(e);
