@@ -2091,7 +2091,12 @@ Entry.NeobotPurple.getBlocks = function() {
                 speedValue = Math.min(speedValue, 100);
                 speedValue = Math.ceil(speedValue / 10);
 
-                const outValue = directionValue + speedValue;
+                let outValue = directionValue + speedValue;
+                if (outValue == directionValue) {
+                    outValue = 254;
+                } else {
+                    outValue = outValue - 1;
+                }
 
                 if (Entry.NeobotPurple.log_to_console) {
                     Entry.console.print('=== neobot_purple_servo_rotate ===');
