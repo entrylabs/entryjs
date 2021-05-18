@@ -1566,7 +1566,7 @@ Entry.EntityObject = class EntityObject {
     }
 
     syncDialogVisible() {
-        if (this.dialog && this.dialog.object) {
+        if (this.dialog?.object) {
             this.dialog.object.visible = this.visible;
         }
     }
