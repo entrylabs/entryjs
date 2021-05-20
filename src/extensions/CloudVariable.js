@@ -227,7 +227,9 @@ class CloudVariableExtension {
             if (this && this.get) {
                 const { array } = this.get(operation);
                 list.array_ = array;          
-            } else {
+            } else if(operation.array) {
+                list.array_ = operation.array;
+            } else if(operation.list) {
                 list.array_ = operation.list.map((key) => ({ data: operation.value[key] }))
             }
             list.updateView();
