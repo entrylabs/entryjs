@@ -222,15 +222,15 @@ class CloudVariableExtension {
         } else if (variableType === 'list') {
             const list = Entry.variableContainer.getList(id);
             if (!list) {
-                return ;
+                return;
             }
             if (this && this.get) {
                 const { array } = this.get(operation);
-                list.array_ = array;          
-            } else if(operation.array) {
+                list.array_ = array;
+            } else if (operation.array) {
                 list.array_ = operation.array;
-            } else if(operation.list) {
-                list.array_ = operation.list.map((key) => ({ data: operation.value[key] }))
+            } else if (operation.list) {
+                list.array_ = operation.list.map((key) => ({ data: operation.value[key] }));
             }
             list.updateView();
         }
