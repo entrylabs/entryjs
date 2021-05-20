@@ -31,8 +31,9 @@ class Cluster {
     #name = '';
 
     constructor(params = {}) {
-         // 정지시 data 초기화.
-         Entry.addEventListener('stop', () => {
+        this.#view = new LearningView({ name: params.name || '', status: 0 });
+        // 정지시 data 초기화.
+        Entry.addEventListener('stop', () => {
             this.init({ ...params });
         });
         this.init({ ...params });
@@ -40,7 +41,6 @@ class Cluster {
 
     init({ name, result, table, trainParam }) {
         this.#name = name;
-        this.#view = new LearningView({ name, status: 0 });
         this.#trainParam = trainParam;
         this.#result = result;
         this.#table = table;
