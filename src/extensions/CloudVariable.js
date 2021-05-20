@@ -101,7 +101,7 @@ class CloudVariableExtension {
 
     setDefaultData(defaultData) {
         this.#defaultData = defaultData;
-        variables.forEach(this.#applyValue);
+        defaultData.forEach(this.#applyValue);
     }
 
     createDmet(object) {
