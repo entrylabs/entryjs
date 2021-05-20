@@ -1870,7 +1870,7 @@ Entry.Utils.addNewBlock = function(item) {
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
-    if (!this.editor.board.code) {
+    if (!this?.editor?.board?.code) {
         if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
             this.objectAlert = Entry.toast.alert(
                 Lang.Workspace.add_object_alert,
