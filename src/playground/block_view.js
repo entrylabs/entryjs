@@ -236,7 +236,7 @@ Entry.BlockView = class BlockView {
                 if (param[param.length - 1] === ' ') {
                     param = param.substring(0, param.length - 1);
                 }
-                if (!param.length) {
+                if (!param?.length) {
                     return;
                 }
 
@@ -244,6 +244,10 @@ Entry.BlockView = class BlockView {
                 if (parsingRet) {
                     const paramIndex = parsingRet[1] - 1;
                     param = params[paramIndex];
+                    // params[paramIndex]= null||undefined 일 수 있는 경우에 대한 방어 코드
+                    if (!param) {
+                        return;
+                    }
                     const field = new Entry[`Field${param.type}`](
                         param,
                         this,
