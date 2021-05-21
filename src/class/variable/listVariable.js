@@ -404,7 +404,7 @@ class ListVariable extends Variable {
                     this.elementView.indexView.text = i + 1;
                 }
 
-                const text = String(arr[i].data);
+                const text = String(arr?.[i]?.data ?? 'undefined');
                 const valueView = this.elementView.valueView;
                 const cachedText = _cache[text.substr(0, 150)];
 
