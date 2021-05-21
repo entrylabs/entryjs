@@ -41,6 +41,9 @@ class LittleBits {
                     littlebits_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                     littlebits_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
                 },
+                Menus: {
+                    littlebits: '리틀비츠',
+                },
             },
             en: {
                 template: {
@@ -53,6 +56,9 @@ class LittleBits {
                     littlebits_toggle_led: '디지털 %1 번 핀 %2 %3',
                     littlebits_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                     littlebits_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                },
+                Menus: {
+                    littlebits: 'Littlebits',
                 },
             },
         };
@@ -407,7 +413,10 @@ class LittleBits {
                     },
                     {
                         type: 'Dropdown',
-                        options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                        options: [
+                            [Lang.Blocks.ARDUINO_on, 'on'],
+                            [Lang.Blocks.ARDUINO_off, 'off'],
+                        ],
                         value: 'on',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

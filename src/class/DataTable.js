@@ -120,7 +120,8 @@ class DataTable {
         }
     }
 
-    setSource({ chart, table, name, id }) {
+    setSource(selected) {
+        const { chart, table, name, id } = selected;
         const source = this.getSource(id);
         if (source) {
             source.modal = null;
@@ -131,16 +132,27 @@ class DataTable {
                 data: table.slice(1),
             });
             source.updated = new Date();
+        } else {
+            const newSource = new DataTableSource({
+                chart,
+                data: table.slice(1),
+                fields: table[0],
+                name,
+            });
+            this.#tables.push(newSource);
+            selected.id = newSource.id;
         }
     }
 
     saveTable = ({ selected }) => {
         this.setSource(selected);
         Entry.playground.reloadPlayground();
+        Entry.creationChangedEvent.notify();
     };
 
     removeTable = (index) => {
         this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
+        Entry.creationChangedEvent.notify();
     };
 
     show(data) {
@@ -192,7 +204,7 @@ class DataTable {
 
     setTables(tables = []) {
         tables.forEach((table) => {
-            let data = table || { name: Lang.Workspace.data_table };
+            const data = table || { name: Lang.Workspace.data_table };
             data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
             const isDataTableSource = data instanceof DataTableSource;
             this.#tables.push(isDataTableSource ? data : new DataTableSource(data));

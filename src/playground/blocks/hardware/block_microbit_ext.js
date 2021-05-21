@@ -55,7 +55,7 @@ Entry.MicrobitExt = new (class MicrobitExt {
         this.imageName = 'microbit_ext.png';
         this.title = {
             en: 'MicrobitExt',
-            ko: '마이크로빗 확장',
+            ko: '마이크로비트 확장',
         };
         this.name = 'microbitExt';
         this.communicationType = 'manual';
@@ -260,6 +260,9 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     microbit_ext_gesture_horizontal_right: '눕혀서 오른쪽 방향',
                     microbit_ext_gesture_horizontal_left: '눕혀서 왼쪽 방향',
                 },
+                Msgs: {
+                    microbit_led_erase_all: '모두 지우기',
+                },
             },
             en: {
                 template: {
@@ -367,6 +370,9 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     microbit_ext_gesture_horizontal_bottom: 'Horizontal Bottom',
                     microbit_ext_gesture_horizontal_right: 'Horizontal Right',
                     microbit_ext_gesture_horizontal_left: 'Horizontal Left',
+                },
+                Msgs: {
+                    microbit_led_erase_all: 'Reset',
                 },
             },
             jp: {
@@ -1341,7 +1347,10 @@ Entry.MicrobitExt = new (class MicrobitExt {
                     },
                     {
                         type: 'Dropdown',
-                        options: [['0', 0], ['1', 1]],
+                        options: [
+                            ['0', 0],
+                            ['1', 1],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1435,7 +1444,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['A', 1], ['B', 2], ['A+B', 3]],
+                        options: [
+                            ['A', 1],
+                            ['B', 2],
+                            ['A+B', 3],
+                        ],
                         value: 1,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1770,7 +1783,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1818,7 +1835,11 @@ Entry.MicrobitExt = new (class MicrobitExt {
                 params: [
                     {
                         type: 'Dropdown',
-                        options: [['P0', 0], ['P1', 1], ['P2', 2]],
+                        options: [
+                            ['P0', 0],
+                            ['P1', 1],
+                            ['P2', 2],
+                        ],
                         value: 0,
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,

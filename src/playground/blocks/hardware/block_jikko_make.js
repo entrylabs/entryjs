@@ -49,6 +49,7 @@ Entry.jikko_make = {
         DOTMATRIX: 27,
         DOTMATRIXEMOJI: 28,
         DOTMATRIXCLEAR: 29,
+        PULLUP: 58,
     },
     toneTable: {
         '0': 0,
@@ -1301,19 +1302,20 @@ Entry.jikko_make.getBlocks = function() {
             isNotFor: ['jikko_make'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
-                var DIGITAL = Entry.hw.portData.DIGITAL;
+                var pu = Entry.hw.portData.PULLUP;
 
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
 
-                Entry.hw.sendQueue['GET'][Entry.jikko_make.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue['GET'][Entry.jikko_make.sensorTypes.PULLUP] = {
                     port: port,
                     data: 2,
                     time: new Date().getTime(),
                 };
 
-                var value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                //var value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                var value = pu ? pu[port] || 0 : 0;
                 return !value;
             },
             syntax: { js: [], py: [] },

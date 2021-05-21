@@ -32,7 +32,7 @@ Entry.Dash = {
     },
     id: '24.1',
     name: 'Dash',
-    url: 'http://www.dashedu.kr/',
+    url: 'https://clevermate.kr',
     imageName: 'dash.png',
     title: {
         ko: '대시',
@@ -70,6 +70,7 @@ Entry.Dash.blockMenuBlocks = [
     'dash_animation',
     //endregion dash
 ];
+
 Entry.Dash.getBlocks = function() {
     return {
         // 소리
@@ -89,6 +90,7 @@ Entry.Dash.getBlocks = function() {
                         ['어 어!', 0x02],
                         ['좋아', 0x03],
                         ['한숨..', 0x04],
+                        ['출발!', 0x1f],
                         ['짜잔!', 0x05],
                         ['위!', 0x06],
                         ['잘 가', 0x07],
@@ -589,7 +591,10 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 0x01], ['끄기', 0x00]],
+                    options: [
+                        ['켜기', 0x01],
+                        ['끄기', 0x00],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -732,7 +737,11 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['위쪽', 0x04], ['가운데', 0x05], ['아래쪽', 0x06]],
+                    options: [
+                        ['위쪽', 0x04],
+                        ['가운데', 0x05],
+                        ['아래쪽', 0x06],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1009,7 +1018,10 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['시계 방향', 0x03], ['반 시계 방향', 0x04]],
+                    options: [
+                        ['시계 방향', 0x03],
+                        ['반 시계 방향', 0x04],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1084,7 +1096,10 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['시계 방향', 0x03], ['반 시계 방향', 0x04]],
+                    options: [
+                        ['시계 방향', 0x03],
+                        ['반 시계 방향', 0x04],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1152,7 +1167,10 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['앞', 0x01], ['뒤', 0x02]],
+                    options: [
+                        ['앞', 0x01],
+                        ['뒤', 0x02],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1245,7 +1263,10 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['앞', 0x01], ['뒤', 0x02]],
+                    options: [
+                        ['앞', 0x01],
+                        ['뒤', 0x02],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1265,7 +1286,10 @@ Entry.Dash.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['앞', 0x01], ['뒤', 0x02]],
+                    options: [
+                        ['앞', 0x01],
+                        ['뒤', 0x02],
+                    ],
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,

@@ -37,12 +37,12 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
     DataTable.setTables(project.tables);
+    Entry.aiLearning.load(project.learning);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
-    Entry.aiLearning.load(project.learning);
     Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
     if (Entry.aiUtilizeBlocks.length > 0) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
@@ -117,20 +117,22 @@ Entry.loadProject = function(project) {
 };
 
 Entry.clearProject = function() {
-    Entry.stop();
-    Entry.projectId = null;
-    Entry.variableContainer.clear();
-    Entry.container.clear();
-    Entry.scene.clear();
-    Entry.stateManager.clear();
-    DataTable.clear();
-    GEHelper.resManager.clearProject();
-    Entry.Loader && (Entry.Loader.loaded = false);
+    try {
+        Entry.stop();
+        Entry.projectId = null;
+        Entry.variableContainer.clear();
+        Entry.container.clear();
+        Entry.scene.clear();
+        Entry.stateManager.clear();
+        DataTable.clear();
+        GEHelper.resManager.clearProject();
+        Entry.Loader && (Entry.Loader.loaded = false);
 
-    if (Entry.type !== 'invisible') {
-        Entry.playground && Entry.playground.changeViewMode('code');
-    } else {
-        Entry.stateManager && Entry.stateManager.clear();
+        if (Entry.type !== 'invisible') {
+            Entry.playground && Entry.playground.changeViewMode('code');
+        }
+    } catch (e) {
+        console.warn('clearProject fail', e);
     }
 };
 
@@ -453,9 +455,8 @@ Entry.Utils.isNumber = function(num) {
     const reg = /^-?\d+\.?\d*$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 };
 
 Entry.Utils.generateId = function() {
@@ -727,9 +728,12 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        // doc.on('mousedown', function(e) {
-        //     Entry.documentMousedown.notify(e);
-        // });
+        doc.on('mousedown', (e) => {
+            const selectedBlock = document.querySelector('.selected');
+            if (selectedBlock) {
+                selectedBlock.classList.remove('selected');
+            }
+        });
     }
 
     if (options.indexOf('mousemove') > -1) {
@@ -757,8 +761,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        document.addEventListener('keydown', (e) => {
-            let keyCode = Entry.Utils.inputToKeycode(e);
+        doc.on('keydown', (e) => {
+            const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -775,8 +779,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        document.addEventListener('keyup', (e) => {
-            let keyCode = Entry.Utils.inputToKeycode(e);
+        doc.on('keyup', (e) => {
+            const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -801,7 +805,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     }
 };
 Entry.Utils.inputToKeycode = (e) => {
-    let keyCode = e.code == undefined ? e.key : e.code;
+    //https://riptutorial.com/jquery/example/21119/originalevent
+    const event = e.originalEvent || e;
+    let keyCode = event.code == undefined ? event.key : event.code;
     if (!keyCode) {
         return null;
     }
@@ -2004,6 +2010,16 @@ Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
             true
         );
         Entry.engine.hideAllAudioPanel();
+    }
+    if (message === 'OfflineError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            toast || [
+                Lang.Workspace.check_runtime_error,
+                Lang.Workspace.offline_not_compatible_error,
+            ],
+            true
+        );
     } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
@@ -2031,6 +2047,14 @@ Entry.Utils.IncompatibleError = function(message, toast) {
 };
 Entry.Utils.IncompatibleError.prototype = new Error();
 Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
+
+Entry.Utils.OfflineError = function(message, toast) {
+    this.name = 'OfflineError';
+    this.message = message || 'OfflineError';
+    this.toast = toast || null;
+};
+Entry.Utils.OfflineError.prototype = new Error();
+Entry.Utils.OfflineError.prototype.constructor = Entry.Utils.OfflineError;
 
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
@@ -2528,8 +2552,8 @@ Entry.Utils.getVolume = function() {
 
 Entry.Utils.forceStopSounds = function() {
     _.each(Entry.soundInstances, (instance) => {
-        instance.dispatchEvent('complete');
-        instance.stop();
+        instance?.dispatchEvent?.('complete');
+        instance?.stop?.();
     });
     Entry.soundInstances = [];
 };

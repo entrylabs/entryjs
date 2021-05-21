@@ -107,16 +107,11 @@ Entry.Stage = class Stage {
 
         const moveFunc = (e) => {
             e.preventDefault();
-            const { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
+            const { offsetY, offsetX } = Entry.Utils.convertMouseEvent(e);
             const roundRect = Entry.stage.getBoundRect();
-            const scrollPos = Entry.Utils.getScrollPos();
             this.mouseCoordinate = {
-                x: Entry.Utils.toFixed(
-                    ((pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480
-                ),
-                y: Entry.Utils.toFixed(
-                    ((pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270
-                ),
+                x: Entry.Utils.toFixed((offsetX / roundRect.width - 0.5) * 480),
+                y: Entry.Utils.toFixed((offsetY / roundRect.height - 0.5) * -270),
             };
             Entry.dispatchEvent('stageMouseMove');
         };
