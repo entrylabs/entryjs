@@ -1314,11 +1314,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isExist(name, 'name_', this.variables_)) {
-            variable.listElement.nameField.value = variable.name_;
-            return Entry.toast.alert(
-                Lang.Workspace.variable_rename_failed,
-                Lang.Workspace.variable_dup
-            );
+            return this.changeVariableNameDuplicated(variable, 'variable', name);
         } else if (name.length > 10) {
             variable.listElement.nameField.value = variable.name_;
             return Entry.toast.alert(
@@ -1351,7 +1347,7 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         if (Entry.isExist(name, 'name_', this.lists_)) {
-            Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_dup);
+            return this.changeVariableNameDuplicated(list, 'list', name);
         } else if (name.length > 10) {
             Entry.toast.alert(Lang.Workspace.list_rename_failed, Lang.Workspace.list_too_long);
         } else {
@@ -1363,6 +1359,22 @@ Entry.VariableContainer = class VariableContainer {
         }
 
         list.listElement.nameField.value = list.name_;
+    }
+
+    /**
+     * @param {Entry.Variable} variable or list
+     * @param {string} type [variable, list]
+     * @param {string} name
+     */
+    changeVariableNameDuplicated(variable, type, name) {
+        const variables = this[`${type}s_`].filter(({ id_ }) => id_ !== variable.id_);
+        const newName = Entry.getOrderedName(this._truncName(name, type, this._maxNameLength), variables, 'name_');
+
+        variable.setName(newName);
+        variable.listElement.nameField.value = newName;
+
+        Entry.playground.reloadPlayground();
+        Entry.toast.warning(Lang.Workspace[`${type}_rename`], Lang.Workspace[`${type}_dup`]);
     }
 
     /**
@@ -3011,7 +3023,7 @@ Entry.VariableContainer = class VariableContainer {
 
         Entry.toast.warning(
             Lang.Workspace[`${type}_name_auto_edited_title`],
-            Lang.Workspace[`${type}_name_auto_edited_content`]
+            Lang.Workspace[`${type}_too_long`]
         );
 
         return name.substring(0, maxLen);
@@ -3160,9 +3172,10 @@ Entry.VariableContainer = class VariableContainer {
         name = this._truncName(name, type, this._maxNameLength);
 
         const target = `${type}s_`;
-        name = this.checkAllVariableName(name, target)
-            ? Entry.getOrderedName(name, this[target], 'name_')
-            : name;
+        if (this.checkAllVariableName(name, target)) {
+            name = Entry.getOrderedName(name, this[target], 'name_');
+            Entry.toast.warning(Lang.Workspace[`${type}_rename`], Lang.Workspace[`${type}_dup`]);
+        }
 
         return {
             name,
