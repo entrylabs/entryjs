@@ -1368,7 +1368,11 @@ Entry.VariableContainer = class VariableContainer {
      */
     changeVariableNameDuplicated(variable, type, name) {
         const variables = this[`${type}s_`].filter(({ id_ }) => id_ !== variable.id_);
-        const newName = Entry.getOrderedName(this._truncName(name, type, this._maxNameLength), variables, 'name_');
+        const newName = Entry.getOrderedName(
+            this._truncName(name, type, this._maxNameLength),
+            variables,
+            'name_'
+        );
 
         variable.setName(newName);
         variable.listElement.nameField.value = newName;
