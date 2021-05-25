@@ -39,7 +39,7 @@ class DataTableSource {
         this.#chart = chart || [];
         this.summary = summary;
         this.tab = tab;
-        this.updated = new Date(updatedAt);
+        this.updated = updatedAt ? new Date(updatedAt) : new Date();
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
             this.modal = null;

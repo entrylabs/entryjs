@@ -209,14 +209,17 @@ Entry.initialize_ = function() {
     this.playground = new Entry.Playground();
     this._destroyer.add(this.playground);
 
-    this.expansion = new Expansion(this.playground);
-    this._destroyer.add(this.expansion);
+    if (this.options.expansionDisable === false || this.options.expansionDisable === undefined) {
+        this.expansion = new Expansion(this.playground);
+        this._destroyer.add(this.expansion);
+    }
 
-    this.aiUtilize = new AIUtilize(this.playground);
-    this._destroyer.add(this.aiUtilize);
-
-    this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
-    this._destroyer.add(this.aiLearning);
+    if (this.options.aiUtilizeDisable === false || this.options.aiUtilizeDisable === undefined) {
+        this.aiUtilize = new AIUtilize(this.playground);
+        this._destroyer.add(this.aiUtilize);
+        this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
+        this._destroyer.add(this.aiLearning);
+    }
 
     this.intro = new Entry.Intro();
 
