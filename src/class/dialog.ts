@@ -66,7 +66,9 @@ class EntryDialog {
             }
         }
         let notchType = '';
-
+        if (!this.object) {
+            return;
+        }
         if (bound.y - 20 - this.border > -135) {
             this.object.y = Math.max(
                 bound.y - this.height / 2 - 20 - this.padding,

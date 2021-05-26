@@ -170,7 +170,7 @@ Entry.Lecoboard = {
     },
 };
 
-Entry.Lecoboard.setLanguage = function () {
+Entry.Lecoboard.setLanguage = function() {
     return {
         ko: {
             template: {
@@ -272,7 +272,7 @@ Entry.Lecoboard.blockMenuBlocks = [
     'lecoboard_get_bluetooth',
 ];
 
-Entry.Lecoboard.getBlocks = function () {
+Entry.Lecoboard.getBlocks = function() {
     return {
         lecoboard_port_highlow_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -975,7 +975,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'LecoboardAnalogRead',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var value1 = script.getNumberValue('VALUE1', script);
                 var value2 = script.getNumberValue('VALUE2', script);
                 var value3 = script.getNumberValue('VALUE3', script);
@@ -1440,7 +1440,7 @@ Entry.Lecoboard.getBlocks = function () {
                 return script.callReturn();
             },
         },
-        arduino_ext_tone_list: {
+        lecoboard_tone_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -1512,7 +1512,7 @@ Entry.Lecoboard.getBlocks = function () {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_tone_list',
+                        keyOption: 'lecoboard_tone_list',
                     },
                 ],
             },
@@ -1533,7 +1533,7 @@ Entry.Lecoboard.getBlocks = function () {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'lecoboard_tone_list',
                     },
                 ],
                 type: 'arduino_ext_tone_value',
@@ -1655,7 +1655,7 @@ Entry.Lecoboard.getBlocks = function () {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'lecoboard_tone_list',
                     },
                     {
                         type: 'text',
@@ -1950,7 +1950,7 @@ Entry.Lecoboard.getBlocks = function () {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'lecoboard_tone_list',
                     },
                 ],
                 type: 'lecoboard_set_tone_long',
@@ -2249,7 +2249,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'lecoboard_motor',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var idx = script.getField('INDEX');
                 var dir = script.getField('DIR');
                 var speed = script.getNumberValue('SPEED');
@@ -2374,7 +2374,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'lecoboard_motor',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 if (!script.isStart) {
                     var idx = script.getField('INDEX');
                     var dir = script.getField('DIR');
@@ -2491,7 +2491,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'lecoboard_motor',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var port1 = 28;
                 var port2 = 29;
                 var port3 = 1;
@@ -2557,7 +2557,7 @@ Entry.Lecoboard.getBlocks = function () {
             paramsKeyMap: {
                 LINE: 0,
             },
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 return script.getField('LINE');
             },
         },
@@ -2601,7 +2601,7 @@ Entry.Lecoboard.getBlocks = function () {
             paramsKeyMap: {
                 COLUMN: 0,
             },
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 return script.getField('COLUMN');
             },
         },
@@ -2655,7 +2655,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'lecoboardLcd',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 var line = script.getValue('LINE', script);
@@ -2735,7 +2735,7 @@ Entry.Lecoboard.getBlocks = function () {
             paramsKeyMap: {
                 COMMAND: 0,
             },
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 return script.getField('COMMAND');
             },
         },
@@ -2772,7 +2772,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'lecoboardLcd',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var value = script.getNumberValue('COMMAND', script);
                 var command = script.getNumberValue('COMMAND', script);
@@ -2828,7 +2828,7 @@ Entry.Lecoboard.getBlocks = function () {
             },
             class: 'lecoboardble',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 var string = script.getValue('STRING', script);
@@ -2892,7 +2892,7 @@ Entry.Lecoboard.getBlocks = function () {
             paramsKeyMap: {},
             class: 'lecoboardble',
             isNotFor: ['lecoboard'],
-            func: function (sprite, script) {
+            func: function(sprite, script) {
                 var port = 2;
                 var getString = Entry.hw.portData.BLE_READ;
 

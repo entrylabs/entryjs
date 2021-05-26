@@ -5,6 +5,9 @@
  *
  */
 Entry.FieldOutput = class FieldOutput extends Entry.Field {
+    schema = {
+        magneting: false,
+    };
     constructor(content, blockView, index, mode, contentIndex) {
         super(content, blockView, index);
         Entry.Model(this, false);
@@ -32,7 +35,6 @@ Entry.FieldOutput = class FieldOutput extends Entry.Field {
         this.observe(this, '_updateBG', ['magneting'], false);
 
         this.renderStart(blockView.getBoard(), mode);
-        this.schema = { magneting: false };
         this.isParamBlockType = _.constant(true);
         this.calcHeight = this.calcWH;
     }
