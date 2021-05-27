@@ -299,7 +299,7 @@ function createDataTable(classes, name) {
         if (typeof data === 'string') {
             data = JSON.parse(data);
         }
-        if (!DataTable.getSource(data.id)) {
+        if (data && data.id && !DataTable.getSource(data.id)) {
             DataTable.addSource(
                 data,
                 false

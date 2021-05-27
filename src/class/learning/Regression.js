@@ -35,6 +35,8 @@ class Regression {
 
     constructor(params = {}) {
         const { name, url, result, table, trainParam } = params;
+        this.#view = new LearningView({ name: params.name || '', status: 0 });
+        // 정지시 data 초기화.
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
             this.init({ ...params });
@@ -43,7 +45,6 @@ class Regression {
     }
 
     init({ name, url, result, table, trainParam }) {
-        this.#view = new LearningView({ name, status: 0 });
         this.#name = name;
         this.#trainParam = trainParam;
         this.#result = result;

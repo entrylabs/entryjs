@@ -30,6 +30,7 @@ class NumberClassification {
     #predictField = [];
 
     constructor(params = {}) {
+        this.#view = new LearningView({ name: params.name || '', status: 0 });
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
             this.init({ ...params });
@@ -38,7 +39,6 @@ class NumberClassification {
     }
 
     init({ name, url, table, trainParam }) {
-        this.#view = new LearningView({ name, status: 0 });
         this.#name = name;
         this.#trainParam = trainParam;
         this.#table = table;
