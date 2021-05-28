@@ -6,7 +6,7 @@ Entry.Robotry_Robit_Stage = {
     url: 'http://robotry.co.kr',
     imageName: 'arduinoNano.png',
     title: {
-        ko: '로보트리 로빗 무대',
+        ko: '로보트리 로빗무대',
         en: 'Robotry Robit Stage',
     },
 
@@ -75,43 +75,49 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
             template: {
                 // 로빗 무대 블록
                 Robotry_Robit_Stage_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
-                Robotry_Robit_Stage_set_led_pwm: '%1 LED 를 %2 의 밝기로 켜기 %3',
                 Robotry_Robit_Stage_get_ultrasonic: '초음파 센서 값 ',
-                Robotry_Robit_Stage_set_tone: '스피커로 %2 %3 음을 %4 초 연주하기 %5',
-                Robotry_Robit_Stage_set_bidirectional_motor:'%3으로 모터 회전시키기 %4',
                 Robotry_Robit_Stage_get_sensor_value: '%1 센서 값',
-                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3으로 %4 만큼 모터 회전시키기 %5',
+
+                Robotry_Robit_Stage_set_tone: '%2 옥타브 %3 %4 초 동안 연주하기 %5',
+                Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
+                Robotry_Robit_Stage_set_bidirectional_motor:'%3 으로 모터 회전시키기 %4',
+                
+                Robotry_Robit_Stage_set_led_pwm: '%1 LED 를 %2 의 밝기로 켜기 %3',
+                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3 으로 %4 만큼 모터 회전시키기 %5',
                 // flow
                 Robotry_Robit_Stage_flow_repeat_basic: '%1 번 반복하기 %2',
                 Robotry_Robit_Stage_flow_repeat_infinit: '계속 반복하기 %1',
                 Robotry_Robit_Stage_flow_wait_second: '%1 초 기다리기 %2',
             },
             Helper:{ // 블록 선택시 나타나는 한글 설명
+                // Get
                 Robotry_Robit_Stage_get_analog_value_map:
-                "센서 값의 범위를 다른 범위로 </br>변환해주는 블록입니다.",
-                Robotry_Robit_Stage_set_led:
-                "LED 를 On / Off 할 수 있습니다.",
-                Robotry_Robit_Stage_set_led_pwm:
-                "PWM 값으로 LED 를 제어할 수 있습니다. </br>PWM 값은 0 부터 255 까지의 값을 사용할 수 있습니다.",
+                "센서 값의 범위를 다른 범위로 </br>변환해주는 블록입니다. </br>ex) 0 부터 1023 의 값을 0 부터 255 의 값으로 정의합니다",
                 Robotry_Robit_Stage_get_ultrasonic:
                 "초음파를 이용해서 대상과의 거리를 계산해줍니다. </br>단위는 cm 입니다.",
-                Robotry_Robit_Stage_set_tone:
-                "로빗무대에 내장된 부저를 통해 연주가 가능합니다.",
-                Robotry_Robit_Stage_set_bidirectional_motor:
-                "시계 방향과 반시계 방향으로 </br>모터를 제어할 수 있습니다.",
-                Robotry_Robit_Stage_set_bidirectional_motor_pwm:
-                "PWM 값으로 모터의 파워를 제어할 수 있습니다. </br>PWM 값은 0 부터 255 까지의 값을 사용할 수 있습니다.",
                 Robotry_Robit_Stage_get_sensor_value:
-                "로빗 무대는 빛과 소리를 감지할 수 있습니다. </br>센서블록은 0 부터 1023 까지의 값을 표현할 수 있습니다.",
+                "로빗 무대는 빛과 소리를 감지할 수 있습니다. </br>센서블록은 0 부터 1023 까지의 값을 표현할 수 있습니다. </br>센서에 입력되는 빛 혹은 소리의 세기가 </br>강하면 값이 높아지고 약하면 낮아집니다",
+                // Set
+                Robotry_Robit_Stage_set_tone:
+                "음계과 옥타브를 선택해서 연주할 수 있습니다.",
+                Robotry_Robit_Stage_set_led:
+                "LED 를 On / Off 할 수 있습니다.",
+                Robotry_Robit_Stage_set_bidirectional_motor:
+                "정방향과 역방향으로 </br>모터를 제어할 수 있습니다.",
+                // PMW
+                Robotry_Robit_Stage_set_led_pwm:
+                "0 부터 255 까지의 값으로 LED 를 제어할 수 있습니다. </br>0 에 가까워 질수록 어두워지고 255 에 가까워 질수록 밝아집니다.",
+                Robotry_Robit_Stage_set_bidirectional_motor_pwm:
+                "모터의 회전 방향과 0 부터 255 값으로 모터의 파워를 제어할 수 있습니다. </br>0 에 가까워 질수록 회전 파워가 약해지고 255 에 가까워 질수록 파워가 강해집니다.",
+                
 
                 // 흐름제어 설명
                 Robotry_Robit_Stage_flow_repeat_basic:
-                '입력한 횟수만큼 감싸고 있는 블록들을 반복 실행합니다',
+                '입력한 횟수만큼 감싸고 있는 블록들을 반복 실행합니다.',
                 Robotry_Robit_Stage_flow_repeat_infinit: 
-                '감싸고 있는 블록들을 계속해서 반복 실행합니다',
+                '감싸고 있는 블록들을 계속해서 반복 실행합니다.',
                 Robotry_Robit_Stage_flow_wait_second:
-                '입력한 시간만큼 기다린 후 다음 블록을 실행합니다',
+                '입력한 시간만큼 기다린 후 다음 블록을 실행합니다.',
             },
             Blocks : {
                 // 드롭 다운 메뉴
@@ -119,10 +125,10 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 right : '오른쪽',
                 motor_p : '모터 P',
                 motor_n : '모터 N',
-                light_s : '빛 감지 센서',
-                mic_s : '소리 감지 센서',
-                clockwise : '시계 방향',
-                counter_clockwise : '반시계 방향'
+                light_s : '빛 감지',
+                mic_s : '소리 감지',
+                clockwise : '정방향',
+                counter_clockwise : '역방향',
             }
         },
         en: {
@@ -176,18 +182,17 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
 
 // 블록의 배치 순서
 Entry.Robotry_Robit_Stage.blockMenuBlocks = [
-    'Robotry_Robit_Stage_get_ultrasonic',
+    // Get
     'Robotry_Robit_Stage_get_analog_value_map',
+    'Robotry_Robit_Stage_get_ultrasonic',
     'Robotry_Robit_Stage_get_sensor_value',
-    'Robotry_Robit_Stage_set_led',
-    'Robotry_Robit_Stage_set_led_pwm',
+    // Set
     'Robotry_Robit_Stage_set_tone',
+    'Robotry_Robit_Stage_set_led',
     'Robotry_Robit_Stage_set_bidirectional_motor',
+    // PWM
+    'Robotry_Robit_Stage_set_led_pwm',
     'Robotry_Robit_Stage_set_bidirectional_motor_pwm',
-    // flow
-    'Robotry_Robit_Stage_flow_repeat_basic',
-    'Robotry_Robit_Stage_flow_repeat_infinit',
-    'Robotry_Robit_Stage_flow_wait_second',
 ];
 
 /* 
@@ -530,7 +535,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'Get',
-            isNotFor: ['Robotry_Robit_Stage'],
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -608,7 +613,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT: 0,
             },
             class: 'Get',
-            isNotFor: ['Robotry_Robit_Stage'],
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -664,7 +669,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT2: 1,
             },
             class: 'Get',
-            isNotFor: ['Robotry_Robit_Stage'],
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1', script);
                 const port2 = script.getNumberValue('PORT2', script);
@@ -733,7 +738,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 1,
             },
             class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port = script.getNumberValue('VALUE');
                 const operator = script.getField('OPERATOR');
@@ -796,8 +801,8 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1
             },
-            class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            class: 'Set_PWM',
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script){
                 const port = script.getNumberValue('PORT');
                 const value = script.getNumberValue('VALUE');
@@ -834,11 +839,11 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
-                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
@@ -859,10 +864,10 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                         params: [Buzzer],
                     },
                     {
-                        type: 'Robotry_Robit_Stage_tone_list',
+                        type: 'Robotry_Robit_Stage_octave_list',
                     },
                     {
-                        type: 'Robotry_Robit_Stage_octave_list',
+                        type: 'Robotry_Robit_Stage_tone_list',
                     },
                     {
                         type: 'text',
@@ -874,12 +879,12 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                NOTE: 1,
-                OCTAVE: 2,
+                OCTAVE: 1,
+                NOTE: 2,
                 DURATION: 3,
             },
             class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = script.getNumberValue('PORT', script);
@@ -1018,7 +1023,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 2,
             },
             class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('VALUE1');
                 const port2 = script.getNumberValue('VALUE2');
@@ -1110,8 +1115,8 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 2,
                 VALUE3: 3,
             },
-            class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            class: 'Set_PWM',
+            //isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('VALUE1');
                 const port2 = script.getNumberValue('VALUE2');
@@ -1143,61 +1148,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 py: [],
             },
         }, // Bidirectional DC Motor PWM End
-
-
         /* Robit Stage Block Code Script End */
-
-        /* 
-         * Flow 함수 정의 Start 
-         * Flow 블록은 엔트리에 구현되어있는 흐름제어 블록의 정보를 상속받아 사용한다.
-         */
-
-        // 정해진 수만큼 반복하기 Start
-        Robotry_Robit_Stage_flow_repeat_basic: {
-            parent : 'repeat_basic',
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['5'],
-                    },
-                    null,
-                ],
-                type: 'Robotry_Robit_Stage_flow_repeat_basic',
-            },
-            class: 'flow',
-            isNotFor: ['Robotry_Robit_Stage'],
-        }, // 정해진 수만큼 반복하기 End
-
-        // 영원히 반복하기 Start
-        Robotry_Robit_Stage_flow_repeat_infinit: {
-            parent : 'repeat_inf',
-            def: {
-                params: [null],
-                type: 'Robotry_Robit_Stage_flow_repeat_infinit',
-            },
-            class: 'flow',
-            isNotFor: ['Robotry_Robit_Stage'],
-        }, // 영원히 반복하기 End
-
-        // 정해진 시간만큼 기다리기
-        Robotry_Robit_Stage_flow_wait_second: {
-            parent : 'wait_second',
-            def: {
-                params: [
-                    {
-                        type: 'number',
-                        params: ['2'],
-                    },
-                    null,
-                ],
-                type: 'Robotry_Robit_Stage_flow_wait_second',
-            },
-            class: 'flow',
-            isNotFor: ['Robotry_Robit_Stage'],
-        }, // 정해진 시간만큼 기다리기 End
-
-        /* Flow 함수 정의 End */
     };
 };
 
