@@ -20,19 +20,18 @@ Entry.jikko_basic = {
                 GET: {},
                 SET: {},
             };
-        } 
-        else {
+        } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach((key) => {
                 if (Entry.hw.sendQueue.SET[key].type == Entry.jikko_basic.sensorTypes.SERVO) {
                     Entry.hw.sendQueue.SET[key].data = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                }
-                else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko_basic.sensorTypes.SERVO2) {
+                } else if (
+                    Entry.hw.sendQueue.SET[key].type == Entry.jikko_basic.sensorTypes.SERVO2
+                ) {
                     Entry.hw.sendQueue.SET[key].data.value1 = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                }
-                else {
+                } else {
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
@@ -132,18 +131,20 @@ Entry.jikko_basic.setLanguage = function() {
                 jikko_basic_set_digital_toggle: '디지털 %1 핀 %2 %3',
                 jikko_basic_set_led_toggle: 'LED %1 핀 %2 %3',
                 jikko_basic_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
-                
+
                 jikko_basic_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
-                jikko_basic_set_digital_servo2: "서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5",
+                jikko_basic_set_digital_servo2: '서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5',
                 jikko_basic_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
-                jikko_basic_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
+                jikko_basic_set_digital_buzzer_volume:
+                    '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_basic_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
 
                 jikko_basic_set_digital_dcmotor: 'DC모터 %1핀 %2 %3',
                 jikko_basic_set_analog_dcmotor: 'DC모터(PWM %1 핀) 세기 %2 출력 (0 ~ 255) %3',
                 jikko_basic_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
-                jikko_basic_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                jikko_basic_set_neopixel_bright:
+                    '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
                 jikko_basic_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
                 jikko_basic_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 jikko_basic_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
@@ -176,7 +177,8 @@ Entry.jikko_basic.setLanguage = function() {
                 jikko_basic_lcd_first_line: 'first',
                 jikko_basic_lcd_seconds_line: 'seconds',
                 jikko_basic_get_analog_value: 'Read analog %1 pin sensor value',
-                jikko_basic_get_analog_mapping: 'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
+                jikko_basic_get_analog_mapping:
+                    'Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5',
                 jikko_basic_mapping1: '%1 값을 %2 ~ %3 사이로 제한한 값',
                 jikko_basic_mapping2: '%1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
                 jikko_basic_get_digital_bluetooth: 'Bluetooth RX 2 value',
@@ -188,13 +190,15 @@ Entry.jikko_basic.setLanguage = function() {
                 jikko_basic_set_digital_rgbled: 'Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5',
                 jikko_basic_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
                 jikko_basic_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
-                jikko_basic_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
+                jikko_basic_set_digital_buzzer_volume:
+                    '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_basic_set_digital_buzzer:
                     '피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
                 jikko_basic_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
                 jikko_basic_set_neopixel_init:
                     '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
-                jikko_basic_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                jikko_basic_set_neopixel_bright:
+                    '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
                 jikko_basic_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
                 jikko_basic_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 jikko_basic_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
@@ -1099,7 +1103,7 @@ Entry.jikko_basic.getBlocks = function() {
                 var row = script.getNumberValue('ROW');
                 var col = script.getNumberValue('COL');
                 var text = script.getValue('STRING');
-
+                text += ' ';
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -2054,7 +2058,7 @@ Entry.jikko_basic.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var pu = Entry.hw.portData.PULLUP;
-                
+
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -2064,11 +2068,10 @@ Entry.jikko_basic.getBlocks = function() {
                     data: 2,
                     time: new Date().getTime(),
                 };
-                 var pullupvalue = pu ? pu[port] || 0 : 0;
+                var pullupvalue = pu ? pu[port] || 0 : 0;
                 return !pullupvalue;
-                
             },
-            
+
             syntax: { js: [], py: [] },
         },
         jikko_basic_get_button: {
@@ -2412,11 +2415,11 @@ Entry.jikko_basic.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_basic_list_digital_basic',
-                        params: ['13'],
+                        params: ['5'],
                     },
                     {
                         type: 'jikko_basic_list_digital_basic',
-                        params: ['12'],
+                        params: ['4'],
                     },
                 ],
                 type: 'jikko_basic_get_digital_ultrasonic',
@@ -2896,7 +2899,7 @@ Entry.jikko_basic.getBlocks = function() {
                     time: new Date().getTime(),
                 };
 
-                 return script.callReturn();
+                return script.callReturn();
             },
             syntax: { js: [], py: [{}] },
         },
@@ -3037,7 +3040,7 @@ Entry.jikko_basic.getBlocks = function() {
             //     if (!Entry.hw.sendQueue['SET']) {
             //         Entry.hw.sendQueue['SET'] = {};
             //     }
-                
+
             //     Entry.hw.sendQueue['SET'][port] = {
             //         type: Entry.jikko_basic.sensorTypes.SERVO2,
             //         data: {
@@ -3265,7 +3268,7 @@ Entry.jikko_basic.getBlocks = function() {
                 params: [
                     {
                         type: 'jikko_basic_list_digital_basic',
-                        params: ['6'],
+                        params: ['7'],
                     },
                     {
                         type: 'jikko_basic_list_digital_tone',
@@ -3393,7 +3396,6 @@ Entry.jikko_basic.getBlocks = function() {
                         type: 'arduino_get_port_number',
                         params: ['4'],
                     },
-
                 ],
                 type: 'jikko_basic_get_dht',
             },
