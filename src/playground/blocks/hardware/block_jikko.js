@@ -26,13 +26,12 @@ Entry.jikko = {
                 if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO) {
                     Entry.hw.sendQueue.SET[key].data = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO2) {
+                } 
+                else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO2) {
                     Entry.hw.sendQueue.SET[key].data.value1 = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.RGBLED) {
-                    Entry.hw.sendQueue.SET[key].data.value1 = 300;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else {
+                } 
+                else {
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 }
@@ -171,11 +170,10 @@ Entry.jikko.setLanguage = function() {
                 jikko_set_digital_toggle: '디지털 %1 핀 %2 %3',
                 jikko_set_led_toggle: 'LED %1 핀 %2 %3',
                 jikko_set_digital_pwm: 'LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
-                jikko_set_digital_rgbled:
-                    'RGB LED (R %1 핀, G %2 핀, B %3 핀) 색 (R: %4, G: %5, B: %6) 출력 %7',
+                jikko_set_digital_rgbled: 'RGB LED (R %1 핀, G %2 핀, B %3 핀) 색 (R: %4, G: %5, B: %6) 출력 %7',
 
                 jikko_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
-                jikko_set_digital_servo2: '서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5',
+                jikko_set_digital_servo2: "서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5",
                 jikko_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
                 jikko_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
                 jikko_set_digital_buzzer: '피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
@@ -235,6 +233,7 @@ Entry.jikko.setLanguage = function() {
 
                 // jikko_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
                 // jikko_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
+
             },
         },
         en: {
@@ -382,6 +381,7 @@ Entry.jikko.blockMenuBlocks = [
     'jikko_step_rotate',
     'jikko_step_rotate2',
     'jikko_step_rotate3',
+
 
     // 'jikko_get_digital_bluetooth',
     // 'jikko_module_digital_bluetooth',
@@ -2018,7 +2018,7 @@ Entry.jikko.getBlocks = function() {
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var pu = Entry.hw.portData.PULLUP;
-
+                
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
@@ -2028,12 +2028,11 @@ Entry.jikko.getBlocks = function() {
                     data: 2,
                     time: new Date().getTime(),
                 };
-                // console.log(DIGITAL[port]);
-                var value = pu ? pu[port] || 0 : 0;
-                // var value = Entry.hw.portData.PULLUP || 0;
-                return !value;
+                var pullupvalue = pu ? pu[port] || 0 : 0;
+                return !pullupvalue;
+                
             },
-
+            
             syntax: { js: [], py: [] },
         },
         jikko_get_button: {
@@ -2901,6 +2900,24 @@ Entry.jikko.getBlocks = function() {
 
                 RGBport = port1;
 
+                // if (!Entry.hw.sendQueue['SET']) {
+                //     Entry.hw.sendQueue['SET'] = {};
+                // }
+                // Entry.hw.sendQueue['SET'][RGBport] = {
+                //     type: Entry.jikko.sensorTypes.RGBLED,
+                //     data: {
+                //         port1: port1,
+                //         port2: port2,
+                //         port3: port3,
+                //         value1: value1,
+                //         value2: value2,
+                //         value3: value3,
+                //     },
+                //     time: new Date().getTime(),
+                // };
+                // return script.callReturn();
+                
+
                 // if (!script.isStart) {
                 //     script.isStart = true;
                 //     script.timeFlag = 1;
@@ -2963,8 +2980,7 @@ Entry.jikko.getBlocks = function() {
                     data: value3,
                     time: new Date().getTime(),
                 };
-
-                return script.callReturn();
+                 return script.callReturn();
             },
             syntax: { js: [], py: [{}] },
         },
@@ -3105,7 +3121,7 @@ Entry.jikko.getBlocks = function() {
             //     if (!Entry.hw.sendQueue['SET']) {
             //         Entry.hw.sendQueue['SET'] = {};
             //     }
-
+                
             //     Entry.hw.sendQueue['SET'][port] = {
             //         type: Entry.jikko.sensorTypes.SERVO2,
             //         data: {
@@ -3701,6 +3717,7 @@ Entry.jikko.getBlocks = function() {
                         type: 'arduino_get_port_number',
                         params: ['4'],
                     },
+
                 ],
                 type: 'jikko_get_dht',
             },
@@ -5774,9 +5791,10 @@ Entry.jikko.getBlocks = function() {
             },
             class: 'jikkoGet',
             isNotFor: ['jikko'],
-
+            
             func: function(sprite, script) {
-                var type = script.getNumberValue('MLX_SELECT');
+                var type = script.getNumberValue('MLX_SELECT')
+
 
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
@@ -5794,7 +5812,7 @@ Entry.jikko.getBlocks = function() {
                         time: new Date().getTime(),
                     };
                     return Entry.hw.portData.MLXAMB || 0;
-                }
+                }                    
             },
             syntax: {
                 js: [],

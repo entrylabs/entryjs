@@ -1082,7 +1082,7 @@ Entry.jikko_basic.getBlocks = function() {
                     },
                     {
                         type: 'text',
-                        params: ['Hello, jikko_basic'],
+                        params: ['Hello, jikko'],
                     },
                     null,
                 ],
@@ -2064,9 +2064,7 @@ Entry.jikko_basic.getBlocks = function() {
                     data: 2,
                     time: new Date().getTime(),
                 };
-                // console.log(DIGITAL[port]);
                  var pullupvalue = pu ? pu[port] || 0 : 0;
-                // var value = Entry.hw.portData.PULLUP || 0;
                 return !pullupvalue;
                 
             },
