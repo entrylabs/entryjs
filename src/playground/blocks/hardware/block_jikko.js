@@ -3579,6 +3579,7 @@ Entry.jikko.getBlocks = function() {
                 var row = script.getNumberValue('ROW');
                 var col = script.getNumberValue('COL');
                 var text = script.getValue('STRING');
+                text += ' ';
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
