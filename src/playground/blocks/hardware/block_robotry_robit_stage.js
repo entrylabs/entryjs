@@ -92,7 +92,7 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
             Helper:{ // 블록 선택시 나타나는 한글 설명
                 // Get
                 Robotry_Robit_Stage_get_analog_value_map:
-                "놓여진 센서 값의 범위를 원하는 범위로 변환합니다. </br></br>이 블록을 사용하면 센서로부터 받은 데이터를 </br>사용자의 상황에 맞게 가공할 수 있습니다. </br></br>ex) 0 부터 1023 까지의 값을 0 부터 255 까지의 값으로 맵핑합니다.",
+                "놓여진 센서블록 값의 범위를 원하는 범위로 변환합니다. </br></br>이 블록을 사용하면 센서로부터 받은 데이터를 </br>사용자의 상황에 맞게 가공할 수 있습니다. </br></br>ex) 0 부터 1023 까지의 값을 0 부터 255 까지의 값으로 맵핑합니다.",
                 Robotry_Robit_Stage_get_ultrasonic:
                 "로빗무대에 전면에 있는 초음파 센서로부터 앞에 놓여진 </br>대상과의 거리를 계산합니다. (단위는 cm 입니다.)",
                 Robotry_Robit_Stage_get_sensor_value:
@@ -109,7 +109,7 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 "LED 의 밝기를 0 부터 255까지 값으로 조절할 수 있습니다. </br></br>LED 의 밝기는 0 에 가까워 질수록 어두워지고 </br>255 에 가까워 질수록 밝아집니다.",
                 Robotry_Robit_Stage_set_bidirectional_motor_pwm:
                 "모터의 회전 방향과 0 부터 255 값으로 모터의 회전력을 </br>제어할 수 있습니다. </br></br>모터의 회전력은 0 에 가까워 질수록 약해지고 </br>255 에 가까워 질수록 강해집니다.",
-            },
+            },  
             Blocks : {
                 // 드롭 다운 메뉴
                 left : '왼쪽',
