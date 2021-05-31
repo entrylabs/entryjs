@@ -75,8 +75,8 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
             template: {
                 // 로빗 무대 블록
                 Robotry_Robit_Stage_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                Robotry_Robit_Stage_get_ultrasonic: '초음파 센서 값 ',
-                Robotry_Robit_Stage_get_sensor_value: '%1 센서 값',
+                Robotry_Robit_Stage_get_ultrasonic: '초음파 센서 (cm) ',
+                Robotry_Robit_Stage_get_sensor_value: '%1 센서 (0 ~ 1023)',
 
                 Robotry_Robit_Stage_set_tone: '%2 옥타브 %3 %4 초 동안 연주하기 %5',
                 Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
@@ -92,32 +92,23 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
             Helper:{ // 블록 선택시 나타나는 한글 설명
                 // Get
                 Robotry_Robit_Stage_get_analog_value_map:
-                "센서 값의 범위를 다른 범위로 </br>변환해주는 블록입니다. </br>ex) 0 부터 1023 의 값을 0 부터 255 의 값으로 정의합니다",
+                "놓여진 센서 값의 범위를 원하는 범위로 변환합니다. </br></br>이 블록을 사용하면 센서로부터 받은 데이터를 </br>사용자의 상황에 맞게 가공할 수 있습니다. </br></br>ex) 0 부터 1023 까지의 값을 0 부터 255 까지의 값으로 맵핑합니다.",
                 Robotry_Robit_Stage_get_ultrasonic:
-                "초음파를 이용해서 대상과의 거리를 계산해줍니다. </br>단위는 cm 입니다.",
+                "로빗무대에 전면에 있는 초음파 센서로부터 앞에 놓여진 </br>대상과의 거리를 계산합니다. (단위는 cm 입니다.)",
                 Robotry_Robit_Stage_get_sensor_value:
-                "로빗 무대는 빛과 소리를 감지할 수 있습니다. </br>센서블록은 0 부터 1023 까지의 값을 표현할 수 있습니다. </br>센서에 입력되는 빛 혹은 소리의 세기가 </br>강하면 값이 높아지고 약하면 낮아집니다",
+                "로빗무대는 제품 상단에 위치한 구멍으로 부터 </br>빛(왼쪽 구멍)과 소리(오른쪽 구멍)를 감지할 수 있습니다. </br></br>센서블록은 각 센서로부터 주변 환경 데이터를 받아 </br>0 부터 1023 까지의 값으로 표현합니다. </br></br>블럭의 값은 센서에 입력되는 빛 혹은 소리의 세기가 </br>강하면 값이 높아지고 약하면 낮아집니다.",
                 // Set
                 Robotry_Robit_Stage_set_tone:
-                "음계과 옥타브를 선택해서 연주할 수 있습니다.",
+                "옥타브와 음계를 선택해서 해당하는 음을 내장된 부저를 통해 </br>연주할 수 있습니다.",
                 Robotry_Robit_Stage_set_led:
                 "LED 를 On / Off 할 수 있습니다.",
                 Robotry_Robit_Stage_set_bidirectional_motor:
-                "정방향과 역방향으로 </br>모터를 제어할 수 있습니다.",
+                "모터는 정방향과 역방향으로 회전할 수 있습니다.",
                 // PMW
                 Robotry_Robit_Stage_set_led_pwm:
-                "0 부터 255 까지의 값으로 LED 를 제어할 수 있습니다. </br>0 에 가까워 질수록 어두워지고 255 에 가까워 질수록 밝아집니다.",
+                "LED 의 밝기를 0 부터 255까지 값으로 조절할 수 있습니다. </br></br>LED 의 밝기는 0 에 가까워 질수록 어두워지고 </br>255 에 가까워 질수록 밝아집니다.",
                 Robotry_Robit_Stage_set_bidirectional_motor_pwm:
-                "모터의 회전 방향과 0 부터 255 값으로 모터의 파워를 제어할 수 있습니다. </br>0 에 가까워 질수록 회전 파워가 약해지고 255 에 가까워 질수록 파워가 강해집니다.",
-                
-
-                // 흐름제어 설명
-                Robotry_Robit_Stage_flow_repeat_basic:
-                '입력한 횟수만큼 감싸고 있는 블록들을 반복 실행합니다.',
-                Robotry_Robit_Stage_flow_repeat_infinit: 
-                '감싸고 있는 블록들을 계속해서 반복 실행합니다.',
-                Robotry_Robit_Stage_flow_wait_second:
-                '입력한 시간만큼 기다린 후 다음 블록을 실행합니다.',
+                "모터의 회전 방향과 0 부터 255 값으로 모터의 회전력을 </br>제어할 수 있습니다. </br></br>모터의 회전력은 0 에 가까워 질수록 약해지고 </br>255 에 가까워 질수록 강해집니다.",
             },
             Blocks : {
                 // 드롭 다운 메뉴
@@ -506,7 +497,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['센서'],
+                        params: ['센서블록을 놓아주세요.'],
                     },
                     {
                         type: 'number',
@@ -535,7 +526,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'Get',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -613,7 +604,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT: 0,
             },
             class: 'Get',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -669,7 +660,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT2: 1,
             },
             class: 'Get',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1', script);
                 const port2 = script.getNumberValue('PORT2', script);
@@ -738,7 +729,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 1,
             },
             class: 'Set',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port = script.getNumberValue('VALUE');
                 const operator = script.getField('OPERATOR');
@@ -802,7 +793,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE: 1
             },
             class: 'Set_PWM',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script){
                 const port = script.getNumberValue('PORT');
                 const value = script.getNumberValue('VALUE');
@@ -884,7 +875,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 DURATION: 3,
             },
             class: 'Set',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = script.getNumberValue('PORT', script);
@@ -1023,7 +1014,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 2,
             },
             class: 'Set',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('VALUE1');
                 const port2 = script.getNumberValue('VALUE2');
@@ -1116,7 +1107,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE3: 3,
             },
             class: 'Set_PWM',
-            //isNotFor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('VALUE1');
                 const port2 = script.getNumberValue('VALUE2');
