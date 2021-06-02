@@ -84,10 +84,6 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 
                 Robotry_Robit_Stage_set_led_pwm: '%1 LED 를 %2 의 밝기로 켜기 %3',
                 Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3 으로 %4 만큼 모터 회전시키기 %5',
-                // flow
-                Robotry_Robit_Stage_flow_repeat_basic: '%1 번 반복하기 %2',
-                Robotry_Robit_Stage_flow_repeat_infinit: '계속 반복하기 %1',
-                Robotry_Robit_Stage_flow_wait_second: '%1 초 기다리기 %2',
             },
             Helper:{ // 블록 선택시 나타나는 한글 설명
                 // Get
@@ -114,54 +110,53 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 // 드롭 다운 메뉴
                 left : '왼쪽',
                 right : '오른쪽',
-                motor_p : '모터 P',
-                motor_n : '모터 N',
                 light_s : '빛 감지',
                 mic_s : '소리 감지',
                 clockwise : '정방향',
                 counter_clockwise : '역방향',
+                position_the_sensorblock : '센서블록을 놓아주세요.',
+                
             }
         },
         en: {
             template: {
                 // 로빗 무대 블록
                 Robotry_Robit_Stage_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                Robotry_Robit_Stage_get_ultrasonic: '초음파 센서 (cm) ',
+                Robotry_Robit_Stage_get_sensor_value: '%1 센서 (0 ~ 1023)',
+
+                Robotry_Robit_Stage_set_tone: '%2 옥타브 %3 %4 초 동안 연주하기 %5',
                 Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
+                Robotry_Robit_Stage_set_bidirectional_motor:'%3 으로 모터 회전시키기 %4',
+                
                 Robotry_Robit_Stage_set_led_pwm: '%1 LED 를 %2 의 밝기로 켜기 %3',
-                Robotry_Robit_Stage_get_ultrasonic: '초음파 센서 값 ',
-                Robotry_Robit_Stage_set_tone: '스피커로 %2 %3 음을 %4 초 연주하기 %5',
-                Robotry_Robit_Stage_set_bidirectional_motor:'%3으로 모터 회전시키기 %4',
-                Robotry_Robit_Stage_get_sensor_value: '%1 센서 값',
-                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3으로 %4 만큼 모터 회전시키기 %5',
-                // flow
-                Robotry_Robit_Stage_flow_repeat_basic: '%1 번 반복하기 %2',
-                Robotry_Robit_Stage_flow_repeat_infinit: '영원히 반복하기 %1',
-                Robotry_Robit_Stage_flow_wait_second: '%1 초 기다리기 %2',
+                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3 으로 %4 만큼 모터 회전시키기 %5',
             },
-            Helper:{ // 블록 선택시 나타나는 영문 설명
+            Helper:{
+                // Get
                 Robotry_Robit_Stage_get_analog_value_map:
-                "This block maps a range of sensor values ​​to a range specified by the user.",
-                Robotry_Robit_Stage_set_led:
-                "With this block you can control the LED",
-                Robotry_Robit_Stage_set_led_pwm:
-                "You can control the LED by PWM value. PWM values ​​are 0 to 255.",
+                "놓여진 센서블록 값의 범위를 원하는 범위로 변환합니다. </br></br>이 블록을 사용하면 센서로부터 받은 데이터를 </br>사용자의 상황에 맞게 가공할 수 있습니다. </br></br>ex) 0 부터 1023 까지의 값을 0 부터 255 까지의 값으로 맵핑합니다.",
                 Robotry_Robit_Stage_get_ultrasonic:
-                "This block converts the distance using an ultrasonic sensor. The unit is cm.",
-                Robotry_Robit_Stage_set_tone:
-                "If you set the tone and octave with this block, you can play through the buzzer built into the Robit stage.",
-                Robotry_Robit_Stage_set_bidirectional_motor:
-                "With this block, you can control the motor clockwise and counterclockwise.",
-                Robotry_Robit_Stage_set_bidirectional_motor_pwm:
-                "This block can control the speed of the motor by PWM value. PWM values ​​are 0 to 255. ",
+                "로빗무대에 전면에 있는 초음파 센서로부터 앞에 놓여진 </br>대상과의 거리를 계산합니다. (단위는 cm 입니다.)",
                 Robotry_Robit_Stage_get_sensor_value:
-                "The Robit Stage can detect light and sound. The sensor block has values ​​from 0 to 1023.",
-            },
+                "로빗무대는 제품 상단에 위치한 구멍으로 부터 </br>빛(왼쪽 구멍)과 소리(오른쪽 구멍)를 감지할 수 있습니다. </br></br>센서블록은 각 센서로부터 주변 환경 데이터를 받아 </br>0 부터 1023 까지의 값으로 표현합니다. </br></br>블럭의 값은 센서에 입력되는 빛 혹은 소리의 세기가 </br>강하면 값이 높아지고 약하면 낮아집니다.",
+                // Set
+                Robotry_Robit_Stage_set_tone:
+                "옥타브와 음계를 선택해서 해당하는 음을 내장된 부저를 통해 </br>연주할 수 있습니다.",
+                Robotry_Robit_Stage_set_led:
+                "LED 를 On / Off 할 수 있습니다.",
+                Robotry_Robit_Stage_set_bidirectional_motor:
+                "모터는 정방향과 역방향으로 회전할 수 있습니다.",
+                // PMW
+                Robotry_Robit_Stage_set_led_pwm:
+                "LED 의 밝기를 0 부터 255까지 값으로 조절할 수 있습니다. </br></br>LED 의 밝기는 0 에 가까워 질수록 어두워지고 </br>255 에 가까워 질수록 밝아집니다.",
+                Robotry_Robit_Stage_set_bidirectional_motor_pwm:
+                "모터의 회전 방향과 0 부터 255 값으로 모터의 회전력을 </br>제어할 수 있습니다. </br></br>모터의 회전력은 0 에 가까워 질수록 약해지고 </br>255 에 가까워 질수록 강해집니다.",
+            }, 
             Blocks : {
                 // 드롭 다운 메뉴
                 left : 'left',
                 right : 'right',
-                motor_p : 'Motor P',
-                motor_n : 'Motor N',
                 light_s : 'Ambient Light Sensor',
                 mic_s : 'Sound Sensor',
                 clockwise : 'Clockwise',
@@ -228,54 +223,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 py: [],
             },
         },
-
-        
-        Robotry_Robit_Stage_digital_list: {     // 디지털 핀 리스트 0 ~ 13
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['D2', '2'],
-                        ['D3', '3'],
-                        ['D4', '4'],
-                        ['D5', '5'],
-                        ['D6', '6'],
-                        ['D7', '7'],
-                        ['D8', '8'],
-                        ['D9', '9'],
-                        ['D10', '10'],
-                        ['D11', '11'],
-                        ['D12', '12'],
-                        ['D13', '13'],
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func(sprite, script) {
-                return script.getField('PORT');
-            },
-            syntax: {
-                js: [],
-                py: [],
-            },
-        },
-        
-        
+       
         // Buzzer define Start
         Robotry_Robit_Stage_tone_list: {         // 버저 톤 리스트
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -400,63 +348,6 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
 
 
         /* Robit Stage Block Code Script Start */
-
-         // Robit Stage MOTOR pin list Start
-         Robotry_Robit_Stage_motor_list: {         // LED pin list 9, 10
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.motor_p, Motor_P],
-                        [Lang.Blocks.motor_n, Motor_N],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func(sprite, script) {
-                return script.getField('PORT');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.motor_p, Motor_P],
-                                    [Lang.Blocks.motor_n, Motor_N],
-                                ],
-                                value: '0',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringOrNumberByValue,
-                            },
-                        ],
-                        keyOption: 'Robotry_Robit_Stage_motor_list',
-                    },
-                ],
-            },
-        },// Robit Stage MOTOR pin list End
-
         // Analog value Mapping Start
         Robotry_Robit_Stage_get_analog_value_map: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -496,7 +387,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['센서블록을 놓아주세요.'],
+                        params: [Lang.Blocks.position_the_sensorblock],
                     },
                     {
                         type: 'number',
@@ -606,14 +497,20 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
+                let value = 0;
+
                 const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') {
                     port = port.substring(1);
                 }
-                const CMS = Math.pow(Math.abs(ANALOG[port] - 88), 3);
-                //console.log(CMS);
-
-                return ANALOG ? port === 1 ? CMS > 8 && CMS < 1024 ? CMS : 0 : ANALOG[port] || 0 : 0;
+                
+                if (port === 1){
+                    value = Math.pow(Math.abs(ANALOG[port] - 88), 3);
+                }
+                else {
+                    value = ANALOG[port]; 
+                }
+                return ANALOG && value < 1024 ?  value || 0 : 0;
             },
             syntax: {
                 js: [],
@@ -630,27 +527,16 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [US_T]
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [US_E]
                 },
             ],
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [US_T],
-                    },
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [US_E],
-                    },
+                    null,
                 ],
                 type: 'Robotry_Robit_Stage_get_ultrasonic',
             },
@@ -677,7 +563,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
-                return Entry.hw.portData.ULTRASONIC || 0;
+                return  parseInt(Entry.hw.portData.ULTRASONIC) || 0; // cm 소수점 이하 표시 안함
             },
             syntax: {
                 js: [],
@@ -724,13 +610,13 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 type: 'Robotry_Robit_Stage_set_led',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                PORT: 0,
                 OPERATOR: 1,
             },
             class: 'Set',
             isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
-                const port = script.getNumberValue('VALUE');
+                const port = script.getNumberValue('PORT');
                 const operator = script.getField('OPERATOR');
                 const value = operator == 'on' ? 255 : 0;
                 if (!Entry.hw.sendQueue.SET) {
@@ -822,9 +708,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [Buzzer],
                 },
                 {
                     type: 'Block',
@@ -849,10 +733,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [Buzzer],
-                    },
+                    null,
                     {
                         type: 'Robotry_Robit_Stage_octave_list',
                     },
@@ -969,14 +850,10 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [Motor_P],
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [Motor_N],
                 },
                 {
                     type: 'Dropdown',
@@ -995,44 +872,36 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [Motor_P],
-                    },
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [Motor_N],
-                    },
                     null,
                 ],
                 type: 'Robotry_Robit_Stage_set_bidirectional_motor',
             },
             paramsKeyMap: {
-                VALUE1: 0,
-                VALUE2: 1,
+                PORT1: 0,
+                PORT2: 1,
                 OPERATOR: 2,
             },
             class: 'Set',
             isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
-                const port1 = script.getNumberValue('VALUE1');
-                const port2 = script.getNumberValue('VALUE2');
+                const port1 = script.getNumberValue('PORT1');
+                const port2 = script.getNumberValue('PORT2');
                 const operator = script.getField('OPERATOR');
-                const value1 = operator == 'on' ? 255 : 0;
-                const value2 = operator == 'on' ? 0 : 255;
+                const forward = operator == 'on' ? 255 : 0;
+                const backward = operator == 'on' ? 0 : 255;
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port1] = {
                     type: Entry.Robotry_Robit_Stage.sensorTypes.DIGITAL,
-                    data: value1,
+                    data: forward,
                     time: new Date().getTime(),
                 };
                 
                 Entry.hw.sendQueue.SET[port2] = {
                     
                     type: Entry.Robotry_Robit_Stage.sensorTypes.DIGITAL,
-                    data: value2,
+                    data: backward,
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
@@ -1052,14 +921,10 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [Motor_P],
                 },
                 {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
+                    value: [Motor_N],
                 },
                 {
                     type: 'Dropdown',
@@ -1083,14 +948,8 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [Motor_P],
-                    },
-                    {
-                        type: 'Robotry_Robit_Stage_digital_list',
-                        params: [Motor_N],
-                    },
+                    null,
+                    null,
                     null,
                     {
                         type: 'Robotry_Robit_Stage_text',
@@ -1100,35 +959,35 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 type: 'Robotry_Robit_Stage_set_bidirectional_motor_pwm',
             },
             paramsKeyMap: {
-                VALUE1: 0,
-                VALUE2: 1,
+                PORT1: 0,
+                PORT2: 1,
                 OPERATOR: 2,
-                VALUE3: 3,
+                VALUE: 3,
             },
             class: 'Set_PWM',
             isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
-                const port1 = script.getNumberValue('VALUE1');
-                const port2 = script.getNumberValue('VALUE2');
+                const port1 = script.getNumberValue('PORT1');
+                const port2 = script.getNumberValue('PORT2');
                 
                 const operator = script.getField('OPERATOR');
-                let value3 = script.getNumberValue('VALUE3');
+                const value = script.getNumberValue('VALUE');
 
-                const value1 = operator == 'on' ? value3 : 0;
-                const value2 = operator == 'on' ? 0 : value3;
+                const forward = operator == 'on' ? value : 0;
+                const backward = operator == 'on' ? 0 : value;
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port1] = {
                     type: Entry.Robotry_Robit_Stage.sensorTypes.PWM,
-                    data: value1,
+                    data: forward,
                     time: new Date().getTime(),
                 };
                 
                 Entry.hw.sendQueue.SET[port2] = {
                     
                     type: Entry.Robotry_Robit_Stage.sensorTypes.PWM,
-                    data: value2,
+                    data: backward,
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
