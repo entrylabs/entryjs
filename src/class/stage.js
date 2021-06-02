@@ -107,11 +107,13 @@ Entry.Stage = class Stage {
 
         const moveFunc = (e) => {
             e.preventDefault();
-            const { offsetY, offsetX } = Entry.Utils.convertMouseEvent(e);
+            const { offsetY, offsetX, clientX, clientY } = Entry.Utils.convertMouseEvent(e);
             const roundRect = Entry.stage.getBoundRect();
+            const x = offsetX || clientX || 0;
+            const y = offsetY || clientY || 0;
             this.mouseCoordinate = {
-                x: Entry.Utils.toFixed((offsetX / roundRect.width - 0.5) * 480),
-                y: Entry.Utils.toFixed((offsetY / roundRect.height - 0.5) * -270),
+                x: Entry.Utils.toFixed((x / roundRect.width - 0.5) * 480),
+                y: Entry.Utils.toFixed((y / roundRect.height - 0.5) * -270),
             };
             Entry.dispatchEvent('stageMouseMove');
         };
