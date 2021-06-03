@@ -6013,7 +6013,7 @@ Lang.template = {
     "calc_rand": "%1 %2 %3 %4 %5",
     "get_date": "%1 %2 %3",
     "get_sound_duration": "%1 %2 %3",
-    "get_user_name": "Username",
+    "get_user_name": "User ID",
     "reset_project_timer": "%1",
     "set_visible_project_timer": "%1 %2 %3 %4",
     "timer_variable": "%1 %2",
