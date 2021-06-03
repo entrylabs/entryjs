@@ -6852,6 +6852,7 @@ Lang.template = {
     get_date: '%1 %2 %3',
     get_sound_duration: '%1 %2 %3',
     get_user_name: '아이디',
+    get_nickname: '닉네임',
     reset_project_timer: '%1',
     set_visible_project_timer: '%1 %2 %3 %4',
     timer_variable: '%1 %2',
