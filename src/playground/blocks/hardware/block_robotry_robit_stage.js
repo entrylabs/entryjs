@@ -6,8 +6,8 @@ Entry.Robotry_Robit_Stage = {
     url: 'http://robotry.co.kr',
     imageName: 'arduinoNano.png',
     title: {
-        ko: '로보트리 로빗무대',
-        en: 'Robotry Robit Stage',
+        ko: '로빗 무대',
+        en: 'Robit Stage',
     },
 
    setZero() {
