@@ -26,14 +26,11 @@ Entry.jikko = {
                 if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO) {
                     Entry.hw.sendQueue.SET[key].data = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                } else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO2) {
+                } 
+                else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.SERVO2) {
                     Entry.hw.sendQueue.SET[key].data.value1 = 200;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
                 } 
-                else if (Entry.hw.sendQueue.SET[key].type == Entry.jikko.sensorTypes.RGBLED) {
-                    Entry.hw.sendQueue.SET[key].data.value1 = 300;
-                    Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-                }
                 else {
                     Entry.hw.sendQueue.SET[key].data = 0;
                     Entry.hw.sendQueue.SET[key].time = new Date().getTime();
@@ -2031,10 +2028,8 @@ Entry.jikko.getBlocks = function() {
                     data: 2,
                     time: new Date().getTime(),
                 };
-                // console.log(DIGITAL[port]);
-                 var value = pu ? pu[port] || 0 : 0;
-                // var value = Entry.hw.portData.PULLUP || 0;
-                return !value;
+                var pullupvalue = pu ? pu[port] || 0 : 0;
+                return !pullupvalue;
                 
             },
             
@@ -2905,6 +2900,24 @@ Entry.jikko.getBlocks = function() {
 
                 RGBport = port1;
 
+                // if (!Entry.hw.sendQueue['SET']) {
+                //     Entry.hw.sendQueue['SET'] = {};
+                // }
+                // Entry.hw.sendQueue['SET'][RGBport] = {
+                //     type: Entry.jikko.sensorTypes.RGBLED,
+                //     data: {
+                //         port1: port1,
+                //         port2: port2,
+                //         port3: port3,
+                //         value1: value1,
+                //         value2: value2,
+                //         value3: value3,
+                //     },
+                //     time: new Date().getTime(),
+                // };
+                // return script.callReturn();
+                
+
                 // if (!script.isStart) {
                 //     script.isStart = true;
                 //     script.timeFlag = 1;
@@ -2967,7 +2980,6 @@ Entry.jikko.getBlocks = function() {
                     data: value3,
                     time: new Date().getTime(),
                 };
-
                  return script.callReturn();
             },
             syntax: { js: [], py: [{}] },
@@ -3583,6 +3595,7 @@ Entry.jikko.getBlocks = function() {
                 var row = script.getNumberValue('ROW');
                 var col = script.getNumberValue('COL');
                 var text = script.getValue('STRING');
+                text += ' ';
 
                 if (!script.isStart) {
                     if (!Entry.hw.sendQueue['SET']) {
