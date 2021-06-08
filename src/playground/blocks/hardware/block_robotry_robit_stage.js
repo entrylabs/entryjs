@@ -144,7 +144,7 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 Robotry_Robit_Stage_set_bidirectional_motor:'Rotate Motor to %3 %4',
                 
                 Robotry_Robit_Stage_set_led_pwm: 'Set %1 LED tp %2 Brightness %3',
-                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'Rotate Motro to %3 for %4 %5',
+                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'Rotate Motor to %3 for %4 %5',
             },
             Helper:{
                 // Get
