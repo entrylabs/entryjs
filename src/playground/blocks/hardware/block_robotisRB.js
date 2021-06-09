@@ -2959,10 +2959,10 @@ Entry.Robotis_rb.getBlocks = function () {
                     case '2':
                         data_value = (256 - speed) * 256 + (256 - speed);
                         break;
-                    case '4':
+                    case '3':
                         data_value = speed * 256 + (256 - speed);
                         break;
-                    case '3':
+                    case '4':
                         data_value = (256 - speed) * 256 + speed;
                         break;
                     default:
