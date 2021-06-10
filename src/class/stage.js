@@ -109,8 +109,8 @@ Entry.Stage = class Stage {
             e.preventDefault();
             const { offsetY, offsetX, clientX, clientY } = Entry.Utils.convertMouseEvent(e);
             const roundRect = Entry.stage.getBoundRect();
-            const x = offsetX || clientX || 0;
-            const y = offsetY || clientY || 0;
+            const x = offsetX || (clientX && clientX - roundRect.left) || 0;
+            const y = offsetY || (clientY && clientY - roundRect.top) || 0;
             this.mouseCoordinate = {
                 x: Entry.Utils.toFixed((x / roundRect.width - 0.5) * 480),
                 y: Entry.Utils.toFixed((y / roundRect.height - 0.5) * -270),
