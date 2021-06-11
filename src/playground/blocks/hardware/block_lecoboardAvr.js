@@ -1,354 +1,10 @@
 'use strict';
 
 Entry.Lecoboard = {
-    id: '3C.1',
-    name: 'lecoboard',
-    url: 'http://www.fnj.or.kr/',
-    imageName: 'lecoboard.png',
-    title: {
-        ko: '레코보드',      
-        en: 'LECOBOARD',      
-    },
-    setZero() {
-        Entry.hw.sendQueue.readablePorts = [];
-        for (var port = 0; port < 34; port++) {
-
-            if (port == 13 || port == 14 || port == 15 || port == 16 || port == 33) {
-                Entry.hw.sendQueue[port] = 1;
-            }
-            else if (port == 17) {
-                Entry.hw.sendQueue[port] = 0;
-            }           
-            else {
-                Entry.hw.sendQueue[port] = 0;
-                Entry.hw.sendQueue.readablePorts.push(port);
-            }            
-        }
-        if (!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue = {
-                GET: {},
-                SET: {},
-            };
-        } else {
-            const keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
-    },    
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8,
-        LCD: 9,
-        LCD_COMMAND: 10,  
-        BLE_WRITE: 11,
-        BLE_READ: 12,
-        ARM_XYZ: 13,
-        ARM_WG: 14,
-    },
-    toneTable: {
-        '0': 0,
-        C: 1,
-        CS: 2,
-        D: 3,
-        DS: 4,
-        E: 5,
-        F: 6,
-        FS: 7,
-        G: 8,
-        GS: 9,
-        A: 10,
-        AS: 11,
-        B: 12,
-        'C2': 13,
-    },
-    toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
-        '13': [65, 131, 262, 523, 1046, 2093, 4186, 8372],
-    },
-    highList: ['high', '1', 'on'],
-    lowList: ['low', '0', 'off'],
-    BlockState: {},
-    monitorTemplate: {
-        //imgPath: 'hw/lecoboard.png',
-        //keys: ['value'],
-        width: 800,
-        height: 600,
-        listPorts: {
-            BLE_READ: {
-                name: '블루투스',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            ULTRASONIC: {
-                name: '초음파센서',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            '4': {
-                name: '버튼입력',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },            
-            a0: {
-                name: '조도센서',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            a1: {
-                name: '가변저항',
-                type: 'input',
-                pos: { x: 200, y: 0 },
-            },
-            a2: {
-                name: '습도센서',
-                type: 'input',
-                pos: { x: 400, y: 0 },
-            },
-            a7: {
-                name: '온도센서',
-                type: 'input',
-                pos: { x: 600, y: 0 },
-            },
-            a3: {
-                name: '아날로그1',
-                type: 'input',
-                pos: { x: 0, y: 500 },
-            },
-            a4: {
-                name: '아날로그2',
-                type: 'input',
-                pos: { x: 200, y: 500 },
-            },
-            a5: {
-                name: '아날로그3',
-                type: 'input',
-                pos: { x: 400, y: 500 },
-            }, 
-            a6: {
-                name: '아날로그4',
-                type: 'input',
-                pos: { x: 600, y: 500 },
-            },     
-            '28': {
-                name: '입력1',
-                type: 'input',
-                pos: { x: 0, y: 400 },
-            },
-            '29': {
-                name: '입력2',
-                type: 'input',
-                pos: { x: 200, y: 400 },
-            },
-            '1': {
-                name: '입력3',
-                type: 'input',
-                pos: { x: 400, y: 400 },
-            },
-            '0': {
-                name: '입력4',
-                type: 'input',
-                pos: { x: 600, y: 400 },
-            },
-            
-        },
-        mode: 'both',
-    },
-};
-
-Entry.LecoboardBT = {
-    id: '3C.2',
-    name: 'lecoboardBT',
-    url: 'http://www.fnj.or.kr/',
-    imageName: 'lecoboardBT.png',
-    title: {
-        ko: '레코보드[무선연결]',      
-        en: 'LECOBOARD[BT]',      
-    },
-    setZero() {
-        Entry.hw.sendQueue.readablePorts = [];
-        for (var port = 0; port < 34; port++) {
-
-            if (port == 13 || port == 14 || port == 15 || port == 16 || port == 33) {
-                Entry.hw.sendQueue[port] = 1;
-            }
-            else if (port == 17) {
-                Entry.hw.sendQueue[port] = 0;
-            }           
-            else {
-                Entry.hw.sendQueue[port] = 0;
-                Entry.hw.sendQueue.readablePorts.push(port);
-            }            
-        }
-        if (!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue = {
-                GET: {},
-                SET: {},
-            };
-        } else {
-            const keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach((key) => {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
-    },    
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8,
-        LCD: 9,
-        LCD_COMMAND: 10,  
-        BLE_WRITE: 11,
-        BLE_READ: 12,
-    },
-    toneTable: {
-        '0': 0,
-        C: 1,
-        CS: 2,
-        D: 3,
-        DS: 4,
-        E: 5,
-        F: 6,
-        FS: 7,
-        G: 8,
-        GS: 9,
-        A: 10,
-        AS: 11,
-        B: 12,
-        'C2': 13,
-    },
-    toneMap: {
-        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
-        '13': [65, 131, 262, 523, 1046, 2093, 4186, 8372],
-    },
-    highList: ['high', '1', 'on'],
-    lowList: ['low', '0', 'off'],
-    BlockState: {},
-    monitorTemplate: {
-        //imgPath: 'hw/lecoboard.png',
-        //keys: ['value'],
-        width: 800,
-        height: 600,
-        listPorts: {
-            ULTRASONIC: {
-                name: '초음파센서',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            '4': {
-                name: '버튼입력',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },            
-            a0: {
-                name: '조도센서',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            a1: {
-                name: '가변저항',
-                type: 'input',
-                pos: { x: 200, y: 0 },
-            },
-            a2: {
-                name: '습도센서',
-                type: 'input',
-                pos: { x: 400, y: 0 },
-            },
-            a7: {
-                name: '온도센서',
-                type: 'input',
-                pos: { x: 600, y: 0 },
-            },
-            a3: {
-                name: '아날로그1',
-                type: 'input',
-                pos: { x: 0, y: 500 },
-            },
-            a4: {
-                name: '아날로그2',
-                type: 'input',
-                pos: { x: 200, y: 500 },
-            },
-            a5: {
-                name: '아날로그3',
-                type: 'input',
-                pos: { x: 400, y: 500 },
-            }, 
-            a6: {
-                name: '아날로그4',
-                type: 'input',
-                pos: { x: 600, y: 500 },
-            },     
-            '28': {
-                name: '입력1',
-                type: 'input',
-                pos: { x: 0, y: 400 },
-            },
-            '29': {
-                name: '입력2',
-                type: 'input',
-                pos: { x: 200, y: 400 },
-            },
-            '1': {
-                name: '입력3',
-                type: 'input',
-                pos: { x: 400, y: 400 },
-            },
-            '0': {
-                name: '입력4',
-                type: 'input',
-                pos: { x: 600, y: 400 },
-            },
-            
-        },    
-        mode: 'both',
-    },
-};
-Entry.Lecoboard = {
     id: '3C.3',
     name: 'lecoboardAvr',
     url: 'http://www.fnj.or.kr/',
-    imageName: 'lecoboard.png',
+    imageName: 'lecoboardAvr.png',
     title: {
         ko: '레코보드2.0',      
         en: 'LECOBOARD2.0',      
@@ -519,6 +175,176 @@ Entry.Lecoboard = {
         mode: 'both',
     },
 };
+
+Entry.LecoboardBT = {
+    id: '3C.4',
+    name: 'lecoboardAvrBT',
+    url: 'http://www.fnj.or.kr/',
+    imageName: 'lecoboardAvrBT.png',
+    title: {
+        ko: '레코보드2.0[무선연결]',      
+        en: 'LECOBOARD2.0[BT]',      
+    },
+    setZero() {
+        Entry.hw.sendQueue.readablePorts = [];
+        for (var port = 0; port < 34; port++) {
+
+            if (port == 13 || port == 14 || port == 15 || port == 16 || port == 33) {
+                Entry.hw.sendQueue[port] = 1;
+            }
+            else if (port == 17) {
+                Entry.hw.sendQueue[port] = 0;
+            }           
+            else {
+                Entry.hw.sendQueue[port] = 0;
+                Entry.hw.sendQueue.readablePorts.push(port);
+            }            
+        }
+        if (!Entry.hw.sendQueue.SET) {
+            Entry.hw.sendQueue = {
+                GET: {},
+                SET: {},
+            };
+        } else {
+            const keySet = Object.keys(Entry.hw.sendQueue.SET);
+            keySet.forEach((key) => {
+                Entry.hw.sendQueue.SET[key].data = 0;
+                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
+            });
+        }
+        Entry.hw.update();
+    },    
+    sensorTypes: {
+        ALIVE: 0,
+        DIGITAL: 1,
+        ANALOG: 2,
+        PWM: 3,
+        SERVO_PIN: 4,
+        TONE: 5,
+        PULSEIN: 6,
+        ULTRASONIC: 7,
+        TIMER: 8,
+        LCD: 9,
+        LCD_COMMAND: 10,  
+        BLE_WRITE: 11,
+        BLE_READ: 12,
+    },
+    toneTable: {
+        '0': 0,
+        C: 1,
+        CS: 2,
+        D: 3,
+        DS: 4,
+        E: 5,
+        F: 6,
+        FS: 7,
+        G: 8,
+        GS: 9,
+        A: 10,
+        AS: 11,
+        B: 12,
+        'C2': 13,
+    },
+    toneMap: {
+        '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
+        '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
+        '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
+        '4': [39, 78, 156, 311, 622, 1245, 2849, 4978],
+        '5': [41, 82, 165, 330, 659, 1319, 2637, 5274],
+        '6': [44, 87, 175, 349, 698, 1397, 2794, 5588],
+        '7': [46, 92, 185, 370, 740, 1480, 2960, 5920],
+        '8': [49, 98, 196, 392, 784, 1568, 3136, 6272],
+        '9': [52, 104, 208, 415, 831, 1661, 3322, 6645],
+        '10': [55, 110, 220, 440, 880, 1760, 3520, 7040],
+        '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
+        '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
+        '13': [65, 131, 262, 523, 1046, 2093, 4186, 8372],
+    },
+    highList: ['high', '1', 'on'],
+    lowList: ['low', '0', 'off'],
+    BlockState: {},
+    monitorTemplate: {
+        //imgPath: 'hw/lecoboard.png',
+        //keys: ['value'],
+        width: 800,
+        height: 600,
+        listPorts: {
+            ULTRASONIC: {
+                name: '초음파센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '4': {
+                name: '버튼입력',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },            
+            a0: {
+                name: '조도센서',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a1: {
+                name: '가변저항',
+                type: 'input',
+                pos: { x: 200, y: 0 },
+            },
+            a2: {
+                name: '습도센서',
+                type: 'input',
+                pos: { x: 400, y: 0 },
+            },
+            a7: {
+                name: '온도센서',
+                type: 'input',
+                pos: { x: 600, y: 0 },
+            },
+            a3: {
+                name: '아날로그1',
+                type: 'input',
+                pos: { x: 0, y: 500 },
+            },
+            a4: {
+                name: '아날로그2',
+                type: 'input',
+                pos: { x: 200, y: 500 },
+            },
+            a5: {
+                name: '아날로그3',
+                type: 'input',
+                pos: { x: 400, y: 500 },
+            }, 
+            a6: {
+                name: '아날로그4',
+                type: 'input',
+                pos: { x: 600, y: 500 },
+            },     
+            '28': {
+                name: '입력1',
+                type: 'input',
+                pos: { x: 0, y: 400 },
+            },
+            '29': {
+                name: '입력2',
+                type: 'input',
+                pos: { x: 200, y: 400 },
+            },
+            '1': {
+                name: '입력3',
+                type: 'input',
+                pos: { x: 400, y: 400 },
+            },
+            '0': {
+                name: '입력4',
+                type: 'input',
+                pos: { x: 600, y: 400 },
+            },
+            
+        },    
+        mode: 'both',
+    },
+};
+
 Entry.Lecoboard.setLanguage = function() {
     return {
         ko: {
