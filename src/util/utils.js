@@ -1868,7 +1868,7 @@ Entry.Utils.addNewBlock = function(item) {
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
-    if (!Entry.getMainWS()?.board?.code) {
+    if (!Entry.container || !Entry.container.isSceneObjectsExist()) {
         if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
             this.objectAlert = Entry.toast.alert(
                 Lang.Workspace.add_object_alert,
