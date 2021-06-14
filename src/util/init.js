@@ -119,6 +119,7 @@ const setDefaultPathsFromOptions = function(options) {
         soundDir = '',
         blockInjectDir = '',
         baseUrl = location.origin || 'https://playentry.org',
+        offlineModulePath,
     } = options;
 
     Entry.mediaFilePath = `${libDir}/entry-js/images/`;
@@ -126,7 +127,7 @@ const setDefaultPathsFromOptions = function(options) {
     Entry.defaultPath = defaultDir;
     Entry.soundPath = soundDir;
     Entry.blockInjectPath = blockInjectDir;
-
+    Entry.offlineModulePath = offlineModulePath;
     Entry.baseUrl = baseUrl.replace(/\/$/, '');
     Entry.moduleBaseUrl = `${Entry.baseUrl}/modules/`;
 };

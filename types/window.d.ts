@@ -4,6 +4,7 @@ declare interface Window {
     popupHelper?: import('../src/class/popup_helper').default;
     EntryStatic: any;
     ImageCapture: any;
+    sendSync: any | undefined;
 }
 
 declare var Lang: any;
