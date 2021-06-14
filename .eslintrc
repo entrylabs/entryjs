@@ -1,4 +1,5 @@
 {
+    "parser": "@babel/eslint-parser",
     "plugins": ["prettier"],
     "extends": ["plugin:prettier/recommended"],
     "overrides": [
@@ -25,7 +26,7 @@
         "jquery": true
     },
     "parserOptions": {
-        "ecmaVersion": 2017,
+        "ecmaVersion": 2020,
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true

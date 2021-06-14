@@ -36,13 +36,13 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
-    this.dataTableEnable && DataTable.setTables(project.tables);
+    DataTable.setTables(project.tables);
+    Entry.aiLearning.load(project.learning);
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
-    Entry.aiLearning.load(project.learning);
     Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
     if (Entry.aiUtilizeBlocks.length > 0) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
@@ -117,20 +117,22 @@ Entry.loadProject = function(project) {
 };
 
 Entry.clearProject = function() {
-    Entry.stop();
-    Entry.projectId = null;
-    Entry.variableContainer.clear();
-    Entry.container.clear();
-    Entry.scene.clear();
-    Entry.stateManager.clear();
-    DataTable.clear();
-    GEHelper.resManager.clearProject();
-    Entry.Loader && (Entry.Loader.loaded = false);
+    try {
+        Entry.stop();
+        Entry.projectId = null;
+        Entry.variableContainer.clear();
+        Entry.container.clear();
+        Entry.scene.clear();
+        Entry.stateManager.clear();
+        DataTable.clear();
+        GEHelper.resManager.clearProject();
+        Entry.Loader && (Entry.Loader.loaded = false);
 
-    if (Entry.type !== 'invisible') {
-        Entry.playground && Entry.playground.changeViewMode('code');
-    } else {
-        Entry.stateManager && Entry.stateManager.clear();
+        if (Entry.type !== 'invisible') {
+            Entry.playground && Entry.playground.changeViewMode('code');
+        }
+    } catch (e) {
+        console.warn('clearProject fail', e);
     }
 };
 
@@ -391,8 +393,7 @@ Entry.overridePrototype = function() {
                 .mod(right)
                 .add(right)
                 .mod(right)
-                .value
-                .toNumber();
+                .value.toNumber();
         } catch (e) {
             return ((this % n) + n) % n;
         }
@@ -454,13 +455,21 @@ Entry.Utils.isNumber = function(num) {
     const reg = /^-?\d+\.?\d*$/;
     if (typeof num === 'string' && reg.test(num)) {
         return true;
-    } else {
-        return false;
     }
+    return false;
 };
 
 Entry.Utils.generateId = function() {
     return `0000${((Math.random() * Math.pow(36, 4)) << 0).toString(36)}`.substr(-4);
+};
+
+Entry.Utils.randomColor = function() {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
 };
 
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
@@ -719,9 +728,12 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        // doc.on('mousedown', function(e) {
-        //     Entry.documentMousedown.notify(e);
-        // });
+        doc.on('mousedown', (e) => {
+            const selectedBlock = document.querySelector('.selected');
+            if (selectedBlock) {
+                selectedBlock.classList.remove('selected');
+            }
+        });
     }
 
     if (options.indexOf('mousemove') > -1) {
@@ -749,8 +761,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        document.addEventListener('keydown', (e) => {
-            let keyCode = Entry.Utils.inputToKeycode(e);
+        doc.on('keydown', (e) => {
+            const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -767,8 +779,8 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        document.addEventListener('keyup', (e) => {
-            let keyCode = Entry.Utils.inputToKeycode(e);
+        doc.on('keyup', (e) => {
+            const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
             }
@@ -793,7 +805,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     }
 };
 Entry.Utils.inputToKeycode = (e) => {
-    let keyCode = e.code == undefined ? e.key : e.code;
+    //https://riptutorial.com/jquery/example/21119/originalevent
+    const event = e.originalEvent || e;
+    let keyCode = event.code == undefined ? event.key : event.code;
     if (!keyCode) {
         return null;
     }
@@ -1180,6 +1194,28 @@ Entry.isPhone = function() {
 
 Entry.getKeyCodeMap = function() {
     return {
+        '8': 'backspace',
+        '9': 'tab',
+        '13': Lang.Blocks.START_press_some_key_enter,
+        '16': 'shift',
+        '17': 'ctrl',
+        '18': 'alt',
+        '27': 'esc',
+        '32': Lang.Blocks.START_press_some_key_space,
+        '37': Lang.Blocks.START_press_some_key_left,
+        '38': Lang.Blocks.START_press_some_key_up,
+        '39': Lang.Blocks.START_press_some_key_right,
+        '40': Lang.Blocks.START_press_some_key_down,
+        '48': '0',
+        '49': '1',
+        '50': '2',
+        '51': '3',
+        '52': '4',
+        '53': '5',
+        '54': '6',
+        '55': '7',
+        '56': '8',
+        '57': '9',
         '65': 'a',
         '66': 'b',
         '67': 'c',
@@ -1206,28 +1242,6 @@ Entry.getKeyCodeMap = function() {
         '88': 'x',
         '89': 'y',
         '90': 'z',
-        '32': Lang.Blocks.START_press_some_key_space,
-        '37': Lang.Blocks.START_press_some_key_left,
-        '38': Lang.Blocks.START_press_some_key_up,
-        '39': Lang.Blocks.START_press_some_key_right,
-        '40': Lang.Blocks.START_press_some_key_down,
-        '48': '0',
-        '49': '1',
-        '50': '2',
-        '51': '3',
-        '52': '4',
-        '53': '5',
-        '54': '6',
-        '55': '7',
-        '56': '8',
-        '57': '9',
-        '13': Lang.Blocks.START_press_some_key_enter,
-        '27': 'esc',
-        '17': 'ctrl',
-        '18': 'alt',
-        '9': 'tab',
-        '16': 'shift',
-        '8': 'backspace',
         //special Characters
         '186': ';',
         '187': '=',
@@ -1240,13 +1254,14 @@ Entry.getKeyCodeMap = function() {
         '220': 'Backslash',
         '221': ']',
         '222': "'",
-        '45': 'Help',
-        '45': 'Insert',
-        '46': 'Delete',
-        '36': 'Home',
-        '35': 'End',
-        '33': 'PageUp',
-        '34': 'PageDown',
+        // #2590 이슈 처리에 의해 주석처리
+        // '45': 'Help',
+        // '45': 'Insert',
+        // '46': 'Delete',
+        // '36': 'Home',
+        // '35': 'End',
+        // '33': 'PageUp',
+        // '34': 'PageDown',
     };
 };
 
@@ -1483,9 +1498,6 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     }
 
     const shape = GEHelper.brushHelper.newShape(brush);
-    if (isWebGL) {
-        brush.setCurrentPath(parentBrush.getCurrentPath());
-    }
     shape.entity = sprite;
     const selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
@@ -1856,6 +1868,15 @@ Entry.Utils.addNewBlock = function(item) {
     Entry.variableContainer.appendMessages(messages);
     Entry.variableContainer.appendVariables(variables);
     Entry.variableContainer.appendFunctions(functions);
+    if (!this?.editor?.board?.code) {
+        if (Entry.toast && !(this.objectAlert && Entry.toast.isOpen(this.objectAlert))) {
+            this.objectAlert = Entry.toast.alert(
+                Lang.Workspace.add_object_alert,
+                Lang.Workspace.add_object_alert_msg
+            );
+        }
+        return;
+    }
     Entry.do(
         'addThread',
         parseScript.map((block) => {
@@ -1962,13 +1983,15 @@ Entry.Utils.createMouseEvent = function(type, event) {
     return e;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, error) {
+Entry.Utils.stopProjectWithToast = async (scope, message, error) => {
     let block = scope.block;
     message = message || 'Runtime Error';
     const toast = error.toast;
     const engine = Entry.engine;
 
-    engine && engine.toggleStop();
+    if (engine) {
+        await engine.toggleStop();
+    }
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
@@ -1994,6 +2017,16 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
             true
         );
         Entry.engine.hideAllAudioPanel();
+    }
+    if (message === 'OfflineError' && Entry.toast) {
+        Entry.toast.alert(
+            Lang.Msgs.warn,
+            toast || [
+                Lang.Workspace.check_runtime_error,
+                Lang.Workspace.offline_not_compatible_error,
+            ],
+            true
+        );
     } else if (Entry.toast) {
         Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
@@ -2021,6 +2054,14 @@ Entry.Utils.IncompatibleError = function(message, toast) {
 };
 Entry.Utils.IncompatibleError.prototype = new Error();
 Entry.Utils.IncompatibleError.prototype.constructor = Entry.Utils.IncompatibleError;
+
+Entry.Utils.OfflineError = function(message, toast) {
+    this.name = 'OfflineError';
+    this.message = message || 'OfflineError';
+    this.toast = toast || null;
+};
+Entry.Utils.OfflineError.prototype = new Error();
+Entry.Utils.OfflineError.prototype.constructor = Entry.Utils.OfflineError;
 
 Entry.Utils.isChrome = function() {
     return /chrom(e|ium)/.test(navigator.userAgent.toLowerCase());
@@ -2518,8 +2559,8 @@ Entry.Utils.getVolume = function() {
 
 Entry.Utils.forceStopSounds = function() {
     _.each(Entry.soundInstances, (instance) => {
-        instance.dispatchEvent('complete');
-        instance.stop();
+        instance?.dispatchEvent?.('complete');
+        instance?.stop?.();
     });
     Entry.soundInstances = [];
 };
@@ -2529,7 +2570,6 @@ Entry.Utils.playSound = function(id, option = {}) {
 };
 
 Entry.Utils.addSoundInstances = function(instance) {
-    console.log('add sound instance');
     Entry.soundInstances.push(instance);
     instance.on('complete', () => {
         const index = Entry.soundInstances.indexOf(instance);

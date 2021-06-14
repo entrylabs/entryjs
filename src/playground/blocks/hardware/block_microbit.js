@@ -11,7 +11,7 @@ Entry.Microbit = new (class Microbit {
         this.imageName = 'microbit.png';
         this.title = {
             en: 'Microbit',
-            ko: '마이크로빗',
+            ko: '마이크로비트',
         };
         this.name = 'microbit';
         this.blockIds = {};

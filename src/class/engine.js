@@ -255,9 +255,13 @@ Entry.Engine = class Engine {
                 this.isLoaded = true;
                 const isSoundEmpty = Entry.soundQueue.urls.size < 1;
                 if (isSoundEmpty || Entry.soundQueue.loadComplete) {
+                    this.runButtonCurtain = Entry.Dom('div', {
+                        class: 'entryRunButtonBigMinimizeCurtain',
+                        parent: $('#entryCanvasWrapper'),
+                    });
                     this.runButton = Entry.Dom('div', {
                         class: 'entryRunButtonBigMinimize',
-                        parent: $('#entryCanvasWrapper'),
+                        parent: this.runButtonCurtain,
                     });
                     this.runButton.bindOnClick(() => Entry.engine.toggleRun());
                 }
@@ -629,6 +633,9 @@ Entry.Engine = class Engine {
             this.setPauseButton(this.option);
             this.runButton.addClass('run');
             this.runButton.addClass('entryRemove');
+            if (this.runButtonCurtain) {
+                this.runButtonCurtain.addClass('entryRemove');
+            }
             this.stopButton.removeClass('entryRemove');
             if (this.addButton) {
                 this.addButton.addClass('entryRemove');
@@ -717,6 +724,9 @@ Entry.Engine = class Engine {
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
             this.runButton.removeClass('entryRemove');
+            if (this.runButtonCurtain) {
+                this.runButtonCurtain.removeClass('entryRemove');
+            }
             this.stopButton.addClass('entryRemove');
             if (this.pauseButton) {
                 this.pauseButton.addClass('entryRemove');
@@ -778,6 +788,9 @@ Entry.Engine = class Engine {
                     this.runButton2.addClass('entryRemove');
                 } else {
                     this.runButton.addClass('entryRemove');
+                    if (this.runButtonCurtain) {
+                        this.runButtonCurtain.addClass('entryRemove');
+                    }
                 }
             }
 
@@ -803,6 +816,9 @@ Entry.Engine = class Engine {
                     this.runButton2.removeClass('entryRemove');
                 } else {
                     this.runButton.removeClass('entryRemove');
+                    if (this.runButtonCurtain) {
+                        this.runButtonCurtain.removeClass('entryRemove');
+                    }
                 }
             }
 
@@ -904,13 +920,7 @@ Entry.Engine = class Engine {
      * @param {boolean} isForce
      */
     captureKeyEvent(e, isForce) {
-        let keyCode = e.code == undefined ? e.key : e.code;
-        if (!keyCode) {
-            return;
-        }
-        keyCode = keyCode.replace('Digit', '');
-        keyCode = keyCode.replace('Numpad', '');
-        keyCode = Entry.KeyboardCode.codeToKeyCode[keyCode];
+        const keyCode = Entry.Utils.inputToKeycode(e);
         if (!keyCode) {
             return;
         }

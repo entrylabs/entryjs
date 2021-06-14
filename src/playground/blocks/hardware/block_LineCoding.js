@@ -3,6 +3,7 @@
 let LmotorSpeed = 0;
 let RmotorSpeed = 0;
 let LineNum = 20;
+let WheelNum = 18;
 let LineInit = 0;
 let LineSaveFlag = 0;
 let LineOneFlag = 1;
@@ -605,7 +606,7 @@ Entry.LineCoding.getBlocks = function() {
                         ['6', '3'],
                         ['7', '4'],
                     ],
-                    value: '0',
+                    value: '2',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1823,7 +1824,7 @@ Entry.LineCoding.getBlocks = function() {
                             time: new Date().getTime(),
                         };
                     } else {
-                        Entry.hw.sendQueue.SET[20] = {
+                        Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
                             type: Entry.LineCoding.sensorTypes.LINE_BWMOTOR,
                             data: {
                                 mode: mode2,
@@ -1891,9 +1892,6 @@ Entry.LineCoding.getBlocks = function() {
             func(sprite, script) {
                 let rspeed2 = script.getNumberValue('RSPEED', script);
                 let lspeed2 = script.getNumberValue('LSPEED', script);
-                if (LineSaveFlag == 1) {
-                    ++LineNum;
-                }
                 lspeed2 = Math.min(20, lspeed2);
                 lspeed2 = Math.max(-20, lspeed2);
                 rspeed2 = Math.min(20, rspeed2);
@@ -1903,7 +1901,17 @@ Entry.LineCoding.getBlocks = function() {
                     if (!Entry.hw.sendQueue.SET) {
                         Entry.hw.sendQueue.SET = {};
                     }
-                    Entry.hw.sendQueue.SET[parseInt(LineNum, 10)] = {
+                    if (LineSaveFlag == 1) {
+                        ++LineNum;
+                        WheelNum = LineNum;
+                    } else {
+                        if (WheelNum == 18) {
+                            WheelNum = 19;
+                        } else {
+                            WheelNum = 18;
+                        }
+                    }
+                    Entry.hw.sendQueue.SET[parseInt(WheelNum, 10)] = {
                         type: Entry.LineCoding.sensorTypes.LINE_WHEEL,
                         data: {
                             lspeed: lspeed2,
@@ -1958,7 +1966,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['100'],
+                        params: ['0'],
                     },
                     null,
                 ],
@@ -2352,7 +2360,7 @@ Entry.LineCoding.getBlocks = function() {
                     },
                     {
                         type: 'text', 
-                        params: ['Hello, Linecoding'],
+                        params: ['Hi, LineCoding'],
                     },
                     null,
                 ],
@@ -2413,10 +2421,10 @@ Entry.LineCoding.getBlocks = function() {
                             text13: text[13],
                             text14: text[14],
                             text15: text[15],
-                            text15: text[16],
-                            text15: text[17],
-                            text15: text[18],
-                            text15: text[19],
+                            text16: text[16],
+                            text17: text[17],
+                            text18: text[18],
+                            text19: text[19],
                         },
                         time: new Date().getTime(),
                     };
@@ -3088,11 +3096,11 @@ Entry.LineCoding.getBlocks = function() {
                 params: [
                     {
                         type: 'text',
-                        params: ['10'],
+                        params: ['6'],
                     },
                     {
                         type: 'text',
-                        params: ['-8'],
+                        params: ['-4'],
                     },
                     {
                         type: 'text',

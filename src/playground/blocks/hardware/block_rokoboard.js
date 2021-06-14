@@ -123,6 +123,41 @@ Entry.rokoboard.blockMenuBlocks = [
     'rokoboard_is_button_pressed',
 ];
 
+Entry.rokoboard.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                rokoboard_get_sensor_value_by_name: '%1 의 센서값',
+            },
+            Blocks: {
+                rokoboard_sensor_name_0: '소리',
+                rokoboard_sensor_name_1: '빛',
+                rokoboard_sensor_name_2: '슬라이더',
+                rokoboard_sensor_name_3: '저항-A',
+                rokoboard_sensor_name_4: '저항-B',
+                rokoboard_sensor_name_5: '저항-C',
+                rokoboard_sensor_name_6: '저항-D',
+                rokoboard_string_1: '버튼을 눌렀는가?',
+            },
+        },
+        en: {
+            template: {
+                rokoboard_get_sensor_value_by_name: '%1 value',
+            },
+            Blocks: {
+                rokoboard_sensor_name_0: 'Sound',
+                rokoboard_sensor_name_1: 'Light',
+                rokoboard_sensor_name_2: 'Slider',
+                rokoboard_sensor_name_3: 'resistance-A',
+                rokoboard_sensor_name_4: 'resistance-B',
+                rokoboard_sensor_name_5: 'resistance-C',
+                rokoboard_sensor_name_6: 'resistance-D',
+                rokoboard_string_1: 'Button Pressed',
+            },
+        },
+    };
+};
+
 Entry.rokoboard.getBlocks = function() {
     return {
         //region rokoboard 로코보드
