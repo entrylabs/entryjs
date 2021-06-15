@@ -3104,6 +3104,5 @@ Entry.Lecoboard.getBlocks = function() {
         },
     };
 };
-//endregion arduinoExt 아두이노 확장모드
 
 module.exports = Entry.Lecoboard;
