@@ -1,6 +1,6 @@
 'use strict';
-
-const _ = require('lodash');
+import _ from 'lodash';
+// const _ = require('lodash');
 const _clamp = _.clamp;
 const _get = _.get;
 const _set = _.set;
