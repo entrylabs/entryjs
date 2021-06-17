@@ -48,9 +48,9 @@ Entry.Robotry_Parodule.setLanguage = function() {
             template: {
                 Robotry_Parodule_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
                 Robotry_Parodule_get_sensor_value: '%1 의 센서 값',
-                Robotry_Parodule_set_neopixel:'%1 의 색상을 %2 (으)로 지정 %3',
+                Robotry_Parodule_set_neopixel:'%1 의 %2 개 LED 의 색상을 %3 (으)로 지정 %4',
                 Robotry_Parodule_set_led:'%1 LED %2 %3',
-                Robotry_Parodule_set_custom_neopixel: '%1 의 색상을 %2 (으)로 지정 %3',
+                Robotry_Parodule_set_custom_neopixel: '%1 의 %2 개 LED 의 색상을 %3 (으)로 지정 %4',
             },
             Helper: {
                 Robotry_Parodule_get_analog_value_map: 
@@ -74,7 +74,7 @@ Entry.Robotry_Parodule.setLanguage = function() {
                 Robotry_Parodule_get_sensor_value: '%1 의 센서 값',
                 Robotry_Parodule_set_neopixel:'%1 의 색상을 %2 (으)로 지정 %3',
                 Robotry_Parodule_set_led:'%1 LED %2 %3',
-                Robotry_Parodule_set_custom_neopixel: '%1 의 색상을 %2 (으)로 지정 %3',
+                Robotry_Parodule_set_custom_neopixel: '%1 의 %2 개 LED 의  색상을 %3 (으)로 지정 %4',
             },
             Helper: {
                 Robotry_Parodule_get_analog_value_map: 
@@ -360,6 +360,11 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
+                    type : 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
                     type: 'Color',
                 },
                 {
@@ -372,18 +377,24 @@ Entry.Robotry_Parodule.getBlocks = function() {
             def: {
                 params: [
                     null,
+                    {
+                        type: 'Robotry_Parodule_text',
+                        params: ['6'],
+                    },
                     null,
                 ],
                 type: 'Robotry_Parodule_set_neopixel',
             },
             paramsKeyMap: {
                 PORT: 0,
-                COLOR: 1,
+                NUM: 1,
+                COLOR: 2,
             },
             class: 'Set',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
+                const num = script.getNumberValue('NUM');
                 const color = script.getField('COLOR', script);
                 const rgb = Entry.hex2rgb(color);
                 console.log(Entry.Utils.hexToHsl(color));
@@ -391,6 +402,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 var red = rgb.r;
                 var green = rgb.g;
                 var blue = rgb.b;
+                
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
@@ -398,6 +410,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 Entry.hw.sendQueue.SET[port] = {
                     type: Entry.Robotry_Parodule.sensorTypes.NEO_LED,
                     data: {
+                        n:num,
                         r:red,
                         g:green,
                         b:blue,
@@ -438,6 +451,21 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4],
+                        ['5', 5],
+                        ['6', 6],
+                    ],
+                    value: 1,
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
                     type : 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -452,6 +480,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
             def: {
                 params: [
                     null,
+                    null,
                     {
                         type: 'Robotry_Parodule_text',
                         params: ['360'],
@@ -461,7 +490,8 @@ Entry.Robotry_Parodule.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                HUE: 1,
+                NUM: 1,
+                HUE: 2,
             },
             class: 'Set',
             isNotFor: ['Robotry_Parodule'],
@@ -469,6 +499,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 let h, s, l;
                 
                 const port = script.getNumberValue('PORT');
+                const num = script.getNumberValue('NUM');
                 const hue = script.getNumberValue('HUE');
                 const hsl = { h, s, l };
                 
@@ -488,6 +519,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 Entry.hw.sendQueue.SET[port] = {
                     type: Entry.Robotry_Parodule.sensorTypes.NEO_LED,
                     data: {
+                        n:num,
                         r:red,
                         g:green,
                         b:blue,
