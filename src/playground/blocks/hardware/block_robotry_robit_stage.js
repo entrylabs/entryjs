@@ -107,6 +107,19 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 "모터의 회전 방향과 0 부터 255 값으로 모터의 회전력을 </br>제어할 수 있습니다. </br></br>모터의 회전력은 0 에 가까워 질수록 약해지고 </br>255 에 가까워 질수록 강해집니다.",
             },  
             Blocks : {
+                silent : '무음',
+                do_name : '도',
+                do_sharp_name : '도#(레♭)',
+                re_name :'레',
+                re_sharp_name : '레#(미♭)', 
+                mi_name : '미',
+                fa_name : '파',
+                fa_sharp_name : '파#(솔♭)',
+                sol_name : '솔',
+                sol_sharp_name : '솔#(라♭)' ,
+                la_name : '라',
+                la_sharp_name : '라#(시♭)' ,
+                si_name : '시',
                 // 드롭 다운 메뉴
                 left : '왼쪽',
                 right : '오른쪽',
@@ -115,52 +128,69 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 clockwise : '정방향',
                 counter_clockwise : '역방향',
                 position_the_sensorblock : '센서블록을 놓아주세요.',
-                
+                on : '켜기',
+                off : '끄기',
             }
         },
         en: {
             template: {
                 // 로빗 무대 블록
-                Robotry_Robit_Stage_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                Robotry_Robit_Stage_get_ultrasonic: '초음파 센서 (cm) ',
-                Robotry_Robit_Stage_get_sensor_value: '%1 센서 (0 ~ 1023)',
+                Robotry_Robit_Stage_get_analog_value_map: 'Convert the range of %1 %2 ~ %3 to %4 ~ %5',
+                Robotry_Robit_Stage_get_ultrasonic: 'Ultrasonic Sensor (cm) ',
+                Robotry_Robit_Stage_get_sensor_value: '%1 Sensor (0 ~ 1023)',
 
-                Robotry_Robit_Stage_set_tone: '%2 옥타브 %3 %4 초 동안 연주하기 %5',
+                Robotry_Robit_Stage_set_tone: 'Perform %2 Octave %3 for %4 second %5',
                 Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
-                Robotry_Robit_Stage_set_bidirectional_motor:'%3 으로 모터 회전시키기 %4',
+                Robotry_Robit_Stage_set_bidirectional_motor:'Rotate Motor to %3 %4',
                 
-                Robotry_Robit_Stage_set_led_pwm: '%1 LED 를 %2 의 밝기로 켜기 %3',
-                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3 으로 %4 만큼 모터 회전시키기 %5',
+                Robotry_Robit_Stage_set_led_pwm: 'Set %1 LED tp %2 Brightness %3',
+                Robotry_Robit_Stage_set_bidirectional_motor_pwm:'Rotate Motor to %3 for %4 %5',
             },
             Helper:{
                 // Get
                 Robotry_Robit_Stage_get_analog_value_map:
-                "놓여진 센서블록 값의 범위를 원하는 범위로 변환합니다. </br></br>이 블록을 사용하면 센서로부터 받은 데이터를 </br>사용자의 상황에 맞게 가공할 수 있습니다. </br></br>ex) 0 부터 1023 까지의 값을 0 부터 255 까지의 값으로 맵핑합니다.",
+                "The data from each Sensor is represented by a range (0 ~ 1023). </br></br>This data range must be converted. </br>This Block converted the old data range the Sensor to a range (0 ~ 1023).",
                 Robotry_Robit_Stage_get_ultrasonic:
-                "로빗무대에 전면에 있는 초음파 센서로부터 앞에 놓여진 </br>대상과의 거리를 계산합니다. (단위는 cm 입니다.)",
+                "Measure the distance from the Ultrasonic Sensor to the object. ( by cm )",
                 Robotry_Robit_Stage_get_sensor_value:
-                "로빗무대는 제품 상단에 위치한 구멍으로 부터 </br>빛(왼쪽 구멍)과 소리(오른쪽 구멍)를 감지할 수 있습니다. </br></br>센서블록은 각 센서로부터 주변 환경 데이터를 받아 </br>0 부터 1023 까지의 값으로 표현합니다. </br></br>블럭의 값은 센서에 입력되는 빛 혹은 소리의 세기가 </br>강하면 값이 높아지고 약하면 낮아집니다.",
+                "Robit Stage senses Light ( Left hole ) and Sound ( Right hole ) via the Sensor above the product.</br></br>Sensor Block represents the data from each Sensor by the range of 0 ~ 1023.</br></br>The higher the number means that the Sensor has detected stronger stimuli.",
                 // Set
                 Robotry_Robit_Stage_set_tone:
-                "옥타브와 음계를 선택해서 해당하는 음을 내장된 부저를 통해 </br>연주할 수 있습니다.",
+                "Choose Octave and Scale to perform the Buzzer.",
                 Robotry_Robit_Stage_set_led:
-                "LED 를 On / Off 할 수 있습니다.",
+                "On / Off the LED",
                 Robotry_Robit_Stage_set_bidirectional_motor:
-                "모터는 정방향과 역방향으로 회전할 수 있습니다.",
+                "Motor rotates to either Forward or Backward.",
                 // PMW
                 Robotry_Robit_Stage_set_led_pwm:
-                "LED 의 밝기를 0 부터 255까지 값으로 조절할 수 있습니다. </br></br>LED 의 밝기는 0 에 가까워 질수록 어두워지고 </br>255 에 가까워 질수록 밝아집니다.",
+                "The LED has a brightness setting that ranges from 0 to 255.</br>The numbers indicate brightness level.</br></br>The higher the number, the brighter the LED.",
                 Robotry_Robit_Stage_set_bidirectional_motor_pwm:
-                "모터의 회전 방향과 0 부터 255 값으로 모터의 회전력을 </br>제어할 수 있습니다. </br></br>모터의 회전력은 0 에 가까워 질수록 약해지고 </br>255 에 가까워 질수록 강해집니다.",
+                "The motor has direction and rotatory power.</br></br>The numbers ( 0~255 ) indicate rotatory power.</br></br>The higher the number, the faster the motor runs.",
             }, 
             Blocks : {
+                silent : 'Silent',
+                do_name : 'C',
+                do_sharp_name : 'C#(D♭)',
+                re_name :'D',
+                re_sharp_name : 'D#(E♭)', 
+                mi_name : 'E',
+                fa_name : 'F',
+                fa_sharp_name : 'F#(G♭)',
+                sol_name : 'G',
+                sol_sharp_name : 'G#(A♭)' ,
+                la_name : 'A',
+                la_sharp_name : 'A#(B♭)' ,
+                si_name : 'B',
                 // 드롭 다운 메뉴
-                left : 'left',
-                right : 'right',
-                light_s : 'Ambient Light Sensor',
-                mic_s : 'Sound Sensor',
-                clockwise : 'Clockwise',
-                counter_clockwise : 'Counterclockwise'
+                left : 'Left',
+                right : 'Right',
+                light_s : 'Light',
+                mic_s : 'Sound',
+                clockwise : 'Forward',
+                counter_clockwise : 'Backward',
+                position_the_sensorblock : 'Put Sensor Block here',
+                on : 'On',
+                off : 'Off',
             },
         },
     };
@@ -588,7 +618,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
+                    options: [[Lang.Blocks.on, 'on'], [Lang.Blocks.off, 'off']],
                     value: 'on',
                     fontSize: 12,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
