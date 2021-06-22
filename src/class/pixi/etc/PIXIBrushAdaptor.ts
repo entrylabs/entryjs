@@ -118,7 +118,7 @@ export class PIXIBrushAdaptor {
     }
     // Matched the method name to createjs for fulfilling the purpose of wrapper class (#11626)
     clear() {
-        const { x, y } = this.entity;
+        const { x = 0, y = 0 } = this.entity || {};
         this._shape.clear();
         // Disconnect the previously continued path
         this._shape.moveTo(x, -y);
