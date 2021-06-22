@@ -49,11 +49,11 @@ type DetectedObject = {
 type IndicatorType = 'pose' | 'face' | 'object';
 
 export const getInputList = async () => {
-    if(navigator.mediaDevices) {
+    if (navigator.mediaDevices) {
         return (await navigator.mediaDevices.enumerateDevices()) || [];
     }
     return [];
-}
+};
 
 class VideoUtils implements MediaUtilsInterface {
     // 비디오 캔버스 크기에 쓰이는 공통 밸류
@@ -388,6 +388,10 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     initialSetup() {
+        const videoTracks = this.stream.getVideoTracks();
+        if (videoTracks[0].readyState === 'ended') {
+            this.changeSource(0);
+        }
         console.log('initial setup');
         this.isRunning = true;
         GEHelper.drawDetectedGraphic();
@@ -777,12 +781,10 @@ class VideoUtils implements MediaUtilsInterface {
         this.objects = [];
         this.isRunning = false;
         this.isModelInitiated = false;
+        this.stopVideo();
     }
 
-    // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
-    destroy() {
-        this.disableAllModels();
-        this.turnOffWebcam();
+    stopVideo() {
         try {
             if (this.stream) {
                 this.stream.getTracks().forEach((track) => {
@@ -792,7 +794,13 @@ class VideoUtils implements MediaUtilsInterface {
         } catch (err) {
             console.log(err);
         }
+    }
 
+    // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
+    destroy() {
+        this.disableAllModels();
+        this.turnOffWebcam();
+        this.stopVideo();
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
