@@ -76,6 +76,7 @@ Entry.ProboConnect.setLanguage = function() {
                 battery_check:'배터리 체크',
                 mainLED_control:'LED %1 번호 %2 R:%3 G:%4 B:%5 동작 %6 %7',
                 LED_control_bright:'LED %1 번호 %2 밝기 %3 동작 %4 %5', 
+                LED_All_turn_off : '모든 %1 LED 전부 끄기 %2',
                 sound_effect:'버저 음향 효과 %1 %2',
                 play_pitch:'%1 옥타브 %2 을(를) %3 초 연주 %4'
             },
@@ -138,6 +139,7 @@ Entry.ProboConnect.setLanguage = function() {
                 battery_check:'battery check',
                 mainLED_control:'LED %1 number %2 R:%3 G:%4 B:%5 turn %6 %7',
                 LED_control_bright:'LED %1 number %2 brightness %3 turn %4 %5',
+                LED_All_turn_off : 'all %1 LEDs clear %2',
                 sound_effect:'sound effect %1 %2',
                 play_pitch:'play %1 octave %2 for %3 second %4',
             },
@@ -154,7 +156,8 @@ Entry.ProboConnect.blockMenuBlocks = [
     'leftJoystick_value',
     'rightJoystick_value',
     'mainLED_control',
-    'LED_control_bright', 
+    'LED_control_bright',
+    'LED_All_turn_off', 
     'sound_effect',
     'play_pitch',      
 ];
@@ -408,7 +411,7 @@ Entry.ProboConnect.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                { type: 'Indicator',   img: 'block_icon/hardware_icon.svg',   size: 12 },
+                { type: 'Indicator',   img: 'block_icon/hardware_icon.svg',  size: 12 },
             ],
             def: {
                 params: ['MAIN', { type: 'number', params: ['0'] }, { type: 'number', params: ['0'] }, {  type: 'number', params: ['0'] }, {  type: 'number', params: ['0'] }, 'ON', null],
@@ -582,6 +585,86 @@ Entry.ProboConnect.getBlocks = function() {
                 if(_turn == 'OFF') {_bright = 0;}
                 
                 Entry.hw.sendQueue[LEDNum] = [_bright, _bright, _bright];
+            },
+        },
+        LED_All_turn_off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#ffffff',
+            skeleton: 'basic',
+            params:[
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.LED_board_main, 'MAIN'],
+                        [Lang.Blocks.LED_board_left, 'LEFT'],
+                        [Lang.Blocks.LED_board_right, 'RIGHT'],                                           
+                    ],
+                    fontSize: 11,
+
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+               
+                { type: 'Indicator',   img: 'block_icon/hardware_icon.svg',   size: 12 },
+            ],
+            def: {
+                params: ['MAIN', null],
+                type: 'LED_All_turn_off',
+            },
+            paramsKeyMap: {
+                BOARD: 0,               
+            },           
+            class: 'output',
+            isNotFor: ['wearable'],
+            func: function(sprite, script) {
+                
+                var LEDNumber = [
+                    'mainLED0',
+                    'mainLED1',
+                    'mainLED2',
+                    'mainLED3',
+                    'mainLED4',
+                    'mainLED5',
+                    'mainLED6',
+                    'mainLED7',
+                    'mainLED8',
+                    'mainLED9',
+                    'mainLED10',
+                    'mainLED11',
+                    'leftLED0',
+                    'leftLED1',
+                    'leftLED2',
+                    'rightLED0',
+                    'rightLED1',
+                    'rightLED2',
+                ];
+                
+                var LEDNum = '';
+                const board = script.getStringField('BOARD', script);                             
+
+                if(board == 'MAIN') {
+                                     
+                    for (var num = 0; num < 12; num++) {
+                        LEDNum = LEDNumber[num];
+                        Entry.hw.sendQueue[LEDNum] = [0, 0, 0];
+                    }
+                }
+                else if(board == 'LEFT') {
+                   
+                    for (var num = 12; num < 15; num++) {
+                        LEDNum = LEDNumber[num];
+                        Entry.hw.sendQueue[LEDNum] = [0, 0, 0];
+                    }
+
+                }
+                else if(board == 'RIGHT') {
+                    
+                    for (var num = 15; num < 18; num++) {
+                        LEDNum = LEDNumber[num];
+                        Entry.hw.sendQueue[LEDNum] = [0, 0, 0];
+                    }
+                }              
             },
         },
         sound_effect: {
