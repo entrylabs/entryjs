@@ -551,6 +551,12 @@ Entry.parseOptions = function(options) {
     if (options.textCodingEnable) {
         this.textCodingEnable = options.textCodingEnable;
     }
+
+    this.fullScreenEnable = options.fullScreenEnable;
+    if (this.fullScreenEnable === undefined) {
+        this.fullScreenEnable = true;
+    }
+    this.modalContainer = options.modalContainer || $('body')[0];
 };
 
 Entry.initFonts = function(fonts) {

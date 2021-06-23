@@ -13,11 +13,11 @@ Entry.Toast = class Toast {
         /** @type {Element} */
         const exist = document.getElementById('entryToastContainer');
         if (exist) {
-            document.body.removeChild(exist);
+            Entry.modalContainer.removeChild(exist);
         }
         this.body_ = Entry.createElement('div', 'entryToastContainer');
         this.body_.addClass('entryToastContainer');
-        document.body.appendChild(this.body_);
+        Entry.modalContainer.appendChild(this.body_);
     }
 
     warning(title, message, isNotAutoDispose) {
