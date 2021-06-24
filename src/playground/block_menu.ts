@@ -872,6 +872,7 @@ class BlockMenu extends ModelClass<Schema> {
             indicator.bindOnClick(() => {
                 point[0].scrollIntoView({
                     behavior: 'smooth',
+                    block: 'nearest',
                 });
             });
             point.attr('data-action', action);

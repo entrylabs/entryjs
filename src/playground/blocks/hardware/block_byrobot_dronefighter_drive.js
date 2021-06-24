@@ -1,3 +1,8 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable brace-style */
+/* eslint-disable max-len */
+/* jshint esversion: 6 */
+
 'use strict';
 
 /***************************************************************************************
