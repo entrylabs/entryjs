@@ -3,6 +3,7 @@ import { kmpp } from 'skmeans/kinit';
 import floor from 'lodash/floor';
 import LearningView from './LearningView';
 import Chart from './Chart';
+import DataTable from '../DataTable';
 
 const GRAPH_COLOR = ['#4f80ff', '#f16670', '#6e5ae6', '#00b6b1', '#9fbaff', '#fcad93', '#c5b4ff', '#b3c3cd', '#2d51ac', '#a23941', '#423496', '#2a7d7f'];
 
@@ -29,9 +30,17 @@ class Cluster {
     #fields = [];
     #name = '';
 
-    constructor({ name, result, table, trainParam }) {
+    constructor(params = {}) {
+        this.#view = new LearningView({ name: params.name || '', status: 0 });
+        // 정지시 data 초기화.
+        Entry.addEventListener('stop', () => {
+            this.init({ ...params });
+        });
+        this.init({ ...params });
+    }
+
+    init({ name, result, table, trainParam }) {
         this.#name = name;
-        this.#view = new LearningView({ name, status: 0 });
         this.#trainParam = trainParam;
         this.#result = result;
         this.#table = table;
@@ -47,6 +56,15 @@ class Cluster {
         this.#fields = table?.select?.[0]?.map((index) => {
             return table?.fields[index];
         });
+    }
+
+    setTable() {
+        const tableSource = DataTable.getSource(this.#table.id);
+        if (this.#table.fieldsInfo.length !== tableSource.fields.length) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
+            throw Error(Lang.AiLearning.train_param_error);
+        }
+        this.#table.data = tableSource.rows;
     }
 
     destroy() {
@@ -117,6 +135,7 @@ class Cluster {
     }
 
     train() {
+        this.setTable();
         this.#trainCallback(1);
         this.#isTrained = false;
         const { data, select } = this.#table;

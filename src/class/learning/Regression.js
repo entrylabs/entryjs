@@ -6,6 +6,7 @@ import LearningView from './LearningView';
 import Chart from './Chart';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import DataTable from '../DataTable';
 
 export const classes = [
     'ai_learning_train',
@@ -32,8 +33,18 @@ class Regression {
     #fields = [];
     #predictFields = [];
 
-    constructor({ name, url, result, table, trainParam }) {
-        this.#view = new LearningView({ name, status: 0 });
+    constructor(params = {}) {
+        const { name, url, result, table, trainParam } = params;
+        this.#view = new LearningView({ name: params.name || '', status: 0 });
+        // 정지시 data 초기화.
+        // 정지시 data 초기화.
+        Entry.addEventListener('stop', () => {
+            this.init({ ...params });
+        });
+        this.init({ ...params });
+    }
+
+    init({ name, url, result, table, trainParam }) {
         this.#name = name;
         this.#trainParam = trainParam;
         this.#result = result;
@@ -59,6 +70,15 @@ class Regression {
         if (!isWebGlSupport()) {
             tf.setBackend('cpu');
         }
+    }
+
+    setTable() {
+        const tableSource = DataTable.getSource(this.#table.id);
+        if (this.#table.fieldsInfo.length !== tableSource.fields.length) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
+            throw Error(Lang.AiLearning.train_param_error);
+        }
+        this.#table.data = tableSource.rows;
     }
     
     destroy() {
@@ -126,6 +146,7 @@ class Regression {
 
     async train() {
         try {
+            this.setTable();
             this.#isTrained = false;
             let currentEpoch = 0;
             let percent = 0;

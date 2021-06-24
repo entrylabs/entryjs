@@ -5,6 +5,7 @@ import _uniq from 'lodash/uniq';
 import _floor from 'lodash/floor';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import DataTable from '../DataTable';
 
 export const classes = [
     'ai_learning_train',
@@ -28,8 +29,16 @@ class NumberClassification {
     #fields = [];
     #predictField = [];
 
-    constructor({ name, url, table, trainParam }) {
-        this.#view = new LearningView({ name, status: 0 });
+    constructor(params = {}) {
+        this.#view = new LearningView({ name: params.name || '', status: 0 });
+        // 정지시 data 초기화.
+        Entry.addEventListener('stop', () => {
+            this.init({ ...params });
+        });
+        this.init({ ...params });
+    }
+
+    init({ name, url, table, trainParam }) {
         this.#name = name;
         this.#trainParam = trainParam;
         this.#table = table;
@@ -49,6 +58,15 @@ class NumberClassification {
             this.#chartEnable = true;
         }
         this.load(`/uploads/${url}/model.json`);
+    }
+
+    setTable() {
+        const tableSource = DataTable.getSource(this.#table.id);
+        if (this.#table.fieldsInfo.length !== tableSource.fields.length) {
+            Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
+            throw Error(Lang.AiLearning.train_param_error);
+        }
+        this.#table.data = tableSource.rows;
     }
 
     destroy() {
@@ -122,6 +140,7 @@ class NumberClassification {
     }
 
     train() {
+        this.setTable();
         this.#trainCallback(1);
         this.#isTrained = false;
         const { data: trainData, labels } = convertTableToKnnData(this.#table);

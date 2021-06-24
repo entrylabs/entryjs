@@ -1674,6 +1674,33 @@ module.exports = {
                     ],
                 },
             },
+            get_nickname: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                fontColor: '#FFF',
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [],
+                    type: 'get_nickname',
+                },
+                class: 'calc_user',
+                isNotFor: [],
+                func() {
+                    return window.user ? window.user.nickname : ' ';
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.value_of_nickname()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
             length_of_string: {
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,
