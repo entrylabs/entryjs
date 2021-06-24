@@ -34,8 +34,8 @@ Entry.ProboConnect.setLanguage = function() {
             joystick_X: 'X축',
             joystick_Y: 'Y축', 
             LED_board_main: '메인 보드',
-            LED_board_left: '왼쪽 보드',
-            LED_board_right: '오른쪽 보드',  
+            LED_board_left: '왼쪽 조이스틱',
+            LED_board_right: '오른쪽 조이스틱',  
             sound_fire_ball: '파이어 볼',
             sound_coin: '코인',
             sound_up1: '보너스',
@@ -97,8 +97,8 @@ Entry.ProboConnect.setLanguage = function() {
                 joystick_X: 'X',
                 joystick_Y: 'Y',
                 LED_board_main: 'MAIN',
-                LED_board_left: 'LEFT',
-                LED_board_right: 'RIGHT', 
+                LED_board_left: 'LEFT_JOYSTICK',
+                LED_board_right: 'RIGHT_JOYSTICK', 
                 sound_fire_ball: 'FIRE_BALL',
                 sound_coin: 'COIN',
                 sound_up1: 'UP1',
@@ -804,7 +804,9 @@ Entry.ProboConnect.getBlocks = function() {
                 const oct = script.getNumberField('OCTAVE', script);
                 const pitch = script.getNumberField('PITCH', script);
                 var time = script.getNumberField('NOTE', script);                
-                const octave = ((oct - 1) * 12) + pitch;
+                var octave = 0;
+                if(pitch == 0)  octave = 0;
+                else octave = ((oct - 1) * 12) + pitch;
                 
                 var exTime = new Date();
                 var firstCheck = true;
