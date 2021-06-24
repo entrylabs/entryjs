@@ -3,7 +3,7 @@
 Entry.Lecoboard = {
     id: '3C.1',
     name: 'lecoboard',
-    url: 'http://www.arduino.cc/',
+    url: 'http://www.fnj.or.kr/',
     imageName: 'lecoboard.png',
     title: {
         ko: '레코보드',
@@ -48,7 +48,9 @@ Entry.Lecoboard = {
         LCD: 9,
         LCD_COMMAND: 10,
         BLE_WRITE: 11,
-        BLE_READ: 12,
+        BLE_READ: 12,        
+        ARM_XYZ: 13,
+        ARM_WG: 14,
     },
     toneTable: {
         0: 0,
@@ -200,7 +202,9 @@ Entry.Lecoboard.setLanguage = function() {
                 lecoboard_lcd_command: 'LCD 설정 %1 %2',
                 lecoboard_set_lcd: 'LCD %1번째줄 %2번째칸에 %3을 출력하기 %4',
                 lecoboard_send_ble: '블루투스로 %1을 보내기 %2',
-                lecoboard_get_bluetooth: '블루투스에서 읽어오기',
+                lecoboard_get_bluetooth: '블루투스에서 읽어오기',                
+                lecoboard_arm_control: '로봇팔 X%1 Y%2 Z%3 %4',
+                lecoboard_arm_gripper_control: '로봇팔 그리퍼 A%1 G%2 %3',
                 /*
                 lecoboard_dc_motor_for_sec: '%1번 DC모터 %2방향으로 속력%3 으로 %4초 동안 동작하기 %5',*/
             },
@@ -236,6 +240,8 @@ Entry.Lecoboard.setLanguage = function() {
                 lecoboard_set_lcd: 'Set LCD data %1 %2 %3 %4',
                 lecoboard_send_ble: 'BLE print %1 %2',
                 lecoboard_get_bluetooth: 'Read from BLE',
+                lecoboard_arm_control: 'Arm X%1 Y%2 Z%3 %4',
+                lecoboard_arm_gripper_control: 'Arm gripper A%1 G%2 %3',
             },
         },
     };
@@ -269,11 +275,200 @@ Entry.Lecoboard.blockMenuBlocks = [
     'lecoboard_lcd_command',
     'lecoboard_set_lcd',
     'lecoboard_send_ble',
-    'lecoboard_get_bluetooth',
+    'lecoboard_get_bluetooth',    
+    'lecoboard_arm_control',
+    'lecoboard_arm_gripper_control',
 ];
 
 Entry.Lecoboard.getBlocks = function() {
     return {
+        lecoboard_arm_control: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [0],
+                    },
+                    {
+                        type: 'number',
+                        params: [98],
+                    },
+                    {
+                        type: 'number',
+                        params: [160],
+                    },
+                    null,
+                ],
+                type: 'lecoboard_arm_control',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+            },
+            class: 'lecoboardRobotArm',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {                
+                let value_x = script.getNumberValue('VALUE1',script);
+                let value_y = script.getNumberValue('VALUE2',script);
+                let value_z = script.getNumberValue('VALUE3',script);
+                let port = 0;
+
+                value_x = value_x*10;
+                value_y = value_y*10;
+                value_z = value_z*10;
+
+                port=31;
+                if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
+                Entry.hw.sendQueue.SET[1] = {
+                    type: Entry.Lecoboard.sensorTypes.ARM_XYZ,
+                    data: {
+                        value_x,
+                        value_y,
+                        value_z,
+                    },
+                    time: new Date().getTime(),
+                };  
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'lecoboard_arm_control(%1, %2, %3)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        lecoboard_arm_gripper_control: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [0],
+                    },
+                    {
+                        type: 'number',
+                        params: [45],
+                    },
+                    null,
+                ],
+                type: 'lecoboard_arm_gripper_control',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'lecoboardRobotArm',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {                
+                let value_w = script.getNumberValue('VALUE1',script);
+                let value_g = script.getNumberValue('VALUE2',script);
+                let port = 0;
+
+                value_w = value_w*10;
+                value_g = value_g*10;
+                
+
+                port=32;
+                if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.Lecoboard.sensorTypes.ARM_WG,
+                    data: {
+                        value_w,
+                        value_g,
+                    },
+                    time: new Date().getTime(),
+                };    
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'lecoboard_arm_gripper_control(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                                defaultType: 'number',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
         lecoboard_port_highlow_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -358,7 +553,6 @@ Entry.Lecoboard.getBlocks = function() {
                 /*
                 if (value == 1) value = 255;
                 else value = 0;
-
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
@@ -2910,6 +3104,5 @@ Entry.Lecoboard.getBlocks = function() {
         },
     };
 };
-//endregion arduinoExt 아두이노 확장모드
 
 module.exports = Entry.Lecoboard;
