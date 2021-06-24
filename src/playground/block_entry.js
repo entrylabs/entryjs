@@ -3049,31 +3049,6 @@ function getBlocks() {
             },
             syntax: { js: [], py: [''] },
         },
-        when_some_key_click: {
-            color: EntryStatic.colorSet.block.default.START,
-            skeleton: 'basic_event',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/start_icon_keyboard.png',
-                    size: 17,
-                    position: {
-                        x: 0,
-                        y: -2,
-                    },
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            func(sprite, script) {
-                return script.callReturn();
-            },
-            event: 'keyPress',
-            syntax: { js: [], py: ['Entry.on_key_press_down(%1)'] },
-        },
         text: {
             color: EntryStatic.colorSet.block.lighten.CALC,
             skeleton: 'basic_string_field',
