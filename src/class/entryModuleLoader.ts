@@ -16,7 +16,7 @@ class EntryModuleLoader {
      * 오프라인의 경우, 오픈소스임으로, 로컬상태에서의 비정상적인 사용에 대한 제약이 힘든 부분이 있음. 다만, 온라인이 되는 경우 서버 검증을 사용 할 수 있음
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
-    loadModule(moduleInfo: { name: string; file: string }): Promise<void> {
+    async loadModule(moduleInfo: { name: string; file: string }): Promise<void> {
         if (!moduleInfo.file || !moduleInfo.name) {
             return;
         }
@@ -30,25 +30,22 @@ class EntryModuleLoader {
 
         const key = cryptojs.SHA1(blockFile);
         // sha1 key를 이용한 블럭 파일 검증.
-        return new Promise(async (resolve, reject) => {
-            const scriptElementId = `entryModuleScript${Date.now()}`;
-            if (window.navigator.onLine) {
-                try {
-                    const sha1Result = await fetch(
-                        `${Entry.moduleBaseUrl}key/${moduleInfo.name}/${key}`
-                    );
-                    if (sha1Result.status != 200) {
-                        throw new Error('MODULE NOT VERIFIED');
-                    }
-                } catch (e) {
-                    reject();
+        if (window.navigator.onLine) {
+            try {
+                const sha1Result = await fetch(
+                    `${Entry.moduleBaseUrl}key/${moduleInfo.name}/${key}`
+                );
+                if (sha1Result.status != 200) {
+                    throw new Error('MODULE NOT VERIFIED');
                 }
+            } catch (e) {
+                throw new Error('MODULE NOT VERIFIED');
             }
-            if (!moduleInfo) {
-                return;
-            }
-            await this.loadScript(moduleInfo.name, blockFile);
-        });
+        }
+        if (!moduleInfo) {
+            return;
+        }
+        await this.loadScript(moduleInfo.name, blockFile);
     }
 
     async loadModuleFromLocalOrOnline(name: string) {
@@ -57,7 +54,6 @@ class EntryModuleLoader {
         if (Entry.offlineModulePath) {
             path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
         }
-        console.log(window, Entry.offlineModulePath);
         const response = await fetch(path);
         if (response.status != 200) {
             throw new Error('MODULE NOT EXIST');

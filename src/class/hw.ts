@@ -82,12 +82,13 @@ export default class Hardware {
 
     async _loadExternalHardwareBlock(moduleinfo: { name: string; file: any }) {
         try {
-            await Entry.moduleManager.loadModule(moduleinfo);
+            await Entry.moduleManager.loadModuleFromLocalOrOnline(moduleinfo.name);
         } catch (e) {
             // Entry.toast.alert(
             //     Lang.Hw.hw_module_load_fail_title,
             //     `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
             // );
+            console.log(e);
             Entry.toast.alert(
                 '모듈 로드 실패',
                 `${moduleinfo.name} 로드에 실패했습니다. 관리자에게 문의하세요`
