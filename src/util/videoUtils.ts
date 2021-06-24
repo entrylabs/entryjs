@@ -75,6 +75,7 @@ class VideoUtils implements MediaUtilsInterface {
     public canvasVideo: PIXI.Sprite | createjs.Bitmap;
     public inMemoryCanvas: HTMLCanvasElement;
 
+    private captureTimeout: any = null;
     public flipStatus: FlipStatus = {
         horizontal: false,
         vertical: false,
@@ -515,6 +516,25 @@ class VideoUtils implements MediaUtilsInterface {
         setTimeout(() => {
             requestAnimationFrame(this.imageDetection.bind(this));
         }, 100);
+    }
+
+    startCapturedImage(callback: Function) {
+        const captureImage = () => {
+            const context = this.inMemoryCanvas.getContext('2d');
+            context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
+            context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
+            callback && callback(this.inMemoryCanvas);
+            this.captureTimeout = requestAnimationFrame(captureImage);
+        }
+        this.captureTimeout = requestAnimationFrame(captureImage);
+        Entry.addEventListener('stop', () => {
+            this.stopCaptureImage();
+        });
+        return this.captureTimeout;
+    }
+
+    stopCaptureImage() {
+        this.captureTimeout && cancelAnimationFrame(this.captureTimeout);
     }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
