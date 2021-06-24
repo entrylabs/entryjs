@@ -5913,7 +5913,8 @@ Lang.Helper = {
     get_date: '현재 연도, 월, 일, 시각과 같이 시간에 대한 값입니다.',
     distance_something: '해당 오브젝트와 선택한 오브젝트 또는 마우스 포인터 간의 거릿값입니다.',
     get_sound_duration: '선택한 소리의 길이(초) 값입니다.',
-    get_user_name: '작품을 실행하고 있는 사용자의 이름값입니다.',
+    get_user_name: '작품을 실행하고 있는 사용자의 아이디 값입니다.',
+    get_nickname: '작품을 실행하고 있는 사용자의 닉네임 값입니다.',
     get_project_timer_value: '이 블록이 실행되는 순간 초시계에 저장된 값입니다.',
     choose_project_timer_action:
         '초시계의 상태를 결정합니다.\n시작하기: 초시계를 시작합니다. \n정지하기: 초시계를 정지합니다. \n초기화하기: 초시계의 값을 0으로 초기화합니다. ',
@@ -6851,7 +6852,8 @@ Lang.template = {
     calc_rand: '%1 %2 %3 %4 %5',
     get_date: '%1 %2 %3',
     get_sound_duration: '%1 %2 %3',
-    get_user_name: '사용자이름',
+    get_user_name: '아이디',
+    get_nickname: '닉네임',
     reset_project_timer: '%1',
     set_visible_project_timer: '%1 %2 %3 %4',
     timer_variable: '%1 %2',
@@ -8357,10 +8359,14 @@ Lang.PythonHelper = {
         'def when_start():\n    Entry.print(Entry.value_of_sound_length_of("소리"))',
     get_sound_duration_exampleDesc:
         '[시작하기]버튼을 클릭하면 오브젝트가 "소리"의 길이를 말합니다.',
-    get_user_name_desc: '작품을 실행하고 있는 사용자의 이름 값입니다.',
+    get_user_name_desc: '작품을 실행하고 있는 사용자의 아이디 값입니다.',
     get_user_name_exampleCode: 'def when_start():\n    Entry.print(Entry.value_of_username())',
     get_user_name_exampleDesc:
-        '[시작하기]버튼을 클릭하면 작품을 실행하고 있는 사용자의 이름 값을 말합니다.',
+        '[시작하기]버튼을 클릭하면 작품을 실행하고 있는 사용자의 아이디 값을 말합니다.',
+    get_nickname_desc: '작품을 실행하고 있는 사용자의 닉네임 값입니다.',
+    get_nickname_exampleCode: 'def when_start():\n    Entry.print(Entry.value_of_nickname())',
+    get_nickname_exampleDesc:
+        '[시작하기]버튼을 클릭하면 작품을 실행하고 있는 사용자의 닉네임 값을 말합니다.',
     length_of_string_desc: '입력한 문자값의 공백을 포함한 글자 수입니다.',
     length_of_string_elements: 'A-- "문자열"',
     length_of_string_exampleCode:
