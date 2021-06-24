@@ -1,13 +1,13 @@
 'use strict';
 
 Entry.Lecoboard = {
-    id: '3C.1',
+    id: '3C.4',
     name: 'lecoboard',
     url: 'http://www.fnj.or.kr/',
-    imageName: 'lecoboard.png',
+    imageName: 'lecoboardAvrBT.png',
     title: {
-        ko: '레코보드',
-        en: 'LECOBOARD',
+        ko: '레코보드2.0[무선연결]',
+        en: 'LECOBOARD2.0[BT]',
     },
     setZero() {
         Entry.hw.sendQueue.readablePorts = [];
