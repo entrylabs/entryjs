@@ -84,14 +84,32 @@ class AudioUtils {
             const audioContext = new window.AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
-            const biquadFilter = audioContext.createBiquadFilter();
-            biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 30;
+
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
+            // TEST용 음성 녹음 확인
+            mediaRecorder.onstop = async (event) => {
+                const blob = new Blob(this._audioChunks, { type: 'audio/ogg; codecs=opus' });
+
+                const audio = document.createElement('audio');
+                audio.style = { width: 100, height: 100 };
+                audio.src = await window.URL.createObjectURL(blob);
+                document.body.prepend(audio);
+
+                audio.controls = true;
+                this._audioChunks = [];
+            };
+            mediaRecorder.ondataavailable = (event) => {
+                if (!this._audioChunks) {
+                    this._audioChunks = [];
+                }
+                this._audioChunks.push(event.data);
+            };
+            ///////////
+
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
+            this._connectNodes(streamSrc, analyserNode, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._audioContext = audioContext;
@@ -120,6 +138,7 @@ class AudioUtils {
 
     async startRecord(recordMilliSecond, language) {
         //getMediaStream 은 만약 stream 이 없는 경우
+        this._audioChunks = [];
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
             this.resolveFunc = resolve;
@@ -243,15 +262,23 @@ class AudioUtils {
         // 현재 input 의 볼륨세기
         this._currentVolume = array.reduce((total, data) => total + data, 0) / array.length;
 
-        // 볼륨 변형 없이 그대로 통과
+        // input -> output연결 데이터 커스텀 mod
         const { inputBuffer, outputBuffer } = audioProcessingEvent;
         for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
             const inputData = inputBuffer.getChannelData(channel);
             const outputData = outputBuffer.getChannelData(channel);
             for (let sample = 0; sample < inputBuffer.length; sample++) {
-                outputData[sample] = inputData[sample];
+                // db이 적은 값에 대해서 제거, biquad 필터 대신 사용함. attenuation보다 아예 캔슬 시키는방향으로
+                if (Math.abs(inputData[sample]) < 0.0025) {
+                    outputData[sample] = 0;
+                } else if (inputData[sample] > 0.8) {
+                    outputData[sample] = inputData[sample] * 0.9;
+                } else {
+                    outputData[sample] = inputData[sample];
+                }
             }
         }
+
         if (!this.isRecording) {
             return;
         }
