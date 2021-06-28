@@ -89,23 +89,26 @@ class AudioUtils {
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
             // TEST용 음성 녹음 확인
-            mediaRecorder.onstop = async (event) => {
-                const blob = new Blob(this._audioChunks, { type: 'audio/ogg; codecs=opus' });
+            // mediaRecorder.onstop = async (event) => {
+            //     const blob = new Blob(this._audioChunks, { type: 'audio/ogg; codecs=opus' });
 
-                const audio = document.createElement('audio');
-                audio.style = { width: 100, height: 100 };
-                audio.src = await window.URL.createObjectURL(blob);
-                document.body.prepend(audio);
+            //     const audio = document.createElement('audio');
+            //     audio.style = { width: 100, height: 100 };
+            //     audio.src = await window.URL.createObjectURL(blob);
 
-                audio.controls = true;
-                this._audioChunks = [];
-            };
-            mediaRecorder.ondataavailable = (event) => {
-                if (!this._audioChunks) {
-                    this._audioChunks = [];
-                }
-                this._audioChunks.push(event.data);
-            };
+            //     audio.controls = true;
+
+            //     audio.oncanplay = () => {
+            //         document.body.prepend(audio);
+            //     };
+            //     this._audioChunks = [];
+            // };
+            // mediaRecorder.ondataavailable = (event) => {
+            //     if (!this._audioChunks) {
+            //         this._audioChunks = [];
+            //     }
+            //     this._audioChunks.push(event.data);
+            // };
             ///////////
 
             // 순서대로 노드 커넥션을 맺는다.
@@ -264,18 +267,11 @@ class AudioUtils {
 
         // input -> output연결 데이터 커스텀 mod
         const { inputBuffer, outputBuffer } = audioProcessingEvent;
-        for (let channel = 0; channel < outputBuffer.numberOfChannels; channel++) {
+        for (let channel = 0; channel < inputBuffer.numberOfChannels; channel++) {
             const inputData = inputBuffer.getChannelData(channel);
             const outputData = outputBuffer.getChannelData(channel);
             for (let sample = 0; sample < inputBuffer.length; sample++) {
-                // db이 적은 값에 대해서 제거, biquad 필터 대신 사용함. attenuation보다 아예 캔슬 시키는방향으로
-                if (Math.abs(inputData[sample]) < 0.0025) {
-                    outputData[sample] = 0;
-                } else if (inputData[sample] > 0.8) {
-                    outputData[sample] = inputData[sample] * 0.9;
-                } else {
-                    outputData[sample] = inputData[sample];
-                }
+                outputData[sample] = inputData[sample];
             }
         }
 
