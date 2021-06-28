@@ -37,7 +37,13 @@ class AudioUtils {
 
     async getMediaStream() {
         try {
-            return await navigator.mediaDevices.getUserMedia({ audio: true });
+            return await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    autoGainControl: false,
+                    noiseSuppression: false,
+                    echoCancellation: false,
+                },
+            });
         } catch (err) {
             // is MIC present in browser
             this.isRecording = false;
@@ -84,13 +90,26 @@ class AudioUtils {
             const audioContext = new window.AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
+            const gainNode = audioContext.createGain();
+            const highpassFilter = audioContext.createBiquadFilter();
+
+            highpassFilter.type = 'highpass';
+            highpassFilter.frequency.value = 50;
+
+            gainNode.gain.value = 3;
 
             const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
-
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(streamSrc, analyserNode, scriptNode, streamDest);
+            this._connectNodes(
+                streamSrc,
+                gainNode,
+                highpassFilter,
+                analyserNode,
+                scriptNode,
+                streamDest
+            );
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._audioContext = audioContext;
@@ -277,6 +296,7 @@ class AudioUtils {
         const source = offlineCtx.createBufferSource();
         source.buffer = cloneBuffer;
         source.connect(offlineCtx.destination);
+
         offlineCtx.oncomplete = (e) => {
             if (!this.isRecording) {
                 return;
