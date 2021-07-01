@@ -1,5 +1,5 @@
 import AudioUtils from '../../util/audioUtils';
-
+Entry.AudioUtils = AudioUtils;
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
     imageName: 'audio.svg',
