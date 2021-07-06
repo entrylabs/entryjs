@@ -47,6 +47,7 @@ declare interface IEntry extends EntryOptions {
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     HARDWARE_LIST: { [hardwareName: string]: any };
+    HARDWARE_LITE_LIST: { [hardwareName: string]: any };
     KeyboardCode: {
         map: { [keyname: string]: number };
         codeToKeyCode: { [keyname: string]: number };
@@ -58,6 +59,7 @@ declare interface IEntry extends EntryOptions {
     TEXT_ALIGN_CENTER: number;
     TEXT_ALIGN_RIGHT: number;
     block: { [blockName: string]: EntryBlock };
+    hwLite: typeof import('../src/class/hw_lite').default;
     hw: import('../src/class/hw').default; // HW instance
     interfaceState: { [key: string]: any };
 

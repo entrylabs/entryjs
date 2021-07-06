@@ -27,23 +27,68 @@ export default class HardwareLite {
     private writer: SerialPort.writer;
     private reader: SerialPort.reader;
     private writableStream: any;
+    public hwModule?: EntryHardwareBlockModule;
 
     constructor() {
         this.status = HardwareStatement.disconnected;
         navigator.serial.addEventListener('connect', (e) => {
             // Connect to `e.target` or add it to a list of available ports.
             console.log(e);
+            alert('WDF');
         });
 
         navigator.serial.addEventListener('disconnect', (e) => {
             // Remove `e.target` from the list of available ports.
             console.log(e);
+            alert('DISCONNECTED');
+        });
+        Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
+    }
+
+    /**
+     * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
+     * @private
+     */
+    private _banClassAllHardware() {
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
+        if (!blockMenu) {
+            return;
+        }
+
+        Object.values(Entry.HARDWARE_LITE_LIST || {}).forEach((hardware: any) => {
+            blockMenu.banClass(hardware.name, true);
         });
     }
+
+    setExternalModule(moduleObject: EntryHardwareBlockModule) {
+        this.hwModule = moduleObject;
+        this._banClassAllHardware();
+        Entry.dispatchEvent('hwLiteChanged');
+    }
+
+    refreshHardwareLiteBlockMenu() {
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
+
+        if (!blockMenu) {
+            return;
+        }
+
+        this._banClassAllHardware();
+
+        blockMenu.hwLiteCodeOutdated = true;
+        blockMenu._generateHwLiteCode(true);
+        blockMenu.reDraw();
+    }
+
+    async getHardwareList() {}
+
     async connect(hwJson: IHardwareModuleConfig) {
-        // if (this.status === HardwareStatement.connected) {
-        //     return;
-        // }
+        if (this.status === HardwareStatement.connected) {
+            alert('이미 연결 되어있습니다.');
+            return;
+        }
         const port = await navigator.serial.requestPort();
         await port.open({
             baudRate: 115200,
@@ -53,7 +98,7 @@ export default class HardwareLite {
             bufferSize: 512,
         });
         this.port = port;
-        // if (hwJson.commType === 'ascii') {
+        // if (hwJson?.commType === 'ascii') {
         const encoder = new TextEncoderStream();
         const writableStream = encoder.readable.pipeTo(port.writable);
         const writer = encoder.writable.getWriter();
@@ -65,21 +110,20 @@ export default class HardwareLite {
             .getReader();
         this.reader = lineReader;
         // } else {
-        // this.writer = port.writable.getWriter();
-        // this.reader = port.readable.getReader();
-        //   }
+        //     this.writer = port.writable.getWriter();
+        //     this.reader = port.readable.getReader();
+        // }
 
         this.status = HardwareStatement.connected;
-        // this.disconnect();
-        await this.reader.cancel();
-        await this.writableStream;
     }
 
     async disconnect() {
         try {
-            await this.reader?.cancel();
-            await this.writer?.abort();
-            await this.writableStream;
+            if (this.writableStream) {
+                await this.reader?.cancel();
+                await this.writer?.abort();
+                await this.writableStream;
+            }
             await this.writer?.close();
 
             this.reader = null;
@@ -91,6 +135,7 @@ export default class HardwareLite {
         } finally {
             await this.port?.close();
             this.port = null;
+            alert('연결 해제 되었습니다.');
         }
     }
 
@@ -100,22 +145,15 @@ export default class HardwareLite {
      * @returns Promise resolves to resulting message
      */
 
-    async send(data?: Buffer | string) {
+    async sendAsync(data?: Buffer | string) {
         if (!data) {
             return;
         }
-
         this.writer.write(data);
         const { value, done } = await this.reader.read();
         console.log('[received]', value);
         return value;
     }
 }
-
-// Entry.hwLite.connect();
-// Entry.hwLite.send();
-// Entry.hwLite.disconnect();
-// Entry.hwLite.writer.close();
-// Entry.hwLite.port.close();
 
 Entry.HWLite = HardwareLite;

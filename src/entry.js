@@ -148,6 +148,7 @@ require('./textcoding/static/codeMap');
 require('./textcoding/static/keyboardCode');
 require('./textcoding/util/console');
 require('./textcoding/util/textCodingUtil');
+require('./playground/blocks/hardware/block_microbit2_lite');
 
 window.Entry = Entry;
 showConsoleBanner();

@@ -12,9 +12,10 @@ import ModelClass from '../core/modelClass';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
+const HW_LITE = 'arduino_lite';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = EntryStatic.splitterHPadding || 20;
-const BETA_LIST = ['ai_utilize', 'analysis'];
+const BETA_LIST = ['ai_utilize', 'analysis', 'arduino_lite'];
 
 type BlockMenuAlignType = 'LEFT' | 'CENTER';
 
@@ -34,6 +35,7 @@ type Schema = {
 class BlockMenu extends ModelClass<Schema> {
     public visible = true;
     public hwCodeOutdated = false;
+    public hwLiteCodeOutdated = false;
     public code: any;
     public view: EntryDom;
     public changeEvent: any; // Entry.Event
@@ -968,6 +970,39 @@ class BlockMenu extends ModelClass<Schema> {
         Entry.dispatchEvent('hwCodeGenerated');
     }
 
+    _generateHwLiteCode(shouldHide?: boolean) {
+        const threads = this.code.getThreadsByCategory(HW_LITE);
+
+        if (!(this._categoryData && this.shouldGenerateHwLiteCode(threads))) {
+            return;
+        }
+
+        threads.forEach((t: any) => {
+            this._deleteThreadsMap(t);
+            t.destroy();
+        });
+
+        const blocks = this._getCategoryBlocks(HW_LITE);
+
+        if (isEmpty(blocks)) {
+            return;
+        }
+
+        this._buildCategoryCodes(
+            blocks.filter((b) => !this.checkBanClass(Entry.block[b])),
+            HW_LITE
+        ).forEach((t: any) => {
+            if (shouldHide) {
+                t[0].x = -99999;
+            }
+            this._createThread(t);
+            delete t[0].x;
+        });
+
+        this.hwLiteCodeOutdated = false;
+        Entry.dispatchEvent('hwCodeGenerated');
+    }
+
     /**
      * Ntry systems/entryPlayground.js#loadConfig 에서 사용됨
      * 그 외에는 쓸모없음
@@ -1063,6 +1098,10 @@ class BlockMenu extends ModelClass<Schema> {
 
     shouldGenerateHwCode(threads: any) {
         return this.hwCodeOutdated || threads.length === 0;
+    }
+
+    shouldGenerateHwLiteCode(threads: any) {
+        return this.hwLiteCodeOutdated || threads.length === 0;
     }
 
     getThreadByBlockKey(key: string) {

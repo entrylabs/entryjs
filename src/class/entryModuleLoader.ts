@@ -151,6 +151,35 @@ class EntryModuleLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
+    registerHardwareLiteModule(moduleObject: EntryHardwareBlockModule) {
+        // test purpose
+        moduleObject = Entry.Microbit2Lite as EntryHardwareBlockModule;
+        /////
+        if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
+            return;
+        }
+        if (typeof moduleObject.id === 'string') {
+            Entry.HARDWARE_LITE_LIST[moduleObject.id] = moduleObject;
+        } else if (moduleObject.id instanceof Array) {
+            moduleObject.id.forEach((id) => {
+                Entry.HARDWARE_LITE_LIST[id] = moduleObject;
+            });
+        }
+
+        this.setLanguageTemplates(moduleObject);
+        const blockObjects = moduleObject.getBlocks();
+        const blockMenuBlocks = moduleObject.blockMenuBlocks;
+
+        this.loadBlocks({
+            categoryName: 'arduino_lite',
+            blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
+                blockName,
+                block,
+                isBlockShowBlockMenu: blockMenuBlocks.indexOf(blockName) > -1,
+            })),
+        });
+    }
+
     /**
      * 이 함수는 외부 블록 모듈 URL 의 코드가 호출한다.
      * 엔트리 내 '확장' 카테고리에 블록을 추가한다.

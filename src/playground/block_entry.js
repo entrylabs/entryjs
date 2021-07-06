@@ -441,6 +441,50 @@ function getBlocks() {
             ],
             events: {},
         },
+        arduino_lite_connect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnect'],
+            class: 'arduino_lite_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.connect();
+                    },
+                ],
+            },
+        },
+        arduino_lite_disconnect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnect'],
+            class: 'arduino_lite_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_disconnect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.disconnect();
+                    },
+                ],
+            },
+        },
         arduino_connect: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -7852,9 +7896,11 @@ function applySetLanguage(hasSetLanguageObj) {
 
 Entry.reloadBlock = function() {
     Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
+    Object.values(Entry.HARDWARE_LITE_LIST).forEach(applySetLanguage);
     assignBlocks();
     inheritBlockSchema();
 };
+
 Entry.reloadBlock();
 
 if (typeof exports === 'object') {

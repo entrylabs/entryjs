@@ -496,6 +496,12 @@ EntryStatic.getAllBlocks = function() {
             ],
         },
         {
+            category: 'arduino_lite',
+            blocks: ['arduino_lite_connect', 'arduino_lite_disconnect'].concat(
+                EntryStatic.DynamicHardwareLiteBlocks
+            ),
+        },
+        {
             category: 'arduino',
             blocks: [
                 'arduino_reconnect',
@@ -511,6 +517,7 @@ EntryStatic.getAllBlocks = function() {
     ];
 };
 EntryStatic.DynamicHardwareBlocks = [];
+EntryStatic.DynamicHardwareLiteBlocks = [];
 EntryStatic.discussCategories = [
     // 'notice',
     'qna',
