@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch';
+import cryptojs from 'crypto-js';
 type EntryBlockRegisterSchema = {
     blockName: string;
     block: EntryBlock;
@@ -10,25 +12,69 @@ class EntryModuleLoader {
     /**
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
+     * key는 로컬에서 파일을 암호화 하여 entry-hw 에서 전달, 해당 파일을 로컬에 있는 키로 1차 검증, 서버로 2차 검증을 통한 무결성/보안 확보
+     * 오프라인의 경우, 오픈소스임으로, 로컬상태에서의 비정상적인 사용에 대한 제약이 힘든 부분이 있음. 다만, 온라인이 되는 경우 서버 검증을 사용 할 수 있음
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
-    loadModule(moduleName: string): Promise<void> {
-        // 이미 로드된 모듈은 다시 로드하지 않는다.
-        if (this.moduleList.includes(moduleName)) {
-            return Promise.resolve();
+    async loadModule(moduleInfo: { name: string; file: string }): Promise<void> {
+        if (!moduleInfo.file || !moduleInfo.name) {
+            return;
         }
 
-        return new Promise((resolve, reject) => {
-            const scriptElementId = `entryModuleScript${Date.now()}`;
-
-            if (!moduleName) {
-                return;
+        let blockFile = moduleInfo.file;
+        if (Entry.offlineModulePath) {
+            if (window.sendSync) {
+                blockFile = window.sendSync('decryptBlock', blockFile);
             }
+        }
+
+        const key = cryptojs.SHA1(blockFile);
+        // sha1 key를 이용한 블럭 파일 검증.
+        if (window.navigator.onLine) {
+            try {
+                const sha1Result = await fetch(
+                    `${Entry.moduleBaseUrl}key/${moduleInfo.name}/${key}`
+                );
+                if (sha1Result.status != 200) {
+                    throw new Error('MODULE NOT VERIFIED');
+                }
+            } catch (e) {
+                throw new Error('MODULE NOT VERIFIED');
+            }
+        }
+        if (!moduleInfo) {
+            return;
+        }
+        await this.loadScript(moduleInfo.name, blockFile);
+    }
+
+    async loadModuleFromLocalOrOnline(name: string) {
+        const lowerCaseName = name.toLowerCase();
+        let path = `${Entry.moduleBaseUrl}${lowerCaseName}/files/block`;
+        if (Entry.offlineModulePath) {
+            path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
+        }
+        const response = await fetch(path);
+        if (response.status != 200) {
+            throw new Error('MODULE NOT EXIST');
+        }
+        let result = await response.text();
+        if (Entry.offlineModulePath) {
+            if (window.sendSync) {
+                result = window.sendSync('decryptBlock', result);
+            }
+        }
+        await this.loadScript(name, result);
+    }
+
+    async loadScript(name: string, code: string) {
+        return await new Promise(async (resolve, reject) => {
+            const scriptElementId = `entryModuleScript${Date.now()}`;
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                !this.moduleList.includes(moduleName) && this.moduleList.push(moduleName);
+                !this.moduleList.includes(name) && this.moduleList.push(name);
                 scriptElement.remove();
                 resolve();
             };
@@ -37,10 +83,15 @@ class EntryModuleLoader {
                 reject(e);
             };
 
-            scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
+            const blobedBlock = new Blob([code], {
+                type: 'text/javascript',
+            });
+            const blobUrl = URL.createObjectURL(blobedBlock);
 
+            scriptElement.src = blobUrl;
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
+            URL.revokeObjectURL(blobUrl);
         });
     }
 
@@ -59,19 +110,34 @@ class EntryModuleLoader {
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
+        const prevModuleBlocks =
+            Entry.HARDWARE_LIST[`${moduleObject.id}`] &&
+            Entry.HARDWARE_LIST[`${moduleObject.id}`].blockMenuBlocks;
+        // clear prevModule if present
+        if (prevModuleBlocks) {
+            let removedCnt = 0;
+            for (const key of Object.keys(Entry.block)) {
+                if (prevModuleBlocks.indexOf(key) > -1) {
+                    delete Entry.block[`${key}`];
+                    removedCnt++;
+                }
+                if (removedCnt == prevModuleBlocks.length) {
+                    break;
+                }
+            }
+        }
 
         if (typeof moduleObject.id === 'string') {
-            Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
+            Entry.HARDWARE_LIST[`${moduleObject.id}`] = moduleObject;
         } else if (moduleObject.id instanceof Array) {
             moduleObject.id.forEach((id) => {
-                Entry.HARDWARE_LIST[id] = moduleObject;
+                Entry.HARDWARE_LIST[`${id}`] = moduleObject;
             });
         }
 
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
-
         this.loadBlocks({
             categoryName: 'arduino',
             blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
@@ -204,5 +270,5 @@ Entry.moduleManager = instance;
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(instance.loadModule.bind(instance)));
+    await Promise.all(externalModules.map(instance.loadModuleFromLocalOrOnline.bind(instance)));
 };
