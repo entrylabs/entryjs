@@ -35,6 +35,7 @@ require('./class/popup');
 require('./class/popup_helper');
 require('./class/popup_list');
 require('./class/hw');
+require('./class/hw_lite');
 require('./class/entryModuleLoader');
 require('./class/project');
 require('./class/property_panel');

@@ -230,6 +230,8 @@ Entry.initialize_ = function() {
     }
     this.hw = new Entry.HW();
 
+    this.hwLite = new Entry.HWLite();
+
     if (Entry.enableActivityLogging) {
         this.reporter = new Entry.Reporter(false);
     } else if (this.type === 'workspace' || this.type === 'phone') {
