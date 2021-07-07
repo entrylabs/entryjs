@@ -54,6 +54,12 @@ Entry.loadProject = function(project) {
             }
         }
     }
+    if (project.externalModulesLite) {
+        Entry.loadLiteExternalModules(project);
+    }
+    if (project.externalModules) {
+        Entry.loadExternalModules(project);
+    }
 
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
@@ -161,10 +167,11 @@ Entry.exportProject = function(project) {
     project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
     project.learning = Entry.aiLearning.toJSON();
     project.externalModules = entryModuleLoader.moduleList;
-
+    project.externalModulesLite = entryModuleLoader.moduleListLite;
     if (!objects || !objects.length) {
         return false;
     }
+    console.log(project);
 
     return project;
 };

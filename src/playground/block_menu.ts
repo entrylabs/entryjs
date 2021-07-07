@@ -4,6 +4,7 @@ import debounce from 'lodash/debounce';
 import each from 'lodash/each';
 import isEmpty from 'lodash/isEmpty';
 import identity from 'lodash/identity';
+import uniqBy from 'lodash/uniqBy';
 import remove from 'lodash/remove';
 import includes from 'lodash/includes';
 import head from 'lodash/head';
@@ -589,7 +590,6 @@ class BlockMenu extends ModelClass<Schema> {
         }
 
         const oldView = this._selectedCategoryView;
-
         const name = this._convertSelector(selector);
         if (selector !== undefined && !name) {
             this.align();
@@ -606,6 +606,10 @@ class BlockMenu extends ModelClass<Schema> {
                 break;
             case HW:
                 this._generateHwCode();
+                this.align();
+                break;
+            case HW_LITE:
+                this._generateHwLiteCode();
                 this.align();
                 break;
         }
@@ -1000,7 +1004,7 @@ class BlockMenu extends ModelClass<Schema> {
         });
 
         this.hwLiteCodeOutdated = false;
-        Entry.dispatchEvent('hwCodeGenerated');
+        Entry.dispatchEvent('hwLiteCodeGenerated');
     }
 
     /**
@@ -1408,6 +1412,7 @@ class BlockMenu extends ModelClass<Schema> {
                 }
                 return visibles;
             }, []);
+            visibles = uniqBy(visibles, 'data.type');
 
             inVisibles = allBlocks;
         } else {
@@ -1419,6 +1424,7 @@ class BlockMenu extends ModelClass<Schema> {
                     inVisibles.push(block);
                 }
             });
+            visibles = uniqBy(visibles, 'data.type');
         }
 
         return [visibles, inVisibles];

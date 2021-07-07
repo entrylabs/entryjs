@@ -262,21 +262,12 @@
             }
             return value;
         }
-        setZero() {
+        async setZero() {
             // 엔트리 정지시 하드웨어 초기화 로직
-            this.requestCommand(this.functionKeys.RESET);
-            this.commandStatus = {};
-            this.commandValue = {};
+            await Entry.hwLite.sendAsync(this.functionKeys.RESET);
+            console.log('DONE RESET ');
         }
 
-        // will not use in this module
-        requestCommand(type, payload) {
-            Entry.hw.sendQueue = {
-                type,
-                payload,
-            };
-            Entry.hw.update();
-        }
         waitMilliSec(milli) {
             this.blockReq = true;
             setTimeout(() => {
@@ -284,69 +275,8 @@
             }, milli);
         }
 
-        /**
-         * command 요청 후 데이터 송수신이 끝날 때까지 대기한다.
-         * @param type
-         * @param payload
-         */
-        requestCommandWithResponse({ id, command: type, payload }) {
-            // if (this.blockReq) {
-            //     throw new Entry.Utils.AsyncError();
-            // }
-            // const codeId = this.generateCodeId(id, type, payload);
-            // if (!this.commandStatus[codeId]) {
-            //     // 첫 진입시 무조건 AsyncError
-            //     Entry.hw.sendQueue = {
-            //         type,
-            //         payload,
-            //     };
-
-            //     this.commandStatus[codeId] = 'pending';
-            //     Entry.hw.sendQueue.codeId = codeId;
-            //     Entry.hw.update();
-            //     throw new Entry.Utils.AsyncError();
-            // } else if (this.commandStatus[codeId] === 'pending') {
-            //     // 두 번째 이상의 진입시도이며 작업이 아직 끝나지 않은 경우
-            //     throw new Entry.Utils.AsyncError();
-            // } else if (this.commandStatus[codeId] === 'completed') {
-            //     // 두 번째 이상의 진입시도이며 pending 도 아닌 경우
-            //     // 블록 func 로직에서 다음 데이터를 처리한다.
-            //     delete this.commandStatus[codeId];
-            // }
-            return Entry.hwLite.sendAsync(`${command};${payload}`);
-        }
-
         generateCodeId(entityId, type, payload) {
             return `${entityId}-${type}${payload ? '-' + payload : ''}`;
-        }
-
-        afterReceive(portData) {
-            if (portData) {
-                let codeId = portData.recentlyWaitDone;
-                let value = portData.result;
-                if (value && value.indexOf('localdata') > -1) {
-                    const version = value.split(';')[1];
-                    if (!version) {
-                        return;
-                    }
-                    const major = version[0];
-                    if (this.version !== major) {
-                        this.version = major;
-                    }
-                } else if (codeId) {
-                    if (codeId.indexOf('reset') > -1) {
-                        this.commandStatus = {};
-                        this.commandValue = {};
-                        return;
-                    }
-                    this.commandStatus[codeId] = 'completed';
-                    this.commandValue[codeId] = value || 'DONE';
-                }
-            }
-
-            if (!Entry.engine.isState('run')) {
-                this.commandStatus = {};
-            }
         }
 
         // 언어 적용
@@ -977,25 +907,7 @@
                     isNotFor: ['microbit2'],
                     events: {},
                 },
-                microbit2_v2_title: {
-                    skeleton: 'basic_text',
-                    color: EntryStatic.colorSet.common.TRANSPARENT,
-                    fontColor: '#333333',
-                    params: [
-                        {
-                            type: 'Text',
-                            text: Lang.template.microbit2_v2_title,
-                            color: '#333333',
-                            align: 'center',
-                        },
-                    ],
-                    def: {
-                        type: 'microbit2_v2_title',
-                    },
-                    class: 'microbit2_title',
-                    isNotFor: ['microbit2'],
-                    events: {},
-                },
+
                 microbit2_get_analog: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1025,37 +937,6 @@
                         const value = script.getValue('VALUE');
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.GET_ANALOG};${value}`
-                        );
-                        return this.getResponse(response);
-                    },
-                },
-                microbit2_get_digital: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    fontColor: '#ffffff',
-                    skeleton: 'basic_string_field',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: this.digitalPins,
-                            value: 8,
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                    ],
-                    events: {},
-                    class: 'microbit2Pin',
-                    isNotFor: ['microbit2'],
-                    def: {
-                        type: 'microbit2_get_digital',
-                    },
-                    paramsKeyMap: { VALUE: 0 },
-                    func: async (sprite, script) => {
-                        const value = script.getValue('VALUE');
-                        const response = await Entry.hwLite.sendAsync(
-                            `${this.functionKeys.GET_DIGITAL};${value}`
                         );
                         return this.getResponse(response);
                     },
@@ -1098,12 +979,45 @@
                     },
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
-                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
+                        const value = Math.round(
+                            this._clamp(script.getNumberValue('VALUE'), 0, 1023)
+                        );
 
                         const parsedPayload = `${pin};${value}`;
 
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.SET_ANALOG};${parsedPayload}`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2_get_digital: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: this.digitalPins,
+                            value: 8,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2Pin',
+                    isNotFor: ['microbit2'],
+                    def: {
+                        type: 'microbit2_get_digital',
+                    },
+                    paramsKeyMap: { VALUE: 0 },
+                    func: async (sprite, script) => {
+                        const value = script.getValue('VALUE');
+                        const response = await Entry.hwLite.sendAsync(
+                            `${this.functionKeys.GET_DIGITAL};${value}`
                         );
                         return this.getResponse(response);
                     },
@@ -1155,6 +1069,43 @@
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.SET_DIGITAL};${parsedPayload}`
                         );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2_screen_toggle: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.plot, this.functionKeys.DISPLAY_ON],
+                                [Lang.Blocks.unplot, this.functionKeys.DISPLAY_OFF],
+                            ],
+                            value: this.functionKeys.DISPLAY_ON,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2Led',
+                    isNotFor: ['microbit2'],
+                    def: {
+                        type: 'microbit2_screen_toggle',
+                    },
+                    paramsKeyMap: { VALUE: 0 },
+                    func: async (sprite, script) => {
+                        const command = script.getField('VALUE');
+
+                        const response = await Entry.hwLite.sendAsync(`${command};`);
                         return this.getResponse(response);
                     },
                 },
@@ -1386,9 +1337,9 @@
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = _clamp(script.getNumberValue('VALUE'), 0, 62);
+                        const value = this._clamp(script.getNumberValue('VALUE'), 0, 62);
                         const parsedPayload = `${this.presetImage[value]}`;
-
+                        console.log('WDF');
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
                         );
@@ -1503,7 +1454,7 @@
                         return this.getResponse(response);
                     },
                 },
-                microbit2_screen_toggle: {
+                microbit2_radio_toggle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1512,10 +1463,10 @@
                         {
                             type: 'Dropdown',
                             options: [
-                                [Lang.Blocks.plot, this.functionKeys.DISPLAY_ON],
-                                [Lang.Blocks.unplot, this.functionKeys.DISPLAY_OFF],
+                                [Lang.Blocks.on, this.functionKeys.RADIO_ON],
+                                [Lang.Blocks.off, this.functionKeys.RADIO_OFF],
                             ],
-                            value: this.functionKeys.DISPLAY_ON,
+                            value: this.functionKeys.RADIO_ON,
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1527,20 +1478,111 @@
                         },
                     ],
                     events: {},
-                    class: 'microbit2Led',
+                    class: 'microbit2Radio',
                     isNotFor: ['microbit2'],
                     def: {
-                        type: 'microbit2_screen_toggle',
+                        type: 'microbit2_radio_toggle',
                     },
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(`${command};`);
+                        const response = await Entry.hwLite.sendAsync(`${command};${value}`);
+                        this.getResponse(response);
+                    },
+                },
+                microbit2_radio_setting: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
+                            value: 7,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2Radio',
+                    isNotFor: ['microbit2'],
+                    def: {
+                        type: 'microbit2_radio_setting',
+                    },
+                    paramsKeyMap: { RATE: 0, CHANNEL: 1 },
+                    func: async (sprite, script) => {
+                        if (!Entry.Utils.isNumber(script.getNumberValue('CHANNEL'))) {
+                            return;
+                        }
+                        const channel = Math.round(
+                            this._clamp(script.getNumberValue('CHANNEL'), 0, 83)
+                        );
+
+                        const response = await Entry.hwLite.sendAsync(
+                            `${this.functionKeys.SETTING_RADIO};${channel}`
+                        );
                         return this.getResponse(response);
                     },
                 },
+                microbit2_radio_send: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2Radio',
+                    isNotFor: ['microbit2'],
+                    def: {
+                        type: 'microbit2_radio_send',
+                    },
+                    paramsKeyMap: { VALUE: 0 },
+                    func: async (sprite, script) => {
+                        const value = script.getStringValue('VALUE');
 
+                        const response = await Entry.hwLite.sendAsync(
+                            `${this.functionKeys.SET_RADIO};${value}`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2_radio_received: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [],
+                    events: {},
+                    class: 'microbit2Radio',
+                    isNotFor: ['microbit2'],
+                    def: {
+                        type: 'microbit2_radio_received',
+                    },
+                    paramsKeyMap: {},
+                    func: async (sprite, script) => {
+                        const response = await Entry.hwLite.sendAsync(
+                            `${this.functionKeys.GET_RADIO};`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
                 microbit2_change_tempo: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1584,8 +1626,8 @@
                         BPM: 1,
                     },
                     func: async (sprite, script) => {
-                        const beat = Math.round(_clamp(script.getNumberValue('BEAT'), 0, 4));
-                        const bpm = Math.round(_clamp(script.getNumberValue('BPM'), 1, 230));
+                        const beat = Math.round(this._clamp(script.getNumberValue('BEAT'), 0, 4));
+                        const bpm = Math.round(this._clamp(script.getNumberValue('BPM'), 1, 230));
 
                         const parsedPayload = `${beat};${bpm}`;
 
@@ -1698,7 +1740,7 @@
                         VALUE: 0,
                     },
                     func: async (sprite, script) => {
-                        const value = _clamp(script.getNumberValue('VALUE'), 0, 20);
+                        const value = this._clamp(script.getNumberValue('VALUE'), 0, 20);
 
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.PLAY_MELODY};${value}`
@@ -1708,133 +1750,7 @@
                         this.waitMilliSec(500);
                     },
                 },
-                microbit2_radio_toggle: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.on, this.functionKeys.RADIO_ON],
-                                [Lang.Blocks.off, this.functionKeys.RADIO_OFF],
-                            ],
-                            value: this.functionKeys.RADIO_ON,
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    class: 'microbit2Radio',
-                    isNotFor: ['microbit2'],
-                    def: {
-                        type: 'microbit2_radio_toggle',
-                    },
-                    paramsKeyMap: { VALUE: 0 },
-                    func: async (sprite, script) => {
-                        const command = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(`${command};${value}`);
-                        this.getResponse(response);
-                    },
-                },
-                microbit2_radio_setting: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                            defaultType: 'number',
-                            value: 7,
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    class: 'microbit2Radio',
-                    isNotFor: ['microbit2'],
-                    def: {
-                        type: 'microbit2_radio_setting',
-                    },
-                    paramsKeyMap: { RATE: 0, CHANNEL: 1 },
-                    func: async (sprite, script) => {
-                        if (!Entry.Utils.isNumber(script.getNumberValue('CHANNEL'))) {
-                            return;
-                        }
-                        const channel = Math.round(_clamp(script.getNumberValue('CHANNEL'), 0, 83));
-
-                        const response = await Entry.hwLite.sendAsync(
-                            `${this.functionKeys.SETTING_RADIO};${channel}`
-                        );
-                        return this.getResponse(response);
-                    },
-                },
-                microbit2_radio_send: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
-                        },
-                    ],
-                    events: {},
-                    class: 'microbit2Radio',
-                    isNotFor: ['microbit2'],
-                    def: {
-                        type: 'microbit2_radio_send',
-                    },
-                    paramsKeyMap: { VALUE: 0 },
-                    func: async (sprite, script) => {
-                        const value = script.getStringValue('VALUE');
-
-                        const response = await Entry.hwLite.sendAsync(
-                            `${this.functionKeys.SET_RADIO};${value}`
-                        );
-                        return this.getResponse(response);
-                    },
-                },
-                microbit2_radio_received: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    fontColor: '#ffffff',
-                    skeleton: 'basic_string_field',
-                    statements: [],
-                    params: [],
-                    events: {},
-                    class: 'microbit2Radio',
-                    isNotFor: ['microbit2'],
-                    def: {
-                        type: 'microbit2_radio_received',
-                    },
-                    paramsKeyMap: {},
-                    func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
-                            `${this.functionKeys.GET_RADIO};`
-                        );
-                        return this.getResponse(response);
-                    },
-                },
                 microbit2_get_btn: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2072,23 +1988,52 @@
                         return this.getResponse(response);
                     },
                 },
-                microbit2_get_sound_level: {
+
+                microbit2_set_servo: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#ffffff',
-                    skeleton: 'basic_string_field',
+                    skeleton: 'basic',
                     statements: [],
-                    params: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: this.majorPins,
+                            value: 0,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
                     events: {},
-                    class: 'microbit2v2',
+                    class: 'microbit2Servo',
                     isNotFor: ['microbit2'],
                     def: {
-                        type: 'microbit2_get_sound_level',
+                        type: 'microbit2_set_servo',
                     },
-                    paramsKeyMap: {},
+                    paramsKeyMap: {
+                        PIN: 0,
+                        VALUE: 1,
+                    },
                     func: async (sprite, script) => {
+                        const pin = script.getValue('PIN');
+                        const value = Math.round(
+                            this._clamp(script.getNumberValue('VALUE'), 0, 180)
+                        );
+
+                        const parsedPayload = `${pin};${value}`;
                         const response = await Entry.hwLite.sendAsync(
-                            `${this.functionKeys.GET_SOUND_LEVEL};`
+                            `${this.functionKeys.SET_SERVO_ANGLE};${parsedPayload}`
                         );
                         return this.getResponse(response);
                     },
@@ -2144,7 +2089,9 @@
                     func: async (sprite, script) => {
                         const pin = script.getValue('PIN');
                         const unit = script.getValue('UNIT');
-                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 1023));
+                        const value = Math.round(
+                            this._clamp(script.getNumberValue('VALUE'), 0, 1023)
+                        );
                         const command =
                             unit === 'milli'
                                 ? this.functionKeys.SET_SERVO_MILLI
@@ -2157,52 +2104,25 @@
                         return this.getResponse(response);
                     },
                 },
-                microbit2_set_servo: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    fontColor: '#ffffff',
-                    skeleton: 'basic',
-                    statements: [],
+
+                microbit2_v2_title: {
+                    skeleton: 'basic_text',
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#333333',
                     params: [
                         {
-                            type: 'Dropdown',
-                            options: this.majorPins,
-                            value: 0,
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                            defaultType: 'number',
-                        },
-                        {
-                            type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
-                            size: 12,
+                            type: 'Text',
+                            text: Lang.template.microbit2_v2_title,
+                            color: '#333333',
+                            align: 'center',
                         },
                     ],
-                    events: {},
-                    class: 'microbit2Servo',
-                    isNotFor: ['microbit2'],
                     def: {
-                        type: 'microbit2_set_servo',
+                        type: 'microbit2_v2_title',
                     },
-                    paramsKeyMap: {
-                        PIN: 0,
-                        VALUE: 1,
-                    },
-                    func: async (sprite, script) => {
-                        const pin = script.getValue('PIN');
-                        const value = Math.round(_clamp(script.getNumberValue('VALUE'), 0, 180));
-
-                        const parsedPayload = `${pin};${value}`;
-                        const response = await Entry.hwLite.sendAsync(
-                            `${this.functionKeys.SET_SERVO_ANGLE};${parsedPayload}`
-                        );
-                        return this.getResponse(response);
-                    },
+                    class: 'microbit2_title',
+                    isNotFor: ['microbit2'],
+                    events: {},
                 },
                 microbit2_get_logo: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2275,6 +2195,7 @@
                         return this.getResponse(response);
                     },
                 },
+
                 microbit2_play_sound_effect: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2322,11 +2243,32 @@
                                 Lang.Msgs.microbit2_compatible_error,
                             ]);
                         }
-                        const value = _clamp(script.getNumberValue('VALUE'), 21, 30);
+                        const value = this._clamp(script.getNumberValue('VALUE'), 21, 30);
                         const parsedPayload = `${value}`;
 
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.PLAY_SOUND};${parsedPayload}`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2_get_sound_level: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [],
+                    events: {},
+                    class: 'microbit2v2',
+                    isNotFor: ['microbit2'],
+                    def: {
+                        type: 'microbit2_get_sound_level',
+                    },
+                    paramsKeyMap: {},
+                    func: async (sprite, script) => {
+                        const response = await Entry.hwLite.sendAsync(
+                            `${this.functionKeys.GET_SOUND_LEVEL};`
                         );
                         return this.getResponse(response);
                     },

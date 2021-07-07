@@ -85,6 +85,7 @@ declare interface IEntry extends EntryOptions {
     assert(predicate: any, message: string): void;
     resizeElement(interfaceModel?: any): void;
     loadExternalModules(project: any): Promise<void>;
+    loadLiteExternalModules: (project?: any) => Promise<void>;
     bindAnimationCallbackOnce(element: any, func: () => void): void;
     createElement<K extends keyof HTMLElementTagNameMap>(
         type: HTMLElement | K,

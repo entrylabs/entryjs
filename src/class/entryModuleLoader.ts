@@ -8,6 +8,7 @@ type EntryBlockRegisterSchema = {
 
 class EntryModuleLoader {
     public moduleList: string[] = [];
+    public moduleListLite: string[] = [];
 
     /**
      * 해당 url 을 동적으로 로드한다.
@@ -151,7 +152,8 @@ class EntryModuleLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
-    registerHardwareLiteModule(moduleObject: EntryHardwareBlockModule) {
+    registerHardwareLiteModule(moduleObject?: EntryHardwareBlockModule) {
+        console.log('LOAINDG ');
         // test purpose
         moduleObject = Entry.Microbit2Lite as EntryHardwareBlockModule;
         /////
@@ -166,10 +168,13 @@ class EntryModuleLoader {
             });
         }
 
+        !this.moduleListLite.includes(moduleObject.name) &&
+            this.moduleListLite.push(moduleObject.name);
+
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
-
+        console.log('registerHardwareLiteModule');
         this.loadBlocks({
             categoryName: 'arduino_lite',
             blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
@@ -178,6 +183,8 @@ class EntryModuleLoader {
                 isBlockShowBlockMenu: blockMenuBlocks.indexOf(blockName) > -1,
             })),
         });
+        Entry.hwLite.setExternalModule(moduleObject);
+        Entry.dispatchEvent('hwLiteChanged');
     }
 
     /**
@@ -300,4 +307,10 @@ Entry.moduleManager = instance;
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
     await Promise.all(externalModules.map(instance.loadModuleFromLocalOrOnline.bind(instance)));
+};
+
+Entry.loadLiteExternalModules = async (project = {}) => {
+    const { externalModulesLite = [] } = project;
+    console.log(externalModulesLite);
+    await Promise.all(externalModulesLite.map(instance.registerHardwareLiteModule.bind(instance)));
 };

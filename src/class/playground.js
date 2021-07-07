@@ -579,6 +579,9 @@ Entry.Playground = class Playground {
         if (Entry.hw) {
             Entry.hw.refreshHardwareBlockMenu();
         }
+        if (Entry.hwLite) {
+            Entry.hwLite.refreshHardwareLiteBlockMenu();
+        }
     }
 
     /**

@@ -28,6 +28,8 @@ export default class HardwareLite {
     private reader: SerialPort.reader;
     private writableStream: any;
     public hwModule?: EntryHardwareBlockModule;
+    static setExternalModule: any;
+    static refreshHardwareLiteBlockMenu: any;
 
     constructor() {
         this.status = HardwareStatement.disconnected;
@@ -43,6 +45,13 @@ export default class HardwareLite {
             alert('DISCONNECTED');
         });
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
+
+        this.setExternalModule.bind(this);
+    }
+
+    setZero() {
+        console.log('RESET CALL');
+        this.hwModule?.setZero();
     }
 
     /**
@@ -59,6 +68,7 @@ export default class HardwareLite {
         Object.values(Entry.HARDWARE_LITE_LIST || {}).forEach((hardware: any) => {
             blockMenu.banClass(hardware.name, true);
         });
+        blockMenu.unbanClass('arduinoLiteConnect', true);
     }
 
     setExternalModule(moduleObject: EntryHardwareBlockModule) {
@@ -75,8 +85,13 @@ export default class HardwareLite {
             return;
         }
 
-        this._banClassAllHardware();
-
+        if (!this.hwModule) {
+            // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
+            this._banClassAllHardware();
+        }
+        if (this.hwModule) {
+            blockMenu.unbanClass(this.hwModule?.name, true);
+        }
         blockMenu.hwLiteCodeOutdated = true;
         blockMenu._generateHwLiteCode(true);
         blockMenu.reDraw();
@@ -115,6 +130,7 @@ export default class HardwareLite {
         // }
 
         this.status = HardwareStatement.connected;
+        // Entry.moduleManager.registerHardwareLiteModule();
     }
 
     async disconnect() {
@@ -125,17 +141,23 @@ export default class HardwareLite {
                 await this.writableStream;
             }
             await this.writer?.close();
-
-            this.reader = null;
-            this.writer = null;
-            this.writableStream = null;
-            this.status = HardwareStatement.disconnected;
         } catch (err) {
             console.log(err);
         } finally {
             await this.port?.close();
             this.port = null;
-            alert('연결 해제 되었습니다.');
+            this.hwModule = null;
+            this.reader = null;
+            this.writer = null;
+            this.writableStream = null;
+            this.refreshHardwareLiteBlockMenu();
+            this.status = HardwareStatement.disconnected;
+            Entry.dispatchEvent('hwLiteChanged');
+            Entry.toast.alert(
+                Lang.Hw.hw_module_terminaltion_title,
+                Lang.Hw.hw_module_terminaltion_desc,
+                false
+            );
         }
     }
 
