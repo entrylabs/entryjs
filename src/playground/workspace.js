@@ -34,7 +34,7 @@ Entry.Workspace = class Workspace {
                 option.dom,
                 option.align,
                 option.categoryData,
-                option.scroll,
+                option.scroll
             );
             this._destroyer.add(this.blockMenu);
             this.blockMenu.workspace = this;
@@ -169,6 +169,9 @@ Entry.Workspace = class Workspace {
                     mode.runType = VIM.WORKSPACE_MODE;
                 }
                 e.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
+            } finally {
+                this.oldMode = 1;
+                this.mode = 1;
             }
         };
 
