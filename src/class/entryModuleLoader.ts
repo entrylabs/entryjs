@@ -309,6 +309,5 @@ Entry.loadExternalModules = async (project = {}) => {
 
 Entry.loadLiteExternalModules = async (project = {}) => {
     const { externalModulesLite = [] } = project;
-    console.log(externalModulesLite);
     await Promise.all(externalModulesLite.map(instance.registerHardwareLiteModule.bind(instance)));
 };

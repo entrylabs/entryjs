@@ -38,12 +38,19 @@ Entry.loadProject = function(project) {
     Entry.variableContainer.setFunctions(project.functions);
     DataTable.setTables(project.tables);
     Entry.aiLearning.load(project.learning);
+    if (project.externalModulesLite) {
+        Entry.loadLiteExternalModules(project);
+    }
+    if (project.externalModules) {
+        Entry.loadExternalModules(project);
+    }
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
     Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
+
     if (Entry.aiUtilizeBlocks.length > 0) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
             if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
@@ -54,13 +61,6 @@ Entry.loadProject = function(project) {
             }
         }
     }
-    if (project.externalModulesLite) {
-        Entry.loadLiteExternalModules(project);
-    }
-    if (project.externalModules) {
-        Entry.loadExternalModules(project);
-    }
-
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
         for (const type in Entry.EXPANSION_BLOCK_LIST) {
