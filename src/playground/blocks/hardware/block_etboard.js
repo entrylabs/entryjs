@@ -35,8 +35,21 @@ Entry.etboard = {
       ULTRASONIC: 7,
       TIMER: 8,
       OLED: 241,
-      COM: 242
+      COM: 242,
+    	NEOPIXELCOLOR: 243,
+
     },
+    duration: {
+          TIME_1ms: 1,
+          TIME_5ms: 5,
+          TIME_10ms: 10,
+          TIME_20ms: 20,
+          TIME_50ms: 50,
+          TIME_100ms: 100,
+          TIME_200ms: 200,
+          TIME_500ms: 500,
+          TIME_600ms: 600,
+      },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},
@@ -71,6 +84,9 @@ Entry.etboard.setLanguage = function() {
                 etboard_set_servo: '서보모터 %1번 핀을 %2 도로 정하기',
                 etboard_oled_set: 'OLED %1 번째 줄의 %2 표시하기',
                 etboard_pw_get_port_number: '%1',
+                etboard_neopixel_set: '디지털 %1 번 핀에 연결된 %2 번째 네오픽셀 %3 개 사용하기',
+                etboard_neopixel_led: '네오픽셀 %1 번에 %2 번째 LED R: %3 , G: %4 , B: %5 색을 밝기 %6 으로 켜기',
+                etboard_neopixel_all_led: '네오픽셀 %1 번에 LED R: %2 , G: %3 , B: %4 색을 밝기 %5 으로 켜기',
             },
         },
         en: {
@@ -100,7 +116,9 @@ Entry.etboard.setLanguage = function() {
               etboard_set_servo: 'Servo %1 PIN %2 degree set',
               etboard_oled_set: 'OLE %1 line %2 Display',
               etboard_pw_get_port_number: '%1',
-
+              etboard_neopixel_set: '디지털 %1 번핀에 연결된 %2 개의 네오픽셀 LED 사용하기',
+              etboard_neopixel_led: '디지털 %1 번핀에 연결된 %2  번째 네오픽셀 LED R: %3 , G: %4 , B: %5 색으로 켜기',
+              etboard_neopixel_all_led: '디지털 %1 번 핀에 연결된 %2  번째 네오픽셀 LED R: %3 , G: %4 , B: %5 색으로 켜기',
             },
         },
     };
@@ -117,6 +135,10 @@ Entry.etboard.blockMenuBlocks = [
     'etboard_toggle_led',
     'etboard_set_servo',
     'etboard_oled_set',
+    'etboard_neopixel_set',
+    'etboard_neopixel_led',
+    'etboard_neopixel_all_led',
+
 ];
 
 Entry.etboard.getBlocks = function() {
@@ -761,6 +783,379 @@ Entry.etboard.getBlocks = function() {
           },
           "syntax": {}
           },
+          etboard_neopixel_set: {
+                  color: EntryStatic.colorSet.block.default.HARDWARE,
+                  outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                  skeleton: 'basic',
+                  statements: [],
+                  params: [
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+                      {
+                              "type": "Dropdown",
+                              "options": [
+                               ["1","1"],
+                               ["2","2"],
+                              ],
+                              "value":"1",
+                              "fontSize":11,
+                              bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                              arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                      },
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+                      {
+                          type: 'Indicator',
+                          img: 'block_icon/hardware_icon.svg',
+                          size: 12,
+                      },
+                  ],
+                  events: {},
+      			def: {
+                      params: [
+                          {
+                              type: 'arduino_get_port_number',
+                              params: ['9'],
+                          },
+                          null,
+      					          {
+                              type: 'number',
+                              params: ['12'],
+                          },
+                          null,
+                      ],
+                      type: 'etboard_neopixel_set',
+                  },
+                  paramsKeyMap: {
+                      PORT: 0,
+                      INDEX: 1,
+                      VALUE: 2,
+                  },
+                  class: 'neopixel',
+                  isNotFor: ['etboard'],
+                  func(sprite, script) {
+                    var port = script.getNumberValue("PORT");
+                    var mode = 1;
+                    var index = script.getNumberValue("INDEX");
+                    var value = script.getNumberValue("VALUE");
+
+                    if (!script.isStart)
+                    {
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    var duration = Entry.Orange.duration.TIME_10ms;
+          						script.isStart = true;
+          						script.timeFlag = 1;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.etboard.sensorTypes.NEOPIXELCOLOR,
+                        data:
+                        {
+                          value : value,
+                          mode: mode,
+                          index: index,
+                        },
+                        time: new Date().getTime()
+                    };
+                    setTimeout(function() {
+                                  script.timeFlag = 0;
+                              }, duration );
+                              return script;
+          				}
+          				else if (script.timeFlag == 1)
+                          {
+                              return script;
+                          }
+                          else
+                          {
+                              delete script.timeFlag;
+                              delete script.isStart;
+
+                              Entry.engine.isContinue = false;
+                              return script.callReturn();
+                          }
+                  },
+                  syntax: {
+                  },
+              },
+      		etboard_neopixel_led: {
+                  color: EntryStatic.colorSet.block.default.HARDWARE,
+                  outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                  skeleton: 'basic',
+                  statements: [],
+                  params: [
+                      {
+                              "type": "Dropdown",
+                              "options": [
+                               ["1","1"],
+                               ["2","2"],
+                              ],
+                              "value":"1",
+                              "fontSize":11,
+                              bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                              arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                      },
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+      				{
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+      				{
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+      				        {
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+                      {
+                          type: 'Block',
+                          accept: 'string',
+                          defaultType: 'number',
+                      },
+                      {
+                          type: 'Indicator',
+                          img: 'block_icon/hardware_icon.svg',
+                          size: 12,
+                      },
+                  ],
+                  events: {},
+      			def: {
+                      params: [
+                          null,
+      					          {
+                              type: 'number',
+                              params: ['1'],
+                          },
+      					          {
+                              type: 'number',
+                              params: ['255'],
+                          },
+      					{
+                              type: 'number',
+                              params: ['255'],
+                          },
+      					{
+                              type: 'number',
+                              params: ['255'],
+                          },
+                          {
+                              type: 'number',
+                              params: ['100'],
+                          },
+                          null,
+                      ],
+                      type: 'etboard_neopixel_led',
+                  },
+                  paramsKeyMap: {
+                      INDEX : 0,
+                      POS: 1,
+              				RED: 2,
+              				GREEN: 3,
+              				BLUE: 4,
+                      BRIG: 5,
+                  },
+                  class: 'neopixel',
+                  isNotFor: ['etboard'],
+                  func(sprite, script) {
+                    var port = script.getNumberValue("INDEX");
+                    var pos = script.getNumberValue("POS");
+                    var red = script.getNumberValue("RED");
+                    var green = script.getNumberValue("GREEN");
+                    var blue = script.getNumberValue("BLUE");
+                    var brig = script.getNumberValue("BRIG");
+                    var mode = 2;
+
+
+                    if (!script.isStart)
+                    {
+
+                    if(!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    var duration = Entry.Orange.duration.TIME_10ms;
+                      script.isStart = true;
+                      script.timeFlag = 1;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.etboard.sensorTypes.NEOPIXELCOLOR,
+                        data:
+                        {
+                          index : port,
+                          pos : pos,
+                          mode: mode,
+                          red: red,
+                          green: green,
+                          blue: blue,
+                          brig: brig,
+                        },
+                        time: new Date().getTime()
+                    };
+                    setTimeout(function() {
+                                  script.timeFlag = 0;
+                              }, duration );
+                              return script;
+          				}
+          				else if (script.timeFlag == 1)
+                          {
+                              return script;
+                          }
+                          else
+                          {
+                              delete script.timeFlag;
+                              delete script.isStart;
+
+                              Entry.engine.isContinue = false;
+                              return script.callReturn();
+                          }
+                  },
+                  syntax: {
+                  },
+              },
+              etboard_neopixel_all_led: {
+                      color: EntryStatic.colorSet.block.default.HARDWARE,
+                      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                      skeleton: 'basic',
+                      statements: [],
+                      params: [
+                          {
+                                  "type": "Dropdown",
+                                  "options": [
+                                   ["1","1"],
+                                   ["2","2"],
+                                  ],
+                                  "value":"1",
+                                  "fontSize":11,
+                                  bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                  arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                          },
+                          {
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+          				{
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+          				{
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+          				        {
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+                          {
+                              type: 'Indicator',
+                              img: 'block_icon/hardware_icon.svg',
+                              size: 12,
+                          },
+                      ],
+                      events: {},
+          			def: {
+                          params: [
+                              null,
+          					          {
+                                  type: 'number',
+                                  params: ['255'],
+                              },
+          					{
+                                  type: 'number',
+                                  params: ['255'],
+                              },
+          					{
+                                  type: 'number',
+                                  params: ['255'],
+                              },
+                              {
+                                  type: 'number',
+                                  params: ['100'],
+                              },
+                              null,
+                          ],
+                          type: 'etboard_neopixel_all_led',
+                      },
+                      paramsKeyMap: {
+                          INDEX : 0,
+                  				RED: 1,
+                  				GREEN: 2,
+                  				BLUE: 3,
+                          BRIG: 4,
+                      },
+                      class: 'neopixel',
+                      isNotFor: ['etboard'],
+                      func(sprite, script) {
+                        var port = script.getNumberValue("INDEX");
+                        var red = script.getNumberValue("RED");
+                        var green = script.getNumberValue("GREEN");
+                        var blue = script.getNumberValue("BLUE");
+                        var brig = script.getNumberValue("BRIG");
+                        var mode = 3;
+
+                        if (!script.isStart)
+                        {
+
+                        if(!Entry.hw.sendQueue['SET']) {
+                            Entry.hw.sendQueue['SET'] = {};
+                        }
+                        var duration = Entry.Orange.duration.TIME_10ms;
+                          script.isStart = true;
+                          script.timeFlag = 1;
+
+                        Entry.hw.sendQueue['SET'][port] = {
+                            type: Entry.etboard.sensorTypes.NEOPIXELCOLOR,
+                            data:
+                            {
+                              index : port,
+                              mode: mode,
+                              red: red,
+                              green: green,
+                              blue: blue,
+                              brig: brig,
+                            },
+                            time: new Date().getTime()
+                        };
+                        setTimeout(function() {
+                                      script.timeFlag = 0;
+                                  }, duration );
+                                  return script;
+                      }
+                      else if (script.timeFlag == 1)
+                              {
+                                  return script;
+                              }
+                              else
+                              {
+                                  delete script.timeFlag;
+                                  delete script.isStart;
+
+                                  Entry.engine.isContinue = false;
+                                  return script.callReturn();
+                              }
+                      },
+                      syntax: {
+                      },
+                  },
     }   //return
 };  //function
 
