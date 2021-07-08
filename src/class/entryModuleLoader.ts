@@ -153,7 +153,6 @@ class EntryModuleLoader {
     }
 
     registerHardwareLiteModule(moduleObject?: EntryHardwareBlockModule) {
-        console.log('LOAINDG ');
         // test purpose
         moduleObject = Entry.Microbit2Lite as EntryHardwareBlockModule;
         /////
@@ -174,7 +173,6 @@ class EntryModuleLoader {
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
-        console.log('registerHardwareLiteModule');
         this.loadBlocks({
             categoryName: 'arduino_lite',
             blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
