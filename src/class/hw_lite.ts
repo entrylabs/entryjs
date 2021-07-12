@@ -33,25 +33,15 @@ export default class HardwareLite {
 
     constructor() {
         this.status = HardwareStatement.disconnected;
-        navigator.serial.addEventListener('connect', (e) => {
-            // Connect to `e.target` or add it to a list of available ports.
-            console.log(e);
-            alert('WDF');
-        });
-
-        navigator.serial.addEventListener('disconnect', (e) => {
-            // Remove `e.target` from the list of available ports.
-            console.log(e);
-            alert('DISCONNECTED');
-        });
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
-
         this.setExternalModule.bind(this);
+        this.getHardwareList();
     }
 
     setZero() {
-        console.log('RESET CALL');
-        this.hwModule?.setZero();
+        if (this.status === HardwareStatement.connected) {
+            return this.hwModule?.setZero();
+        }
     }
 
     /**
@@ -68,19 +58,25 @@ export default class HardwareLite {
         Object.values(Entry.HARDWARE_LITE_LIST || {}).forEach((hardware: any) => {
             blockMenu.banClass(hardware.name, true);
         });
-        blockMenu.unbanClass('arduinoLiteConnect', true);
     }
 
     setExternalModule(moduleObject: EntryHardwareBlockModule) {
         this.hwModule = moduleObject;
         this._banClassAllHardware();
         Entry.dispatchEvent('hwLiteChanged');
+        this.refreshHardwareLiteBlockMenu();
     }
 
     refreshHardwareLiteBlockMenu() {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
-
+        if (this.status === HardwareStatement.disconnected) {
+            blockMenu.banClass('arduinoLiteConnected', true);
+            blockMenu.unbanClass('arduinoLiteConnect', true);
+        } else {
+            blockMenu.unbanClass('arduinoLiteConnected', true);
+            blockMenu.banClass('arduinoLiteConnect', true);
+        }
         if (!blockMenu) {
             return;
         }
@@ -97,7 +93,16 @@ export default class HardwareLite {
         blockMenu.reDraw();
     }
 
-    async getHardwareList() {}
+    async getHardwareList() {
+        const list = await fetch(`${Entry.moduleliteBaseUrl}`);
+        const parsed = await list.json();
+        Entry.HARDWARE_LITE_LIST = parsed.map((item) => {
+            return {
+                ...item,
+                imageName: `${Entry.moduleliteBaseUrl}${item.name}/files/image`,
+            };
+        });
+    }
 
     async connect(hwJson: IHardwareModuleConfig) {
         if (this.status === HardwareStatement.connected) {
@@ -113,7 +118,9 @@ export default class HardwareLite {
             bufferSize: 512,
         });
         this.port = port;
-        // if (hwJson?.commType === 'ascii') {
+        const portInfo = port.getInfo();
+        // Microbit에서만 적용되는 코드, ascii 통신용
+        // if (portInfo.usbProductId === 516 && portInfo.usbVendorId === 3368) {
         const encoder = new TextEncoderStream();
         const writableStream = encoder.readable.pipeTo(port.writable);
         const writer = encoder.writable.getWriter();
@@ -128,16 +135,21 @@ export default class HardwareLite {
         //     this.writer = port.writable.getWriter();
         //     this.reader = port.readable.getReader();
         // }
+        try {
+            await this.getHardwareList();
+        } catch (err) {
+            console.log(err);
+        }
 
         this.status = HardwareStatement.connected;
-        // Entry.moduleManager.registerHardwareLiteModule();
+        this.refreshHardwareLiteBlockMenu();
     }
 
     async disconnect() {
         try {
+            await this.reader?.cancel();
+            await this.writer?.abort();
             if (this.writableStream) {
-                await this.reader?.cancel();
-                await this.writer?.abort();
                 await this.writableStream;
             }
             await this.writer?.close();
@@ -167,11 +179,23 @@ export default class HardwareLite {
      * @returns Promise resolves to resulting message
      */
 
-    async sendAsync(data?: Buffer | string) {
+    async sendAsync(data?: Buffer | string, isResetReq?: boolean) {
+        if (this.status === HardwareStatement.disconnected) {
+            Entry.toast.alert(
+                Lang.Hw.hw_module_terminaltion_title,
+                Lang.Hw.hw_module_terminaltion_desc,
+                false
+            );
+            throw new Error('HARDWARE LITE NOT CONNECTED');
+        }
+
         if (!data) {
             return;
         }
         this.writer.write(data);
+        if (isResetReq) {
+            return;
+        }
         const { value, done } = await this.reader.read();
         console.log('[received]', value);
         return value;

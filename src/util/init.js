@@ -130,6 +130,7 @@ const setDefaultPathsFromOptions = function(options) {
     Entry.offlineModulePath = offlineModulePath;
     Entry.baseUrl = baseUrl.replace(/\/$/, '');
     Entry.moduleBaseUrl = `${Entry.baseUrl}/modules/`;
+    Entry.moduleliteBaseUrl = `${Entry.baseUrl}/moduleslite/`;
 };
 
 const setDefaultTheme = function(options) {

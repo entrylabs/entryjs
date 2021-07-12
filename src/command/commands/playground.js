@@ -198,6 +198,40 @@
         dom: ['playground', 'soundAddButton'],
     };
 
+    c[COMMAND_TYPES.playgroundClickAddHardwareLiteBlock] = {
+        do() {
+            Entry.dispatchEvent('openHardwareLiteBlockManager');
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict(data, domQuery, callback, restrictor) {
+            Entry.dispatchEvent('dismissModal');
+            const tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: domQuery,
+                    },
+                ],
+                {
+                    restrict: true,
+                    dimmed: true,
+                    callBack: callback,
+                }
+            );
+            return tooltip;
+        },
+        undo: 'playgroundClickAddHardwareLiteBlockCancel',
+        dom: ['playground', 'soundAddButton'],
+    };
+
     c[COMMAND_TYPES.playgroundClickAddExpansionBlockCancel] = {
         do() {
             Entry.dispatchEvent('dismissModal');

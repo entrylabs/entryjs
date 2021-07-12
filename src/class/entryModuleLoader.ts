@@ -11,6 +11,7 @@ class EntryModuleLoader {
     public moduleListLite: string[] = [];
 
     /**
+     * @deprecated
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
      * key는 로컬에서 파일을 암호화 하여 entry-hw 에서 전달, 해당 파일을 로컬에 있는 키로 1차 검증, 서버로 2차 검증을 통한 무결성/보안 확보
@@ -49,9 +50,10 @@ class EntryModuleLoader {
         await this.loadScript(moduleInfo.name, blockFile);
     }
 
-    async loadModuleFromLocalOrOnline(name: string) {
-        const lowerCaseName = name.toLowerCase();
-        let path = `${Entry.moduleBaseUrl}${lowerCaseName}/files/block`;
+    async loadModuleFromLocalOrOnline(name: string, isLite?: boolean) {
+        const lowerCaseName = isLite ? name : name.toLowerCase();
+        const baseUrl = isLite ? Entry.moduleliteBaseUrl : Entry.moduleBaseUrl;
+        let path = `${baseUrl}${name}/files/block`;
         if (Entry.offlineModulePath) {
             path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
         }
@@ -65,17 +67,23 @@ class EntryModuleLoader {
                 result = window.sendSync('decryptBlock', result);
             }
         }
-        await this.loadScript(name, result);
+        await this.loadScript(name, result, isLite);
     }
 
-    async loadScript(name: string, code: string) {
+    async loadScript(name: string, code: string, isLite?: boolean) {
         return await new Promise(async (resolve, reject) => {
             const scriptElementId = `entryModuleScript${Date.now()}`;
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                !this.moduleList.includes(name) && this.moduleList.push(name);
+                console.log(isLite);
+                if (isLite) {
+                    !this.moduleListLite.includes(name) && this.moduleListLite.push(name);
+                } else {
+                    !this.moduleList.includes(name) && this.moduleList.push(name);
+                }
+
                 scriptElement.remove();
                 resolve();
             };
@@ -152,9 +160,13 @@ class EntryModuleLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
-    registerHardwareLiteModule(moduleObject?: EntryHardwareBlockModule) {
-        // test purpose
-        moduleObject = Entry.Microbit2Lite as EntryHardwareBlockModule;
+    async registerHardwareLiteModule(moduleName: string, isDeveloping: boolean) {
+        if (!isDeveloping) {
+            await this.loadModuleFromLocalOrOnline(moduleName, true);
+        }
+
+        // @ts-ignore
+        const moduleObject = Entry[moduleName] as EntryHardwareBlockModule;
         /////
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
@@ -166,10 +178,6 @@ class EntryModuleLoader {
                 Entry.HARDWARE_LITE_LIST[id] = moduleObject;
             });
         }
-
-        !this.moduleListLite.includes(moduleObject.name) &&
-            this.moduleListLite.push(moduleObject.name);
-
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
@@ -182,7 +190,6 @@ class EntryModuleLoader {
             })),
         });
         Entry.hwLite.setExternalModule(moduleObject);
-        Entry.dispatchEvent('hwLiteChanged');
     }
 
     /**
@@ -210,7 +217,6 @@ class EntryModuleLoader {
             categoryName: 'expansion',
             blockSchemas,
         });
-        // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
     }
 
     loadBlocks({
@@ -310,4 +316,34 @@ Entry.loadExternalModules = async (project = {}) => {
 Entry.loadLiteExternalModules = async (project = {}) => {
     const { externalModulesLite = [] } = project;
     await Promise.all(externalModulesLite.map(instance.registerHardwareLiteModule.bind(instance)));
+};
+
+/**
+ * 개발용 코드, path를 통해서 블럭을 로딩할수 있음.
+ * @param path
+ */
+Entry.loadLiteTestModule = async (file: File, name: string) => {
+    const result = await file.text();
+    await Entry.moduleManager.loadScript(name, result, true);
+    Entry.moduleManager.registerHardwareLiteModule(name, true);
+};
+
+Entry.loadLiteTestModuleUploader = () => {
+    const headerBtns = document.querySelector('section');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    const loadButton = document.createElement('button');
+    loadButton.innerText = '적용';
+    const handleUpdate = async () => {
+        const file = fileInput.files[0];
+        fileInput.value = null;
+        await Entry.loadLiteTestModule(file, nameInput.value);
+    };
+
+    loadButton.onclick = handleUpdate;
+    headerBtns.prepend(loadButton);
+    headerBtns.prepend(fileInput);
+    headerBtns.prepend(nameInput);
 };

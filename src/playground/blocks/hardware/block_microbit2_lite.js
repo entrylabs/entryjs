@@ -882,7 +882,6 @@
         }
 
         getResponse(response) {
-            console.log(response);
             return response.split(';')[1];
         }
 
@@ -1339,7 +1338,6 @@
                     func: async (sprite, script) => {
                         const value = this._clamp(script.getNumberValue('VALUE'), 0, 62);
                         const parsedPayload = `${this.presetImage[value]}`;
-                        console.log('WDF');
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
                         );
@@ -1984,7 +1982,6 @@
                         const response = await Entry.hwLite.sendAsync(
                             `${this.functionKeys.GET_TEMPERATURE};`
                         );
-                        console.log(response);
                         return this.getResponse(response);
                     },
                 },

@@ -25,7 +25,7 @@ Entry.clipboard = null;
  * Load project
  * @param {*} project
  */
-Entry.loadProject = function(project) {
+Entry.loadProject = async function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
@@ -39,10 +39,10 @@ Entry.loadProject = function(project) {
     DataTable.setTables(project.tables);
     Entry.aiLearning.load(project.learning);
     if (project.externalModulesLite) {
-        Entry.loadLiteExternalModules(project);
+        await Entry.loadLiteExternalModules(project);
     }
     if (project.externalModules) {
-        Entry.loadExternalModules(project);
+        await Entry.loadExternalModules(project);
     }
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
@@ -171,7 +171,6 @@ Entry.exportProject = function(project) {
     if (!objects || !objects.length) {
         return false;
     }
-    console.log(project);
 
     return project;
 };

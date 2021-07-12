@@ -4,6 +4,7 @@ declare interface EntryOptions {
     hardwareEnable?: boolean;
     mediaFilePath?: string;
     moduleBaseUrl?: string;
+    moduleliteBaseUrl?: string;
     dataTableDisable?: boolean;
     offlineModulePath?: string;
 }
@@ -12,6 +13,8 @@ declare interface EntryOptions {
  * 엔트리 실제 인스턴스에 대한 정의
  */
 declare interface IEntry extends EntryOptions {
+    loadLiteTestModule: (file: file, name: string) => Promise<void>;
+    loadLiteTestModuleUploader: () => void;
     HWLite: typeof import('../src/class/hw_lite').default;
     HW: typeof import('../src/class/hw').default;
     Intro: typeof import('../src/class/intro').default;

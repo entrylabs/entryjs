@@ -310,6 +310,73 @@ function getBlocks() {
                 ],
             },
         },
+        arduino_lite_connect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnect'],
+            class: 'arduino_lite_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.connect();
+                    },
+                ],
+            },
+        },
+        arduino_lite_disconnect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnected'],
+            class: 'arduino_lite_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_disconnect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.disconnect();
+                    },
+                ],
+            },
+        },
+        arduino_lite_add_button: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnected'],
+            class: 'arduino_lite_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_add_button,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.do('playgroundClickAddHardwareLiteBlock');
+                    },
+                ],
+            },
+        },
+
         //region hardware 하드웨어 기본
         arduino_noti_light: {
             skeleton: 'basic_text_light',
@@ -441,50 +508,7 @@ function getBlocks() {
             ],
             events: {},
         },
-        arduino_lite_connect: {
-            skeleton: 'basic_button',
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            template: '%1',
-            isNotFor: ['arduinoLiteConnect'],
-            class: 'arduino_lite_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.arduino_lite_connect,
-                    color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hwLite.connect();
-                    },
-                ],
-            },
-        },
-        arduino_lite_disconnect: {
-            skeleton: 'basic_button',
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            template: '%1',
-            isNotFor: ['arduinoLiteConnect'],
-            class: 'arduino_lite_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.arduino_lite_disconnect,
-                    color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hwLite.disconnect();
-                    },
-                ],
-            },
-        },
+
         arduino_connect: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
