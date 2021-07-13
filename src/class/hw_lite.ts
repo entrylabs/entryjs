@@ -106,7 +106,6 @@ export default class HardwareLite {
 
     async connect(hwJson: IHardwareModuleConfig) {
         if (this.status === HardwareStatement.connected) {
-            alert('이미 연결 되어있습니다.');
             return;
         }
         const port = await navigator.serial.requestPort();
@@ -120,21 +119,21 @@ export default class HardwareLite {
         this.port = port;
         const portInfo = port.getInfo();
         // Microbit에서만 적용되는 코드, ascii 통신용
-        // if (portInfo.usbProductId === 516 && portInfo.usbVendorId === 3368) {
-        const encoder = new TextEncoderStream();
-        const writableStream = encoder.readable.pipeTo(port.writable);
-        const writer = encoder.writable.getWriter();
-        this.writer = writer;
-        this.writableStream = writableStream;
-        const lineReader = port.readable
-            .pipeThrough(new TextDecoderStream())
-            .pipeThrough(new TransformStream(new LineBreakTransformer()))
-            .getReader();
-        this.reader = lineReader;
-        // } else {
-        //     this.writer = port.writable.getWriter();
-        //     this.reader = port.readable.getReader();
-        // }
+        if (portInfo.usbProductId === 516 && portInfo.usbVendorId === 3368) {
+            const encoder = new TextEncoderStream();
+            const writableStream = encoder.readable.pipeTo(port.writable);
+            const writer = encoder.writable.getWriter();
+            this.writer = writer;
+            this.writableStream = writableStream;
+            const lineReader = port.readable
+                .pipeThrough(new TextDecoderStream())
+                .pipeThrough(new TransformStream(new LineBreakTransformer()))
+                .getReader();
+            this.reader = lineReader;
+        } else {
+            this.writer = port.writable.getWriter();
+            this.reader = port.readable.getReader();
+        }
         try {
             await this.getHardwareList();
         } catch (err) {
@@ -180,6 +179,7 @@ export default class HardwareLite {
      */
 
     async sendAsync(data?: Buffer | string, isResetReq?: boolean) {
+        await Entry.hwLite.connect();
         if (this.status === HardwareStatement.disconnected) {
             Entry.toast.alert(
                 Lang.Hw.hw_module_terminaltion_title,
