@@ -184,6 +184,7 @@ class AudioUtils {
      * 녹음을 종료한다.
      */
     async stopRecord() {
+        console.log('Stop record');
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
