@@ -39,9 +39,7 @@ export default class HardwareLite {
     }
 
     setZero() {
-        if (this.status === HardwareStatement.connected) {
-            return this.hwModule?.setZero();
-        }
+        this.hwModule?.setZero();
     }
 
     /**
@@ -157,7 +155,6 @@ export default class HardwareLite {
         } finally {
             await this.port?.close();
             this.port = null;
-            this.hwModule = null;
             this.reader = null;
             this.writer = null;
             this.writableStream = null;
