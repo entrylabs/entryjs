@@ -104,7 +104,7 @@ export default class HardwareLite {
         });
     }
 
-    async connect(hwJson: IHardwareModuleConfig) {
+    async connect(hwJson?: IHardwareModuleConfig) {
         if (this.status === HardwareStatement.connected) {
             return;
         }
@@ -179,7 +179,7 @@ export default class HardwareLite {
      */
 
     async sendAsync(data?: Buffer | string, isResetReq?: boolean) {
-        await Entry.hwLite.connect();
+        await this.connect();
         if (this.status === HardwareStatement.disconnected) {
             Entry.toast.alert(
                 Lang.Hw.hw_module_terminaltion_title,

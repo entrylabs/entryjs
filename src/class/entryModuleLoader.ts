@@ -167,16 +167,8 @@ class EntryModuleLoader {
 
         // @ts-ignore
         const moduleObject = Entry[moduleName] as EntryHardwareBlockModule;
-        /////
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
-        }
-        if (typeof moduleObject.id === 'string') {
-            Entry.HARDWARE_LITE_LIST[moduleObject.id] = moduleObject;
-        } else if (moduleObject.id instanceof Array) {
-            moduleObject.id.forEach((id) => {
-                Entry.HARDWARE_LITE_LIST[id] = moduleObject;
-            });
         }
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
