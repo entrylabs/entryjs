@@ -31,7 +31,7 @@
         "clean": "rimraf ./dist",
         "dist": "webpack"
     },
-    "license": "MIT",
+    "license": "Apache-2.0",
     "dependencies": {
         "@entrylabs/event": "^1.0.3",
         "@tensorflow-models/coco-ssd": "^2.0.1",
