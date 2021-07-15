@@ -22,7 +22,7 @@ Entry.Popup = class Popup {
             }
         });
         this.body_.popup = this;
-        document.body.appendChild(this.body_);
+        Entry.modalContainer.appendChild(this.body_);
         this.window_ = Entry.createElement('div');
         this.window_.addClass('entryPopupWindow');
         if (Entry.targetChecker && !Entry.targetChecker.statusViewDisabled) {

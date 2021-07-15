@@ -249,7 +249,7 @@ class DataTable {
         const { chart = [], fields, rows } = source;
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
-            parent: $('body'),
+            parent: $(Entry.modalContainer),
         })[0];
         return new ModalChart({
             data: {
