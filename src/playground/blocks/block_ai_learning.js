@@ -178,6 +178,61 @@ module.exports = {
                     py: [],
                 },
             },
+            video_capture_for_image_test: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.video_start, 'start'],
+                            [Lang.Blocks.video_end, 'stop'],
+                        ],
+                        value: 'on',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        'start',
+                        null,
+                    ],
+                    type: 'video_capture_for_image_test',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'video_capture_for_image_test',
+                },
+                paramsKeyMap: {
+                    MODE: 0,
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_image'],
+                async func(sprite, script) {
+                    const mode = script.getField('MODE');
+                    if (mode === 'start') {
+                        Entry.aiLearning.startPredict();
+                    } else {
+                        Entry.aiLearning.stopPredict();
+                    }
+                    
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             insert_text_block_for_test: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
