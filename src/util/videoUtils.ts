@@ -518,12 +518,15 @@ class VideoUtils implements MediaUtilsInterface {
         }, 100);
     }
 
-    startCapturedImage(callback: Function) {
+    startCapturedImage(callback: Function, { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
         const captureImage = () => {
-            const context = this.inMemoryCanvas.getContext('2d');
-            context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
-            context.drawImage(this.video, 0, 0, this.CANVAS_WIDTH, this.CANVAS_HEIGHT);
-            callback && callback(this.inMemoryCanvas);
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(this.video, 0, 0, width, height);
+            callback && callback(canvas);
             this.captureTimeout = requestAnimationFrame(captureImage);
         }
         this.captureTimeout = requestAnimationFrame(captureImage);
