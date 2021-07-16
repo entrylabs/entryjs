@@ -20,6 +20,10 @@ class ImageLearning {
         this.#url = url;
         this.#labels = labels;
         this.load(`/uploads/${url}/model.json`);
+        Entry.addEventListener('stop', () => {
+            this.#result = [];
+            this.#isPredicting = false;
+        });
     }
 
     getResult(index) {
@@ -56,7 +60,7 @@ class ImageLearning {
             const tensor = await this.preprocess(captured);
             const logits = this.model.predict(tensor);
             this.#result = await this.namePredictions(logits);
-        });
+        }, { width: 224, height: 224 });
         return this.#result;
     }
 
@@ -78,8 +82,6 @@ class ImageLearning {
     async preprocess(canvas) {
         return tf.tidy(() => {
             const offset = tf.scalar(SCALAR_VALUE);
-            canvas.width = SIZE;
-            canvas.height = SIZE;
             return tf.browser
                 .fromPixels(canvas)
                 .toFloat()
