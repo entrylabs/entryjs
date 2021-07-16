@@ -76,7 +76,7 @@ class ImageLearning {
             .map((probability, index) => ({
                 className: this.#labels[index] || index,
                 probability,
-            }));
+            })).sort((a, b) => a.probability > b.probability ? -1 : a.probability < b.probability ? 1 : 0);
     }
 
     async preprocess(canvas) {
