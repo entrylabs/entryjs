@@ -66,17 +66,16 @@ export default class HardwareLite {
     }
 
     refreshHardwareLiteBlockMenu() {
-        const workspace = Entry.getMainWS();
-        const blockMenu = workspace && workspace.blockMenu;
+        const blockMenu = Entry.getMainWS()?.blockMenu;
+        if (!blockMenu) {
+            return;
+        }
         if (this.status === HardwareStatement.disconnected) {
             blockMenu.banClass('arduinoLiteConnected', true);
             blockMenu.unbanClass('arduinoLiteConnect', true);
         } else {
             blockMenu.unbanClass('arduinoLiteConnected', true);
             blockMenu.banClass('arduinoLiteConnect', true);
-        }
-        if (!blockMenu) {
-            return;
         }
 
         if (!this.hwModule) {

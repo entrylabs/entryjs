@@ -218,7 +218,7 @@ class EntryModuleLoader {
         categoryName: string;
         blockSchemas: EntryBlockRegisterSchema[];
     }) {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const blockMenu = Entry.getMainWS()?.blockMenu;
 
         blockSchemas.forEach((blockSchema) => {
             this.applyDefaultProperties(blockSchema);
@@ -230,11 +230,13 @@ class EntryModuleLoader {
             }
 
             Entry.block[blockName] = block;
-
-            if (isBlockShowBlockMenu) {
+            if (isBlockShowBlockMenu && blockMenu) {
                 blockMenu.addCategoryData(categoryName, blockName);
             }
         });
+        if (!blockMenu) {
+            return;
+        }
 
         blockMenu.reDraw();
     }
