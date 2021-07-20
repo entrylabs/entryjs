@@ -1,3 +1,5 @@
+import ExtraBlockUtils from '../util/extrablockUtils';
+
 enum HardwareStatement {
     disconnected = 'disconnected',
     connected = 'connected',
@@ -30,8 +32,11 @@ export default class HardwareLite {
     public hwModule?: EntryHardwareBlockModule;
     static setExternalModule: any;
     static refreshHardwareLiteBlockMenu: any;
+    static banClassAllHardware: any;
+    private playground: any;
 
-    constructor() {
+    constructor(playground: any) {
+        this.playground = playground;
         this.status = HardwareStatement.disconnected;
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
         this.setExternalModule.bind(this);
@@ -42,25 +47,29 @@ export default class HardwareLite {
         this.hwModule?.setZero();
     }
 
+    isActive(name: string) {
+        return ExtraBlockUtils.isActive(name, Entry.HARDWARE_LITE_LIST);
+    }
     /**
      * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
      * @private
      */
-    private _banClassAllHardware() {
+    banClassAllHardware() {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
         if (!blockMenu) {
             return;
         }
-
         Object.values(Entry.HARDWARE_LITE_LIST || {}).forEach((hardware: any) => {
             blockMenu.banClass(hardware.name, true);
         });
+        ExtraBlockUtils.banAllBlocks(this.playground, Entry.HARDWARE_LITE_LIST);
+        blockMenu.reDraw();
     }
 
     setExternalModule(moduleObject: EntryHardwareBlockModule) {
         this.hwModule = moduleObject;
-        this._banClassAllHardware();
+        this.banClassAllHardware();
         Entry.dispatchEvent('hwLiteChanged');
         this.refreshHardwareLiteBlockMenu();
     }
@@ -80,7 +89,7 @@ export default class HardwareLite {
 
         if (!this.hwModule) {
             // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
-            this._banClassAllHardware();
+            this.banClassAllHardware();
         }
         if (this.hwModule) {
             blockMenu.unbanClass(this.hwModule?.name, true);
@@ -93,7 +102,7 @@ export default class HardwareLite {
     async getHardwareList() {
         const list = await fetch(`${Entry.moduleliteBaseUrl}`);
         const parsed = await list.json();
-        Entry.HARDWARE_LITE_LIST = parsed.map((item) => {
+        Entry.HARDWARE_LITE_LIST = parsed.map((item: any) => {
             return {
                 ...item,
                 imageName: `${Entry.moduleliteBaseUrl}${item.name}/files/image`,

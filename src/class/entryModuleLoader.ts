@@ -77,13 +77,7 @@ class EntryModuleLoader {
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                console.log(isLite);
-                if (isLite) {
-                    !this.moduleListLite.includes(name) && this.moduleListLite.push(name);
-                } else {
-                    !this.moduleList.includes(name) && this.moduleList.push(name);
-                }
-
+                this.moduleListLite = [name];
                 scriptElement.remove();
                 resolve();
             };
@@ -164,7 +158,7 @@ class EntryModuleLoader {
         if (!isDeveloping) {
             await this.loadModuleFromLocalOrOnline(moduleName, true);
         }
-
+        Entry.hwLite.banClassAllHardware();
         // @ts-ignore
         const moduleObject = Entry[moduleName] as EntryHardwareBlockModule;
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
@@ -309,6 +303,7 @@ Entry.loadExternalModules = async (project = {}) => {
 
 Entry.loadLiteExternalModules = async (project = {}) => {
     const { externalModulesLite = [] } = project;
+    Entry.externalModulesLite = externalModulesLite;
     await Promise.all(externalModulesLite.map(instance.registerHardwareLiteModule.bind(instance)));
 };
 

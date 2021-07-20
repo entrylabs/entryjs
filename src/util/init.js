@@ -232,7 +232,7 @@ Entry.initialize_ = function() {
     }
     this.hw = new Entry.HW();
 
-    this.hwLite = new Entry.HWLite();
+    this.hwLite = new Entry.HWLite(this.playground);
 
     if (Entry.enableActivityLogging) {
         this.reporter = new Entry.Reporter(false);
