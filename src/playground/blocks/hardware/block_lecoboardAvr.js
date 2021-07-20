@@ -51,7 +51,25 @@ Entry.Lecoboard = {
         BLE_READ: 12,        
         ARM_XYZ: 13,
         ARM_WG: 14,
+        HUSKY: 15,
+        HUSKY_GET: 16,
+        HUSKY_GET_LEARNED_ID_CNT: 17,
+        HUSKY_GET_BLOCK_CNT: 18,
+        HUSKY_GET_ARROW_CNT: 19,
+        HUSKY_GET_ID: 20,
+        HUSKY_GET_XD: 21,
+        HUSKY_GET_YD: 22,
+        HUSKY_GET_WD: 23,
+        HUSKY_GET_HT: 24, 
+        HUSKY_GET_ID_BL_EXIST: 25,
+        HUSKY_GET_ID_AR_EXIST: 26,
+        HUSKY_GET_BLOCK_INFO: 27,
+        HUSKY_GET_ARROW_INFO: 28, 
+        HUSKY_GET_ID_LEARNED: 29,
     },
+
+
+
     toneTable: {
         0: 0,
         C: 1,
@@ -205,6 +223,18 @@ Entry.Lecoboard.setLanguage = function() {
                 lecoboard_get_bluetooth: '블루투스에서 읽어오기',                
                 lecoboard_arm_control: '로봇팔 X%1 Y%2 Z%3 %4',
                 lecoboard_arm_gripper_control: '로봇팔 그리퍼 A%1 G%2 %3',
+                lecoboard_husky_al_set: '허스키렌즈 알고리즘 %1(으)로 설정하기 %2',
+                lecoboard_husky_get_learn: '허스키렌즈 학습한 ID수 읽어오기',
+                lecoboard_husky_get_item: '허스키렌즈 화면에 인식된 %1 읽어오기',
+                lecoboard_husky_get_ID: '허스키렌즈 화면에 인식된 ID %1 %2 읽어오기',
+                lecoboard_husky_get_closest_block: '허스키렌즈 화면 중심에서 가까운 %1 프레임 읽어오기',
+                lecoboard_husky_get_closest_arrow: '허스키렌즈 화면 중심에서 가까운 %1 화살표 읽어오기',
+                lecoboard_husky_get_id_block: '허스키렌즈 ID %1의 프레임에서 %2 읽어오기',
+                lecoboard_husky_get_id_arrow: '허스키렌즈 ID %1의 화살표에서 %2 읽어오기',
+                lecoboard_husky_get_id_learned: '허스키렌즈 학습한 ID %1이 있는지 읽어오기',
+                
+
+
                 /*
                 lecoboard_dc_motor_for_sec: '%1번 DC모터 %2방향으로 속력%3 으로 %4초 동안 동작하기 %5',*/
             },
@@ -242,6 +272,15 @@ Entry.Lecoboard.setLanguage = function() {
                 lecoboard_get_bluetooth: 'Read from BLE',
                 lecoboard_arm_control: 'Arm X%1 Y%2 Z%3 %4',
                 lecoboard_arm_gripper_control: 'Arm gripper A%1 G%2 %3',
+                lecoboard_husky_al_set: 'Huskylens Algorithm set as %1 %2',
+                lecoboard_husky_get_learn: 'Read number of learned IDs',
+                lecoboard_husky_get_item: 'Read check if %1 on screen',
+                lecoboard_husky_get_ID: 'Read check if ID %1 of %2 on screen',
+                lecoboard_husky_get_closest_block: 'Read %1 of frames closest to the center of screen',
+                lecoboard_husky_get_closest_arrow: 'Read %1 of arrows closest to the center of screen',
+                lecoboard_husky_get_id_block: 'Read frame ID %1  %2',
+                lecoboard_husky_get_id_arrow: 'Read arrow ID %1  %2',
+                lecoboard_husky_get_id_learned: 'Read Learned ID %1',
             },
         },
     };
@@ -278,10 +317,452 @@ Entry.Lecoboard.blockMenuBlocks = [
     'lecoboard_get_bluetooth',    
     'lecoboard_arm_control',
     'lecoboard_arm_gripper_control',
+    'lecoboard_husky_al_set',
+    'lecoboard_husky_get_learn',
+    'lecoboard_husky_get_id_learned',
+    'lecoboard_husky_get_item',
+    'lecoboard_husky_get_ID',
+    'lecoboard_husky_get_closest_block',
+    'lecoboard_husky_get_closest_arrow',
+    'lecoboard_husky_get_id_block',
+    'lecoboard_husky_get_id_arrow',
+    
 ];
 
 Entry.Lecoboard.getBlocks = function() {
     return {
+        
+        lecoboard_husky_al_set: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['얼굴 인식하기', '1'],
+                        ['사물 따라가기', '2'],
+                        ['사물 인식하기', '3'],
+                        ['선 따라가기', '4'],
+                        ['색깔 인식하기', '5'],
+                        ['태그 인식하기', '6'],
+                    ],
+                    value: '1',
+                    size: 12,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [1,null],
+                type: 'lecoboard_husky_al_set',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {                  
+                let huskyitem = 1;      
+                let huskyset = script.getNumberValue('VALUE1',script);
+                
+                let port = 0;
+
+                port=1;
+                if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
+                Entry.hw.sendQueue.SET[port] = {
+                    type: 15, 
+                    data: {
+                        huskyitem,
+                        huskyset,
+                    },
+                    time: new Date().getTime(),
+                };    
+                return script.callReturn();
+            },
+        },
+        lecoboard_husky_get_learn: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},     
+            def: {
+                params: [],
+                type: 'lecoboard_husky_get_learn',
+            },
+            paramsKeyMap: {},
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const item = 1;
+                const id = 0;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.HUSKYLENS_LEARNED_CNT;
+            },
+        },
+        lecoboard_husky_get_item: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['프레임', '2'],
+                        ['화살표', '3'],
+                    ],
+                    value: '2',
+                    size: 12,
+                },                
+            ],
+            events: {},
+            def: {
+                params: [2],
+                type: 'lecoboard_husky_get_item',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const id = 0;
+                let result = 0;
+                const item = script.getNumberValue('VALUE1',script);
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                if(item==2)
+                    if(Entry.hw.portData.HUSKYLENS_BL_EXIST>0)result = true;
+                    else result = false;
+                else if(item==3)
+                    if(Entry.hw.portData.HUSKYLENS_AR_EXIST>0)result = true;
+                    else result = false;
+                else result = false;
+                return result;
+            },
+        },
+        lecoboard_husky_get_ID: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['프레임', '4'],
+                        ['화살표', '5'],
+                    ],
+                    value: '4',
+                    size: 12,
+                },  
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: [1,4],
+                    },
+                ],
+                type: 'lecoboard_husky_get_ID',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                let id = script.getNumberValue('VALUE1',script);;
+                let result = 0;
+                let item = script.getNumberValue('VALUE2',script);
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                if(item==4)
+                    if(Entry.hw.portData.HUSKYLENS_BLID_EXIST>0)result = true;
+                    else result = false;
+                else if(item==5)
+                    if(Entry.hw.portData.HUSKYLENS_ARID_EXIST>0)result = true;
+                    else result = false;
+                else result = false;
+               
+                return result;
+            },
+        },
+        lecoboard_husky_get_closest_block: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['ID', '1'],
+                        ['X 중심점', '2'],
+                        ['Y 중심점', '3'],
+                        ['좌우 크기', '4'],
+                        ['상하 크기', '5'],
+                    ],
+                    value: '1',
+                    size: 12,
+                },                
+            ],
+            events: {},
+            def: {
+                params: [1],
+                type: 'lecoboard_husky_get_closest_block',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const id = 0;
+                let result = script.getNumberValue('VALUE1',script);
+                let item = 6;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                
+                if(result>=1)
+                    return Entry.hw.portData.HUSKYLENS_RESULT[result-1];
+                else return 0;
+            },
+        },
+        lecoboard_husky_get_closest_arrow: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['ID', '1'],
+                        ['X 시작점', '2'],
+                        ['Y 시작점', '3'],
+                        ['X 끝점', '4'],
+                        ['Y 끝점', '5'],
+                    ],
+                    value: '1',
+                    size: 12,
+                },                
+            ],
+            events: {},
+            def: {
+                params: [1],
+                type: 'lecoboard_husky_get_closest_arrow',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const id = 0;
+                let result = script.getNumberValue('VALUE1',script);
+                let item = 7;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                if(result>=1)
+                    return Entry.hw.portData.HUSKYLENS_RESULT[result-1];
+                else return 0;
+            },
+        },
+        lecoboard_husky_get_id_block: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['X 중심점', '1'],
+                        ['Y 중심점', '2'],
+                        ['좌우 크기', '3'],
+                        ['상하 크기', '4'],
+                    ],
+                    value: '1',
+                    size: 12,
+                },                
+            ],
+            events: {},
+            def: {
+                params: [1,1],
+                type: 'lecoboard_husky_get_id_block',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const id = script.getNumberValue('VALUE1',script);
+                let result = script.getNumberValue('VALUE2',script);
+                let item = 8;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                if(result>=1)
+                    return Entry.hw.portData.HUSKYLENS_RESULT[result];
+                else return 0;
+            },
+        },
+        lecoboard_husky_get_id_arrow: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['X 시작점', '1'],
+                        ['Y 시작점', '2'],
+                        ['X 끝점', '3'],
+                        ['Y 끝점', '4'],
+                    ],
+                    value: '1',
+                    size: 12,
+                },                
+            ],
+            events: {},
+            def: {
+                params: [1,1],
+                type: 'lecoboard_husky_get_id_arrow',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const id = script.getNumberValue('VALUE1',script);
+                let result = script.getNumberValue('VALUE2',script);;
+                let item = 9;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                if(result>=1)
+                    return Entry.hw.portData.HUSKYLENS_RESULT[result];
+                else return 0;
+            },
+        },
+        lecoboard_husky_get_id_learned: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            fontSize: 14,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',                    
+                    size: 12,
+                },       
+            ],
+            events: {},
+            def: {
+                params: [1],
+                type: 'lecoboard_husky_get_id_learned',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            class: 'lecoboardHuskylens',
+            isNotFor: ['lecoboard'],
+            func(sprite, script) {
+                const id = script.getNumberValue('VALUE1',script);
+                const item = 10;
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+                Entry.hw.sendQueue.GET[16/*Entry.Lecoboard.sensorTypes.HUSKY*/] = {
+                    port: item,
+                    data: id,
+                    time: new Date().getTime(),
+                };
+                return Entry.hw.portData.HUSKYLENS_ID_LEARNED;
+            },
+        },
         lecoboard_arm_control: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -318,11 +799,11 @@ Entry.Lecoboard.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: [98],
+                        params: [95],
                     },
                     {
                         type: 'number',
-                        params: [160],
+                        params: [185],
                     },
                     null,
                 ],
@@ -357,31 +838,6 @@ Entry.Lecoboard.getBlocks = function() {
                     time: new Date().getTime(),
                 };  
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'lecoboard_arm_control(%1, %2, %3)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_arm_gripper_control: {
@@ -447,26 +903,6 @@ Entry.Lecoboard.getBlocks = function() {
                     time: new Date().getTime(),
                 };    
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'lecoboard_arm_gripper_control(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_port_highlow_list: {
@@ -576,24 +1012,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -662,24 +1080,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_analog_input_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -711,31 +1111,6 @@ Entry.Lecoboard.getBlocks = function() {
             },
             func(sprite, script) {
                 return script.getField('PORT');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    ['1', '3'],
-                                    ['2', '4'],
-                                    ['3', '5'],
-                                    ['4', '6'],
-                                ],
-                                value: '3',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'lecoboard_analog_input_list',
-                    },
-                ],
             },
         },
         lecoboard_button_read_bool: {
@@ -868,25 +1243,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
                 return Entry.hw.portData.ULTRASONIC || 0;
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_analog_read: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -920,21 +1276,6 @@ Entry.Lecoboard.getBlocks = function() {
                 let port = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[port] || 0 : 0;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_cds_read: {
@@ -1204,29 +1545,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return result;
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.convert_scale(%1, %2, %3)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_dual_color_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1325,20 +1643,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_dual_led_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1409,24 +1713,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_led_rgb_toggle: {
@@ -1675,41 +1961,6 @@ Entry.Lecoboard.getBlocks = function() {
             func(sprite, script) {
                 return script.getField('NOTE');
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.silent, '0'],
-                                    [Lang.Blocks.do_name, 'C'],
-                                    [Lang.Blocks.do_sharp_name, 'CS'],
-                                    [Lang.Blocks.re_name, 'D'],
-                                    [Lang.Blocks.re_sharp_name, 'DS'],
-                                    [Lang.Blocks.mi_name, 'E'],
-                                    [Lang.Blocks.fa_name, 'F'],
-                                    [Lang.Blocks.fa_sharp_name, 'FS'],
-                                    [Lang.Blocks.sol_name, 'G'],
-                                    [Lang.Blocks.sol_sharp_name, 'GS'],
-                                    [Lang.Blocks.la_name, 'A'],
-                                    [Lang.Blocks.la_sharp_name, 'AS'],
-                                    [Lang.Blocks.si_name, 'B'],
-                                    [Lang.Blocks.do_name, 'C2'],
-                                ],
-                                value: 'C',
-                                fontSize: 11,
-                                converter: Entry.block.converters.returnStringValueUpperCase,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'lecoboard_tone_list',
-                    },
-                ],
-            },
         },
         arduino_ext_tone_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1737,15 +1988,6 @@ Entry.Lecoboard.getBlocks = function() {
             },
             func(sprite, script) {
                 return script.getNumberValue('NOTE');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'arduino_ext_tone_value',
-                    },
-                ],
             },
         },
         arduino_ext_octave_list: {
@@ -1781,15 +2023,6 @@ Entry.Lecoboard.getBlocks = function() {
             func(sprite, script) {
                 return script.getField('OCTAVE');
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'arduino_ext_octave_list',
-                    },
-                ],
-            },
         },
         lecoboard_buzzer_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1813,15 +2046,6 @@ Entry.Lecoboard.getBlocks = function() {
             },
             func(sprite, script) {
                 return script.getNumberValue('NOTE');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'lecoboard_buzzer_number',
-                    },
-                ],
             },
         },
         lecoboard_set_tone: {
@@ -1920,24 +2144,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_set_freq_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2032,28 +2238,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1, %2 , %3)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_set_tone_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2108,20 +2292,6 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_set_tone_long: {
@@ -2197,20 +2367,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_set_tone_off: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2250,20 +2406,6 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_servomotor_list: {
@@ -2364,24 +2506,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.servomotorWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_dc_motor: {
@@ -2497,7 +2621,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['lecoboard.dc_motor(%1, %2, %3, %4)'] },
         },
         lecoboard_dc_motor_for_sec: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2650,7 +2773,6 @@ Entry.Lecoboard.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['lecoboard.dc_motor(%1, %2, %3, %4, %5)'] },
         },
         lecoboard_dc_motor_stop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2722,7 +2844,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['lecoboard.dc_motor(%1)'] },
         },
 
         lecoboard_list_digital_lcd_line: {
@@ -2899,7 +3020,6 @@ Entry.Lecoboard.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['lecoboard_set_lcd(%1, %2, %3)'] },
         },
         lecoboard_list_lcd_command: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2986,7 +3106,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: [] },
         },
         lecoboard_send_ble: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3068,7 +3187,6 @@ Entry.Lecoboard.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['lecoboard_send_ble(%1)'] },
         },
         lecoboard_get_bluetooth: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3100,7 +3218,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return getString ? getString.slice(0, getString.length - 1) : ' ';
             },
-            syntax: { js: [], py: ['lecoboard.get_digital_bluetooth()'] },
         },
     };
 };
