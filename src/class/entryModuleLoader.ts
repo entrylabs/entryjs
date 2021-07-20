@@ -158,7 +158,7 @@ class EntryModuleLoader {
         if (!isDeveloping) {
             await this.loadModuleFromLocalOrOnline(moduleName, true);
         }
-        Entry.hwLite.banClassAllHardware();
+        Entry.hwLite.banClassAllHardwareLite();
         // @ts-ignore
         const moduleObject = Entry[moduleName] as EntryHardwareBlockModule;
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {

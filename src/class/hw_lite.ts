@@ -32,7 +32,7 @@ export default class HardwareLite {
     public hwModule?: EntryHardwareBlockModule;
     static setExternalModule: any;
     static refreshHardwareLiteBlockMenu: any;
-    static banClassAllHardware: any;
+    static banClassAllHardwareLite: any;
     private playground: any;
 
     constructor(playground: any) {
@@ -48,13 +48,19 @@ export default class HardwareLite {
     }
 
     isActive(name: string) {
-        return ExtraBlockUtils.isActive(name, Entry.HARDWARE_LITE_LIST);
+        if (this.hwModule) {
+            const data = {};
+            // @ts-ignore
+            data[name] = this.hwModule;
+            return ExtraBlockUtils.isActive(name, data);
+        }
+        return false;
     }
     /**
      * 모든 하드웨어를 숨김처리한다. 현재 연결된 하드웨어도 예외는 없다.
      * @private
      */
-    banClassAllHardware() {
+    banClassAllHardwareLite() {
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
         if (!blockMenu) {
@@ -69,7 +75,7 @@ export default class HardwareLite {
 
     setExternalModule(moduleObject: EntryHardwareBlockModule) {
         this.hwModule = moduleObject;
-        this.banClassAllHardware();
+        this.banClassAllHardwareLite();
         Entry.dispatchEvent('hwLiteChanged');
         this.refreshHardwareLiteBlockMenu();
     }
@@ -89,7 +95,7 @@ export default class HardwareLite {
 
         if (!this.hwModule) {
             // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
-            this.banClassAllHardware();
+            this.banClassAllHardwareLite();
         }
         if (this.hwModule) {
             blockMenu.unbanClass(this.hwModule?.name, true);

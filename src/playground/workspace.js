@@ -34,7 +34,7 @@ Entry.Workspace = class Workspace {
                 option.dom,
                 option.align,
                 option.categoryData,
-                option.scroll,
+                option.scroll
             );
             this._destroyer.add(this.blockMenu);
             this.blockMenu.workspace = this;
@@ -193,6 +193,7 @@ Entry.Workspace = class Workspace {
                             if (result) {
                                 Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
                                 Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
+                                Entry.hwLite.banClassAllHardwareLite();
                                 Entry.playground.dataTable.removeAllBlocks();
                                 Entry.aiLearning.removeAllBlocks();
                                 changeToPythonMode();

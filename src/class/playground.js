@@ -2187,6 +2187,19 @@ Entry.Playground = class Playground {
         });
     }
 
+    banHardwareLiteBlock() {
+        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) {
+            return;
+        }
+
+        Object.values(Entry.HARDWARE_LITE_LIST).forEach((block) => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
+            blockMenu.banClass(`${block.name.toLowerCase()}`, true);
+        });
+    }
+
     toggleLineBreak(isLineBreak) {
         const { objectType, entity } = this.object || {};
         if (objectType !== 'textBox') {
