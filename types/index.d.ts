@@ -199,6 +199,7 @@ declare interface EntryHardwareBlockModule extends EntryBlockModule {
 }
 
 declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
+    duration: number;
     // 홍보용
     imageName: string;
     url: string;
@@ -215,7 +216,7 @@ declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
         connectionType: 'bytestream' | 'ascii';
     };
     type?: 'master' | 'slave';
-    delimeter?: string;
+    delimeter?: string | number;
 
     // 필수 함수 목록
     setZero: () => void;

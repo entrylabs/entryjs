@@ -34,7 +34,7 @@ export default class HardwareLite {
     private writer: SerialPort.writer;
     private reader: SerialPort.reader;
     private writableStream: any;
-    public static hwModule?: EntryHardwareLiteBlockModule;
+    hwModule: EntryHardwareLiteBlockModule;
     static setExternalModule: any;
     static refreshHardwareLiteBlockMenu: any;
     static banClassAllHardwareLite: any;
@@ -44,6 +44,7 @@ export default class HardwareLite {
 
     constructor(playground: any) {
         this.playground = playground;
+        this.hwModule = null;
         this.status = HardwareStatement.disconnected;
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
         this.setExternalModule.bind(this);
@@ -134,7 +135,6 @@ export default class HardwareLite {
             }
 
             const { value, done } = await this.reader.read();
-
             this.hwModule?.handleLocalData(value);
 
             if (this.hwModule?.duration) {
@@ -177,18 +177,21 @@ export default class HardwareLite {
             const writer = port.writable.getWriter();
             const lineReader = port.readable
                 .pipeThrough(new TextDecoderStream())
-                .pipeThrough(
-                    new TransformStream(
-                        this.hwModule?.type !== 'master' &&
-                            new LineBreakTransformer(this.hwModule?.delimeter)
-                    )
-                )
+                .pipeThrough(new TransformStream(new LineBreakTransformer()))
                 .getReader();
             this.writer = writer;
             this.reader = lineReader;
         } else {
             this.writer = port.writable.getWriter();
-            this.reader = port.readable.getReader();
+            if (this.hwModule.delimeter) {
+                this.reader = port.readable
+                    .pipeThrough(
+                        new TransformStream(new LineBreakTransformer(this.hwModule?.delimeter))
+                    )
+                    .getReader();
+            } else {
+                this.reader = port.readable.getReader();
+            }
         }
 
         this.connectionType = this.hwModule?.portData?.connectionType;

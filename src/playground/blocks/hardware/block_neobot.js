@@ -2071,8 +2071,8 @@ Entry.Neobot.getBlocks = function() {
                 if (!script.isStart) {
                     var port = script.getStringField('PORT', script);
                     if (port == 'ALL') {
-                        Entry.hw.sendQueue['OUT1'] = 0xBA;
-                        Entry.hw.sendQueue['OUT2'] = 0xBA;
+                        Entry.hw.sendQueue['OUT1'] = 0xba;
+                        Entry.hw.sendQueue['OUT2'] = 0xba;
 
                         script.isStart = true;
                         script.timeFlag = 1;
@@ -2082,7 +2082,7 @@ Entry.Neobot.getBlocks = function() {
                             script.timeFlag = 0;
                         }, 200);
                     } else {
-                        Entry.hw.sendQueue[port] = 0xBA;
+                        Entry.hw.sendQueue[port] = 0xba;
 
                         script.isStart = true;
                         script.timeFlag = 1;
@@ -2194,12 +2194,12 @@ Entry.Neobot.getBlocks = function() {
                     if (port == 'ALL') {
                         switch (direction) {
                             case 1:
-                                Entry.hw.sendQueue['OUT1'] = 0xBC;
-                                Entry.hw.sendQueue['OUT2'] = 0xBC;
+                                Entry.hw.sendQueue['OUT1'] = 0xbc;
+                                Entry.hw.sendQueue['OUT2'] = 0xbc;
                                 break;
                             case 2:
-                                Entry.hw.sendQueue['OUT1'] = 0xBD;
-                                Entry.hw.sendQueue['OUT2'] = 0xBD;
+                                Entry.hw.sendQueue['OUT1'] = 0xbd;
+                                Entry.hw.sendQueue['OUT2'] = 0xbd;
                                 break;
                         }
 
@@ -2227,10 +2227,10 @@ Entry.Neobot.getBlocks = function() {
                     } else {
                         switch (direction) {
                             case 1:
-                                Entry.hw.sendQueue[port] = 0xBC;
+                                Entry.hw.sendQueue[port] = 0xbc;
                                 break;
                             case 2:
-                                Entry.hw.sendQueue[port] = 0xBD;
+                                Entry.hw.sendQueue[port] = 0xbd;
                                 break;
                         }
 
@@ -2340,21 +2340,21 @@ Entry.Neobot.getBlocks = function() {
                 if (port == 'ALL') {
                     switch (direction) {
                         case 1:
-                            Entry.hw.sendQueue['OUT1'] = 0xC0 + (speed + 0x01);
-                            Entry.hw.sendQueue['OUT2'] = 0xC0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT1'] = 0xc0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT2'] = 0xc0 + (speed + 0x01);
                             break;
                         case 2:
-                            Entry.hw.sendQueue['OUT1'] = 0xD0 + (speed + 0x01);
-                            Entry.hw.sendQueue['OUT2'] = 0xD0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT1'] = 0xd0 + (speed + 0x01);
+                            Entry.hw.sendQueue['OUT2'] = 0xd0 + (speed + 0x01);
                             break;
                     }
                 } else {
                     switch (direction) {
                         case 1:
-                            Entry.hw.sendQueue[port] = 0xC0 + (speed + 0x01);
+                            Entry.hw.sendQueue[port] = 0xc0 + (speed + 0x01);
                             break;
                         case 2:
-                            Entry.hw.sendQueue[port] = 0xD0 + (speed + 0x01);
+                            Entry.hw.sendQueue[port] = 0xd0 + (speed + 0x01);
                             break;
                     }
                 }
