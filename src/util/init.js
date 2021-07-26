@@ -368,12 +368,12 @@ Entry.createDom = function(container, type) {
                     const list = tempList[i];
                     if (wheelDirection) {
                         if (list.scrollButton_.y >= 46) {
-                            list.scrollButton_.y -= 23;
+                            list.scrollButton_.y -= 25;
                         } else {
-                            list.scrollButton_.y = 23;
+                            list.scrollButton_.y = 25;
                         }
                     } else {
-                        list.scrollButton_.y += 23;
+                        list.scrollButton_.y += 25;
                     }
                     list.updateView();
                 }
