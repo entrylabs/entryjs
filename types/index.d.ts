@@ -197,3 +197,33 @@ declare interface EntryHardwareBlockModule extends EntryBlockModule {
     afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
     dataHandler?: (data: HardwareMessageData) => void;
 }
+
+declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
+    // 홍보용
+    imageName: string;
+    url: string;
+
+    // 모듈 정의용
+    id: string | string[];
+    monitorTemplate?: UnknownAny;
+    portData: {
+        baudRate: Number;
+        dataBits: Number;
+        parity: 'none' | 'even' | 'odd';
+        stopBits: 1 | 2;
+        bufferSize: Number;
+        connectionType: 'bytestream' | 'ascii';
+    };
+    type?: 'master' | 'slave';
+    delimeter?: string;
+
+    // 필수 함수 목록
+    setZero: () => void;
+    blockMenuBlocks: string[];
+    setLanguage: () => {
+        [langType: string]: { [type: string]: { [templateName: string]: string } };
+    };
+    handleLocalData: (value: any) => void;
+    initialHandshake: () => void;
+    requestLocalData: () => string;
+}

@@ -310,28 +310,28 @@ function getBlocks() {
                 ],
             },
         },
-        // arduino_lite_connect: {
-        //     skeleton: 'basic_button',
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     template: '%1',
-        //     isNotFor: ['arduinoLiteConnect'],
-        //     class: 'arduino_lite_default',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.Blocks.arduino_lite_connect,
-        //             color: EntryStatic.colorSet.common.BUTTON,
-        //             align: 'center',
-        //         },
-        //     ],
-        //     events: {
-        //         mousedown: [
-        //             function() {
-        //                 Entry.hwLite.connect();
-        //             },
-        //         ],
-        //     },
-        // },
+        arduino_lite_connect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnect'],
+            class: 'arduino_lite_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.connect();
+                    },
+                ],
+            },
+        },
         arduino_lite_disconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.TRANSPARENT,

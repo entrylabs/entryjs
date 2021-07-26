@@ -1,3 +1,4 @@
+import { TextEncoder } from 'util';
 import ExtraBlockUtils from '../util/extrablockUtils';
 
 enum HardwareStatement {
@@ -12,10 +13,14 @@ class LineBreakTransformer {
     }
 
     transform(chunk: string, controller: any) {
-        this.container += chunk;
-        const lines = this.container.split('\r\n');
-        this.container = lines.pop();
-        lines.forEach((line) => controller.enqueue(line));
+        try {
+            this.container += chunk;
+            const lines = this.container.split(Entry.hwLite.hwModule.delimeter || '\r\n');
+            this.container = lines.pop();
+            lines.forEach((line) => controller.enqueue(line));
+        } catch (e) {
+            controller.enqueue(chunk);
+        }
     }
 
     flush(controller: any) {
@@ -29,11 +34,13 @@ export default class HardwareLite {
     private writer: SerialPort.writer;
     private reader: SerialPort.reader;
     private writableStream: any;
-    public hwModule?: EntryHardwareBlockModule;
+    public static hwModule?: EntryHardwareLiteBlockModule;
     static setExternalModule: any;
     static refreshHardwareLiteBlockMenu: any;
     static banClassAllHardwareLite: any;
     private playground: any;
+    private connectionType: string;
+    textEncoder: TextEncoder;
 
     constructor(playground: any) {
         this.playground = playground;
@@ -73,7 +80,7 @@ export default class HardwareLite {
         blockMenu.reDraw();
     }
 
-    setExternalModule(moduleObject: EntryHardwareBlockModule) {
+    setExternalModule(moduleObject: EntryHardwareLiteBlockModule) {
         this.hwModule = moduleObject;
         this.banClassAllHardwareLite();
         Entry.dispatchEvent('hwLiteChanged');
@@ -116,54 +123,101 @@ export default class HardwareLite {
         });
     }
 
-    async connect(hwJson?: IHardwareModuleConfig) {
+    async constantServing() {
+        let container: Uint8Array[] = [];
+        try {
+            if (this.status === HardwareStatement.disconnected) {
+                return;
+            }
+            const reqLocal = this.hwModule?.requestLocalData();
+            if (reqLocal && this.status === HardwareStatement.connected) {
+                this.writer.write(Buffer.from(reqLocal));
+            }
+
+            const { value, done } = await this.reader.read();
+
+            container = container.concat(...value);
+            const lineLength = this.hwModule?.lineLength;
+
+            if (lineLength) {
+                if (container.length > lineLength) {
+                    const spliced = container.splice(0, lineLength);
+                    this.hwModule?.handleLocalData(spliced);
+                }
+            } else {
+                this.hwModule?.handleLocalData(value);
+            }
+
+            if (this.hwModule?.duration) {
+                await new Promise((resolve, reject) => {
+                    setTimeout(() => {
+                        this.constantServing();
+                    }, this.hwModule.duration);
+                });
+            }
+        } catch (err) {
+            this.status === HardwareStatement.disconnected;
+            console.log(err);
+            this.disconnect();
+            return;
+        }
+    }
+
+    async connect() {
         if (this.status === HardwareStatement.connected) {
             return;
         }
         const port = await navigator.serial.requestPort();
-        await port.open({
-            baudRate: 115200,
-            dataBits: 8,
-            parity: 'none',
-            stopBits: 1,
-            bufferSize: 512,
-        });
+
+        await port.open(
+            this.hwModule?.portData || {
+                baudRate: 9600,
+                dataBits: 8,
+                parity: 'none',
+                bufferSize: 256,
+                stopBits: 1,
+                ...this.hwModule?.portData,
+            }
+        );
         this.port = port;
-        const portInfo = port.getInfo();
-        // Microbit에서만 적용되는 코드, ascii 통신용
-        if (portInfo.usbProductId === 516 && portInfo.usbVendorId === 3368) {
+        if (this.hwModule?.portData?.connectionType === 'ascii') {
             const encoder = new TextEncoderStream();
             const writableStream = encoder.readable.pipeTo(port.writable);
             const writer = encoder.writable.getWriter();
-            this.writer = writer;
             this.writableStream = writableStream;
+            const writer = port.writable.getWriter();
             const lineReader = port.readable
                 .pipeThrough(new TextDecoderStream())
-                .pipeThrough(new TransformStream(new LineBreakTransformer()))
+                .pipeThrough(
+                    new TransformStream(
+                        this.hwModule?.type !== 'master' &&
+                            new LineBreakTransformer(this.hwModule?.delimeter)
+                    )
+                )
                 .getReader();
+            this.writer = writer;
             this.reader = lineReader;
         } else {
             this.writer = port.writable.getWriter();
             this.reader = port.readable.getReader();
         }
-        try {
-            await this.getHardwareList();
-        } catch (err) {
-            console.log(err);
-        }
+
+        this.connectionType = this.hwModule?.portData?.connectionType;
 
         this.status = HardwareStatement.connected;
         this.refreshHardwareLiteBlockMenu();
+        if (this.hwModule?.portData?.constantServing) {
+            this.constantServing();
+        }
     }
 
     async disconnect() {
         try {
             await this.reader?.cancel();
             await this.writer?.abort();
-            if (this.writableStream) {
+            if (this.connectionType === 'ascii') {
                 await this.writableStream;
             }
-            await this.writer?.close();
         } catch (err) {
             console.log(err);
         } finally {
@@ -189,27 +243,37 @@ export default class HardwareLite {
      * @returns Promise resolves to resulting message
      */
 
-    async sendAsync(data?: Buffer | string, isResetReq?: boolean) {
-        await this.connect();
-        if (this.status === HardwareStatement.disconnected) {
-            Entry.toast.alert(
-                Lang.Hw.hw_module_terminaltion_title,
-                Lang.Hw.hw_module_terminaltion_desc,
-                false
-            );
-            throw new Error('HARDWARE LITE NOT CONNECTED');
-        }
-
+    async sendAsync(data?: Buffer | string, isResetReq?: boolean, callback?: Function) {
         if (!data) {
             return;
         }
-        this.writer.write(data);
-        if (isResetReq) {
-            return;
+        const encodedData = typeof data === 'string' ? data : Buffer.from(data, 'utf8');
+        await this.connect();
+        try {
+            if (this.status === HardwareStatement.disconnected) {
+                Entry.toast.alert(
+                    Lang.Hw.hw_module_terminaltion_title,
+                    Lang.Hw.hw_module_terminaltion_desc,
+                    false
+                );
+                throw new Error('HARDWARE LITE NOT CONNECTED');
+            }
+            await this.writer.write(encodedData);
+
+            if (isResetReq) {
+                return;
+            }
+
+            const { value, done } = await this.reader.read();
+
+            if (callback) {
+                return callback(value);
+            }
+            this.hwModule?.handleLocalData(value);
+            return value;
+        } catch (err) {
+            console.log(err);
         }
-        const { value, done } = await this.reader.read();
-        console.log('[received]', value);
-        return value;
     }
 }
 

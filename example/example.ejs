@@ -17,6 +17,11 @@
 
     <body>
         <section>
+            <input type="file" id="litemodule" />
+            <input type="text" id="litemodulename" />
+            <button style="border: 1px solid black" onclick="handleUpdate()">
+                apply
+            </button>
             <button style="border: 1px solid black" onclick="changeWorkspaceMode('block')">
                 Block Mode
             </button>
@@ -136,6 +141,12 @@
         <% } %>
 
         <script>
+            function handleUpdate() {
+                const file = document.getElementById('litemodule').files[0];
+                const name = document.getElementById('litemodulename').value;
+                Entry.loadLiteTestModule(file, name);
+            }
+
             function changeWorkspaceMode(mode) {
                 const option = {};
 

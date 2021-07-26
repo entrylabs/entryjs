@@ -497,9 +497,11 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'arduino_lite',
-            blocks: ['arduino_lite_disconnect', 'arduino_lite_add_button'].concat(
-                EntryStatic.DynamicHardwareLiteBlocks
-            ),
+            blocks: [
+                'arduino_lite_connect',
+                'arduino_lite_disconnect',
+                'arduino_lite_add_button',
+            ].concat(EntryStatic.DynamicHardwareLiteBlocks),
         },
         {
             category: 'arduino',
