@@ -124,7 +124,6 @@ export default class HardwareLite {
     }
 
     async constantServing() {
-        let container: Uint8Array[] = [];
         try {
             if (this.status === HardwareStatement.disconnected) {
                 return;
@@ -136,17 +135,7 @@ export default class HardwareLite {
 
             const { value, done } = await this.reader.read();
 
-            container = container.concat(...value);
-            const lineLength = this.hwModule?.lineLength;
-
-            if (lineLength) {
-                if (container.length > lineLength) {
-                    const spliced = container.splice(0, lineLength);
-                    this.hwModule?.handleLocalData(spliced);
-                }
-            } else {
-                this.hwModule?.handleLocalData(value);
-            }
+            this.hwModule?.handleLocalData(value);
 
             if (this.hwModule?.duration) {
                 await new Promise((resolve, reject) => {
