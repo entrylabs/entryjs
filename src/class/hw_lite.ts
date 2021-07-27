@@ -174,7 +174,6 @@ export default class HardwareLite {
             const writableStream = encoder.readable.pipeTo(port.writable);
             const writer = encoder.writable.getWriter();
             this.writableStream = writableStream;
-            const writer = port.writable.getWriter();
             const lineReader = port.readable
                 .pipeThrough(new TextDecoderStream())
                 .pipeThrough(new TransformStream(new LineBreakTransformer()))
@@ -183,7 +182,7 @@ export default class HardwareLite {
             this.reader = lineReader;
         } else {
             this.writer = port.writable.getWriter();
-            if (this.hwModule.delimeter) {
+            if (this.hwModule?.delimeter) {
                 this.reader = port.readable
                     .pipeThrough(
                         new TransformStream(new LineBreakTransformer(this.hwModule?.delimeter))
