@@ -667,6 +667,7 @@ Entry.Engine = class Engine {
 
         this.selectedObject = Entry.stage.selectedObject;
         Entry.stage.selectObject();
+        Entry.dispatchEvent('closeBackPack');
         Entry.dispatchEvent('run');
     }
 
