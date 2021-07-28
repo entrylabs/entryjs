@@ -28,14 +28,14 @@ Entry.NeobotPurple = {
             FND: { name: 'FND', type: 'output', pos: { x: 0, y: 0 } },
         },
         ports: {
-            IN1: { name: 'IN1', type: 'input', pos: { x: 270, y: 200 } },
-            IN2: { name: 'IN2', type: 'input', pos: { x: 325, y: 200 } },
-            IN3: { name: 'IN3', type: 'input', pos: { x: 325, y: 500 } },
-            DCL: { name: 'L-Motor', type: 'output', pos: { x: 270, y: 500 } },
-            DCR: { name: 'R-Motor', type: 'output', pos: { x: 435, y: 500 } },
-            OUT1: { name: 'OUT1', type: 'output', pos: { x: 380, y: 200 } },
-            OUT2: { name: 'OUT2', type: 'output', pos: { x: 435, y: 200 } },
-            OUT3: { name: 'OUT3', type: 'output', pos: { x: 380, y: 500 } },
+            IN1: { name: 'IN1', type: 'input', pos: { x: 270, y: 170 } },
+            IN2: { name: 'IN2', type: 'input', pos: { x: 325, y: 170 } },
+            IN3: { name: 'IN3', type: 'input', pos: { x: 325, y: 530 } },
+            DCL: { name: 'L-Motor', type: 'output', pos: { x: 270, y: 530 } },
+            DCR: { name: 'R-Motor', type: 'output', pos: { x: 435, y: 530 } },
+            OUT1: { name: 'OUT1', type: 'output', pos: { x: 380, y: 170 } },
+            OUT2: { name: 'OUT2', type: 'output', pos: { x: 435, y: 170 } },
+            OUT3: { name: 'OUT3', type: 'output', pos: { x: 380, y: 530 } },
         },
         mode: 'both',
     },
@@ -1970,17 +1970,19 @@ Entry.NeobotPurple.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    if (out1) Entry.hw.sendQueue['OUT1'] = resetValue;
-                    if (out2) Entry.hw.sendQueue['OUT2'] = resetValue;
-                    if (out3) Entry.hw.sendQueue['OUT3'] = resetValue;
-                    if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + resetValue, 'speak');
                     setTimeout(function() {
-                        if (out1) Entry.hw.sendQueue['OUT1'] = initValue;
-                        if (out2) Entry.hw.sendQueue['OUT2'] = initValue;
-                        if (out3) Entry.hw.sendQueue['OUT3'] = initValue;
-                        if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + initValue, 'speak');
-                        script.timeFlag = 0;
-                    }, 200);
+                        if (out1) Entry.hw.sendQueue['OUT1'] = resetValue;
+                        if (out2) Entry.hw.sendQueue['OUT2'] = resetValue;
+                        if (out3) Entry.hw.sendQueue['OUT3'] = resetValue;
+                        if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + resetValue, 'speak');
+                        setTimeout(function() {
+                            if (out1) Entry.hw.sendQueue['OUT1'] = initValue;
+                            if (out2) Entry.hw.sendQueue['OUT2'] = initValue;
+                            if (out3) Entry.hw.sendQueue['OUT3'] = initValue;
+                            if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + initValue, 'speak');
+                            script.timeFlag = 0;
+                        }, 200);
+                    }, 100);
 
                     return script;
                 } else if (script.timeFlag == 1) {
