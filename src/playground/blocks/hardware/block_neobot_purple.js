@@ -1970,19 +1970,19 @@ Entry.NeobotPurple.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
+                    if (out1) Entry.hw.sendQueue['OUT1'] = resetValue;
+                    if (out2) Entry.hw.sendQueue['OUT2'] = resetValue;
+                    if (out3) Entry.hw.sendQueue['OUT3'] = resetValue;
+                    if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + resetValue, 'speak');
                     setTimeout(function() {
-                        if (out1) Entry.hw.sendQueue['OUT1'] = resetValue;
-                        if (out2) Entry.hw.sendQueue['OUT2'] = resetValue;
-                        if (out3) Entry.hw.sendQueue['OUT3'] = resetValue;
-                        if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + resetValue, 'speak');
+                        if (out1) Entry.hw.sendQueue['OUT1'] = initValue;
+                        if (out2) Entry.hw.sendQueue['OUT2'] = initValue;
+                        if (out3) Entry.hw.sendQueue['OUT3'] = initValue;
+                        if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + initValue, 'speak');
                         setTimeout(function() {
-                            if (out1) Entry.hw.sendQueue['OUT1'] = initValue;
-                            if (out2) Entry.hw.sendQueue['OUT2'] = initValue;
-                            if (out3) Entry.hw.sendQueue['OUT3'] = initValue;
-                            if (Entry.NeobotPurple.log_to_console) Entry.console.print('neobot_purple_servo_init : ' + initValue, 'speak');
                             script.timeFlag = 0;
-                        }, 200);
-                    }, 100);
+                        }, 100);
+                    }, 200);
 
                     return script;
                 } else if (script.timeFlag == 1) {

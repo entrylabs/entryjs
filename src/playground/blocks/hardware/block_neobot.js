@@ -2073,27 +2073,29 @@ Entry.Neobot.getBlocks = function() {
                     if (port == 'ALL') {
                         script.isStart = true;
                         script.timeFlag = 1;
-                        setTimeout(function() {
-                            Entry.hw.sendQueue['OUT1'] = 0xBA;
-                            Entry.hw.sendQueue['OUT2'] = 0xBA;
 
+                        Entry.hw.sendQueue['OUT1'] = 0xBA;
+                        Entry.hw.sendQueue['OUT2'] = 0xBA;
+
+                        setTimeout(function() {
+                            Entry.hw.sendQueue['OUT1'] = 0x01;
+                            Entry.hw.sendQueue['OUT2'] = 0x01;
                             setTimeout(function() {
-                                Entry.hw.sendQueue['OUT1'] = 0x01;
-                                Entry.hw.sendQueue['OUT2'] = 0x01;
                                 script.timeFlag = 0;
-                            }, 200);
-                        }, 100);
+                            }, 100);
+                        }, 200);
+
                     } else {
                         script.isStart = true;
                         script.timeFlag = 1;
 
+                        Entry.hw.sendQueue[port] = 0xBA;
                         setTimeout(function() {
-                            Entry.hw.sendQueue[port] = 0xBA;
+                            Entry.hw.sendQueue[port] = 0x01;
                             setTimeout(function() {
-                                Entry.hw.sendQueue[port] = 0x01;
                                 script.timeFlag = 0;
-                            }, 200);
-                        }, 100);
+                            }, 100);
+                        }, 200);
                     }
                     return script;
                 } else if (script.timeFlag == 1) {
