@@ -87,6 +87,8 @@ type WebSocketMessage = {
     type: 'utf8';
 };
 
+declare module SerialPort {}
+
 declare module IEntry {
     export interface Container {
         resizeEvent: any; // Entry.Event
@@ -213,7 +215,12 @@ declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
         parity: 'none' | 'even' | 'odd';
         stopBits: 1 | 2;
         bufferSize: Number;
-        connectionType: 'bytestream' | 'ascii';
+        connectionType?: 'bytestream' | 'ascii';
+        constantServing?: boolean;
+        constantRead?: boolean;
+        writeAscii?: boolean;
+        readAscii?: boolean;
+        flowControl?: 'hardware';
     };
     type?: 'master' | 'slave';
     delimeter?: string | number;
@@ -225,6 +232,6 @@ declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
         [langType: string]: { [type: string]: { [templateName: string]: string } };
     };
     handleLocalData: (value: any) => void;
-    initialHandshake: () => void;
+    initialHandshake: () => any;
     requestLocalData: () => string;
 }

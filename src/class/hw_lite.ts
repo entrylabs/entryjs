@@ -15,7 +15,8 @@ class LineBreakTransformer {
     transform(chunk: string, controller: any) {
         try {
             this.container += chunk;
-            const lines = this.container.split(Entry.hwLite.hwModule.delimeter || '\r\n');
+            // @ts-ignore
+            const lines = this.container.split(Entry.hwLite?.hwModule?.delimeter || '\r\n');
             this.container = lines.pop();
             lines.forEach((line) => controller.enqueue(line));
         } catch (e) {
@@ -30,9 +31,9 @@ class LineBreakTransformer {
 
 export default class HardwareLite {
     private status: string;
-    private port: SerialPort;
-    private writer: SerialPort.writer;
-    private reader: SerialPort.reader;
+    private port: any; // serialport
+    private writer: any; // SerialPort.writer;
+    private reader: any; //SerialPort.reader;
     private writableStream: any;
     hwModule: EntryHardwareLiteBlockModule;
     static setExternalModule: any;
@@ -138,15 +139,15 @@ export default class HardwareLite {
             this.hwModule?.handleLocalData(value);
 
             if (this.hwModule?.duration) {
-                await new Promise((resolve, reject) => {
-                    setTimeout(() => {
-                        this.constantServing();
-                    }, this.hwModule.duration);
-                });
+                setTimeout(() => {
+                    this.constantServing();
+                }, this.hwModule.duration);
+            } else if (this.hwModule?.duration === -1) {
+                this.constantServing();
             }
         } catch (err) {
             this.status === HardwareStatement.disconnected;
-            console.log(err);
+            console.error(err);
             this.disconnect();
             return;
         }
@@ -156,6 +157,7 @@ export default class HardwareLite {
         if (this.status === HardwareStatement.connected) {
             return;
         }
+        // @ts-ignore
         const port = await navigator.serial.requestPort();
 
         await port.open(
@@ -169,34 +171,54 @@ export default class HardwareLite {
             }
         );
         this.port = port;
-        if (this.hwModule?.portData?.connectionType === 'ascii') {
-            const encoder = new TextEncoderStream();
-            const writableStream = encoder.readable.pipeTo(port.writable);
-            const writer = encoder.writable.getWriter();
+        const encoder = new TextEncoderStream();
+        // if () {
+        //     const writableStream = encoder.readable.pipeTo(port.writable);
+        //     const writer = encoder.writable.getWriter();
+        //     this.writableStream = writableStream;
+        //     const lineReader = port.readable
+        //         .pipeThrough(new TextDecoderStream())
+        //         .pipeThrough(new TransformStream(new LineBreakTransformer()))
+        //         .getReader();
+        //     this.writer = writer;
+        //     this.reader = lineReader;
+        // } else {
+        const writable = port.writable;
+        if (
+            this.hwModule?.portData?.writeAscii ||
+            this.hwModule?.portData?.connectionType === 'ascii'
+        ) {
+            const writableStream = encoder.readable.pipeTo(writable);
             this.writableStream = writableStream;
-            const lineReader = port.readable
-                .pipeThrough(new TextDecoderStream())
-                .pipeThrough(new TransformStream(new LineBreakTransformer()))
-                .getReader();
-            this.writer = writer;
-            this.reader = lineReader;
+            this.writer = encoder.writable.getWriter();
         } else {
             this.writer = port.writable.getWriter();
-            if (this.hwModule?.delimeter) {
-                this.reader = port.readable
-                    .pipeThrough(
-                        new TransformStream(new LineBreakTransformer(this.hwModule?.delimeter))
-                    )
-                    .getReader();
-            } else {
-                this.reader = port.readable.getReader();
-            }
         }
+
+        let readable = port.readable;
+        if (
+            this.hwModule?.portData?.readAscii ||
+            this.hwModule?.portData?.connectionType === 'ascii'
+        ) {
+            readable = readable.pipeThrough(new TextDecoderStream());
+        }
+        if (this.hwModule?.delimeter || this.hwModule?.portData?.connectionType === 'ascii') {
+            readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
+        }
+        this.reader = readable.getReader();
+        // }
 
         this.connectionType = this.hwModule?.portData?.connectionType;
 
         this.status = HardwareStatement.connected;
         this.refreshHardwareLiteBlockMenu();
+        if (this.hwModule?.initialHandshake) {
+            const result = await this.hwModule.initialHandshake();
+            if (!result) {
+                this.disconnect();
+                return;
+            }
+        }
         if (this.hwModule?.portData?.constantServing) {
             this.constantServing();
         }
@@ -210,7 +232,7 @@ export default class HardwareLite {
                 await this.writableStream;
             }
         } catch (err) {
-            console.log(err);
+            console.error(err);
         } finally {
             await this.port?.close();
             this.port = null;
@@ -238,6 +260,7 @@ export default class HardwareLite {
         if (!data) {
             return;
         }
+        // @ts-ignore
         const encodedData = typeof data === 'string' ? data : Buffer.from(data, 'utf8');
         await this.connect();
         try {
@@ -254,17 +277,18 @@ export default class HardwareLite {
             if (isResetReq) {
                 return;
             }
-
             const { value, done } = await this.reader.read();
-
             if (callback) {
                 return callback(value);
             }
             this.hwModule?.handleLocalData(value);
             return value;
         } catch (err) {
-            console.log(err);
+            console.error(err);
         }
+    }
+    sendAsciiAsBuffer(asciiStr: string) {
+        this.writer.write(Buffer.from(asciiStr, 'utf8'));
     }
 }
 
