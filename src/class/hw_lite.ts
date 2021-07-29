@@ -172,6 +172,9 @@ export default class HardwareLite {
         );
         this.port = port;
         const encoder = new TextEncoderStream();
+        const writable = port.writable;
+        const { portData } = this.hwModule;
+        this.connectionType = portData?.connectionType;
         // if () {
         //     const writableStream = encoder.readable.pipeTo(port.writable);
         //     const writer = encoder.writable.getWriter();
@@ -183,11 +186,7 @@ export default class HardwareLite {
         //     this.writer = writer;
         //     this.reader = lineReader;
         // } else {
-        const writable = port.writable;
-        if (
-            this.hwModule?.portData?.writeAscii ||
-            this.hwModule?.portData?.connectionType === 'ascii'
-        ) {
+        if (portData?.writeAscii || portData?.connectionType === 'ascii') {
             const writableStream = encoder.readable.pipeTo(writable);
             this.writableStream = writableStream;
             this.writer = encoder.writable.getWriter();
@@ -196,19 +195,14 @@ export default class HardwareLite {
         }
 
         let readable = port.readable;
-        if (
-            this.hwModule?.portData?.readAscii ||
-            this.hwModule?.portData?.connectionType === 'ascii'
-        ) {
+        if (portData?.readAscii || this.connectionType === 'ascii') {
             readable = readable.pipeThrough(new TextDecoderStream());
         }
-        if (this.hwModule?.delimeter || this.hwModule?.portData?.connectionType === 'ascii') {
+        if (this.hwModule?.delimeter || this.connectionType === 'ascii') {
             readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
         }
         this.reader = readable.getReader();
         // }
-
-        this.connectionType = this.hwModule?.portData?.connectionType;
 
         this.status = HardwareStatement.connected;
         this.refreshHardwareLiteBlockMenu();
@@ -219,7 +213,7 @@ export default class HardwareLite {
                 return;
             }
         }
-        if (this.hwModule?.portData?.constantServing) {
+        if (portData?.constantServing) {
             this.constantServing();
         }
     }
