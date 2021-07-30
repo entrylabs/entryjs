@@ -130,9 +130,11 @@ export default class HardwareLite {
             if (this.status === HardwareStatement.disconnected) {
                 return;
             }
-            const reqLocal = this.hwModule?.requestLocalData();
-            if (reqLocal && this.status === HardwareStatement.connected) {
-                this.writer.write(Buffer.from(reqLocal));
+            if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
+                const reqLocal = this.hwModule?.requestLocalData();
+                if (reqLocal && this.status === HardwareStatement.connected) {
+                    this.writer.write(Buffer.from(reqLocal));
+                }
             }
 
             const { value, done } = await this.reader.read();
@@ -142,7 +144,7 @@ export default class HardwareLite {
                 setTimeout(() => {
                     this.constantServing();
                 }, this.hwModule.duration);
-            } else if (this.hwModule?.duration === -1) {
+            } else {
                 this.constantServing();
             }
         } catch (err) {
@@ -159,21 +161,20 @@ export default class HardwareLite {
         }
         // @ts-ignore
         const port = await navigator.serial.requestPort();
-
+        const { portData } = this.hwModule || {};
         await port.open(
-            this.hwModule?.portData || {
+            portData || {
                 baudRate: 9600,
                 dataBits: 8,
                 parity: 'none',
                 bufferSize: 256,
                 stopBits: 1,
-                ...this.hwModule?.portData,
             }
         );
         this.port = port;
         const encoder = new TextEncoderStream();
         const writable = port.writable;
-        const { portData } = this.hwModule;
+
         this.connectionType = portData?.connectionType;
         // if () {
         //     const writableStream = encoder.readable.pipeTo(port.writable);

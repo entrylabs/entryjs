@@ -216,7 +216,7 @@ declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
         stopBits: 1 | 2;
         bufferSize: Number;
         connectionType?: 'bytestream' | 'ascii';
-        constantServing?: boolean;
+        constantServing?: boolean | 'ReadOnly';
         constantRead?: boolean;
         writeAscii?: boolean;
         readAscii?: boolean;
