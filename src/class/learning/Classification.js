@@ -1,7 +1,6 @@
 import InputPopup from './InputPopup';
 
 export const classes = [
-    'ai_learning_image',
     'ai_learning_speech'
 ];
 
