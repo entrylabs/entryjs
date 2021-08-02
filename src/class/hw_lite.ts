@@ -98,7 +98,15 @@ export default class HardwareLite {
         if (this.status === HardwareStatement.disconnected) {
             blockMenu.banClass('arduinoLiteConnected', true);
             blockMenu.unbanClass('arduinoLiteConnect', true);
+            if (this.hwModule) {
+                blockMenu.unbanClass('arduinoLiteConnectButton');
+            } else {
+                blockMenu.banClass('arduinoLiteConnectButton');
+            }
         } else {
+            if (this.hwModule) {
+                blockMenu.banClass('arduinoLiteConnectButton');
+            }
             blockMenu.unbanClass('arduinoLiteConnected', true);
             blockMenu.banClass('arduinoLiteConnect', true);
         }
