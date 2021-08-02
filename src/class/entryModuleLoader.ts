@@ -1,5 +1,6 @@
 import fetch from 'isomorphic-fetch';
 import cryptojs from 'crypto-js';
+import HardwareLite from './hw_lite';
 type EntryBlockRegisterSchema = {
     blockName: string;
     block: EntryBlock;
@@ -62,6 +63,13 @@ class EntryModuleLoader {
             throw new Error('MODULE NOT EXIST');
         }
         let result = await response.text();
+        const key = cryptojs.SHA1(result).toString();
+        const isValid = Entry.HARDWARE_LITE_LIST.some(
+            (item: any) => item.name == name && item.sha1 == key
+        );
+        if (!isValid) {
+            return alert('NOT VALID MODULE');
+        }
         if (Entry.offlineModulePath) {
             if (window.sendSync) {
                 result = window.sendSync('decryptBlock', result);

@@ -4,6 +4,7 @@ import ExtraBlockUtils from '../util/extrablockUtils';
 enum HardwareStatement {
     disconnected = 'disconnected',
     connected = 'connected',
+    willDisconnect = 'willDisconnect',
 }
 
 class LineBreakTransformer {
@@ -140,13 +141,9 @@ export default class HardwareLite {
             const { value, done } = await this.reader.read();
             this.hwModule?.handleLocalData(value);
 
-            if (this.hwModule?.duration) {
-                setTimeout(() => {
-                    this.constantServing();
-                }, this.hwModule.duration);
-            } else {
+            setTimeout(() => {
                 this.constantServing();
-            }
+            }, this.hwModule.duration || 0);
         } catch (err) {
             this.status === HardwareStatement.disconnected;
             console.error(err);
@@ -221,6 +218,7 @@ export default class HardwareLite {
 
     async disconnect() {
         try {
+            this.status = HardwareStatement.willDisconnect;
             await this.reader?.cancel();
             await this.writer?.abort();
             if (this.connectionType === 'ascii') {
