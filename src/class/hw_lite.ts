@@ -1,5 +1,6 @@
 import { TextEncoder } from 'util';
 import ExtraBlockUtils from '../util/extrablockUtils';
+import HardwareMonitor from './hardware/hardwareMonitor';
 
 enum HardwareStatement {
     disconnected = 'disconnected',
@@ -43,6 +44,7 @@ export default class HardwareLite {
     private playground: any;
     private connectionType: string;
     textEncoder: TextEncoder;
+    private hwMonitor?: HardwareMonitor;
 
     constructor(playground: any) {
         this.playground = playground;
@@ -88,6 +90,26 @@ export default class HardwareLite {
         this.banClassAllHardwareLite();
         Entry.dispatchEvent('hwLiteChanged');
         this.refreshHardwareLiteBlockMenu();
+        if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
+            this._setHardwareMonitorTemplate();
+        }
+    }
+
+    private _setHardwareMonitorTemplate() {
+        if (!this.hwMonitor) {
+            this.hwMonitor = new HardwareMonitor(this.hwModule);
+        } else {
+            this.hwMonitor.setHwModule(this.hwModule);
+            this.hwMonitor.initView();
+        }
+        Entry.propertyPanel.addMode('hw', this.hwMonitor);
+        this.hwMonitor.generateViewByMode();
+    }
+
+    _updatePortData() {
+        if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected === 'hw') {
+            this.hwMonitor.update(this.hwModule.getMonitorPort(), null);
+        }
     }
 
     refreshHardwareLiteBlockMenu() {
@@ -148,6 +170,7 @@ export default class HardwareLite {
 
             const { value, done } = await this.reader.read();
             this.hwModule?.handleLocalData(value);
+            this._updatePortData(value);
 
             setTimeout(() => {
                 this.constantServing();
@@ -283,6 +306,7 @@ export default class HardwareLite {
                 return callback(value);
             }
             this.hwModule?.handleLocalData(value);
+            this._updatePortData(value);
             return value;
         } catch (err) {
             console.error(err);

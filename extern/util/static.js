@@ -496,20 +496,15 @@ EntryStatic.getAllBlocks = function() {
             ],
         },
         {
-            category: 'arduino_lite',
-            blocks: [
-                'arduino_lite_connect',
-                'arduino_lite_disconnect',
-                'arduino_lite_add_button',
-            ].concat(EntryStatic.DynamicHardwareLiteBlocks),
-        },
-        {
             category: 'arduino',
             blocks: [
                 'arduino_reconnect',
                 'arduino_open',
                 'arduino_cloud_pc_open',
                 'arduino_connect',
+                'arduino_lite_connect',
+                'arduino_lite_disconnect',
+                'arduino_lite_add_button',
                 'arduino_download_connector',
                 // 'download_guide',
                 'arduino_download_source',

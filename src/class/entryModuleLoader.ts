@@ -176,7 +176,7 @@ class EntryModuleLoader {
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
         this.loadBlocks({
-            categoryName: 'arduino_lite',
+            categoryName: 'arduino',
             blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
                 blockName,
                 block,

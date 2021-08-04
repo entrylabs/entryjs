@@ -201,6 +201,7 @@ declare interface EntryHardwareBlockModule extends EntryBlockModule {
 }
 
 declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
+    getMonitorPort(): Object;
     duration: number;
     // 홍보용
     imageName: string;
