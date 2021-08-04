@@ -973,6 +973,11 @@ Entry.Engine = class Engine {
     }
 
     toggleFullScreen(popupClassName) {
+        Entry.dispatchEvent("toggleFullScreen");
+        if (!Entry.fullScreenEnable) {
+            return ;
+        }
+
         if (!this.popup) {
             this.popup = new Entry.Popup(popupClassName);
             if (Entry.engine.speedPanelOn) {
