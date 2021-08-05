@@ -305,7 +305,6 @@ export default class HardwareMonitor {
     }
 
     update(portData: any, sendQueue: any) {
-        console.log(portData, portData.leftLed);
         const mode = this._template.mode;
         const objectKeys = this._template.keys || [];
         let portView = [];

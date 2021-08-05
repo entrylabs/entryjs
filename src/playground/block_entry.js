@@ -315,7 +315,7 @@ function getBlocks() {
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoLiteConnectButton'],
-            class: 'arduino_lite_default',
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
@@ -337,7 +337,7 @@ function getBlocks() {
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoLiteConnected'],
-            class: 'arduino_lite_default',
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',
@@ -359,7 +359,7 @@ function getBlocks() {
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             isNotFor: ['arduinoLiteConnect'],
-            class: 'arduino_lite_default',
+            class: 'arduino_default',
             params: [
                 {
                     type: 'Text',

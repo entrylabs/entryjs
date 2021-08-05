@@ -170,7 +170,7 @@ export default class HardwareLite {
 
             const { value, done } = await this.reader.read();
             this.hwModule?.handleLocalData(value);
-            this._updatePortData(value);
+            this._updatePortData();
 
             setTimeout(() => {
                 this.constantServing();
@@ -306,7 +306,7 @@ export default class HardwareLite {
                 return callback(value);
             }
             this.hwModule?.handleLocalData(value);
-            this._updatePortData(value);
+            this._updatePortData();
             return value;
         } catch (err) {
             console.error(err);
