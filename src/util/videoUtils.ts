@@ -171,7 +171,7 @@ class VideoUtils implements MediaUtilsInterface {
         await this.checkPermission();
         const inputList = await getInputList();
         this.videoInputList = inputList
-            .filter((input) => input.kind === 'videoinput')
+            .filter((input) => input.kind === 'videoinput' && input.deviceId)
             .map((item) => [item.label, item.deviceId]);
         await this.compatabilityChecker();
         // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
@@ -518,7 +518,10 @@ class VideoUtils implements MediaUtilsInterface {
         }, 100);
     }
 
-    startCapturedImage(callback: Function, { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }) {
+    startCapturedImage(
+        callback: Function,
+        { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }
+    ) {
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
@@ -528,7 +531,7 @@ class VideoUtils implements MediaUtilsInterface {
             context.drawImage(this.video, 0, 0, width, height);
             callback && callback(canvas);
             this.captureTimeout = requestAnimationFrame(captureImage);
-        }
+        };
         this.captureTimeout = requestAnimationFrame(captureImage);
         Entry.addEventListener('stop', () => {
             this.stopCaptureImage();
