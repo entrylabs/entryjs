@@ -32,7 +32,7 @@ class LineBreakTransformer {
 }
 
 export default class HardwareLite {
-    private status: string;
+    private status: HardwareStatement;
     private port: any; // serialport
     private writer: any; // SerialPort.writer;
     private reader: any; //SerialPort.reader;
@@ -42,7 +42,7 @@ export default class HardwareLite {
     static refreshHardwareLiteBlockMenu: any;
     static banClassAllHardwareLite: any;
     private playground: any;
-    private connectionType: string;
+    private connectionType: 'ascii' | 'bytestream' | undefined;
     textEncoder: TextEncoder;
     private hwMonitor?: HardwareMonitor;
 
