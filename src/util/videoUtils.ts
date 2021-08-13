@@ -522,14 +522,12 @@ class VideoUtils implements MediaUtilsInterface {
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
-        const captureImage = () => {
+        this.captureTimeout = Entry.Utils.asyncAnimationFrame(async () => {
             const context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(this.video, 0, 0, width, height);
-            callback && callback(canvas);
-            this.captureTimeout = requestAnimationFrame(captureImage);
-        }
-        this.captureTimeout = requestAnimationFrame(captureImage);
+            callback && await callback(canvas);
+        });
         Entry.addEventListener('stop', () => {
             this.stopCaptureImage();
         });

@@ -57,9 +57,12 @@ class ImageLearning {
         }
         this.#isPredicting = true;
         VideoUtils.startCapturedImage(async (captured) => {
+            tf.engine().startScope();
             const tensor = await this.preprocess(captured);
             const logits = this.model.predict(tensor);
             this.#result = await this.namePredictions(logits);
+            logits.dispose();
+            tf.engine().endScope();
         }, { width: 224, height: 224 });
         return this.#result;
     }
