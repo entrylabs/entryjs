@@ -24,6 +24,9 @@ class ImageLearning {
             this.#result = [];
             this.#isPredicting = false;
         });
+        if (!isWebGlSupport()) {
+            tf.setBackend('cpu');
+        }
     }
 
     getResult(index) {
@@ -102,3 +105,13 @@ class ImageLearning {
 }
 
 export default ImageLearning;
+
+function isWebGlSupport() {
+    try {
+        const currentCanvas = document.createElement('canvas');
+        return !!currentCanvas.getContext('webgl', { premultipliedalpha: false });
+    } catch (e) {
+        console.log('error', e);
+        return false;
+    }
+}
