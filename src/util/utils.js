@@ -2860,3 +2860,21 @@ Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
         return variable;
     });
 };
+
+Entry.Utils.asyncAnimationFrame = (func) => {
+    let captureTimeout = false;
+
+    const asyncFunc = () => {
+        if (func instanceof Promise) {
+            func().then(() => {
+                captureTimeout = requestAnimationFrame(asyncFunc);
+            });
+        } else if (func instanceof Function) {
+            func();
+            captureTimeout = requestAnimationFrame(asyncFunc);
+        }
+    }
+
+    captureTimeout = requestAnimationFrame(asyncFunc);
+    return captureTimeout;
+}
