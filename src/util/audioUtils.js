@@ -100,6 +100,7 @@ class AudioUtils {
             highpassFilter.Q.value = 1;
             highpassFilter.detune.value = 1;
 
+
             analyserNode.fftSize = 4096;
             analyserNode.smoothingTimeConstant = 0.0;
             analyserNode.minDecibels = -80;
