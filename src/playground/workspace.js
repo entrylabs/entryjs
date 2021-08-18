@@ -48,6 +48,10 @@ Entry.Workspace = class Workspace {
             this.board = new Entry.Board(option);
             this.board.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
             this.set({ selectedBoard: this.board });
+
+            if (this.blockMenu) {
+                this.blockMenu.enableTrashcan();
+            }
         }
 
         option = options.vimBoard;

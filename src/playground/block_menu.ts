@@ -60,6 +60,7 @@ class BlockMenu extends ModelClass<Schema> {
     private categoryWrapper: EntryDom;
     private blockMenuContainer: EntryDom;
     private blockMenuWrapper: EntryDom;
+    private blockMenuWrapperForTrashcan: EntryDom;
     private objectAlert: any;
     private _dynamicThreads: any[];
     private _selectDynamic: boolean;
@@ -829,6 +830,16 @@ class BlockMenu extends ModelClass<Schema> {
         if (this._scroller) {
             this._scroller.setOpacity(0);
         }
+
+        this._toggleTrashcan(!!this.dragBlock);
+    }
+
+    _handleBoardDragBlock() {
+        this._toggleTrashcan(!!this.workspace?.board?.dragBlock);
+    }
+
+    _toggleTrashcan(visible: boolean) {
+        this.blockMenuWrapperForTrashcan?.toggleClass('entryRemove', !visible);
     }
 
     enablePattern() {
@@ -1082,12 +1093,41 @@ class BlockMenu extends ModelClass<Schema> {
         }, []);
     }
 
+    enableTrashcan() {
+        this.blockMenuWrapperForTrashcan = Entry.Dom('div', {
+            class: 'blockMenuWrapper blockMenuTrashcan entryRemove',
+            parent: this.blockMenuContainer,
+        })
+            .css({
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: 242,
+                opacity: '0.3',
+                background: 'black',
+            })
+            .on('mouseenter', (el) => {
+                // TODO markup
+                // 휴지통 열림
+                this.blockMenuWrapperForTrashcan.css('background', 'white');
+            })
+            .on('mouseleave', (el) => {
+                // TODO markup
+                // 휴지통 닫힘
+                this.blockMenuWrapperForTrashcan.css('background', 'black');
+            });
+
+        this.workspace?.board?.observe(this, '_handleBoardDragBlock', ['dragBlock']);
+    }
+
     private _generateView(categoryData: CategoryData[]) {
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             class: 'blockMenuContainer',
             parent: this.view,
+        }).css({
+            position: 'relative',
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
         this.blockMenuWrapper = Entry.Dom('div', {
