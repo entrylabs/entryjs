@@ -367,8 +367,8 @@ Entry.resizeElement = function(interfaceModel) {
             menuWidth = 258;
         } else if (menuWidth < 258) {
             menuWidth = 258;
-        } else if (menuWidth > 308) {
-            menuWidth = 308;
+        } else if (menuWidth > 516) {
+            menuWidth = 516;
         }
         interfaceModel.menuWidth = menuWidth;
 
