@@ -317,6 +317,7 @@ import VideoUtils from '../../util/videoUtils';
             const object = Entry.container.getObject(objectId);
             object.setName(newName);
             object.setInputBlurred('nameInput');
+            Entry.playground.updateObjectTitle(object);
             Entry.playground.reloadPlayground();
         },
         state(objectId, newName) {

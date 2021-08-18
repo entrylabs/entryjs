@@ -99,6 +99,12 @@ Entry.Board = class Board {
 
         this.svgGroup = this.svg.elem('g');
         this.svgGroup.attr('transform', `scale(${this.scale})`);
+        this.svgObjectTitle = this.svgGroup.elem('g');
+        this.svgObjectTitle.board = this;
+        this.svgObjectTitle.attr({
+            class: 'svgObjectTitle',
+        });
+
         this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
 
@@ -421,6 +427,7 @@ Entry.Board = class Board {
         this.svgCommentGroup.remove();
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
+        this.clearObjectTitle();
     }
 
     updateOffset() {
@@ -1401,5 +1408,52 @@ Entry.Board = class Board {
         this.scale = scale;
         this.svgGroup.attr('transform', `scale(${scale})`);
         this.adjustThreadsPosition();
+    }
+
+    updateObjectTitle(object) {
+        if (!object) {
+            this.clearObjectTitle();
+            return;
+        }
+
+        if (!this.svgObjectTitle.thumbnail) {
+            // TODO markup
+            // board 상단 선택된 오브젝트 썸네일 이미지
+            const thumbnail = this.svgObjectTitle.elem('g');
+            const image = thumbnail.elem('image');
+            image.addClass('entryBoardObjectThumbnail');
+            image.attr({
+                href: object.thumbUrl,
+                width: 24,
+                height: 24,
+                transform: 'translate(14,12)',
+            });
+            this.svgObjectTitle.thumbnail = image;
+        }
+
+        if (!this.svgObjectTitle.name) {
+            // TODO markup
+            // board 상단 선택된 오브젝트 이름
+            const name = this.svgObjectTitle.elem('g');
+            const nameText = name.elem('text');
+            nameText.addClass('entryBoardObjectName');
+            nameText.attr({ transform: 'translate(44,19)' });
+            nameText.innerHTML = object.name;
+            this.svgObjectTitle.name = nameText;
+        }
+
+        this.svgObjectTitle.thumbnail.attr({ href: object.thumbUrl });
+        this.svgObjectTitle.name.innerHTML = object.name;
+    }
+
+    clearObjectTitle() {
+        if (!this.svgObjectTitle) {
+            return;
+        }
+
+        this.svgObjectTitle.thumbnail?.remove();
+        this.svgObjectTitle.name?.remove();
+        delete this.svgObjectTitle.thumbnail;
+        delete this.svgObjectTitle.name;
     }
 };

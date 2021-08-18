@@ -1152,6 +1152,8 @@ Entry.Playground = class Playground {
             }
         }
 
+        this.updateObjectTitle(object);
+
         const viewMode = this.viewMode_;
         if (viewMode === 'default') {
             this.changeViewMode('code');
@@ -1330,6 +1332,8 @@ Entry.Playground = class Playground {
             }
             Entry.dispatchEvent('pictureSelected', picture, removed);
         }
+
+        this.updateObjectTitle(this.object);
     }
 
     /**
@@ -2315,6 +2319,12 @@ Entry.Playground = class Playground {
         }
         if (Entry.hasVariableManager) {
             this.variableTab.removeClass('entryRemove');
+        }
+    }
+
+    updateObjectTitle(object) {
+        if (this.board) {
+            this.board.updateObjectTitle(object);
         }
     }
 
