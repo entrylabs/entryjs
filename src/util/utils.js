@@ -308,6 +308,14 @@ Entry.getDom = function(query) {
     }
 };
 
+function toggleEngineContainer(isVisible) {
+    const splitterSelector = '.entryObjectSelectedImgWorkspace';
+    $(Entry.engineContainer)
+        .css('padding', isVisible ? '' : '0')
+        .children(`:not(${splitterSelector})`)
+        .toggleClass('entryRemove', !isVisible);
+}
+
 /**
  * Resize element's size.
  * @param {!json} interfaceModel
@@ -337,13 +345,13 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
-        let panelHidden = false;
+        let isEngineContainerVisible = true;
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
             canvasSize = 324;
         } else if (canvasSize < 162) {
             canvasSize = 16;
-            panelHidden = true;
+            isEngineContainerVisible = false;
         } else if (canvasSize < 324) {
             canvasSize = 324;
         } else if (canvasSize > 640) {
@@ -356,11 +364,7 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.width = `${canvasSize - 24}px`;
         Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
 
-        $(engineContainer)
-            .css('padding', panelHidden ? '0' : '')
-            .children()
-            .filter((i, el) => !$(el).is($('.entryObjectSelectedImgWorkspace')))
-            .each((i, el) => $(el).toggleClass('entryRemove', panelHidden));
+        toggleEngineContainer(isEngineContainerVisible);
 
         let menuWidth = interfaceModel.menuWidth;
         if (!menuWidth) {
