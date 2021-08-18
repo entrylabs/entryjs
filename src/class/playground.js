@@ -230,6 +230,19 @@ Entry.Playground = class Playground {
             commentToggleButton.bindOnClick(() => {
                 this.toggleCommentButton();
             });
+
+            // TODO markup
+            // 상단 메모 추가하기 버튼
+            const addCommentButton = Entry.createElement('div')
+                .addClass('entryPlaygroundCommentButtonWorkspace addComment')
+                .appendTo(tabButtonView);
+            addCommentButton.setAttribute('alt', Lang.Blocks.add_comment);
+            addCommentButton.setAttribute('title', Lang.Blocks.add_comment);
+
+            this.addCommentButton_ = addCommentButton;
+            addCommentButton.bindOnClick(() => {
+                this.addComment();
+            });
         }
 
         // TODO: 백팩(나의보관함) 숨김처리
@@ -509,14 +522,35 @@ Entry.Playground = class Playground {
         this.toggleCommentButtonVisible();
     }
 
+    addComment() {
+        if (!Entry.options.commentDisable && this.board) {
+            const { svg, scale } = this.board;
+            const boardCenterX = svg.clientWidth / 2 / scale;
+            const boardCenterY = svg.clientHeight / 2 / scale;
+
+            Entry.do(
+                'createComment',
+                {
+                    id: Entry.Utils.generateId(),
+                    x: Math.max(boardCenterX - 80, 0),
+                    y: Math.max(boardCenterY - 80, 0),
+                },
+                this.board
+            );
+        }
+    }
+
     toggleCommentButtonVisible() {
         const button = this.commentToggleButton_;
+        const addButton = this.addCommentButton_;
 
         if (this.board.isVisibleComment) {
+            addButton.addClass('addComment');
             button.addClass('showComment');
             button.setAttribute('alt', Lang.Blocks.show_all_comment);
             button.setAttribute('title', Lang.Blocks.show_all_comment);
         } else {
+            addButton.removeClass('addComment');
             button.removeClass('showComment');
             button.setAttribute('alt', Lang.Blocks.hide_all_comment);
             button.setAttribute('title', Lang.Blocks.hide_all_comment);
@@ -2286,6 +2320,7 @@ Entry.Playground = class Playground {
 
     destroy() {
         this.commentToggleButton_ && this.commentToggleButton_.unBindOnClick();
+        this.addCommentButton_ && this.addCommentButton_.unBindOnClick();
         this.backPackButton_ && this.backPackButton_.unBindOnClick();
         this.blockBackPackEvent && this.blockBackPackEvent.off();
         this.blockBackPackAreaEvent && this.blockBackPackAreaEvent.off();
