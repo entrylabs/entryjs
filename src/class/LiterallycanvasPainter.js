@@ -119,7 +119,7 @@ Entry.LiterallycanvasPainter = class LiterallycanvasPainter {
                 Entry.engine.toggleStop();
                 wasRun = true;
             }
-            entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
+            window.EntryModal.confirm(Lang.Menus.save_modified_shape).then((result) => {
                 this.isConfirm = false;
                 if (result === true) {
                     this.fileSave(true);

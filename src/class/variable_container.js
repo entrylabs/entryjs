@@ -1140,7 +1140,7 @@ Entry.VariableContainer = class VariableContainer {
                     'function'
                 );
                 if (alertMsg) {
-                    entrylms.alert(alertMsg);
+                    window.EntryModal.alert(alertMsg);
                     Entry.Func.cancelEdit();
                     return;
                 }
@@ -1188,12 +1188,14 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('del')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
-                    if (result === true) {
-                        this.destroyFunction(func);
-                        this.selected = null;
+                window.EntryModal.confirm(Lang.Workspace.will_you_delete_function).then(
+                    (result) => {
+                        if (result === true) {
+                            this.destroyFunction(func);
+                            this.selected = null;
+                        }
                     }
-                });
+                );
             })
             .appendTo(editBoxWrapper);
         delButton.href = '#';
@@ -1232,7 +1234,7 @@ Entry.VariableContainer = class VariableContainer {
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, type);
             if (alertMsg) {
-                entrylms.alert(alertMsg);
+                window.EntryModal.alert(alertMsg);
                 this.resetVariableAddPanel(type);
                 return;
             }
@@ -1307,7 +1309,7 @@ Entry.VariableContainer = class VariableContainer {
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'variable');
             if (alertMsg) {
-                entrylms.alert(alertMsg);
+                window.EntryModal.alert(alertMsg);
                 variable.listElement.nameField.value = variable.name_;
                 return;
             }
@@ -1340,7 +1342,7 @@ Entry.VariableContainer = class VariableContainer {
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'list');
             if (alertMsg) {
-                entrylms.alert(alertMsg);
+                window.EntryModal.alert(alertMsg);
                 list.listElement.nameField.value = list.name_;
                 return;
             }
@@ -2578,7 +2580,7 @@ Entry.VariableContainer = class VariableContainer {
                 const { name_ } = that.selected;
                 const array_ = that.selected.getArray();
                 if (array_.length === 0) {
-                    entrylms.alert(Lang.Menus.nothing_to_export);
+                    window.EntryModal.alert(Lang.Menus.nothing_to_export);
                 } else {
                     Entry.dispatchEvent('openExportListModal', array_, name_);
                 }

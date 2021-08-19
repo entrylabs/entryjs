@@ -34,7 +34,7 @@ Entry.Workspace = class Workspace {
                 option.dom,
                 option.align,
                 option.categoryData,
-                option.scroll,
+                option.scroll
             );
             this._destroyer.add(this.blockMenu);
             this.blockMenu.workspace = this;
@@ -183,13 +183,13 @@ Entry.Workspace = class Workspace {
                     Entry.Workspace.MODE_VIMBOARD
                 );
                 if (invalidEditorModeErrorMessage) {
-                    entrylms.alert(invalidEditorModeErrorMessage);
+                    window.EntryModal.alert(invalidEditorModeErrorMessage);
                     return;
                 }
 
                 if (alertMessage) {
                     if (alertMessage.type === 'warning') {
-                        entrylms.confirm(alertMessage.message).then((result) => {
+                        window.EntryModal.confirm(alertMessage.message).then((result) => {
                             if (result) {
                                 Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
                                 Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
@@ -206,7 +206,7 @@ Entry.Workspace = class Workspace {
                             }
                         });
                     } else if (alertMessage.type === 'error') {
-                        entrylms.alert(alertMessage.message);
+                        window.EntryModal.alert(alertMessage.message);
 
                         const mode = {};
                         mode.boardType = WORKSPACE.MODE_BOARD;
@@ -277,7 +277,7 @@ Entry.Workspace = class Workspace {
 
         function checkObjectAndAlert(object, message) {
             if (Entry.type === 'workspace' && !object) {
-                entrylms.alert(message || Lang.Workspace.object_not_exist_error);
+                window.EntryModal.alert(message || Lang.Workspace.object_not_exist_error);
                 return false;
             }
             return true;
@@ -469,7 +469,7 @@ Entry.Workspace = class Workspace {
                         Entry.Workspace.MODE_VIMBOARD
                     );
                     if (message) {
-                        entrylms.alert(message);
+                        window.EntryModal.alert(message);
                         return;
                     }
 
@@ -590,7 +590,7 @@ Entry.Workspace = class Workspace {
         function checkObjectAndAlert(object, message) {
             if (!object) {
                 message = message || Lang.Workspace.object_not_exist_error;
-                entrylms.alert(message);
+                window.EntryModal.alert(message);
                 return false;
             }
             return true;
