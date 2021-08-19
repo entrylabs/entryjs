@@ -37,7 +37,13 @@ class AudioUtils {
 
     async getMediaStream() {
         try {
-            return await navigator.mediaDevices.getUserMedia({ audio: true });
+            return await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    autoGainControl: true,
+                    noiseSuppression: true,
+                    echoCancellation: true,
+                },
+            });
         } catch (err) {
             // is MIC present in browser
             this.isRecording = false;
@@ -84,14 +90,55 @@ class AudioUtils {
             const audioContext = new window.AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
-            const biquadFilter = audioContext.createBiquadFilter();
-            biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 30;
-            const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
+            // const reducerNode = new window.audio.NoiseReducer(0.5, 5);
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 1.8;
+
+            const highpassFilter = audioContext.createBiquadFilter();
+            highpassFilter.type = 'highpass';
+            highpassFilter.frequency.value = 150;
+            highpassFilter.Q.value = 1;
+            highpassFilter.detune.value = 1;
+
+            analyserNode.fftSize = 4096;
+            analyserNode.smoothingTimeConstant = 0.0;
+            analyserNode.minDecibels = -80;
+            analyserNode.maxDecibels = -40;
+
+            const scriptNode = audioContext.createScriptProcessor(512, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
+            // mediaRecorder.onstop = async (event) => {
+            //     const blob = new Blob(this._audioChunks, { type: 'audio/ogg; codecs=opus' });
+            //     const audio = document.createElement('audio');
+            //     audio.style = { width: 100, height: 100 };
+            //     audio.src = await window.URL.createObjectURL(blob);
+
+            //     audio.controls = true;
+
+            //     audio.oncanplay = () => {
+            //         document.body.prepend(audio);
+            //     };
+            //     this._audioChunks = [];
+            // };
+            // mediaRecorder.ondataavailable = (event) => {
+            //     if (!this._audioChunks) {
+            //         this._audioChunks = [];
+            //     }
+            //     this._audioChunks.push(event.data);
+            // };
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
+            this._connectNodes(
+                streamSrc,
+                // highpassFilter,
+                // gainNode,
+                // highpassFilter2,
+                // gainNode2,
+                // reducerNode,
+                analyserNode,
+                scriptNode,
+                streamDest
+            );
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._audioContext = audioContext;
