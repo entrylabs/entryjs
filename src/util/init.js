@@ -193,6 +193,7 @@ Entry.initialize_ = function() {
 
     this.helper = new EntryBlockHelper();
     this.youtube = new Entry.Youtube();
+    this.modal = new Entry.Modal();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
 

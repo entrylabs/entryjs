@@ -707,7 +707,7 @@ Entry.Playground = class Playground {
                     if (!hanjaEnable) {
                         if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
                             font = options[0][1];
-                            entrylms.alert(Lang.Menus.not_supported_text);
+                            Entry.modal.alert(Lang.Menus.not_supported_text);
                         }
                     }
                     fontLink.innerText = font.name;
@@ -921,7 +921,7 @@ Entry.Playground = class Playground {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     $('#entryTextBoxAttrFontName').text(defaultFont.name);
                     entity.setFontType(defaultFont.family);
-                    entrylms.alert(Lang.Menus.not_supported_text);
+                    Entry.modal.alert(Lang.Menus.not_supported_text);
                 }
             }
             object.setText(this.value);
@@ -1699,7 +1699,7 @@ Entry.Playground = class Playground {
             return;
         }
         if (this.nameView.value.trim() === '') {
-            entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+            Entry.modal.alert(Lang.Workspace.enter_the_name).then(() => {
                 this.nameView.focus();
             });
             return true;
@@ -1715,7 +1715,7 @@ Entry.Playground = class Playground {
                 nameViewArray.eq(i).val() == this.nameView.value &&
                 nameViewArray[i] != this.nameView
             ) {
-                entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                Entry.modal.alert(Lang.Workspace.name_already_exists).then(() => {
                     this.nameView.focus();
                 });
                 return true;
@@ -1979,7 +1979,7 @@ Entry.Playground = class Playground {
 
         function nameViewBlur() {
             if (this.value.trim() === '') {
-                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                return Entry.modal.alert(Lang.Workspace.enter_the_name).then(() => {
                     nameView.focus();
                 });
             }
@@ -1991,7 +1991,7 @@ Entry.Playground = class Playground {
 
             for (let i = 0; i < nameViewArray.length; i++) {
                 if (nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
-                    return entrylms.alert(Lang.Workspace.name_already_exists).on('hide', () => {
+                    return Entry.modal.alert(Lang.Workspace.name_already_exists).then(() => {
                         nameView.focus();
                     });
                 }

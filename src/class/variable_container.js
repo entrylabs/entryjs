@@ -1140,7 +1140,7 @@ Entry.VariableContainer = class VariableContainer {
                     'function'
                 );
                 if (alertMsg) {
-                    entrylms.alert(alertMsg);
+                    Entry.modal.alert(alertMsg);
                     Entry.Func.cancelEdit();
                     return;
                 }
@@ -1188,7 +1188,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('del')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                entrylms.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
+                Entry.modal.confirm(Lang.Workspace.will_you_delete_function).then((result) => {
                     if (result === true) {
                         this.destroyFunction(func);
                         this.selected = null;
@@ -1232,7 +1232,7 @@ Entry.VariableContainer = class VariableContainer {
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, type);
             if (alertMsg) {
-                entrylms.alert(alertMsg);
+                Entry.modal.alert(alertMsg);
                 this.resetVariableAddPanel(type);
                 return;
             }
@@ -1307,7 +1307,7 @@ Entry.VariableContainer = class VariableContainer {
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'variable');
             if (alertMsg) {
-                entrylms.alert(alertMsg);
+                Entry.modal.alert(alertMsg);
                 variable.listElement.nameField.value = variable.name_;
                 return;
             }
@@ -1340,7 +1340,7 @@ Entry.VariableContainer = class VariableContainer {
         if (Entry.isTextMode) {
             const alertMsg = Entry.TextCodingUtil.validateNameIncludeSpace(name, 'list');
             if (alertMsg) {
-                entrylms.alert(alertMsg);
+                Entry.modal.alert(alertMsg);
                 list.listElement.nameField.value = list.name_;
                 return;
             }
@@ -2578,7 +2578,7 @@ Entry.VariableContainer = class VariableContainer {
                 const { name_ } = that.selected;
                 const array_ = that.selected.getArray();
                 if (array_.length === 0) {
-                    entrylms.alert(Lang.Menus.nothing_to_export);
+                    Entry.modal.alert(Lang.Menus.nothing_to_export);
                 } else {
                     Entry.dispatchEvent('openExportListModal', array_, name_);
                 }
@@ -2689,7 +2689,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('scroll_box')
             .appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
-        const parent = /* html */ `<ol class='cnt_list'>{1}</ol>`;
+        const parent = /* html */ `<ol class="cnt_list">{1}</ol>`;
         this.listSettingView.scrollBox = scrollBox;
         this.listSettingView.simpleBar = el;
         this.listSettingView.listValues = el.getContentElement();
@@ -2706,11 +2706,11 @@ Entry.VariableContainer = class VariableContainer {
     createListValueElement(index, value, startIndex = 0) {
         return `
         <li>
-            <span class='cnt'>${+index + startIndex}</span>
-            <input value='${xssFilters.inSingleQuotedAttr(
+            <span class="cnt">${+index + startIndex}</span>
+            <input value="${xssFilters.inSingleQuotedAttr(
                 value
-            )}' type='text' data-index='${index}'/>
-            <a class='del' data-index='${index}'></a>
+            )}" type="text" data-index="${index}"/>
+            <a class="del" data-index="${index}"></a>
         </li>`.trim();
     }
 

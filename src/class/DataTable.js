@@ -185,7 +185,7 @@ class DataTable {
         this.dataAnalytics = new DataAnalytics({ container: view, data: {}, isShow: false })
             .on('submit', this.saveTable)
             .on('alert', ({ message, title = Lang.DataAnalytics.max_row_count_error_title }) =>
-                entrylms.alert(message, title)
+                Entry.modal.alert(message, title)
             )
             .on('toast', (message) => {
                 const { title, content } = message;
