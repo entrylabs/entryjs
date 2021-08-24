@@ -203,7 +203,6 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
-
         } catch (err) {
             throw new Entry.Utils.IncompatibleError('IncompatibleError', [
                 Lang.Workspace.check_webcam_error,
@@ -536,10 +535,8 @@ class VideoUtils implements MediaUtilsInterface {
             const context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(this.video, 0, 0, width, height);
-            callback && callback(canvas);
-            this.captureTimeout = requestAnimationFrame(captureImage);
-        };
-        this.captureTimeout = requestAnimationFrame(captureImage);
+            callback && (await callback(canvas));
+        });
         Entry.addEventListener('stop', () => {
             this.stopCaptureImage();
         });
