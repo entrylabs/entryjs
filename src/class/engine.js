@@ -123,6 +123,12 @@ Entry.Engine = class Engine {
             this.buttonWrapper = Entry.createElement('div')
                 .addClass('entryEngineButtonWrapper')
                 .appendTo(this.view_);
+
+            /*
+              TODO markup
+              오브젝트 추가하기, 시작하기, 미사용버튼, 기본 일시정지/다시시작,
+              전체화면 일시정지/다시시작, 기본/전체화면 정지 순서
+             */
             this.addButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryAddButtonWorkspace_w')
@@ -973,9 +979,9 @@ Entry.Engine = class Engine {
     }
 
     toggleFullScreen(popupClassName) {
-        Entry.dispatchEvent("toggleFullScreen");
+        Entry.dispatchEvent('toggleFullScreen');
         if (!Entry.fullScreenEnable) {
-            return ;
+            return;
         }
 
         if (!this.popup) {

@@ -642,6 +642,17 @@ Entry.Playground = class Playground {
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
 
+            // TODO markup
+            // 새로 그리기 버튼
+            const innerDrawNewPicture = Entry.createElement('div', 'entryAddPictureInner')
+                .addClass('entryPlaygroundAddPictureInner')
+                .bindOnClick(() => {
+                    this.painter.newPicture();
+                })
+                .appendTo(pictureAdd);
+            innerDrawNewPicture.innerHTML = Lang.Workspace.draw_new;
+            this._drawNewPictureButton = innerDrawNewPicture;
+
             this.pictureListView_ = Entry.createElement('ul', 'entryPictureList')
                 .addClass('entryPlaygroundPictureList')
                 .appendTo(PictureView);
