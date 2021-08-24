@@ -40,9 +40,9 @@ class AudioUtils {
         try {
             return await navigator.mediaDevices.getUserMedia({
                 audio: {
-                    autoGainControl: false,
-                    noiseSuppression: false,
-                    echoCancellation: false,
+                    autoGainControl: true,
+                    noiseSuppression: true,
+                    echoCancellation: true,
                 },
             });
         } catch (err) {

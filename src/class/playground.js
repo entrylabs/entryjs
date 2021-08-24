@@ -567,10 +567,10 @@ Entry.Playground = class Playground {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
-        Entry.expansion.banAllExpansionBlock();
-        Entry.aiUtilize.banAllAIUtilizeBlock();
-        DataTable.banAllBlock();
-        Entry.aiLearning.banBlocks();
+        Entry.expansion?.banAllExpansionBlock();
+        Entry.aiUtilize?.banAllAIUtilizeBlock();
+        DataTable?.banAllBlock();
+        Entry.aiLearning?.banBlocks();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         this._destroyer.add(this.mainWorkspace);
