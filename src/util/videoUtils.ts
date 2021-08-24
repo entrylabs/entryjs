@@ -518,7 +518,10 @@ class VideoUtils implements MediaUtilsInterface {
         }, 100);
     }
 
-    startCapturedImage(callback: Function, { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }) {
+    startCapturedImage(
+        callback: Function,
+        { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }
+    ) {
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
@@ -526,7 +529,7 @@ class VideoUtils implements MediaUtilsInterface {
             const context = canvas.getContext('2d');
             context.clearRect(0, 0, canvas.width, canvas.height);
             context.drawImage(this.video, 0, 0, width, height);
-            callback && await callback(canvas);
+            callback && (await callback(canvas));
         });
         Entry.addEventListener('stop', () => {
             this.stopCaptureImage();
