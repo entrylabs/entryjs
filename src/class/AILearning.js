@@ -1,6 +1,7 @@
 import TextLearning, { classes as TextClasses } from './learning/TextLearning';
 import Cluster, { classes as ClusterClasses } from './learning/Cluster';
 import Regression, { classes as RegressionClasses } from './learning/Regression';
+import ImageLearning, { classes as ImageClasses } from './learning/ImageLearning';
 import Classification, { classes as ClassificationClasses } from './learning/Classification';
 import NumberClassification, {
     classes as NumberClassificationClasses,
@@ -11,6 +12,7 @@ const banClasses = [
     ...ClusterClasses,
     ...RegressionClasses,
     ...TextClasses,
+    ...ImageClasses,
     ...ClassificationClasses,
     ...NumberClassificationClasses,
 ];
@@ -147,7 +149,13 @@ export default class AILearning {
                 trainParam,
                 table: this.#tableData,
             });
-        } else if (type === 'image' || type === 'speech') {
+        } else if (type === 'image') {
+            this.#module = new ImageLearning({
+                url,
+                labels: this.#labels,
+                type,
+            });
+        } else if (type === 'speech') {
             this.#module = new Classification({
                 url,
                 labels: this.#labels,
@@ -223,6 +231,18 @@ export default class AILearning {
             this.result = await this.#module.predict(obj);
         }
         return [];
+    }
+
+    startPredict() {
+        if (this.#module && this.#module.startPredict) {
+            this.#module.startPredict();
+        }
+    }
+
+    stopPredict() {
+        if (this.#module && this.#module.stopPredict) {
+            this.#module.stopPredict();
+        }
     }
 
     unbanBlocks() {

@@ -26,7 +26,7 @@ export default class LearningChart {
     createChart({ title = '', description = '', source }) {
         const container = Entry.Dom('div', {
             class: 'entry-learning-chart',
-            parent: $('body'),
+            parent: $(Entry.modalContainer),
         })[0];
 
         return new BillBoard({
