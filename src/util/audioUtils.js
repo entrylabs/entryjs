@@ -58,11 +58,13 @@ class AudioUtils {
         // IE/safari CHECKER
         if (!this.isAudioSupport) {
             this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
-        }
-        if (!this.isAudioSupport) {
-            this.isRecording = false;
-            this.stopRecord();
-            throw new Entry.Utils.IncompatibleError();
+            if (!this.isAudioSupport) {
+                this.isRecording = false;
+                this.stopRecord();
+                throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                    Lang.Workspace.check_microphone_error,
+                ]);
+            }
         }
     }
 
