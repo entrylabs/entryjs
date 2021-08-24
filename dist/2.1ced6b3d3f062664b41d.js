@@ -1,6 +1,6 @@
 (window["entryJsonp"] = window["entryJsonp"] || []).push([[2],{
 
-/***/ 2256:
+/***/ 2255:
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
@@ -253,38 +253,36 @@ var map = {
 	"./block_robotisRBHumanoid.js": 792,
 	"./block_robotori": 793,
 	"./block_robotori.js": 793,
-	"./block_robotry_parodule": 794,
-	"./block_robotry_parodule.js": 794,
-	"./block_robotry_robit_stage": 795,
-	"./block_robotry_robit_stage.js": 795,
-	"./block_rokoboard": 796,
-	"./block_rokoboard.js": 796,
-	"./block_sally": 797,
-	"./block_sally.js": 797,
-	"./block_sciencecube": 798,
-	"./block_sciencecube.js": 798,
-	"./block_sensorboard": 799,
-	"./block_sensorboard.js": 799,
-	"./block_smartboard": 800,
-	"./block_smartboard.js": 800,
-	"./block_ssboard_nano": 801,
-	"./block_ssboard_nano.js": 801,
-	"./block_thinkboard": 802,
-	"./block_thinkboard.js": 802,
-	"./block_truerobot": 803,
-	"./block_truerobot.js": 803,
-	"./block_turtle": 804,
-	"./block_turtle.js": 804,
-	"./block_uglybot": 805,
-	"./block_uglybot.js": 805,
-	"./block_uo_albert": 806,
-	"./block_uo_albert.js": 806,
-	"./block_wearable": 807,
-	"./block_wearable.js": 807,
-	"./block_xbot": 808,
-	"./block_xbot.js": 808,
-	"./block_zerone": 809,
-	"./block_zerone.js": 809,
+	"./block_robotry_robit_stage": 794,
+	"./block_robotry_robit_stage.js": 794,
+	"./block_rokoboard": 795,
+	"./block_rokoboard.js": 795,
+	"./block_sally": 796,
+	"./block_sally.js": 796,
+	"./block_sciencecube": 797,
+	"./block_sciencecube.js": 797,
+	"./block_sensorboard": 798,
+	"./block_sensorboard.js": 798,
+	"./block_smartboard": 799,
+	"./block_smartboard.js": 799,
+	"./block_ssboard_nano": 800,
+	"./block_ssboard_nano.js": 800,
+	"./block_thinkboard": 801,
+	"./block_thinkboard.js": 801,
+	"./block_truerobot": 802,
+	"./block_truerobot.js": 802,
+	"./block_turtle": 803,
+	"./block_turtle.js": 803,
+	"./block_uglybot": 804,
+	"./block_uglybot.js": 804,
+	"./block_uo_albert": 805,
+	"./block_uo_albert.js": 805,
+	"./block_wearable": 806,
+	"./block_wearable.js": 806,
+	"./block_xbot": 807,
+	"./block_xbot.js": 807,
+	"./block_zerone": 808,
+	"./block_zerone.js": 808,
 	"./index": 669,
 	"./index.js": 669
 };
@@ -307,7 +305,7 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = 2256;
+webpackContext.id = 2255;
 
 /***/ })
 
