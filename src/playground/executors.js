@@ -15,6 +15,7 @@ class Executor {
         this.valueMap = {};
         this.valueState = {};
         this.id = Entry.Utils.generateId();
+        console.log("Executor constructor activated");
     }
 
     execute(isFromOrigin) {
