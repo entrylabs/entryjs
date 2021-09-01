@@ -1104,12 +1104,12 @@ class BlockMenu extends ModelClass<Schema> {
                 opacity: '0.3',
                 background: 'black',
             })
-            .on('mouseenter', (el) => {
+            .on('pointerenter', () => {
                 // TODO markup
                 // 휴지통 열림
                 this.blockMenuWrapperForTrashcan.css('background', 'white');
             })
-            .on('mouseleave', (el) => {
+            .on('pointerleave', () => {
                 // TODO markup
                 // 휴지통 닫힘
                 this.blockMenuWrapperForTrashcan.css('background', 'black');
