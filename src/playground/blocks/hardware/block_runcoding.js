@@ -81,14 +81,14 @@ Entry.Runcoding.setLanguage = function() {
     return {
         ko: {
             template: {
-                arduino_ext_get_analog_value: '아날로그 %1 번 센서값',
-                arduino_ext_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                arduino_ext_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
-                arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
-                arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                arduino_ext_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
-                arduino_ext_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
-                arduino_ext_get_digital: '디지털 %1 번 센서값',
+                arduino_runcoding_get_analog_value: '아날로그 %1 번 센서값',
+                arduino_runcoding_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                arduino_runcoding_get_ultrasonic_value: '울트라소닉 Trig %1 Echo %2 센서값',
+                arduino_runcoding_toggle_led: '디지털 %1 번 핀 %2 %3',
+                arduino_runcoding_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                arduino_runcoding_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                arduino_runcoding_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                arduino_runcoding_get_digital: '디지털 %1 번 센서값',
 
                 arduino_runcoding_set_neopixel_init: '네오픽셀 설정 %1 번 핀 led %2 개를 %3 밝기로 설정하기 %4',
                 arduino_runcoding_set_neopixel: '네오픽셀 %1 번 핀 RGB ( %2, %3, %4) %5',
@@ -105,14 +105,14 @@ Entry.Runcoding.setLanguage = function() {
         },
         en: {
             template: {
-                arduino_ext_get_analog_value: 'Analog %1 Sensor value',
-                arduino_ext_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                arduino_ext_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                arduino_ext_toggle_led: 'Digital %1 Pin %2 %3',
-                arduino_ext_digital_pwm: 'Digital %1 Pin %2 %3',
-                arduino_ext_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-                arduino_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
-                arduino_ext_get_digital: 'Digital %1 Sensor value',
+                arduino_runcoding_get_analog_value: 'Analog %1 Sensor value',
+                arduino_runcoding_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                arduino_runcoding_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                arduino_runcoding_toggle_led: 'Digital %1 Pin %2 %3',
+                arduino_runcoding_digital_pwm: 'Digital %1 Pin %2 %3',
+                arduino_runcoding_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                arduino_runcoding_set_servo: 'Set servo pin %1 angle as %2 %3',
+                arduino_runcoding_get_digital: 'Digital %1 Sensor value',
 
                 arduino_runcoding_set_neopixel_init: 'set neopixel pin: %1 led-count: %2 bright: %3 %4',
                 arduino_runcoding_set_neopixel: 'neopixel pin: %1 (R:%2 G:%3 B:%4) %5',
@@ -130,14 +130,14 @@ Entry.Runcoding.setLanguage = function() {
 };
 
 Entry.Runcoding.blockMenuBlocks = [
-    'arduino_ext_get_analog_value',
-    'arduino_ext_get_analog_value_map',
-    'arduino_ext_get_ultrasonic_value',
-    'arduino_ext_get_digital',
-    'arduino_ext_toggle_led',
-    'arduino_ext_digital_pwm',
-    'arduino_ext_set_servo',
-    'arduino_ext_set_tone',
+    'arduino_runcoding_get_analog_value',
+    'arduino_runcoding_get_analog_value_map',
+    'arduino_runcoding_get_ultrasonic_value',
+    'arduino_runcoding_get_digital',
+    'arduino_runcoding_toggle_led',
+    'arduino_runcoding_digital_pwm',
+    'arduino_runcoding_set_servo',
+    'arduino_runcoding_set_tone',
     'arduino_runcoding_set_neopixel_init',
     'arduino_runcoding_set_neopixel',
     'arduino_runcoding_set_neopixel_rainbow',
@@ -151,7 +151,7 @@ Entry.Runcoding.blockMenuBlocks = [
 //region Runcoding 아두이노 확장모드
 Entry.Runcoding.getBlocks = function() {
     return {
-        arduino_ext_analog_list: {
+        arduino_runcoding_analog_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -204,17 +204,17 @@ Entry.Runcoding.getBlocks = function() {
                                 value: '0',
                                 fontSize: 11,
                                 converter: Entry.block.converters.returnStringKey,
-                                codeMap: 'Entry.CodeMap.Arduino.arduino_ext_analog_list[0]',
+                                codeMap: 'Entry.CodeMap.Arduino.arduino_runcoding_analog_list[0]',
                                 bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_analog_list',
+                        keyOption: 'arduino_runcoding_analog_list',
                     },
                 ],
             },
         },
-        arduino_ext_get_analog_value: {
+        arduino_runcoding_get_analog_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -231,10 +231,10 @@ Entry.Runcoding.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_analog_list',
+                        type: 'arduino_runcoding_analog_list',
                     },
                 ],
-                type: 'arduino_ext_get_analog_value',
+                type: 'arduino_runcoding_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -265,7 +265,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_analog_value_map: {
+        arduino_runcoding_get_analog_value_map: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -302,10 +302,10 @@ Entry.Runcoding.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_get_analog_value',
+                        type: 'arduino_runcoding_get_analog_value',
                         params: [
                             {
-                                type: 'arduino_ext_analog_list',
+                                type: 'arduino_runcoding_analog_list',
                             },
                         ],
                     },
@@ -326,7 +326,7 @@ Entry.Runcoding.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'arduino_ext_get_analog_value_map',
+                type: 'arduino_runcoding_get_analog_value_map',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -411,7 +411,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_ultrasonic_value: {
+        arduino_runcoding_get_ultrasonic_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -441,7 +441,7 @@ Entry.Runcoding.getBlocks = function() {
                         params: ['5'],
                     },
                 ],
-                type: 'arduino_ext_get_ultrasonic_value',
+                type: 'arduino_runcoding_get_ultrasonic_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -488,7 +488,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_get_digital: {
+        arduino_runcoding_get_digital: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
@@ -508,7 +508,7 @@ Entry.Runcoding.getBlocks = function() {
                         params: [2],
                     },
                 ],
-                type: 'arduino_ext_get_digital',
+                type: 'arduino_runcoding_get_digital',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -599,7 +599,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_toggle_led: {
+        arduino_runcoding_toggle_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -633,7 +633,7 @@ Entry.Runcoding.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_toggle_led',
+                type: 'arduino_runcoding_toggle_led',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -684,7 +684,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_digital_pwm: {
+        arduino_runcoding_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -718,7 +718,7 @@ Entry.Runcoding.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_digital_pwm',
+                type: 'arduino_runcoding_digital_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -761,7 +761,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_tone_list: {
+        arduino_runcoding_tone_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -831,12 +831,12 @@ Entry.Runcoding.getBlocks = function() {
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
-                        keyOption: 'arduino_ext_tone_list',
+                        keyOption: 'arduino_runcoding_tone_list',
                     },
                 ],
             },
         },
-        arduino_ext_tone_value: {
+        arduino_runcoding_tone_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -852,10 +852,10 @@ Entry.Runcoding.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'arduino_runcoding_tone_list',
                     },
                 ],
-                type: 'arduino_ext_tone_value',
+                type: 'arduino_runcoding_tone_value',
             },
             paramsKeyMap: {
                 NOTE: 0,
@@ -868,12 +868,12 @@ Entry.Runcoding.getBlocks = function() {
                 py: [
                     {
                         syntax: '%1',
-                        keyOption: 'arduino_ext_tone_value',
+                        keyOption: 'arduino_runcoding_tone_value',
                     },
                 ],
             },
         },
-        arduino_ext_octave_list: {
+        arduino_runcoding_octave_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -911,12 +911,12 @@ Entry.Runcoding.getBlocks = function() {
                 py: [
                     {
                         syntax: '%1',
-                        keyOption: 'arduino_ext_octave_list',
+                        keyOption: 'arduino_runcoding_octave_list',
                     },
                 ],
             },
         },
-        arduino_ext_set_tone: {
+        arduino_runcoding_set_tone: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -955,10 +955,10 @@ Entry.Runcoding.getBlocks = function() {
                         params: [3],
                     },
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'arduino_runcoding_tone_list',
                     },
                     {
-                        type: 'arduino_ext_octave_list',
+                        type: 'arduino_runcoding_octave_list',
                     },
                     {
                         type: 'text',
@@ -966,7 +966,7 @@ Entry.Runcoding.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_set_tone',
+                type: 'arduino_runcoding_set_tone',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -1816,7 +1816,7 @@ Entry.Runcoding.getBlocks = function() {
                 ],
             },
         },
-        arduino_ext_set_servo: {
+        arduino_runcoding_set_servo: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1847,7 +1847,7 @@ Entry.Runcoding.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_ext_set_servo',
+                type: 'arduino_runcoding_set_servo',
             },
             paramsKeyMap: {
                 PORT: 0,
