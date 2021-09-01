@@ -830,8 +830,6 @@ class BlockMenu extends ModelClass<Schema> {
         if (this._scroller) {
             this._scroller.setOpacity(0);
         }
-
-        this._toggleTrashcan(!!this.dragBlock);
     }
 
     _handleBoardDragBlock() {
