@@ -5606,6 +5606,7 @@ Lang.Workspace = {
     goal_project: '목표작품 살펴보기',
     look_target_project: '작품을 실행하며 무엇을 만들지 살펴봅시다.',
     ai_learning_login_required: '모델 학습 기능을 사용하시려면 \n로그인이 필요합니다.',
+    drag_to_remove: '여기로 옮겨 버리기',
 };
 Lang.code = '코드보기';
 Lang.EntryStatic = {

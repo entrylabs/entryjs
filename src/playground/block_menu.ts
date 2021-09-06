@@ -1096,24 +1096,12 @@ class BlockMenu extends ModelClass<Schema> {
             class: 'blockMenuWrapper blockMenuTrashcan entryRemove',
             parent: this.blockMenuContainer,
         })
-            .css({
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                width: 242,
-                opacity: '0.3',
-                background: 'black',
-            })
-            .on('pointerenter', () => {
-                // TODO markup
-                // 휴지통 열림
-                this.blockMenuWrapperForTrashcan.css('background', 'white');
-            })
-            .on('pointerleave', () => {
-                // TODO markup
-                // 휴지통 닫힘
-                this.blockMenuWrapperForTrashcan.css('background', 'black');
-            });
+            .on('pointerenter', () => this.blockMenuWrapperForTrashcan.addClass('open'))
+            .on('pointerleave', () => this.blockMenuWrapperForTrashcan.removeClass('open'));
+
+        Entry.Dom('span')
+            .text(Lang.Workspace.drag_to_remove)
+            .appendTo(this.blockMenuWrapperForTrashcan);
 
         this.workspace?.board?.observe(this, '_handleBoardDragBlock', ['dragBlock']);
     }
