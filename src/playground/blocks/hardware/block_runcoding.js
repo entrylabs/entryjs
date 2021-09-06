@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.Runcoding = {
-    id: '170101',
+    id: '17.1',
     name: 'runcoding',
     url: 'https://runcoding.co.kr/',
     imageName: 'runcoding.png',
