@@ -1417,27 +1417,38 @@ Entry.Board = class Board {
         }
 
         if (!this.svgObjectTitle.thumbnail) {
-            // TODO markup
-            // board 상단 선택된 오브젝트 썸네일 이미지
             const thumbnail = this.svgObjectTitle.elem('g');
+            const rect = thumbnail.elem('rect');
+            rect.attr({
+                x: 14,
+                y: 12,
+                rx: 2,
+                ry: 2,
+                width: 24,
+                height: 24,
+                fill: 'none',
+                stroke: '#e2e2e2',
+                strokeWidth: '1',
+            });
             const image = thumbnail.elem('image');
             image.addClass('entryBoardObjectThumbnail');
             image.attr({
+                x: 17,
+                y: 15,
+                width: 18,
+                height: 18,
                 href: object.thumbUrl,
-                width: 24,
-                height: 24,
-                transform: 'translate(14,12)',
             });
+            this.svgObjectTitle.frame = rect;
             this.svgObjectTitle.thumbnail = image;
         }
 
         if (!this.svgObjectTitle.name) {
-            // TODO markup
-            // board 상단 선택된 오브젝트 이름
             const name = this.svgObjectTitle.elem('g');
             const nameText = name.elem('text');
             nameText.addClass('entryBoardObjectName');
-            nameText.attr({ transform: 'translate(44,19)' });
+            nameText.attr({ x: 44, y: 26, fill: '#6b6b6b' });
+            nameText.style.font = '10px NanumGothicOTFBold';
             nameText.innerHTML = object.name;
             this.svgObjectTitle.name = nameText;
         }
@@ -1451,8 +1462,10 @@ Entry.Board = class Board {
             return;
         }
 
+        this.svgObjectTitle.frame?.remove();
         this.svgObjectTitle.thumbnail?.remove();
         this.svgObjectTitle.name?.remove();
+        delete this.svgObjectTitle.frame;
         delete this.svgObjectTitle.thumbnail;
         delete this.svgObjectTitle.name;
     }
