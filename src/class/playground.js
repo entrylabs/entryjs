@@ -640,10 +640,8 @@ Entry.Playground = class Playground {
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
 
-            // TODO markup
-            // 새로 그리기 버튼
-            const innerDrawNewPicture = Entry.createElement('div', 'entryAddPictureInner')
-                .addClass('entryPlaygroundAddPictureInner')
+            const innerDrawNewPicture = Entry.createElement('div', 'entryNewPictureInner')
+                .addClass('entryPlaygroundNewPictureInner')
                 .bindOnClick(() => {
                     this.painter.newPicture();
                 })
