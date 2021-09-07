@@ -243,21 +243,35 @@
 
     .entryPlaygroundCommentButtonWorkspace {
         float: left;
-        .backgroundImage('btn-toggle-comment-off.png');
         background-repeat: no-repeat;
         background-size: 32px auto;
         background-position: 50% 50%;
         cursor: pointer;
         width: 32px;
         height: 32px;
-        margin: 0 8px;
-        &.showComment {
-            .backgroundImage('btn-toggle-comment-select.png');
+
+        &.enabled {
             background-size: 32px auto;
             width: 32px;
             height: 32px;
             border: 0;
             background-color: inherit;
+        }
+
+        &.showComment {
+            margin-right: 4px;
+            .backgroundImage('btn-toggle-comment-off.png');
+            &.enabled {
+                .backgroundImage('btn-toggle-comment-select.png');
+            }
+        }
+
+        &.addComment {
+            margin-right: 8px;
+            .backgroundImage('btn-add-comment-off.png');
+            &.enabled {
+                .backgroundImage('btn-add-comment-select.png');
+            }
         }
     }
 

@@ -221,7 +221,7 @@ Entry.Playground = class Playground {
 
         if (!commentDisable) {
             const commentToggleButton = Entry.createElement('div')
-                .addClass('entryPlaygroundCommentButtonWorkspace showComment')
+                .addClass('entryPlaygroundCommentButtonWorkspace showComment enabled')
                 .appendTo(tabButtonView);
             commentToggleButton.setAttribute('alt', Lang.Blocks.show_all_comment);
             commentToggleButton.setAttribute('title', Lang.Blocks.show_all_comment);
@@ -231,10 +231,8 @@ Entry.Playground = class Playground {
                 this.toggleCommentButton();
             });
 
-            // TODO markup
-            // 상단 메모 추가하기 버튼
             const addCommentButton = Entry.createElement('div')
-                .addClass('entryPlaygroundCommentButtonWorkspace addComment')
+                .addClass('entryPlaygroundCommentButtonWorkspace addComment enabled')
                 .appendTo(tabButtonView);
             addCommentButton.setAttribute('alt', Lang.Blocks.add_comment);
             addCommentButton.setAttribute('title', Lang.Blocks.add_comment);
@@ -545,13 +543,13 @@ Entry.Playground = class Playground {
         const addButton = this.addCommentButton_;
 
         if (this.board.isVisibleComment) {
-            addButton.addClass('addComment');
-            button.addClass('showComment');
+            addButton.addClass('enabled');
+            button.addClass('enabled');
             button.setAttribute('alt', Lang.Blocks.show_all_comment);
             button.setAttribute('title', Lang.Blocks.show_all_comment);
         } else {
-            addButton.removeClass('addComment');
-            button.removeClass('showComment');
+            addButton.removeClass('enabled');
+            button.removeClass('enabled');
             button.setAttribute('alt', Lang.Blocks.hide_all_comment);
             button.setAttribute('title', Lang.Blocks.hide_all_comment);
         }
