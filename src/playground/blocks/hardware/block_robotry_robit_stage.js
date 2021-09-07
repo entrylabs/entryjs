@@ -81,6 +81,7 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 Robotry_Robit_Stage_set_tone: '%2 옥타브 %3 %4 초 동안 연주하기 %5',
                 Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
                 Robotry_Robit_Stage_set_bidirectional_motor:'%3 으로 모터 회전시키기 %4',
+                Robotry_Robit_Stage_set_stop_the_motor: '모터를 정지합니다. %3',
                 
                 Robotry_Robit_Stage_set_led_pwm: '%1 LED 를 %2 의 밝기로 켜기 %3',
                 Robotry_Robit_Stage_set_bidirectional_motor_pwm:'%3 으로 %4 만큼 모터 회전시키기 %5',
@@ -100,6 +101,8 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 "LED 를 On / Off 할 수 있습니다.",
                 Robotry_Robit_Stage_set_bidirectional_motor:
                 "모터는 정방향과 역방향으로 회전할 수 있습니다.",
+                Robotry_Robit_Stage_set_stop_the_motor:
+                "모터의 회전을 멈출수 있습니다.",
                 // PMW
                 Robotry_Robit_Stage_set_led_pwm:
                 "LED 의 밝기를 0 부터 255까지 값으로 조절할 수 있습니다. </br></br>LED 의 밝기는 0 에 가까워 질수록 어두워지고 </br>255 에 가까워 질수록 밝아집니다.",
@@ -142,6 +145,7 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 Robotry_Robit_Stage_set_tone: 'Perform %2 Octave %3 for %4 second %5',
                 Robotry_Robit_Stage_set_led:'%1 LED %2 %3',
                 Robotry_Robit_Stage_set_bidirectional_motor:'Rotate Motor to %3 %4',
+                Robotry_Robit_Stage_set_stop_the_motor:'Stop the motor rotation %3',
                 
                 Robotry_Robit_Stage_set_led_pwm: 'Set %1 LED tp %2 Brightness %3',
                 Robotry_Robit_Stage_set_bidirectional_motor_pwm:'Rotate Motor to %3 for %4 %5',
@@ -161,6 +165,8 @@ Entry.Robotry_Robit_Stage.setLanguage = function() {
                 "On / Off the LED",
                 Robotry_Robit_Stage_set_bidirectional_motor:
                 "Motor rotates to either Forward or Backward.",
+                Robotry_Robit_Stage_set_stop_the_motor:
+                "Stop the motor rotation",
                 // PMW
                 Robotry_Robit_Stage_set_led_pwm:
                 "The LED has a brightness setting that ranges from 0 to 255.</br>The numbers indicate brightness level.</br></br>The higher the number, the brighter the LED.",
@@ -206,6 +212,7 @@ Entry.Robotry_Robit_Stage.blockMenuBlocks = [
     'Robotry_Robit_Stage_set_tone',
     'Robotry_Robit_Stage_set_led',
     'Robotry_Robit_Stage_set_bidirectional_motor',
+    'Robotry_Robit_Stage_set_stop_the_motor',
     // PWM
     'Robotry_Robit_Stage_set_led_pwm',
     'Robotry_Robit_Stage_set_bidirectional_motor_pwm',
@@ -376,7 +383,6 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
         }, 
         // Buzzer define End
 
-
         /* Robit Stage Block Code Script Start */
         // Analog value Mapping Start
         Robotry_Robit_Stage_get_analog_value_map: {
@@ -446,7 +452,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'Get',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -457,7 +463,6 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 const stringValue4 = script.getValue('VALUE4', script);
                 const stringValue5 = script.getValue('VALUE5', script);
                 let isFloat = false;
-
                 if (
                     (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
                     (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
@@ -480,7 +485,6 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 result += value4;
                 result = Math.min(value5, result);
                 result = Math.max(value4, result);
-
                 if (isFloat) {
                     result = Math.round(result * 100) / 100;
                 } else {
@@ -524,7 +528,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT: 0,
             },
             class: 'Get',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
                 let value = 0;
@@ -533,7 +537,6 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 if (port[0] === 'A') {
                     port = port.substring(1);
                 }
-                
                 if (port === 1){
                     value = Math.pow(Math.abs(ANALOG[port] - 88), 3);
                 }
@@ -575,7 +578,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT2: 1,
             },
             class: 'Get',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1', script);
                 const port2 = script.getNumberValue('PORT2', script);
@@ -644,7 +647,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 1,
             },
             class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 const operator = script.getField('OPERATOR');
@@ -708,7 +711,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE: 1
             },
             class: 'Set_PWM',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script){
                 const port = script.getNumberValue('PORT');
                 const value = script.getNumberValue('VALUE');
@@ -785,11 +788,10 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 DURATION: 3,
             },
             class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = script.getNumberValue('PORT', script);
-
                 if (!script.isStart) {
                     let note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note)) {
@@ -807,11 +809,9 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                     if (duration < 0) {
                         duration = 0;
                     }
-
                     if (!sq.SET) {
                         sq.SET = {};
                     }
-
                     if (duration === 0) {
                         sq.SET[port] = {
                             type: Entry.Robotry_Robit_Stage.sensorTypes.TONE,
@@ -820,7 +820,6 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                         };
                         return script.callReturn();
                     }
-
                     let octave = script.getNumberValue('OCTAVE', script) - 1;
                     if (octave < 0) {
                         octave = 0;
@@ -833,11 +832,9 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                     if (note != 0) {
                         value = Entry.Robotry_Robit_Stage.toneMap[note][octave];
                     }
-
                     duration = duration * 1000;
                     script.isStart = true;
                     script.timeFlag = 1;
-
                     sq.SET[port] = {
                         type: Entry.Robotry_Robit_Stage.sensorTypes.TONE,
                         data: {
@@ -912,7 +909,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 2,
             },
             class: 'Set',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1');
                 const port2 = script.getNumberValue('PORT2');
@@ -927,9 +924,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                     data: forward,
                     time: new Date().getTime(),
                 };
-                
                 Entry.hw.sendQueue.SET[port2] = {
-                    
                     type: Entry.Robotry_Robit_Stage.sensorTypes.DIGITAL,
                     data: backward,
                     time: new Date().getTime(),
@@ -995,7 +990,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE: 3,
             },
             class: 'Set_PWM',
-            isNotFor: ['Robotry_Robit_Stage'],
+            isNotfor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1');
                 const port2 = script.getNumberValue('PORT2');
@@ -1013,9 +1008,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                     data: forward,
                     time: new Date().getTime(),
                 };
-                
                 Entry.hw.sendQueue.SET[port2] = {
-                    
                     type: Entry.Robotry_Robit_Stage.sensorTypes.PWM,
                     data: backward,
                     time: new Date().getTime(),
@@ -1028,6 +1021,64 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             },
         }, // Bidirectional DC Motor PWM End
         /* Robit Stage Block Code Script End */
+
+        // Stop the DC Motor Start
+        // 모터 작동을 중지합니다.
+        Robotry_Robit_Stage_set_stop_the_motor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    value: [Motor_P],
+                },
+                {
+                    value: [Motor_N],
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'Robotry_Robit_Stage_set_stop_the_motor',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+            },
+            class: 'Set',
+            isNotfor: ['Robotry_Robit_Stage'],
+            func(sprite, script) {
+                const port1 = script.getNumberValue('PORT1');
+                const port2 = script.getNumberValue('PORT2');
+                const operator = 0;
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[port1] = {
+                    type: Entry.Robotry_Robit_Stage.sensorTypes.DIGITAL,
+                    data: operator,
+                    time: new Date().getTime(),
+                }
+                Entry.hw.sendQueue.SET[port2] = {
+                    type: Entry.Robotry_Robit_Stage.sensorTypes.DIGITAL,
+                    data: operator,
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        }, // Stop the DC Motor End
     };
 };
 
