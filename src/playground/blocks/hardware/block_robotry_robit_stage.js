@@ -452,7 +452,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE5: 4,
             },
             class: 'Get',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
@@ -528,7 +528,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT: 0,
             },
             class: 'Get',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
                 let value = 0;
@@ -578,7 +578,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT2: 1,
             },
             class: 'Get',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1', script);
                 const port2 = script.getNumberValue('PORT2', script);
@@ -647,7 +647,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 1,
             },
             class: 'Set',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 const operator = script.getField('OPERATOR');
@@ -711,7 +711,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE: 1
             },
             class: 'Set_PWM',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script){
                 const port = script.getNumberValue('PORT');
                 const value = script.getNumberValue('VALUE');
@@ -788,7 +788,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 DURATION: 3,
             },
             class: 'Set',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = script.getNumberValue('PORT', script);
@@ -909,7 +909,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 OPERATOR: 2,
             },
             class: 'Set',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1');
                 const port2 = script.getNumberValue('PORT2');
@@ -990,7 +990,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 VALUE: 3,
             },
             class: 'Set_PWM',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1');
                 const port2 = script.getNumberValue('PORT2');
@@ -1054,7 +1054,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 PORT2: 1,
             },
             class: 'Set',
-            isNotfor: ['Robotry_Robit_Stage'],
+            isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1');
                 const port2 = script.getNumberValue('PORT2');
