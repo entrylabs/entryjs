@@ -69,6 +69,7 @@ Entry.Engine = class Engine {
             /** @type {!Element} */
             this.view_ = controlView;
             this.view_.addClass('entryEngine_w').addClass('entryEngineWorkspace_w');
+            this.view_.addClass('test');
 
             this.speedButton = Entry.createElement('button')
                 .addClass(
