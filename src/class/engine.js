@@ -121,9 +121,8 @@ Entry.Engine = class Engine {
             this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
             $(this.mouseViewInput).attr('readonly', 'readonly');
 
-            this.buttonWrapper = Entry.createElement('div')
-                .addClass('entryEngineButtonWrapper')
-                .appendTo(this.view_);
+            this.buttonWrapper = Entry.createElement('div').addClass('entryEngineButtonWrapper');
+            this.view_.after(this.buttonWrapper);
 
             /*
               TODO markup
@@ -1000,8 +999,11 @@ Entry.Engine = class Engine {
                 popup.window_.appendChild(Entry.engine.runButton[0]);
             }
             popup.window_.appendChild(Entry.engine.view_);
-            if (Entry.type === 'workspace' && Entry.targetChecker) {
-                popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
+            if (Entry.type === 'workspace') {
+                Entry.engine.view_.appendChild(this.buttonWrapper);
+                if (Entry.targetChecker) {
+                    popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
+                }
             }
         } else {
             this.popup.remove();
