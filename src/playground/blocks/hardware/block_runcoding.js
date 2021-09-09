@@ -2,7 +2,7 @@
 
 Entry.Runcoding = {
     id: '17.1',
-    name: 'runcoding',
+    name: 'Runcoding',
     url: 'https://runcoding.co.kr/',
     imageName: 'runcoding.png',
     title: {
