@@ -939,6 +939,9 @@ Entry.EntryObject = class {
             'entryObjectRotateLabelWrapperWorkspace'
         );
 
+        const rotateWrapper = Entry.createElement('span').addClass(
+            'entryObjectRotateWorkspaceWrapper'
+        );
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = `${Lang.Workspace.rotation}`;
         const rotateInput = Entry.createElement('input').addClass(
@@ -968,6 +971,9 @@ Entry.EntryObject = class {
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
+        const directionWrapper = Entry.createElement('span').addClass(
+            'entryObjectDirectionWorkspaceWrapper'
+        );
         const directionSpan = Entry.createElement('span').addClass(
             'entryObjectDirectionSpanWorkspace'
         );
@@ -997,10 +1003,13 @@ Entry.EntryObject = class {
         });
 
         this.directionInput_ = directionInput;
-        rotateLabelWrapperView.appendChild(rotateSpan);
-        rotateLabelWrapperView.appendChild(rotateInput);
-        rotateLabelWrapperView.appendChild(directionSpan);
-        rotateLabelWrapperView.appendChild(directionInput);
+        rotateWrapper.appendChild(rotateSpan);
+        rotateWrapper.appendChild(rotateInput);
+        directionWrapper.appendChild(directionSpan);
+        directionWrapper.appendChild(directionInput);
+
+        rotateLabelWrapperView.appendChild(rotateWrapper);
+        rotateLabelWrapperView.appendChild(directionWrapper);
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
 
@@ -1012,6 +1021,9 @@ Entry.EntryObject = class {
             'entryObjectCoordinateWorkspace'
         );
 
+        const xCoordiWrapper = Entry.createElement('span').addClass(
+            'entryObjectCoordinateWorkspaceWrapper'
+        );
         const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
@@ -1032,6 +1044,9 @@ Entry.EntryObject = class {
             );
         });
 
+        const yCoordiWrapper = Entry.createElement('span').addClass(
+            'entryObjectCoordinateWorkspaceWrapper'
+        );
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
         const yInput = Entry.createElement('input').addClass(
@@ -1053,6 +1068,9 @@ Entry.EntryObject = class {
             );
         });
 
+        const sizeWrapper = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSizeWrapper'
+        );
         const sizeSpan = Entry.createElement('span').addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = `${Lang.Workspace.Size}`;
         const sizeInput = Entry.createElement('input').addClass(
@@ -1075,12 +1093,16 @@ Entry.EntryObject = class {
             );
         });
 
-        coordinationView.appendChild(xCoordi);
-        coordinationView.appendChild(xInput);
-        coordinationView.appendChild(yCoordi);
-        coordinationView.appendChild(yInput);
-        coordinationView.appendChild(sizeSpan);
-        coordinationView.appendChild(sizeInput);
+        xCoordiWrapper.appendChild(xCoordi);
+        xCoordiWrapper.appendChild(xInput);
+        yCoordiWrapper.appendChild(yCoordi);
+        yCoordiWrapper.appendChild(yInput);
+        sizeWrapper.appendChild(sizeSpan);
+        sizeWrapper.appendChild(sizeInput);
+
+        coordinationView.appendChild(xCoordiWrapper);
+        coordinationView.appendChild(yCoordiWrapper);
+        coordinationView.appendChild(sizeWrapper);
         coordinationView.xInput_ = xInput;
         coordinationView.yInput_ = yInput;
         coordinationView.sizeInput_ = sizeInput;
