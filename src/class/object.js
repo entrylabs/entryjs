@@ -282,14 +282,11 @@ Entry.EntryObject = class {
         const className = 'entryRemove';
 
         if (rotateMethod === 'free') {
-            this.rotateSpan_.removeClass(className);
-            this.rotateInput_.removeClass(className);
-
+            this.rotateWrapper_.removeClass(className);
             this.rotateInput_.value = `${entity.getRotation(1)}`;
             this.directionInput_.value = `${entity.getDirection(1)}`;
         } else {
-            this.rotateSpan_.addClass(className);
-            this.rotateInput_.addClass(className);
+            this.rotateWrapper_.addClass(className);
             this.directionInput_.value = `${entity.getDirection(1)}`;
         }
     }
@@ -944,7 +941,9 @@ Entry.EntryObject = class {
         );
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = `${Lang.Workspace.rotation}`;
-        const RotateDegCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        const RotateDegCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
         RotateDegCoordi.innerHTML = '°';
 
         const rotateInput = Entry.createElement('input').addClass(
@@ -971,6 +970,7 @@ Entry.EntryObject = class {
             );
         });
 
+        this.rotateWrapper_ = rotateWrapper;
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
@@ -981,7 +981,9 @@ Entry.EntryObject = class {
             'entryObjectDirectionSpanWorkspace'
         );
         directionSpan.innerHTML = `${Lang.Workspace.direction}`;
-        const DirectionDegCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        const DirectionDegCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
         DirectionDegCoordi.innerHTML = '°';
         const directionInput = Entry.createElement('input').addClass(
             'entryObjectDirectionInputWorkspace'
@@ -1056,7 +1058,9 @@ Entry.EntryObject = class {
         );
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
-        const PerCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        const PerCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
         PerCoordi.innerHTML = '%';
         const yInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
@@ -1133,7 +1137,7 @@ Entry.EntryObject = class {
         rotationWrapperView.appendChild(rotateLabelWrapperView);
 
         const rotationMethodWrapperView = this.createRotationMethodWrapperView();
-        rotationWrapperView.appendChild(rotationMethodWrapperView);
+        rotateLabelWrapperView.appendChild(rotationMethodWrapperView);
         this.rotationMethodWrapper_ = rotationMethodWrapperView;
 
         return rotationWrapperView;
