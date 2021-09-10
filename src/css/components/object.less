@@ -222,11 +222,28 @@
     letter-spacing: -0.4px;
     width: auto;
 }
+.entryObjectCoordinateWorkspaceWrapper,
+.entryObjectCoordinateSizeWrapper {
+    display: inline-block;
+    position: relative;
+    margin-left: 6px;
+    vertical-align: top;
+    &:first-of-type {
+        margin-left: 0;
+    }
+}
+.entryObjectCoordinateSizeWrapper {
+    margin-left: 12px;
+}
+
 
 .entryObjectCoordinateSpanWorkspace {
-    display: inline-block;
-    vertical-align: top;
-    margin-top: 2px;
+    position: absolute;
+    right: 6px;
+    top: 7px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #979797;
 }
 
 .selectedObject > .entryObjectWrapperWorkspace > .entryObjectCoordinateWorkspace {
@@ -320,10 +337,9 @@
 .entryObjectRotationWrapperWorkspace {
     position: relative;
     display: none;
-    width: 100%;
-    padding: 18px 8px 7px;
-    border: 1px solid #d6e9f4;
-    background-color: #d6e9f4;
+    margin: 10px 10px 0;
+    padding: 9px 0 13px;
+    border-top: 1px solid #aac5d5;
     clear: both;
 }
 
@@ -332,7 +348,7 @@
 }
 
 .selectedObject .entryObjectRotationWrapperWorkspace {
-    display: inline-block;
+    display: block;
 }
 
 .fold .entryObjectRotationWrapperWorkspace {
@@ -344,9 +360,7 @@
 }
 
 .rotationMethodWrapper {
-    margin: 16px -8px 0;
-    padding: 7px 8px 0;
-    border-top: 1px solid #fff;
+    
 }
 
 .collapsed .rotationMethodWrapper {
@@ -365,26 +379,38 @@
 }
 
 .entryObjectRotateLabelWrapperWorkspace {
-    margin-top: 16px;
+    position: relative;
+    margin-top: 8px;
     font-size: 12px;
     font-weight: 600;
     color: #2c313d;
 }
+.entryObjectRotateWorkspaceWrapper,
+.entryObjectDirectionWorkspaceWrapper {
+    position: relative;
+    display: inline-block;
+    margin-left: 6px;
+    padding-bottom: 32px;
+    vertical-align: top;
+    &:first-of-type {
+        margin-left: 0;
+    }
+}
 
 .entryObjectRotateInputWorkspace,
 .entryObjectDirectionInputWorkspace {
-    width: 48px;
+    width: 60px;
     height: 24px;
     box-sizing: border-box;
-    margin-left: 4px;
+    padding: 0 13px 0 8px;
     background-color: #fff;
-    border: 1px solid #e2e2e2;
+    border: 1px solid #aac5d5;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: #2c313d;
     letter-spacing: -0.4px;
-    text-align: center;
+    text-align: left;
 }
 .entryObjectRotateInputWorkspace:focus,
 .entryObjectRotateInputWorkspace:active,
@@ -395,9 +421,15 @@
 
 .entryObjectDirectionSpanWorkspace,
 .entryObjectRotateSpanWorkspace {
-    display: inline-block;
-    margin: 2px 0 0 0;
-    vertical-align: top;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 13px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
+    text-align: center;
+    line-height: 12px;
 }
 .entryObjectRotateInputWorkspace + .entryObjectDirectionSpanWorkspace {
     margin-left: 10px;
@@ -442,31 +474,28 @@
     .backgroundImage('layers_icon_rotate03_sel.png');
 }
 
-.entryObjectCoordinateSpanWorkspace:nth-child(3) {
-    margin-left: 12px;
-    position: relative;
-}
-
 .entryObjectCoordinateSizeWorkspace {
     display: inline-block;
-    margin: 2px 0 0 10px;
     position: relative;
-    float: none;
+    margin-right: 6px;
+    font-size: 10px;
+    font-weight: 600;
     vertical-align: top;
+    line-height: 24px;
 }
 
 .entryObjectCoordinateInputWorkspace {
-    width: 48px;
+    width: 60px;
     height: 24px;
-    margin-left: 6px;
+    padding: 0 13px 0 8px;
     background-color: #fff;
-    border: 1px solid #e2e2e2;
+    border: 1px solid #aac5d5;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: #2c313d;
     letter-spacing: -0.4px;
-    text-align: center;
+    text-align: left;
     box-sizing: border-box;
 }
 .entryObjectCoordinateInputWorkspace:focus,

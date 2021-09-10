@@ -944,6 +944,9 @@ Entry.EntryObject = class {
         );
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = `${Lang.Workspace.rotation}`;
+        const RotateDegCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        RotateDegCoordi.innerHTML = '°';
+
         const rotateInput = Entry.createElement('input').addClass(
             'entryObjectRotateInputWorkspace'
         );
@@ -978,6 +981,8 @@ Entry.EntryObject = class {
             'entryObjectDirectionSpanWorkspace'
         );
         directionSpan.innerHTML = `${Lang.Workspace.direction}`;
+        const DirectionDegCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        DirectionDegCoordi.innerHTML = '°';
         const directionInput = Entry.createElement('input').addClass(
             'entryObjectDirectionInputWorkspace'
         );
@@ -1005,8 +1010,10 @@ Entry.EntryObject = class {
         this.directionInput_ = directionInput;
         rotateWrapper.appendChild(rotateSpan);
         rotateWrapper.appendChild(rotateInput);
+        rotateWrapper.appendChild(RotateDegCoordi);
         directionWrapper.appendChild(directionSpan);
         directionWrapper.appendChild(directionInput);
+        directionWrapper.appendChild(DirectionDegCoordi);
 
         rotateLabelWrapperView.appendChild(rotateWrapper);
         rotateLabelWrapperView.appendChild(directionWrapper);
@@ -1017,7 +1024,7 @@ Entry.EntryObject = class {
     }
 
     createCoordinationView() {
-        const coordinationView = Entry.createElement('span').addClass(
+        const coordinationView = Entry.createElement('div').addClass(
             'entryObjectCoordinateWorkspace'
         );
 
@@ -1049,6 +1056,8 @@ Entry.EntryObject = class {
         );
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
+        const PerCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
+        PerCoordi.innerHTML = '%';
         const yInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
@@ -1099,6 +1108,7 @@ Entry.EntryObject = class {
         yCoordiWrapper.appendChild(yInput);
         sizeWrapper.appendChild(sizeSpan);
         sizeWrapper.appendChild(sizeInput);
+        sizeWrapper.appendChild(PerCoordi);
 
         coordinationView.appendChild(xCoordiWrapper);
         coordinationView.appendChild(yCoordiWrapper);
