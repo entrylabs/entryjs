@@ -53,7 +53,7 @@
     }
     .entryObjectDeleteWorkspace {
         .backgroundImage('layers_icon_close_nor_new_disabled.png');
-        background-size: 26px auto;
+        background-size: 24px auto;
         cursor: default;
     }
     input {
@@ -90,31 +90,32 @@
 .entryObjectWrapperWorkspace {
     overflow: hidden;
     position: relative;
-    margin: 16px 78px 0 82px;
+    margin: 16px 64px 0 76px;
 }
 
 .entryObjectNameWorkspace {
     overflow: hidden;
-    float: left;
     box-sizing: border-box;
-    max-width: 283px;
-    width: calc(100% - 28px);
-    margin-right: 4px;
+    width: 100%;
     padding: 7px 4px 6px;
-    border: 1px solid #e2e2e2;
+    border: 1px solid transparent;
     border-radius: 4px;
-    background-color: #fff;
-    font-size: 12px;
+    background-color: transparent;
+    font-size: 10px;
     font-weight: 600;
     color: #2c313d;
     white-space: nowrap;
     text-overflow: ellipsis;
-    line-height: 11px;
+    line-height: 12px;
 }
 
 .selectedObject {
     .entryObjectNameWorkspace:focus {
         border-color: #4f80ff;
+    }
+    .entryObjectNameWorkspace {
+        border-color: #aac5d5;
+        background-color: #f7fcff;
     }
 }
 
@@ -150,13 +151,10 @@
 .entryObjectDeleteWorkspace {
     overflow: hidden;
     position: absolute;
-    right: 26px;
-    top: 18px;
+    right: 3px;
+    top: 17px;
     width: 24px;
     height: 24px;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-    background-color: #fff;
     cursor: pointer;
     background-size: 10px auto;
     background-position: 50% 50%;
@@ -251,13 +249,12 @@
 }
 
 .entryObjectInformationWorkspace {
-    display: inline-block;
-    right: 0;
-    top: 9px;
+    position: absolute;
+    right: 32px;
+    top: 18px;
     width: 24px;
     height: 24px;
-    margin-top: 2px;
-    background-size: 8px auto;
+    background-size: 7px auto;
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
@@ -400,7 +397,8 @@
     margin-left: 6px;
     padding-bottom: 32px;
     vertical-align: top;
-    &:first-of-type {
+    &:first-of-type,
+    &.entryRemove + .entryObjectDirectionWorkspaceWrapper {
         margin-left: 0;
     }
 }
