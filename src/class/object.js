@@ -868,6 +868,10 @@ Entry.EntryObject = class {
 
         this.view_.appendChild(this.createWrapperView()); // name space
 
+        const informationView = this.createInformationView();
+        this.informationView_ = informationView;
+        this.view_.appendChild(informationView);
+
         const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
         this.deleteView_ = deleteView;
         this.view_.appendChild(deleteView);
@@ -1226,10 +1230,6 @@ Entry.EntryObject = class {
         const nameView = this.createNameView();
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
-
-        const informationView = this.createInformationView();
-        wrapperView.appendChild(informationView);
-        this.informationView_ = informationView;
 
         return wrapperView;
     }
