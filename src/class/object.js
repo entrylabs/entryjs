@@ -894,7 +894,7 @@ Entry.EntryObject = class {
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = `${Lang.Workspace.rotate_method}`;
 
-        const rotateModeAView = Entry.createElement('div').addClass(
+        const rotateModeAView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
         );
         this.rotateModeAView_ = rotateModeAView;
@@ -906,7 +906,7 @@ Entry.EntryObject = class {
             }, this)
         );
 
-        const rotateModeBView = Entry.createElement('div').addClass(
+        const rotateModeBView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
         );
         this.rotateModeBView_ = rotateModeBView;
@@ -917,7 +917,7 @@ Entry.EntryObject = class {
             }, this)
         );
 
-        const rotateModeCView = Entry.createElement('div').addClass(
+        const rotateModeCView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
         );
         this.rotateModeCView_ = rotateModeCView;

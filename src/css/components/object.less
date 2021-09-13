@@ -72,8 +72,8 @@
     position: absolute;
     top: 8px;
     left: 34px;
-    height: 44px;
-    width: 40px;
+    width: 36px;
+    height: 40px;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
     background-color: #fff;
@@ -338,7 +338,7 @@
     position: relative;
     display: none;
     margin: 10px 10px 0;
-    padding: 9px 0 13px;
+    padding-top: 9px;
     border-top: 1px solid #aac5d5;
     clear: both;
 }
@@ -360,7 +360,11 @@
 }
 
 .rotationMethodWrapper {
-    
+    display: inline-block;
+    position: relative;
+    margin-left: 12px;
+    padding-bottom: 32px;
+    vertical-align: top;
 }
 
 .collapsed .rotationMethodWrapper {
@@ -370,11 +374,15 @@
 }
 
 .entryObjectRotateMethodLabelWorkspace {
-    display: inline-block;
-    margin-top: 2px;
-    font-size: 12px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 13px;
+    font-size: 10px;
     font-weight: 600;
     color: #2c313d;
+    line-height: 12px;
+    text-align: center;
     vertical-align: top;
 }
 
@@ -441,14 +449,13 @@
 .entryObjectRotateModeWorkspace {
     cursor: pointer;
     display: inline-block;
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
     vertical-align: top;
-    background-size: 30px auto;
+    background-size: 24px auto;
 }
 
 .entryObjectRotateModeAWorkspace {
-    margin-left: 12px;
     .backgroundImage('layers_icon_rotate01_nor.png');
 }
 
@@ -457,7 +464,7 @@
 }
 
 .entryObjectRotateModeBWorkspace {
-    margin-left: 12px;
+    margin-left: 6px;
     .backgroundImage('layers_icon_rotate02_nor.png');
 }
 
@@ -466,7 +473,7 @@
 }
 
 .entryObjectRotateModeCWorkspace {
-    margin-left: 12px;
+    margin-left: 6px;
     .backgroundImage('layers_icon_rotate03_nor.png');
 }
 
