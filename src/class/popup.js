@@ -42,6 +42,10 @@ Entry.Popup = class Popup {
         while (this.window_.hasChildNodes()) {
             if (Entry.type == 'workspace') {
                 Entry.engineContainer.insertBefore(
+                    Entry.engine.buttonWrapper,
+                    Entry.engineContainer.firstChild
+                );
+                Entry.engineContainer.insertBefore(
                     this.window_.firstChild,
                     Entry.engineContainer.firstChild
                 );
