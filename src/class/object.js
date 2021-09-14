@@ -1212,7 +1212,7 @@ Entry.EntryObject = class {
             if (!object) {
                 return;
             } else if (nameView.value.trim() === '') {
-                return entrylms.alert(Lang.Workspace.enter_the_name).on('hide', () => {
+                return Entry.modal.alert(Lang.Workspace.enter_the_name).then(() => {
                     nameView.focus();
                 });
             }

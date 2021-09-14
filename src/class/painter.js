@@ -148,7 +148,7 @@ Entry.Painter = class Painter {
             return;
         }
 
-        entrylms.confirm(Lang.Menus.save_modified_shape).then((result) => {
+        Entry.modal.confirm(Lang.Menus.save_modified_shape).then((result) => {
             this.updatePicture(picture, wasRun, result);
         });
     }

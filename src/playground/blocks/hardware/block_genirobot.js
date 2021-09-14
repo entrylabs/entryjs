@@ -55,8 +55,8 @@ function getAngleStepTime(angle){
 Entry.GENIBOT = {
     id: '44.1',
     name: 'genibot',
-    url: 'https://www.arduino.cc/',
-    imageName: 'arduino.png',
+    url: 'https://genirobot.com',
+    imageName: 'genibot.png',
     title: {
         ko: '지니봇',
         en: 'Genibot',
@@ -393,7 +393,6 @@ Entry.GENIBOT.getBlocks = function() {
             isNotFor: ['genibot'],
             func(sprite, script) {
                 var portData = Entry.hw.portData['BUTTON'];
-                
                 if (portData) {
                     portData = '0';
                     return script.callReturn();

@@ -1865,7 +1865,7 @@ Entry.Utils.addNewBlock = function(item) {
         (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
             !Entry.TextCodingUtil.canUsePythonFunctions(functions))
     ) {
-        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+        return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
     }
 
     const objectIdMap = {};
@@ -1917,7 +1917,7 @@ Entry.Utils.addNewObject = function(sprite) {
             (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
                 !Entry.TextCodingUtil.canUsePythonFunctions(functions))
         ) {
-            return entrylms.alert(Lang.Menus.object_import_syntax_error);
+            return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
         DataTable.setTables(tables);
@@ -2887,8 +2887,8 @@ Entry.Utils.asyncAnimationFrame = (func) => {
             func();
             captureTimeout = requestAnimationFrame(asyncFunc);
         }
-    }
+    };
 
     captureTimeout = requestAnimationFrame(asyncFunc);
     return captureTimeout;
-}
+};
