@@ -282,14 +282,11 @@ Entry.EntryObject = class {
         const className = 'entryRemove';
 
         if (rotateMethod === 'free') {
-            this.rotateSpan_.removeClass(className);
-            this.rotateInput_.removeClass(className);
-
+            this.rotateWrapper_.removeClass(className);
             this.rotateInput_.value = `${entity.getRotation(1)}`;
             this.directionInput_.value = `${entity.getDirection(1)}`;
         } else {
-            this.rotateSpan_.addClass(className);
-            this.rotateInput_.addClass(className);
+            this.rotateWrapper_.addClass(className);
             this.directionInput_.value = `${entity.getDirection(1)}`;
         }
     }
@@ -871,6 +868,10 @@ Entry.EntryObject = class {
 
         this.view_.appendChild(this.createWrapperView()); // name space
 
+        const informationView = this.createInformationView();
+        this.informationView_ = informationView;
+        this.view_.appendChild(informationView);
+
         const deleteView = this.createDeleteView(exceptionsForMouseDown, that); // delete
         this.deleteView_ = deleteView;
         this.view_.appendChild(deleteView);
@@ -897,7 +898,7 @@ Entry.EntryObject = class {
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = `${Lang.Workspace.rotate_method}`;
 
-        const rotateModeAView = Entry.createElement('div').addClass(
+        const rotateModeAView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
         );
         this.rotateModeAView_ = rotateModeAView;
@@ -909,7 +910,7 @@ Entry.EntryObject = class {
             }, this)
         );
 
-        const rotateModeBView = Entry.createElement('div').addClass(
+        const rotateModeBView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
         );
         this.rotateModeBView_ = rotateModeBView;
@@ -920,7 +921,7 @@ Entry.EntryObject = class {
             }, this)
         );
 
-        const rotateModeCView = Entry.createElement('div').addClass(
+        const rotateModeCView = Entry.createElement('span').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
         );
         this.rotateModeCView_ = rotateModeCView;
@@ -939,8 +940,16 @@ Entry.EntryObject = class {
             'entryObjectRotateLabelWrapperWorkspace'
         );
 
+        const rotateWrapper = Entry.createElement('span').addClass(
+            'entryObjectRotateWorkspaceWrapper'
+        );
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = `${Lang.Workspace.rotation}`;
+        const RotateDegCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
+        RotateDegCoordi.innerHTML = '°';
+
         const rotateInput = Entry.createElement('input').addClass(
             'entryObjectRotateInputWorkspace'
         );
@@ -965,13 +974,21 @@ Entry.EntryObject = class {
             );
         });
 
+        this.rotateWrapper_ = rotateWrapper;
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
+        const directionWrapper = Entry.createElement('span').addClass(
+            'entryObjectDirectionWorkspaceWrapper'
+        );
         const directionSpan = Entry.createElement('span').addClass(
             'entryObjectDirectionSpanWorkspace'
         );
         directionSpan.innerHTML = `${Lang.Workspace.direction}`;
+        const DirectionDegCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
+        DirectionDegCoordi.innerHTML = '°';
         const directionInput = Entry.createElement('input').addClass(
             'entryObjectDirectionInputWorkspace'
         );
@@ -997,10 +1014,15 @@ Entry.EntryObject = class {
         });
 
         this.directionInput_ = directionInput;
-        rotateLabelWrapperView.appendChild(rotateSpan);
-        rotateLabelWrapperView.appendChild(rotateInput);
-        rotateLabelWrapperView.appendChild(directionSpan);
-        rotateLabelWrapperView.appendChild(directionInput);
+        rotateWrapper.appendChild(rotateSpan);
+        rotateWrapper.appendChild(rotateInput);
+        rotateWrapper.appendChild(RotateDegCoordi);
+        directionWrapper.appendChild(directionSpan);
+        directionWrapper.appendChild(directionInput);
+        directionWrapper.appendChild(DirectionDegCoordi);
+
+        rotateLabelWrapperView.appendChild(rotateWrapper);
+        rotateLabelWrapperView.appendChild(directionWrapper);
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
 
@@ -1008,10 +1030,13 @@ Entry.EntryObject = class {
     }
 
     createCoordinationView() {
-        const coordinationView = Entry.createElement('span').addClass(
+        const coordinationView = Entry.createElement('div').addClass(
             'entryObjectCoordinateWorkspace'
         );
 
+        const xCoordiWrapper = Entry.createElement('span').addClass(
+            'entryObjectCoordinateWorkspaceWrapper'
+        );
         const xCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
@@ -1032,8 +1057,15 @@ Entry.EntryObject = class {
             );
         });
 
+        const yCoordiWrapper = Entry.createElement('span').addClass(
+            'entryObjectCoordinateWorkspaceWrapper'
+        );
         const yCoordi = Entry.createElement('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
+        const PerCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
+        PerCoordi.innerHTML = '%';
         const yInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
@@ -1053,6 +1085,9 @@ Entry.EntryObject = class {
             );
         });
 
+        const sizeWrapper = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSizeWrapper'
+        );
         const sizeSpan = Entry.createElement('span').addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = `${Lang.Workspace.Size}`;
         const sizeInput = Entry.createElement('input').addClass(
@@ -1075,12 +1110,17 @@ Entry.EntryObject = class {
             );
         });
 
-        coordinationView.appendChild(xCoordi);
-        coordinationView.appendChild(xInput);
-        coordinationView.appendChild(yCoordi);
-        coordinationView.appendChild(yInput);
-        coordinationView.appendChild(sizeSpan);
-        coordinationView.appendChild(sizeInput);
+        xCoordiWrapper.appendChild(xCoordi);
+        xCoordiWrapper.appendChild(xInput);
+        yCoordiWrapper.appendChild(yCoordi);
+        yCoordiWrapper.appendChild(yInput);
+        sizeWrapper.appendChild(sizeSpan);
+        sizeWrapper.appendChild(sizeInput);
+        sizeWrapper.appendChild(PerCoordi);
+
+        coordinationView.appendChild(xCoordiWrapper);
+        coordinationView.appendChild(yCoordiWrapper);
+        coordinationView.appendChild(sizeWrapper);
         coordinationView.xInput_ = xInput;
         coordinationView.yInput_ = yInput;
         coordinationView.sizeInput_ = sizeInput;
@@ -1101,7 +1141,7 @@ Entry.EntryObject = class {
         rotationWrapperView.appendChild(rotateLabelWrapperView);
 
         const rotationMethodWrapperView = this.createRotationMethodWrapperView();
-        rotationWrapperView.appendChild(rotationMethodWrapperView);
+        rotateLabelWrapperView.appendChild(rotationMethodWrapperView);
         this.rotationMethodWrapper_ = rotationMethodWrapperView;
 
         return rotationWrapperView;
@@ -1190,10 +1230,6 @@ Entry.EntryObject = class {
         const nameView = this.createNameView();
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
-
-        const informationView = this.createInformationView();
-        wrapperView.appendChild(informationView);
-        this.informationView_ = informationView;
 
         return wrapperView;
     }
