@@ -946,9 +946,8 @@ Entry.EntryObject = class {
         const rotateSpan = Entry.createElement('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = `${Lang.Workspace.rotation}`;
         const RotateDegCoordi = Entry.createElement('span').addClass(
-            'entryObjectCoordinateSpanWorkspace'
+            'entryObjectCoordinateSpanWorkspace degree'
         );
-        RotateDegCoordi.innerHTML = '°';
 
         const rotateInput = Entry.createElement('input').addClass(
             'entryObjectRotateInputWorkspace'
@@ -987,9 +986,8 @@ Entry.EntryObject = class {
         );
         directionSpan.innerHTML = `${Lang.Workspace.direction}`;
         const DirectionDegCoordi = Entry.createElement('span').addClass(
-            'entryObjectCoordinateSpanWorkspace'
+            'entryObjectCoordinateSpanWorkspace degree'
         );
-        DirectionDegCoordi.innerHTML = '°';
         const directionInput = Entry.createElement('input').addClass(
             'entryObjectDirectionInputWorkspace'
         );
