@@ -83,8 +83,15 @@ Entry.Popup = class Popup {
         const popupWindow = popup.window_;
         const bottomOffset =
             Entry.targetChecker && !Entry.targetChecker.statusViewDisabled ? 91 + 48 : 48;
-        let maxWidth = window.innerWidth * 0.9;
-        let maxHeight = window.innerHeight * 0.9 - bottomOffset;
+        let maxWidth = 0;
+        let maxHeight = 0;
+        if (window.parent) {
+            maxWidth = window.parent.innerWidth * 0.9;
+            maxHeight = window.parent.innerHeight * 0.9 - bottomOffset;
+        } else {
+            maxWidth = window.parent.innerWidth * 0.9;
+            maxHeight = window.parent.innerHeight * 0.9 - bottomOffset;
+        }
         if (maxWidth * 9 <= maxHeight * 16) {
             maxHeight = (maxWidth / 16) * 9;
             maxHeight += bottomOffset;
