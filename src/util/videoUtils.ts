@@ -151,17 +151,15 @@ class VideoUtils implements MediaUtilsInterface {
 
     // issue 12160 bug , 강제로 usermedia를 가져오도록 하기 위함 enumerateDevices자체로는 권한 요청을 하지 않음
     async checkPermission() {
-        await navigator.permissions
-            .query({ name: 'camera' })
-            .then(async (permission) => {
-                console.log('camera state', permission.state);
-                if (permission.state !== 'granted') {
-                    await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
-                }
-            })
-            .catch(async (error) => {
-                console.log('Got error :', error);
-            });
+        if (navigator.permissions) {
+            const permission = await navigator.permissions.query({ name: 'camera' });
+            console.log('camera state', permission.state);
+            if (permission.state !== 'granted') {
+                await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+            }
+        } else {
+            await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+        }
     }
 
     async initialize() {
@@ -518,7 +516,10 @@ class VideoUtils implements MediaUtilsInterface {
         }, 100);
     }
 
-    startCapturedImage(callback: Function, { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }) {
+    startCapturedImage(
+        callback: Function,
+        { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }
+    ) {
         const canvas = document.createElement('canvas');
         canvas.width = width;
         canvas.height = height;
@@ -528,7 +529,7 @@ class VideoUtils implements MediaUtilsInterface {
             context.drawImage(this.video, 0, 0, width, height);
             callback && callback(canvas);
             this.captureTimeout = requestAnimationFrame(captureImage);
-        }
+        };
         this.captureTimeout = requestAnimationFrame(captureImage);
         Entry.addEventListener('stop', () => {
             this.stopCaptureImage();
@@ -544,7 +545,7 @@ class VideoUtils implements MediaUtilsInterface {
      * @param sprite Entry Entity Object
      */
     motionDetect(sprite: any) {
-        if (!this.inMemoryCanvas) {
+        if (!this.inMemoryCanvas || !this.isRunning) {
             return;
         }
         // 움직임 감지 기본 범위는 전체 캔버스 범위
