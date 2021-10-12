@@ -50,15 +50,15 @@ Entry.NeobotSensorTheme = {
     return {
         ko: {
             template: {
-                neobot_st_sensor_value: '%1 값', 
-                neobot_st_sensor_connect_external: '%1 에 연결한 %2 값', 
+                neobot_st_sensor_value: '%1 값',
+                neobot_st_sensor_connect_external: '%1 에 연결한 %2 값',
                 neobot_st_sensor_convert_scale: '%1 센서값 %2 ~ %3 를 %4 ~ %5 (으)로 바꾼 값',
 
                 neobot_st_compare_symbol: '%1',
                 neobot_st_decision_sensor_is_over: '%1 의 센서값이 %2 %3',
                 neobot_st_decision_equal_with_sensor: '%1 에 연결한 컬러센서가 %2 을 감지함',
 
-                neobot_st_output_led_on: '%1 에 연결한 LED 켜기 %2', 
+                neobot_st_output_led_on: '%1 에 연결한 LED 켜기 %2',
                 neobot_st_output_led_off: '%1 에 연결한 LED 끄기 %2',
                 neobot_st_set_output: '%1 에 %2 값만큼 출력 %3',
             },
@@ -88,9 +88,9 @@ Entry.NeobotSensorTheme = {
                 neobot_st_sensor_value: '%1 value',
                 neobot_st_sensor_connect_external: 'the %2 value connected %1',
                 neobot_st_sensor_convert_scale: "the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5",
-                
+
                 neobot_st_compare_symbol: '%1',
-                neobot_st_decision_sensor_is_over: "%1 sensor value %2 %3", 
+                neobot_st_decision_sensor_is_over: "%1 sensor value %2 %3",
                 neobot_st_decision_equal_with_sensor: "being detected %2 by %1 color sensor",
                 neobot_st_remote_button : 'pressing button %1 of remote controller',
 
@@ -523,10 +523,10 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'OUT1'],
-                        ['2번 포트', 'OUT2'],
-                        ['3번 포트', 'OUT3'],
-                        ['4번 포트', 'FND'],
+                        [Lang.Blocks.neobot_st_port_1, 'OUT1'],
+                        [Lang.Blocks.neobot_st_port_2, 'OUT2'],
+                        [Lang.Blocks.neobot_st_port_3, 'OUT3'],
+                        [Lang.Blocks.neobot_st_port_4, 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
@@ -569,10 +569,10 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'OUT1'],
-                        ['2번 포트', 'OUT2'],
-                        ['3번 포트', 'OUT3'],
-                        ['4번 포트', 'FND'],
+                        [Lang.Blocks.neobot_st_port_1, 'OUT1'],
+                        [Lang.Blocks.neobot_st_port_2, 'OUT2'],
+                        [Lang.Blocks.neobot_st_port_3, 'OUT3'],
+                        [Lang.Blocks.neobot_st_port_4, 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
@@ -615,10 +615,10 @@ Entry.NeobotSensorTheme.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'OUT1'],
-                        ['2번 포트', 'OUT2'],
-                        ['3번 포트', 'OUT3'],
-                        ['4번 포트', 'FND'],
+                        [Lang.Blocks.neobot_st_port_1, 'OUT1'],
+                        [Lang.Blocks.neobot_st_port_2, 'OUT2'],
+                        [Lang.Blocks.neobot_st_port_3, 'OUT3'],
+                        [Lang.Blocks.neobot_st_port_4, 'FND'],
                     ],
                     value: 'OUT1',
                     fontSize: 11,
@@ -672,5 +672,5 @@ Entry.NeobotSensorTheme.getBlocks = function() {
             },
         },
     }; // end region neobot sensor theme
-}; 
+};
 module.exports = Entry.NeobotSensorTheme;

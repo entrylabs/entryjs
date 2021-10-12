@@ -361,6 +361,7 @@ Entry.Diaboard.blockMenuBlocks = [
     'diaboard_led_one',
     'diaboard_led_one_time',
     'diaboard_led_hue',
+    'diaboard_led_color',
     'diaboard_led_rgb',
     'diaboard_led_turn_off_all',
     
@@ -1583,6 +1584,69 @@ Entry.Diaboard.getBlocks = function() {
             },
             syntax: { js: [], py: ['Diaboard.led_hue(%1,%2)'] },
         },
+        diaboard_led_color: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    options: options_DIABOARD_led,
+                    value: 0,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null
+                ],
+                type: 'diaboard_led_color',
+                id: 'i3je',
+            },
+            paramsKeyMap: {
+                LED: 0
+            },            
+            class: 'led',
+            isNotFor: ['diaboard'],
+            func: function(sprite, script) {
+                let led = script.getNumberValue('LED');
+                if( led == 7 ) {        // 7은 랜덤
+                    led     = Math.floor(Math.random() * 6) + 1;    // 1 ~ 6
+                }
+                // ============================================================
+                let sensorValue = Entry.hw.portData[ 'S4' ];            // sensorValue can be 0 ~ 7
+                let COLOR_MAP   = {
+                    0: "#000000",        // 'no_color'
+                    1: "#FF0000",        // 'red'
+                    2: "#FFFF00",        // 'yellow'
+                    3: "#008000",        // 'green'
+                    4: "#00FFFF",        // 'cyan'
+                    5: "#0000FF",        // 'blue'
+                    6: "#FF00FF",        // 'magenta'
+                    7: "#FFFFFF"         // 'white'
+                };
+        
+                let color   = COLOR_MAP[ sensorValue ];
+                let red     = parseInt(color.substr(1, 2), 16);
+                let green   = parseInt(color.substr(3, 2), 16);
+                let blue    = parseInt(color.substr(5, 2), 16);
+                let time    = 0;
+                let cmd     = `l:c:${led}:${red}:${green}:${blue}:${time}`; // l:c:0:255:255:255:1
+                Entry.Diaboard.fireCommand( cmd );
+                return Entry.Diaboard.deferredReturn( script.callReturn );
+            },
+            syntax: { js: [], py: ['Diaboard.led_color(%1)'] },
+        },        
         diaboard_led_rgb: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2925,6 +2989,7 @@ Entry.Diaboard.setLanguage = function() {
                 diaboard_led_one:				    '엘이디 %1 (을)를 %2 (으)로 켜기 %3',
                 diaboard_led_one_time:				'엘이디 %1 (을)를 %2 (으)로 %3 초 동안 켜기 %4',
                 diaboard_led_hue:				    '엘이디 %1 (을)를 색상(hue) %2 (으)로 켜기 %3',
+                diaboard_led_color:				    '엘이디 %1 (을)를 컬러센서 색상(7가지)로 켜기 %2',
                 diaboard_led_rgb:				    '엘이디 %1 (을)를 빨강 %2 녹색 %3 파랑 %4 (으)로 켜기 %5',
                 diaboard_led_turn_off_all:			'엘이디 %1 끄기 %2',
                 // 모터
@@ -2967,6 +3032,7 @@ Entry.Diaboard.setLanguage = function() {
                 diaboard_led_one:					"선택한 번호의 엘이디를 선택한 색상으로 켭니다.",
                 diaboard_led_one_time:				"선택한 번호의 엘이디를 입력한 시간만큼 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
                 diaboard_led_hue:					"선택한 번호의 엘이디를 색상(hue)값으로 켭니다.\n색상( hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)",
+                diaboard_led_color:					"선택한 번호의 엘이디를 현재 컬러센서가 감지한 색상(7가지)으로 켭니다. 컬러센서 색상이 \"없음\"일 때는 코드를 실행해도 엘이디를 켜지 않습니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
                 diaboard_led_rgb:					"선택한 번호의 엘이디를 빨강, 녹색, 파랑값으로 켭니다.\n빨강, 녹색, 파랑 : 0 ~ 255의 범위로 설정할 수 있습니다.\n(0이하는 0으로, 255이상은 255로 처리됩니다. )",
                 diaboard_led_turn_off_all:			"선택한 번호의 엘이디를 끕니다.",
                 diaboard_servomotor_angle:			"선택한 포트의 서보모터의 각도를 입력한 값으로 정합니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)",
@@ -3077,6 +3143,7 @@ Entry.Diaboard.setLanguage = function() {
                 diaboard_led_one:				    'turn on %1 to %2 %3',
                 diaboard_led_one_time:				'turn on %1 to %2 for %3 seconds %4',
                 diaboard_led_hue:				    'turn on %1 to %2 %3',
+                diaboard_led_color:				    'turn on %1 to seven colors %2',
                 diaboard_led_rgb:				    'turn on %1 to red %2 green %3 blue %4 %5',
                 diaboard_led_turn_off_all:			'turn off %1 %2',
                 // 모터
@@ -3119,6 +3186,7 @@ Entry.Diaboard.setLanguage = function() {
                 diaboard_led_one:					"",
                 diaboard_led_one_time:				"",
                 diaboard_led_hue:					"",
+                diaboard_led_color:					"",
                 diaboard_led_rgb:					"",
                 diaboard_led_turn_off_all:			"",
                 diaboard_servomotor_angle:			"",

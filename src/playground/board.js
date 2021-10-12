@@ -99,6 +99,12 @@ Entry.Board = class Board {
 
         this.svgGroup = this.svg.elem('g');
         this.svgGroup.attr('transform', `scale(${this.scale})`);
+        this.svgObjectTitle = this.svgGroup.elem('g');
+        this.svgObjectTitle.board = this;
+        this.svgObjectTitle.attr({
+            class: 'svgObjectTitle',
+        });
+
         this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
 
@@ -421,6 +427,7 @@ Entry.Board = class Board {
         this.svgCommentGroup.remove();
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
+        this.clearObjectTitle();
     }
 
     updateOffset() {
@@ -1401,5 +1408,65 @@ Entry.Board = class Board {
         this.scale = scale;
         this.svgGroup.attr('transform', `scale(${scale})`);
         this.adjustThreadsPosition();
+    }
+
+    updateObjectTitle(object) {
+        if (!object) {
+            this.clearObjectTitle();
+            return;
+        }
+
+        if (!this.svgObjectTitle.thumbnail) {
+            const thumbnail = this.svgObjectTitle.elem('g');
+            const rect = thumbnail.elem('rect');
+            rect.attr({
+                x: 14,
+                y: 12,
+                rx: 2,
+                ry: 2,
+                width: 24,
+                height: 24,
+                fill: 'none',
+                stroke: '#e2e2e2',
+                strokeWidth: '1',
+            });
+            const image = thumbnail.elem('image');
+            image.addClass('entryBoardObjectThumbnail');
+            image.attr({
+                x: 17,
+                y: 15,
+                width: 18,
+                height: 18,
+                href: object.thumbUrl,
+            });
+            this.svgObjectTitle.frame = rect;
+            this.svgObjectTitle.thumbnail = image;
+        }
+
+        if (!this.svgObjectTitle.name) {
+            const name = this.svgObjectTitle.elem('g');
+            const nameText = name.elem('text');
+            nameText.addClass('entryBoardObjectName');
+            nameText.attr({ x: 44, y: 26, fill: '#6b6b6b' });
+            nameText.style.font = '10px NanumGothicOTFBold';
+            nameText.innerHTML = object.name;
+            this.svgObjectTitle.name = nameText;
+        }
+
+        this.svgObjectTitle.thumbnail.attr({ href: object.thumbUrl });
+        this.svgObjectTitle.name.innerHTML = object.name;
+    }
+
+    clearObjectTitle() {
+        if (!this.svgObjectTitle) {
+            return;
+        }
+
+        this.svgObjectTitle.frame?.remove();
+        this.svgObjectTitle.thumbnail?.remove();
+        this.svgObjectTitle.name?.remove();
+        delete this.svgObjectTitle.frame;
+        delete this.svgObjectTitle.thumbnail;
+        delete this.svgObjectTitle.name;
     }
 };

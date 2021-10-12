@@ -169,7 +169,7 @@ class VideoUtils implements MediaUtilsInterface {
         await this.checkPermission();
         const inputList = await getInputList();
         this.videoInputList = inputList
-            .filter((input) => input.kind === 'videoinput')
+            .filter((input) => input.kind === 'videoinput' && input.deviceId)
             .map((item) => [item.label, item.deviceId]);
         await this.compatabilityChecker();
         // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
@@ -187,18 +187,13 @@ class VideoUtils implements MediaUtilsInterface {
         // const tempTarget = document.getElementsByClassName('uploadInput')[0];
         // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
         // //motion test
-
+        if (this.isFirefox) {
+            this._VIDEO_HEIGHT = 480;
+            this.CANVAS_HEIGHT = 360;
+        }
+        let stream;
         try {
-            /*
-                NT11576  #11683
-                파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
-                이로인해 다른 브라우저에 비해서 잘려보임
-            */
-            if (this.isFirefox) {
-                this._VIDEO_HEIGHT = 480;
-                this.CANVAS_HEIGHT = 360;
-            }
-            const stream = await navigator.mediaDevices.getUserMedia({
+            stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
                     deviceId: { exact: this.videoInputList[0][1] },
@@ -206,7 +201,18 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
+        } catch (err) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
+        }
 
+        try {
+            /*
+                NT11576  #11683
+                파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
+                이로인해 다른 브라우저에 비해서 잘려보임
+            */
             this.motionWorker.onmessage = (e: { data: { type: String; message: any } }) => {
                 const { type, message } = e.data;
                 if (Entry.engine.state !== 'run' && type !== 'init') {

@@ -88,11 +88,14 @@ Entry.exMars_Cube.setLanguage = function() {
                 RecordTime5: '최신-4',
                 RecordTimeBest: '최고',
                 RecordDiceNumber: '주사위 숫자',
+                ModeMain: '메인',
+                ModeSub: '서브',
                 CellLedColor: '%1 면 %2 번 셀의 색상값',
                 FaceLedColor: '%1 면의 셀 색상값',
                 FaceDir: '%1 면의 회전값',
                 Record: '%1 의 %2 기록',
                 RecodeDice: '%1 기록',
+                ModeState: '모드 상태',
                 MenuInit: '모드 빠져나오기  %1',
                 NonBrake: '브레이크 기능을 %1 %2',
                 ResetAllFace: '모든 색상을 초기화하기 %1',
@@ -160,11 +163,14 @@ Entry.exMars_Cube.setLanguage = function() {
                 RecordTime5: 'Latest-4',
                 RecordTimeBest: 'Best',
                 RecordDiceNumber: 'Dice number',
+                ModeMain: 'Main',
+                ModeSub: 'Sub',
                 CellLedColor: 'LED color of %1 face %2 cell',
                 FaceLedColor: 'LED color of %1 face',
                 FaceDir: 'rotation value of %1 face',
                 Record: '%2 record of %1',
-                RecodeDice: '%1 record',
+                RecodeDice: '%1 record',                
+                ModeState: 'mode state',
                 MenuInit: 'Exit mode %1',
                 NonBrake: '%1 the brake function %2',
                 ResetAllFace: 'Initialize all colors %1',
@@ -193,6 +199,7 @@ Entry.exMars_Cube.blockMenuBlocks = [
     'GetBlock_FaceDir',
     'GetBlock_Record',
     'GetBlock_RecordDice',
+    'GetBlock_ModeState',
     'SetBlock_MenuInit',
     'SetBlock_ModeSetting',
     'SetBlock_PlayMode',
@@ -945,6 +952,36 @@ Entry.exMars_Cube.getBlocks = function() {
                 return script.getField('TIME');
             }
         },
+        DropDownBlock_Mode: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.ModeMain, '0'],
+                        [Lang.template.ModeSub, '1']
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE
+                }
+            ],
+            def: {
+                params: [null]
+            },
+            paramsKeyMap: {
+                TIME: 0
+            },
+            events: {},
+            func: function(sprite, script) {
+                return script.getField('TIME');
+            }
+        },
         // ===================================================================================== //
         // Get Value Blocks
         // ===================================================================================== //
@@ -1148,6 +1185,41 @@ Entry.exMars_Cube.getBlocks = function() {
                 var hwData = Entry.hw.portData;
                 var s = Math.floor(hwData[index + 7][time] / 10) / 100;
 
+                return s;
+            }
+        },
+        
+        GetBlock_ModeState: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            template: Lang.template.ModeState,
+            params: [
+                {
+                    //type: 'Block',
+                    //accept: 'string',
+                    //defaultType: 'number'
+                }
+            ],
+            def: {
+                params: [
+                    {
+                        //type: 'DropDownBlock_Mode'
+                    }
+                ],
+                type: 'GetBlock_ModeState'
+            },
+            paramsKeyMap: {
+                MODE: 0
+            },
+            events: {},
+            class: 'GetBlock',
+            isNotFor: ['exMars_Cube'],
+            func: function(sprite, script) {
+                var hwData = Entry.hw.portData;
+                var s = String(hwData[16]) + String(hwData[17]);
+                
                 return s;
             }
         },

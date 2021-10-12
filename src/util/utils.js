@@ -308,6 +308,14 @@ Entry.getDom = function(query) {
     }
 };
 
+function toggleEngineContainer(isVisible) {
+    const splitterSelector = '.entryObjectSelectedImgWorkspace';
+    $(Entry.engineContainer)
+        .css('padding', isVisible ? '' : '0')
+        .children(`:not(${splitterSelector})`)
+        .toggleClass('entryRemove', !isVisible);
+}
+
 /**
  * Resize element's size.
  * @param {!json} interfaceModel
@@ -337,9 +345,13 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
+        let isEngineContainerVisible = true;
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
             canvasSize = 324;
+        } else if (canvasSize < 162) {
+            canvasSize = 16;
+            isEngineContainerVisible = false;
         } else if (canvasSize < 324) {
             canvasSize = 324;
         } else if (canvasSize > 640) {
@@ -352,13 +364,15 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.width = `${canvasSize - 24}px`;
         Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
 
+        toggleEngineContainer(isEngineContainerVisible);
+
         let menuWidth = interfaceModel.menuWidth;
         if (!menuWidth) {
             menuWidth = 258;
         } else if (menuWidth < 258) {
             menuWidth = 258;
-        } else if (menuWidth > 308) {
-            menuWidth = 308;
+        } else if (menuWidth > 516) {
+            menuWidth = 516;
         }
         interfaceModel.menuWidth = menuWidth;
 
@@ -1851,7 +1865,7 @@ Entry.Utils.addNewBlock = function(item) {
         (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
             !Entry.TextCodingUtil.canUsePythonFunctions(functions))
     ) {
-        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+        return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
     }
 
     const objectIdMap = {};
@@ -1903,7 +1917,7 @@ Entry.Utils.addNewObject = function(sprite) {
             (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
                 !Entry.TextCodingUtil.canUsePythonFunctions(functions))
         ) {
-            return entrylms.alert(Lang.Menus.object_import_syntax_error);
+            return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
         DataTable.setTables(tables);
@@ -2859,4 +2873,22 @@ Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
         }
         return variable;
     });
+};
+
+Entry.Utils.asyncAnimationFrame = (func) => {
+    let captureTimeout = false;
+
+    const asyncFunc = () => {
+        if (func instanceof Promise) {
+            func().then(() => {
+                captureTimeout = requestAnimationFrame(asyncFunc);
+            });
+        } else if (func instanceof Function) {
+            func();
+            captureTimeout = requestAnimationFrame(asyncFunc);
+        }
+    };
+
+    captureTimeout = requestAnimationFrame(asyncFunc);
+    return captureTimeout;
 };

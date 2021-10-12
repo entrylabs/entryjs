@@ -5285,7 +5285,7 @@ Lang.Workspace = {
     context_rename: '이름 수정',
     coordinate: '좌표',
     create_function: '함수 만들기',
-    direction: '이동 방향(°)',
+    direction: '이동 방향',
     drawing: '직접 그리기',
     enter_list_name: '새로운 리스트의 이름을 입력하세요(10글자 이하)',
     enter_name: '새로운 이름을 입력하세요',
@@ -5358,7 +5358,7 @@ Lang.Workspace = {
     remove_object_msg: '(이)가 삭제되었습니다.',
     removed_msg: '(이)가 성공적으로 삭제 되었습니다.',
     rotate_method: '회전방식',
-    rotation: '방향(°)',
+    rotation: '방향',
     run: '시작하기',
     saved: '저장완료',
     saved_msg: '(이)가 저장되었습니다.',
@@ -5606,6 +5606,7 @@ Lang.Workspace = {
     goal_project: '목표작품 살펴보기',
     look_target_project: '작품을 실행하며 무엇을 만들지 살펴봅시다.',
     ai_learning_login_required: '모델 학습 기능을 사용하시려면 \n로그인이 필요합니다.',
+    drag_to_remove: '여기로 옮겨 버리기',
 };
 Lang.code = '코드보기';
 Lang.EntryStatic = {
@@ -6446,6 +6447,8 @@ Lang.Helper = {
         "선택한 번호의 엘이디를 입력한 시간만큼 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
     diaboard_led_hue:						
         "선택한 번호의 엘이디를 색상(hue)값으로 켭니다.\n색상( hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)",
+    diaboard_led_color:
+        "선택한 번호의 엘이디를 현재 컬러센서가 감지한 색상(7가지)으로 켭니다. 컬러센서 색상이 '없음'일 때는 코드를 실행해도 엘이디를 켜지 않습니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
     diaboard_led_rgb:						
         "선택한 번호의 엘이디를 빨강, 녹색, 파랑값으로 켭니다.\n빨강, 녹색, 파랑 : 0 ~ 255의 범위로 설정할 수 있습니다.\n(0이하는 0으로, 255이상은 255로 처리됩니다. )",
     diaboard_led_turn_off_all:				

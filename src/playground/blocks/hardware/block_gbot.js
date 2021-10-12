@@ -77,6 +77,7 @@ Entry.GBot = {
         TIME_10ms: 10,
         TIME_20ms: 20,
         TIME_50ms: 50,
+		TIME_70ms: 70,
         TIME_100ms: 100,
         TIME_200ms: 200, 
         TIME_500ms: 500,    
@@ -890,7 +891,7 @@ Entry.GBot.getBlocks = function() {
 						sq.SET = {};
 					}
 					
-					var duration = Entry.GBot.duration.TIME_100ms;
+					var duration = Entry.GBot.duration.TIME_70ms;
                     script.isStart = true;
                     script.timeFlag = 1;
 					
@@ -1023,7 +1024,7 @@ Entry.GBot.getBlocks = function() {
 						sq.SET = {};
 					}
 					
-					var duration = Entry.GBot.duration.TIME_500ms;
+					var duration = Entry.GBot.duration.TIME_70ms;
                     script.isStart = true;
                     script.timeFlag = 1;
 					
@@ -1124,7 +1125,7 @@ Entry.GBot.getBlocks = function() {
 						sq.SET = {};
 					}
 					
-					var duration = Entry.GBot.duration.TIME_200ms;
+					var duration = Entry.GBot.duration.TIME_70ms;
                     script.isStart = true;
                     script.timeFlag = 1;
 					

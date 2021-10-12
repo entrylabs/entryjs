@@ -55,10 +55,14 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             class: 'audio',
             isNotFor: ['audio'],
             async func(sprite, script) {
-                if (!AudioUtils.isInitialized) {
-                    await AudioUtils.initialize();
+                try {
+                    if (!AudioUtils.isInitialized) {
+                        await AudioUtils.initialize();
+                    }
+                    return AudioUtils.audioInputList.length > 0;
+                } catch (err) {
+                    return false;
                 }
-                return AudioUtils.audioInputList.length > 0;
             },
             syntax: {
                 js: [],
