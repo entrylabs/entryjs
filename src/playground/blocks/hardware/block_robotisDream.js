@@ -211,6 +211,7 @@ Entry.Robotis_DREAM2.blockMenuBlocks = [
     'robotis_play_melody',
     'robotis_play_melody_wait',
 
+    'robotis_internal_ir_value',
     'robotis_port_ir_value',
     'robotis_sound_count',
     'robotis_sm_position',
@@ -242,6 +243,8 @@ Entry.Robotis_DREAM2.setLanguage = function() {
                 robotis_play_piano: "%1 옥타브 %2 음계를 %3초 동안 연주하기 %4",
                 robotis_play_melody: "%1 번 멜로디 연주하기 %2",
                 robotis_play_melody_wait: "%1 번 멜로디 연주하고 기다리기 %2",
+
+                robotis_internal_ir_value: "%1 내장 적외선 센서 값",
                 robotis_port_ir_value: "%1 번 %2 값",
                 robotis_sound_count: "%1 소리 횟수",
                 robotis_sm_position: "%1 번 서보모터 위치",
@@ -281,10 +284,10 @@ Entry.Robotis_DREAM2.setLanguage = function() {
                 robotis_touched: "눌림",
                 robotis_no_touched: "안눌림",
 
-                robotis_on_on: "주황 LED 켜기, 파랑 LED 켜기",
-                robotis_on_off: "주황 LED 켜기, 파랑 LED 끄기",
-                robotis_off_on: "주황 LED 끄기, 파랑 LED 켜기",
-                robotis_off_off: "주황 LED 끄기, 파랑 LED 끄기"
+                robotis_on_on: "주황 켜기, 파랑 켜기",
+                robotis_on_off: "주황 켜기, 파랑 끄기",
+                robotis_off_on: "주황 끄기, 파랑 켜기",
+                robotis_off_off: "주황 끄기, 파랑 끄기"
             },
         },
         en: {
@@ -309,6 +312,8 @@ Entry.Robotis_DREAM2.setLanguage = function() {
                 robotis_play_piano: "%1 octave %2 sound during %3 play %4",
                 robotis_play_melody: "%1 melody play %2",
                 robotis_play_melody_wait: "%1 melody play and wait %2",
+
+                robotis_internal_ir_value: "%1 internal ir value",
                 robotis_port_ir_value: "%1 port %2 value ",
                 robotis_sound_count: "%1 sound count ",
                 robotis_sm_position: "%1 port servo motor position ",
@@ -753,6 +758,13 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                 var data_address2 = 156;
 
                 var data_length = 2;
+
+                if(angle < -150) {
+                    angle = -150;
+                }
+                if(angle > 150) {
+                    angle = 150;
+                }
 
                 var data_value1 = speed * 10;
                 var data_value2 = angle * (-1024);
@@ -1348,6 +1360,106 @@ Entry.Robotis_DREAM2.getBlocks = function() {
             syntax: { js: [], py: ['Robotis.carcont_cm_sound_clear()'] },
         },
 
+        robotis_internal_ir_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_left, '2'],
+                        [Lang.Blocks.robotis_center, '4'],
+                        [Lang.Blocks.robotis_right, '0'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    
+                ],
+                type: 'robotis_internal_ir_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'robotis_openCM70_custom',
+            isNotFor: ['Robotis_DREAM2'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.READ;
+                var data_address = 91;
+                var data_length = 2;
+                var data_value = 0;
+
+                var data_default_address = 0;
+                var data_default_length = 0;
+                
+                var port = script.getNumberValue('PORT', script);
+
+                data_address += port;
+
+                data_default_address = data_address;
+                data_default_length = data_length;
+
+                if (
+                    Entry.hw.sendQueue.prevAddress &&
+                    Entry.hw.sendQueue.prevAddress == data_default_address
+                ) {
+                    if (
+                        Entry.hw.sendQueue.prevTime &&
+                        new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay//200
+                    ) {
+                        //throw new Entry.Utils.AsyncError();
+                        var innerValue = Entry.hw.sendQueue.prevResult;
+                        
+                        if(innerValue > 400) {
+                            innerValue = 400;
+                        }
+
+                        return innerValue;
+                        
+                    }
+                }
+
+                Entry.Robotis_carCont.setRobotisData([
+                    [
+                        data_instruction,
+                        data_address,
+                        data_length,
+                        data_value,
+                        data_default_length,
+                    ],
+                ]);
+                // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
+                Entry.Robotis_carCont.update();
+
+                var result = Entry.hw.portData[data_default_address];
+                Entry.hw.sendQueue.prevAddress = data_default_address;
+                Entry.hw.sendQueue.prevTime = new Date();
+                Entry.hw.sendQueue.prevResult = result;
+
+                
+                
+                if(result > 400) {
+                    result = 400;
+                }
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.robotis_RB_cm_ir_compare(%1)'],
+            },
+        },
+
         //%1 번 %2 값 %3
         robotis_port_ir_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1441,7 +1553,16 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                             return 0;
                         }
                         
-                        return Entry.hw.sendQueue.prevResult;
+                        var innerValue = Entry.hw.sendQueue.prevResult;
+                        innerValue *= 4;
+                        innerValue = Math.floor(innerValue / 10);
+
+                        if(innerValue > 400) {
+                            innerValue = 400;
+                        }
+
+
+                        return innerValue;
                     }
                 }
 
@@ -1466,7 +1587,12 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                     //console.log('result is undefined')
                     return 0;
                 }
-                
+                result *= 4;
+                result = Math.floor(result / 10);
+
+                if(result > 400) {
+                    result = 400;
+                }
                 return result;
             }
         },
@@ -1840,13 +1966,19 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                         new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay//200
                     ) {
                         //throw new Entry.Utils.AsyncError();
+                        var innerValue = Entry.hw.sendQueue.prevResult;
+                        
+                        if(innerValue > 400) {
+                            innerValue = 400;
+                        }
+
                         switch(compareOP) {
                             case 0:
-                                return Entry.hw.sendQueue.prevResult > compareValue;
+                                return innerValue > compareValue;
                             case 1:
-                                return Entry.hw.sendQueue.prevResult < compareValue;
+                                return innerValue < compareValue;
                             case 2:
-                                return Entry.hw.sendQueue.prevResult == compareValue;
+                                return innerValue == compareValue;
                         }
 
                         
@@ -1870,6 +2002,11 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
 
+                
+                
+                if(result > 400) {
+                    result = 400;
+                }
                 switch(compareOP) {
                     case 0:
                         return result > compareValue;
@@ -1968,13 +2105,21 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                         new Date() - Entry.hw.sendQueue.prevTime < Entry.Robotis_openCM70.readDelay//200
                     ) {
                         //throw new Entry.Utils.AsyncError();
+                        var innerValue = Entry.hw.sendQueue.prevResult;
+                        innerValue *= 4;
+                        innerValue = Math.floor(innerValue / 10);
+
+                        if(innerValue > 400) {
+                            innerValue = 400;
+                        }
+
                         switch(compareOP) {
                             case 0:
-                                return Entry.hw.sendQueue.prevResult > compareValue;
+                                return innerValue > compareValue;
                             case 1:
-                                return Entry.hw.sendQueue.prevResult < compareValue;
+                                return innerValue < compareValue;
                             case 2:
-                                return Entry.hw.sendQueue.prevResult == compareValue;
+                                return innerValue == compareValue;
                         }
 
                         
@@ -1999,6 +2144,12 @@ Entry.Robotis_DREAM2.getBlocks = function() {
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
 
+                result *= 4;
+                result = Math.floor(result / 10);
+
+                if(result > 400) {
+                    result = 400;
+                }
                 //console.log(result)
                 switch(compareOP) {
                     case 0:
