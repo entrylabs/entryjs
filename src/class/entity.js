@@ -1259,6 +1259,11 @@ Entry.EntityObject = class EntityObject {
             if (~diffEffects.indexOf('alpha')) {
                 e.alpha = adjust(e.alpha, 0, 1);
                 obj.alpha = e.alpha;
+                if (obj.alpha < 0.001) {
+                    obj.interactive = false;
+                } else {
+                    obj.interactive = true;
+                }
             }
             if (GEHelper.isWebGL) {
                 obj.setFilterAndCache(f);
@@ -1296,6 +1301,11 @@ Entry.EntityObject = class EntityObject {
         }
         this.setInitialEffectValue();
         object.alpha = this.effect.alpha;
+        if (object.alpha < 0.001) {
+            object.interactive = false;
+        } else {
+            object.interactive = true;
+        }
         GEHelper.colorFilter.setCache(this, false);
     }
 
@@ -1556,7 +1566,7 @@ Entry.EntityObject = class EntityObject {
     }
 
     syncDialogVisible() {
-        if (this.dialog) {
+        if (this.dialog?.object) {
             this.dialog.object.visible = this.visible;
         }
     }

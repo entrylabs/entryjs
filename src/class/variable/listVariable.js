@@ -369,7 +369,7 @@ class ListVariable extends Variable {
                 //     .rr(20, -2, wrapperWidth, 17, 2);
                 this.scrollButton_.x = totalWidth - 6;
                 this.scrollPosition = Math.floor(
-                    ((this.scrollButton_.y - 23) / (this.getHeight() - 23 - 30)) *
+                    ((this.scrollButton_.y - 25) / (this.getHeight() - 25 - 30)) *
                         (arr.length - maxView)
                 );
             } else {
@@ -404,7 +404,7 @@ class ListVariable extends Variable {
                     this.elementView.indexView.text = i + 1;
                 }
 
-                const text = String(arr[i].data);
+                const text = String(arr?.[i]?.data ?? 'undefined');
                 const valueView = this.elementView.valueView;
                 const cachedText = _cache[text.substr(0, 150)];
 

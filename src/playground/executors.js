@@ -32,13 +32,15 @@ class Executor {
         }
 
         const entity = this.entity;
-
+        const isOffline = window.location.href.indexOf('file://') === 0;
         while (true) {
             let returnVal = null;
             executedBlocks.push(this.scope.block);
-
             try {
                 const schema = this.scope.block.getSchema();
+                if (schema.class === 'ai_learning' && isOffline) {
+                    throw new Entry.Utils.OfflineError();
+                }
                 if (schema && Entry.skeleton[schema.skeleton].executable) {
                     Entry.dispatchEvent('blockExecute', this.scope.block && this.scope.block.view);
                     returnVal = this.scope.run(entity);
@@ -49,6 +51,8 @@ class Executor {
                     returnVal = Entry.STATIC.BREAK;
                 } else if (e.name === 'IncompatibleError') {
                     Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
+                } else if (e.name === 'OfflineError') {
+                    Entry.Utils.stopProjectWithToast(this.scope, 'OfflineError', e);
                 } else if (this.isFuncExecutor) {
                     //function executor
                     throw e;
@@ -70,7 +74,7 @@ class Executor {
                         this.valueMap = {};
                         this.valueState = {};
                         this.paused = false;
-                        if (returnVal === Entry.STATIC.CONTINUE) {
+                        if (returnVal === Entry.STATIC.CONTINUE || returnVal === this.scope) {
                             return;
                         }
                         if (this.scope.block && Entry.engine.isState('run')) {

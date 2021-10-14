@@ -24,7 +24,7 @@ class AudioUtils {
     }
 
     constructor() {
-        this.isAudioInitComplete = false; // 유저 인풋 연결 확인
+        this.isInitialized = false; // 유저 인풋 연결 확인
         this.isRecording = false;
         this._userMediaStream = undefined;
         this._mediaRecorder = undefined;
@@ -32,20 +32,18 @@ class AudioUtils {
         this._audioChunks = [];
         this.result = null;
         this.startedRecording = false;
-    }
-
-    async checkUserMicAvailable() {
-        try {
-            await navigator.mediaDevices.getUserMedia({ audio: true });
-            return true;
-        } catch (err) {
-            return false;
-        }
+        this.audioInputList = [];
     }
 
     async getMediaStream() {
         try {
-            return await navigator.mediaDevices.getUserMedia({ audio: true });
+            return await navigator.mediaDevices.getUserMedia({
+                audio: {
+                    autoGainControl: true,
+                    noiseSuppression: true,
+                    echoCancellation: true,
+                },
+            });
         } catch (err) {
             // is MIC present in browser
             this.isRecording = false;
@@ -60,25 +58,32 @@ class AudioUtils {
         // IE/safari CHECKER
         if (!this.isAudioSupport) {
             this.isAudioSupport = this._isBrowserSupportAudio(); // 브라우저 지원 확인
-        }
-        if (!this.isAudioSupport) {
-            this.isRecording = false;
-            this.stopRecord();
-            throw new Entry.Utils.IncompatibleError();
+            if (!this.isAudioSupport) {
+                this.isRecording = false;
+                this.stopRecord();
+                throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                    Lang.Workspace.check_microphone_error,
+                ]);
+            }
         }
     }
 
-    async initUserMedia() {
-        this.incompatBrowserChecker();
-        const mediaStream = await this.getMediaStream();
-
-        if (this.isAudioInitComplete) {
+    async initialize() {
+        if (this.isInitialized) {
             return;
         }
-        Entry.addEventListener('beforeStop', () => {
-            this.improperStop();
-        });
+        this.incompatBrowserChecker();
+        const mediaStream = await this.getMediaStream();
         try {
+            Entry.addEventListener('beforeStop', () => {
+                this.improperStop();
+            });
+
+            const inputList = await navigator.mediaDevices.enumerateDevices();
+            this.audioInputList = inputList
+                .filter((input) => input.kind === 'audioinput')
+                .map((item) => [item.label, item.deviceId]);
+
             if (!window.AudioContext) {
                 if (window.webkitAudioContext) {
                     window.AudioContext = window.webkitAudioContext;
@@ -87,30 +92,71 @@ class AudioUtils {
             const audioContext = new window.AudioContext();
             const streamSrc = audioContext.createMediaStreamSource(mediaStream);
             const analyserNode = audioContext.createAnalyser();
-            const biquadFilter = audioContext.createBiquadFilter();
-            biquadFilter.type = 'highpass';
-            biquadFilter.frequency.value = 30;
-            const scriptNode = audioContext.createScriptProcessor(4096, 1, 1);
+            // const reducerNode = new window.audio.NoiseReducer(0.5, 5);
+            const gainNode = audioContext.createGain();
+            gainNode.gain.value = 1.8;
+
+            const highpassFilter = audioContext.createBiquadFilter();
+            highpassFilter.type = 'highpass';
+            highpassFilter.frequency.value = 150;
+            highpassFilter.Q.value = 1;
+            highpassFilter.detune.value = 1;
+
+            analyserNode.fftSize = 4096;
+            analyserNode.smoothingTimeConstant = 0.0;
+            analyserNode.minDecibels = -80;
+            analyserNode.maxDecibels = -40;
+
+            const scriptNode = audioContext.createScriptProcessor(512, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
+            // mediaRecorder.onstop = async (event) => {
+            //     const blob = new Blob(this._audioChunks, { type: 'audio/ogg; codecs=opus' });
+            //     const audio = document.createElement('audio');
+            //     audio.style = { width: 100, height: 100 };
+            //     audio.src = await window.URL.createObjectURL(blob);
+
+            //     audio.controls = true;
+
+            //     audio.oncanplay = () => {
+            //         document.body.prepend(audio);
+            //     };
+            //     this._audioChunks = [];
+            // };
+            // mediaRecorder.ondataavailable = (event) => {
+            //     if (!this._audioChunks) {
+            //         this._audioChunks = [];
+            //     }
+            //     this._audioChunks.push(event.data);
+            // };
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(streamSrc, analyserNode, biquadFilter, scriptNode, streamDest);
+            this._connectNodes(
+                streamSrc,
+                // highpassFilter,
+                // gainNode,
+                // highpassFilter2,
+                // gainNode2,
+                // reducerNode,
+                analyserNode,
+                scriptNode,
+                streamDest
+            );
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._audioContext = audioContext;
             this._userMediaStream = mediaStream;
             this._mediaRecorder = mediaRecorder;
-            this.isAudioInitComplete = true;
 
             // 음성 인식 api 를 사용하기 위함
             // 음성 인식은 websocket 을 통해서 WAV로 전송하게 되어있음.
             // 첫번째 파라미터는 프로토콜을 제외한 hostname+port 조합
             // ex)'localhost:4001'
-            return true;
+            this.isInitialized = true;
+            return;
         } catch (e) {
             console.error('error occurred while init audio input', e);
-            this.isAudioInitComplete = false;
-            return false;
+            this.isInitialized = false;
+            return;
         }
     }
 
@@ -126,14 +172,15 @@ class AudioUtils {
         await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
             this.resolveFunc = resolve;
-            if (!this.isAudioInitComplete) {
+            if (!this.isInitialized) {
                 console.log('audio not initialized');
                 resolve(0);
                 return;
             }
             // this.isRecording = true;
             if (this._audioContext.state === 'suspended') {
-                await this.initUserMedia();
+                this.isInitialized = false;
+                await this.initialize();
             }
 
             try {
@@ -183,15 +230,13 @@ class AudioUtils {
     }
 
     /**
-     * 녹음을 종료한다. silent = true 인 경우 API 콜을 하지 않기 위해 리스너를 먼저 제거하고 stop 한다.
-     * @param {object=} option
-     * @param {boolean} [option.silent=false]
+     * 녹음을 종료한다.
      */
-    async stopRecord(option = { silent: false }) {
+    async stopRecord() {
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
-        if (!this.isAudioInitComplete || !this.isRecording) {
+        if (!this.isInitialized || !this.isRecording) {
             return;
         }
         Entry.dispatchEvent('audioRecordProcessing');
@@ -200,17 +245,9 @@ class AudioUtils {
         }
         this.startedRecording = false;
 
-        if (option.silent) {
-            this._mediaRecorder.onstop = () => {
-                console.log('silent stop');
-            };
-            this._stopMediaRecorder();
-        } else {
-            this._stopMediaRecorder();
-            this._mediaRecorder.onstop = () => {
-                console.log('proper stop');
-            };
-        }
+        this._mediaRecorder.onstop = null;
+
+        this._stopMediaRecorder();
         this._audioContext.suspend();
         this.stream.getTracks().forEach((track) => {
             track.stop();
@@ -220,7 +257,7 @@ class AudioUtils {
     }
 
     isAudioConnected() {
-        if (!this._isBrowserSupportAudio() || !this.isAudioInitComplete || !this._userMediaStream) {
+        if (!this._isBrowserSupportAudio() || !this.isInitialized || !this._userMediaStream) {
             return false;
         }
         const tracks = this._userMediaStream.getAudioTracks();

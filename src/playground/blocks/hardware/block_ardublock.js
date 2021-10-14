@@ -93,6 +93,71 @@ Entry.ardublock.blockMenuBlocks = [
     'ardublock_get_sound_analog_value',
 ];
 
+Entry.ardublock.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                ardublock_get_number_sensor_value: '아날로그 %1 번 센서값  ',
+                ardublock_get_digital_value: '디지털 %1 번 센서값  ',
+                ardublock_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                ardublock_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                ardublock_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                ardublock_get_analog_value: '아날로그 %1 번 센서값',
+                ardublock_get_analog_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                ardublock_get_digital: '디지털 %1 번 센서값',
+                ardublock_get_left_cds_analog_value: '왼쪽 조도센서 %1 센서값',
+                ardublock_get_right_cds_analog_value: '오른쪽 조도센서 %1 센서값',
+                ardublock_get_sound_analog_value: '사운드(소리) 센서 %1 센서값',
+                ardublock_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 센서값',
+                ardublock_set_left_motor: '왼쪽모터를 %1 으로 %2 회전 속도로 정하기 %3',
+                ardublock_set_right_motor: '오른쪽모터를 %1 으로 %2 회전 속도로 정하기 %3',
+                ardublock_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                ardublock_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                ardublock_toggle_led: '디지털 %1 번 핀 %2 %3',
+                ardublock_toggle_left_led: '왼쪽 라이트 %1 번 핀 %2 %3',
+                ardublock_toggle_right_led: '오른쪽 라이트 %1 번 핀 %2 %3',
+            },
+            Blocks: {
+                ardublock_motor_forward: '앞',
+                ardublock_motor_backward: '뒤',
+            },
+            Menus: {
+                ardublock: '아두블럭',
+            },
+        },
+        en: {
+            template: {
+                ardublock_get_number_sensor_value: 'Analog %1 Sensor value  ',
+                ardublock_get_digital_value: 'Digital %1 Sensor value  ',
+                ardublock_toggle_pwm: 'Digital %1 Pin %2 %3',
+                ardublock_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5  ',
+                ardublock_digital_pwm: 'Digital %1 Pin %2 %3',
+                ardublock_get_analog_value: 'Analog %1 Sensor value',
+                ardublock_get_analog_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                ardublock_get_digital: 'Digital %1 Sensor value',
+                ardublock_get_left_cds_analog_value: 'Left CDS %1 Sensor value',
+                ardublock_get_right_cds_analog_value: 'Left CDS  %1 Sensor value',
+                ardublock_get_sound_analog_value: 'Analog Sound %1 Sensor value',
+                ardublock_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
+                ardublock_set_left_motor: 'Left motor direction to %1 speed %2 set %3',
+                ardublock_set_right_motor: 'Right motor direction to %1 speed %2 set %3',
+                ardublock_set_servo: 'Set servo pin %1 angle as %2 %3',
+                ardublock_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                ardublock_toggle_led: 'Digital %1 Pin %2 %3',
+                ardublock_toggle_left_led: 'Left Light %1 Pin %2 %3',
+                ardublock_toggle_right_led: 'Right Light %1 Pin %2 %3',
+            },
+            Blocks: {
+                ardublock_motor_forward: 'Forward',
+                ardublock_motor_backward: 'Backward',
+            },
+            Menus: {
+                ardublock: 'ardublock',
+            },
+        },
+    };
+};
+
 Entry.ardublock.getBlocks = function() {
     return {
         //region ardublock 아두블록

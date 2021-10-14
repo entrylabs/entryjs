@@ -6349,6 +6349,33 @@ LineRobot.prototype.followLineUntil = function(script) {
     }
 };
 
+LineRobot.prototype.followLineUntilIntersection = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(9); // LINE_TRACER_MODE_UNTIL_CROSS
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
 LineRobot.prototype.crossIntersection = function(script) {
     this.__setModule();
     if (!script.isStart) {
@@ -6861,8 +6888,11 @@ function ZeroneRobot(index) {
         colorRed: 0,
         colorGreen: 0,
         colorBlue: 0,
+        floor: 0,
+        button: 0,
         gesture: -1,
         colorNumber: -1,
+        colorPattern: -1,
         pulseCount: 0,
         batteryState: 2,
     };
@@ -6873,17 +6903,28 @@ function ZeroneRobot(index) {
     };
     this.pulseId = 0;
     this.soundId = 0;
+    this.lineTracerModeId = 0;
     this.motionId = 0;
+    this.clickedId = -1;
+    this.doubleClickedId = -1;
+    this.longPressedId = -1;
     this.gestureId = -1;
+    this.colorPatternId = -1;
     this.wheelStateId = -1;
     this.soundStateId = -1;
+    this.lineTracerStateId = -1;
     this.blockId = 0;
     this.motionCallback = undefined;
+    this.lineTracerCallback = undefined;
     this.soundCallback = undefined;
     this.noteBlockId = 0;
     this.noteTimer1 = undefined;
     this.noteTimer2 = undefined;
+    this.clicked = false;
+    this.doubleClicked = false;
+    this.longPressed = false;
     this.gesture = -1;
+    this.colorPattern = -1;
     this.tempo = 60;
     this.timeouts = [];
 }
@@ -6916,13 +6957,15 @@ ZeroneRobot.prototype.__PORT_MAP = {
     sound: 0,
     soundRepeat: 1,
     soundId: 0,
+    lineTracerMode: 0,
+    lineTracerModeId: 0,
+    lineTracerSpeed: 4,
     motionId: 0,
     motionType: 0,
     motionUnit: 0,
     motionSpeed: 0,
     motionValue: 0,
     motionRadius: 0,
-    sensorMode: 0,
 };
 
 ZeroneRobot.prototype.setZero = function() {
@@ -6933,17 +6976,28 @@ ZeroneRobot.prototype.setZero = function() {
     }
     this.pulseId = 0;
     this.soundId = 0;
+    this.lineTracerModeId = 0;
     this.motionId = 0;
+    this.clickedId = -1;
+    this.doubleClickedId = -1;
+    this.longPressedId = -1;
     this.gestureId = -1;
+    this.colorPatternId = -1;
     this.wheelStateId = -1;
     this.soundStateId = -1;
+    this.lineTracerStateId = -1;
     this.blockId = 0;
     this.motionCallback = undefined;
+    this.lineTracerCallback = undefined;
     this.soundCallback = undefined;
     this.noteBlockId = 0;
     this.noteTimer1 = undefined;
     this.noteTimer2 = undefined;
+    this.clicked = false;
+    this.doubleClicked = false;
+    this.longPressed = false;
     this.gesture = -1;
+    this.colorPattern = -1;
     this.tempo = 60;
     
     this.__removeAllTimeouts();
@@ -6955,7 +7009,11 @@ ZeroneRobot.prototype.afterReceive = function(pd) {
 };
 
 ZeroneRobot.prototype.afterSend = function(sq) {
+    this.clicked = false;
+    this.doubleClicked = false;
+    this.longPressed = false;
     this.gesture = -1;
+    this.colorPattern = -1;
 };
 
 ZeroneRobot.prototype.setMotoring = function(motoring) {
@@ -6987,6 +7045,16 @@ ZeroneRobot.prototype.__setPulse = function(pulse) {
     this.pulseId = (this.pulseId % 255) + 1;
     this.motoring.pulse = pulse;
     this.motoring.pulseId = this.pulseId;
+};
+
+ZeroneRobot.prototype.__setLineTracerMode = function(mode) {
+    this.lineTracerModeId = (this.lineTracerModeId % 255) + 1;
+    this.motoring.lineTracerMode = mode;
+    this.motoring.lineTracerModeId = this.lineTracerModeId;
+};
+
+ZeroneRobot.prototype.__cancelLineTracer = function() {
+    this.lineTracerCallback = undefined;
 };
 
 ZeroneRobot.prototype.__setMotion = function(type, unit, speed, value, radius) {
@@ -7041,8 +7109,23 @@ ZeroneRobot.prototype.handleSensory = function() {
     const self = this;
     const sensory = self.sensory;
     
+    self.clicked = sensory.clicked == 1;
+    self.doubleClicked = sensory.doubleClicked == 1;
+    self.longPressed = sensory.longPressed == 1;
     self.gesture = sensory.gesture;
+    self.colorPattern = sensory.colorPattern;
     
+    if(self.lineTracerCallback) {
+        if(sensory.lineTracerStateId != self.lineTracerStateId) {
+            self.lineTracerStateId = sensory.lineTracerStateId;
+            if(sensory.lineTracerState == 0x02) {
+                self.__setLineTracerMode(0);
+                var callback = self.lineTracerCallback;
+                self.__cancelLineTracer();
+                if(callback) callback();
+            }
+        }
+    }
     if(self.motionCallback) {
         if(sensory.wheelStateId != self.wheelStateId) {
             self.wheelStateId = sensory.wheelStateId;
@@ -7078,19 +7161,21 @@ ZeroneRobot.prototype.checkGesture = function(script) {
         case 'RIGHTWARD': return this.gesture == 3;
         case 'NEAR': return this.gesture == 4;
         case 'FAR': return this.gesture == 5;
-        case 'CLICK': return this.gesture == 6;
-        case 'LONG_TOUCH': return this.gesture == 7;
+        case 'LONG_TOUCH': return this.gesture == 6;
     }
     return false;
 };
 
 ZeroneRobot.prototype.__TOUCHING_COLORS = {
     RED: 1,
+    ORANGE: 7,
     YELLOW: 2,
     GREEN: 3,
     SKY_BLUE: 4,
     BLUE: 5,
     PURPLE: 6,
+    BLACK: 0,
+    WHITE: 8,
 };
 
 ZeroneRobot.prototype.checkTouchingColor = function(script) {
@@ -7099,6 +7184,39 @@ ZeroneRobot.prototype.checkTouchingColor = function(script) {
 
     if(typeof color == 'number') {
         return this.sensory.colorNumber == color;
+    }
+    return false;
+};
+
+ZeroneRobot.prototype.__PATTERN_COLORS = {
+	BLACK: 0,
+	RED: 1,
+	YELLOW: 2,
+	GREEN: 3,
+	SKY_BLUE: 4,
+	BLUE: 5,
+	PURPLE: 6
+};
+
+ZeroneRobot.prototype.checkColorPattern = function(script) {
+    this.__setModule();
+    const color1 = this.__TOUCHING_COLORS[script.getField('COLOR1')];
+    const color2 = this.__TOUCHING_COLORS[script.getField('COLOR2')];
+
+    if((typeof color1 == 'number') && (typeof color2 == 'number')) {
+        return this.colorPattern == color1 * 10 + color2;
+    }
+    return false;
+};
+
+ZeroneRobot.prototype.checkButtonState = function(script) {
+    this.__setModule();
+    const state = script.getField('STATE');
+    
+    switch(state) {
+        case 'CLICKED': return this.clicked;
+        case 'DOUBLE_CLICKED': return this.doubleClicked;
+        case 'LONG_PRESSED': return this.longPressed;
     }
     return false;
 };
@@ -7124,6 +7242,8 @@ ZeroneRobot.prototype.__SENSORS = {
     COLOR_R: 'colorRed',
     COLOR_G: 'colorGreen',
     COLOR_B: 'colorBlue',
+    FLOOR: 'floor',
+    BUTTON: 'button',
     COLOR_NUMBER: 'colorNumber',
 };
 
@@ -7133,24 +7253,17 @@ ZeroneRobot.prototype.getValue = function(script) {
     
     if(dev == 'GESTURE') {
         return this.gesture;
+    } else if(dev == 'COLOR_PATTERN') {
+        return this.colorPattern;
     } else {
         const sensor = this.__SENSORS[dev] || dev;
         return this.sensory[sensor];
     }
 };
 
-ZeroneRobot.prototype.startSensor = function(script) {
-    this.__setModule();
-    const mode = script.getField('MODE');
-    
-    switch(mode) {
-        case 'GESTURE': this.motoring.sensorMode = 0; break;
-        case 'COLOR': this.motoring.sensorMode = 1; break;
-    }
-};
-
 ZeroneRobot.prototype.__motionUnit = function(type, unit, value, callback) {
     const motoring = this.motoring;
+    this.__cancelLineTracer();
     this.__cancelMotion();
 
     motoring.leftWheel = 0;
@@ -7160,8 +7273,10 @@ ZeroneRobot.prototype.__motionUnit = function(type, unit, value, callback) {
     if (value && value > 0) {
         this.__setMotion(type, unit, 0, value, 0); // type, unit, speed, value, radius
         this.motionCallback = callback;
+        this.__setLineTracerMode(0);
     } else {
         this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(0);
         callback();
     }
 };
@@ -7276,6 +7391,7 @@ ZeroneRobot.prototype.turnUnit = function(script) {
 ZeroneRobot.prototype.changeWheels = function(script) {
     const motoring = this.motoring;
     this.__setModule();
+    this.__cancelLineTracer();
     this.__cancelMotion();
 
     let leftVelocity = script.getNumberValue('LEFT');
@@ -7293,12 +7409,14 @@ ZeroneRobot.prototype.changeWheels = function(script) {
     }
     this.__setPulse(0);
     this.__setMotion(0, 0, 0, 0, 0);
+    this.__setLineTracerMode(0);
     return script.callReturn();
 };
 
 ZeroneRobot.prototype.setWheels = function(script) {
     const motoring = this.motoring;
     this.__setModule();
+    this.__cancelLineTracer();
     this.__cancelMotion();
 
     let leftVelocity = script.getNumberValue('LEFT');
@@ -7314,12 +7432,14 @@ ZeroneRobot.prototype.setWheels = function(script) {
     }
     this.__setPulse(0);
     this.__setMotion(0, 0, 0, 0, 0);
+    this.__setLineTracerMode(0);
     return script.callReturn();
 };
 
 ZeroneRobot.prototype.changeWheel = function(script) {
     const motoring = this.motoring;
     this.__setModule();
+    this.__cancelLineTracer();
     this.__cancelMotion();
 
     const wheel = script.getField('WHEEL');
@@ -7342,12 +7462,14 @@ ZeroneRobot.prototype.changeWheel = function(script) {
     }
     this.__setPulse(0);
     this.__setMotion(0, 0, 0, 0, 0);
+    this.__setLineTracerMode(0);
     return script.callReturn();
 };
 
 ZeroneRobot.prototype.setWheel = function(script) {
     const motoring = this.motoring;
     this.__setModule();
+    this.__cancelLineTracer();
     this.__cancelMotion();
 
     const wheel = script.getField('WHEEL');
@@ -7366,11 +7488,13 @@ ZeroneRobot.prototype.setWheel = function(script) {
     }
     this.__setPulse(0);
     this.__setMotion(0, 0, 0, 0, 0);
+    this.__setLineTracerMode(0);
     return script.callReturn();
 };
 
-ZeroneRobot.prototype.stop = function(script) {
+ZeroneRobot.prototype.followLine = function(script) {
     this.__setModule();
+    this.__cancelLineTracer();
     this.__cancelMotion();
 
     const motoring = this.motoring;
@@ -7378,6 +7502,185 @@ ZeroneRobot.prototype.stop = function(script) {
     motoring.rightWheel = 0;
     this.__setPulse(0);
     this.__setMotion(0, 0, 0, 0, 0);
+    this.__setLineTracerMode(1); // LINE_TRACER_MODE_FOLLOW
+    return script.callReturn();
+};
+
+ZeroneRobot.prototype.followLineUntil = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        let mode = 2; // LINE_TRACER_MODE_UNTIL_ANY
+        switch(script.getField('COLOR')) {
+            case 'RED': mode = 10; break;
+            case 'YELLOW': mode = 11; break;
+            case 'GREEN': mode = 12; break;
+            case 'SKY_BLUE': mode = 13; break;
+            case 'BLUE': mode = 14; break;
+            case 'PURPLE': mode = 15; break;
+        }
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(mode);
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+ZeroneRobot.prototype.followLineUntilIntersection = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(9); // LINE_TRACER_MODE_UNTIL_CROSS
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+ZeroneRobot.prototype.crossIntersection = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(3); // LINE_TRACER_MODE_MOVE_FORWARD
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+ZeroneRobot.prototype.turnAtIntersection = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        let mode = 4; // LINE_TRACER_MODE_TURN_LEFT
+        switch(script.getField('DIRECTION')) {
+            case 'RIGHT': mode = 5; break;
+            case 'BACK': mode = 6; break;
+        }
+
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(mode);
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+ZeroneRobot.prototype.jumpLine = function(script) {
+    this.__setModule();
+    if (!script.isStart) {
+        script.isStart = true;
+        script.isMoving = true;
+        this.__cancelMotion();
+
+        let mode = 7; // LINE_TRACER_MODE_JUMP_LEFT
+        if(script.getField('DIRECTION') == 'RIGHT') mode = 8;
+
+        const motoring = this.motoring;
+        motoring.leftWheel = 0;
+        motoring.rightWheel = 0;
+        this.__setPulse(0);
+        this.__setMotion(0, 0, 0, 0, 0);
+        this.__setLineTracerMode(mode);
+        this.lineTracerCallback = function() {
+            script.isMoving = false;
+        };
+        return script;
+    } else if (script.isMoving) {
+        return script;
+    } else {
+        delete script.isStart;
+        delete script.isMoving;
+        Entry.engine.isContinue = false;
+        return script.callReturn();
+    }
+};
+
+ZeroneRobot.prototype.setLineTracerSpeed = function(script) {
+    this.__setModule();
+    let speed = Number(script.getField('SPEED'));
+
+    speed = parseInt(speed);
+    if (typeof speed == 'number') {
+        this.motoring.lineTracerSpeed = speed;
+    }
+    return script.callReturn();
+};
+
+ZeroneRobot.prototype.stop = function(script) {
+    this.__setModule();
+    this.__cancelLineTracer();
+    this.__cancelMotion();
+
+    const motoring = this.motoring;
+    motoring.leftWheel = 0;
+    motoring.rightWheel = 0;
+    this.__setPulse(0);
+    this.__setMotion(0, 0, 0, 0, 0);
+    this.__setLineTracerMode(0);
     return script.callReturn();
 };
 
@@ -8375,8 +8678,8 @@ CheeseHatColorLedMatrix.prototype.__KO_JONG = [ [], [0], [0, 0], [0, 9], [2], [2
 
 CheeseHatColorLedMatrix.prototype.__drawString = function(data, tx, ty, text, len, color) {
     let t, width = 0, blank, index, shape;
-    for(let i = 0; i < len; ++i) {
-        t = text.charCodeAt(i);
+    for(let j = 0; j < len; ++j) {
+        t = text.charCodeAt(j);
         if(t == 32) {
             blank = true;
             tx += 5;
@@ -8464,7 +8767,7 @@ CheeseHatColorLedMatrix.prototype.__drawString = function(data, tx, ty, text, le
                 tx += 2;
                 width += 2;
             } else {
-                shape = CHEESE_HAT_ALPHABETS[text.charAt(i)];
+                shape = CHEESE_HAT_ALPHABETS[text.charAt(j)];
                 if(shape) {
                     this.__drawShape(data, tx, ty, shape.data, shape.width - 1, color);
                     tx += shape.width;
@@ -8592,9 +8895,8 @@ CheeseHatColorLedMatrix.prototype.drawBackgroundPattern = function(x, y, pattern
         for(const i in candidates) {
             candidate = candidates[i];
             if(candidate) {
-                this.__drawPattern(data, tx, ty, candidate[3], candidate[0], candidate[2], color);
+                this.__drawPattern(data, tx, i, candidate[3], candidate[0], candidate[2], color);
             }
-            ++ ty;
         }
         return true;
     }
@@ -9068,8 +9370,8 @@ CheeseRange.prototype.setLowMidHigh = function(port, low1, mid1, high1, low2, mi
     range.out_lower = low2;
     range.out_middle = mid2;
     range.out_upper = high2;
-    range.out_min = Math.min(low2, high2);
-    range.out_max = Math.max(low2, high2);
+    range.out_min = Math.min(low2, mid2, high2);
+    range.out_max = Math.max(low2, mid2, high2);
     range.active = true;
 };
 
@@ -9808,8 +10110,8 @@ CheeseHat.prototype.handleSensory = function(recv) {
     }
 };
 
-CheeseHat.prototype.handleRequest = function() {
-    if(this.__hat && this.__hat.handleRequest) this.__hat.handleRequest();
+CheeseHat.prototype.handleRequest = function(sent) {
+    if(this.__hat && this.__hat.handleRequest) this.__hat.handleRequest(sent);
 };
 
 /**CheeseRobot**/

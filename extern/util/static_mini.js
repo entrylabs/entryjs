@@ -334,7 +334,7 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_irs_value',
                 'robotis_irs_value_boolean',
                 'robotis_light_value',
-                'robotis_light_value_boolean',                
+                'robotis_light_value_boolean',
                 'robotis_detectedsound_value',
                 'robotis_detectingsound_value',
                 'robotis_detectedsound_value_boolean',
@@ -392,7 +392,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_cloud_pc_open',
                 'arduino_connect',
                 'arduino_download_connector',
-                'download_guide',
+                // 'download_guide',
                 'arduino_connected',
             ],
         },
@@ -815,7 +815,7 @@ EntryStatic.hwMiniSupportList = [
     'roborobo_schoolkit',
     'robotis_openCM70',
     'robotis_openCM70EDU',
-    'robotis_Dream'
+    'robotis_Dream',
 ];
 
 EntryStatic.COMMAND_TYPES = {

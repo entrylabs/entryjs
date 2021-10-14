@@ -60,6 +60,7 @@ class BlockMenu extends ModelClass<Schema> {
     private categoryWrapper: EntryDom;
     private blockMenuContainer: EntryDom;
     private blockMenuWrapper: EntryDom;
+    private blockMenuWrapperForTrashcan: EntryDom;
     private objectAlert: any;
     private _dynamicThreads: any[];
     private _selectDynamic: boolean;
@@ -141,7 +142,7 @@ class BlockMenu extends ModelClass<Schema> {
             },
             false
         );
-        const { hardwareEnable, dataTableEnable } = Entry;
+        const { hardwareEnable } = Entry;
 
         this._dSelectMenu = debounce(this.selectMenu, 0);
 
@@ -164,16 +165,11 @@ class BlockMenu extends ModelClass<Schema> {
         this._clearCategory();
 
         // hardwareEnable 인 경우, 하드웨어 카테고리와 실과형 로봇카테고리 전부를 제외한다.
-        // dataTableEnable 이 false 인 경우, anlaysis 카테고리를 제외한다.
-        this._categoryData = remove(categoryData, ({ category }) => {
-            if (!dataTableEnable && category === 'analysis') {
-                return false;
-            }
-
-            return !(
-                !hardwareEnable && [...practicalCourseCategoryList, HW].indexOf(category) > -1
-            );
-        });
+        this._categoryData = remove(
+            categoryData,
+            ({ category }) =>
+                hardwareEnable || [...practicalCourseCategoryList, HW].indexOf(category) <= -1
+        );
 
         this._generateView(this._categoryData);
 
@@ -255,7 +251,7 @@ class BlockMenu extends ModelClass<Schema> {
 
         // this.codeListener?.destory();
         this.codeListener?.destroy?.();
-        
+
         this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, () => {
             this.changeEvent.notify();
@@ -836,6 +832,14 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
+    _handleBoardDragBlock() {
+        this._toggleTrashcan(!!this.workspace?.board?.dragBlock);
+    }
+
+    _toggleTrashcan(visible: boolean) {
+        this.blockMenuWrapperForTrashcan?.toggleClass('entryRemove', !visible);
+    }
+
     enablePattern() {
         this.pattern.removeAttribute('style');
     }
@@ -877,6 +881,7 @@ class BlockMenu extends ModelClass<Schema> {
             indicator.bindOnClick(() => {
                 point[0].scrollIntoView({
                     behavior: 'smooth',
+                    block: 'nearest',
                 });
             });
             point.attr('data-action', action);
@@ -1086,12 +1091,29 @@ class BlockMenu extends ModelClass<Schema> {
         }, []);
     }
 
+    enableTrashcan() {
+        this.blockMenuWrapperForTrashcan = Entry.Dom('div', {
+            class: 'blockMenuWrapper blockMenuTrashcan entryRemove',
+            parent: this.blockMenuContainer,
+        })
+            .on('pointerenter', () => this.blockMenuWrapperForTrashcan.addClass('open'))
+            .on('pointerleave', () => this.blockMenuWrapperForTrashcan.removeClass('open'));
+
+        Entry.Dom('span')
+            .text(Lang.Workspace.drag_to_remove)
+            .appendTo(this.blockMenuWrapperForTrashcan);
+
+        this.workspace?.board?.observe(this, '_handleBoardDragBlock', ['dragBlock']);
+    }
+
     private _generateView(categoryData: CategoryData[]) {
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             class: 'blockMenuContainer',
             parent: this.view,
+        }).css({
+            position: 'relative',
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
         this.blockMenuWrapper = Entry.Dom('div', {

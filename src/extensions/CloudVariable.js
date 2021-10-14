@@ -73,6 +73,7 @@ class CloudVariableExtension {
             socket.on('welcome', ({ variables = [], isOffline }) => {
                 try {
                     this.#data = new dmet(variables);
+                    variables.forEach(this.#applyValue);
                 } catch (e) {
                     console.warn(e);
                 }
@@ -100,6 +101,7 @@ class CloudVariableExtension {
 
     setDefaultData(defaultData) {
         this.#defaultData = defaultData;
+        defaultData.forEach(this.#applyValue);
     }
 
     createDmet(object) {
@@ -219,11 +221,18 @@ class CloudVariableExtension {
             }
         } else if (variableType === 'list') {
             const list = Entry.variableContainer.getList(id);
-            if (list) {
+            if (!list) {
+                return;
+            }
+            if (this && this.get) {
                 const { array } = this.get(operation);
                 list.array_ = array;
-                list.updateView();
+            } else if (operation.array) {
+                list.array_ = operation.array;
+            } else if (operation.list) {
+                list.array_ = operation.list.map((key) => ({ data: operation.value[key] }));
             }
+            list.updateView();
         }
     }
 

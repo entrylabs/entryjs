@@ -18,6 +18,7 @@ module.exports = {
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js', '.json'],
+        mainFields: ['jsnext:main', 'browser', 'main'],
     },
     node: {
         fs: 'empty',
@@ -35,7 +36,6 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
                 use: [
                     {
                         loader: 'webpack-strip-block',
@@ -46,6 +46,9 @@ module.exports = {
                     },
                     {
                         loader: 'babel-loader',
+                        options: {
+                            configFile: path.resolve(__dirname, '..', '.babelrc'),
+                        },
                     },
                 ],
             },

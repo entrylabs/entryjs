@@ -375,32 +375,32 @@ function getBlocks() {
                 ],
             },
         },
-        download_guide: {
-            skeleton: 'clickable_text',
-            skeletonOptions: {
-                box: {
-                    offsetX: 3,
-                },
-            },
-            isNotFor: ['arduinoDisconnected'],
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            class: 'arduino_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.download_guide,
-                    color: EntryStatic.colorSet.common.TEXT,
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.hw.downloadGuide();
-                    },
-                ],
-            },
-        },
+        // download_guide: {
+        //     skeleton: 'clickable_text',
+        //     skeletonOptions: {
+        //         box: {
+        //             offsetX: 3,
+        //         },
+        //     },
+        //     isNotFor: ['arduinoDisconnected'],
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     class: 'arduino_default',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.download_guide,
+        //             color: EntryStatic.colorSet.common.TEXT,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     events: {
+        //         mousedown: [
+        //             function() {
+        //                 Entry.hw.downloadGuide();
+        //             },
+        //         ],
+        //     },
+        // },
         arduino_download_source: {
             skeleton: 'clickable_text',
             skeletonOptions: {
@@ -3048,31 +3048,6 @@ function getBlocks() {
                 return script.callReturn();
             },
             syntax: { js: [], py: [''] },
-        },
-        when_some_key_click: {
-            color: EntryStatic.colorSet.block.default.START,
-            skeleton: 'basic_event',
-            statements: [],
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/start_icon_keyboard.png',
-                    size: 17,
-                    position: {
-                        x: 0,
-                        y: -2,
-                    },
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            func(sprite, script) {
-                return script.callReturn();
-            },
-            event: 'keyPress',
-            syntax: { js: [], py: ['Entry.on_key_press_down(%1)'] },
         },
         text: {
             color: EntryStatic.colorSet.block.lighten.CALC,

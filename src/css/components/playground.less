@@ -119,7 +119,7 @@
 
 .entryPlaygroundDefaultWorkspace {
     height: 100%;
-    background-color: #363c46;
+    background-color: white;
     color: white;
 }
 
@@ -243,21 +243,35 @@
 
     .entryPlaygroundCommentButtonWorkspace {
         float: left;
-        .backgroundImage('btn-toggle-comment-off.png');
         background-repeat: no-repeat;
         background-size: 32px auto;
         background-position: 50% 50%;
         cursor: pointer;
         width: 32px;
         height: 32px;
-        margin: 0 8px;
-        &.showComment {
-            .backgroundImage('btn-toggle-comment-select.png');
+
+        &.enabled {
             background-size: 32px auto;
             width: 32px;
             height: 32px;
             border: 0;
             background-color: inherit;
+        }
+
+        &.showComment {
+            margin-right: 4px;
+            .backgroundImage('btn-toggle-comment-off.svg');
+            &.enabled {
+                .backgroundImage('btn-toggle-comment-select.svg');
+            }
+        }
+
+        &.addComment {
+            margin-right: 8px;
+            .backgroundImage('btn-add-comment-off.svg');
+            &.enabled {
+                .backgroundImage('btn-add-comment-select.svg');
+            }
         }
     }
 
@@ -296,30 +310,27 @@
 .entryTabListItemWorkspace {
     float: left;
     min-width: 58px;
-    margin: 4px 0 0 2px;
-    padding: 7px 0;
+    margin-left: 2px;
+    padding: 0;
     cursor: pointer;
-    background-color: #d6e9f4;
+    background-color: #d7e8f4;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
     font-size: 12px;
     font-weight: 600;
-    color: #8aa3b2;
+    color: #8ba4b3;
     text-align: center;
-    line-height: 14px;
-    vertical-align: bottom;
+    letter-spacing: -0.4px;
+    line-height: 32px;
 }
 .entryTabListItemWorkspace:first-child {
     margin-left: 0;
 }
 
 .entryTabSelected {
-    margin-top: 0;
-    padding: 9px 0 8px;
     color: #fff;
-    background-color: #8274ff;
+    background-color: @baseblue;
     font-size: 14px;
-    line-height: 15px;
 }
 
 .entryTabListItemWorkspace:hover {
@@ -545,16 +556,32 @@
 }
 
 .entryPlaygroundAddPictureInner {
-    display: block;
-    width: 146px;
+    display: inline-block;
+    width: 116px;
     height: 40px;
-    margin: 0 auto;
+    margin-left: 7px;
     background-color: #fff;
     border: 1px solid #4f80ff;
     border-radius: 4px;
     color: #4f80ff;
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 38px;
+    cursor: pointer;
+}
+
+.entryPlaygroundNewPictureInner {
+    display: inline-block;
+    width: 116px;
+    height: 40px;
+    margin-left: 6px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    color: #555;
+    text-align: center;
+    font-size: 12px;
     font-weight: 600;
     line-height: 38px;
     cursor: pointer;

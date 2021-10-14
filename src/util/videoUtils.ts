@@ -48,6 +48,13 @@ type DetectedObject = {
 };
 type IndicatorType = 'pose' | 'face' | 'object';
 
+export const getInputList = async () => {
+    if (navigator.mediaDevices) {
+        return (await navigator.mediaDevices.enumerateDevices()) || [];
+    }
+    return [];
+};
+
 class VideoUtils implements MediaUtilsInterface {
     // 비디오 캔버스 크기에 쓰이는 공통 밸류
     public CANVAS_WIDTH: number = 480;
@@ -68,6 +75,7 @@ class VideoUtils implements MediaUtilsInterface {
     public canvasVideo: PIXI.Sprite | createjs.Bitmap;
     public inMemoryCanvas: HTMLCanvasElement;
 
+    private captureTimeout: any = null;
     public flipStatus: FlipStatus = {
         horizontal: false,
         vertical: false,
@@ -93,10 +101,6 @@ class VideoUtils implements MediaUtilsInterface {
         object: false,
         warmup: false,
     };
-
-    // motion test
-    // private tempCanvas: any;
-    // motion test
 
     // 감지된 요소들
     public motions: Pixel[][] = [...Array(this.CANVAS_HEIGHT / this._SAMPLE_SIZE)].map((e) =>
@@ -138,16 +142,36 @@ class VideoUtils implements MediaUtilsInterface {
     public motionWorker: Worker = new VideoMotionWorker();
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
+    private isFront = true;
+    public videoInputList: string[][] = [];
 
     constructor() {
         this.videoOnLoadHandler = this.videoOnLoadHandler.bind(this);
     }
+
+    // issue 12160 bug , 강제로 usermedia를 가져오도록 하기 위함 enumerateDevices자체로는 권한 요청을 하지 않음
+    async checkPermission() {
+        if (navigator.permissions) {
+            const permission = await navigator.permissions.query({ name: 'camera' });
+            console.log('camera state', permission.state);
+            if (permission.state !== 'granted') {
+                await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+            }
+        } else {
+            await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+        }
+    }
+
     async initialize() {
         if (this.isInitialized) {
             return;
         }
+        await this.checkPermission();
+        const inputList = await getInputList();
+        this.videoInputList = inputList
+            .filter((input) => input.kind === 'videoinput' && input.deviceId)
+            .map((item) => [item.label, item.deviceId]);
         await this.compatabilityChecker();
-
         // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
         // 움직임 감지를 위한 실제 렌더되지 않는 돔
         if (!this.inMemoryCanvas) {
@@ -163,6 +187,25 @@ class VideoUtils implements MediaUtilsInterface {
         // const tempTarget = document.getElementsByClassName('uploadInput')[0];
         // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
         // //motion test
+        if (this.isFirefox) {
+            this._VIDEO_HEIGHT = 480;
+            this.CANVAS_HEIGHT = 360;
+        }
+        let stream;
+        try {
+            stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    deviceId: { exact: this.videoInputList[0][1] },
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+        } catch (err) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
+        }
 
         try {
             /*
@@ -170,19 +213,6 @@ class VideoUtils implements MediaUtilsInterface {
                 파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
                 이로인해 다른 브라우저에 비해서 잘려보임
             */
-            if (this.isFirefox) {
-                this._VIDEO_HEIGHT = 480;
-                this.CANVAS_HEIGHT = 360;
-            }
-            const stream = await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: {
-                    facingMode: 'user',
-                    width: this._VIDEO_WIDTH,
-                    height: this._VIDEO_HEIGHT,
-                },
-            });
-
             this.motionWorker.onmessage = (e: { data: { type: String; message: any } }) => {
                 const { type, message } = e.data;
                 if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -214,11 +244,11 @@ class VideoUtils implements MediaUtilsInterface {
                     if (Entry.engine.state !== 'run' && type !== 'init') {
                         return;
                     }
+                    const name: 'pose' | 'face' | 'object' | 'warmup' = message;
+                    const modelLang = Lang.Blocks[`video_${name}_model`];
+
                     switch (type) {
                         case 'init':
-                            const name: 'pose' | 'face' | 'object' | 'warmup' = message;
-                            const modelLang = Lang.Blocks[`video_${name}_model`];
-
                             if (message === 'warmup') {
                                 Entry.toast.success(
                                     Lang.Msgs.video_model_load_success,
@@ -275,13 +305,12 @@ class VideoUtils implements MediaUtilsInterface {
                         })
                         .then((cocoLoaded: any) => {
                             this.coco = cocoLoaded;
-                            // console.log('coco model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
+                                // eslint-disable-next-line
                                 `${Lang.Blocks.video_object_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
-                            // this.postMessage({ type: 'init', message: 'object' });
                             console.timeEnd('test');
                         }),
                     posenet
@@ -296,9 +325,9 @@ class VideoUtils implements MediaUtilsInterface {
                         })
                         .then((mobileNetLoaded: any) => {
                             this.mobileNet = mobileNetLoaded;
-                            // console.log('posenet model loaded');
                             Entry.toast.success(
                                 Lang.Msgs.video_model_load_success,
+                                // eslint-disable-next-line
                                 `${Lang.Blocks.video_pose_model} ${Lang.Msgs.video_model_load_success}`,
                                 false
                             );
@@ -315,12 +344,12 @@ class VideoUtils implements MediaUtilsInterface {
 
             const video = document.createElement('video');
             video.id = 'webCamElement';
+            video.autoplay = true;
             video.srcObject = stream;
             video.width = this.CANVAS_WIDTH;
             video.height = this.CANVAS_HEIGHT;
-            video.autoplay = true;
-            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
 
+            video.onloadedmetadata = this.videoOnLoadHandler.bind(this);
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
@@ -330,14 +359,44 @@ class VideoUtils implements MediaUtilsInterface {
             this.isInitialized = false;
         }
     }
+    async changeSource(target: number) {
+        if (!this.videoInputList[target]) {
+            return;
+        }
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    deviceId: {
+                        exact: this.videoInputList[target][1],
+                    },
+                    width: this._VIDEO_WIDTH,
+                    height: this._VIDEO_HEIGHT,
+                },
+            });
+            this.isFront = !this.isFront;
+            this.stream = stream;
+            this.video.srcObject = this.stream;
+            this.video.width = this.CANVAS_WIDTH;
+            this.video.height = this.CANVAS_HEIGHT;
+            const [track] = this.stream.getVideoTracks();
+            this.imageCapture = new ImageCapture(track);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
     videoOnLoadHandler() {
-        this.video.play();
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
     }
 
     initialSetup() {
+        const videoTracks = this.stream.getVideoTracks();
+        if (videoTracks[0].readyState === 'ended') {
+            this.changeSource(0);
+        }
         console.log('initial setup');
         this.isRunning = true;
         GEHelper.drawDetectedGraphic();
@@ -424,8 +483,14 @@ class VideoUtils implements MediaUtilsInterface {
             return;
         }
         if (this.isChrome) {
-            const captured = await this.imageCapture.grabFrame();
-            this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+            if (
+                this.imageCapture.track.readyState === 'live' &&
+                this.imageCapture.track.enabled &&
+                !this.imageCapture.track.muted
+            ) {
+                const captured = await this.imageCapture.grabFrame();
+                this.worker.postMessage({ type: 'estimate', image: captured }, [captured]);
+            }
         } else {
             const context = this.inMemoryCanvas.getContext('2d');
             context.clearRect(0, 0, this.inMemoryCanvas.width, this.inMemoryCanvas.height);
@@ -456,12 +521,35 @@ class VideoUtils implements MediaUtilsInterface {
             requestAnimationFrame(this.imageDetection.bind(this));
         }, 100);
     }
+
+    startCapturedImage(
+        callback: Function,
+        { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }
+    ) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        this.captureTimeout = Entry.Utils.asyncAnimationFrame(async () => {
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(this.video, 0, 0, width, height);
+            callback && (await callback(canvas));
+        });
+        Entry.addEventListener('stop', () => {
+            this.stopCaptureImage();
+        });
+        return this.captureTimeout;
+    }
+
+    stopCaptureImage() {
+        this.captureTimeout && cancelAnimationFrame(this.captureTimeout);
+    }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
      * @param sprite Entry Entity Object
      */
     motionDetect(sprite: any) {
-        if (!this.inMemoryCanvas) {
+        if (!this.inMemoryCanvas || !this.isRunning) {
             return;
         }
         // 움직임 감지 기본 범위는 전체 캔버스 범위
@@ -605,13 +693,10 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     cameraSwitch(mode: String) {
-        switch (mode) {
-            case 'on':
-                this.turnOnWebcam();
-                break;
-            default:
-                this.turnOffWebcam();
-                break;
+        if (mode === 'on') {
+            this.turnOnWebcam();
+        } else {
+            this.turnOffWebcam();
         }
     }
     turnOffWebcam() {
@@ -724,24 +809,26 @@ class VideoUtils implements MediaUtilsInterface {
         this.objects = [];
         this.isRunning = false;
         this.isModelInitiated = false;
+        this.stopVideo();
     }
 
-    // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
-    destroy() {
-        this.disableAllModels();
-        this.turnOffWebcam();
+    stopVideo() {
         try {
             if (this.stream) {
                 this.stream.getTracks().forEach((track) => {
                     track.stop();
                 });
             }
-
-            // this.worker.terminate();
         } catch (err) {
             console.log(err);
         }
+    }
 
+    // videoUtils.destroy does not actually destroy singletonClass, but instead resets the whole stuff except models to be used
+    destroy() {
+        this.disableAllModels();
+        this.turnOffWebcam();
+        this.stopVideo();
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
@@ -775,27 +862,10 @@ class VideoUtils implements MediaUtilsInterface {
                 Lang.Workspace.check_browser_error_video,
             ]);
         }
-        if (!this.stream) {
-            if (!this.checkUserCamAvailable()) {
-                throw new Entry.Utils.IncompatibleError('IncompatibleError', [
-                    Lang.Workspace.check_webcam_error,
-                ]);
-            }
-        }
-    }
-    async checkUserCamAvailable() {
-        try {
-            await navigator.mediaDevices.getUserMedia({
-                audio: false,
-                video: {
-                    facingMode: 'user',
-                    width: this._VIDEO_WIDTH,
-                    height: this._VIDEO_HEIGHT,
-                },
-            });
-            return true;
-        } catch (err) {
-            return false;
+        if (!this.stream && this.videoInputList.length == 0) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
         }
     }
 }

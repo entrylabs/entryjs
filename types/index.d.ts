@@ -20,7 +20,7 @@ declare interface ISkeleton {
     dropdownHeight?: number; // for pebble
     path: (blockView: any) => string; // svg path string
     box: (
-        blockView: any,
+        blockView: any
     ) => {
         offsetX: number;
         offsetY: number;
@@ -31,7 +31,7 @@ declare interface ISkeleton {
     };
     contentPos: (blockView: any) => Point;
     magnets?: (
-        blockView: any,
+        blockView: any
     ) => {
         next?: Point;
         previous?: Point;
@@ -43,7 +43,7 @@ declare interface ISkeleton {
 }
 
 declare interface MediaUtilsInterface {
-    initialize(): void;
+    initialize(list?: string[][]): void;
 
     reset(): void;
 
@@ -69,7 +69,7 @@ declare interface EntryDom extends JQuery {
 
 declare type EntryDomConstructor = (
     tag: string | HTMLElement | JQuery,
-    options?: EntryDomOptions,
+    options?: EntryDomOptions
 ) => EntryDom;
 
 interface HardwareMessageData extends HardwareModuleId {
@@ -139,48 +139,48 @@ declare module IEntry {
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
 
-declare interface EntryBlock {
+declare type EntryBlock = {
     color: string;
     outerLine?: string;
     skeleton: string;
     statements?: any[];
     template?: string;
-    params: { [key: string]: any; };
+    params: { [key: string]: any };
     defs?: any; // legacy
-    def: { type: string; } & { [key: string]: any }
-    paramsKeyMap?: { [key: string]: number; }
+    def: { type: string } & { [key: string]: any };
+    paramsKeyMap?: { [key: string]: number };
     class: string;
     isFor?: string[];
     isNotFor?: string[];
-    events: { [key: string]: any; }
+    events: { [key: string]: any };
     type?: string;
     category?: string;
     pyHelpDef?: {
         params: string[];
         type: string;
-    }
+    };
     func?: Function;
     syntax?: {
-        js: any[];
+        js?: any[];
         py: any[];
-    }
-}
+    };
+};
 
 // expansion blocks 의 스키마를 따름
-declare type EntryBlockModule = {
+declare interface EntryBlockModule {
     name: string;
     title: { [key: string]: string };
     description?: string;
     getBlocks: () => { [blockName: string]: EntryBlock };
-};
+}
 
-declare type EntryHardwareBlockModule = {
+declare interface EntryHardwareBlockModule extends EntryBlockModule {
     // 홍보용
     imageName: string;
     url: string;
 
     // 모듈 정의용
-    id: HardwareModuleId;
+    id: string | string[];
     monitorTemplate?: UnknownAny;
     communicationType?: string;
     sendMessage?: (hw: import('../src/class/hw').default) => void;
@@ -196,4 +196,4 @@ declare type EntryHardwareBlockModule = {
     afterReceive?: (portData: HardwareMessageData) => void; // 데이터 수신 이후
     afterSend?: (sendQueue: HardwareMessageData) => void; // 데이서 송신 이후
     dataHandler?: (data: HardwareMessageData) => void;
-} & EntryBlockModule
+}

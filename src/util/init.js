@@ -82,13 +82,14 @@ Entry.init = function(container, options) {
         Entry.propertyPanel.select('helper');
     });
 
-    if (Entry.getBrowserType().substr(0, 2) === 'IE' && !window.flashaudio) {
-        createjs.FlashAudioPlugin.swfPath = `${this.mediaFilePath}media/`;
-        createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
-        window.flashaudio = true;
-    } else {
-        createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
-    }
+    // if (Entry.getBrowserType().substr(0, 2) === 'IE' && !window.flashaudio) {
+    //     createjs.FlashAudioPlugin.swfPath = `${this.mediaFilePath}media/`;
+    //     createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
+    //     window.flashaudio = true;
+    // } else {
+    //     createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
+    // }
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
 
     Entry.loadAudio_(
         [
@@ -192,6 +193,7 @@ Entry.initialize_ = function() {
 
     this.helper = new EntryBlockHelper();
     this.youtube = new Entry.Youtube();
+    this.modal = new Entry.Modal();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
 
@@ -208,14 +210,17 @@ Entry.initialize_ = function() {
     this.playground = new Entry.Playground();
     this._destroyer.add(this.playground);
 
-    this.expansion = new Expansion(this.playground);
-    this._destroyer.add(this.expansion);
+    if (this.options.expansionDisable === false || this.options.expansionDisable === undefined) {
+        this.expansion = new Expansion(this.playground);
+        this._destroyer.add(this.expansion);
+    }
 
-    this.aiUtilize = new AIUtilize(this.playground);
-    this._destroyer.add(this.aiUtilize);
-
-    this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
-    this._destroyer.add(this.aiLearning);
+    if (this.options.aiUtilizeDisable === false || this.options.aiUtilizeDisable === undefined) {
+        this.aiUtilize = new AIUtilize(this.playground);
+        this._destroyer.add(this.aiUtilize);
+        this.aiLearning = new AILearning(this.playground, this.aiLearningEnable);
+        this._destroyer.add(this.aiLearning);
+    }
 
     this.intro = new Entry.Intro();
 
@@ -353,7 +358,7 @@ Entry.createDom = function(container, type) {
             this.engine.generateView(this.engineView, type);
 
             const canvas = _createCanvasElement('entryCanvasWorkspace');
-            engineView.insertBefore(canvas, this.engine.buttonWrapper);
+            this.engine.mouseView.after(canvas);
 
             canvas.addEventListener('mousewheel', (evt) => {
                 const mousePosition = Entry.stage.mouseCoordinate;
@@ -364,12 +369,12 @@ Entry.createDom = function(container, type) {
                     const list = tempList[i];
                     if (wheelDirection) {
                         if (list.scrollButton_.y >= 46) {
-                            list.scrollButton_.y -= 23;
+                            list.scrollButton_.y -= 25;
                         } else {
-                            list.scrollButton_.y = 23;
+                            list.scrollButton_.y = 25;
                         }
                     } else {
-                        list.scrollButton_.y += 23;
+                        list.scrollButton_.y += 25;
                     }
                     list.updateView();
                 }
@@ -440,7 +445,7 @@ Entry.stop = function() {
         return;
     }
     this.FPS = null;
-    Entry.engine.stop();
+    Entry?.engine?.stop();
 };
 
 /**
@@ -510,11 +515,6 @@ Entry.parseOptions = function(options) {
         this.variableEnable = true;
     }
 
-    this.dataTableEnable = options.dataTableEnable;
-    if (this.dataTableEnable === undefined) {
-        this.dataTableEnable = false;
-    }
-
     this.aiLearningEnable = options.aiLearningEnable;
     if (this.aiLearningEnable === undefined) {
         this.aiLearningEnable = true;
@@ -555,6 +555,12 @@ Entry.parseOptions = function(options) {
     if (options.textCodingEnable) {
         this.textCodingEnable = options.textCodingEnable;
     }
+
+    this.fullScreenEnable = options.fullScreenEnable;
+    if (this.fullScreenEnable === undefined) {
+        this.fullScreenEnable = true;
+    }
+    this.modalContainer = options.modalContainer || $('body')[0];
 };
 
 Entry.initFonts = function(fonts) {
