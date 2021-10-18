@@ -953,7 +953,6 @@ Entry.EntryObject = class {
             'entryObjectRotateInputWorkspace'
         );
         rotateInput.setAttribute('type', 'text');
-        rotateInput.setAttribute('inputmode', 'numeric');
         rotateInput.onkeypress = this.editObjectValueWhenEnterPress;
         rotateInput.onfocus = this._setFocused;
         rotateInput.onblur = this._setBlurredTimer(() => {
@@ -992,7 +991,6 @@ Entry.EntryObject = class {
             'entryObjectDirectionInputWorkspace'
         );
         directionInput.setAttribute('type', 'text');
-        directionInput.setAttribute('inputmode', 'numeric');
         directionInput.onkeypress = this.editObjectValueWhenEnterPress;
         directionInput.onfocus = this._setFocused;
         directionInput.onblur = this._setBlurredTimer(() => {
@@ -1041,7 +1039,6 @@ Entry.EntryObject = class {
         xCoordi.innerHTML = 'X';
         const xInput = Entry.createElement('input').addClass('entryObjectCoordinateInputWorkspace');
         xInput.setAttribute('type', 'text');
-        xInput.setAttribute('inputmode', 'numeric');
         xInput.onkeypress = this.editObjectValueWhenEnterPress;
         xInput.onfocus = this._setFocused;
         xInput.onblur = this._setBlurredTimer(() => {
@@ -1071,7 +1068,6 @@ Entry.EntryObject = class {
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
         yInput.setAttribute('type', 'text');
-        yInput.setAttribute('inputmode', 'numeric');
         yInput.onkeypress = this.editObjectValueWhenEnterPress;
         yInput.onfocus = this._setFocused;
         yInput.onblur = this._setBlurredTimer(() => {
@@ -1097,7 +1093,6 @@ Entry.EntryObject = class {
             'entryObjectCoordinateInputWorkspace_size'
         );
         sizeInput.setAttribute('type', 'text');
-        sizeInput.setAttribute('inputmode', 'numeric');
         sizeInput.onkeypress = this.editObjectValueWhenEnterPress;
         sizeInput.onfocus = this._setFocused;
         sizeInput.onblur = this._setBlurredTimer(() => {
