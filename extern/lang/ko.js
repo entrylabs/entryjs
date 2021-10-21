@@ -5285,7 +5285,7 @@ Lang.Workspace = {
     context_rename: '이름 수정',
     coordinate: '좌표',
     create_function: '함수 만들기',
-    direction: '이동 방향(°)',
+    direction: '이동 방향',
     drawing: '직접 그리기',
     enter_list_name: '새로운 리스트의 이름을 입력하세요(10글자 이하)',
     enter_name: '새로운 이름을 입력하세요',
@@ -5358,7 +5358,7 @@ Lang.Workspace = {
     remove_object_msg: '(이)가 삭제되었습니다.',
     removed_msg: '(이)가 성공적으로 삭제 되었습니다.',
     rotate_method: '회전방식',
-    rotation: '방향(°)',
+    rotation: '방향',
     run: '시작하기',
     saved: '저장완료',
     saved_msg: '(이)가 저장되었습니다.',
@@ -5606,6 +5606,7 @@ Lang.Workspace = {
     goal_project: '목표작품 살펴보기',
     look_target_project: '작품을 실행하며 무엇을 만들지 살펴봅시다.',
     ai_learning_login_required: '모델 학습 기능을 사용하시려면 \n로그인이 필요합니다.',
+    drag_to_remove: '여기로 옮겨 버리기',
 };
 Lang.code = '코드보기';
 Lang.EntryStatic = {

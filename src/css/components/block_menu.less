@@ -112,6 +112,45 @@
         transition: width ease 0.2s;
     }
 
+    .blockMenuTrashcan {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0.95;
+        background: #f7f2d1;
+        border: 2px dashed #ffc803;
+
+        &:before {
+            display: block;
+            content: ' ';
+            width: 62px;
+            height: 94px;
+            margin-top: 74px;
+            margin-left: calc(50% - 32px);
+            .backgroundImage("trashcan.svg");
+        }
+
+        &.open:before {
+            display: block;
+            content: ' ';
+            width: 64px;
+            height: 102px;
+            margin-top: 66px;
+            margin-left: calc(50% - 31px);
+            .backgroundImage("trashcan_open.svg");
+        }
+
+        span {
+            position: absolute;
+            top: 180px;
+            width: 100%;
+            font-family: NanumGothicOTFBold;
+            font-size: 14px;
+            color: #555;
+            text-align: center;
+        }
+    }
+
     .block.selected > g > .blockPath,
     .block.selected > g > .blockBackgroundPath {
         // stroke-width: 3px;

@@ -308,6 +308,14 @@ Entry.getDom = function(query) {
     }
 };
 
+function toggleEngineContainer(isVisible) {
+    const splitterSelector = '.entryObjectSelectedImgWorkspace';
+    $(Entry.engineContainer)
+        .css('padding', isVisible ? '' : '0')
+        .children(`:not(${splitterSelector})`)
+        .toggleClass('entryRemove', !isVisible);
+}
+
 /**
  * Resize element's size.
  * @param {!json} interfaceModel
@@ -337,9 +345,13 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
+        let isEngineContainerVisible = true;
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
             canvasSize = 324;
+        } else if (canvasSize < 162) {
+            canvasSize = 16;
+            isEngineContainerVisible = false;
         } else if (canvasSize < 324) {
             canvasSize = 324;
         } else if (canvasSize > 640) {
@@ -352,13 +364,15 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.width = `${canvasSize - 24}px`;
         Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
 
+        toggleEngineContainer(isEngineContainerVisible);
+
         let menuWidth = interfaceModel.menuWidth;
         if (!menuWidth) {
             menuWidth = 258;
         } else if (menuWidth < 258) {
             menuWidth = 258;
-        } else if (menuWidth > 308) {
-            menuWidth = 308;
+        } else if (menuWidth > 516) {
+            menuWidth = 516;
         }
         interfaceModel.menuWidth = menuWidth;
 
@@ -729,7 +743,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         }
         Entry.documentMousedown = new Entry.Event(window);
         doc.on('mousedown', (e) => {
-            const selectedBlock = document.querySelector('.selected');
+            const selectedBlock = document.querySelector('.block.selected');
             if (selectedBlock) {
                 selectedBlock.classList.remove('selected');
             }
