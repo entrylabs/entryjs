@@ -48,6 +48,10 @@ Entry.Workspace = class Workspace {
             this.board = new Entry.Board(option);
             this.board.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
             this.set({ selectedBoard: this.board });
+
+            if (this.blockMenu) {
+                this.blockMenu.enableTrashcan();
+            }
         }
 
         option = options.vimBoard;
@@ -169,6 +173,9 @@ Entry.Workspace = class Workspace {
                     mode.runType = VIM.WORKSPACE_MODE;
                 }
                 e.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
+            } finally {
+                this.oldMode = 1;
+                this.mode = 1;
             }
         };
 

@@ -358,7 +358,7 @@ Entry.createDom = function(container, type) {
             this.engine.generateView(this.engineView, type);
 
             const canvas = _createCanvasElement('entryCanvasWorkspace');
-            engineView.insertBefore(canvas, this.engine.buttonWrapper);
+            this.engine.mouseView.after(canvas);
 
             canvas.addEventListener('mousewheel', (evt) => {
                 const mousePosition = Entry.stage.mouseCoordinate;

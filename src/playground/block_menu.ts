@@ -60,6 +60,7 @@ class BlockMenu extends ModelClass<Schema> {
     private categoryWrapper: EntryDom;
     private blockMenuContainer: EntryDom;
     private blockMenuWrapper: EntryDom;
+    private blockMenuWrapperForTrashcan: EntryDom;
     private objectAlert: any;
     private _dynamicThreads: any[];
     private _selectDynamic: boolean;
@@ -831,6 +832,14 @@ class BlockMenu extends ModelClass<Schema> {
         }
     }
 
+    _handleBoardDragBlock() {
+        this._toggleTrashcan(!!this.workspace?.board?.dragBlock);
+    }
+
+    _toggleTrashcan(visible: boolean) {
+        this.blockMenuWrapperForTrashcan?.toggleClass('entryRemove', !visible);
+    }
+
     enablePattern() {
         this.pattern.removeAttribute('style');
     }
@@ -1082,12 +1091,29 @@ class BlockMenu extends ModelClass<Schema> {
         }, []);
     }
 
+    enableTrashcan() {
+        this.blockMenuWrapperForTrashcan = Entry.Dom('div', {
+            class: 'blockMenuWrapper blockMenuTrashcan entryRemove',
+            parent: this.blockMenuContainer,
+        })
+            .on('pointerenter', () => this.blockMenuWrapperForTrashcan.addClass('open'))
+            .on('pointerleave', () => this.blockMenuWrapperForTrashcan.removeClass('open'));
+
+        Entry.Dom('span')
+            .text(Lang.Workspace.drag_to_remove)
+            .appendTo(this.blockMenuWrapperForTrashcan);
+
+        this.workspace?.board?.observe(this, '_handleBoardDragBlock', ['dragBlock']);
+    }
+
     private _generateView(categoryData: CategoryData[]) {
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             class: 'blockMenuContainer',
             parent: this.view,
+        }).css({
+            position: 'relative',
         });
         Entry.Utils.disableContextmenu(this.blockMenuContainer);
         this.blockMenuWrapper = Entry.Dom('div', {

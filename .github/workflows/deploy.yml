@@ -1,17 +1,17 @@
 name: Entry Build and Deploy
 
 on:
-  push:
-    branches:
-      - 'deploy/**'
-      - master
-      - develop-hw
-      - develop2
-      - develop
+    push:
+        branches:
+            - 'deploy/**'
+            - master
+            - develop-hw
+            - develop2
+            - develop
 
 jobs:
     build-and-deploy:
-        runs-on: ubuntu-18.04
+        runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
             - name: Use Node.js 10.x
@@ -40,14 +40,10 @@ jobs:
                   if_false: dist/${{ steps.target_branch.outputs.branch }}
             - name: Execute build.sh
               run: |
-                  sh ./scripts/build_action.sh
+                  sh ./scripts/build.sh
             - name: Execute deploy.sh
-              env:
-                github_token: ${{ secrets.GH_TOKEN }}
-                TEST: ${{ secrets.TEST }}
-                TEST2: ${{ secrets.TEST2 }}                
               run: |
-                  sh ./scripts/deploy_action.sh
+                  sh ./scripts/deploy.sh
             - name: Push Changes into build branch
               uses: ad-m/github-push-action@master
               with:
