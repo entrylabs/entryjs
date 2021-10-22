@@ -1436,6 +1436,24 @@ Entry.NeoSpider.getBlocks = function () {
 
                 return script.callReturn();
             },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoSpider.neopixelColorPicker(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
         },
         neo_spider_neopixel_color_picker_all_on: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1489,6 +1507,20 @@ Entry.NeoSpider.getBlocks = function () {
 
                 Entry.hw.update();
                 return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'NeoSpider.neopixelColorPickerAllOn(%1)',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
             },
         },
         neo_spider_neopixel_all_on: {
