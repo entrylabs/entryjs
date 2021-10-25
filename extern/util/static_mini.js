@@ -811,11 +811,11 @@ EntryStatic.initOptions = {
 EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
 
 EntryStatic.hwMiniSupportList = [
-    'neobot',
-    'roborobo_schoolkit',
-    'robotis_openCM70',
-    'robotis_openCM70EDU',
-    'robotis_Dream',
+    // 'neobot',
+    // 'roborobo_schoolkit',
+    // 'robotis_openCM70',
+    // 'robotis_openCM70EDU',
+    // 'robotis_Dream',
 ];
 
 EntryStatic.COMMAND_TYPES = {
