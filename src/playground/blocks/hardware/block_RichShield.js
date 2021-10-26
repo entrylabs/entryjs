@@ -42,12 +42,14 @@ Entry.RichShield = {
         READ_BLUETOOTH: 9,
         WRITE_BLUETOOTH: 10,
         LCD: 11,
-        //RGBLED: 12,
+        DHT: 12,
         DCMOTOR: 13,
         OLED: 14,
         PIR: 15,
         FND: 16,
-        DHT: 12,
+        IRREMOTE : 19,
+        DHT2 : 17,
+        RGBLED: 18,
     },
     toneTable: {
         '0': 0,
@@ -114,8 +116,19 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_set_digital_toggle: '디지털 %1 번 핀 %2 %3',
                 RichShield_get_digital: '디지털 %1 번 핀 센서 %2 값',
                 RichShield_get_digital_toggle: '디지털 %1 번 핀 센서 %2 값',
+                RichShield_set_digital_pwm: '디지털 PWM %1 번 핀을 %2 (으)로 정하기 %3',
 
-                RichShield_LCD_event: 'LCD Display(1602)-I2C',
+                RichShield_get_digital_ultrasonic: '초음파 Trig %1 핀 Echo %2 핀 센서 값',
+
+                RichShield_set_digital_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                RichShield_set_digital_buzzer: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+
+                RichShield_rgbled_event: '네오픽셀 ( 8 Cell ) - 디지털 13번 핀',
+                RichShield_rgbled_clr: '네오픽셀  off',
+                RichShield_rgbled_set: '%1번 네오픽셀을 빨강 %2 초록 %3 파랑 %4 로 정하기 %5',
+                RichShield_rgbled_show: '네오픽셀 적용(표시)',
+
+                RichShield_LCD_event: 'LCD Display(1602-)-I2C',
                 RichShield_LCD_Control_init: 'LCD %1 번 : 주소 %2 로 설정',
                 RichShield_LCD_Control_Display: 'LCD %1 번 : %2 행 %3 열에 %4 출력 %5',
                 RichShield_LCD_Control_Clear: 'LCD %1 번 : 지우기',
@@ -129,72 +142,21 @@ Entry.RichShield.setLanguage = function() {
                     'FND %1 번 : %2 출력하기:나머지0채우기 %3  %4 초 대기',
                 RichShield_DHT_event: '온습도센서(DHT11/22)-디지털 12번 핀',
                 RichShield_DHT_Control_Init_Process: '온습도 %1 번 : 디지털 %2 번 핀 / 버전 %3',
-                RichShield_DHT_Control_Set_Temper: '온습도 %1 번 : 온도값 읽기 %2 모드설정',
-                RichShield_DHT_Control_Get_Temper: '온습도 %1 번 온도값 읽기',
-                RichShield_DHT_Control_Set_Humid: '온습도 %1 번 : 습도 읽기 모드설정',
-                RichShield_DHT_Control_Get_Humid: '온습도 %1 번 : 습도값 읽기',
+                RichShield_DHT_Control_Get_Temper: '온습도 %1 번  온도값  읽기',
+                RichShield_DHT2: '온습도 %1 번 : 습도값 읽기',
 
                 RichShield_OLED_event: 'OLED Display(0.96"16*08)-I2C',
                 RichShield_OLED_init: 'OLED : I2C 주소 0X3C로 설정하고, 초기화',
-                RichShield_OLED_Display_String: 'OLED : %1 행, %2 열 %3 문자(16) 출력',
-                /*
-                chocopi_control_button: '%1 컨트롤 %2번을 누름',
-                chocopi_control_event: '%1 %2 컨트롤 %3을 %4',
-                chocopi_control_joystick: '%1 컨트롤 %2의 값',
-                chocopi_dc_motor: '%1 DC모터 %2 %3% 세기 %4 방향 %5',
-                chocopi_led: '%1 LED %2 RGB(%3 %4 %5) %6',
-                chocopi_motion_photogate_event: '%1 %2 포토게이트 %3번을 %4',
-                chocopi_motion_photogate_status: '%1 포토게이트 %2번이 막힘',
-                chocopi_motion_photogate_time: '%1 포토게이트%2번을 %3',
-                chocopi_motion_value: '%1 모션 %2의 값',
-                chocopi_motion_angle: '%1 모션 %2',
-                chocopi_sensor: '%1 센서 %2',
-                chocopi_servo_motor: '%1 서보모터 %2번 %3도 %4',
-                chocopi_touch_event: '%1 %2 터치 %3번을 %4',
-                chocopi_touch_status: '%1 터치 %2번을 만짐',
-                chocopi_touch_value: '%1 터치 %2번의 값',
-                chocopi_map_range: '%1을 %2~%3에서 %4~%5로',
-                */
+                RichShield_OLED_Display_String: 'OLED : %1 행, %2 열 %3 출력',
+
+                RichShield_IRREMOTE_event: '적외선수신-RECV',
+                RichShield_IRREMOTE_init: '적외선 %1번: 디지털 %2번 핀으로 설정~',
+                RichShield_IRREMOTE_recv: '적외선 %1 번: 자료 읽기',
+
             },
-            /*
-            Helper: {
-                chocopi_control_button:
-                    '버튼이 눌리면 참이 됩니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_control_event:
-                    '버튼을 누르거나 뗄 때 처리할 엔트리 블록들을 연결합니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_control_joystick:
-                    '조이스틱 좌우, 상하, 볼륨의 값은 0~4095까지 입니다.<br/>따라서 2047 근처가 중간이 됩니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_dc_motor:
-                    'DC모터 모듈에는 직류전동기 두개를 연결 할 수 있습니다.<br/> 직류 전동기는 최대 5V로 동작하게 됩니다.<br/>값은 100이 최대(100%)이고 음수를 넣으면 반대 방향으로 회전합니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_led:
-                    'LED번호는 LED블록에 연결된 순서이고 1번부터 시작합니다.<br/>RGB값은 0~255사이의 값입니다.<br/>빨강(Red),녹색(Green), 파랑(Blue)순서로  입력합니다.<br/>밝은 LED를 직접보면 눈이 아프니까 값을 0~5정도로 씁니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_motion_photogate_event:
-                    '포토게이트는 모션블록에 연결합니다.<br/>포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br/>빛센서를 물체로 가리거나 치우면 시작되는 엔트리 블록을 연결합니다<br/>모션 모듈에는 포토게이트 2개를 연결할 수 있습니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_motion_photogate_status:
-                    '포토게이트는 모션블록에 연결합니다.<br/>포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br>물체가 빛센서를 가리면 참</b>이됩니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_motion_photogate_time:
-                    '포토게이트는 모션블록에 연결합니다.<br/>포토게이트는 한쪽에서 나온 빛을 맞은 편의 센서가 감지하는 장치입니다.<br>이 블록은 물체가 빛센서를 가리거나 벗어난 시간을 가집니다.<br/>1/10000초까지 측정할 수 있습니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_motion_value:
-                    '모션 모듈에는 3개의 적외선 센서가 있습니다.<br/>0~4095사이의 값을 가질 수 있는데 물체가 빛을 많이 반사할 수록 작은 값을 가집니다. <br/>거리를 대략적으로 측정할 수 있습니다. <br/>가속도와 각가속도 값의 범위는 -32768~32767 까지입니다.<br/>가속도를 이용해서 센서의 기울기를 측정할 수도 있습니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_motion_angle:
-                    '모션 모듈의 가속도 센서를 이용하여 기울기를 측정합니다.<br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_sensor:
-                    '온도 값은 섭씨 온도입니다.<br/>습도 값은 백분율로 나타낸 상대습도 값입니다.<br/>빛은 로그스케일로 0~4095사이입니다.<br/>아날로그 값은 0~4095사이입니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_servo_motor:
-                    '서보모터 모듈에는 4개의 서보모터를 연결 할 수 있습니다.<br/>서보모터는 5V로 동작하게 됩니다.<br/>각도는 0~200도까지 지정할 수 있습니다.<br/>연속회전식 서보모터를 연결하면 각도에 따라 속도가 변하게됩니다.<br/>90~100 사이가 중간값입니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_touch_event:
-                    '터치 모듈에는 1~12번의 연결 패드가 있습니다. <br/>만지거나 뗄 때 처리할 엔트리 블록들을 연결합니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_touch_status:
-                    '터치 모듈의 패드를 만지면 참이됩니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_touch_value:
-                    '터치패드에 연결된 물체의 전기용량이 커지면 값이 작아집니다.<br/>여러 명이 손잡고 만지면 더 작은 값이 됩니다.<br/>전기용량이란 물체에 전기를 띈 입자를 얼마나 가지고 있을 수 있는 지를 말합니다.<br/><br/>포트번호는 맞추지 않아도 됩니다.<br/>단, 같은 종류의 모듈을 여러 개 연결하는 경우에만 포트를 지정하면 됩니다.',
-                chocopi_map_range:
-                    '예를 들어 설명하면, 컨트럴 블럭의 조이스틱X의 위치에 따라 인형의 위치를 -100에서 100사이로 정해주고 싶다면. 조이스틱X, 0, 4095, -100,100 순서대로 입력합니다.',
-            },
-            */
+
         },
         en: {
-            // en.js에 작성하던 내용
             Blocks: {
                 RichShield_pulldown: 'Pull Down',
                 RichShield_pullup: 'Pull Up',
@@ -223,14 +185,24 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_set_digital_toggle: 'Digital %1 pin %2 %3',
                 RichShield_get_digital: 'Digital %1 pin sensor value %2',
                 RichShield_get_digital_toggle: 'Digital %1 pin sensor value %2',
+                RichShield_set_digital_pwm: 'Digital pwm %1 Pin %2 %3',
 
-                RichShield_LCD_event: 'LCD Display(1602)-I2C',
+                RichShield_get_digital_ultrasonic: 'Read ultrasonic Trig %1 Echo %2 sensor value',
+
+                RichShield_set_digital_servo: 'Set servo pin %1 angle as %2 %3',
+                RichShield_set_digital_buzzer: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+
+                RichShield_rgbled_event: 'NeoPixel ( 8 Cell ) - Digital 13 pin',
+                RichShield_rgbled_clr: 'NeoPixel off',
+                RichShield_rgbled_set: '#%1 NeoPixel Red %2 Green %3 Blue %4 %5',
+                RichShield_rgbled_show: 'NeoPixel Update',
+
+                RichShield_LCD_event: 'LCD Display(1602-)-I2C',
                 RichShield_LCD_Control_init: 'LCD %1 :  Address set to %2',
                 RichShield_LCD_Control_Display: 'LCD %1  : row %2  column %3 display %4 %5',
                 RichShield_LCD_Control_Clear: 'LCD %1 : Clear Display',
                 RichShield_LCD_Control_Scroll: 'LCD %1 : Display Scroll to %2',
 
-                //RichShield_LCD_Control_Display: 'LCD %1 line %2 appear %3',
                 RichShield_FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
                 RichShield_FND_Control_init: 'FND %1 : Digital CLK %2  , DIO %3 pin setting',
                 RichShield_FND_Control_diplay_brightness: 'FND %1 : Brightness %2 level setting',
@@ -240,105 +212,61 @@ Entry.RichShield.setLanguage = function() {
                 RichShield_DHT_event: 'Humidity/Temperature(DHT11/22)-Digital 12 pin',
                 RichShield_DHT_Control_Init_Process:
                     'Humidity/Temperature %1 : Digital %2 Pin, Version %3',
-                RichShield_DHT_Control_Set_Temper: 'DHT %1 : read Temperature %2 Setting',
                 RichShield_DHT_Control_Get_Temper: 'DHT %1 : read Temperature',
-                RichShield_DHT_Control_Set_Humid: 'DHT %1 : read Humid Setting',
-                RichShield_DHT_Control_Get_Humid: 'DHT %1 : read Humid',
+                RichShield_DHT2: 'DHT %1 : read Humid',
 
                 RichShield_OLED_event: 'OLED Display(0.96"16*08)-I2C',
                 RichShield_OLED_init: 'OLED : I2C adress 0X3C set, initialize',
-                RichShield_OLED_Display_String: 'OLED : %1 Row, %2 Col %3 String(16) Display',
-                /*
-                chocopi_control_button: '%1 controller %2 is pressed',
-                chocopi_control_event: '%1 When %2 controller %3 is %4',
-                chocopi_control_joystick: '%1 controller %2 value',
-                chocopi_dc_motor: '%1 DC motor #%2  %3 % direction %4 %5',
-                chocopi_led: '%1 LED #%2 RGB(%3 %4 %5) %6',
-                chocopi_motion_photogate_event: '%1 When %2 photogate %3 is %4',
-                chocopi_motion_photogate_status: '%1 photogate #%2 is blocked',
-                chocopi_motion_photogate_time: 'time when %1 photogate %2 was %3',
-                chocopi_motion_value: '%1 motion %2 value',
-                chocopi_sensor: '%1 sensor %2',
-                chocopi_servo_motor: '%1 set servo motor #%2 %3 degree %4',
-                chocopi_touch_event: '%1 When %2 touch pad%3 is %4',
-                chocopi_touch_status: '%1 touch pad%2 is touched',
-                chocopi_touch_value: '%1 touch pad%2 value',
-                chocopi_map_range: 'map %1 in %2~%3 to %4~%5',
-                */
+                RichShield_OLED_Display_String: 'OLED : %1 Row, %2 Col %3 Display',
+
+                RichShield_IRREMOTE_event: 'IR RECV-RECV pin:D2',
+                RichShield_IRREMOTE_init: 'IR %1 : Digital recv pin set to %2',
+                RichShield_IRREMOTE_recv: 'IR %1 : IR recv',
+
             },
-            /*
-            Helper: {
-                chocopi_control_button:
-                    'This block will be true if the button is pressed.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_control_event:
-                    'You can attach blocks to process when the button is pressed or released <br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_control_joystick:
-                    'Joystick X,Y and potentiometer has range of  0~4095.<br/>so, around 2047 will be center value.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_dc_motor:
-                    "Two DC motors can be connected to 'DC motor' module<br/> The motor will be supplied with maximum 5V.<br/>Maximum value is 100 (100%), is negative value is used then it will rotate opposite direction.<br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_led:
-                    'LED number start from 1 and is the connecting order from the LED module.<br/>You can assign RGB values from 0 to 255<br/>RGB(Red Green Blue) order<br/>To watch an LED with bright light can be painful,<br/>so, please use small number like 0 to 5.<br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_motion_photogate_event:
-                    "Two photogates can be connected to 'Motion' module<br/>A photogate is a device with light sensor facing light source in opposite side<br/>You can attach blocks when an object blocks or unblocks light sensor<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_motion_photogate_status:
-                    "Two photogates can be connected to 'Motion' module<br/>A photogate is a device with light sensor facing light source in opposite side<br/>This block will be <b>true if an object blocks sensor</b><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_motion_photogate_time:
-                    "Two photogates can be connected to 'Motion' module<br/>A photogate is a device with light sensor facing light source in opposite side<br/>This block will have the time when an object blocked or unblocked the sensor<br/>It can measure time with resolution of 1/10000 sec<br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_motion_value:
-                    "'Motion' module has three infrared sensors<br/>The value has range of 0~4095, the more reflection from object, the smaller the value is<br/>It can be used to measure approximate distance between the sensor and an object <br/>Acceleration and angular acceleration value ranges from -32768 to 32767.<br/>You can measure inclination of the sensor using these values.<br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_sensor:
-                    'Temperature value is Celsius.<br/>Relative humidity value ranges from 0 to 100%.<br/>Light value ranges 0~4095 in log scale.<br/>Analog value ranges from 0 to 4095.<br/><br/>Port number(P1~P8) is automatically selected internally.<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_servo_motor:
-                    "'Servo' module can be connected to four servo motors<br/>Servo motors are provided with 5V<br/>You can assign 0~200 in degree unit.<br/>If a contineous rotational servo motor is connected, it's speed is determined by the degree value.<br/>Center value is from 90 to 100 varying by motor model.<br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_touch_event:
-                    'Touch module has #1~12 connecting pads.<br/>You can attach block to process when these pads are touched or untouched.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_touch_status:
-                    'It will be true if the pad is touched.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used',
-                chocopi_touch_value:
-                    "The value will be smaller if the capacitance of the obeject is larger.<br/>If many people hold each other's hand and touch, the value will be smaller<br/>'Capacitance' means how many electric particles the object can hold.<br/><br/><br/>Port number(P1~P8) is automatically selected internally<br>It is needed only when multiple modules with the same kind are used",
-                chocopi_map_range:
-                    'Usage example: If you want to set a sprite position x according to joystic x position between -100 and 100, you can put five values as Joystic X, 0, 4095, -100, 100.',
-            },
-            */
-        },
+         },
     };
 };
 
 Entry.RichShield.blockMenuBlocks = [
-    'RichShield_get_Analog_value',
-    'RichShield_set_digital_toggle',
     'RichShield_get_digital',
+    'RichShield_get_Analog_value',
     'RichShield_get_digital_toggle',
+    'RichShield_get_digital_ultrasonic',
+
+    'RichShield_set_digital_toggle', 
+    'RichShield_set_digital_pwm',
+    'RichShield_set_digital_servo',
+    'RichShield_set_digital_buzzer',
+
+
+    
+    'RichShield_rgbled_event',
+    'RichShield_rgbled_clr',
+    'RichShield_rgbled_set',
+    'RichShield_rgbled_show',
 
     'RichShield_LCD_event',
     'RichShield_LCD_Control_init',
     'RichShield_LCD_Control_Display',
     'RichShield_LCD_Control_Clear',
-    'RichShield_LCD_Control_Scroll',
 
     'RichShield_FND_event',
-    'RichShield_FND_Control_init',
     'RichShield_FND_Control_diplay_brightness',
     'RichShield_FND_Control_display_onoff',
     'RichShield_FND_Control_diplay_char',
 
     'RichShield_DHT_event',
-    'RichShield_DHT_Control_Init_Process',
-    'RichShield_DHT_Control_Set_Temper',
     'RichShield_DHT_Control_Get_Temper',
-    'RichShield_DHT_Control_Set_Humid',
-    'RichShield_DHT_Control_Get_Humid',
+    'RichShield_DHT2',
+
 
     'RichShield_OLED_event',
-    'RichShield_OLED_init',
     'RichShield_OLED_Display_String',
-    //'RichShield_get_number_sensor_value',
-    /*
-    'RichShield_get_number_sensor_value',
-    'RichShield_toggle_led',
-    'RichShield_toggle_pwm',
-    'RichShield_convert_scale',
-    */
+
+    'RichShield_IRREMOTE_event',
+    'RichShield_IRREMOTE_recv',
+
 ];
 
 Entry.RichShield.getBlocks = function() {
@@ -351,7 +279,7 @@ Entry.RichShield.getBlocks = function() {
             template: '%1',
             params: [
                 {
-                    type: 'Dropdown',
+                    type: 'Dropdown1',
                     options: [
                         ['0', '0'],
                         ['1', '1'],
@@ -368,7 +296,7 @@ Entry.RichShield.getBlocks = function() {
                         ['12', '12'],
                         ['13', '13'],
                     ],
-                    value: '10',
+                    value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -385,6 +313,7 @@ Entry.RichShield.getBlocks = function() {
                 return script.getStringField('PORT');
             },
         },
+ 
         RichShield_list_pullup_setting: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -415,6 +344,67 @@ Entry.RichShield.getBlocks = function() {
                 return script.getStringField('OPERATOR');
             },
         },
+        RichShield_get_digital_ultrasonic: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            template: Lang.template.RichShield_get_digital_ultrasonic,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['8'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['7'],
+                    },
+                ],
+                type: 'RichShield_get_digital_ultrasonic',
+            },
+            paramsKeyMap: {
+                PORT1: 0,
+                PORT2: 1,
+            },
+            class: 'RichShieldGet',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port1 = script.getNumberValue('PORT1');
+                var port2 = script.getNumberValue('PORT2');
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                delete Entry.hw.sendQueue['SET'][port1];
+                delete Entry.hw.sendQueue['SET'][port2];
+                if (!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][Entry.RichShield.sensorTypes.ULTRASONIC] = {
+                    port: [port1, port2],
+                    time: new Date().getTime(),
+                };
+
+                return Entry.hw.portData.ULTRASONIC || 0;
+            },
+            syntax: {
+                js: [],
+                py: ['RichShield.get_digital_ultrasonic(%1, %2)'],
+            },
+        },
         RichShield_get_digital: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -438,7 +428,7 @@ Entry.RichShield.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'RichShield_list_digital_basic',
+                        type: 'RichShield_list_digital_switch',
                     },
                     {
                         type: 'RichShield_list_pullup_setting',
@@ -496,7 +486,7 @@ Entry.RichShield.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'RichShield_list_digital_basic',
+                        type: 'RichShield_list_digital_switch',
                     },
                     {
                         type: 'RichShield_list_pullup_setting',
@@ -643,7 +633,7 @@ Entry.RichShield.getBlocks = function() {
                         ['12', '12'],
                         ['13', '13'],
                     ],
-                    value: '10',
+                    value: '5',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -658,6 +648,483 @@ Entry.RichShield.getBlocks = function() {
             },
             func(sprite, script) {
                 return script.getStringField('PORT');
+            },
+        },
+        RichShield_list_digital_pwm: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['~3', '3'],
+                        ['~5', '5'],
+                        ['~6', '6'],
+                        ['~9', '9'],
+                        ['~10', '10'],
+                        ['~11', '11'],
+                    ],
+                    value: '11',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        RichShield_list_digital_pwm2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+
+                        ['~9', '9'],
+                        ['~10', '10'],
+                        ['~11', '11'],
+                    ],
+                    value: '9',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        RichShield_list_digital_basic: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                    ],
+                    value: '10',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        RichShield_list_digital_switch: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['4', '4'],
+                        ['5', '5'],                        
+                    ],
+                    value: '4',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        RichShield_rgbled_event: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_event',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
+                    position: { x: 0, y: -2 },
+                },
+            ],
+            def: { params: [], type: 'RichShield_rgbled_event' },
+            class: 'RichShield_rgbled',
+            isNotFor: ['RichShield'],
+        },
+        RichShield_rgbled_clr: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [          
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'RichShield_rgbled_clr',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NO: 1,
+                VALUE0: 2,
+                VALUE1: 3,
+                VALUE2: 4,
+            },
+            class: 'RichShield_rgbled',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port = 13;
+
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) ;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.RichShield.sensorTypes.RGBLED,
+                        data: {
+                            block_Index: 1,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: ['RichShield_rgbled_clr(%1)'] },
+        },
+        RichShield_rgbled_set: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'RichShield_rgbled_set',
+            },
+            paramsKeyMap: {
+                NO: 0,
+                VALUE0: 1,
+                VALUE1: 2,
+                VALUE2: 3,
+            },
+            class: 'RichShield_rgbled',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port = 13;
+                var no = script.getNumberValue('NO');
+                var value = [3];
+                var noValue1;
+
+                let time = new Date().getTime();
+
+                if (!script.isStart) {
+                    noValue1 = no - 1;
+                    value[0] = script.getNumberValue('VALUE0');
+                    value[1] = script.getNumberValue('VALUE1');
+                    value[2] = script.getNumberValue('VALUE2');
+
+                    for (var i = 0; i < 3; i++) {
+                        value[i] = Math.round(value[i]);
+                        value[i] = Math.min(value[i], 255);
+                        value[i] = Math.max(value[i], 0);
+                    }
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) ;
+
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.RichShield.sensorTypes.RGBLED,
+                        data: {
+                            block_Index: 2,
+                            noValue: noValue1,
+                            redValue: value[0],
+                            greenValue: value[1],
+                            blueValue: value[2],
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, timeValue*20);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield_rgbled_set(%1, %2, %3, %4, %5)'] },
+        },
+        RichShield_rgbled_show: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                ],
+                type: 'RichShield_rgbled_show',
+            },
+            paramsKeyMap: {
+
+            },
+            class: 'RichShield_rgbled',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port = 13;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.RichShield.sensorTypes.RGBLED,
+                    data: {
+                        block_Index: 3,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield_rgbled_show(%1)'] },
+        },
+        RichShield_list_digital_servo: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['6', '6'],
+                    ],
+                    value: '6',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        RichShield_list_digital_sound: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['3', '3'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+        RichShield_list_digital_octave: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                OCTAVE: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('OCTAVE');
             },
         },
         RichShield_list_digital_toggle: {
@@ -758,6 +1225,283 @@ Entry.RichShield.getBlocks = function() {
             },
             syntax: { js: [], py: ['RichShield.Set_Digital_Toggle(%1, %2)'] },
         },
+        RichShield_set_digital_pwm: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.RichShield_set_digital_pwm,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'RichShield_list_digital_pwm2',
+                    },
+                 
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'RichShield_set_digital_pwm',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'RichShield_Set',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getNumberValue('VALUE');
+
+                let time = new Date().getTime();
+
+            if (!script.isStart) {
+                value = Math.round(value);
+                value = Math.min(value, 255);
+                value = Math.max(value, 0);
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) * 50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.RichShield.sensorTypes.PWM,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(() => {
+                        script.timeFlag = 0;
+                }, timeValue);
+            } else if (script.timeFlag == 1) {
+                    return script;
+            } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+            }
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield.set_digital_pwm(%1, %2)'] },
+        },
+        RichShield_set_digital_servo: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.RichShield_set_digital_servo,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'RichShield_list_digital_servo',
+                    },
+                    {
+                        type: 'text',
+                        params: ['90'],
+                    },
+                    null,
+                ],
+                type: 'RichShield_set_digital_servo',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'RichShield_Set',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getNumberValue('VALUE');
+                value = Math.min(value, 180);
+                value = Math.max(value, 0);
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.RichShield.sensorTypes.SERVO,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield.set_digital_servo(%1, %2)'] },
+        },
+        RichShield_set_digital_buzzer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.RichShield_set_digital_buzzer,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'RichShield_list_digital_sound',
+                    },
+                    {
+                        type: 'RichShield_list_digital_tone',
+                    },
+                    {
+                        type: 'RichShield_list_digital_octave',
+                    },
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'RichShield_set_digital_buzzer',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                NOTE: 1,
+                OCTAVE: 2,
+                DURATION: 3,
+            },
+            class: 'RichShield_Set',
+            isNotFor: ['RichShield'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var duration = script.getNumberValue('DURATION');
+                var octave = script.getNumberValue('OCTAVE') - 1;
+                var value = 0;
+
+                if (!script.isStart) {
+                    var note = script.getValue('NOTE');
+                    if (!Entry.Utils.isNumber(note)) {
+                        note = Entry.RichShield.toneTable[note];
+                    }
+                    if (note < 0) {
+                        note = 0;
+                    } else if (note > 12) {
+                        note = 12;
+                    }
+                    if (duration < 0) {
+                        duration = 0;
+                    }
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    if (duration === 0) {
+                        Entry.hw.sendQueue['SET'][port] = {
+                            type: Entry.RichShield.sensorTypes.TONE,
+                            data: 0,
+                            time: new Date().getTime(),
+                        };
+                        return script.callReturn();
+                    }
+                    if (octave < 0) {
+                        octave = 0;
+                    } else if (octave > 8) {
+                        octave = 8;
+                    }
+                    if (note != 0) {
+                        value = Entry.RichShield.toneMap[note][octave];
+                    }
+
+                    duration = duration * 1000;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.RichShield.sensorTypes.TONE,
+                        data: {
+                            value: value,
+                            duration: duration,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration + 32);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.RichShield.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: ['RichShield.set_digital_toggle(%1, %2, %3, %4)'],
+            },
+        },
         RichShield_LCD_event: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -812,9 +1556,6 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_LCD',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('lcd_device', script);
                 const addr_val = script.getNumberValue('address', script);
 
@@ -846,6 +1587,7 @@ Entry.RichShield.getBlocks = function() {
                     Entry.hw.sendQueue.SET[device] = {
                         type: Entry.RichShield.sensorTypes.LCD,
                         data: {
+                            block_index:1,
                             text0: text[0],
                             text1: text[1],
                         },
@@ -897,7 +1639,7 @@ Entry.RichShield.getBlocks = function() {
                 return script.getField('LINE');
             },
         },
-        //LCD Number번 :Number  행 Number 열에 String  출력
+
         RichShield_LCD_Control_Display: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -952,7 +1694,6 @@ Entry.RichShield.getBlocks = function() {
                 type: 'RichShield_LCD_Control_Display',
             },
             paramsKeyMap: {
-                //LINE: 0,
                 line: 0,
                 Row: 1,
                 Col: 2,
@@ -986,14 +1727,12 @@ Entry.RichShield.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     const fps = Entry.FPS || 60;
-                    const timeValue = (60 / fps) * 50;
+                    const timeValue = (60 / fps) * 60;
 
                     console.log(
-                        // eslint-disable-next-line max-len
                         `Row : ${Row} / Col : ${Col} / text : ${text}`
                     );
 
-                    //Entry.hw.sendQueue.SET[line] = {
                     Entry.hw.sendQueue.SET[line] = {
                         type: Entry.RichShield.sensorTypes.LCD,
                         data: {
@@ -1032,6 +1771,7 @@ Entry.RichShield.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
+                return script.callReturn();
             },
             syntax: { js: [], py: ['RichShield.LCD_Display(%1, %2, %3, %4)'] },
         },
@@ -1056,30 +1796,43 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_LCD',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('lcd_device', script);
+                
+                let time = new Date().getTime();
 
-                /*
-                  LCD Clear Block Added with block_index number 3
-                  Writer : Remoted
-                  Date : 2021-03-01
-                */
+                if (!script.isStart) {
 
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) * 50;
+
+                    // LCD_Init type data protocol defined
+                    Entry.hw.sendQueue.SET[device] = {
+                        type: Entry.RichShield.sensorTypes.LCD,
+                        data: {
+                            block_index: 3,
+                        },
+                        time: time,
+                    };
+
+                    setTimeout(() => {
+                            script.timeFlag = 0;
+                    }, timeValue);
+
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-
-                // LCD_Init type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.LCD,
-                    data: {
-                        block_index: 3,
-                    },
-                    time: new Date().getTime(),
-                };
-
                 return script.callReturn();
             },
             syntax: { js: [], py: ['RichShield_LCD_Control_Clear(%1)'] },
@@ -1119,17 +1872,8 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_LCD',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('lcd_device', script);
                 const direction = script.getNumberValue('direction', script);
-
-                /*
-                  LCD Scrolling Block Added
-                  Writer : Remoted
-                  Date : 2021-03-07
-                */
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
@@ -1204,9 +1948,6 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_FND',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('fnd_device', script);
                 const clk_val = script.getNumberValue('CLK', script);
                 const dio_val = script.getNumberValue('DIO', script);
@@ -1266,26 +2007,42 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_FND',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('fnd_device', script);
                 const level_val = script.getNumberValue('level', script);
 
-                // index number patched by Remoted 2020-11-20
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                if (!script.isStart) {
+                    // index number patched by Remoted 2020-11-20
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) * 50;
+
+                    // FND_Init type data protocol defined
+                    Entry.hw.sendQueue.SET[device] = {
+                        type: Entry.RichShield.sensorTypes.FND,
+                        data: {
+                            level_val,
+                            block_index: 1,
+                        },
+                        time: new Date().getTime(),
+                    };
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-                // FND_Init type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.FND,
-                    data: {
-                        level_val,
-                        block_index: 1,
-                    },
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
             },
             syntax: { js: [], py: ['RichShield_FND_Control_diplay_brightness(%1, %2)'] },
         },
@@ -1321,26 +2078,43 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_FND',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('fnd_device', script);
                 const onoff = script.getNumberValue('onoff', script);
 
-                // index number patched by Remoted 2020-11-20
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                if (!script.isStart) {
+                    // index number patched by Remoted 2020-11-20
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) * 50;
+
+                    // FND_Init type data protocol defined
+                    Entry.hw.sendQueue.SET[device] = {
+                        type: Entry.RichShield.sensorTypes.FND,
+                        data: {
+                            onoff,
+                            block_index: 2,
+                        },
+                        time: new Date().getTime(),
+                    };
+                    
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-                // FND_Init type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.FND,
-                    data: {
-                        onoff,
-                        block_index: 2,
-                    },
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
+
             },
             syntax: { js: [], py: ['RichShield_FND_Control_display_onoff(%1, %2)'] },
         },
@@ -1385,7 +2159,7 @@ Entry.RichShield.getBlocks = function() {
                     '1',
                     {
                         type: 'number',
-                        params: ['2021'],
+                        params: ['1234'],
                     },
                     '0',
                     {
@@ -1407,36 +2181,54 @@ Entry.RichShield.getBlocks = function() {
                 const splited_array = [];
                 let display_str_converted = 0;
 
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                if (!script.isStart) {
+                    if (!Entry.hw.sendQueue.SET) {
+                        Entry.hw.sendQueue.SET = {};
+                    }
+
+                    display_str_converted = display_str.toString();
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    const fps = Entry.FPS || 60;
+                    const timeValue = (60 / fps) * 100;
+
+                    for (let i = 0; i < display_str_converted.length; i++) {
+                        splited_array.push(parseInt(display_str_converted.charAt(i)));
+                    }
+
+                    console.log(`splited_array :${splited_array}`);
+
+                    // FND_Init type data protocol defined
+                    Entry.hw.sendQueue.SET[device] = {
+                        type: Entry.RichShield.sensorTypes.FND,
+                        data: {
+                            display_str,
+                            onoff,
+                            block_index: 3,
+                            str_length: display_str_converted.length,
+                            data_0: splited_array[0],
+                            data_1: splited_array[1],
+                            data_2: splited_array[2],
+                            data_3: splited_array[3],
+                            delay_ms: delay_ms_sec,
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                        
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-
-                display_str_converted = display_str.toString();
-
-                for (let i = 0; i < display_str_converted.length; i++) {
-                    splited_array.push(parseInt(display_str_converted.charAt(i)));
-                }
-
-                console.log(`splited_array :${splited_array}`);
-
-                // FND_Init type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.FND,
-                    data: {
-                        display_str,
-                        onoff,
-                        block_index: 3,
-                        str_length: display_str_converted.length,
-                        data_0: splited_array[0],
-                        data_1: splited_array[1],
-                        data_2: splited_array[2],
-                        data_3: splited_array[3],
-                        delay_ms: delay_ms_sec,
-                    },
-                    time: new Date().getTime(),
-                };
-
-                return script.callReturn();
             },
             syntax: { js: [], py: ['RichShield_FND_Control_diplay_char(%1, %2, %3, %4)'] },
         },
@@ -1474,16 +2266,16 @@ Entry.RichShield.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [['12', 12]],
-                    value: 12,
+                    options: [['13', 13]],
+                    value: 13,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    options: [['DHT11', 1]],
-                    value: 1,
+                    options: [['DHT11', 4]],
+                    value: 4,
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1496,9 +2288,6 @@ Entry.RichShield.getBlocks = function() {
             class: 'RichShield_DHT',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('dht_device', script);
                 const dht_val = script.getNumberValue('pin', script);
                 const ver_val = script.getNumberValue('ver', script);
@@ -1522,65 +2311,7 @@ Entry.RichShield.getBlocks = function() {
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Init_Process(%1, %2, %3)'] },
         },
-        RichShield_DHT_Control_Set_Temper: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['C', 0],
-                        ['F', 1],
-                    ],
-                    value: 0,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: { params: [], type: 'RichShield_DHT_Control_Set_Temper' },
-            paramsKeyMap: { dht_device: 0, tempMode: 1 },
-            class: 'RichShield_DHT',
-            isNotFor: ['RichShield'],
-            func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
-                const device = script.getNumberValue('dht_device', script);
-                const tempType = script.getNumberValue('tempMode', script);
-                const port = 12;
 
-                // index number patched by Remoted 2020-11-20
-
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-
-                // DHT Temp-Reader type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.DHT,
-                    data: {
-                        tempMode: tempType,
-                        dht_block_index: 1,
-                    },
-                    time: new Date().getTime(),
-                };
-                console.log(`TempMode = ${tempType}`);
-
-                return script.callReturn();
-            },
-            syntax: { js: [], py: ['RichShield_DHT_Control_Set_Temper(%1, %2)'] },
-        },
         RichShield_DHT_Control_Get_Temper: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1597,13 +2328,10 @@ Entry.RichShield.getBlocks = function() {
                 },
             ],
             def: { params: [], type: 'RichShield_DHT_Control_Get_Temper' },
-            paramsKeyMap: { dht_device: 0 },
+            paramsKeyMap: { dht_device: 0},
             class: 'RichShield_DHT',
             isNotFor: ['RichShield'],
             func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
                 const device = script.getNumberValue('dht_device', script);
                 const port = 12;
 
@@ -1614,102 +2342,17 @@ Entry.RichShield.getBlocks = function() {
                 // DHT Temp-Reader type data protocol defined
                 Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.DHT] = {
                     port,
+                    //tempMode: tempType,
+                    dht_block_index: 0,
                     time: new Date().getTime(),
                 };
 
                 console.log((Entry.hw.portData.DHT || 0).toFixed(1));
-
                 return (Entry.hw.portData.DHT || 0).toFixed(0);
             },
             syntax: { js: [], py: ['RichShield_DHT_Control_Get_Temper(%1, %2)'] },
         },
-        RichShield_DHT_Control_Set_Humid: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: { params: [], type: 'RichShield_DHT_Control_Set_Humid' },
-            paramsKeyMap: { dht_device: 0 },
-            class: 'RichShield_DHT',
-            isNotFor: ['RichShield'],
-            func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
-                const device = script.getNumberValue('dht_device', script);
-                const port = 12;
 
-                // index number patched by Remoted 2020-11-20
-
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-
-                // DHT Temp-Reader type data protocol defined
-                Entry.hw.sendQueue.SET[device] = {
-                    type: Entry.RichShield.sensorTypes.DHT,
-                    data: {
-                        dht_block_index: 2,
-                    },
-                    time: new Date().getTime(),
-                };
-
-                return script.callReturn();
-            },
-            syntax: { js: [], py: ['RichShield_DHT_Control_Set_Humid(%1)'] },
-        },
-        RichShield_DHT_Control_Get_Humid: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    value: 1,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            def: { params: [], type: 'RichShield_DHT_Control_Get_Humid' },
-            paramsKeyMap: { dht_device: 0 },
-            class: 'RichShield_DHT',
-            isNotFor: ['RichShield'],
-            func(sprite, script) {
-                // type이 Block의 경우에는 Field가 아닌 Value로 취급해서 가져 옵니다.
-                // 일반적으로는 getValue로 값을 가져오고
-                // 명시적으로 숫자형으로 가져오고 싶을때에는 getNumberValue를 사용합니다.
-                const device = script.getNumberValue('dht_device', script);
-                const port = 12;
-
-                if (!Entry.hw.sendQueue.GET) {
-                    Entry.hw.sendQueue.GET = {};
-                }
-
-                // DHT Temp-Reader type data protocol defined
-                Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.DHT] = {
-                    port,
-                    time: new Date().getTime(),
-                };
-
-                //console.log((Entry.hw.portData.DHT || 0).toFixed(1));
-
-                return (Entry.hw.portData.DHT || 0).toFixed(0);
-            },
-            syntax: { js: [], py: ['RichShield_DHT_Control_Get_Humid(%1)'] },
-        },
         RichShield_OLED_event: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1839,11 +2482,9 @@ Entry.RichShield.getBlocks = function() {
                     const timeValue = (60 / fps) * 50;
 
                     console.log(
-                        // eslint-disable-next-line max-len
                         `Row : ${Row} / Col : ${Col} / text : ${text}`
                     );
 
-                    //Entry.hw.sendQueue.SET[line] = {
                     Entry.hw.sendQueue.SET[device] = {
                         type: Entry.RichShield.sensorTypes.OLED,
                         data: {
@@ -1885,6 +2526,161 @@ Entry.RichShield.getBlocks = function() {
             },
             syntax: { js: [], py: ['RichShield_OLED_Display_String(%1, %2, %3)'] },
         },
+                
+        RichShield_IRREMOTE_event: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_event',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_hardware.svg',
+                    size: 14,
+                    position: { x: 0, y: -2 },
+                },
+            ],
+            def: { params: [], type: 'RichShield_IRREMOTE_event' },
+            class: 'RichShield_IR',
+            isNotFor: ['RichShield'],
+        },
+
+        RichShield_IRREMOTE_init: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    value: 2,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_IRREMOTE_init' },
+            paramsKeyMap: { ir_device: 0, pin: 1 },
+            class: 'RichShield_IR',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                const device = script.getNumberValue('ir_device', script);
+                const ir_val = script.getNumberValue('pin', script);
+                let time = new Date().getTime();
+
+                // index number patched by Remoted 2020-11-20
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                // IR_Init type data protocol defined
+                Entry.hw.sendQueue.SET[device] = {
+                    type: Entry.RichShield.sensorTypes.IRREMOTE,
+                    data: {
+                        ir_pin: ir_val,
+                        ir_block_index: 0,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['RichShield_IRREMOTE_init(%1, %2)'] },
+        },
+
+
+        RichShield_IRREMOTE_recv: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    value: 2,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_IRREMOTE_recv' },
+            paramsKeyMap: { ir_device: 0 },
+            class: 'RichShield_IR',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                const device = script.getNumberValue('ir_device', script);
+                const port = 12;
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+
+                // DHT Temp-Reader type data protocol defined
+                Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.IRREMOTE] = {
+                    port,
+                    dir:123,
+                    //dht_block_index: 2,
+                    time: new Date().getTime(),
+                };
+
+                console.log((Entry.hw.portData.IRREMOTE || 0).toFixed(1));
+
+                return (Entry.hw.portData.IRREMOTE || 0).toFixed(0);
+
+            },
+            syntax: { js: [], py: ['RichShield_IRREMOTE_recv(%1, %2)'], },
+        },
+
+        RichShield_DHT2: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    value: 1,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            def: { params: [], type: 'RichShield_DHT2' },
+            paramsKeyMap: { ir_device: 0 },
+            class: 'RichShield_DHT',
+            isNotFor: ['RichShield'],
+            func(sprite, script) {
+                const device = script.getNumberValue('ir_device', script);
+                const port = 12;
+
+                if (!Entry.hw.sendQueue.GET) {
+                    Entry.hw.sendQueue.GET = {};
+                }
+
+                // DHT Temp-Reader type data protocol defined
+                Entry.hw.sendQueue.GET[Entry.RichShield.sensorTypes.DHT2] = {
+                    port,
+                    dir:123,
+                    time: new Date().getTime(),
+                };
+
+                console.log((Entry.hw.portData.DHT2 || 0).toFixed(1));
+
+                return (Entry.hw.portData.DHT2 || 0).toFixed(0);
+            },
+            syntax: { js: [], py: ['RichShield_DHT2(%1, %2)'] },
+        },    
+
     };
 };
 module.exports = Entry.RichShield;
