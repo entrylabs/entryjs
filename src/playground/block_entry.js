@@ -7836,9 +7836,6 @@ function assignBlocks() {
     if (EntryStatic.isPracticalCourse) {
         Object.assign(Entry.block, Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
         applySetLanguage(Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
-        // const practicalCourseBlockModule = require('../playground/block_entry_mini');
-        // Object.assign(Entry.block, practicalCourseBlockModule.practicalCourseBlock);
-        // applySetLanguage(practicalCourseBlockModule);
     }
 }
 

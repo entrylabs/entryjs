@@ -1,7 +1,5 @@
 'use strict';
 
-const { EntryStatic } = require("../../../../extern/util/static");
-
 /*
  * ex)
  * '1.1': Entry.Arduino,
@@ -27,14 +25,12 @@ function addHardwareModule(module, id) {
     // 일반모드, 교과용 하드웨어 > 추가안함
     // 교과모드, 일반 하드웨어 > 리스트에만 추가
     // 교과모드, 교과용 하드웨어 > 리스트에 추가, 모듈리스트에도 추가
-    if (module.isPracticalCourse) {
-        if (EntryStatic.isPracticalCourse) {
-            Entry.HARDWARE_LIST[id] = module;
-            Object.assign(Entry.PRACTICAL_HARDWARE_BLOCK_LIST, module.getBlocks ?? module.getBlocks());
-            EntryStatic.hwMiniSupportList.push(module.name);
-        }
-    } else {
+    if (!module.isPracticalCourse) {
         Entry.HARDWARE_LIST[id] = module;
+    } else if (EntryStatic.isPracticalCourse) {
+        Entry.HARDWARE_LIST[id] = module;
+        Object.assign(Entry.PRACTICAL_HARDWARE_BLOCK_LIST, module.getBlocks ?? module.getBlocks());
+        EntryStatic.hwMiniSupportList.push(module.name);
     }
 }
 
