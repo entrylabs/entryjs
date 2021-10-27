@@ -60,6 +60,29 @@ function getBlockObject(items) {
     return blockObject;
 }
 
+function getHardwareBlockObject(items) {
+    const blockObject = {};
+    items.forEach((item) => {
+        // 일반모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 일반모드, 교과블록 포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 교과모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 교과모드, 교과블록 포함 하드웨어 > 교과블록만 출력
+        try {
+            if (item.hasPracticalCourse && EntryStatic.isPracticalCourse) {
+                // console.log("Practical item : ", item);
+                Object.assign(blockObject, 'getPracticalBlocks' in item ? item.getPracticalBlocks() : {});
+                EntryStatic.hwMiniSupportList.push(item.name);
+            } else {
+                Object.assign(blockObject, 'getBlocks' in item ? item.getBlocks() : {});
+                // console.log("normal item : ", item);
+            }
+        } catch (err) {
+            console.log(err, item);
+        }
+    });
+    return blockObject;
+}
+
 /**
  * 하드웨어 블록을 EntryStatic 에 등록한다.
  * 하드웨어 블록에만 사용하는 이유는,
@@ -85,7 +108,7 @@ module.exports = {
                 .concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
                 .concat(Object.values(Entry.AI_UTILIZE_BLOCK_LIST))
         );
-        const hardwareBlockObjectList = getBlockObject(hardwareModules);
+        const hardwareBlockObjectList = getHardwareBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };

@@ -7835,7 +7835,7 @@ function assignBlocks() {
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
     if (EntryStatic.isPracticalCourse) {
         Object.assign(Entry.block, Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
-        applySetLanguage(Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
+        // applySetLanguage(Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
     }
 }
 

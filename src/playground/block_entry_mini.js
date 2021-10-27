@@ -22,1494 +22,1494 @@ const miniBlock = {
         },
         func(sprite, script) {},
     },
-    practical_course_motor_speed: {
-        color: '#00B200',
-        outerLine: '#019101',
-        skeleton: 'basic_string_field',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['1', '1'],
-                    ['2', '2'],
-                    ['3', '3'],
-                    ['4', '4'],
-                    ['5', '5'],
-                    ['6', '6'],
-                    ['7', '7'],
-                    ['8', '8'],
-                    ['9', '9'],
-                    ['10', '10'],
-                    ['11', '11'],
-                    ['12', '12'],
-                    ['13', '13'],
-                    ['14', '14'],
-                    ['15', '15'],
-                ],
-                value: '15',
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null],
-        },
-        paramsKeyMap: {
-            VALUE: 0,
-        },
-        func(sprite, script) {
-            return script.getStringField('VALUE');
-        },
-    },
-    practical_course_set_servo2: {
-        color: '#D128BD',
-        outerLine: '#a2049e',
-        skeleton: 'basic',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1 포트의 서보모터를 %2 도 이동 %3',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['OUT1', '1'],
-                    ['OUT2', '2'],
-                    ['OUT3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#A2049E',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/servo.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null, null, null],
-            type: 'practical_course_set_servo2',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            DEGREE: 1,
-        },
-        class: 'practical_course_servo',
-        func(sprite, script) {
-            const port = script.getNumberField('PORT');
-            let degree = script.getNumberValue('DEGREE');
-            if (degree < 0) {
-                degree = 0;
-            } else if (degree > 180) {
-                degree = 180;
-            }
-            Entry.hw.sendQueue[`OUT${port}`] = degree;
-            let option = port;
-            if (option === 3) {
-                option = 4;
-            }
-            Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT | option;
-            return script.callReturn();
-        },
-    },
-    practical_course_move_for_secs: {
-        color: '#00B200',
-        outerLine: '#019101',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['양쪽', '1'],
-                    ['오른쪽', '2'],
-                    ['왼쪽', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['앞으로', '16'],
-                    ['뒤로', '32'],
-                ],
-                value: '16',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/dcmotor.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                null,
-                {
-                    type: 'practical_course_motor_speed',
-                },
-                {
-                    type: 'number',
-                    params: ['2'],
-                },
-                null,
-            ],
-            type: 'practical_course_move_for_secs',
-        },
-        paramsKeyMap: {
-            WHEEL: 0,
-            DIRECTION: 1,
-            SPEED: 2,
-            DURATION: 3,
-        },
-        class: 'practical_course_motor',
-        func(sprite, script) {
-            if (!script.isStart) {
-                const wheel = script.getNumberField('WHEEL');
-                const speed = script.getNumberValue('SPEED');
-                const direction = script.getNumberField('DIRECTION');
-                const duration = script.getNumberValue('DURATION');
-                const value = speed + direction;
-                switch (wheel) {
-                    case 1: {
-                        Entry.hw.sendQueue.DCL = value;
-                        Entry.hw.sendQueue.DCR = value;
-                        break;
-                    }
+    // practical_course_motor_speed: {
+    //     color: '#00B200',
+    //     outerLine: '#019101',
+    //     skeleton: 'basic_string_field',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['1', '1'],
+    //                 ['2', '2'],
+    //                 ['3', '3'],
+    //                 ['4', '4'],
+    //                 ['5', '5'],
+    //                 ['6', '6'],
+    //                 ['7', '7'],
+    //                 ['8', '8'],
+    //                 ['9', '9'],
+    //                 ['10', '10'],
+    //                 ['11', '11'],
+    //                 ['12', '12'],
+    //                 ['13', '13'],
+    //                 ['14', '14'],
+    //                 ['15', '15'],
+    //             ],
+    //             value: '15',
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null],
+    //     },
+    //     paramsKeyMap: {
+    //         VALUE: 0,
+    //     },
+    //     func(sprite, script) {
+    //         return script.getStringField('VALUE');
+    //     },
+    // },
+    // practical_course_set_servo2: {
+    //     color: '#D128BD',
+    //     outerLine: '#a2049e',
+    //     skeleton: 'basic',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1 포트의 서보모터를 %2 도 이동 %3',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['OUT1', '1'],
+    //                 ['OUT2', '2'],
+    //                 ['OUT3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#A2049E',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/servo.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null, null, null],
+    //         type: 'practical_course_set_servo2',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         DEGREE: 1,
+    //     },
+    //     class: 'practical_course_servo',
+    //     func(sprite, script) {
+    //         const port = script.getNumberField('PORT');
+    //         let degree = script.getNumberValue('DEGREE');
+    //         if (degree < 0) {
+    //             degree = 0;
+    //         } else if (degree > 180) {
+    //             degree = 180;
+    //         }
+    //         Entry.hw.sendQueue[`OUT${port}`] = degree;
+    //         let option = port;
+    //         if (option === 3) {
+    //             option = 4;
+    //         }
+    //         Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT | option;
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_move_for_secs: {
+    //     color: '#00B200',
+    //     outerLine: '#019101',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['양쪽', '1'],
+    //                 ['오른쪽', '2'],
+    //                 ['왼쪽', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['앞으로', '16'],
+    //                 ['뒤로', '32'],
+    //             ],
+    //             value: '16',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/dcmotor.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             null,
+    //             {
+    //                 type: 'practical_course_motor_speed',
+    //             },
+    //             {
+    //                 type: 'number',
+    //                 params: ['2'],
+    //             },
+    //             null,
+    //         ],
+    //         type: 'practical_course_move_for_secs',
+    //     },
+    //     paramsKeyMap: {
+    //         WHEEL: 0,
+    //         DIRECTION: 1,
+    //         SPEED: 2,
+    //         DURATION: 3,
+    //     },
+    //     class: 'practical_course_motor',
+    //     func(sprite, script) {
+    //         if (!script.isStart) {
+    //             const wheel = script.getNumberField('WHEEL');
+    //             const speed = script.getNumberValue('SPEED');
+    //             const direction = script.getNumberField('DIRECTION');
+    //             const duration = script.getNumberValue('DURATION');
+    //             const value = speed + direction;
+    //             switch (wheel) {
+    //                 case 1: {
+    //                     Entry.hw.sendQueue.DCL = value;
+    //                     Entry.hw.sendQueue.DCR = value;
+    //                     break;
+    //                 }
 
-                    case 2: {
-                        Entry.hw.sendQueue.DCR = value;
-                        break;
-                    }
+    //                 case 2: {
+    //                     Entry.hw.sendQueue.DCR = value;
+    //                     break;
+    //                 }
 
-                    case 3: {
-                        Entry.hw.sendQueue.DCL = value;
-                        break;
-                    }
-                }
+    //                 case 3: {
+    //                     Entry.hw.sendQueue.DCL = value;
+    //                     break;
+    //                 }
+    //             }
 
-                script.wheelMode = wheel;
-                script.isStart = true;
-                script.timeFlag = 1;
-                setTimeout(() => {
-                    script.timeFlag = 0;
-                }, duration * 1000);
-                return script;
-            } else if (script.timeFlag == 1) {
-                return script;
-            } else {
-                switch (script.wheelMode) {
-                    case 1: {
-                        Entry.hw.sendQueue.DCL = 0;
-                        Entry.hw.sendQueue.DCR = 0;
-                        break;
-                    }
+    //             script.wheelMode = wheel;
+    //             script.isStart = true;
+    //             script.timeFlag = 1;
+    //             setTimeout(() => {
+    //                 script.timeFlag = 0;
+    //             }, duration * 1000);
+    //             return script;
+    //         } else if (script.timeFlag == 1) {
+    //             return script;
+    //         } else {
+    //             switch (script.wheelMode) {
+    //                 case 1: {
+    //                     Entry.hw.sendQueue.DCL = 0;
+    //                     Entry.hw.sendQueue.DCR = 0;
+    //                     break;
+    //                 }
 
-                    case 2: {
-                        Entry.hw.sendQueue.DCR = 0;
-                        break;
-                    }
+    //                 case 2: {
+    //                     Entry.hw.sendQueue.DCR = 0;
+    //                     break;
+    //                 }
 
-                    case 3: {
-                        Entry.hw.sendQueue.DCL = 0;
-                        break;
-                    }
-                }
-                delete script.timeFlag;
-                delete script.isStart;
-                delete script.wheelMode;
-                Entry.engine.isContinue = false;
-                return script.callReturn();
-            }
-        },
-    },
-    practical_course_move_for_secs2: {
-        color: '#00B200',
-        outerLine: '#019101',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 %5초 동안 회전 %6',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['앞으로', '16'],
-                    ['뒤로', '32'],
-                ],
-                value: '16',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['앞으로', '16'],
-                    ['뒤로', '32'],
-                ],
-                value: '16',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/dcmotor.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                {
-                    type: 'practical_course_motor_speed',
-                },
-                null,
-                {
-                    type: 'practical_course_motor_speed',
-                },
-                {
-                    type: 'number',
-                    params: ['2'],
-                },
-                null,
-            ],
-            type: 'practical_course_move_for_secs2',
-        },
-        paramsKeyMap: {
-            DIRECTION1: 0,
-            SPEED1: 1,
-            DIRECTION2: 2,
-            SPEED2: 3,
-            DURATION: 4,
-        },
-        class: 'practical_course_motor',
-        func(sprite, script) {
-            if (!script.isStart) {
-                // var wheel = script.getNumberField('WHEEL');
-                const speed1 = script.getNumberValue('SPEED1');
-                const speed2 = script.getNumberValue('SPEED2');
-                const direction1 = script.getNumberField('DIRECTION1');
-                const direction2 = script.getNumberField('DIRECTION2');
-                const duration = script.getNumberValue('DURATION');
-                const value1 = speed1 + direction1;
-                const value2 = speed2 + direction2;
+    //                 case 3: {
+    //                     Entry.hw.sendQueue.DCL = 0;
+    //                     break;
+    //                 }
+    //             }
+    //             delete script.timeFlag;
+    //             delete script.isStart;
+    //             delete script.wheelMode;
+    //             Entry.engine.isContinue = false;
+    //             return script.callReturn();
+    //         }
+    //     },
+    // },
+    // practical_course_move_for_secs2: {
+    //     color: '#00B200',
+    //     outerLine: '#019101',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 %5초 동안 회전 %6',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['앞으로', '16'],
+    //                 ['뒤로', '32'],
+    //             ],
+    //             value: '16',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['앞으로', '16'],
+    //                 ['뒤로', '32'],
+    //             ],
+    //             value: '16',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/dcmotor.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             {
+    //                 type: 'practical_course_motor_speed',
+    //             },
+    //             null,
+    //             {
+    //                 type: 'practical_course_motor_speed',
+    //             },
+    //             {
+    //                 type: 'number',
+    //                 params: ['2'],
+    //             },
+    //             null,
+    //         ],
+    //         type: 'practical_course_move_for_secs2',
+    //     },
+    //     paramsKeyMap: {
+    //         DIRECTION1: 0,
+    //         SPEED1: 1,
+    //         DIRECTION2: 2,
+    //         SPEED2: 3,
+    //         DURATION: 4,
+    //     },
+    //     class: 'practical_course_motor',
+    //     func(sprite, script) {
+    //         if (!script.isStart) {
+    //             // var wheel = script.getNumberField('WHEEL');
+    //             const speed1 = script.getNumberValue('SPEED1');
+    //             const speed2 = script.getNumberValue('SPEED2');
+    //             const direction1 = script.getNumberField('DIRECTION1');
+    //             const direction2 = script.getNumberField('DIRECTION2');
+    //             const duration = script.getNumberValue('DURATION');
+    //             const value1 = speed1 + direction1;
+    //             const value2 = speed2 + direction2;
 
-                Entry.hw.sendQueue.DCL = value1;
-                Entry.hw.sendQueue.DCR = value2;
+    //             Entry.hw.sendQueue.DCL = value1;
+    //             Entry.hw.sendQueue.DCR = value2;
 
-                script.isStart = true;
-                script.timeFlag = 1;
-                setTimeout(() => {
-                    script.timeFlag = 0;
-                }, duration * 1000);
-                return script;
-            } else if (script.timeFlag == 1) {
-                return script;
-            } else {
-                Entry.hw.sendQueue.DCL = 0;
-                Entry.hw.sendQueue.DCR = 0;
+    //             script.isStart = true;
+    //             script.timeFlag = 1;
+    //             setTimeout(() => {
+    //                 script.timeFlag = 0;
+    //             }, duration * 1000);
+    //             return script;
+    //         } else if (script.timeFlag == 1) {
+    //             return script;
+    //         } else {
+    //             Entry.hw.sendQueue.DCL = 0;
+    //             Entry.hw.sendQueue.DCR = 0;
 
-                delete script.timeFlag;
-                delete script.isStart;
-                delete script.wheelMode;
-                Entry.engine.isContinue = false;
-                return script.callReturn();
-            }
-        },
-    },
-    practical_course_move_for: {
-        color: '#00B200',
-        outerLine: '#019101',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['양쪽', '1'],
-                    ['오른쪽', '2'],
-                    ['왼쪽', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['앞으로', '16'],
-                    ['뒤로', '32'],
-                ],
-                value: '16',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/dcmotor.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                null,
-                {
-                    type: 'practical_course_motor_speed',
-                },
-                null,
-            ],
-            type: 'practical_course_move_for',
-        },
-        paramsKeyMap: {
-            WHEEL: 0,
-            DIRECTION: 1,
-            SPEED: 2,
-        },
-        class: 'practical_course_motor',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const wheel = script.getNumberField('WHEEL');
-            const speed = script.getNumberValue('SPEED');
-            const direction = script.getNumberField('DIRECTION');
-            const value = speed + direction;
+    //             delete script.timeFlag;
+    //             delete script.isStart;
+    //             delete script.wheelMode;
+    //             Entry.engine.isContinue = false;
+    //             return script.callReturn();
+    //         }
+    //     },
+    // },
+    // practical_course_move_for: {
+    //     color: '#00B200',
+    //     outerLine: '#019101',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['양쪽', '1'],
+    //                 ['오른쪽', '2'],
+    //                 ['왼쪽', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['앞으로', '16'],
+    //                 ['뒤로', '32'],
+    //             ],
+    //             value: '16',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/dcmotor.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             null,
+    //             {
+    //                 type: 'practical_course_motor_speed',
+    //             },
+    //             null,
+    //         ],
+    //         type: 'practical_course_move_for',
+    //     },
+    //     paramsKeyMap: {
+    //         WHEEL: 0,
+    //         DIRECTION: 1,
+    //         SPEED: 2,
+    //     },
+    //     class: 'practical_course_motor',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const wheel = script.getNumberField('WHEEL');
+    //         const speed = script.getNumberValue('SPEED');
+    //         const direction = script.getNumberField('DIRECTION');
+    //         const value = speed + direction;
 
-            switch (wheel) {
-                case 1: {
-                    Entry.hw.sendQueue.DCL = value;
-                    Entry.hw.sendQueue.DCR = value;
-                    break;
-                }
+    //         switch (wheel) {
+    //             case 1: {
+    //                 Entry.hw.sendQueue.DCL = value;
+    //                 Entry.hw.sendQueue.DCR = value;
+    //                 break;
+    //             }
 
-                case 2: {
-                    Entry.hw.sendQueue.DCR = value;
-                    break;
-                }
+    //             case 2: {
+    //                 Entry.hw.sendQueue.DCR = value;
+    //                 break;
+    //             }
 
-                case 3: {
-                    Entry.hw.sendQueue.DCL = value;
-                    break;
-                }
-            }
+    //             case 3: {
+    //                 Entry.hw.sendQueue.DCL = value;
+    //                 break;
+    //             }
+    //         }
 
-            return script.callReturn();
-        },
-    },
-    practical_course_move_for2: {
-        color: '#00B200',
-        outerLine: '#019101',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 계속 회전 %5',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['앞으로', '16'],
-                    ['뒤로', '32'],
-                ],
-                value: '16',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['앞으로', '16'],
-                    ['뒤로', '32'],
-                ],
-                value: '16',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/dcmotor.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                {
-                    type: 'practical_course_motor_speed',
-                },
-                null,
-                {
-                    type: 'practical_course_motor_speed',
-                },
-                null,
-            ],
-            type: 'practical_course_move_for2',
-        },
-        paramsKeyMap: {
-            DIRECTION1: 0,
-            SPEED1: 1,
-            DIRECTION2: 2,
-            SPEED2: 3,
-        },
-        class: 'practical_course_motor',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const speed1 = script.getNumberValue('SPEED1');
-            const direction1 = script.getNumberField('DIRECTION1');
-            const speed2 = script.getNumberValue('SPEED2');
-            const direction2 = script.getNumberField('DIRECTION2');
-            const value1 = speed1 + direction1;
-            const value2 = speed2 + direction2;
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_move_for2: {
+    //     color: '#00B200',
+    //     outerLine: '#019101',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 계속 회전 %5',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['앞으로', '16'],
+    //                 ['뒤로', '32'],
+    //             ],
+    //             value: '16',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['앞으로', '16'],
+    //                 ['뒤로', '32'],
+    //             ],
+    //             value: '16',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/dcmotor.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             {
+    //                 type: 'practical_course_motor_speed',
+    //             },
+    //             null,
+    //             {
+    //                 type: 'practical_course_motor_speed',
+    //             },
+    //             null,
+    //         ],
+    //         type: 'practical_course_move_for2',
+    //     },
+    //     paramsKeyMap: {
+    //         DIRECTION1: 0,
+    //         SPEED1: 1,
+    //         DIRECTION2: 2,
+    //         SPEED2: 3,
+    //     },
+    //     class: 'practical_course_motor',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const speed1 = script.getNumberValue('SPEED1');
+    //         const direction1 = script.getNumberField('DIRECTION1');
+    //         const speed2 = script.getNumberValue('SPEED2');
+    //         const direction2 = script.getNumberField('DIRECTION2');
+    //         const value1 = speed1 + direction1;
+    //         const value2 = speed2 + direction2;
 
-            Entry.hw.sendQueue.DCL = value1;
-            Entry.hw.sendQueue.DCR = value2;
+    //         Entry.hw.sendQueue.DCL = value1;
+    //         Entry.hw.sendQueue.DCR = value2;
 
-            return script.callReturn();
-        },
-    },
-    practical_course_stop_for: {
-        color: '#00B200',
-        outerLine: '#019101',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1모터를 정지 %2',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['양쪽', '1'],
-                    ['오른쪽', '2'],
-                    ['왼쪽', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#019101',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/dcmotor.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null, null],
-            type: 'practical_course_stop_for',
-        },
-        paramsKeyMap: {
-            WHEEL: 0,
-        },
-        class: 'practical_course_motor',
-        func(sprite, script) {
-            const wheel = script.getNumberField('WHEEL');
-            if (wheel == 2) {
-                Entry.hw.sendQueue.DCR = 0;
-            } else if (wheel == 3) {
-                Entry.hw.sendQueue.DCL = 0;
-            } else {
-                Entry.hw.sendQueue.DCR = 0;
-                Entry.hw.sendQueue.DCL = 0;
-            }
-            return script.callReturn();
-        },
-    },
-    practical_course_touch_value: {
-        color: '#2AB4D3',
-        outerLine: '#0e93b1',
-        skeleton: 'basic_string_field',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 접촉 센서 값',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#0e93b1',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null],
-            type: 'practical_course_touch_value',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-        },
-        class: 'practical_course_touch',
-        func(sprite, script) {
-            const port = script.getStringField('PORT');
-            const value = Entry.hw.portData[`IN${port}`] > 125 ? 1 : 0;
-            return value;
-        },
-    },
-    practical_course_touch_value_boolean: {
-        color: '#2AB4D3',
-        outerLine: '#0e93b1',
-        skeleton: 'basic_boolean_field',
-        fontColor: '#fff',
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 접촉 센서가 %2',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#0e93b1',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['접촉 되면', '1'],
-                    ['접촉 안되면', '0'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#0e93b1',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        def: {
-            params: [null, null, null],
-            type: 'practical_course_touch_value_boolean',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            TOUCH: 1,
-        },
-        class: 'practical_course_touch',
-        func(sprite, script) {
-            const port = script.getStringField('PORT');
-            const touch = script.getNumberField('TOUCH', script);
-            const value = Entry.hw.portData[`IN${port}`];
-            const isTouch = !((value > 125) ^ touch);
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_stop_for: {
+    //     color: '#00B200',
+    //     outerLine: '#019101',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1모터를 정지 %2',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['양쪽', '1'],
+    //                 ['오른쪽', '2'],
+    //                 ['왼쪽', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#019101',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/dcmotor.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null, null],
+    //         type: 'practical_course_stop_for',
+    //     },
+    //     paramsKeyMap: {
+    //         WHEEL: 0,
+    //     },
+    //     class: 'practical_course_motor',
+    //     func(sprite, script) {
+    //         const wheel = script.getNumberField('WHEEL');
+    //         if (wheel == 2) {
+    //             Entry.hw.sendQueue.DCR = 0;
+    //         } else if (wheel == 3) {
+    //             Entry.hw.sendQueue.DCL = 0;
+    //         } else {
+    //             Entry.hw.sendQueue.DCR = 0;
+    //             Entry.hw.sendQueue.DCL = 0;
+    //         }
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_touch_value: {
+    //     color: '#2AB4D3',
+    //     outerLine: '#0e93b1',
+    //     skeleton: 'basic_string_field',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 접촉 센서 값',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#0e93b1',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null],
+    //         type: 'practical_course_touch_value',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //     },
+    //     class: 'practical_course_touch',
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT');
+    //         const value = Entry.hw.portData[`IN${port}`] > 125 ? 1 : 0;
+    //         return value;
+    //     },
+    // },
+    // practical_course_touch_value_boolean: {
+    //     color: '#2AB4D3',
+    //     outerLine: '#0e93b1',
+    //     skeleton: 'basic_boolean_field',
+    //     fontColor: '#fff',
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 접촉 센서가 %2',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#0e93b1',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['접촉 되면', '1'],
+    //                 ['접촉 안되면', '0'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#0e93b1',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     def: {
+    //         params: [null, null, null],
+    //         type: 'practical_course_touch_value_boolean',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         TOUCH: 1,
+    //     },
+    //     class: 'practical_course_touch',
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT');
+    //         const touch = script.getNumberField('TOUCH', script);
+    //         const value = Entry.hw.portData[`IN${port}`];
+    //         const isTouch = !((value > 125) ^ touch);
 
-            return isTouch;
-        },
-    },
-    practical_course_light_value: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic_string_field',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 빛 감지 센서 값',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null],
-            type: 'practical_course_light_value',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-        },
-        class: 'practical_course_light',
-        func(sprite, script) {
-            const port = script.getStringField('PORT');
-            return Entry.hw.portData[`IN${port}`];
-        },
-    },
-    practical_course_light_value_boolean: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic_boolean_field',
-        fontColor: '#fff',
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 빛 감지 센서 값 %2 %3',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['=', 'EQUAL'],
-                    ['>', 'GREATER'],
-                    ['<', 'LESS'],
-                    ['≥', 'GREATER_OR_EQUAL'],
-                    ['≤', 'LESS_OR_EQUAL'],
-                ],
-                value: 'LESS',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-                noaRrow: true,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-        ],
-        def: {
-            params: [
-                null,
-                null,
-                {
-                    type: 'number',
-                    params: ['100'],
-                },
-            ],
-            type: 'practical_course_light_value_boolean',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            OPERATOR: 1,
-            RIGHTVALUE: 2,
-        },
-        class: 'practical_course_light',
-        func(sprite, script) {
-            const port = script.getNumberField('PORT', script);
-            const operator = script.getField('OPERATOR', script);
-            const rightValue = script.getNumberValue('RIGHTVALUE', script);
-            const leftValue = Entry.hw.portData[`IN${port}`];
-            let isCheck = false;
+    //         return isTouch;
+    //     },
+    // },
+    // practical_course_light_value: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic_string_field',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 빛 감지 센서 값',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null],
+    //         type: 'practical_course_light_value',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //     },
+    //     class: 'practical_course_light',
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT');
+    //         return Entry.hw.portData[`IN${port}`];
+    //     },
+    // },
+    // practical_course_light_value_boolean: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic_boolean_field',
+    //     fontColor: '#fff',
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 빛 감지 센서 값 %2 %3',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['=', 'EQUAL'],
+    //                 ['>', 'GREATER'],
+    //                 ['<', 'LESS'],
+    //                 ['≥', 'GREATER_OR_EQUAL'],
+    //                 ['≤', 'LESS_OR_EQUAL'],
+    //             ],
+    //             value: 'LESS',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //             noaRrow: true,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //     ],
+    //     def: {
+    //         params: [
+    //             null,
+    //             null,
+    //             {
+    //                 type: 'number',
+    //                 params: ['100'],
+    //             },
+    //         ],
+    //         type: 'practical_course_light_value_boolean',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         OPERATOR: 1,
+    //         RIGHTVALUE: 2,
+    //     },
+    //     class: 'practical_course_light',
+    //     func(sprite, script) {
+    //         const port = script.getNumberField('PORT', script);
+    //         const operator = script.getField('OPERATOR', script);
+    //         const rightValue = script.getNumberValue('RIGHTVALUE', script);
+    //         const leftValue = Entry.hw.portData[`IN${port}`];
+    //         let isCheck = false;
 
-            switch (operator) {
-                case 'EQUAL':
-                    isCheck = leftValue == rightValue;
-                    break;
-                case 'GREATER':
-                    isCheck = Number(leftValue) > Number(rightValue);
-                    break;
-                case 'LESS':
-                    isCheck = Number(leftValue) < Number(rightValue);
-                    break;
-                case 'GREATER_OR_EQUAL':
-                    isCheck = Number(leftValue) >= Number(rightValue);
-                    break;
-                case 'LESS_OR_EQUAL':
-                    isCheck = Number(leftValue) <= Number(rightValue);
-                    break;
-            }
+    //         switch (operator) {
+    //             case 'EQUAL':
+    //                 isCheck = leftValue == rightValue;
+    //                 break;
+    //             case 'GREATER':
+    //                 isCheck = Number(leftValue) > Number(rightValue);
+    //                 break;
+    //             case 'LESS':
+    //                 isCheck = Number(leftValue) < Number(rightValue);
+    //                 break;
+    //             case 'GREATER_OR_EQUAL':
+    //                 isCheck = Number(leftValue) >= Number(rightValue);
+    //                 break;
+    //             case 'LESS_OR_EQUAL':
+    //                 isCheck = Number(leftValue) <= Number(rightValue);
+    //                 break;
+    //         }
 
-            return isCheck;
-        },
-    },
-    practical_course_sound_value: {
-        color: '#01d67f',
-        outerLine: '#00b36a',
-        skeleton: 'basic_string_field',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 소리 센서에 감지되는 소리 값',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#00b36a',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null],
-            type: 'practical_course_sound_value',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-        },
-        class: 'practical_course_sound',
-        func(sprite, script) {
-            const port = script.getStringField('PORT');
-            return Entry.hw.portData[`IN${port}`];
-        },
-    },
-    practical_course_sound_value_boolean: {
-        color: '#01d67f',
-        outerLine: '#00b36a',
-        skeleton: 'basic_boolean_field',
-        fontColor: '#fff',
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 소리 센서에 감지되는 소리 값 %2 %3',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#00b36a',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['=', 'EQUAL'],
-                    ['>', 'GREATER'],
-                    ['<', 'LESS'],
-                    ['≥', 'GREATER_OR_EQUAL'],
-                    ['≤', 'LESS_OR_EQUAL'],
-                ],
-                value: 'LESS',
-                fontSize: 11,
-                bgColor: '#00b36a',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-                noaRrow: true,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-        ],
-        def: {
-            params: [
-                null,
-                null,
-                {
-                    type: 'number',
-                    params: ['100'],
-                },
-            ],
-            type: 'practical_course_sound_value_boolean',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            OPERATOR: 1,
-            RIGHTVALUE: 2,
-        },
-        class: 'practical_course_sound',
-        func(sprite, script) {
-            const port = script.getNumberField('PORT', script);
-            const operator = script.getField('OPERATOR', script);
-            const rightValue = script.getNumberValue('RIGHTVALUE', script);
-            const leftValue = Entry.hw.portData[`IN${port}`];
-            let isCheck = false;
+    //         return isCheck;
+    //     },
+    // },
+    // practical_course_sound_value: {
+    //     color: '#01d67f',
+    //     outerLine: '#00b36a',
+    //     skeleton: 'basic_string_field',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 소리 센서에 감지되는 소리 값',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#00b36a',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null],
+    //         type: 'practical_course_sound_value',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //     },
+    //     class: 'practical_course_sound',
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT');
+    //         return Entry.hw.portData[`IN${port}`];
+    //     },
+    // },
+    // practical_course_sound_value_boolean: {
+    //     color: '#01d67f',
+    //     outerLine: '#00b36a',
+    //     skeleton: 'basic_boolean_field',
+    //     fontColor: '#fff',
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 소리 센서에 감지되는 소리 값 %2 %3',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#00b36a',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['=', 'EQUAL'],
+    //                 ['>', 'GREATER'],
+    //                 ['<', 'LESS'],
+    //                 ['≥', 'GREATER_OR_EQUAL'],
+    //                 ['≤', 'LESS_OR_EQUAL'],
+    //             ],
+    //             value: 'LESS',
+    //             fontSize: 11,
+    //             bgColor: '#00b36a',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //             noaRrow: true,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //     ],
+    //     def: {
+    //         params: [
+    //             null,
+    //             null,
+    //             {
+    //                 type: 'number',
+    //                 params: ['100'],
+    //             },
+    //         ],
+    //         type: 'practical_course_sound_value_boolean',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         OPERATOR: 1,
+    //         RIGHTVALUE: 2,
+    //     },
+    //     class: 'practical_course_sound',
+    //     func(sprite, script) {
+    //         const port = script.getNumberField('PORT', script);
+    //         const operator = script.getField('OPERATOR', script);
+    //         const rightValue = script.getNumberValue('RIGHTVALUE', script);
+    //         const leftValue = Entry.hw.portData[`IN${port}`];
+    //         let isCheck = false;
 
-            switch (operator) {
-                case 'EQUAL':
-                    isCheck = leftValue == rightValue;
-                    break;
-                case 'GREATER':
-                    isCheck = Number(leftValue) > Number(rightValue);
-                    break;
-                case 'LESS':
-                    isCheck = Number(leftValue) < Number(rightValue);
-                    break;
-                case 'GREATER_OR_EQUAL':
-                    isCheck = Number(leftValue) >= Number(rightValue);
-                    break;
-                case 'LESS_OR_EQUAL':
-                    isCheck = Number(leftValue) <= Number(rightValue);
-                    break;
-            }
+    //         switch (operator) {
+    //             case 'EQUAL':
+    //                 isCheck = leftValue == rightValue;
+    //                 break;
+    //             case 'GREATER':
+    //                 isCheck = Number(leftValue) > Number(rightValue);
+    //                 break;
+    //             case 'LESS':
+    //                 isCheck = Number(leftValue) < Number(rightValue);
+    //                 break;
+    //             case 'GREATER_OR_EQUAL':
+    //                 isCheck = Number(leftValue) >= Number(rightValue);
+    //                 break;
+    //             case 'LESS_OR_EQUAL':
+    //                 isCheck = Number(leftValue) <= Number(rightValue);
+    //                 break;
+    //         }
 
-            return isCheck;
-        },
-    },
-    practical_course_irs_value: {
-        color: '#C4065C',
-        outerLine: '#9a0045',
-        skeleton: 'basic_string_field',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 적외선 센서에 감지되는 크기 값',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#9a0045',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null],
-            type: 'practical_course_irs_value',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-        },
-        class: 'practical_course_irs',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const port = script.getStringField('PORT');
-            return Entry.hw.portData[`IN${port}`];
-        },
-    },
-    practical_course_irs_value_boolean: {
-        color: '#C4065C',
-        outerLine: '#9a0045',
-        skeleton: 'basic_boolean_field',
-        fontColor: '#fff',
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#9a0045',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['=', 'EQUAL'],
-                    ['>', 'GREATER'],
-                    ['<', 'LESS'],
-                    ['≥', 'GREATER_OR_EQUAL'],
-                    ['≤', 'LESS_OR_EQUAL'],
-                ],
-                value: 'LESS',
-                fontSize: 11,
-                bgColor: '#9a0045',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-                noaRrow: true,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-        ],
-        def: {
-            params: [
-                null,
-                null,
-                {
-                    type: 'number',
-                    params: ['100'],
-                },
-            ],
-            type: 'practical_course_irs_value_boolean',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            OPERATOR: 1,
-            RIGHTVALUE: 2,
-        },
-        class: 'practical_course_irs',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const port = script.getNumberField('PORT', script);
-            const operator = script.getField('OPERATOR', script);
-            const rightValue = script.getNumberValue('RIGHTVALUE', script);
-            const leftValue = Entry.hw.portData[`IN${port}`];
-            let isCheck = false;
+    //         return isCheck;
+    //     },
+    // },
+    // practical_course_irs_value: {
+    //     color: '#C4065C',
+    //     outerLine: '#9a0045',
+    //     skeleton: 'basic_string_field',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 적외선 센서에 감지되는 크기 값',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#9a0045',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null],
+    //         type: 'practical_course_irs_value',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //     },
+    //     class: 'practical_course_irs',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT');
+    //         return Entry.hw.portData[`IN${port}`];
+    //     },
+    // },
+    // practical_course_irs_value_boolean: {
+    //     color: '#C4065C',
+    //     outerLine: '#9a0045',
+    //     skeleton: 'basic_boolean_field',
+    //     fontColor: '#fff',
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#9a0045',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['=', 'EQUAL'],
+    //                 ['>', 'GREATER'],
+    //                 ['<', 'LESS'],
+    //                 ['≥', 'GREATER_OR_EQUAL'],
+    //                 ['≤', 'LESS_OR_EQUAL'],
+    //             ],
+    //             value: 'LESS',
+    //             fontSize: 11,
+    //             bgColor: '#9a0045',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //             noaRrow: true,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //     ],
+    //     def: {
+    //         params: [
+    //             null,
+    //             null,
+    //             {
+    //                 type: 'number',
+    //                 params: ['100'],
+    //             },
+    //         ],
+    //         type: 'practical_course_irs_value_boolean',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         OPERATOR: 1,
+    //         RIGHTVALUE: 2,
+    //     },
+    //     class: 'practical_course_irs',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const port = script.getNumberField('PORT', script);
+    //         const operator = script.getField('OPERATOR', script);
+    //         const rightValue = script.getNumberValue('RIGHTVALUE', script);
+    //         const leftValue = Entry.hw.portData[`IN${port}`];
+    //         let isCheck = false;
 
-            switch (operator) {
-                case 'EQUAL':
-                    isCheck = leftValue == rightValue;
-                    break;
-                case 'GREATER':
-                    isCheck = Number(leftValue) > Number(rightValue);
-                    break;
-                case 'LESS':
-                    isCheck = Number(leftValue) < Number(rightValue);
-                    break;
-                case 'GREATER_OR_EQUAL':
-                    isCheck = Number(leftValue) >= Number(rightValue);
-                    break;
-                case 'LESS_OR_EQUAL':
-                    isCheck = Number(leftValue) <= Number(rightValue);
-                    break;
-            }
+    //         switch (operator) {
+    //             case 'EQUAL':
+    //                 isCheck = leftValue == rightValue;
+    //                 break;
+    //             case 'GREATER':
+    //                 isCheck = Number(leftValue) > Number(rightValue);
+    //                 break;
+    //             case 'LESS':
+    //                 isCheck = Number(leftValue) < Number(rightValue);
+    //                 break;
+    //             case 'GREATER_OR_EQUAL':
+    //                 isCheck = Number(leftValue) >= Number(rightValue);
+    //                 break;
+    //             case 'LESS_OR_EQUAL':
+    //                 isCheck = Number(leftValue) <= Number(rightValue);
+    //                 break;
+    //         }
 
-            return isCheck;
-        },
-    },
-    practical_course_diode_secs_toggle: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 발광다이오드를 %2초 동안 %3 %4',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['OUT 1', '1'],
-                    ['OUT 2', '2'],
-                    ['OUT 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['켜기', '255'],
-                    ['끄기', '0'],
-                ],
-                value: '255',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/diode.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                {
-                    type: 'number',
-                    params: ['2'],
-                },
-                null,
-                null,
-            ],
-            type: 'practical_course_diode_secs_toggle',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            DURATION: 1,
-            VALUE: 2,
-        },
-        class: 'practical_course_diode',
-        func(sprite, script) {
-            if (!script.isStart) {
-                const port = script.getNumberField('PORT');
-                const duration = script.getNumberValue('DURATION');
-                let value = script.getNumberField('VALUE');
+    //         return isCheck;
+    //     },
+    // },
+    // practical_course_diode_secs_toggle: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 발광다이오드를 %2초 동안 %3 %4',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['OUT 1', '1'],
+    //                 ['OUT 2', '2'],
+    //                 ['OUT 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['켜기', '255'],
+    //                 ['끄기', '0'],
+    //             ],
+    //             value: '255',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/diode.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             {
+    //                 type: 'number',
+    //                 params: ['2'],
+    //             },
+    //             null,
+    //             null,
+    //         ],
+    //         type: 'practical_course_diode_secs_toggle',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         DURATION: 1,
+    //         VALUE: 2,
+    //     },
+    //     class: 'practical_course_diode',
+    //     func(sprite, script) {
+    //         if (!script.isStart) {
+    //             const port = script.getNumberField('PORT');
+    //             const duration = script.getNumberValue('DURATION');
+    //             let value = script.getNumberField('VALUE');
 
-                let option = port;
-                if (value < 0) {
-                    value = 0;
-                } else if (value > 255) {
-                    value = 255;
-                }
-                if (option === 3) {
-                    option = 4;
-                }
+    //             let option = port;
+    //             if (value < 0) {
+    //                 value = 0;
+    //             } else if (value > 255) {
+    //                 value = 255;
+    //             }
+    //             if (option === 3) {
+    //                 option = 4;
+    //             }
 
-                script.isStart = true;
-                script.timeFlag = 1;
-                script.outPort = port;
-                script.outOption = option;
-                Entry.hw.sendQueue[`OUT${port}`] = value;
-                Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+    //             script.isStart = true;
+    //             script.timeFlag = 1;
+    //             script.outPort = port;
+    //             script.outOption = option;
+    //             Entry.hw.sendQueue[`OUT${port}`] = value;
+    //             Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
 
-                setTimeout(() => {
-                    script.timeFlag = 0;
-                }, duration * 1000);
-                return script;
-            } else if (script.timeFlag == 1) {
-                return script;
-            } else {
-                Entry.hw.sendQueue[`OUT${script.outPort}`] = 0;
-                Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~script.outOption;
-                delete script.timeFlag;
-                delete script.isStart;
-                delete script.outPort;
-                delete script.outOption;
-                Entry.engine.isContinue = false;
-                return script.callReturn();
-            }
-        },
-    },
-    practical_course_diode_toggle: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 발광다이오드를 %2 %3',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['OUT 1', '1'],
-                    ['OUT 2', '2'],
-                    ['OUT 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['켜기', '255'],
-                    ['끄기', '0'],
-                ],
-                value: '255',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/diode.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null, null, null],
-            type: 'practical_course_diode_toggle',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            VALUE: 1,
-        },
-        class: 'practical_course_diode',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const port = script.getNumberField('PORT');
-            let value = script.getNumberField('VALUE');
-            let option = port;
+    //             setTimeout(() => {
+    //                 script.timeFlag = 0;
+    //             }, duration * 1000);
+    //             return script;
+    //         } else if (script.timeFlag == 1) {
+    //             return script;
+    //         } else {
+    //             Entry.hw.sendQueue[`OUT${script.outPort}`] = 0;
+    //             Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~script.outOption;
+    //             delete script.timeFlag;
+    //             delete script.isStart;
+    //             delete script.outPort;
+    //             delete script.outOption;
+    //             Entry.engine.isContinue = false;
+    //             return script.callReturn();
+    //         }
+    //     },
+    // },
+    // practical_course_diode_toggle: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 발광다이오드를 %2 %3',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['OUT 1', '1'],
+    //                 ['OUT 2', '2'],
+    //                 ['OUT 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['켜기', '255'],
+    //                 ['끄기', '0'],
+    //             ],
+    //             value: '255',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/diode.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null, null, null],
+    //         type: 'practical_course_diode_toggle',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         VALUE: 1,
+    //     },
+    //     class: 'practical_course_diode',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const port = script.getNumberField('PORT');
+    //         let value = script.getNumberField('VALUE');
+    //         let option = port;
 
-            if (value < 0) {
-                value = 0;
-            } else if (value > 255) {
-                value = 255;
-            }
+    //         if (value < 0) {
+    //             value = 0;
+    //         } else if (value > 255) {
+    //             value = 255;
+    //         }
 
-            if (option === 3) {
-                option = 4;
-            }
+    //         if (option === 3) {
+    //             option = 4;
+    //         }
 
-            Entry.hw.sendQueue[`OUT${port}`] = value;
-            Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+    //         Entry.hw.sendQueue[`OUT${port}`] = value;
+    //         Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
 
-            return script.callReturn();
-        },
-    },
-    practical_course_diode_inout_toggle: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['OUT 1', '1'],
-                    ['OUT 2', '2'],
-                    ['OUT 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/diode.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                null,
-                { type: 'number', params: ['0'] },
-                { type: 'number', params: ['255'] },
-                null,
-            ],
-            type: 'practical_course_diode_inout_toggle',
-        },
-        paramsKeyMap: {
-            OUTPUT: 0,
-            INPUT: 1,
-            MIN: 2,
-            MAX: 3,
-        },
-        class: 'practical_course_diode',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const outputPort = script.getNumberField('OUTPUT');
-            const inputPort = script.getNumberField('INPUT');
-            let option = inputPort;
-            if (option === 3) {
-                option = 4;
-            }
-            const oMin = script.getNumberValue('MIN');
-            const oMax = script.getNumberValue('MAX');
-            const nMin = 0;
-            const nMax = 255;
-            const x = Entry.hw.portData[`IN${inputPort}`];
-            const percent = (x - oMin) / (oMax - oMin);
-            let result = percent * (nMax - nMin) + nMin;
-            if (result > nMax) {
-                result = nMax;
-            }
-            if (result < nMin) {
-                result = nMin;
-            }
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_diode_inout_toggle: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['OUT 1', '1'],
+    //                 ['OUT 2', '2'],
+    //                 ['OUT 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/diode.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             null,
+    //             { type: 'number', params: ['0'] },
+    //             { type: 'number', params: ['255'] },
+    //             null,
+    //         ],
+    //         type: 'practical_course_diode_inout_toggle',
+    //     },
+    //     paramsKeyMap: {
+    //         OUTPUT: 0,
+    //         INPUT: 1,
+    //         MIN: 2,
+    //         MAX: 3,
+    //     },
+    //     class: 'practical_course_diode',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const outputPort = script.getNumberField('OUTPUT');
+    //         const inputPort = script.getNumberField('INPUT');
+    //         let option = inputPort;
+    //         if (option === 3) {
+    //             option = 4;
+    //         }
+    //         const oMin = script.getNumberValue('MIN');
+    //         const oMax = script.getNumberValue('MAX');
+    //         const nMin = 0;
+    //         const nMax = 255;
+    //         const x = Entry.hw.portData[`IN${inputPort}`];
+    //         const percent = (x - oMin) / (oMax - oMin);
+    //         let result = percent * (nMax - nMin) + nMin;
+    //         if (result > nMax) {
+    //             result = nMax;
+    //         }
+    //         if (result < nMin) {
+    //             result = nMin;
+    //         }
 
-            Entry.hw.sendQueue[`OUT${outputPort}`] = result;
-            Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+    //         Entry.hw.sendQueue[`OUT${outputPort}`] = result;
+    //         Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
 
-            return script.callReturn();
-        },
-    },
-    practical_course_diode_set_output: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['OUT 1', '1'],
-                    ['OUT 2', '2'],
-                    ['OUT 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Block',
-                accept: 'string',
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/diode.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [
-                null,
-                {
-                    type: 'number',
-                    params: ['255'],
-                },
-                null,
-            ],
-            type: 'practical_course_diode_set_output',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-            VALUE: 1,
-        },
-        class: 'practical_course_diode',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const port = script.getStringField('PORT', script);
-            let value = script.getNumberValue('VALUE', script);
-            let option = port;
-            if (value < 0) {
-                value = 0;
-            } else if (value > 255) {
-                value = 255;
-            }
-            if (option === 3) {
-                option = 4;
-            }
-            Entry.hw.sendQueue[`OUT${port}`] = value;
-            Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
-            return script.callReturn();
-        },
-    },
-    practical_course_diode_input_value: {
-        color: '#ff8d0f',
-        outerLine: '#e37100',
-        skeleton: 'basic_string_field',
-        fontColor: '#fff',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '%1번 포트의 값',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['IN 1', '1'],
-                    ['IN 2', '2'],
-                    ['IN 3', '3'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#e37100',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null],
-            type: 'practical_course_diode_input_value',
-        },
-        paramsKeyMap: {
-            PORT: 0,
-        },
-        class: 'practical_course_diode',
-        func(sprite, script) {
-            const port = script.getStringField('PORT');
-            return Entry.hw.portData[`IN${port}`];
-        },
-    },
-    practical_course_melody_note_for: {
-        color: '#FC327F',
-        skeleton: 'basic',
-        statements: [],
-        isNotFor: ['neobot'],
-        template: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
-        params: [
-            {
-                type: 'Dropdown',
-                options: [
-                    ['무음', '0'],
-                    ['도', '1'],
-                    ['도#(레♭)', '2'],
-                    ['레', '3'],
-                    ['레#(미♭)', '4'],
-                    ['미', '5'],
-                    ['파', '6'],
-                    ['파#(솔♭)', '7'],
-                    ['솔', '8'],
-                    ['솔#(라♭)', '9'],
-                    ['라', '10'],
-                    ['라#(시♭)', '11'],
-                    ['시', '12'],
-                ],
-                value: '1',
-                fontSize: 11,
-                bgColor: '#ce105e',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['1', '0'],
-                    ['2', '1'],
-                    ['3', '2'],
-                    ['4', '3'],
-                    ['5', '4'],
-                    ['6', '5'],
-                ],
-                value: '2',
-                fontSize: 11,
-                bgColor: '#ce105e',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Dropdown',
-                options: [
-                    ['온음표', '1'],
-                    ['2분음표', '2'],
-                    ['4분음표', '4'],
-                    ['8분음표', '8'],
-                    ['16분음표', '16'],
-                ],
-                value: '4',
-                fontSize: 11,
-                bgColor: '#ce105e',
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            },
-            {
-                type: 'Indicator',
-                img: 'block_icon/practical_course/melody.png',
-                size: 12,
-            },
-        ],
-        events: {},
-        def: {
-            params: [null, null, null, null],
-            type: 'practical_course_melody_note_for',
-        },
-        paramsKeyMap: {
-            NOTE: 0,
-            OCTAVE: 1,
-            DURATION: 2,
-        },
-        class: 'practical_course_melody',
-        //'isNotFor': ['mini'],
-        func(sprite, script) {
-            const sq = Entry.hw.sendQueue;
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_diode_set_output: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['OUT 1', '1'],
+    //                 ['OUT 2', '2'],
+    //                 ['OUT 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Block',
+    //             accept: 'string',
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/diode.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [
+    //             null,
+    //             {
+    //                 type: 'number',
+    //                 params: ['255'],
+    //             },
+    //             null,
+    //         ],
+    //         type: 'practical_course_diode_set_output',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //         VALUE: 1,
+    //     },
+    //     class: 'practical_course_diode',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT', script);
+    //         let value = script.getNumberValue('VALUE', script);
+    //         let option = port;
+    //         if (value < 0) {
+    //             value = 0;
+    //         } else if (value > 255) {
+    //             value = 255;
+    //         }
+    //         if (option === 3) {
+    //             option = 4;
+    //         }
+    //         Entry.hw.sendQueue[`OUT${port}`] = value;
+    //         Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+    //         return script.callReturn();
+    //     },
+    // },
+    // practical_course_diode_input_value: {
+    //     color: '#ff8d0f',
+    //     outerLine: '#e37100',
+    //     skeleton: 'basic_string_field',
+    //     fontColor: '#fff',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '%1번 포트의 값',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['IN 1', '1'],
+    //                 ['IN 2', '2'],
+    //                 ['IN 3', '3'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#e37100',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null],
+    //         type: 'practical_course_diode_input_value',
+    //     },
+    //     paramsKeyMap: {
+    //         PORT: 0,
+    //     },
+    //     class: 'practical_course_diode',
+    //     func(sprite, script) {
+    //         const port = script.getStringField('PORT');
+    //         return Entry.hw.portData[`IN${port}`];
+    //     },
+    // },
+    // practical_course_melody_note_for: {
+    //     color: '#FC327F',
+    //     skeleton: 'basic',
+    //     statements: [],
+    //     isNotFor: ['neobot'],
+    //     template: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
+    //     params: [
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['무음', '0'],
+    //                 ['도', '1'],
+    //                 ['도#(레♭)', '2'],
+    //                 ['레', '3'],
+    //                 ['레#(미♭)', '4'],
+    //                 ['미', '5'],
+    //                 ['파', '6'],
+    //                 ['파#(솔♭)', '7'],
+    //                 ['솔', '8'],
+    //                 ['솔#(라♭)', '9'],
+    //                 ['라', '10'],
+    //                 ['라#(시♭)', '11'],
+    //                 ['시', '12'],
+    //             ],
+    //             value: '1',
+    //             fontSize: 11,
+    //             bgColor: '#ce105e',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['1', '0'],
+    //                 ['2', '1'],
+    //                 ['3', '2'],
+    //                 ['4', '3'],
+    //                 ['5', '4'],
+    //                 ['6', '5'],
+    //             ],
+    //             value: '2',
+    //             fontSize: 11,
+    //             bgColor: '#ce105e',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Dropdown',
+    //             options: [
+    //                 ['온음표', '1'],
+    //                 ['2분음표', '2'],
+    //                 ['4분음표', '4'],
+    //                 ['8분음표', '8'],
+    //                 ['16분음표', '16'],
+    //             ],
+    //             value: '4',
+    //             fontSize: 11,
+    //             bgColor: '#ce105e',
+    //             arrowColor: EntryStatic.colorSet.common.WHITE,
+    //         },
+    //         {
+    //             type: 'Indicator',
+    //             img: 'block_icon/practical_course/melody.png',
+    //             size: 12,
+    //         },
+    //     ],
+    //     events: {},
+    //     def: {
+    //         params: [null, null, null, null],
+    //         type: 'practical_course_melody_note_for',
+    //     },
+    //     paramsKeyMap: {
+    //         NOTE: 0,
+    //         OCTAVE: 1,
+    //         DURATION: 2,
+    //     },
+    //     class: 'practical_course_melody',
+    //     //'isNotFor': ['mini'],
+    //     func(sprite, script) {
+    //         const sq = Entry.hw.sendQueue;
 
-            if (!script.isStart) {
-                const note = script.getNumberField('NOTE', script);
-                const octave = script.getNumberField('OCTAVE', script);
-                const duration = script.getNumberField('DURATION', script);
-                let value = note > 0 ? note + 12 * octave : 0;
+    //         if (!script.isStart) {
+    //             const note = script.getNumberField('NOTE', script);
+    //             const octave = script.getNumberField('OCTAVE', script);
+    //             const duration = script.getNumberField('DURATION', script);
+    //             let value = note > 0 ? note + 12 * octave : 0;
 
-                script.isStart = true;
-                script.timeFlag = 1;
-                script.soundFlag = 1;
-                if (value > 65) {
-                    value = 65;
-                }
-                sq.SND = value;
-                setTimeout(() => {
-                    setTimeout(() => {
-                        script.timeFlag = 0;
-                    }, 50);
-                }, (1 / duration) * 2000);
-                return script;
-            } else if (script.timeFlag == 1) {
-                return script;
-            } else if (script.soundFlag == 1) {
-                Entry.hw.sendQueue.SND = 0;
-                script.soundFlag = 0;
-                return script;
-            } else {
-                delete script.timeFlag;
-                delete script.isStart;
-                Entry.engine.isContinue = false;
-                return script.callReturn();
-            }
-        },
-    },
+    //             script.isStart = true;
+    //             script.timeFlag = 1;
+    //             script.soundFlag = 1;
+    //             if (value > 65) {
+    //                 value = 65;
+    //             }
+    //             sq.SND = value;
+    //             setTimeout(() => {
+    //                 setTimeout(() => {
+    //                     script.timeFlag = 0;
+    //                 }, 50);
+    //             }, (1 / duration) * 2000);
+    //             return script;
+    //         } else if (script.timeFlag == 1) {
+    //             return script;
+    //         } else if (script.soundFlag == 1) {
+    //             Entry.hw.sendQueue.SND = 0;
+    //             script.soundFlag = 0;
+    //             return script;
+    //         } else {
+    //             delete script.timeFlag;
+    //             delete script.isStart;
+    //             Entry.engine.isContinue = false;
+    //             return script.callReturn();
+    //         }
+    //     },
+    // },
 
     // roborobo_mini
     roborobo_motor_speed: {
