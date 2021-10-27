@@ -7833,10 +7833,10 @@ function inheritBlockSchema() {
 function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
-    if (EntryStatic.isPracticalCourse) {
-        Object.assign(Entry.block, Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
-        // applySetLanguage(Entry.PRACTICAL_HARDWARE_BLOCK_LIST);
-    }
+    // if (EntryStatic.isPracticalCourse) {
+    //     Object.assign(Entry.block, Entry.PRACTICAL_BLOCK_LIST);
+    //     applySetLanguage(Entry.PRACTICAL_BLOCK_LIST);
+    // }
 }
 
 function applySetLanguage(hasSetLanguageObj) {

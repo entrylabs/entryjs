@@ -10,7 +10,7 @@
  * ...
  */
 Entry.HARDWARE_LIST = {};
-Entry.PRACTICAL_HARDWARE_BLOCK_LIST = {};
+Entry.PRACTICAL_HARDWARE_LIST = {};
 
 /*
  * index.js 를 제외한 해당 폴더의 모든 모듈을 import 한다.
@@ -21,19 +21,20 @@ Entry.PRACTICAL_HARDWARE_BLOCK_LIST = {};
 const moduleListReq = require.context('.', false, /^(?!.*index.js)((.*\.(js\.*))[^.]*$)/im);
 
 function addHardwareModule(module, id) {
-    // 일반모드, 일반 하드웨어 > 리스트에만 추가
-    // 일반모드, 교과용 하드웨어 > 추가안함
-    // 교과모드, 일반 하드웨어 > 리스트에만 추가
-    // 교과모드, 교과용 하드웨어 > 리스트에 추가, 모듈리스트에도 추가
-    Entry.HARDWARE_LIST[id] = module;
-    // if (!module.isPracticalCourse) {
-    //     Entry.HARDWARE_LIST[id] = module;
-    // } else if (EntryStatic.isPracticalCourse) {
-    //     // console.log("module : ", module);
-    //     Entry.HARDWARE_LIST[id] = module;
-    //     Object.assign(Entry.PRACTICAL_HARDWARE_BLOCK_LIST, module.getPracticalBlocks() ?? {});
-    //     EntryStatic.hwMiniSupportList.push(module.name);
-    // }
+    // 일반모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+    // 일반모드, 교과블록 포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+    // 교과모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+    // 교과모드, 교과블록 포함 하드웨어 > 교과블록만 출력
+    try {
+        if (module.hasPracticalCourse && EntryStatic.isPracticalCourse) {
+            Entry.PRACTICAL_HARDWARE_LIST[id] = module;
+            EntryStatic.hwMiniSupportList.push(module.name);
+        } else {
+            Entry.HARDWARE_LIST[id] = module;
+        }
+    } catch (err) {
+        console.log(err, module);
+    }
 }
 
 function addHardwareList(module) {
@@ -50,8 +51,8 @@ function getHardwareModuleList() {
     return Object.values(Entry.HARDWARE_LIST);
 }
 
-function getPracticalCourseHardwareBlockList() {
-    return Entry.PRACTICAL_HARDWARE_BLOCK_LIST;
+function getPracticalHardwareModuleList() {
+    return Object.values(Entry.PRACTICAL_HARDWARE_LIST);
 };
 
 function getHardwareModule(hardware, callback) {
@@ -74,5 +75,5 @@ moduleListReq.keys().forEach((fileName) => {
 
 module.exports = {
     getHardwareModuleList,
-    getPracticalCourseHardwareBlockList
+    getPracticalHardwareModuleList
 };
