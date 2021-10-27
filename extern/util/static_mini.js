@@ -268,17 +268,17 @@ EntryStatic.getAllBlocks = function() {
             visible: false,
             blocks: [
                 'practical_course_dummy',
-                // 'practical_course_move_for_secs',
-                // 'practical_course_move_for_secs2',
-                // 'practical_course_move_for',
-                // 'practical_course_move_for2',
-                // 'practical_course_stop_for',
-                // 'practical_course_set_servo2',
+                'practical_course_move_for_secs',
+                'practical_course_move_for_secs2',
+                'practical_course_move_for',
+                'practical_course_move_for2',
+                'practical_course_stop_for',
                 //roborobo
                 'roborobo_move_for_secs',
                 'roborobo_move_for',
                 'roborobo_turn_for',
                 'roborobo_stop_for',
+                'practical_course_set_servo2',
                 //robotis
                 'robotis_aux_move_for',
                 'robotis_aux_stop_for',
@@ -294,7 +294,7 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_set_servo_speed_dream',
                 'robotis_set_servo_position_dream',
                 'robotis_servo_stop_for_dream',
-            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_motor']),
+            ],
         },
         {
             category: 'hw_melody',
@@ -304,21 +304,21 @@ EntryStatic.getAllBlocks = function() {
                 'practical_course_melody_note_for',
                 //robotis
                 'robotis_melody_note_for',
-            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_melody']),
+            ],
         },
         {
             category: 'hw_sensor',
             visible: false,
             blocks: [
                 'practical_course_dummy',
-                // 'practical_course_touch_value',
-                // 'practical_course_touch_value_boolean',
-                // 'practical_course_light_value',
-                // 'practical_course_light_value_boolean',
-                // 'practical_course_sound_value',
-                // 'practical_course_sound_value_boolean',
-                // 'practical_course_irs_value',
-                // 'practical_course_irs_value_boolean',
+                'practical_course_touch_value',
+                'practical_course_touch_value_boolean',
+                'practical_course_light_value',
+                'practical_course_light_value_boolean',
+                'practical_course_sound_value',
+                'practical_course_sound_value_boolean',
+                'practical_course_irs_value',
+                'practical_course_irs_value_boolean',
                 //roborobo
                 'roborobo_touch_value',
                 'roborobo_touch_value_boolean',
@@ -361,18 +361,18 @@ EntryStatic.getAllBlocks = function() {
                 'robotis_humidity_value_boolean_dream',
                 'robotis_temperature_value_dream',
                 'robotis_temperature_value_boolean_dream',
-            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_sensor']),
+            ],
         },
         {
             category: 'hw_led',
             visible: false,
             blocks: [
                 'practical_course_dummy',
-                // 'practical_course_diode_secs_toggle',
-                // 'practical_course_diode_toggle',
-                // 'practical_course_diode_inout_toggle',
-                // 'practical_course_diode_set_output',
-                // 'practical_course_diode_input_value',
+                'practical_course_diode_secs_toggle',
+                'practical_course_diode_toggle',
+                'practical_course_diode_inout_toggle',
+                'practical_course_diode_set_output',
+                'practical_course_diode_input_value',
                 //roborobo
                 'roborobo_diode_secs_toggle',
                 'roborobo_diode_toggle',
@@ -382,7 +382,7 @@ EntryStatic.getAllBlocks = function() {
                 //robotis
                 'robotis_set_led',
                 'robotis_set_led_dream',
-            ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_led']),
+            ],
         },
         {
             category: 'hw_robot',
@@ -809,12 +809,6 @@ EntryStatic.initOptions = {
 };
 
 EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
-
-EntryStatic.DynamicPracticalHardwareBlocks = {};
-
-EntryStatic.hwCategoryList.forEach(category => {
-    EntryStatic.DynamicPracticalHardwareBlocks[category] = [];
-});
 
 EntryStatic.hwMiniSupportList = [
     // 'neobot',

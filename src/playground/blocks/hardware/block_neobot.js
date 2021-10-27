@@ -1928,36 +1928,6 @@ Entry.Neobot.setLanguage = function () {
     };
 };
 
-Entry.Neobot.practicalBlockMenuBlocks = {
-    hw_motor: [
-        'practical_course_move_for_secs',
-        'practical_course_move_for_secs2',
-        'practical_course_move_for',
-        'practical_course_move_for2',
-        'practical_course_stop_for',
-    ],
-    hw_melody: [
-        'practical_course_melody_note_for',
-    ],
-    hw_sensor: [
-        'practical_course_touch_value',
-        'practical_course_touch_value_boolean',
-        'practical_course_light_value',
-        'practical_course_light_value_boolean',
-        'practical_course_sound_value',
-        'practical_course_sound_value_boolean',
-        'practical_course_irs_value',
-        'practical_course_irs_value_boolean',
-    ],
-    hw_led: [
-        'practical_course_diode_secs_toggle',
-        'practical_course_diode_toggle',
-        'practical_course_diode_inout_toggle',
-        'practical_course_diode_set_output',
-        'practical_course_diode_input_value',
-    ],
-}
-
 Entry.Neobot.blockMenuBlocks = [
     // class sensor
     'neobot_sensor_value',

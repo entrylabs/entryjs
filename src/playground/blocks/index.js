@@ -60,12 +60,21 @@ function getBlockObject(items) {
     return blockObject;
 }
 
-function getPracticalBlockObject(items) {
+function getHardwareBlockObject(items) {
     const blockObject = {};
     items.forEach((item) => {
+        // 일반모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 일반모드, 교과블록 포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 교과모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 교과모드, 교과블록 포함 하드웨어 > 교과블록만 출력
         try {
-            if ('getPracticalBlocks' in item) {
-                Object.assign(blockObject, item.getPracticalBlocks());
+            if (item.hasPracticalCourse && EntryStatic.isPracticalCourse) {
+                // console.log("Practical item : ", item);
+                Object.assign(blockObject, 'getPracticalBlocks' in item ? item.getPracticalBlocks() : {});
+                EntryStatic.hwMiniSupportList.push(item.name);
+            } else {
+                Object.assign(blockObject, 'getBlocks' in item ? item.getBlocks() : {});
+                // console.log("normal item : ", item);
             }
         } catch (err) {
             console.log(err, item);
@@ -90,34 +99,16 @@ function registerHardwareBlockToStatic(hardwareModules) {
     );
 }
 
-function registerPracticalHardwareBlockToStatic(hardwareModules) {
-    // TODO : 카테고리별로 분리해서 삽입
-    for (let category in EntryStatic.DynamicPracticalHardwareBlocks) {
-        EntryStatic.DynamicPracticalHardwareBlocks[category] = _union(
-            _flatten(hardwareModules.map((hardware) => hardware.practicalBlockMenuBlocks[category] || [])),
-            EntryStatic.DynamicPracticalHardwareBlocks[category]
-        );
-    }
-}
-
 module.exports = {
     getBlocks() {
+        const hardwareModules = hardware.getHardwareModuleList();
+        registerHardwareBlockToStatic(hardwareModules);
         const basicAndExpansionBlockObjectList = getBlockObject(
             basicBlockList
                 .concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
                 .concat(Object.values(Entry.AI_UTILIZE_BLOCK_LIST))
         );
-
-        const hardwareModules = hardware.getHardwareModuleList();
-        const hardwareBlockObjectList = getBlockObject(hardwareModules);
-        registerHardwareBlockToStatic(hardwareModules);
-
-        if (EntryStatic.isPracticalCourse) {
-            const practicalHardwareModules = hardware.getPracticalHardwareModuleList();
-            Object.assign(hardwareBlockObjectList, getPracticalBlockObject(practicalHardwareModules));
-            registerPracticalHardwareBlockToStatic(practicalHardwareModules);
-        }
-
+        const hardwareBlockObjectList = getHardwareBlockObject(hardwareModules);
         return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };

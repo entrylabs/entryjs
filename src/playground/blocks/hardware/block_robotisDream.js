@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Robotis_DREAM = {
+    isPracticalCourse: true,
     MODULE_VALUE: {
         DEFAULT: 0,
         PASSIVE: 1,
