@@ -16,7 +16,7 @@ Entry.Wearable = {
 };
 
 // 언어 적용
-Entry.ProboConnect.setLanguage = function() {
+Entry.Wearable.setLanguage = function() {
     return {
         ko: {
             Blocks: {
@@ -147,7 +147,7 @@ Entry.ProboConnect.setLanguage = function() {
     };
 };
 
-Entry.ProboConnect.blockMenuBlocks = [
+Entry.Wearable.blockMenuBlocks = [
     //'test_value',
     'mic_input',
     'battery_check',
@@ -167,7 +167,7 @@ Entry.ProboConnect.blockMenuBlocks = [
 
 
 // 블록 생성
-Entry.ProboConnect.getBlocks = function() {
+Entry.Wearable.getBlocks = function() {
     return {
         test_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
