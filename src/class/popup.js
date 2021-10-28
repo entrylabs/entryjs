@@ -89,8 +89,8 @@ Entry.Popup = class Popup {
             maxWidth = window.parent.innerWidth * 0.9;
             maxHeight = window.parent.innerHeight * 0.9 - bottomOffset;
         } else {
-            maxWidth = window.parent.innerWidth * 0.9;
-            maxHeight = window.parent.innerHeight * 0.9 - bottomOffset;
+            maxWidth = window.innerWidth * 0.9;
+            maxHeight = window.innerHeight * 0.9 - bottomOffset;
         }
         if (maxWidth * 9 <= maxHeight * 16) {
             maxHeight = (maxWidth / 16) * 9;
