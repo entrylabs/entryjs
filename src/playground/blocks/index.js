@@ -63,18 +63,16 @@ function getBlockObject(items) {
 function getHardwareBlockObject(items) {
     const blockObject = {};
     items.forEach((item) => {
-        // 일반모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
-        // 일반모드, 교과블록 포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
-        // 교과모드, 교과블록 미포함 하드웨어 > 일반블록만 출력(리스트에만 추가)
+        // 일반모드, 교과블록 미포함 하드웨어 > 일반블록만 출력
+        // 일반모드, 교과블록 포함 하드웨어 > 일반블록만 출력
+        // 교과모드, 교과블록 미포함 하드웨어 > 일반블록만 출력
         // 교과모드, 교과블록 포함 하드웨어 > 교과블록만 출력
         try {
             if (item.hasPracticalCourse && EntryStatic.isPracticalCourse) {
-                // console.log("Practical item : ", item);
                 Object.assign(blockObject, 'getPracticalBlocks' in item ? item.getPracticalBlocks() : {});
                 EntryStatic.hwMiniSupportList.push(item.name);
             } else {
                 Object.assign(blockObject, 'getBlocks' in item ? item.getBlocks() : {});
-                // console.log("normal item : ", item);
             }
         } catch (err) {
             console.log(err, item);
@@ -93,10 +91,27 @@ function getHardwareBlockObject(items) {
  * @return {void}
  */
 function registerHardwareBlockToStatic(hardwareModules) {
-    EntryStatic.DynamicHardwareBlocks = _union(
-        _flatten(hardwareModules.map((hardware) => hardware.blockMenuBlocks || [])),
-        EntryStatic.DynamicHardwareBlocks
-    );
+    // TODO : getHardwareBlockObject과의 병합 고려
+    hardwareModules.forEach((hardware) => {
+        try {
+            if (hardware.hasPracticalCourse && EntryStatic.isPracticalCourse) {
+                if (hardware.practicalBlockMenuBlocks) {
+                    for (let category in hardware.practicalBlockMenuBlocks) {
+                        EntryStatic.DynamicPracticalHardwareBlocks[category] = _union(
+                            hardware.practicalBlockMenuBlocks[category],
+                            EntryStatic.DynamicPracticalHardwareBlocks[category]
+                        );
+                    }
+                }
+            } else {
+                EntryStatic.DynamicHardwareBlocks = _union(hardware.blockMenuBlocks || [],
+                    EntryStatic.DynamicHardwareBlocks
+                );
+            }
+        } catch (err) {
+            console.log(err, hardware);
+        }
+    });
 }
 
 module.exports = {
