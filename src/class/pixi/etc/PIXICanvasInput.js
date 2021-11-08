@@ -992,11 +992,8 @@ import * as PIXI from 'pixi.js';
         mousedown(e, self) {
             e = Entry.Utils.convertMouseEvent(e);
             const roundRect = Entry.stage.getBoundRect();
-            const scrollPos = Entry.Utils.getScrollPos();
-            const x = ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480;
-            const y = ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270;
-
-            const mouse = self._mousePos(e);
+            const x = (e.offsetX / roundRect.width - 0.5) * 480;
+            const y = (e.offsetY / roundRect.height - 0.5) * -270;
             const isOver = self._overInput(x, y);
 
             // setup the 'click' event
@@ -1418,8 +1415,7 @@ import * as PIXI from 'pixi.js';
          * @return {Boolean}   True if it is over the input box.
          */
         _overInput(x, y) {
-            const self = this;
-            return x >= -138 && x <= 148 && y >= -112 && y <= -91;
+            return x >= -226 && x <= 183 && y >= -110 && y <= -73;
         },
 
         /**
