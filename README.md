@@ -143,7 +143,7 @@ entryjs는 HTML Canvas와 오디오, 벡터 이미지등을 다루기 위해 몇
       url: '/css/nanumpenscript.css'
     }]
     ```
-    무료 한글 웹폰트는 https://www.google.com/fonts/earlyaccess 에서 다운로드 하실 수 있습니다.
+    무료 한글 웹폰트는 https://fonts.google.com/earlyaccess 에서 다운로드 하실 수 있습니다.
 
 ### Entry.playground.setBlockMenu();
  블록메뉴 초기화
