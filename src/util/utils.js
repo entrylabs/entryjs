@@ -733,7 +733,7 @@ function removeEntryEvent(dom, event, func) {
 Entry.Utils.bindGlobalEvent = function(options) {
     const doc = $(document);
     let parentDoc;
-    if (window.parent) {
+    if (window.parent !== window.self) {
         parentDoc = $(window.parent.document);
     }
     if (options === undefined) {
