@@ -6,8 +6,8 @@ Entry.aibot = {
     url: 'http://www.jinirobot.com',
     imageName: 'aibot.png',
     title: {
-        ko: 'aibot',
-        en: 'aibot',
+        ko: 'AIBOT',
+        en: 'AIBOT',
     },
     array: {        
 		SERVO_CONTROL: 0,
@@ -20,9 +20,10 @@ Entry.aibot = {
         SET_SERVO_HOME_POS: 7,
         AIDESK_CONTROL: 8,
         REMOTE_DEVICE: 9,
+        CONNECT_DEVICE: 10,
     },
 
-    delayTime: 50,
+    delayTime: 100,
     timeouts: [],
 
     removeTimeout: function(id) {
@@ -42,11 +43,11 @@ Entry.aibot = {
     },
     
     setZero() {
-      
+        
     },
     BlockState: {},
     monitorTemplate: {
-        width: 800,
+        width: 400,
         height: 600,
         listPorts: {
             A0: {
@@ -89,23 +90,74 @@ Entry.aibot = {
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A16: {
-                name: 'AIDF',
+            A8: {
+                name: 'RD1',
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A17: {
-                name: 'AIDS',
+            A9: {
+                name: 'RD2',
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A18: {
-                name: 'AIDN',
+            A10: {
+                name: 'RD3',
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A19: {
-                name: 'AIDS',
+            A11: {
+                name: 'RD4',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            A12: {
+                name: 'RA1',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            A13: {
+                name: 'RA2',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            A14: {
+                name: 'RA3',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            A15: {
+                name: 'RA4',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            
+            AD0: {
+                name: 'AID1',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            AD1: {
+                name: 'AID2',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            AD2: {
+                name: 'AID3',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            AD3: {
+                name: 'AID4',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            AD4: {
+                name: 'AID5',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            AD5: {
+                name: 'AID6',
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
@@ -135,11 +187,21 @@ Entry.aibot.setLanguage = function() {
                 aibot_set_remote_servo_angle_single: '원격의 %1번 모듈을 %2의 각도로 제어하기 %3',                
                 aibot_set_remote_servo_angle_123: '원격의 모듈 1번을%1, 2번을%2, 3번을%3의 각도로 제어하기%4',
                 aibot_set_remote_servo_angle_56: '원격의 모듈 5번을%1, 6번을%2의 각도로 제어하기%3',
-                aibot_aidesk_read_string: 'AI Desk의 %1번 문자열 반환값 가져오기 %2',  
+                //aibot_aidesk_read_string: 'AI Desk의 %1번 문자열 반환값 가져오기 %2',  
                 aibot_aidesk_read_number: 'AI Desk의 %1번 숫자 반환값 가져오기 %2', 
-                aibot_aidesk_control_basic: 'AI Desk의 %1번 기능 시작하기(매개변수1:%2, 매개변수2:%3) %4',
+                aibot_aidesk_control_basic: 'AI Desk의 %1번 기능 시작하기(매개변수1:%2, 매개변수2:%3, 매개변수3:%4)%5',
                 aibot_aidesk_func_stop: 'AI Desk의 %1번 기능 정지하기%2',
                 aibot_set_remote_device: '원격 디바이스 설정%1',
+
+                remote1: '원격1',
+                remote2: '원격2',
+                remote3: '원격3',
+                remote4: '원격4',
+                digitalInput: '디지털입력',
+                digitalOutput: '디지털출력',
+                analogInput: '아날로그입력', 
+                on: '켜기',
+                off: '끄기',   
             },
         },
         en: {
@@ -160,12 +222,22 @@ Entry.aibot.setLanguage = function() {
                 aibot_set_remote_servo_angle_single: 'Remote %1 Module %2 DEGREE %3',
                 aibot_set_remote_servo_angle_123: 'Remote Module control degree 1%1, 2%2 3%3 %4',     
                 aibot_set_remote_servo_angle_56: 'Remote Module control degree 5%1, 6%2 %3',  
-                aibot_aidesk_read_string: 'Read String %1 of AIDesk %2',  
+                //aibot_aidesk_read_string: 'Read String %1 of AIDesk %2',  
                 aibot_aidesk_read_number: 'Read Number %1 of AIDesk %2',  
-                aibot_aidesk_control_basic: 'Start Function%1 of AI Desk(Var1:%2, Var2:%3) %4',
+                aibot_aidesk_control_basic: 'Start Function%1 of AI Desk(Var1:%2, Var2:%3, Var3:%4)%5',
                 aibot_aidesk_func_stop: 'Stop Function%1 of AI Desk%2',
                 aibot_set_remote_device: 'Set Remote Device%1',
-            },
+            
+                remote1: 'REMOTE1',
+                remote2: 'REMOTE2',
+                remote3: 'REMOTE3',
+                remote4: 'REMOTE4',                
+                digitalInput: 'DIGITAL INPUT',
+                digitalOutput: 'DIGITAL OUTPUT',
+                analogInput: 'ANALOG INPUT',                      
+                on: 'ON',
+                off: 'OFF', 
+            }
         },
     };
 };
@@ -188,7 +260,7 @@ Entry.aibot.blockMenuBlocks = [
     'aibot_set_remote_servo_angle_123',
     'aibot_set_remote_servo_angle_56',
     'aibot_set_remote_device',
-    'aibot_aidesk_read_string',
+    //'aibot_aidesk_read_string',
     'aibot_aidesk_read_number',
     'aibot_aidesk_control_basic',
     'aibot_aidesk_func_stop',
@@ -213,10 +285,10 @@ Entry.aibot.getBlocks = function() {
                         ['2', '1'],
                         ['3', '2'],
                         ['4', '3'],
-                        ['원격1', '4'],
-                        ['원격2', '5'],
-                        ['원격3', '6'],
-                        ['원격4', '7'],
+                        [Lang.template.remote1, '4'],
+                        [Lang.template.remote2, '5'],
+                        [Lang.template.remote3, '6'],
+                        [Lang.template.remote4, '7'],
                     ],
                     value: '0',   
                     fontSize: 11,
@@ -259,10 +331,10 @@ Entry.aibot.getBlocks = function() {
                         ['2', '1'],
                         ['3', '2'],
                         ['4', '3'],
-                        ['원격1', '4'],
-                        ['원격2', '5'],
-                        ['원격3', '6'],
-                        ['원격4', '7'],
+                        [Lang.template.remote1, '4'],
+                        [Lang.template.remote2, '5'],
+                        [Lang.template.remote3, '6'],
+                        [Lang.template.remote4, '7'],
                     ],
                     value: '0',   
                     fontSize: 11,
@@ -304,10 +376,10 @@ Entry.aibot.getBlocks = function() {
                         ['2', '1'],
                         ['3', '2'],
                         ['4', '3'],
-                        ['원격1', '4'],
-                        ['원격2', '5'],
-                        ['원격3', '6'],
-                        ['원격4', '7'],
+                        [Lang.template.remote1, '4'],
+                        [Lang.template.remote2, '5'],
+                        [Lang.template.remote3, '6'],
+                        [Lang.template.remote4, '7'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -315,9 +387,9 @@ Entry.aibot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [                        
-                        ['디지털입력', '0'],
-                        ['디지털출력', '1'],
-                        ['아날로그입력', '2'],
+                        [Lang.template.digitalInput, '0'],
+                        [Lang.template.digitalOutput, '1'],
+                        [Lang.template.analogInput, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -389,10 +461,10 @@ Entry.aibot.getBlocks = function() {
                         ['2', '1'],
                         ['3', '2'],
                         ['4', '3'],
-                        ['원격1', '4'],
-                        ['원격2', '5'],
-                        ['원격3', '6'],
-                        ['원격4', '7'],
+                        [Lang.template.remote1, '4'],
+                        [Lang.template.remote2, '5'],
+                        [Lang.template.remote3, '6'],
+                        [Lang.template.remote4, '7'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -400,8 +472,8 @@ Entry.aibot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [                        
-                        ['켜기', '1'],
-                        ['끄기', '0'],
+                        [Lang.template.on, '1'],
+                        [Lang.template.off, '0'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -709,7 +781,7 @@ Entry.aibot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0','90','150'],
+                params: ['90','90','90'],
                 type: 'aibot_set_servo_angle_123',    
             },
             paramsKeyMap: {                    
@@ -786,7 +858,7 @@ Entry.aibot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0','90'],
+                params: ['90','90'],
                 type: 'aibot_set_servo_angle_56',    
             },
             paramsKeyMap: {                    
@@ -897,8 +969,8 @@ Entry.aibot.getBlocks = function() {
                 else
                 {
                     var sq = Entry.hw.sendQueue;
-                    var Servo1=0;var Servo2=0;var Servo3=0;
-                    var Servo4=0;var Servo5=0;var Servo6=0;
+                    var Servo1=0,Servo2=0,Servo3=0;
+                    var Servo4=0,Servo5=0,Servo6=0;
                     var Servo = script.getNumberValue('SERVO', script);
                     var Angle = script.getNumberValue('ANGLE', script);
                                         
@@ -956,7 +1028,7 @@ Entry.aibot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0','90','150'],
+                params: ['90','90','90'],
                 type: 'aibot_set_remote_servo_angle_123',    
             },
             paramsKeyMap: {                    
@@ -1033,7 +1105,7 @@ Entry.aibot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0','90'],
+                params: ['90','90'],
                 type: 'aibot_set_remote_servo_angle_56',    
             },
             paramsKeyMap: {                    
@@ -1411,8 +1483,10 @@ Entry.aibot.getBlocks = function() {
             class: 'aibot_aidesk',
             isNotFor: ['aibot'],
             func: function(sprite, script) { 
-                var value = script.getNumberValue('VALUE',script);  
-                result = Entry.hw.portData.SENSOR[17];
+                var value = script.getNumberValue('VALUE',script); 
+                if(value>6)value=6; 
+                if(value<1)value=1; 
+                result = Entry.hw.portData.AIDESK[value-1];
                 return result;
             },
         },
@@ -1438,6 +1512,11 @@ Entry.aibot.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
@@ -1445,13 +1524,14 @@ Entry.aibot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['1','1','1'],
+                params: ['1','0','0','0'],
                 type: 'aibot_aidesk_control_basic',    
             },
             paramsKeyMap: {                    
                 FUNC: 0,
                 VAR1: 1,
                 VAR2: 2,
+                VAR3: 3,
             },
             class: 'aibot_aidesk',
             isNotFor: ['aibot'],
@@ -1477,6 +1557,14 @@ Entry.aibot.getBlocks = function() {
                     var Func=script.getNumberValue('FUNC', script);
                     var Var1=script.getNumberValue('VAR1', script);
                     var Var2=script.getNumberValue('VAR2', script); 
+                    var Var3=script.getNumberValue('VAR3', script); 
+
+                    if(Var1>2000)Var1=2000;
+                    if(Var1<-2000)Var1=-2000;
+                    if(Var2>2000)Var2=2000;
+                    if(Var2<-2000)Var2=-2000;
+                    if(Var3>2000)Var3=2000;
+                    if(Var3<-2000)Var3=-2000;
 
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1484,7 +1572,8 @@ Entry.aibot.getBlocks = function() {
                         remote: Remote,
                         func: Func,
                         var1: Var1, 
-                        var2: Var2,                       
+                        var2: Var2,
+                        var3: Var3,                       
                         Time: new Date().getTime(),
                     };
                     return script.callReturn(); 
@@ -1540,13 +1629,15 @@ Entry.aibot.getBlocks = function() {
                     var Func=script.getNumberValue('FUNC', script);
                     var Var1 = 0;
                     var Var2 = 0;
+                    var Var3 = 0;
                     var Remote = 2;
                     sq['SEND'] = {};
                     sq['SEND'][Entry.aibot.array.AIDESK_CONTROL] = {
                         remote: Remote,      
                         func: Func,    
                         var1: Var1,
-                        var2: Var2,         
+                        var2: Var2, 
+                        var3: Var3,        
                         Time: new Date().getTime(),
                     };
                     return script.callReturn(); 
