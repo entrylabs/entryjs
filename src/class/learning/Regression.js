@@ -181,7 +181,7 @@ class Regression {
                 rsquared,
                 equation: `Y = ${a
                     .map((a, i) => `${addSign(a)}X<sub>${i + 1}</sub>`)
-                    .join('')} ${addSign(b)}`
+                    .join('')} ${addSign(b)}`,
             };
             this.#isTrained = true;
             this.#chart?.load({
