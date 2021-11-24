@@ -180,7 +180,7 @@ class Regression {
                 normResult,
                 rsquared,
                 equation: `Y = ${a
-                    .map((a, i) => `${this.addSign(a)}X<sub>${i + 1}</sub>`)
+                    .map((a, i) => `${addSign(a)}X<sub>${i + 1}</sub>`)
                     .join('')} ${addSign(b)}`
             };
             this.#isTrained = true;
