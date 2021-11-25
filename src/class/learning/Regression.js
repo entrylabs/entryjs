@@ -174,14 +174,15 @@ class Regression {
                     }
                 })
             }
-            
             this.#result = {
                 graphData: (graphData.originalPoints || []).slice(0, 1000),
                 accuracy,
                 normResult,
                 rsquared,
-                equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
-            }
+                equation: `Y = ${a
+                    .map((a, i) => `${addSign(a)}X<sub>${i + 1}</sub>`)
+                    .join('')} ${addSign(b)}`,
+            };
             this.#isTrained = true;
             this.#chart?.load({
                 source: this.chartData,

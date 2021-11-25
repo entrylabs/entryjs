@@ -948,14 +948,9 @@
     mousedown: function mousedown(e, self) {
       e = Entry.Utils.convertMouseEvent(e);
       var roundRect = Entry.stage.getBoundRect();
-      var scrollPos = Entry.Utils.getScrollPos();
-      var x = ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480;
-      var y = ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270;
-
-      var mouse = self._mousePos(e);
-
+      var x = (e.offsetX / roundRect.width - 0.5) * 480;
+      var y = (e.offsetY / roundRect.height - 0.5) * -270;
       var isOver = self._overInput(x, y); // setup the 'click' event
-
 
       self._mouseDown = isOver;
       var inputField = Entry.stage.inputField;
@@ -1304,8 +1299,7 @@
      * @return {Boolean}   True if it is over the input box.
      */
     _overInput: function _overInput(x, y) {
-      var self = this;
-      return x >= -138 && x <= 148 && y >= -112 && y <= -91;
+      return x >= -226 && x <= 183 && y >= -110 && y <= -73;
     },
 
     /**
