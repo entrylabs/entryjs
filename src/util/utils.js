@@ -110,9 +110,11 @@ Entry.loadProject = function(project) {
         Entry.loadInterfaceState(project.interface);
     }
 
-    if (window.parent && window.parent.childIframeLoaded) {
-        window.parent.childIframeLoaded();
-    }
+    try {
+        if (window.parent && window.parent.childIframeLoaded) {
+            window.parent.childIframeLoaded();
+        }
+    } catch (e) {}
     return project;
 };
 
@@ -745,7 +747,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
             removeEntryEvent($(window), 'resize');
-            removeEntryEvent($(window.parent), 'resize');
+            if (parentDoc) {
+                removeEntryEvent($(window.parent), 'resize');
+            }
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
@@ -753,7 +757,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.windowResized.notify(e);
         };
         addEntryEvent($(window), 'resize', func);
-        addEntryEvent($(window.parent), 'resize', func);
+        if (parentDoc) {
+            addEntryEvent($(window.parent), 'resize', func);
+        }
         Entry.Utils.bindIOSDeviceWatch();
     }
 
