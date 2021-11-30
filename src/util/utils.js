@@ -734,7 +734,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     const doc = $(document);
     let parentDoc;
     if (window.parent !== window.self) {
-        parentDoc = $(window.parent.document);
+        try {
+            parentDoc = $(window.parent.document);
+        } catch (e) {}
     }
     if (options === undefined) {
         options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup', 'dispose'];
