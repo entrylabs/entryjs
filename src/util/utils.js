@@ -1907,7 +1907,9 @@ Entry.Utils.addNewBlock = function(item) {
         }
     });
     DataTable.setTables(tables);
-    Entry.aiLearning.load(learning);
+    if (!Entry.options.aiUtilizeDisable) {
+        Entry.aiLearning.load(learning);
+    }
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);
