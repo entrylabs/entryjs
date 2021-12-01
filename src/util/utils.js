@@ -110,9 +110,11 @@ Entry.loadProject = function(project) {
         Entry.loadInterfaceState(project.interface);
     }
 
-    if (window.parent && window.parent.childIframeLoaded) {
-        window.parent.childIframeLoaded();
-    }
+    try {
+        if (window.parent && window.parent.childIframeLoaded) {
+            window.parent.childIframeLoaded();
+        }
+    } catch (e) {}
     return project;
 };
 
@@ -734,7 +736,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     const doc = $(document);
     let parentDoc;
     if (window.parent !== window.self) {
-        parentDoc = $(window.parent.document);
+        try {
+            parentDoc = $(window.parent.document);
+        } catch (e) {}
     }
     if (options === undefined) {
         options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup', 'dispose'];
@@ -743,7 +747,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
             removeEntryEvent($(window), 'resize');
-            removeEntryEvent($(window.parent), 'resize');
+            if (parentDoc) {
+                removeEntryEvent($(window.parent), 'resize');
+            }
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
@@ -751,7 +757,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
             Entry.windowResized.notify(e);
         };
         addEntryEvent($(window), 'resize', func);
-        addEntryEvent($(window.parent), 'resize', func);
+        if (parentDoc) {
+            addEntryEvent($(window.parent), 'resize', func);
+        }
         Entry.Utils.bindIOSDeviceWatch();
     }
 
@@ -1907,7 +1915,9 @@ Entry.Utils.addNewBlock = function(item) {
         }
     });
     DataTable.setTables(tables);
-    Entry.aiLearning.load(learning);
+    if (!Entry.options.aiUtilizeDisable) {
+        Entry.aiLearning.load(learning);
+    }
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);

@@ -86,8 +86,13 @@ Entry.Popup = class Popup {
         let maxWidth = 0;
         let maxHeight = 0;
         if (window.parent) {
-            maxWidth = window.parent.innerWidth * 0.9;
-            maxHeight = window.parent.innerHeight * 0.9 - bottomOffset;
+            try {
+                maxWidth = window.parent.innerWidth * 0.9;
+                maxHeight = window.parent.innerHeight * 0.9 - bottomOffset;
+            } catch (e) {
+                maxWidth = window.innerWidth * 0.9;
+                maxHeight = window.innerHeight * 0.9 - bottomOffset;
+            }
         } else {
             maxWidth = window.innerWidth * 0.9;
             maxHeight = window.innerHeight * 0.9 - bottomOffset;

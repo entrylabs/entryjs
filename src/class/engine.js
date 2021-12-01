@@ -1005,11 +1005,23 @@ Entry.Engine = class Engine {
                     popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
                 }
             }
+
+            if (window.top !== window.self) {
+                window.top.addEventListener('mousemove', this.copyMouseMoveEvent);
+            }
         } else {
+            if (window.top !== window.self) {
+                window.top.removeEventListener('mousemove', this.copyMouseMoveEvent);
+            }
             this.popup.remove();
             this.popup = null;
         }
         Entry.windowResized.notify();
+    }
+
+    copyMouseMoveEvent(event) {
+        const eventClone = new event.constructor(event.type, event);
+        window.self.dispatchEvent(eventClone);
     }
 
     closeFullScreen() {
