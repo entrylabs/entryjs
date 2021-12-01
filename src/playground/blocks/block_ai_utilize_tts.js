@@ -126,7 +126,7 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
      * https://github.com/CreateJS/PreloadJS/issues/232#issuecomment-338739115
      *  */
     const read = function(args) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             const { message, hash, prop } = args;
             const tts = Entry.AI_UTILIZE_BLOCK.tts;
             const id = `tts-${hash}-${JSON.stringify(prop)}`;
@@ -156,16 +156,12 @@ Entry.AI_UTILIZE_BLOCK.tts.getBlocks = function() {
                     return true;
                 });
             };
-            // if Error, retry
-            const errorHandler = async (error) => {
+            // 읽어주기 오류 발생 시, 다음 블록 실행
+            const errorHandler = async () => {
                 soundQueue.removeEventListener('complete', loadHandler);
                 soundQueue.removeEventListener('error', errorHandler);
                 soundQueue.destroy();
-                if (isWait) {
-                    await read(args, true);
-                } else {
-                    read(args);
-                }
+                resolve();
             };
             soundQueue.on('complete', loadHandler);
             soundQueue.on('error', errorHandler);
