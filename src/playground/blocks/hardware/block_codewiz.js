@@ -112,7 +112,6 @@ Entry.CodeWiz.setLanguage = function() {
                     'OLED에 점1(%1,%2) 점2(%3,%4) 점3(%5,%6)으로 삼각형 그리기(채우기%7)색%8%9',
 
                 CodeWiz_DIGITAL_OUTPUT_title: '기본 출력',
-                // CodeWiz_DIGITAL_OUTPUT_setup: '터치센서 %1핀 출력으로 사용%2',
                 CodeWiz_DIGITAL_OUTPUT_digitalWrite: 'PIN(%1)으로 %2내보내기%3',
                 CodeWiz_DIGITAL_OUTPUT_pwmWrite: 'PIN(%1)으로 PWM %2내보내기(0~1023)%3',
 
@@ -140,14 +139,21 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_Servo_menuSpeed: '무한회전 서보모터(%1) %2속도로 정하기%3',
                 CodeWiz_Servo_customSpeed: '무한회전 서보모터(%1) %2속도로 정하기(-100~100)%3',
 
-                CodeWiz_Dc_title: 'DC모터',
-                CodeWiz_Dc_setValue: 'MCON DC모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
+                CodeWiz_Dc_title: 'WizCar 모터',
+                CodeWiz_Dc_setValue: 'WizCar 모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
+
+                CodeWiz_DotMatrix_title: '도트매트릭스',
+                CodeWiz_DotMatrix_init: '도트매트릭스 %1개 DIN%2, CS%3, CLK%4에 시작설정%5',
+                CodeWiz_DotMatrix_setBrightness: '도트매트릭스 %1번 밝기를 %2로 설정%3',
+                CodeWiz_DotMatrix_printString: '도트매트릭스 %1번에 문자열%2 출력%3',
+                CodeWiz_DotMatrix_setLine: '도트매트릭스 %1번에 %2번%3 %4로 만들기%5',
+                CodeWiz_DotMatrix_setDot: '도트매트릭스 %1번에 %2행%3열 %4%5',
+                CodeWiz_DotMatrix_clear: '도트매트릭스 %1번 지우기%2',
+                CodeWiz_DotMatrix_clearAll: '도트매트릭스 모두 지우기%1',
 
                 CodeWiz_ColorSensor_title: '컬러센서',
                 CodeWiz_ColorSensor_isColor: 'MCON 컬러센서 감지된 색이 %1인가%2',
                 CodeWiz_ColorSensor_getColorValue: 'MCON 컬러센서 %1값%2',
-
-                CodeWiz_TestBlock_digitalRead: '테스트블록 digitalRead(%1)%2',
             },
         },
     };
@@ -192,7 +198,6 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_OLED_drawPoligon',
 
     'CodeWiz_DIGITAL_OUTPUT_title',
-    // 'CodeWiz_DIGITAL_OUTPUT_setup',
     'CodeWiz_DIGITAL_OUTPUT_digitalWrite',
     'CodeWiz_DIGITAL_OUTPUT_pwmWrite',
 
@@ -220,11 +225,18 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_Dc_title',
     'CodeWiz_Dc_setValue',
 
+    'CodeWiz_DotMatrix_title',
+    'CodeWiz_DotMatrix_init',
+    'CodeWiz_DotMatrix_setBrightness',
+    'CodeWiz_DotMatrix_printString',
+    'CodeWiz_DotMatrix_setLine',
+    'CodeWiz_DotMatrix_setDot',
+    'CodeWiz_DotMatrix_clear',
+    'CodeWiz_DotMatrix_clearAll',
+
     'CodeWiz_ColorSensor_title',
     'CodeWiz_ColorSensor_isColor',
     'CodeWiz_ColorSensor_getColorValue',
-
-    'CodeWiz_TestBlock_digitalRead',
 ];
 
 Entry.CodeWiz.preWait = function() {
@@ -3352,7 +3364,6 @@ Entry.CodeWiz.getBlocks = function() {
                 }
                 let _pin = Number.parseInt(script.getNumberValue('PIN', script));
                 let _value = Number.parseInt(script.getNumberValue('VALUE', script));
-                _value = Math.round(_value);
                 if (_value < -100) {
                     _value = -100;
                 } else if (_value > 100) {
@@ -3374,7 +3385,7 @@ Entry.CodeWiz.getBlocks = function() {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.CodeWiz_Dc_title),
+                    offsetX: this.getOffsetX(Lang.template.CodeWiz_Dc_title) + 5,
                     offsetY: 5,
                 },
             },
@@ -3396,7 +3407,7 @@ Entry.CodeWiz.getBlocks = function() {
             events: {},
         },
         CodeWiz_Dc_setValue: {
-            // Block UI : "MCON DC모터(%1)에 %2방향으로 %3내보내기(0~1023)%4",
+            // Block UI : 'WizCar 모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -3453,7 +3464,6 @@ Entry.CodeWiz.getBlocks = function() {
                 let _pin = script.getNumberValue('PIN', script);
                 let _dir = script.getNumberValue('DIR', script);
                 let _value = Number.parseInt(script.getNumberValue('VALUE', script));
-                _value = Math.round(_value);
                 if (_value < 0) {
                     _value = 0;
                 } else if (_value > 1023) {
@@ -3464,6 +3474,503 @@ Entry.CodeWiz.getBlocks = function() {
                     value: {
                         opcode: 36,
                         params: [_pin, _dir, _value],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+
+        CodeWiz_DotMatrix_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.CodeWiz_DotMatrix_title),
+                    offsetY: 5,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#333333',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.CodeWiz_DotMatrix_title,
+                    color: '#333333',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'CodeWiz_DotMatrix_title',
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            events: {},
+        },
+        CodeWiz_DotMatrix_init: {
+            // Block UI : '도트매트릭스 %1개 DIN%2, CS%3, CLK%4에 시작설정%5',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['18', '18'],
+                        ['19', '19'],
+                        ['15', '15'],
+                        ['27', '27'],
+                    ],
+                    value: '18',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['18', '18'],
+                        ['19', '19'],
+                        ['15', '15'],
+                        ['27', '27'],
+                    ],
+                    value: '19',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['18', '18'],
+                        ['19', '19'],
+                        ['15', '15'],
+                        ['27', '27'],
+                    ],
+                    value: '15',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', null, null, null],
+                type: 'CodeWiz_DotMatrix_init',
+            },
+            paramsKeyMap: {
+                COUNT: 0,
+                PIN1: 1,
+                PIN2: 2,
+                PIN3: 3,
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _count = Number.parseInt(script.getNumberValue('COUNT', script));
+                if (_count <= 0) {
+                    return;
+                } else if (_count > 8) {
+                    _count = 8;
+                }
+                let _pins = [
+                    script.getNumberValue('PIN1', script),
+                    script.getNumberValue('PIN2', script),
+                    script.getNumberValue('PIN3', script),
+                ];
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 24,
+                        params: [_count, ..._pins],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DotMatrix_setBrightness: {
+            // Block UI : '도트매트릭스 %1번 밝기를 %2로 설정%3',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', '8'],
+                type: 'CodeWiz_DotMatrix_setBrightness',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                BRIGHTNESS: 1,
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _num = Number.parseInt(script.getNumberValue('NUM', script));
+                if (_num < 1) {
+                    num = 1;
+                } else if (_num > 8) {
+                    _num = 8;
+                }
+                let _brightness = Number.parseInt(script.getNumberValue('BRIGHTNESS', script));
+                if (_brightness < 1) {
+                    _brightness = 1;
+                } else if (_brightness > 15) {
+                    _brightness = 15;
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 37,
+                        params: [_num, _brightness],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DotMatrix_printString: {
+            // Block UI : '도트매트릭스 %1번에 문자열%2 출력%3',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', 'HELLO'],
+                type: 'CodeWiz_DotMatrix_printString',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                TEXT: 1,
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _num = Number.parseInt(script.getNumberValue('NUM', script));
+                if (_num < 1) {
+                    num = 1;
+                } else if (_num > 8) {
+                    _num = 8;
+                }
+                let _value = script.getStringValue('TEXT');
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 38,
+                        params: [_num, _value],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DotMatrix_setLine: {
+            // Block UI : '도트매트릭스 %1번에 %2번%3 %4로 만들기%5',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['행', '1'],
+                        ['열', '0'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', '2', null, '11111111'],
+                type: 'CodeWiz_DotMatrix_setLine',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                NUM_LINE: 1,
+                IS_ROW: 2,
+                VALUE: 3,
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _num = Number.parseInt(script.getNumberValue('NUM', script));
+                if (_num < 1) {
+                    num = 1;
+                } else if (_num > 8) {
+                    _num = 8;
+                }
+                let _numLine = Number.parseInt(script.getNumberValue('NUM_LINE', script));
+                if (_numLine < 1) {
+                    _numLine = 1;
+                } else if (_numLine > 8) {
+                    _numLine = 8;
+                }
+                let _isRow = script.getNumberValue('IS_ROW', script);
+                let _value = script.getStringValue('VALUE');
+                const _f = (str) => {
+                    str = str.substring(0, 8);
+                    let retVal = '';
+                    for (let i = 0; i < str.length; ++i) {
+                        if (str[i] === '0') {
+                            retVal += '0';
+                        } else {
+                            retVal += '1';
+                        }
+                    }
+                    return retVal.padStart(8, '0');
+                };
+                _value = _f(_value);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 39,
+                        params: [_num, _numLine, _isRow, _value],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DotMatrix_setDot: {
+            // Block UI : '도트매트릭스 %1번에 %2행%3열 %4%5',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['켜기', '1'],
+                        ['끄기', '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', '2', '2', null],
+                type: 'CodeWiz_DotMatrix_setDot',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+                ROW: 1,
+                COL: 2,
+                VALUE: 3,
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _num = Number.parseInt(script.getNumberValue('NUM', script));
+                if (_num < 1) {
+                    num = 1;
+                } else if (_num > 8) {
+                    _num = 8;
+                }
+                let _numRow = Number.parseInt(script.getNumberValue('ROW', script));
+                if (_numRow < 1) {
+                    _numRow = 1;
+                } else if (_numRow > 8) {
+                    _numRow = 8;
+                }
+                let _numCol = Number.parseInt(script.getNumberValue('COL', script));
+                if (_numCol < 1) {
+                    _numCol = 1;
+                } else if (_numCol > 8) {
+                    _numCol = 8;
+                }
+                let _value = script.getNumberValue('VALUE', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 40,
+                        params: [_num, _numRow, _numCol, _value],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DotMatrix_clear: {
+            // Block UI : '도트매트릭스 %1번 지우기%2',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1'],
+                type: 'CodeWiz_DotMatrix_clear',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _num = Number.parseInt(script.getNumberValue('NUM', script));
+                if (_num < 1) {
+                    num = 1;
+                } else if (_num > 8) {
+                    _num = 8;
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 41,
+                        params: [_num],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DotMatrix_clearAll: {
+            // Block UI : '도트매트릭스 모두 지우기%1',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'CodeWiz_DotMatrix_clearAll',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_DotMatrix',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 41,
+                        params: [-1],
                     },
                 };
                 Entry.CodeWiz.sendOrder(order);
@@ -3607,77 +4114,6 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
 
-        // CodeWiz_Laser_title: {
-        //     skeleton: 'basic_text',
-        //     color: EntryStatic.colorSet.common.TRANSPARENT,
-        //     fontColor: '#333333',
-        //     params: [
-        //         {
-        //             type: 'Text',
-        //             text: Lang.template.CodeWiz_ColorSensor_title,
-        //             color: '#333333',
-        //             align: 'justify'
-        //         },
-        //     ],
-        //     def: {
-        //         type: 'CodeWiz_ColorSensor_title',
-        //     },
-        //     class: 'CodeWiz_ColorSensor',
-        //     isNotFor: ['CodeWiz'],
-        //     events: {},
-        // },
-        // CodeWiz_TestBlock_digitalRead: {
-        //     // Block UI : "테스트블록 digitalRead(%1)%2",
-        //     color: EntryStatic.colorSet.block.default.HARDWARE,
-        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-        //     skeleton: 'basic_string_field',
-        //     statements: [],
-        //     params: [
-        //         {
-        //             type: 'Dropdown',
-        //             options: [
-        //                 ['18', '18'],
-        //                 ['19', '19'],
-        //             ],
-        //             value: '18',
-        //             fontSize: 11,
-        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-        //         },
-        //         {
-        //             type: 'Indicator',
-        //             img: 'block_icon/hardware_icon.svg',
-        //             size: 12,
-        //         },
-        //     ],
-        //     events: {},
-        //     def: {
-        //         params: [null],
-        //         type: 'CodeWiz_TestBlock_digitalRead',
-        //     },
-        //     paramsKeyMap: {
-        //         PIN: 0,
-        //     },
-        //     class: 'CodeWiz_TestBlock',
-        //     isNotFor: ['CodeWiz'],
-        //     async func(sprite, script) {
-        //         if (Entry.CodeWiz.intervalId) {
-        //             await Entry.CodeWiz.preWait();
-        //         }
-        //         let _pin = script.getNumberValue('PIN', script);
-
-        //         const order = {
-        //             type: Entry.CodeWiz.sensorTypes.READ,
-        //             value: {
-        //                 opcode: 7,
-        //                 params: [_pin],
-        //             },
-        //         };
-        //         Entry.CodeWiz.sendOrder(order);
-        //         await Entry.CodeWiz.checkComplete();
-
-        //         return Entry.hw.portData.runOK.value ?? 0;
-        //     },
         //endregion CodeWiz 코드위즈
     };
 };
