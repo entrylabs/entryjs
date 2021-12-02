@@ -7287,6 +7287,7 @@ module.exports.setLanguage = () => ({
     en: {
         Helper: {
             robotis_aux_move_for: '',
+            dummy_helper:'',
         },
     },
     jp: {
