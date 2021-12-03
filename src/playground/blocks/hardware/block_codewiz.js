@@ -3788,7 +3788,7 @@ Entry.CodeWiz.getBlocks = function() {
                     str = str.substring(0, 8);
                     let retVal = '';
                     for (let i = 0; i < str.length; ++i) {
-                        if (str[i] === '0') {
+                        if (str[i] === '0' || str[i] === ' ') {
                             retVal += '0';
                         } else {
                             retVal += '1';
