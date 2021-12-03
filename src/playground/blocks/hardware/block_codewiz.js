@@ -90,30 +90,29 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_neopixel_off_all: '네오픽셀 모두 끄기%1',
 
                 CodeWiz_OLED_title: 'OLED',
-                CodeWiz_OLED_clear: 'OLED 클리어%1',
-                CodeWiz_OLED_mirror: 'OLED 반전%1 %2',
-                CodeWiz_OLED_setSize: 'OLED 문자열 크기를 %1(으)로 설정%2',
+                CodeWiz_OLED_clear: 'OLED 지우기%1',
+                CodeWiz_OLED_mirror: 'OLED 반전 모드%1 %2',
+                CodeWiz_OLED_setSize: 'OLED 문자 크기를 %1(으)로 설정%2',
                 CodeWiz_OLED_setPosition: 'OLED 커서위치(%1,%2)(으)로 지정%3',
                 CodeWiz_OLED_println: 'OLED에 %1 출력%2',
-                CodeWiz_OLED_isCollision: 'OLED 문자열겹치기%1%2',
-                CodeWiz_OLED_specialChar: 'OLED에 특수기호%1 출력하기%2',
+                CodeWiz_OLED_isCollision: 'OLED 문자겹침 모드%1%2',
+                CodeWiz_OLED_specialChar: 'OLED에 기호%1 출력하기%2',
                 CodeWiz_OLED_setFont: 'OLED 폰트%1를 크기%2(으)로 설정%3',
-                CodeWiz_OLED_startScroll: 'OLED 스크롤%1 시작페이지%2 종료페이지%3%4',
-                CodeWiz_OLED_stopScroll: 'OLED 스크롤 정지%1',
-                CodeWiz_OLED_drawPoint: 'OLED의 좌표(%1,%2)에 점 그리기 색%3%4',
-                CodeWiz_OLED_drawLine1: 'OLED에 선 그리기 시작(%1,%2) 끝(%3,%4) 색%5%6',
-                CodeWiz_OLED_drawLine2: 'OLED에 수직 선 그리기 시작(%1,%2) 길이%3 색%4%5',
-                CodeWiz_OLED_drawLine3: 'OLED에 수평 선 그리기 시작(%1,%2) 길이%3 색%4%5',
+                CodeWiz_OLED_startScroll: 'OLED 스크롤 시키기 옵션(%1, 범위%2~%3(0~7))%4',
+                CodeWiz_OLED_stopScroll: 'OLED 스크롤 멈추기%1',
+                CodeWiz_OLED_drawPoint: 'OLED에 점찍기 옵션((%1,%2), %3)%4',
+                CodeWiz_OLED_drawLine1: 'OLED에 선 그리기 옵션((%1,%2)~(%3,%4), %5)%6',
+                CodeWiz_OLED_drawLine2: 'OLED에 수직 선 그리기 옵션((%1,%2), 길이%3, %4)%5',
+                CodeWiz_OLED_drawLine3: 'OLED에 수평 선 그리기 옵션((%1,%2), 길이%3, %4)%5',
                 CodeWiz_OLED_drawRect:
-                    'OLED에 시작(%1,%2)에서 가로%3 세로%4인 직사각형 그리기(채우기%5)색%6%7',
-                CodeWiz_OLED_drawCircle:
-                    'OLED에 중심(%1,%2)에서 반지름%3인 원 그리기(채우기%4)색%5%6',
+                    'OLED에 직사각형 그리기 옵션(좌상단점(%1,%2), 가로%3, 세로%4, %5, %6)%7',
+                CodeWiz_OLED_drawCircle: 'OLED에 원 그리기 옵션(중심(%1,%2) 반지름%3, %4, %5)%6',
                 CodeWiz_OLED_drawPoligon:
-                    'OLED에 점1(%1,%2) 점2(%3,%4) 점3(%5,%6)으로 삼각형 그리기(채우기%7)색%8%9',
+                    'OLED에 삼각형 그리기 옵션((%1,%2), (%3,%4), (%5,%6), %7, %8)%9',
 
                 CodeWiz_DIGITAL_OUTPUT_title: '기본 출력',
-                CodeWiz_DIGITAL_OUTPUT_digitalWrite: 'PIN(%1)으로 %2내보내기%3',
-                CodeWiz_DIGITAL_OUTPUT_pwmWrite: 'PIN(%1)으로 PWM %2내보내기(0~1023)%3',
+                CodeWiz_DIGITAL_OUTPUT_digitalWrite: 'PIN%1(으)로 %2내보내기%3',
+                CodeWiz_DIGITAL_OUTPUT_pwmWrite: 'PIN%1(으)로 PWM %2내보내기(0~1023)%3',
 
                 CodeWiz_HuskyLens_title: '허스키렌즈',
                 CodeWiz_HuskyLens_initHuskyLens: '허스키렌즈 시작설정%1',
@@ -135,7 +134,7 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_InfraredThermometer_read: '비접촉온도센서 %1에 %2로 읽기%3',
 
                 CodeWiz_Servo_title: '서보모터',
-                CodeWiz_Servo_setAngle: '서보모터(%1) 각도를 %2로 바꾸기%3',
+                CodeWiz_Servo_setAngle: '서보모터(%1) 각도를 %2(으)로 바꾸기%3',
                 CodeWiz_Servo_menuSpeed: '무한회전 서보모터(%1) %2속도로 정하기%3',
                 CodeWiz_Servo_customSpeed: '무한회전 서보모터(%1) %2속도로 정하기(-100~100)%3',
 
@@ -144,9 +143,9 @@ Entry.CodeWiz.setLanguage = function() {
 
                 CodeWiz_DotMatrix_title: '도트매트릭스',
                 CodeWiz_DotMatrix_init: '도트매트릭스 %1개 DIN%2, CS%3, CLK%4에 시작설정%5',
-                CodeWiz_DotMatrix_setBrightness: '도트매트릭스 %1번 밝기를 %2로 설정%3',
+                CodeWiz_DotMatrix_setBrightness: '도트매트릭스 %1번 밝기를 %2(으)로 설정%3',
                 CodeWiz_DotMatrix_printString: '도트매트릭스 %1번에 문자열%2 출력%3',
-                CodeWiz_DotMatrix_setLine: '도트매트릭스 %1번에 %2번%3 %4로 만들기%5',
+                CodeWiz_DotMatrix_setLine: '도트매트릭스 %1번에 %2번%3 %4(으)로 만들기%5',
                 CodeWiz_DotMatrix_setDot: '도트매트릭스 %1번에 %2행%3열 %4%5',
                 CodeWiz_DotMatrix_clear: '도트매트릭스 %1번 지우기%2',
                 CodeWiz_DotMatrix_clearAll: '도트매트릭스 모두 지우기%1',
@@ -1050,7 +1049,7 @@ Entry.CodeWiz.getBlocks = function() {
             events: {},
         },
         CodeWiz_OLED_clear: {
-            // Block UI : "OLED 클리어%1",
+            // Block UI : "OLED 지우기%1",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1087,7 +1086,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_mirror: {
-            // Block UI : "OLED 반전%1 %2",
+            // Block UI : "OLED 반전모드%1 %2",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1096,8 +1095,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['false', '0'],
-                        ['true', '1'],
+                        ['OFF', '0'],
+                        ['ON', '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1138,7 +1137,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_setSize: {
-            // Block UI : "OLED 문자열 크기를 %1(으)로 설정%2",
+            // Block UI : "OLED 문자 크기를 %1(으)로 설정%2",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1297,7 +1296,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_isCollision: {
-            // Block UI : "OLED 문자열겹치기%1%2",
+            // Block UI : "OLED 문자겹침 모드%1%2",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1306,8 +1305,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['false', '0'],
-                        ['true', '1'],
+                        ['OFF', '0'],
+                        ['ON', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1348,7 +1347,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_specialChar: {
-            // Block UI : "OLED에 특수기호%1 출력하기%2",
+            // Block UI : "OLED에 기호%1 출력하기%2",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1405,7 +1404,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_setFont: {
-            // Block UI : "OLED 폰트%1를 크기%2(으)로 설정",
+            // Block UI : "OLED 폰트%1를 크기%2(으)로 설정%3",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1472,7 +1471,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_startScroll: {
-            // Block UI : "OLED 스크롤%1 시작페이지%2 종료페이지%3%4",
+            // Block UI : "OLED 스크롤 시키기 옵션(%1, 범위%2~%3(0~7))%4",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1481,13 +1480,13 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['left to right', '0'],
-                        ['right to left', '1'],
-                        ['right bottom to upper left', '2'],
-                        ['left bottom to upper right', '3'],
+                        ['→', '0'],
+                        ['←', '1'],
+                        ['↖', '2'],
+                        ['↗', '3'],
                     ],
                     value: '0',
-                    fontSize: 11,
+                    fontSize: 14,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
@@ -1522,8 +1521,8 @@ Entry.CodeWiz.getBlocks = function() {
                     await Entry.CodeWiz.preWait();
                 }
 
-                let _value = script.getNumberValue('DIRECTION', script);
-                let _st = script.getNumberValue('START', script);
+                let _value = Number.parseInt(script.getNumberValue('DIRECTION', script));
+                let _st = Number.parseInt(script.getNumberValue('START', script));
                 _st = Math.round(_st);
                 if (_st < 0) {
                     _x = 0;
@@ -1550,7 +1549,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_stopScroll: {
-            // Block UI : "OLED 스크롤 정지%1",
+            // Block UI : "OLED 스크롤 멈추기%1",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1587,7 +1586,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawPoint: {
-            // Block UI : "OLED의 좌표(%1,%2)에 점 그리기 색%3%4",
+            // Block UI : "OLED에 점찍기 옵션((%1,%2), %3)%4",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1604,8 +1603,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1664,7 +1663,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawLine1: {
-            // Block UI : "OLED에 선 그리기 시작(%1,%2) 끝(%3,%4) 색%5%6",
+            // Block UI : "OLED에 선 그리기 옵션((%1,%2)~(%3,%4), %5)%6",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1689,8 +1688,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1764,7 +1763,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawLine2: {
-            // Block UI : "OLED에 수직 선 그리기 시작(%1,%2) 길이%3 색%4%5",
+            // Block UI : "OLED에 수직 선 그리기 옵션((%1,%2), 길이%3, %4)%5",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1785,8 +1784,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1852,7 +1851,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawLine3: {
-            // Block UI : "OLED에 수평 선 그리기 시작(%1,%2) 길이%3 색%4%5",
+            // Block UI : "OLED에 수평 선 그리기 옵션((%1,%2), 길이%3, %4)%5",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1873,8 +1872,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1940,7 +1939,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawRect: {
-            // Block UI : "OLED에 시작(%1,%2)에서 가로%3 세로%4인 직사각형 그리기(채우기%5)색%6%7",
+            // Block UI : "OLED에 직사각형 그리기 옵션(좌상단점(%1,%2), 가로%3, 세로%4, %5, %6)%7",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1965,8 +1964,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['false', '0'],
-                        ['true', '1'],
+                        ['비움', '0'],
+                        ['채움', '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1976,8 +1975,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2055,7 +2054,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawCircle: {
-            // Block UI : "OLED에 시작(%1,%2)에서 반지름%3인 원 그리기(채우기%4)색%5%6",
+            // Block UI : "OLED에 원 그리기 옵션(중심(%1,%2) 반지름%3, %4, %5)%6",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2076,8 +2075,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['false', '0'],
-                        ['true', '1'],
+                        ['비움', '0'],
+                        ['채움', '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2087,8 +2086,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2156,7 +2155,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_OLED_drawPoligon: {
-            // Block UI : "OLED에 왼쪽(%1,%2) 위(%3,%4) 오른쪽(%5,%6) 점으로 삼각형 그리기(채우기%7)색%8%9",
+            // Block UI : "OLED에 삼각형 그리기 옵션((%1,%2), (%3,%4), (%5,%6), %7, %8)%9",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -2189,8 +2188,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['false', '0'],
-                        ['true', '1'],
+                        ['비움', '0'],
+                        ['채움', '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2200,8 +2199,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['black', '0'],
-                        ['white', '1'],
+                        ['검은색', '0'],
+                        ['흰색', '1'],
                     ],
                     value: '1',
                     fontSize: 11,
