@@ -71,7 +71,7 @@ Entry.CodeWiz.setLanguage = function() {
             template: {
                 CodeWiz_sensor_title: '기본 센서',
                 CodeWiz_get_sensor: '%1센서 값',
-                CodeWiz_get_gyroSensor: '자이로 센서 %1값',
+                CodeWiz_get_gyroSensor: '3축 센서 %1값',
                 CodeWiz_isPushedButton: '%1 스위치 버튼 값',
                 CodeWiz_touchPin: '터치핀 %1 값',
 
@@ -95,20 +95,18 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_OLED_setSize: 'OLED 문자 크기를 %1(으)로 설정%2',
                 CodeWiz_OLED_setPosition: 'OLED 커서위치(%1,%2)(으)로 지정%3',
                 CodeWiz_OLED_println: 'OLED에 %1 출력%2',
-                CodeWiz_OLED_isCollision: 'OLED 문자겹침 모드%1%2',
+                CodeWiz_OLED_isCollision: 'OLED 자동 줄바꿈%1%2',
                 CodeWiz_OLED_specialChar: 'OLED에 기호%1 출력하기%2',
                 CodeWiz_OLED_setFont: 'OLED 폰트%1를 크기%2(으)로 설정%3',
-                CodeWiz_OLED_startScroll: 'OLED 스크롤 시키기 옵션(%1, 범위%2~%3(0~7))%4',
+                CodeWiz_OLED_startScroll: 'OLED 스크롤 시키기%1 시작%2~종료%3(0~7)%4',
                 CodeWiz_OLED_stopScroll: 'OLED 스크롤 멈추기%1',
-                CodeWiz_OLED_drawPoint: 'OLED에 점찍기 옵션((%1,%2), %3)%4',
-                CodeWiz_OLED_drawLine1: 'OLED에 선 그리기 옵션((%1,%2)~(%3,%4), %5)%6',
-                CodeWiz_OLED_drawLine2: 'OLED에 수직 선 그리기 옵션((%1,%2), 길이%3, %4)%5',
-                CodeWiz_OLED_drawLine3: 'OLED에 수평 선 그리기 옵션((%1,%2), 길이%3, %4)%5',
-                CodeWiz_OLED_drawRect:
-                    'OLED에 직사각형 그리기 옵션(좌상단점(%1,%2), 가로%3, 세로%4, %5, %6)%7',
-                CodeWiz_OLED_drawCircle: 'OLED에 원 그리기 옵션(중심(%1,%2) 반지름%3, %4, %5)%6',
-                CodeWiz_OLED_drawPoligon:
-                    'OLED에 삼각형 그리기 옵션((%1,%2), (%3,%4), (%5,%6), %7, %8)%9',
+                CodeWiz_OLED_drawPoint: 'OLED 점찍기 (%1,%2)%3%4',
+                CodeWiz_OLED_drawLine1: 'OLED 선 그리기 시작(%1,%2) 끝(%3,%4)%5%6',
+                CodeWiz_OLED_drawLine2: 'OLED 수직선 시작(%1,%2) 길이%3%4%5',
+                CodeWiz_OLED_drawLine3: 'OLED 수평선 시작(%1,%2) 길이%3%4%5',
+                CodeWiz_OLED_drawRect: 'OLED 직사각형 시작(%1,%2) 가로%3세로%4%5%6%7',
+                CodeWiz_OLED_drawCircle: 'OLED 원 중심(%1,%2) 반지름%3%4%5%6',
+                CodeWiz_OLED_drawPoligon: 'OLED 삼각형 점1(%1,%2)점2(%3,%4)점3(%5,%6)%7%8%9',
 
                 CodeWiz_DIGITAL_OUTPUT_title: '기본 출력',
                 CodeWiz_DIGITAL_OUTPUT_digitalWrite: 'PIN%1(으)로 %2내보내기%3',
@@ -124,9 +122,9 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_HuskyLens_getCountLearnedHuskyLens: '허스키렌즈가 감지한 학습데이터 수%1',
                 CodeWiz_HuskyLens_hasTypeHuskyLens: '허스키렌즈가 읽은 데이터 타입이%1인가?%2',
                 CodeWiz_HuskyLens_getArrowInfoHuskyLens:
-                    '허스키렌즈가 읽은 ARROW정보%1(첫 인식 1개)%2',
+                    '허스키렌즈가 읽은 화살표정보%1(첫 인식 1개)%2',
                 CodeWiz_HuskyLens_getBoxInfoHuskyLens:
-                    '허스키렌즈가 읽은 BOX정보%1(중심좌표가 중앙에 가장 가까운 것)%2',
+                    '허스키렌즈가 읽은 사각형정보%1(중심좌표가 중앙에 가장 가까운 것)%2',
                 CodeWiz_HuskyLens_writeTextHuskyLens: '허스키렌즈 (%1,%2)에 %3출력%4',
                 CodeWiz_HuskyLens_clearTextHuskyLens: '허스키렌즈 텍스트 지우기%1',
 
@@ -142,11 +140,11 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_Dc_setValue: 'WizCar 모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
 
                 CodeWiz_DotMatrix_title: '도트매트릭스',
-                CodeWiz_DotMatrix_init: '도트매트릭스 %1개 DIN%2, CS%3, CLK%4에 시작설정%5',
+                CodeWiz_DotMatrix_init: '도트매트릭스 %1개 DIN%2, CS%3, CLK%4로 설정%5',
                 CodeWiz_DotMatrix_setBrightness: '도트매트릭스 %1번 밝기를 %2(으)로 설정%3',
                 CodeWiz_DotMatrix_printString: '도트매트릭스 %1번에 문자열%2 출력%3',
-                CodeWiz_DotMatrix_setLine: '도트매트릭스 %1번에 %2번%3 %4(으)로 만들기%5',
-                CodeWiz_DotMatrix_setDot: '도트매트릭스 %1번에 %2행%3열 %4%5',
+                CodeWiz_DotMatrix_setLine: '도트매트릭스 %1번의 %2%3 %4(으)로 만들기%5',
+                CodeWiz_DotMatrix_setDot: '도트매트릭스 %1번의 %2행%3열 %4%5',
                 CodeWiz_DotMatrix_clear: '도트매트릭스 %1번 지우기%2',
                 CodeWiz_DotMatrix_clearAll: '도트매트릭스 모두 지우기%1',
 
@@ -241,7 +239,7 @@ Entry.CodeWiz.blockMenuBlocks = [
 Entry.CodeWiz.preWait = function() {
     return new Promise((resolve) => {
         let tmp = setInterval(() => {
-            console.log('preWait:', Entry.CodeWiz.intervalId);
+            // console.log('preWait:', Entry.CodeWiz.intervalId);
             if (!Entry.CodeWiz.intervalId) {
                 clearInterval(tmp);
                 resolve();
@@ -254,7 +252,7 @@ Entry.CodeWiz.checkComplete = function(timeout) {
         timeout = timeout ?? 1000;
 
         Entry.CodeWiz.intervalId = setInterval(() => {
-            console.log(Entry.CodeWiz.intervalId, 'runOK:', Entry.hw.portData.runOK);
+            // console.log(Entry.CodeWiz.intervalId, 'runOK:', Entry.hw.portData.runOK);
             if (Entry.hw.portData.runOK) {
                 clearInterval(Entry.CodeWiz.intervalId);
                 clearTimeout(Entry.CodeWiz.timeoutId);
@@ -265,7 +263,7 @@ Entry.CodeWiz.checkComplete = function(timeout) {
         }, 11);
         Entry.CodeWiz.timeoutId = setTimeout(() => {
             clearInterval(Entry.CodeWiz.intervalId);
-            console.log(Entry.CodeWiz.intervalId, 'timeOut');
+            // console.log(Entry.CodeWiz.intervalId, 'timeOut');
             Entry.CodeWiz.intervalId = null;
             Entry.CodeWiz.timeoutId = null;
             // throw new Entry.Utils.AsyncError('TimeOutOccurred');
@@ -502,18 +500,18 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['C', '0'],
-                        ['Cs', '1'],
-                        ['D', '2'],
-                        ['Eb', '3'],
-                        ['E', '4'],
-                        ['F', '5'],
-                        ['Fs', '6'],
-                        ['G', '7'],
-                        ['Gs', '8'],
-                        ['A', '9'],
-                        ['Bb', '10'],
-                        ['B', '11'],
+                        ['도', '0'],
+                        ['도#', '1'],
+                        ['레', '2'],
+                        ['미♭', '3'],
+                        ['미', '4'],
+                        ['파', '5'],
+                        ['파#', '6'],
+                        ['솔', '7'],
+                        ['솔#', '8'],
+                        ['라', '9'],
+                        ['시♭', '10'],
+                        ['시', '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -608,7 +606,7 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['23', '23'],
+                        ['코드위즈', '23'],
                         ['18', '18'],
                         ['19', '19'],
                         ['13', '13'],
@@ -2215,7 +2213,7 @@ Entry.CodeWiz.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['0', '40', '60', '0', '123', '0', null, null],
+                params: ['0', '9', '6', '9', '3', '0', null, null],
                 type: 'CodeWiz_OLED_drawPoligon',
             },
             paramsKeyMap: {
@@ -2585,13 +2583,13 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['FACE_RECOGNITION', '0'],
-                        ['OBJECT_TRACKING', '1'],
-                        ['OBJECT_RECOGNITION', '2'],
-                        ['LINE_TRACKING', '3'],
-                        ['COLOR_RECOGNITION', '4'],
-                        ['TAG_RECOGNITION', '5'],
-                        ['OBJECT_CLASSIFICATION', '6'],
+                        ['1.FACE_RECOGNITION', '0'],
+                        ['2.OBJECT_TRACKING', '1'],
+                        ['3.OBJECT_RECOGNITION', '2'],
+                        ['4.LINE_TRACKING', '3'],
+                        ['5.COLOR_RECOGNITION', '4'],
+                        ['6.TAG_RECOGNITION', '5'],
+                        ['7.OBJECT_CLASSIFICATION', '6'],
                     ],
                     value: '2',
                     fontSize: 11,
@@ -2726,8 +2724,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['BOX', '42'],
-                        ['ARROW', '43'],
+                        ['사각형', '42'],
+                        ['화살표', '43'],
                     ],
                     value: '42',
                     fontSize: 11,
@@ -2819,8 +2817,8 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['BOX', '42'],
-                        ['ARROW', '43'],
+                        ['사각형', '42'],
+                        ['화살표', '43'],
                     ],
                     value: '42',
                     fontSize: 11,
@@ -2863,7 +2861,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_HuskyLens_getArrowInfoHuskyLens: {
-            // Block UI : "허스키렌즈가 읽은 ARROW정보%1(첫 인식 1개)%2",
+            // Block UI : "허스키렌즈가 읽은 화살표정보%1(첫 인식 1개)%2",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -2918,7 +2916,7 @@ Entry.CodeWiz.getBlocks = function() {
             },
         },
         CodeWiz_HuskyLens_getBoxInfoHuskyLens: {
-            // Block UI : "허스키렌즈가 읽은 BOX정보%1(중심좌표가 중앙에 가장 가까운 것)%2",
+            // Block UI : "허스키렌즈가 읽은 사각형정보%1(중심좌표가 중앙에 가장 가까운 것)%2",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -4012,11 +4010,11 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Red', '0'],
-                        ['Green', '1'],
-                        ['Blue', '2'],
-                        ['Black', '3'],
-                        ['White', '4'],
+                        ['빨강', '0'],
+                        ['초록', '1'],
+                        ['파랑', '2'],
+                        ['검정', '3'],
+                        ['흰색', '4'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -4068,9 +4066,9 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['Red', '0'],
-                        ['Green', '1'],
-                        ['Blue', '2'],
+                        ['빨강', '0'],
+                        ['초록', '1'],
+                        ['파랑', '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -4112,7 +4110,6 @@ Entry.CodeWiz.getBlocks = function() {
                 return Entry.hw.portData.runOK.value ?? 0;
             },
         },
-
         //endregion CodeWiz 코드위즈
     };
 };
