@@ -28,7 +28,6 @@ Entry.CodeWiz = {
         }
         return Entry.generateHash() + key;
     },
-
     sendOrder(order) {
         const sq = Entry.hw.sendQueue;
         if (!sq.ORDER) {
@@ -63,6 +62,9 @@ Entry.CodeWiz = {
         READ: 1,
         WRITE: 0,
     },
+
+    // preWaitList: [],
+    // preWaitResult: null,
 };
 
 Entry.CodeWiz.setLanguage = function() {
@@ -235,13 +237,13 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_ColorSensor_isColor',
     'CodeWiz_ColorSensor_getColorValue',
 ];
-
 Entry.CodeWiz.preWait = function() {
     return new Promise((resolve) => {
         let tmp = setInterval(() => {
             // console.log('preWait:', Entry.CodeWiz.intervalId);
             if (!Entry.CodeWiz.intervalId) {
                 clearInterval(tmp);
+                // Entry.CodeWiz.preWaitResult = Entry.CodeWiz.preWaitList.shift() || null;
                 resolve();
             }
         }, 11);
@@ -420,15 +422,15 @@ Entry.CodeWiz.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['13', 'touchPin_13'],
-                        ['14', 'touchPin_14'],
-                        ['15', 'touchPin_15'],
-                        ['27', 'touchPin_27'],
-                        ['32', 'touchPin_32'],
-                        ['33', 'touchPin_33'],
+                        ['🔆(13)', 'touchPin_13'],
+                        ['⭕(14)', 'touchPin_14'],
+                        ['🖐(15)', 'touchPin_15'],
+                        ['👊(27)', 'touchPin_27'],
+                        ['🐻(32)', 'touchPin_32'],
+                        ['❌(33)', 'touchPin_33'],
                     ],
                     value: 'touchPin_32',
-                    fontSize: 11,
+                    fontSize: 14,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
@@ -551,8 +553,13 @@ Entry.CodeWiz.getBlocks = function() {
             class: 'CodeWiz_buzzer',
             isNotFor: ['CodeWiz'],
             async func(sprite, script) {
+                // console.log('script:', script);
                 if (Entry.CodeWiz.intervalId) {
+                    // Entry.CodeWiz.preWaitList.push(script.key);
+                    // while (Entry.CodeWiz.preWaitResult !== script.key) {
                     await Entry.CodeWiz.preWait();
+                    // }
+                    // Entry.CodeWiz.preWaitResult = null;
                 }
                 let octave = Number.parseInt(script.getValue('OCTAVE', script));
                 let note = Number.parseInt(script.getValue('NOTE', script));
@@ -609,12 +616,6 @@ Entry.CodeWiz.getBlocks = function() {
                         ['코드위즈', '23'],
                         ['18', '18'],
                         ['19', '19'],
-                        ['13', '13'],
-                        ['14', '14'],
-                        ['15', '15'],
-                        ['27', '27'],
-                        ['32', '32'],
-                        ['33', '33'],
                     ],
                     value: '23',
                     fontSize: 11,
@@ -1480,8 +1481,8 @@ Entry.CodeWiz.getBlocks = function() {
                     options: [
                         ['→', '0'],
                         ['←', '1'],
-                        ['↖', '2'],
-                        ['↗', '3'],
+                        ['↗', '2'],
+                        ['↖', '3'],
                     ],
                     value: '0',
                     fontSize: 14,
