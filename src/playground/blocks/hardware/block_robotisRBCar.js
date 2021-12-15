@@ -82,8 +82,8 @@ Entry.Robotis_rb_car.blockMenuBlocks = [
     
     //알라표정 
     //화면 애니메이션 
-    // 'robotis_RB_car_screen',
-    // 'robotis_RB_car_anim_screen',
+    'robotis_RB_car_screen',
+    'robotis_RB_car_anim_screen',
 
     'robotis_RB_cm_screen',
     'robotis_RB_cm_anim_screen',
@@ -151,7 +151,6 @@ Entry.Robotis_rb_car.setLanguage = function() {
                 robotis_RB_turn:"알라 로봇 제자리 %1 도 회전하기%2",
                 robotis_RB_pen:"알라 로봇 펜 %1 %2",
 
-                robotis_RB_car_screen: "제어기 화면 배경을 알라 %1 로 선택 %2",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -275,6 +274,7 @@ Entry.Robotis_rb_car.setLanguage = function() {
                 robotis_face21: "폭풍눈물",
                 robotis_face22: "목욕",
                 robotis_face23: "햐트뿅뿅",
+
                 robotis_flashing1: "점멸1",
                 robotis_flashing2: "점멸2",
                 robotis_flashing3: "점멸3",
@@ -361,7 +361,8 @@ Entry.Robotis_rb_car.setLanguage = function() {
                 robotis_RB_rotate_stop:"%1 motor stop%2",
                 robotis_RB_go_distance:"Rla robot %1 cm %2 moving %3",
                 robotis_RB_turn:"Rla robot turn %1 degree %2",
-                robotis_RB_pen:"Rla robot %1 pen %2"
+                robotis_RB_pen:"Rla robot %1 pen %2",
+
                 
             },
             Blocks: {
@@ -485,7 +486,8 @@ Entry.Robotis_rb_car.setLanguage = function() {
                 robotis_face20: "Sad",
                 robotis_face21: "Cry",
                 robotis_face22: "Bath",
-                robotis_face23: "Heart-Eyes",
+                robotis_face23: "Heart-Eyes",       
+
                 robotis_flashing1: "Flashing1",
                 robotis_flashing2: "Flashing2",
                 robotis_flashing3: "Flashing3",
@@ -541,57 +543,6 @@ Entry.Robotis_rb_car.setLanguage = function() {
 
 Entry.Robotis_rb_car.getBlocks = function() {
     return {
-        robotis_RB_car_screen: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'robotis_RB_car_screen',
-            },
-            paramsKeyMap: {
-                BACKGROUND: 0,
-            },
-            class: 'robotis_openCM70_cm',
-            isNotFor: ['Robotis_rb_car'],
-            func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var screenValue = script.getNumberValue('BACKGROUND', script);
-                
-                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
-                var data_address = 163;
-                var data_length = 2;
-                var data_value = screenValue;
-                console.log("screen send");
-                var data_sendqueue = [
-                    [data_instruction, data_address, data_length, data_value],
-                    [3, 162, 1, 1]
-                ];
-              
-
-
-                return Entry.Robotis_carCont.postCallReturn(
-                    script,
-                    data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 1000
-                );
-            },
-            syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
-        },
-
         robotis_openCM70_RLa_go: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -647,6 +598,12 @@ Entry.Robotis_rb_car.getBlocks = function() {
                 var data_length = 2;
                 var data_value = 0;
                 
+                if(speed > 100) {
+                    speed = 100;
+                } else if(speed < -100) {
+                    speed = -100;
+                }
+
                 switch(direction) {
                     case '1':
                         data_value = speed * 256 + speed;
@@ -705,15 +662,11 @@ Entry.Robotis_rb_car.getBlocks = function() {
                 type: 'robotis_openCM70_RLa_stop',
             },
             paramsKeyMap: {
-                SPEED: 0,
-                DIRECTION: 1,
+                
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['Robotis_rb_car'],
             func: function (sprite, script) {
-                // instruction / address / length / value / default length
-                var speed = script.getNumberValue('SPEED', script);
-                var direction = script.getField('DIRECTION', script);
                 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 710;
@@ -765,10 +718,10 @@ Entry.Robotis_rb_car.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_clockwise, '-1'],
-                        [Lang.Blocks.robotis_counterclockwise, '1'], //Lang.Blocks.robotis_common_green_color
+                        [Lang.Blocks.robotis_clockwise, '-10'],
+                        [Lang.Blocks.robotis_counterclockwise, '10'], //Lang.Blocks.robotis_common_green_color
                     ],
-                    value: '-1',
+                    value: '-10',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -785,7 +738,7 @@ Entry.Robotis_rb_car.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['0'],
+                        params: ['10'],
                     },
                     null
                 ],
@@ -815,6 +768,11 @@ Entry.Robotis_rb_car.getBlocks = function() {
                 var velocity = script.getNumberValue('VEL', script);
                 var direction = script.getNumberValue('DIRECTION', script);
         
+                if(velocity > 100) {
+                    velocity = 100;
+                } else if(velocity < -100) {
+                    velocity = -100;
+                }
                 
                 var dxlPosition = dxlID == 35 ? -1 : 1;
                 velocity = Math.floor(velocity * direction * dxlPosition);
@@ -933,7 +891,7 @@ Entry.Robotis_rb_car.getBlocks = function() {
                 params: [
                     {
                         type: 'number',
-                        params: ['5'],
+                        params: ['10'],
                     },
                     null,
                 ],
@@ -949,6 +907,12 @@ Entry.Robotis_rb_car.getBlocks = function() {
             func(entity, script) {
                 var distance = script.getNumberValue('DISTANCE', script);
                 var direction = script.getField('DIRECTION', script);
+
+                if(distance > 1000) {
+                    distance = 1000;
+                } else if(distance < -1000) {
+                    distance = -1000;
+                }
 
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 270;
@@ -969,7 +933,7 @@ Entry.Robotis_rb_car.getBlocks = function() {
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 500 * distance
+                    Entry.Robotis_openCM70.delay + 500 * Math.abs(distance)
                     //Entry.Robotis_openCM70.delay
                 );
             },
@@ -1011,6 +975,12 @@ Entry.Robotis_rb_car.getBlocks = function() {
             func(entity, script) {
                 var angle = script.getNumberValue('ANGLE', script);
 
+                if(angle > 180) {
+                    angle = 180;
+                } else if(angle < -180) {
+                    angle = -180;
+                }
+
                 var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
                 var data_address = 270;
                 var data_length = 4;
@@ -1025,12 +995,13 @@ Entry.Robotis_rb_car.getBlocks = function() {
                     ],
                 ];
                 
+            
                 data_sendqueue.push([data_instruction, 66, 2, 50492]);
         
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
-                    Entry.Robotis_openCM70.delay + 2000*(angle / 90) + 300
+                    Entry.Robotis_openCM70.delay + 2000*(Math.abs(angle) / 90) + 1000
                     //Entry.Robotis_openCM70.delay
                 );
             },

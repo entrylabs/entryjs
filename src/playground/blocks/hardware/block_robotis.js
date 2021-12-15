@@ -52,6 +52,27 @@ Entry.Robotis_carCont = {
             return script.callReturn();
         }
 
+        Entry.hw.portData = {};
+        setTimeout(function() {
+            Entry.hw.sendQueue = {}
+           // Entry.hw.portData = {};
+        }, ms - 100);
+
+        setTimeout(function() {
+            Entry.hw.sendQueue = {}
+            //Entry.hw.portData = {};
+        }, ms);
+
+        setTimeout(function() {
+            Entry.hw.sendQueue = {}
+            //Entry.hw.portData = {};
+        }, ms + 100);
+
+        setTimeout(function() {
+            Entry.hw.sendQueue = {}
+           // Entry.hw.portData = {};
+        }, ms + 200);
+
         if (!script.isStart) {
             script.isStart = true;
             script.timeFlag = 1;
@@ -62,6 +83,7 @@ Entry.Robotis_carCont = {
             //delay xx ms
             setTimeout(function() {
                 script.timeFlag = 0;
+                
             }, ms);
 
             return script;
@@ -218,6 +240,7 @@ Entry.Robotis_openCM70 = {
         en: 'Robotis Open CM70',
     },
     delay: 15,
+    readDelay: 30
 };
 
 Entry.Robotis_openCM70EDU = {
