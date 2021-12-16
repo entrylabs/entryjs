@@ -500,7 +500,8 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
         },
         // Analog value Mapping End
 
-        // Sensor Start
+        // Sensor Start 
+        // TODO 소리감지센서 값 최적화 필요.
         Robotry_Robit_Stage_get_sensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -531,19 +532,27 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
+                let CMS_MAX = 200; 
                 let value = 0;
 
                 const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') {
-                    port = port.substring(1);
+                    port = port.substring(1); // 아날로그 핀 넘버
                 }
-                if (port === 1){
-                    value = Math.pow(Math.abs(ANALOG[port] - 88), 3);
+                
+                if (port === CMS){
+                    if (ANALOG[port] > 0 && ANALOG[port] < CMS_MAX) {
+                        value = ANALOG[port]  * ( 1024 / CMS_MAX );
+                        value = Math.min(1024, value);
+                        value = Math.max(   0, value);
+                        value = Math.round(value);
+                    }
                 }
                 else {
                     value = ANALOG[port]; 
                 }
-                return ANALOG && value < 1024 ?  value || 0 : 0;
+
+                return value;
             },
             syntax: {
                 js: [],
