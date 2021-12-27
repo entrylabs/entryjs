@@ -759,10 +759,13 @@ import * as PIXI from 'pixi.js';
             if (self._cursorInterval) {
                 clearInterval(self._cursorInterval);
             }
-            self._cursorInterval = setInterval(() => {
-                self._cursor = !self._cursor;
-                self.render();
-            }, 500);
+
+            requestAnimationFrame(() => {
+                self._cursorInterval = setInterval(() => {
+                    self._cursor = !self._cursor;
+                    self.render();
+                }, 500);
+            });
 
             // check if this is Chrome for Android (there is a bug with returning incorrect character key codes)
             const nav = navigator.userAgent.toLowerCase();
@@ -992,8 +995,10 @@ import * as PIXI from 'pixi.js';
         mousedown(e, self) {
             e = Entry.Utils.convertMouseEvent(e);
             const roundRect = Entry.stage.getBoundRect();
-            const x = (e.offsetX / roundRect.width - 0.5) * 480;
-            const y = (e.offsetY / roundRect.height - 0.5) * -270;
+            const offsetX = e.offsetX || e.clientX - roundRect.left;
+            const offsetY = e.offsetY || e.clientY - roundRect.top;
+            const x = (offsetX / roundRect.width - 0.5) * 480;
+            const y = (offsetY / roundRect.height - 0.5) * -270;
             const isOver = self._overInput(x, y);
 
             // setup the 'click' event

@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.aibot = {
-    id: '4C.1',
+    id: ['4C.1','4C.2'],
     name: 'aibot',
     url: 'http://www.jinirobot.com',
     imageName: 'aibot.png',
@@ -23,7 +23,7 @@ Entry.aibot = {
         CONNECT_DEVICE: 10,
     },
 
-    delayTime: 100,
+    delayTime: 50,
     timeouts: [],
 
     removeTimeout: function(id) {
@@ -177,19 +177,23 @@ Entry.aibot.setLanguage = function() {
                 aibot_set_port_out: '디지털출력 %1번 %2 %3',
                 aibot_buzzer_play: '%1 효과음 재생하기 %2',
                 aibot_set_servo_speed: '제어속도를 %1로 정하기 %2',
-                aibot_set_servo_angle_single: '%1번 모듈을 %2의 각도로 제어하기 %3',                
-                aibot_set_servo_angle_123: '모듈 1번을%1, 2번을%2, 3번을%3의 각도로 제어하기%4',
-                aibot_set_servo_angle_56: '모듈 5번을%1, 6번을%2의 각도로 제어하기%3',
+                aibot_set_servo_angle_single: '모듈 %1을 %2각도로 제어%3',                
+                aibot_set_servo_angle_123: '모듈 1%1, 2%2, 3%3 각도로 제어%4',
+                aibot_set_servo_angle_56: '모듈 5%1, 6%2 각도로 제어%3',                
+                aibot_set_servo_angle_123456: '모듈 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 각도로 제어%7',
                 aibot_set_servo_go_home: '모든 모듈을 기본위치로 제어하기(원점복귀) %1',
                 aibot_set_set_offset_zero: '모든 설정값 공장초기화 %1',
                 //aibot_set_servo_home_pos_angle: '%1번 모듈의 기본위치 각도를 %2도로 설정하기%3',
                 aibot_set_servo_home_pos_current: '%1번 모듈의 90도 위치를 현재의 위치로 정하기%2',
-                aibot_set_remote_servo_angle_single: '원격의 %1번 모듈을 %2의 각도로 제어하기 %3',                
-                aibot_set_remote_servo_angle_123: '원격의 모듈 1번을%1, 2번을%2, 3번을%3의 각도로 제어하기%4',
-                aibot_set_remote_servo_angle_56: '원격의 모듈 5번을%1, 6번을%2의 각도로 제어하기%3',
+                aibot_set_remote_servo_speed: '원격의 제어속도를 %1로 정하기 %2',
+                aibot_set_remote_servo_angle_single: '원격모듈 %1을 %2각도로 제어%3',                
+                aibot_set_remote_servo_angle_123: '원격모듈 1%1, 2%2, 3%3 각도로 제어%4',
+                aibot_set_remote_servo_angle_56: '원격모듈 5%1, 6%2 각도로 제어%3',
+                aibot_set_remote_servo_angle_123456: '원격모듈 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 각도로 제어%7',
+                aibot_set_remote_servo_go_home: '원격의 모든 모듈을 기본위치로 제어하기(원점복귀) %1',
                 //aibot_aidesk_read_string: 'AI Desk의 %1번 문자열 반환값 가져오기 %2',  
-                aibot_aidesk_read_number: 'AI Desk의 %1번 숫자 반환값 가져오기 %2', 
-                aibot_aidesk_control_basic: 'AI Desk의 %1번 기능 시작하기(매개변수1:%2, 매개변수2:%3, 매개변수3:%4)%5',
+                aibot_aidesk_read_number: 'AI Desk의 %1번 값%2', 
+                aibot_aidesk_control_basic: 'AI Desk의 %1번 기능 시작하기(변수1:%2, 변수2:%3, 변수3:%4, 변수4:%5)%6',
                 aibot_aidesk_func_stop: 'AI Desk의 %1번 기능 정지하기%2',
                 aibot_set_remote_device: '원격 디바이스 설정%1',
 
@@ -214,17 +218,21 @@ Entry.aibot.setLanguage = function() {
                 aibot_set_servo_speed: 'Control Speed %1 %2',
                 aibot_set_servo_angle_single: '%1 SERVO %2 DEGREE %3',
                 aibot_set_servo_angle_123: 'Module control degree 1%1, 2%2 3%3 %4',     
-                aibot_set_servo_angle_56: 'Module control degree 5%1, 6%2 %3',              
-                aibot_set_servo_go_home: 'Servo Home Position %1',
+                aibot_set_servo_angle_56: 'Module control degree 5%1, 6%2 %3',      
+                aibot_set_servo_angle_123456: 'Module control degree 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 %7',        
+                aibot_set_servo_go_home: 'Module Home Position %1',
                 aibot_set_set_offset_zero: 'Factory reset %1',
                 //aibot_set_servo_home_pos_angle: 'Servo %1 Set Home Position to %2degree %3',
                 aibot_set_servo_home_pos_current: 'Servo %1 Set Home Position to current %2',
+                aibot_set_remote_servo_speed: 'Remote Control Speed %1 %2',
                 aibot_set_remote_servo_angle_single: 'Remote %1 Module %2 DEGREE %3',
                 aibot_set_remote_servo_angle_123: 'Remote Module control degree 1%1, 2%2 3%3 %4',     
-                aibot_set_remote_servo_angle_56: 'Remote Module control degree 5%1, 6%2 %3',  
+                aibot_set_remote_servo_angle_56: 'Remote Module control degree 5%1, 6%2 %3', 
+                aibot_set_remote_servo_angle_123456: 'Remote Module control degree 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 %7', 
+                aibot_set_remote_servo_go_home: 'Remote Module Home Position %1',
                 //aibot_aidesk_read_string: 'Read String %1 of AIDesk %2',  
                 aibot_aidesk_read_number: 'Read Number %1 of AIDesk %2',  
-                aibot_aidesk_control_basic: 'Start Function%1 of AI Desk(Var1:%2, Var2:%3, Var3:%4)%5',
+                aibot_aidesk_control_basic: 'Start Function%1 of AI Desk(Var1:%2, Var2:%3, Var3:%4, Var4:%5)%6',
                 aibot_aidesk_func_stop: 'Stop Function%1 of AI Desk%2',
                 aibot_set_remote_device: 'Set Remote Device%1',
             
@@ -252,13 +260,17 @@ Entry.aibot.blockMenuBlocks = [
     'aibot_set_servo_angle_single',    
     'aibot_set_servo_angle_123',
     'aibot_set_servo_angle_56',
+    'aibot_set_servo_angle_123456',
     'aibot_set_servo_go_home',
     //'aibot_set_servo_home_pos_angle',
     'aibot_set_servo_home_pos_current',    
     'aibot_set_set_offset_zero',
+    'aibot_set_remote_servo_speed',
     'aibot_set_remote_servo_angle_single',
     'aibot_set_remote_servo_angle_123',
     'aibot_set_remote_servo_angle_56',
+    'aibot_set_remote_servo_angle_123456',
+    'aibot_set_remote_servo_go_home',
     'aibot_set_remote_device',
     //'aibot_aidesk_read_string',
     'aibot_aidesk_read_number',
@@ -752,6 +764,216 @@ Entry.aibot.getBlocks = function() {
                 }
             },
         },
+        aibot_set_remote_servo_angle_123456: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [                
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['90','90','90','90','90','90'],
+                type: 'aibot_set_remote_servo_angle_123456',    
+            },
+            paramsKeyMap: {                    
+                SERVO1: 0,
+                SERVO2: 1,
+                SERVO3: 2,
+                SERVO4: 3,
+                SERVO5: 4,
+                SERVO6: 5,
+            },
+            class: 'aibot_remote',
+            isNotFor: ['aibot'],
+            func: function(sprite, script) {
+                if(!script.isStart)
+                {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.aibot.removeTimeout(timer);
+                    }, Entry.aibot.delayTime);
+                    Entry.aibot.timeouts.push(timer);
+                    return script;
+                }
+                else if(script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else
+                {
+                    var sq = Entry.hw.sendQueue;
+                    var Servo1=script.getNumberValue('SERVO1', script);
+                    var Servo2=script.getNumberValue('SERVO2', script);
+                    var Servo3=script.getNumberValue('SERVO3', script);
+                    var Servo4=script.getNumberValue('SERVO4', script);
+                    var Servo5=script.getNumberValue('SERVO5', script);
+                    var Servo6=script.getNumberValue('SERVO6', script);
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
+                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 600;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
+
+                    var Remote = 2;
+                    sq['SEND'] = {};
+                    sq['SEND'][Entry.aibot.array.SERVO_CONTROL] = {
+                        remote: Remote,
+                        servo1: Servo1,
+                        servo2: Servo2,
+                        servo3: Servo3,
+                        servo4: Servo4,
+                        servo5: Servo5,
+                        servo6: Servo6,                        
+                        Time: new Date().getTime(),
+                    };
+                    return script.callReturn(); 
+                }
+            },
+        },
+        aibot_set_servo_angle_123456: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [                
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['90','90','90','90','90','90'],
+                type: 'aibot_set_servo_angle_123456',    
+            },
+            paramsKeyMap: {                    
+                SERVO1: 0,
+                SERVO2: 1,
+                SERVO3: 2,
+                SERVO4: 3,
+                SERVO5: 4,
+                SERVO6: 5,
+            },
+            class: 'aibot',
+            isNotFor: ['aibot'],
+            func: function(sprite, script) {
+                if(!script.isStart)
+                {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.aibot.removeTimeout(timer);
+                    }, Entry.aibot.delayTime);
+                    Entry.aibot.timeouts.push(timer);
+                    return script;
+                }
+                else if(script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else
+                {
+                    var sq = Entry.hw.sendQueue;
+                    var Servo1=script.getNumberValue('SERVO1', script);
+                    var Servo2=script.getNumberValue('SERVO2', script);
+                    var Servo3=script.getNumberValue('SERVO3', script);
+                    var Servo4=script.getNumberValue('SERVO4', script);
+                    var Servo5=script.getNumberValue('SERVO5', script);
+                    var Servo6=script.getNumberValue('SERVO6', script);
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
+                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 600;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
+
+                    var Remote = 1;
+                    sq['SEND'] = {};
+                    sq['SEND'][Entry.aibot.array.SERVO_CONTROL] = {
+                        remote: Remote,
+                        servo1: Servo1,
+                        servo2: Servo2,
+                        servo3: Servo3,
+                        servo4: Servo4,
+                        servo5: Servo5,
+                        servo6: Servo6,                        
+                        Time: new Date().getTime(),
+                    };
+                    return script.callReturn(); 
+                }
+            },
+        },
         aibot_set_servo_angle_123: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -903,6 +1125,71 @@ Entry.aibot.getBlocks = function() {
                         servo4: Servo4,
                         servo5: Servo5,
                         servo6: Servo6,                        
+                        Time: new Date().getTime(),
+                    };
+                    return script.callReturn(); 
+                }
+            },
+        },
+        aibot_set_remote_servo_speed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [                        
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                    ],
+                    value: '1',
+                    fontSize: 12,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'aibot_set_remote_servo_speed',    
+            },
+            paramsKeyMap: {                    
+                SPEED: 0,
+            },
+            class: 'aibot_remote',
+            isNotFor: ['aibot'],
+            func: function(sprite, script) {
+                if(!script.isStart)
+                {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.aibot.removeTimeout(timer);
+                    }, Entry.aibot.delayTime);
+                    Entry.aibot.timeouts.push(timer);
+                    return script;
+                }
+                else if(script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else
+                {
+                    var sq = Entry.hw.sendQueue;
+                    var Speed = script.getNumberValue('SPEED', script);
+                    var Remote = 2;
+                    sq['SEND'] = {};
+                    sq['SEND'][Entry.aibot.array.SERVO_SPEED] = {
+                        remote: Remote,
+                        speed: Speed,
                         Time: new Date().getTime(),
                     };
                     return script.callReturn(); 
@@ -1206,6 +1493,56 @@ Entry.aibot.getBlocks = function() {
                 }
             },
         },
+        aibot_set_remote_servo_go_home: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [                
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'aibot_set_remote_servo_go_home',    
+            },
+            paramsKeyMap: {
+            },
+            class: 'aibot_remote',
+            isNotFor: ['aibot'],
+            func: function(sprite, script) {
+                if(!script.isStart)
+                {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.aibot.removeTimeout(timer);
+                    }, Entry.aibot.delayTime);
+                    Entry.aibot.timeouts.push(timer);
+                    return script;
+                }
+                else if(script.timeFlag == 1)
+                {
+                    return script;
+                }
+                else
+                {      
+                    var sq = Entry.hw.sendQueue;
+                    var Remote = 2;
+                    sq['SEND'] = {};
+                    sq['SEND'][Entry.aibot.array.HOME_CONTROL] = {
+                        remote: Remote,                      
+                        Time: new Date().getTime(),
+                    };
+                    return script.callReturn(); 
+                }
+            },
+        },
         aibot_set_servo_home_pos_angle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1486,7 +1823,7 @@ Entry.aibot.getBlocks = function() {
                 var value = script.getNumberValue('VALUE',script); 
                 if(value>6)value=6; 
                 if(value<1)value=1; 
-                result = Entry.hw.portData.AIDESK[value-1];
+                var result = Entry.hw.portData.AIDESK[value-1];
                 return result;
             },
         },
@@ -1517,6 +1854,11 @@ Entry.aibot.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
                     size: 12,
@@ -1524,7 +1866,7 @@ Entry.aibot.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: ['1','0','0','0'],
+                params: ['1','0','0','0','0'],
                 type: 'aibot_aidesk_control_basic',    
             },
             paramsKeyMap: {                    
@@ -1532,6 +1874,7 @@ Entry.aibot.getBlocks = function() {
                 VAR1: 1,
                 VAR2: 2,
                 VAR3: 3,
+                VAR4: 4,
             },
             class: 'aibot_aidesk',
             isNotFor: ['aibot'],
@@ -1558,6 +1901,7 @@ Entry.aibot.getBlocks = function() {
                     var Var1=script.getNumberValue('VAR1', script);
                     var Var2=script.getNumberValue('VAR2', script); 
                     var Var3=script.getNumberValue('VAR3', script); 
+                    var Var4=script.getNumberValue('VAR4', script); 
 
                     if(Var1>2000)Var1=2000;
                     if(Var1<-2000)Var1=-2000;
@@ -1565,6 +1909,8 @@ Entry.aibot.getBlocks = function() {
                     if(Var2<-2000)Var2=-2000;
                     if(Var3>2000)Var3=2000;
                     if(Var3<-2000)Var3=-2000;
+                    if(Var4>2000)Var4=2000;
+                    if(Var4<-2000)Var4=-2000;
 
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1573,7 +1919,8 @@ Entry.aibot.getBlocks = function() {
                         func: Func,
                         var1: Var1, 
                         var2: Var2,
-                        var3: Var3,                       
+                        var3: Var3,    
+                        var4: Var4,                    
                         Time: new Date().getTime(),
                     };
                     return script.callReturn(); 
