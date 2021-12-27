@@ -921,8 +921,8 @@ class TextCodingUtil {
                 if (isNaN(data) || (data.length > 1 && String(data)[0] === '0')) {
                     data = `"${data.replace(/"/gi, '\\"')}"`;
                 }
-
-                if (typeof data === 'number' || data.trim().length > 0) {
+       
+                if (typeof data === 'number' || (data.trim && data.trim().length > 0)) {
                     value += data;
                 }
 
