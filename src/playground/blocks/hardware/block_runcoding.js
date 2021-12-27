@@ -42,6 +42,7 @@ Entry.Runcoding = {
         NEOPIXELCLEAR : 15,
         NEOPIXELINIT : 16,
         NEOPIXELRAINBOW: 17,
+        NEOPIXELEACH: 18,
     },
     toneTable: {
         '0': 0,
@@ -90,10 +91,11 @@ Entry.Runcoding.setLanguage = function() {
                 arduino_runcoding_set_servo: '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
                 arduino_runcoding_get_digital: '디지털 %1 번 센서값',
 
-                arduino_runcoding_set_neopixel_init: '네오픽셀 설정 %1 번 핀 led %2 개를 %3 밝기로 설정하기 %4',
-                arduino_runcoding_set_neopixel: '네오픽셀 %1 번 핀 RGB ( %2, %3, %4) %5',
-                arduino_runcoding_set_neopixel_rainbow: '무지개 표현하기 %1 번 핀 %2 %3',
-                arduino_runcoding_set_neopixel_clear: '네오픽셀 지우기 %1 번 핀 %2',
+                arduino_runcoding_set_neopixel_init: '네오픽셀 설정 (%1 핀) led %2 개를 %3 밝기로 설정하기 %4',
+                arduino_runcoding_set_neopixel: '네오픽셀 (%1 핀) RGB ( %2, %3, %4) %5',
+                arduino_runcoding_set_neopixel_each: '네오픽셀(%1 핀) LED (%2 번 쨰) RGB ( %3, %4, %5) %6',
+                arduino_runcoding_set_neopixel_rainbow: '무지개 표현하기 (%1 핀) %2 %3',
+                arduino_runcoding_set_neopixel_clear: '네오픽셀 지우기 (%1 핀) %2',
 
                 arduino_runcoding_set_metrix: '도트매트릭스 그리기 (열 %1 - 행 %2) %3',
                 arduino_runcoding_set_metrix_draw: '도트매트릭스 그리기 %1 %2',
@@ -116,6 +118,7 @@ Entry.Runcoding.setLanguage = function() {
 
                 arduino_runcoding_set_neopixel_init: 'set neopixel pin: %1 led-count: %2 bright: %3 %4',
                 arduino_runcoding_set_neopixel: 'neopixel pin: %1 (R:%2 G:%3 B:%4) %5',
+                arduino_runcoding_set_neopixel_each: 'neopixel pin: %1 LED %2 RGB ( %3, %4, %5) %6',
                 arduino_runcoding_set_neopixel_rainbow: 'neopixel pin: %1 %2 %4',
                 arduino_runcoding_set_neopixel_clear: 'clear neopixel pin: %1 %2',
 
@@ -140,6 +143,7 @@ Entry.Runcoding.blockMenuBlocks = [
     'arduino_runcoding_set_tone',
     'arduino_runcoding_set_neopixel_init',
     'arduino_runcoding_set_neopixel',
+    'arduino_runcoding_set_neopixel_each',
     'arduino_runcoding_set_neopixel_rainbow',
     'arduino_runcoding_set_neopixel_clear',
     'arduino_runcoding_set_metrix',
@@ -1140,16 +1144,35 @@ Entry.Runcoding.getBlocks = function() {
                 let value1 = script.getNumberValue('VALUE1', script);
                 let value2 = script.getNumberValue('VALUE2', script);
 
-                if (!sq.SET) {
-                    sq.SET = {};
-                }
-                sq.SET[port] = {
-                    type: Entry.Runcoding.sensorTypes.NEOPIXELINIT,
-                    data:{value1,value2},
-                    time: new Date().getTime(),
-                };
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
 
-                return script.callReturn();
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+
+                    sq.SET[port] = {
+                        type: Entry.Runcoding.sensorTypes.NEOPIXELINIT,
+                        data:{value1,value2},
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
@@ -1243,16 +1266,34 @@ Entry.Runcoding.getBlocks = function() {
                 let G_val = script.getNumberValue('G', script);
                 let B_val = script.getNumberValue('B', script);
 
-                if (!sq.SET) {
-                    sq.SET = {};
-                }
-                sq.SET[port] = {
-                    type: Entry.Runcoding.sensorTypes.NEOPIXEL,
-                    data:{R_val,G_val,B_val},
-                    time: new Date().getTime(),
-                };
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
 
-                return script.callReturn();
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    sq.SET[port] = {
+                        type: Entry.Runcoding.sensorTypes.NEOPIXEL,
+                        data:{R_val,G_val,B_val},
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
@@ -1260,6 +1301,146 @@ Entry.Runcoding.getBlocks = function() {
                     {
                         syntax: 'Arduino.neopixel(%1, %2, %3, %4)',
                         textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        arduino_runcoding_set_neopixel_each: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: [6],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                ],
+                type: 'arduino_runcoding_set_neopixel_each',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                CNT: 1,
+                R: 2,
+                G: 3,
+                B: 4,
+            },
+            class: 'Runcoding',
+            isNotFor: ['Runcoding'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let CNT_val = script.getNumberValue('CNT', script);
+                let R_val = script.getNumberValue('R', script);
+                let G_val = script.getNumberValue('G', script);
+                let B_val = script.getNumberValue('B', script);
+
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    sq.SET[port] = {
+                        type: Entry.Runcoding.sensorTypes.NEOPIXELEACH,
+                        data:{CNT_val,R_val,G_val,B_val},
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.neopixel_each(%1, %2, %3, %4, %5)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
                             {
                                 type: 'Block',
                                 accept: 'string',
@@ -1383,17 +1564,35 @@ Entry.Runcoding.getBlocks = function() {
                 const port = script.getNumberValue('PORT', script);
                 let value = script.getNumberValue('VALUE', script);
                 
-                if (!sq.SET) {
-                    sq.SET = {};
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+
+                    sq.SET[port] = {
+                        type: Entry.Runcoding.sensorTypes.NEOPIXELRAINBOW,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-
-                sq.SET[port] = {
-                    type: Entry.Runcoding.sensorTypes.NEOPIXELRAINBOW,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-
-                return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1453,16 +1652,34 @@ Entry.Runcoding.getBlocks = function() {
                 const sq = Entry.hw.sendQueue;
                 const port =  script.getNumberValue('PORT', script);
 
-                if (!sq.SET) {
-                    sq.SET = {};
-                }
-                sq.SET[port] = {
-                    type: Entry.Runcoding.sensorTypes.NEOPIXELCLEAR,
-                    data: 0,
-                    time: new Date().getTime(),
-                };
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
 
-                return script.callReturn();
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    sq.SET[port] = {
+                        type: Entry.Runcoding.sensorTypes.NEOPIXELCLEAR,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
@@ -1528,16 +1745,34 @@ Entry.Runcoding.getBlocks = function() {
                 let value1 = script.getNumberValue('VALUE1', script) +10;
                 let value2 = script.getNumberValue('VALUE2', script) + 10;
 
-                if (!sq.SET) {
-                    sq.SET = {};
-                }
-                sq.SET[12] = {
-                    type: Entry.Runcoding.sensorTypes.METRIX,
-                    data:{value1,value2},
-                    time: new Date().getTime(),
-                };
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
 
-                return script.callReturn();
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    sq.SET[12] = {
+                        type: Entry.Runcoding.sensorTypes.METRIX,
+                        data:{value1,value2},
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
@@ -1665,17 +1900,35 @@ Entry.Runcoding.getBlocks = function() {
 
                 let value = script.getNumberValue('VALUE', script);
                 
-                if (!sq.SET) {
-                    sq.SET = {};
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+
+                    sq.SET[12] = {
+                        type: Entry.Runcoding.sensorTypes.METRIXDRAW,
+                        data: value,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
                 }
-
-                sq.SET[12] = {
-                    type: Entry.Runcoding.sensorTypes.METRIXDRAW,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-
-                return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1739,16 +1992,34 @@ Entry.Runcoding.getBlocks = function() {
                 let value1 = script.getNumberValue('VALUE1', script) + 10;
                 let value2 = script.getNumberValue('VALUE2', script) + 10;
 
-                if (!sq.SET) {
-                    sq.SET = {};
-                }
-                sq.SET[12] = {
-                    type: Entry.Runcoding.sensorTypes.METRIXROWCOLCLEAR,
-                    data:{value1,value2},
-                    time: new Date().getTime(),
-                };
+                if (!script.isStart) {
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
 
-                return script.callReturn();
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    sq.SET[12] = {
+                        type: Entry.Runcoding.sensorTypes.METRIXROWCOLCLEAR,
+                        data:{value1,value2},
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
@@ -1797,17 +2068,36 @@ Entry.Runcoding.getBlocks = function() {
             func(sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const port = 12;
-             
-                if (!sq.SET) {
-                    sq.SET = {};
-                }
-                sq.SET[port] = {
-                    type: Entry.Runcoding.sensorTypes.METRIXCLEAR,
-                    data: 0,
-                    time: new Date().getTime(),
-                };
 
-                return script.callReturn();
+                if (!script.isStart) {
+             
+                    if (!sq.SET) {
+                        sq.SET = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = (60 / fps) * 50;
+
+                    sq.SET[port] = {
+                        type: Entry.Runcoding.sensorTypes.METRIXCLEAR,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                }else if (script.timeFlag == 1) {
+                    return script;
+                }else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
