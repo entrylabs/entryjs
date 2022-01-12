@@ -110,9 +110,11 @@ Entry.loadProject = function(project) {
         Entry.loadInterfaceState(project.interface);
     }
 
-    if (window.parent && window.parent.childIframeLoaded) {
-        window.parent.childIframeLoaded();
-    }
+    try {
+        if (window.parent && window.parent.childIframeLoaded) {
+            window.parent.childIframeLoaded();
+        }
+    } catch (e) {}
     return project;
 };
 
@@ -718,64 +720,96 @@ Entry.Utils.bindIOSDeviceWatch = function() {
     }
 };
 
+function addEntryEvent(dom, event, func) {
+    if (dom && event) {
+        dom.on(event, func);
+    }
+}
+
+function removeEntryEvent(dom, event, func) {
+    if (dom && event) {
+        dom.off(event, func);
+    }
+}
+
 Entry.Utils.bindGlobalEvent = function(options) {
     const doc = $(document);
+    let parentDoc;
+    if (window.parent !== window.self) {
+        try {
+            parentDoc = $(window.parent.document);
+        } catch (e) {}
+    }
     if (options === undefined) {
         options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup', 'dispose'];
     }
 
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
-            $(window).off('resize');
+            removeEntryEvent($(window), 'resize');
+            if (parentDoc) {
+                removeEntryEvent($(window.parent), 'resize');
+            }
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', (e) => {
+        const func = (e) => {
             Entry.windowResized.notify(e);
-        });
+        };
+        addEntryEvent($(window), 'resize', func);
+        if (parentDoc) {
+            addEntryEvent($(window.parent), 'resize', func);
+        }
         Entry.Utils.bindIOSDeviceWatch();
     }
 
     if (options.indexOf('mousedown') > -1) {
         if (Entry.documentMousedown) {
-            doc.off('mousedown');
+            removeEntryEvent(doc, 'mousedown');
+            removeEntryEvent(parentDoc, 'mousedown');
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        doc.on('mousedown', (e) => {
-            const selectedBlock = document.querySelector('.selected');
+        const func = (e) => {
+            const selectedBlock = document.querySelector('.block.selected');
             if (selectedBlock) {
                 selectedBlock.classList.remove('selected');
             }
-        });
+        };
+        addEntryEvent(doc, 'mousedown', func);
+        addEntryEvent(parentDoc, 'mousedown', func);
     }
 
     if (options.indexOf('mousemove') > -1) {
         if (Entry.documentMousemove) {
-            doc.off('touchmove mousemove');
+            removeEntryEvent(doc, 'touchmove mousemove');
+            removeEntryEvent(parentDoc, 'touchmove mousemove');
             Entry.documentMousemove.clear();
         }
 
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        doc.on('touchmove mousemove', (e) => {
+        const func = (e) => {
             if (e.originalEvent && e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
-        });
+        };
+        addEntryEvent(doc, 'touchmove mousemove', func);
+        addEntryEvent(parentDoc, 'touchmove mousemove', func);
     }
 
     if (options.indexOf('keydown') > -1) {
         if (Entry.keyPressed) {
-            doc.off('keydown');
+            removeEntryEvent(doc, 'keydown');
+            removeEntryEvent(parentDoc, 'keydown');
             Entry.keyPressed.clear();
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', (e) => {
+        const func = (e) => {
             const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
@@ -784,16 +818,19 @@ Entry.Utils.bindGlobalEvent = function(options) {
                 Entry.pressedKeys.push(keyCode);
             }
             Entry.keyPressed.notify(e);
-        });
+        };
+        addEntryEvent(doc, 'keydown', func);
+        addEntryEvent(parentDoc, 'keydown', func);
     }
 
     if (options.indexOf('keyup') > -1) {
         if (Entry.keyUpped) {
-            doc.off('keyup');
+            removeEntryEvent(doc, 'keyup');
+            removeEntryEvent(parentDoc, 'keyup');
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', (e) => {
+        const func = (e) => {
             const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
@@ -803,7 +840,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
                 Entry.pressedKeys.splice(index, 1);
             }
             Entry.keyUpped.notify(e);
-        });
+        };
+        addEntryEvent(doc, 'keyup', func);
+        addEntryEvent(parentDoc, 'keyup', func);
     }
 
     if (options.indexOf('dispose') > -1) {
@@ -1876,7 +1915,9 @@ Entry.Utils.addNewBlock = function(item) {
         }
     });
     DataTable.setTables(tables);
-    Entry.aiLearning.load(learning);
+    if (!Entry.options.aiUtilizeDisable) {
+        Entry.aiLearning.load(learning);
+    }
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);

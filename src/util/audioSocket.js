@@ -17,29 +17,35 @@ export function voiceApiConnect(addr = DEFAULT_ADDR, language = 'Kor', cb) {
             reconnect: true,
             rejectUnauthorized: false,
             timeout: GATEWAY_CONNECT_TIMEOUT,
-            transports: ['websocket'],
+            transports: ['websocket', 'polling'],
         });
-        // client.onerror = function(error) {
-        //     console.log('Connect Error: ' + JSON.stringify(error));
-        // };
+
         client.on('open', () => {
             console.log('NSASR Voice Server Connected');
             resolve(client);
         });
+
         client.on('connect', () => {
             console.log('socket connected');
         });
+
         client.on('disconnect', () => {
             console.log('closed');
             Entry.engine.hideAllAudioPanel();
             audioUtils.isRecording = false;
         });
 
+        let isFirst = true;
         client.on('connect_error', (error) => {
-            console.error('connect_error', error);
-            Entry.engine.hideAllAudioPanel();
-            audioUtils.isRecording = false;
-            reject(error);
+            if (isFirst) {
+                isFirst = false;
+                client.io.opts.transports = ['polling', 'websocket'];
+            } else {
+                console.error('connect_error', error);
+                Entry.engine.hideAllAudioPanel();
+                audioUtils.isRecording = false;
+                reject(error);
+            }
         });
         client.on('connect_timeout', (timeout) => {
             console.error('connect_timeout', timeout);
