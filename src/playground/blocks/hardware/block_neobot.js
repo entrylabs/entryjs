@@ -1537,6 +1537,7 @@ Entry.Neobot.getPracticalBlocks = function () {
 
 Entry.Neobot.practicalBlockMenuBlocks = {
     hw_motor: [
+        // 'practical_course_motor_speed',
         'practical_course_move_for_secs',
         'practical_course_move_for_secs2',
         'practical_course_move_for',
