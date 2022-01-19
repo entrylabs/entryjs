@@ -739,7 +739,7 @@ Entry.aibot.getBlocks = function() {
                     var Servo = script.getNumberValue('SERVO', script);
                     var Angle = script.getNumberValue('ANGLE', script);
                                         
-                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 600;                    
+                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;                    
 
                     if(Servo==1)Servo1 = Angle;
                     else if(Servo==2)Servo2 = Angle;
@@ -846,12 +846,12 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=script.getNumberValue('SERVO4', script);
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
-                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 600;  
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
+                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 700;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
 
                     var Remote = 2;
                     sq['SEND'] = {};
@@ -951,12 +951,12 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=script.getNumberValue('SERVO4', script);
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
-                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 600;  
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
+                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 700;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
 
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1036,9 +1036,9 @@ Entry.aibot.getBlocks = function() {
                     var Servo2=script.getNumberValue('SERVO2', script);
                     var Servo3=script.getNumberValue('SERVO3', script);
                     var Servo4=0;var Servo5=0;var Servo6=0;
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
 
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1112,8 +1112,8 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=0;
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
                     
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1261,7 +1261,7 @@ Entry.aibot.getBlocks = function() {
                     var Servo = script.getNumberValue('SERVO', script);
                     var Angle = script.getNumberValue('ANGLE', script);
                                         
-                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 600;                    
+                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;                    
 
                     if(Servo==1)Servo1 = Angle;
                     else if(Servo==2)Servo2 = Angle;
@@ -1348,9 +1348,9 @@ Entry.aibot.getBlocks = function() {
                     var Servo2=script.getNumberValue('SERVO2', script);
                     var Servo3=script.getNumberValue('SERVO3', script);
                     var Servo4=0;var Servo5=0;var Servo6=0;
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
 
                     var Remote = 2;
                     sq['SEND'] = {};
@@ -1424,8 +1424,8 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=0;
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
                     
                     var Remote = 2;
                     sq['SEND'] = {};
@@ -1611,7 +1611,7 @@ Entry.aibot.getBlocks = function() {
                     if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;
                     if(Servo==1 || Servo==5 )Angle = 90+Angle;
                     
-                    Angle = Angle*10 + 600;                    
+                    Angle = Angle*10 + 700;                    
 
                     if(Servo==1)Servo1 = Angle;
                     else if(Servo==2)Servo2 = Angle;
