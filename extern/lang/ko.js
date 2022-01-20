@@ -803,6 +803,7 @@ Lang.Blocks = {
     JUDGEMENT_reach_something_1: '',
     JUDGEMENT_reach_something_2: '에 닿았는가?',
     JUDGEMENT_true: ' 참 ',
+    JUDGEMENT_is_boost_mode: '부스트모드가 켜져 있는가?',
     LOOKS: '생김새',
     LOOKS_change_scale_percent_1: '크기를',
     LOOKS_change_scale_percent_2: '만큼 바꾸기',
@@ -5895,6 +5896,7 @@ Lang.Helper = {
     boolean_and: '두 판단이 모두 참인 경우 ‘참’으로 판단합니다.',
     boolean_or: '두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다.',
     boolean_not: '해당 판단이 참이면 거짓, 거짓이면 참으로 만듭니다.',
+    is_boost_mode: '부스트모드가 켜져 있으면 ‘참’으로 판단합니다.',
     calc_basic:
         '입력한 두 수의 사칙연산 값입니다.\n+ : 입력한 두 수를 더한 값입니다.\n- : 입력한 두 수를 뺀 값입니다.\n* : 입력한 두 수를 곱한 값입니다.\n/ : 입력한 두 수를 나눈 값입니다.',
     calc_rand:
@@ -7134,6 +7136,7 @@ Lang.template = {
     boolean_and: '%1 %2 %3',
     boolean_or: '%1 %2 %3',
     boolean_not: '%1 %2 %3',
+    is_boost_mode: '%1',
     true_or_false: '%1',
     True: '%1  ',
     False: '%1  ',

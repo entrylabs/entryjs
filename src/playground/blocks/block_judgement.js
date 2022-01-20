@@ -614,6 +614,38 @@ module.exports = {
                     ],
                 },
             },
+            is_boost_mode: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_boost_mode,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_boost_mode',
+                },
+                class: 'boolean_input',
+                isNotFor: [],
+                func() {
+                    return !!Entry.options.useWebGL;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.is_boost_mode()',
+                            blockType: 'param',
+                        },
+                    ],
+                },
+            },
         };
     },
 };

@@ -1007,11 +1007,13 @@ Entry.Engine = class Engine {
             }
 
             if (window.top !== window.self) {
-                window.top.addEventListener('mousemove', this.copyMouseMoveEvent);
+                window.top.addEventListener('mouseup', this.copyEvent);
+                window.top.addEventListener('mousemove', this.copyEvent);
             }
         } else {
             if (window.top !== window.self) {
-                window.top.removeEventListener('mousemove', this.copyMouseMoveEvent);
+                window.top.removeEventListener('mouseup', this.copyEvent);
+                window.top.removeEventListener('mousemove', this.copyEvent);
             }
             this.popup.remove();
             this.popup = null;
@@ -1019,7 +1021,7 @@ Entry.Engine = class Engine {
         Entry.windowResized.notify();
     }
 
-    copyMouseMoveEvent(event) {
+    copyEvent(event) {
         const eventClone = new event.constructor(event.type, event);
         window.self.dispatchEvent(eventClone);
     }

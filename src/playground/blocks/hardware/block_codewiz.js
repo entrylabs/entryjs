@@ -77,8 +77,8 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_isPushedButton: '%1 스위치 버튼 값',
                 CodeWiz_touchPin: '터치핀 %1 값',
 
-                CodeWiz_buzzer_title: '부저　　',
-                CodeWiz_default_buzzer: '부저를 %1옥타브, %2음, %3분음표로 연주하기 %4',
+                CodeWiz_buzzer_title: '스피커',
+                CodeWiz_default_buzzer: '스피커를 %1옥타브, %2음, %3분음표로 연주하기 %4',
 
                 CodeWiz_neopixel_title: '네오픽셀',
                 CodeWiz_neopixel_init: '네오픽셀 %1에 %2개로 시작설정%3',
@@ -109,6 +109,7 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_OLED_drawRect: 'OLED 직사각형 시작(%1,%2) 가로%3세로%4%5%6%7',
                 CodeWiz_OLED_drawCircle: 'OLED 원 중심(%1,%2) 반지름%3%4%5%6',
                 CodeWiz_OLED_drawPoligon: 'OLED 삼각형 점1(%1,%2)점2(%3,%4)점3(%5,%6)%7%8%9',
+                CodeWiz_OLED_printHG:'OLED에 한글포함%1 출력, 줄바꿈%2%3',
 
                 CodeWiz_DIGITAL_OUTPUT_title: '기본 출력',
                 CodeWiz_DIGITAL_OUTPUT_digitalWrite: 'PIN%1(으)로 %2내보내기%3',
@@ -154,6 +155,134 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_ColorSensor_isColor: 'MCON 컬러센서 감지된 색이 %1인가%2',
                 CodeWiz_ColorSensor_getColorValue: 'MCON 컬러센서 %1값%2',
             },
+
+            Helper: {
+                CodeWiz_get_sensor: `주변의 소리값을 0~1023 사이 값으로 알려줍니다.
+
+                ▼을 클릭하여 빛, 거리, 홀, 온도를 선택하여
+                주변의 밝기, 거리, 자성, 보드의 온도를 확인할 수 있습니다.`,
+                CodeWiz_get_gyroSensor: `선택된 축의 기울기를 -90~90 사이 값으로 알려줍니다.
+                ▼을 눌러 X축, Y축, Z축을 선택할 수 있습니다.`,
+                CodeWiz_isPushedButton: `왼쪽/오른쪽 버튼을 누르면 “참” 으로 판단합니다.
+                ▼을 눌러 왼쪽, 오른쪽을 선택할 수 있습니다.`,
+                CodeWiz_touchPin: `🐻 모양의 터치센서를 손가락으로 터치하면 “참“으로 판단합니다.
+                ▼을 눌러 🔆,⭕, 🖐, 👊, ❌ 모양의 터치센서를 선택하면 해당 모양의 터치센서의 터치 여부도 확인할 수 있습니다.`,
+
+                CodeWiz_default_buzzer: `지정된 옥타브의 음을 지정된 음표로 스피커(부저)를 재생합니다.`,
+
+                CodeWiz_neopixel_init: `코드위즈의 네오 RGB LED 5개의 사용을 설정합니다.
+                ▼을 눌러 SCON에 연결된 네오픽셀의 개수와 사용을 설정할 수 있습니다.`,
+                CodeWiz_neopixel_brightness: `밝기를 0~255 사이 값으로 지정합니다.`,
+                CodeWiz_neopixel_setColor_one: `입력한 번호의 LED를 선택한 색으로 켭니다.`,
+                CodeWiz_neopixel_setColor_one2:
+                    `입력한 번호의 LED를 빨강, 초록, 파랑에 입력된 값의 색으로 켭니다.
+                    각 값을 0~255 사이 값으로 지정합니다.`,
+                CodeWiz_neopixel_off_one: `입력한 번호의 LED를 끕니다.`,
+                CodeWiz_neopixel_setColor_all: `모든 LED를 선택한 색으로 켭니다.`,
+                CodeWiz_neopixel_setColor_all2: `모든 LED를 빨강, 초록, 파랑에 입력된 값의 색으로 켭니다.
+                각 값을 0~255 사이 값으로 지정합니다.`,
+                CodeWiz_neopixel_off_all: `모든 LED를 끕니다.`,
+
+                CodeWiz_OLED_clear: `OLED에 표시된 내용을 지웁니다.`,
+                CodeWiz_OLED_mirror: `OLED에 표시할 내용의 출력 상태를 설정합니다.
+                OFF가 기본이며, ON을 선택하면 OLED 배경에 색이 채워지고 내용이 표시됩니다.`,
+                CodeWiz_OLED_setSize: `글자 크기를 지정합니다.
+                1~10 사이의 범위로 설정할 수 있습니다.`,
+                CodeWiz_OLED_setPosition: `글자가 출력될 위치(x좌표, y좌표)를 지정합니다.
+                X는 0~127, Y는 0~63 사이의 범위로 설정할 수 있습니다.`,
+                CodeWiz_OLED_println: `입력한 내용을 OLED에 출력합니다.`,
+                CodeWiz_OLED_isCollision: `OLED에 출력된 내용의 줄바꿈을 설정합니다.`,
+                CodeWiz_OLED_specialChar: `OLED에 기호를 출력합니다.`,
+                CodeWiz_OLED_setFont: `글꼴과 글자 크기를 ▼ 을 눌러 설정합니다.`,
+                CodeWiz_OLED_startScroll: `OLED에 입력된 내용을 지정한 화살표방향으로 이동시킵니다. 시작과 종료는 y좌표를 0~7 페이지로 나눈 것으로 각 페이지는 다음과 같은 y 좌표를 가집니다.
+                
+                0 : y좌표 0~7
+                1 : y좌표 8~15
+                2 : y좌표 16~23
+                3 : y좌표 24~31
+                4 : y좌표 32~39
+                5 : y좌표 40~47
+                6 : y좌표 48~55
+                7 : y좌표 56~63`,
+                CodeWiz_OLED_stopScroll: `이동을 멈춥니다.`,
+                CodeWiz_OLED_drawPoint: `지정된 위치 (x좌표, y좌표)에 점을 찍습니다.
+                X는 0~127, Y는 0~63 사이의 범위로 설정할 수 있습니다.`,
+                CodeWiz_OLED_drawLine1: `시작 위치 (x좌표, y좌표)에서 끝 위치 (x좌표, y좌표)까지 흰색 선을 그립니다.`,
+                CodeWiz_OLED_drawLine2: `시작 위치 (x좌표, y좌표)에서 지정된 길이의 흰색 수직선을 그립니다.`,
+                CodeWiz_OLED_drawLine3: `시작 위치 (x좌표, y좌표)에서 지정된 길이의 흰색 수평선을 그립니다.`,
+                CodeWiz_OLED_drawRect: `시작 위치 (x좌표, y좌표)에서 지정된 가로, 세로 길이의 흰색 선 직사각형을 그립니다.
+                ▼을 눌러 ‘비움’ 대신 ‘채움‘을 선택하면 직사각형 내부가 채워집니다.`,
+                CodeWiz_OLED_drawCircle: `중심(x좌표, y좌표)에서 지정된 반지름을 가지는 흰색 선 원을 그립니다.
+                ▼을 눌러 ‘비움’ 대신 ‘채움‘을 선택하면 원 내부가 채워집니다.`,
+                CodeWiz_OLED_drawPoligon: `점1(x좌표, y좌표), 점2 (x좌표, y좌표), 점3 (x좌표, y좌표)을 연결하여 흰색 선 삼각형을 그립니다.
+                ▼을 눌러 ‘비움’ 대신 ‘채움‘을 선택하면 원 내부가 채워집니다.`,
+                CodeWiz_OLED_printHG:`입력한 내용(한글포함)을 OLED에 출력합니다.
+                ▼을 눌러 ‘⭕’를 선택하면 아랫줄로 커서를 이동시키고 ‘❌‘를 선택하면 마지막 글자 오른쪽으로 커서를 이동시킵니다.`,
+
+                CodeWiz_DIGITAL_OUTPUT_digitalWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 HIGH 또는 LOW 를 내보냅니다.`,
+                CodeWiz_DIGITAL_OUTPUT_pwmWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 입력된 값을 내보냅니다.`,
+
+                CodeWiz_HuskyLens_initHuskyLens: `허스키렌즈 시작을 설정합니다.`,
+                CodeWiz_HuskyLens_setModeOfHuskyLens: `허스키렌즈를 선택된 알고리즘으로 설정합니다.
+
+                1.FACE_RECOGNITION
+                2.OBJECT_TRACKING
+                3.OBJECT_RECOGNITION
+                4.LINE_TRACKING
+                5.COLOR_RECOGNITION
+                6.TAG_RECOGNITION
+                7.OBJECT_CLASSIFICATION`,
+                CodeWiz_HuskyLens_readHuskyLens: `허스키렌즈가 인식한 결과를 읽어옵니다.`,
+                CodeWiz_HuskyLens_isLearnedHuskyLens: `입력한 ID 번호 데이터를 학습했다면 ‘참’으로 판단하여 알려줍니다.`,
+                CodeWiz_HuskyLens_isContainHuskyLens:
+                    `입력한 ID 번호의 사각형 데이터가 인식된다면 ‘참’으로 판단하여 알려줍니다.
+                    ▼을 눌러 화살표를 선택하면 화살표 데이터가 인식될 때 ‘참’으로 판단하여 알려줍니다.`,
+                CodeWiz_HuskyLens_getCountLearnedHuskyLens: `화면에 감지된 학습한 데이터 수를 알려줍니다.`,
+                CodeWiz_HuskyLens_hasTypeHuskyLens: `읽어온 데이터 타입이 선택한 타입(사각형/화살표)과 같다면 ‘참’으로 판단하여 알려줍니다.`,
+                CodeWiz_HuskyLens_getArrowInfoHuskyLens:
+                    `읽어온 화살표 데이터의 좌표 값을 알려줍니다. 좌표 값은 ‘시작 X좌표‘, ‘시작 Y좌표‘, ‘종료 X좌표‘, ‘종료 Y좌표‘ 중 하나를 선택합니다.`,
+                CodeWiz_HuskyLens_getBoxInfoHuskyLens:
+                    `읽어온 사각형 데이터의 정보를 알려줍니다. 정보는 ‘ID’, ‘중심 X좌표‘, ‘중심 Y좌표’, ‘너비‘, ‘높이’ 중 하나를 선택합니다.`,
+                CodeWiz_HuskyLens_writeTextHuskyLens: `허스키렌즈 화면의 지정된 좌표에 입력된 데이터를 출력합니다.`,
+                CodeWiz_HuskyLens_clearTextHuskyLens: `허스키렌즈 화면에 출력되어 있는 데이터를 지웁니다.`,
+
+                CodeWiz_InfraredThermometer_read: `선택된 커넥터(MCON/SCON)에 연결된 비접촉 온도 센서에 인식된 온도를 알려줍니다.
+                ▼을 눌러 온도 단위를 선택합니다.`,
+
+                CodeWiz_Servo_setAngle: `선택된 커넥터(MCON/SCON)에 연결된 180도 서보모터의 각도를 입력된 각도로 회전시킵니다.(0~180)`,
+                CodeWiz_Servo_menuSpeed: `선택된 커넥터(MCON/SCON)에 무한회전 서보모터를 지정된 속도로 회전시킵니다.
+                ▼을 눌러 속도를 선택합니다.(빠른/보통/느림/멈춘)`,
+                CodeWiz_Servo_customSpeed: `선택된 커넥터(MCON/SCON)에 무한회전 서보모터를 지정된 속도로 회전시킵니다.
+
+                속도 = 0 : 모터의 회전이 멈춥니다.
+                속도 > 0 : 모터가 지정된 속도로 정방향 회전합니다.
+                속도 < 0 : 모터가 지정된 속도로 역방향 회전합니다.`,
+
+                CodeWiz_Dc_setValue: `선택된 WizCar 모터를 지정한 방향의 입력한 속도로 회전시킵니다.
+                ▼을 눌러 회전시킬 모터(MOTOR_L, MOROT_R)와 방향(반시계, 시계)을 선택하고 속도는 0~1023 사이 값으로 직접 입력합니다.`,
+
+                CodeWiz_DotMatrix_init: `도트매트릭스가 연결된 핀을 설정합니다.
+
+                18, 19번 : SCON                
+                15, 27번 : 터치센서`,
+                CodeWiz_DotMatrix_setBrightness: `입력된 값으로 도트매트릭스의 밝기를 설정합니다.(1~8)`,
+                CodeWiz_DotMatrix_printString: `입력된 문자열을 한 글자씩 출력합니다.`,
+                CodeWiz_DotMatrix_setLine: `지정된 행/열에 위치한 8개 LED의 ON/OFF를 각각 지정해서 제어합니다.
+
+                1 : ON                
+                0 : OFF`,
+                CodeWiz_DotMatrix_setDot: `입력된 행,열에 위치한 LED의 ON/OFF를 지정합니다.
+
+                켜기 : ON
+                끄기 : OFF`,
+                CodeWiz_DotMatrix_clear: `입력된 도트 매트릭스를 지웁니다.(끕니다.)`,
+                CodeWiz_DotMatrix_clearAll: `연결된 모든 도트 매트릭스를 지웁니다.(끕니다.)`,
+
+                CodeWiz_ColorSensor_isColor: `MCON에 연결된 컬러센서에 인식된 색 값이 지정된 색이라면 ‘참’으로 판단하여 알려줍니다.
+                ▼을 빨강, 초록, 파랑, 검정, 흰색을 선택할 수 있습니다.`,
+                CodeWiz_ColorSensor_getColorValue: `MCON에 연결된 컬러센서에 인식된 빨강의 색상 값을 0~255 사이값으로 알려줍니다.
+                ▼을 눌러 초록, 파랑을 선택할 수 있습니다.`,
+            },
         },
     };
 };
@@ -195,6 +324,7 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_OLED_drawRect',
     'CodeWiz_OLED_drawCircle',
     'CodeWiz_OLED_drawPoligon',
+    'CodeWiz_OLED_printHG',
 
     'CodeWiz_DIGITAL_OUTPUT_title',
     'CodeWiz_DIGITAL_OUTPUT_digitalWrite',
@@ -477,7 +607,7 @@ Entry.CodeWiz.getBlocks = function() {
             events: {},
         },
         CodeWiz_default_buzzer: {
-            // Block UI : "부저를 %1옥타브, %2음, %3분음표로 연주하기%4",
+            // Block UI : "스피커를 %1옥타브, %2음, %3분음표로 연주하기%4",
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1362,6 +1492,15 @@ Entry.CodeWiz.getBlocks = function() {
                         ['♬', '14'],
                         ['▲', '30'],
                         ['▼', '31'],
+
+                        ['😧', '1'],
+                        ['😀', '2'],
+                        ['♂', '11'],
+                        ['♀', '12'],
+                        ['↑', '24'],
+                        ['↓', '25'],
+                        ['→', '26'],
+                        ['←', '27'],
                     ],
                     value: '14',
                     fontSize: 11,
@@ -2289,7 +2428,63 @@ Entry.CodeWiz.getBlocks = function() {
                 await Entry.CodeWiz.checkComplete();
             },
         },
+        CodeWiz_OLED_printHG: {
+            // OLED 한글 출력
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['❌', '0'],
+                        ['⭕', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['코드위즈 Magic!!', null],
+                type: 'CodeWiz_OLED_printHG',
+            },
+            paramsKeyMap: {
+                TEXT: 0,
+                isLB: 1,
+            },
+            class: 'CodeWiz_OLED',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
 
+                let _value = script.getStringValue('TEXT');
+                let _isLB = script.getNumberValue('isLB', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 42,
+                        params: [_value, _isLB],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
         CodeWiz_DIGITAL_OUTPUT_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
@@ -2315,61 +2510,6 @@ Entry.CodeWiz.getBlocks = function() {
             isNotFor: ['CodeWiz'],
             events: {},
         },
-        // CodeWiz_DIGITAL_OUTPUT_setup: {
-        //     // Block UI : "터치센서 %1핀 출력으로 사용%2",
-        //     color: EntryStatic.colorSet.block.default.HARDWARE,
-        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [
-        //         {
-        //             type: 'Dropdown',
-        //             options: [
-        //                 ['13', '13'],
-        //                 ['14', '14'],
-        //                 ['15', '15'],
-        //                 ['27', '27'],
-        //                 ['32', '32'],
-        //                 ['33', '33'],
-        //             ],
-        //             value: '13',
-        //             fontSize: 11,
-        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-        //         },
-        //         {
-        //             type: 'Indicator',
-        //             img: 'block_icon/hardware_icon.svg',
-        //             size: 12,
-        //         },
-        //     ],
-        //     events: {},
-        //     def: {
-        //         params: [],
-        //         type: 'CodeWiz_DIGITAL_OUTPUT_setup',
-        //     },
-        //     paramsKeyMap: {
-        //         PIN: 0,
-        //     },
-        //     class: 'CodeWiz_DIGITAL_OUTPUT',
-        //     isNotFor: ['CodeWiz'],
-        //     async func(sprite, script) {
-        //         if (Entry.CodeWiz.intervalId) {
-        //             await Entry.CodeWiz.preWait();
-        //         }
-
-        //         let _pin = script.getNumberValue('PIN', script);
-        //         const order = {
-        //             type: Entry.CodeWiz.sensorTypes.WRITE,
-        //             value: {
-        //                 opcode: 24,
-        //                 params: [_pin],
-        //             },
-        //         };
-        //         Entry.CodeWiz.sendOrder(order);
-        //         await Entry.CodeWiz.checkComplete();
-        //     },
-        // },
         CodeWiz_DIGITAL_OUTPUT_digitalWrite: {
             // Block UI : "터치센서 디지털 %1(으)로 %2내보내기%3",
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3932,7 +4072,7 @@ Entry.CodeWiz.getBlocks = function() {
                     type: Entry.CodeWiz.sensorTypes.WRITE,
                     value: {
                         opcode: 41,
-                        params: [_num],
+                        params: [_num - 1],
                     },
                 };
                 Entry.CodeWiz.sendOrder(order);
