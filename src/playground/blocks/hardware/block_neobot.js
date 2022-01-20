@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Neobot = {
+    hasPracticalCourse: true,
     id: '5.1',
     name: 'neobot',
     url: 'http://www.neobot.co.kr',
@@ -11,7 +12,7 @@ Entry.Neobot = {
     },
     LOCAL_MAP: ['IN1', 'IN2', 'IN3', 'IR', 'BAT'],
     REMOTE_MAP: ['OUT1', 'OUT2', 'OUT3', 'DCR', 'DCL', 'SND', 'FND', 'OPT'],
-    setZero: function() {
+    setZero: function () {
         for (var port in Entry.Neobot.REMOTE_MAP) {
             Entry.hw.sendQueue[Entry.Neobot.REMOTE_MAP[port]] = 0;
         }
@@ -41,7 +42,1532 @@ Entry.Neobot = {
     },
 };
 
-Entry.Neobot.setLanguage = function() {
+Entry.Neobot.getPracticalBlocks = function () {
+    return {
+        practical_course_motor_speed: {
+            color: '#00B200',
+            outerLine: '#019101',
+            skeleton: 'basic_string_field',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                    ],
+                    value: '15',
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getStringField('VALUE');
+            },
+        },
+        practical_course_set_servo2: {
+            color: '#D128BD',
+            outerLine: '#a2049e',
+            skeleton: 'basic',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1 포트의 서보모터를 %2 도 이동 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['OUT1', '1'],
+                        ['OUT2', '2'],
+                        ['OUT3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#A2049E',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/servo.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'practical_course_set_servo2',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                DEGREE: 1,
+            },
+            class: 'practical_course_servo',
+            func(sprite, script) {
+                const port = script.getNumberField('PORT');
+                let degree = script.getNumberValue('DEGREE');
+                if (degree < 0) {
+                    degree = 0;
+                } else if (degree > 180) {
+                    degree = 180;
+                }
+                Entry.hw.sendQueue[`OUT${port}`] = degree;
+                let option = port;
+                if (option === 3) {
+                    option = 4;
+                }
+                Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT | option;
+                return script.callReturn();
+            },
+        },
+        practical_course_move_for_secs: {
+            color: '#00B200',
+            outerLine: '#019101',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['양쪽', '1'],
+                        ['오른쪽', '2'],
+                        ['왼쪽', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', '16'],
+                        ['뒤로', '32'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/dcmotor.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'practical_course_motor_speed',
+                    },
+                    {
+                        type: 'number',
+                        params: ['2'],
+                    },
+                    null,
+                ],
+                type: 'practical_course_move_for_secs',
+            },
+            paramsKeyMap: {
+                WHEEL: 0,
+                DIRECTION: 1,
+                SPEED: 2,
+                DURATION: 3,
+            },
+            class: 'practical_course_motor',
+            func(sprite, script) {
+                if (!script.isStart) {
+                    const wheel = script.getNumberField('WHEEL');
+                    const speed = script.getNumberValue('SPEED');
+                    const direction = script.getNumberField('DIRECTION');
+                    const duration = script.getNumberValue('DURATION');
+                    const value = speed + direction;
+                    switch (wheel) {
+                        case 1: {
+                            Entry.hw.sendQueue.DCL = value;
+                            Entry.hw.sendQueue.DCR = value;
+                            break;
+                        }
+
+                        case 2: {
+                            Entry.hw.sendQueue.DCR = value;
+                            break;
+                        }
+
+                        case 3: {
+                            Entry.hw.sendQueue.DCL = value;
+                            break;
+                        }
+                    }
+
+                    script.wheelMode = wheel;
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    switch (script.wheelMode) {
+                        case 1: {
+                            Entry.hw.sendQueue.DCL = 0;
+                            Entry.hw.sendQueue.DCR = 0;
+                            break;
+                        }
+
+                        case 2: {
+                            Entry.hw.sendQueue.DCR = 0;
+                            break;
+                        }
+
+                        case 3: {
+                            Entry.hw.sendQueue.DCL = 0;
+                            break;
+                        }
+                    }
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    delete script.wheelMode;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        practical_course_move_for_secs2: {
+            color: '#00B200',
+            outerLine: '#019101',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 %5초 동안 회전 %6',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', '16'],
+                        ['뒤로', '32'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', '16'],
+                        ['뒤로', '32'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/dcmotor.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'practical_course_motor_speed',
+                    },
+                    null,
+                    {
+                        type: 'practical_course_motor_speed',
+                    },
+                    {
+                        type: 'number',
+                        params: ['2'],
+                    },
+                    null,
+                ],
+                type: 'practical_course_move_for_secs2',
+            },
+            paramsKeyMap: {
+                DIRECTION1: 0,
+                SPEED1: 1,
+                DIRECTION2: 2,
+                SPEED2: 3,
+                DURATION: 4,
+            },
+            class: 'practical_course_motor',
+            func(sprite, script) {
+                if (!script.isStart) {
+                    // var wheel = script.getNumberField('WHEEL');
+                    const speed1 = script.getNumberValue('SPEED1');
+                    const speed2 = script.getNumberValue('SPEED2');
+                    const direction1 = script.getNumberField('DIRECTION1');
+                    const direction2 = script.getNumberField('DIRECTION2');
+                    const duration = script.getNumberValue('DURATION');
+                    const value1 = speed1 + direction1;
+                    const value2 = speed2 + direction2;
+
+                    Entry.hw.sendQueue.DCL = value1;
+                    Entry.hw.sendQueue.DCR = value2;
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    Entry.hw.sendQueue.DCL = 0;
+                    Entry.hw.sendQueue.DCR = 0;
+
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    delete script.wheelMode;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        practical_course_move_for: {
+            color: '#00B200',
+            outerLine: '#019101',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['양쪽', '1'],
+                        ['오른쪽', '2'],
+                        ['왼쪽', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', '16'],
+                        ['뒤로', '32'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/dcmotor.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'practical_course_motor_speed',
+                    },
+                    null,
+                ],
+                type: 'practical_course_move_for',
+            },
+            paramsKeyMap: {
+                WHEEL: 0,
+                DIRECTION: 1,
+                SPEED: 2,
+            },
+            class: 'practical_course_motor',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const wheel = script.getNumberField('WHEEL');
+                const speed = script.getNumberValue('SPEED');
+                const direction = script.getNumberField('DIRECTION');
+                const value = speed + direction;
+
+                switch (wheel) {
+                    case 1: {
+                        Entry.hw.sendQueue.DCL = value;
+                        Entry.hw.sendQueue.DCR = value;
+                        break;
+                    }
+
+                    case 2: {
+                        Entry.hw.sendQueue.DCR = value;
+                        break;
+                    }
+
+                    case 3: {
+                        Entry.hw.sendQueue.DCL = value;
+                        break;
+                    }
+                }
+
+                return script.callReturn();
+            },
+        },
+        practical_course_move_for2: {
+            color: '#00B200',
+            outerLine: '#019101',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 계속 회전 %5',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', '16'],
+                        ['뒤로', '32'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['앞으로', '16'],
+                        ['뒤로', '32'],
+                    ],
+                    value: '16',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/dcmotor.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'practical_course_motor_speed',
+                    },
+                    null,
+                    {
+                        type: 'practical_course_motor_speed',
+                    },
+                    null,
+                ],
+                type: 'practical_course_move_for2',
+            },
+            paramsKeyMap: {
+                DIRECTION1: 0,
+                SPEED1: 1,
+                DIRECTION2: 2,
+                SPEED2: 3,
+            },
+            class: 'practical_course_motor',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const speed1 = script.getNumberValue('SPEED1');
+                const direction1 = script.getNumberField('DIRECTION1');
+                const speed2 = script.getNumberValue('SPEED2');
+                const direction2 = script.getNumberField('DIRECTION2');
+                const value1 = speed1 + direction1;
+                const value2 = speed2 + direction2;
+
+                Entry.hw.sendQueue.DCL = value1;
+                Entry.hw.sendQueue.DCR = value2;
+
+                return script.callReturn();
+            },
+        },
+        practical_course_stop_for: {
+            color: '#00B200',
+            outerLine: '#019101',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1모터를 정지 %2',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['양쪽', '1'],
+                        ['오른쪽', '2'],
+                        ['왼쪽', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#019101',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/dcmotor.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'practical_course_stop_for',
+            },
+            paramsKeyMap: {
+                WHEEL: 0,
+            },
+            class: 'practical_course_motor',
+            func(sprite, script) {
+                const wheel = script.getNumberField('WHEEL');
+                if (wheel == 2) {
+                    Entry.hw.sendQueue.DCR = 0;
+                } else if (wheel == 3) {
+                    Entry.hw.sendQueue.DCL = 0;
+                } else {
+                    Entry.hw.sendQueue.DCR = 0;
+                    Entry.hw.sendQueue.DCL = 0;
+                }
+                return script.callReturn();
+            },
+        },
+        practical_course_touch_value: {
+            color: '#2AB4D3',
+            outerLine: '#0e93b1',
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 접촉 센서 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#0e93b1',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'practical_course_touch_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'practical_course_touch',
+            func(sprite, script) {
+                const port = script.getStringField('PORT');
+                const value = Entry.hw.portData[`IN${port}`] > 125 ? 1 : 0;
+                return value;
+            },
+        },
+        practical_course_touch_value_boolean: {
+            color: '#2AB4D3',
+            outerLine: '#0e93b1',
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 접촉 센서가 %2',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#0e93b1',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['접촉 되면', '1'],
+                        ['접촉 안되면', '0'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#0e93b1',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            def: {
+                params: [null, null, null],
+                type: 'practical_course_touch_value_boolean',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                TOUCH: 1,
+            },
+            class: 'practical_course_touch',
+            func(sprite, script) {
+                const port = script.getStringField('PORT');
+                const touch = script.getNumberField('TOUCH', script);
+                const value = Entry.hw.portData[`IN${port}`];
+                const isTouch = !((value > 125) ^ touch);
+
+                return isTouch;
+            },
+        },
+        practical_course_light_value: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 빛 감지 센서 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'practical_course_light_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'practical_course_light',
+            func(sprite, script) {
+                const port = script.getStringField('PORT');
+                return Entry.hw.portData[`IN${port}`];
+            },
+        },
+        practical_course_light_value_boolean: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 빛 감지 센서 값 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['=', 'EQUAL'],
+                        ['>', 'GREATER'],
+                        ['<', 'LESS'],
+                        ['≥', 'GREATER_OR_EQUAL'],
+                        ['≤', 'LESS_OR_EQUAL'],
+                    ],
+                    value: 'LESS',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    noaRrow: true,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'practical_course_light_value_boolean',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                OPERATOR: 1,
+                RIGHTVALUE: 2,
+            },
+            class: 'practical_course_light',
+            func(sprite, script) {
+                const port = script.getNumberField('PORT', script);
+                const operator = script.getField('OPERATOR', script);
+                const rightValue = script.getNumberValue('RIGHTVALUE', script);
+                const leftValue = Entry.hw.portData[`IN${port}`];
+                let isCheck = false;
+
+                switch (operator) {
+                    case 'EQUAL':
+                        isCheck = leftValue == rightValue;
+                        break;
+                    case 'GREATER':
+                        isCheck = Number(leftValue) > Number(rightValue);
+                        break;
+                    case 'LESS':
+                        isCheck = Number(leftValue) < Number(rightValue);
+                        break;
+                    case 'GREATER_OR_EQUAL':
+                        isCheck = Number(leftValue) >= Number(rightValue);
+                        break;
+                    case 'LESS_OR_EQUAL':
+                        isCheck = Number(leftValue) <= Number(rightValue);
+                        break;
+                }
+
+                return isCheck;
+            },
+        },
+        practical_course_sound_value: {
+            color: '#01d67f',
+            outerLine: '#00b36a',
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 소리 센서에 감지되는 소리 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#00b36a',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'practical_course_sound_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'practical_course_sound',
+            func(sprite, script) {
+                const port = script.getStringField('PORT');
+                return Entry.hw.portData[`IN${port}`];
+            },
+        },
+        practical_course_sound_value_boolean: {
+            color: '#01d67f',
+            outerLine: '#00b36a',
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 소리 센서에 감지되는 소리 값 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#00b36a',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['=', 'EQUAL'],
+                        ['>', 'GREATER'],
+                        ['<', 'LESS'],
+                        ['≥', 'GREATER_OR_EQUAL'],
+                        ['≤', 'LESS_OR_EQUAL'],
+                    ],
+                    value: 'LESS',
+                    fontSize: 11,
+                    bgColor: '#00b36a',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    noaRrow: true,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'practical_course_sound_value_boolean',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                OPERATOR: 1,
+                RIGHTVALUE: 2,
+            },
+            class: 'practical_course_sound',
+            func(sprite, script) {
+                const port = script.getNumberField('PORT', script);
+                const operator = script.getField('OPERATOR', script);
+                const rightValue = script.getNumberValue('RIGHTVALUE', script);
+                const leftValue = Entry.hw.portData[`IN${port}`];
+                let isCheck = false;
+
+                switch (operator) {
+                    case 'EQUAL':
+                        isCheck = leftValue == rightValue;
+                        break;
+                    case 'GREATER':
+                        isCheck = Number(leftValue) > Number(rightValue);
+                        break;
+                    case 'LESS':
+                        isCheck = Number(leftValue) < Number(rightValue);
+                        break;
+                    case 'GREATER_OR_EQUAL':
+                        isCheck = Number(leftValue) >= Number(rightValue);
+                        break;
+                    case 'LESS_OR_EQUAL':
+                        isCheck = Number(leftValue) <= Number(rightValue);
+                        break;
+                }
+
+                return isCheck;
+            },
+        },
+        practical_course_irs_value: {
+            color: '#C4065C',
+            outerLine: '#9a0045',
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 적외선 센서에 감지되는 크기 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#9a0045',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'practical_course_irs_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'practical_course_irs',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const port = script.getStringField('PORT');
+                return Entry.hw.portData[`IN${port}`];
+            },
+        },
+        practical_course_irs_value_boolean: {
+            color: '#C4065C',
+            outerLine: '#9a0045',
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#9a0045',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['=', 'EQUAL'],
+                        ['>', 'GREATER'],
+                        ['<', 'LESS'],
+                        ['≥', 'GREATER_OR_EQUAL'],
+                        ['≤', 'LESS_OR_EQUAL'],
+                    ],
+                    value: 'LESS',
+                    fontSize: 11,
+                    bgColor: '#9a0045',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    noaRrow: true,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'practical_course_irs_value_boolean',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                OPERATOR: 1,
+                RIGHTVALUE: 2,
+            },
+            class: 'practical_course_irs',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const port = script.getNumberField('PORT', script);
+                const operator = script.getField('OPERATOR', script);
+                const rightValue = script.getNumberValue('RIGHTVALUE', script);
+                const leftValue = Entry.hw.portData[`IN${port}`];
+                let isCheck = false;
+
+                switch (operator) {
+                    case 'EQUAL':
+                        isCheck = leftValue == rightValue;
+                        break;
+                    case 'GREATER':
+                        isCheck = Number(leftValue) > Number(rightValue);
+                        break;
+                    case 'LESS':
+                        isCheck = Number(leftValue) < Number(rightValue);
+                        break;
+                    case 'GREATER_OR_EQUAL':
+                        isCheck = Number(leftValue) >= Number(rightValue);
+                        break;
+                    case 'LESS_OR_EQUAL':
+                        isCheck = Number(leftValue) <= Number(rightValue);
+                        break;
+                }
+
+                return isCheck;
+            },
+        },
+        practical_course_diode_secs_toggle: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 발광다이오드를 %2초 동안 %3 %4',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['OUT 1', '1'],
+                        ['OUT 2', '2'],
+                        ['OUT 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['켜기', '255'],
+                        ['끄기', '0'],
+                    ],
+                    value: '255',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/diode.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['2'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'practical_course_diode_secs_toggle',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                DURATION: 1,
+                VALUE: 2,
+            },
+            class: 'practical_course_diode',
+            func(sprite, script) {
+                if (!script.isStart) {
+                    const port = script.getNumberField('PORT');
+                    const duration = script.getNumberValue('DURATION');
+                    let value = script.getNumberField('VALUE');
+
+                    let option = port;
+                    if (value < 0) {
+                        value = 0;
+                    } else if (value > 255) {
+                        value = 255;
+                    }
+                    if (option === 3) {
+                        option = 4;
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    script.outPort = port;
+                    script.outOption = option;
+                    Entry.hw.sendQueue[`OUT${port}`] = value;
+                    Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+
+                    setTimeout(() => {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    Entry.hw.sendQueue[`OUT${script.outPort}`] = 0;
+                    Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~script.outOption;
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    delete script.outPort;
+                    delete script.outOption;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+        practical_course_diode_toggle: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 발광다이오드를 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['OUT 1', '1'],
+                        ['OUT 2', '2'],
+                        ['OUT 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['켜기', '255'],
+                        ['끄기', '0'],
+                    ],
+                    value: '255',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/diode.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'practical_course_diode_toggle',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'practical_course_diode',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const port = script.getNumberField('PORT');
+                let value = script.getNumberField('VALUE');
+                let option = port;
+
+                if (value < 0) {
+                    value = 0;
+                } else if (value > 255) {
+                    value = 255;
+                }
+
+                if (option === 3) {
+                    option = 4;
+                }
+
+                Entry.hw.sendQueue[`OUT${port}`] = value;
+                Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+
+                return script.callReturn();
+            },
+        },
+        practical_course_diode_inout_toggle: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['OUT 1', '1'],
+                        ['OUT 2', '2'],
+                        ['OUT 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/diode.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    { type: 'number', params: ['0'] },
+                    { type: 'number', params: ['255'] },
+                    null,
+                ],
+                type: 'practical_course_diode_inout_toggle',
+            },
+            paramsKeyMap: {
+                OUTPUT: 0,
+                INPUT: 1,
+                MIN: 2,
+                MAX: 3,
+            },
+            class: 'practical_course_diode',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const outputPort = script.getNumberField('OUTPUT');
+                const inputPort = script.getNumberField('INPUT');
+                let option = inputPort;
+                if (option === 3) {
+                    option = 4;
+                }
+                const oMin = script.getNumberValue('MIN');
+                const oMax = script.getNumberValue('MAX');
+                const nMin = 0;
+                const nMax = 255;
+                const x = Entry.hw.portData[`IN${inputPort}`];
+                const percent = (x - oMin) / (oMax - oMin);
+                let result = percent * (nMax - nMin) + nMin;
+                if (result > nMax) {
+                    result = nMax;
+                }
+                if (result < nMin) {
+                    result = nMin;
+                }
+
+                Entry.hw.sendQueue[`OUT${outputPort}`] = result;
+                Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+
+                return script.callReturn();
+            },
+        },
+        practical_course_diode_set_output: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['OUT 1', '1'],
+                        ['OUT 2', '2'],
+                        ['OUT 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/diode.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    {
+                        type: 'number',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'practical_course_diode_set_output',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'practical_course_diode',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const port = script.getStringField('PORT', script);
+                let value = script.getNumberValue('VALUE', script);
+                let option = port;
+                if (value < 0) {
+                    value = 0;
+                } else if (value > 255) {
+                    value = 255;
+                }
+                if (option === 3) {
+                    option = 4;
+                }
+                Entry.hw.sendQueue[`OUT${port}`] = value;
+                Entry.hw.sendQueue.OPT = Entry.hw.sendQueue.OPT & ~option;
+                return script.callReturn();
+            },
+        },
+        practical_course_diode_input_value: {
+            color: '#ff8d0f',
+            outerLine: '#e37100',
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '%1번 포트의 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['IN 1', '1'],
+                        ['IN 2', '2'],
+                        ['IN 3', '3'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#e37100',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'practical_course_diode_input_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'practical_course_diode',
+            func(sprite, script) {
+                const port = script.getStringField('PORT');
+                return Entry.hw.portData[`IN${port}`];
+            },
+        },
+        practical_course_melody_note_for: {
+            color: '#FC327F',
+            skeleton: 'basic',
+            statements: [],
+            isNotFor: ['neobot'],
+            template: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['무음', '0'],
+                        ['도', '1'],
+                        ['도#(레♭)', '2'],
+                        ['레', '3'],
+                        ['레#(미♭)', '4'],
+                        ['미', '5'],
+                        ['파', '6'],
+                        ['파#(솔♭)', '7'],
+                        ['솔', '8'],
+                        ['솔#(라♭)', '9'],
+                        ['라', '10'],
+                        ['라#(시♭)', '11'],
+                        ['시', '12'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: '#ce105e',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', '0'],
+                        ['2', '1'],
+                        ['3', '2'],
+                        ['4', '3'],
+                        ['5', '4'],
+                        ['6', '5'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: '#ce105e',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['온음표', '1'],
+                        ['2분음표', '2'],
+                        ['4분음표', '4'],
+                        ['8분음표', '8'],
+                        ['16분음표', '16'],
+                    ],
+                    value: '4',
+                    fontSize: 11,
+                    bgColor: '#ce105e',
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/practical_course/melody.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null, null],
+                type: 'practical_course_melody_note_for',
+            },
+            paramsKeyMap: {
+                NOTE: 0,
+                OCTAVE: 1,
+                DURATION: 2,
+            },
+            class: 'practical_course_melody',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+
+                if (!script.isStart) {
+                    const note = script.getNumberField('NOTE', script);
+                    const octave = script.getNumberField('OCTAVE', script);
+                    const duration = script.getNumberField('DURATION', script);
+                    let value = note > 0 ? note + 12 * octave : 0;
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    script.soundFlag = 1;
+                    if (value > 65) {
+                        value = 65;
+                    }
+                    sq.SND = value;
+                    setTimeout(() => {
+                        setTimeout(() => {
+                            script.timeFlag = 0;
+                        }, 50);
+                    }, (1 / duration) * 2000);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else if (script.soundFlag == 1) {
+                    Entry.hw.sendQueue.SND = 0;
+                    script.soundFlag = 0;
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+        },
+    }
+}
+
+Entry.Neobot.practicalBlockMenuBlocks = {
+    hw_motor: [
+        // 'practical_course_motor_speed',
+        'practical_course_move_for_secs',
+        'practical_course_move_for_secs2',
+        'practical_course_move_for',
+        'practical_course_move_for2',
+        'practical_course_stop_for',
+        'practical_course_set_servo2',
+    ],
+    hw_melody: [
+        'practical_course_melody_note_for',
+    ],
+    hw_sensor: [
+        'practical_course_touch_value',
+        'practical_course_touch_value_boolean',
+        'practical_course_light_value',
+        'practical_course_light_value_boolean',
+        'practical_course_sound_value',
+        'practical_course_sound_value_boolean',
+        'practical_course_irs_value',
+        'practical_course_irs_value_boolean',
+    ],
+    hw_led: [
+        'practical_course_diode_secs_toggle',
+        'practical_course_diode_toggle',
+        'practical_course_diode_inout_toggle',
+        'practical_course_diode_set_output',
+        'practical_course_diode_input_value',
+    ],
+}
+
+Entry.Neobot.setLanguage = function () {
     return {
         ko: {
             template: {
@@ -86,28 +1612,28 @@ Entry.Neobot.setLanguage = function() {
 
                 neobot_play_note_for: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
                 neobot_play_note_with_sensor:
-                  '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
+                    '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
             },
             Helper: {
                 neobot_sensor_value:
-                  'IN1 ~ IN3 포트 및 리모컨에서 입력되는 값 그리고 배터리 정보를 0부터 255의 숫자로 표시합니다.',
+                    'IN1 ~ IN3 포트 및 리모컨에서 입력되는 값 그리고 배터리 정보를 0부터 255의 숫자로 표시합니다.',
                 neobot_sensor_convert_scale:
-                  '선택한 포트 입력값의 변화를 특정범위의 값으로 표현범위를 조절할 수 있습니다.',
+                    '선택한 포트 입력값의 변화를 특정범위의 값으로 표현범위를 조절할 수 있습니다.',
                 neobot_left_motor: 'L모터 포트에 연결한 모터의 회전방향 및 속도를 설정합니다.',
                 neobot_stop_left_motor: 'L모터 포트에 연결한 모터를 정지합니다.',
                 neobot_right_motor: 'R모터 포트에 연결한 모터의 회전방향 및 속도를 설정합니다.',
                 neobot_stop_right_motor: 'R모터 포트에 연결한 모터를 정지합니다.',
                 neobot_all_motor:
-                  'L모터 및 R모터 포트에 2개 모터를 연결하여 바퀴로 활용할 때 전, 후, 좌, 우 이동 방향 및 속도, 시간을 설정할 수 있습니다.',
+                    'L모터 및 R모터 포트에 2개 모터를 연결하여 바퀴로 활용할 때 전, 후, 좌, 우 이동 방향 및 속도, 시간을 설정할 수 있습니다.',
                 neobot_stop_all_motor: 'L모터 및 R모터에 연결한 모터를 모두 정지합니다.',
                 neobot_set_servo:
-                  'OUT1 ~ OUT3에 서보모터를 연결했을 때 0도 ~ 180도 범위 내에서 각도를 조절할 수 있습니다.',
+                    'OUT1 ~ OUT3에 서보모터를 연결했을 때 0도 ~ 180도 범위 내에서 각도를 조절할 수 있습니다.',
                 neobot_set_output:
-                  'OUT1 ~ OUT3에 라이팅블록 및 전자회로를 연결했을 때 출력 전압을 설정할 수 있습니다.</br>0은 0V, 1 ~ 255는 2.4 ~ 4.96V의 전압을 나타냅니다.',
+                    'OUT1 ~ OUT3에 라이팅블록 및 전자회로를 연결했을 때 출력 전압을 설정할 수 있습니다.</br>0은 0V, 1 ~ 255는 2.4 ~ 4.96V의 전압을 나타냅니다.',
                 neobot_set_fnd: 'FND로 0~99 까지의 숫자를 표시할 수 있습니다.',
                 neobot_set_fnd_off: 'FND에 표시한 숫자를 끌 수 있습니다.',
                 neobot_play_note_for:
-                  '주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.',
+                    '주파수 발진 방법을 이용해 멜로디에 반음 단위의 멜로디 음을 발생시킬 수 있습니다.',
             },
             Blocks: {
                 //for dropdown
@@ -242,16 +1768,16 @@ Entry.Neobot.setLanguage = function() {
                 neobot_stop_right: 'Stop right motor %1',
                 neobot_run_motor: 'Run %1 motor for %2 secs',
                 neobot_servo_1:
-                  'Move the servo motor connected to SERVO1 to %2 with the speed of %1 %3',
+                    'Move the servo motor connected to SERVO1 to %2 with the speed of %1 %3',
                 neobot_servo_2:
-                  'Move the servo motor connected to SERVO2 to %2 with the speed of %1 %3',
+                    'Move the servo motor connected to SERVO2 to %2 with the speed of %1 %3',
                 neobot_set_sensor_value: '%1 value of the port to %2 %3',
 
                 neobot_sensor_value: '%1 value',
                 neobot_sensor_connect_external: 'the %2 value connected %1',
 
                 neobot_sensor_convert_scale:
-                  'the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5',
+                    'the value that is changed %1 sensor value %2 ~%3 to %4 ~ %5',
 
                 neobot_compare_symbol: '%1',
                 neobot_decision_sensor_is_over: '%1 sensor value %2 %3',
@@ -264,7 +1790,7 @@ Entry.Neobot.setLanguage = function() {
                 neobot_right_motor: 'Rotate the right motor in %2 for speed %1 %3',
                 neobot_stop_right_motor: 'Stop right motor %1',
                 neobot_both_motor:
-                  'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
+                    'Rotate the left motor in %2 speed %1 & the right motor in %4 for speed %3 %5',
                 neobot_all_motor: 'Rotate both motors %2 speed %1 for %3 second(s) %4',
                 neobot_stop_all_motor: 'Stop both motors %1',
                 neobot_robot: 'Go %1 the robot %2',
@@ -282,30 +1808,30 @@ Entry.Neobot.setLanguage = function() {
 
                 neobot_play_note_for: 'Make a sound the melody %1 to %2 octave(s) as %3 %4',
                 neobot_play_note_with_sensor:
-                  'Play the melody as %2 ~ %3 value of %1 sensor in the controller %4',
+                    'Play the melody as %2 ~ %3 value of %1 sensor in the controller %4',
             },
             Helper: {
                 neobot_sensor_value:
-                  'Indicates the input value from ports IN1 - IN3 and the battery information as number from 0 to 255.',
+                    'Indicates the input value from ports IN1 - IN3 and the battery information as number from 0 to 255.',
                 neobot_sensor_convert_scale:
-                  "The expressed scale of the selected port's change of input value as the value of a particular scale can be adjusted.",
+                    "The expressed scale of the selected port's change of input value as the value of a particular scale can be adjusted.",
                 neobot_left_motor:
-                  'Sets the wheel direction and speed of the motor connected to L motor port.',
+                    'Sets the wheel direction and speed of the motor connected to L motor port.',
                 neobot_stop_left_motor: 'Stops the motor connected to L motor port.',
                 neobot_right_motor:
-                  'Sets the wheel direction and speed of the motor connected to R motor port.',
+                    'Sets the wheel direction and speed of the motor connected to R motor port.',
                 neobot_stop_right_motor: 'Stops the motor connected to R motor port.',
                 neobot_all_motor:
-                  'The speed, time, and direction towards front, back, left and right, when connecting 2 motors to L and R motor ports can be set and used as wheels. ',
+                    'The speed, time, and direction towards front, back, left and right, when connecting 2 motors to L and R motor ports can be set and used as wheels. ',
                 neobot_stop_all_motor: 'Stops the motor connected to both L and R motor ports.',
                 neobot_set_servo:
-                  'The angle within 0 - 180 degrees when connecting servo motor to OUT1 - OUT3 can be adjusted',
+                    'The angle within 0 - 180 degrees when connecting servo motor to OUT1 - OUT3 can be adjusted',
                 neobot_set_output:
-                  'The output voltage when connecting lighting block and electronic circuit to OUT1 - OUT3 can be set.</br>0 indicates 0V, and 1 ~ 255 indicates 2.4 ~ 4.96V.',
+                    'The output voltage when connecting lighting block and electronic circuit to OUT1 - OUT3 can be set.</br>0 indicates 0V, and 1 ~ 255 indicates 2.4 ~ 4.96V.',
                 neobot_set_fnd: 'Numbers from 0 to 99 with FND can be indicated.',
                 neobot_set_fnd_off: 'Number indicated on FND can be turned off.',
                 neobot_play_note_for:
-                  'Notes in semitone units of the melody can be played by utilizing frequency oscillation. ',
+                    'Notes in semitone units of the melody can be played by utilizing frequency oscillation. ',
             },
             Blocks: {
                 //for dropdown
@@ -470,7 +1996,7 @@ Entry.Neobot.blockMenuBlocks = [
     'neobot_play_note_with_sensor',
 ];
 
-Entry.Neobot.getBlocks = function() {
+Entry.Neobot.getBlocks = function () {
     return {
         //region neobot 네오봇
         neobot_sensor_value: {
@@ -506,7 +2032,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_value',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData[port];
             },
@@ -546,7 +2072,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_value',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('SYMBOL');
             },
         },
@@ -593,7 +2119,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_value',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData[port];
             },
@@ -667,7 +2193,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_value',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 var value = Entry.hw.portData[port];
                 var omin = script.getNumberValue('OMIN', script);
@@ -747,7 +2273,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'decision',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var sensorTemp = script.getStringField('SENSOR');
                 var sensor = Entry.hw.portData[sensorTemp];
                 var symbol = script.getStringField('SYMBOL');
@@ -821,7 +2347,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'decision',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var sensorTemp = script.getStringField('SENSOR');
                 var sensor = Entry.hw.portData[sensorTemp];
                 var color = script.getNumberField('COLOR');
@@ -885,7 +2411,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'remote',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var key = script.getNumberField('KEY');
                 var value = Entry.hw.portData['IR'];
                 if (key >= 5 && key <= 8) key -= 4;
@@ -936,7 +2462,7 @@ Entry.Neobot.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('VALUE');
             },
             syntax: { js: [], py: ['%1get_motor_speed#'] },
@@ -986,7 +2512,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var speed = Entry.parseNumber(script.getStringValue('SPEED'));
                 var direction = script.getNumberField('DIRECTION');
 
@@ -1019,7 +2545,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 Entry.hw.sendQueue['DCL'] = 0;
                 return script.callReturn();
             },
@@ -1070,7 +2596,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var speed = Entry.parseNumber(script.getStringValue('SPEED'));
                 var direction = script.getNumberField('DIRECTION');
 
@@ -1103,7 +2629,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 Entry.hw.sendQueue['DCR'] = 0;
                 return script.callReturn();
             },
@@ -1176,7 +2702,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var speed_left = Entry.parseNumber(script.getStringValue('SPEED_LEFT'));
                 var direction_left = script.getNumberField('DIRECTION_LEFT');
                 var speed_right = Entry.parseNumber(script.getStringValue('SPEED_RIGHT'));
@@ -1262,7 +2788,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
@@ -1290,7 +2816,7 @@ Entry.Neobot.getBlocks = function() {
 
                     script.isStart = true;
                     script.timeFlag = 1;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
@@ -1432,7 +2958,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 Entry.hw.sendQueue['DCL'] = 0;
                 Entry.hw.sendQueue['DCR'] = 0;
                 return script.callReturn();
@@ -1475,7 +3001,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var move = script.getNumberField('MOVE');
                 switch (move) {
                     case 1:
@@ -1577,7 +3103,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 if (!script.isStart) {
                     var port = script.getStringField('PORT', script);
                     var value = script.getNumberField('VALUE', script);
@@ -1590,7 +3116,7 @@ Entry.Neobot.getBlocks = function() {
 
                     script.isStart = true;
                     script.timeFlag = 1;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         Entry.hw.sendQueue[port] = 0;
                         script.timeFlag = 0;
                     }, duration * 1000);
@@ -1639,7 +3165,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 Entry.hw.sendQueue[port] = 255;
                 return script.callReturn();
@@ -1679,7 +3205,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var option = port;
                 Entry.hw.sendQueue[port] = 0;
@@ -1732,7 +3258,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var value = script.getNumberValue('VALUE', script);
                 var option = port;
@@ -1821,7 +3347,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_note',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
@@ -1836,7 +3362,7 @@ Entry.Neobot.getBlocks = function() {
                         value = 65;
                     }
                     sq.SND = value;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, (1 / duration) * 2000);
                     return script;
@@ -1910,7 +3436,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_note',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 var port = script.getStringField('PORT', script);
@@ -1947,7 +3473,7 @@ Entry.Neobot.getBlocks = function() {
                         value = 72;
                     }
                     sq.SND = value;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, (1 / 4) * 2000);
                     return script;
@@ -2028,7 +3554,7 @@ Entry.Neobot.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('VALUE');
             },
             syntax: { js: [], py: ['%1get_servo_degree#'] },
@@ -2067,7 +3593,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_servo',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 if (!script.isStart) {
                     var port = script.getStringField('PORT', script);
                     if (port == 'ALL') {
@@ -2077,10 +3603,10 @@ Entry.Neobot.getBlocks = function() {
                         Entry.hw.sendQueue['OUT1'] = 0xBA;
                         Entry.hw.sendQueue['OUT2'] = 0xBA;
 
-                        setTimeout(function() {
+                        setTimeout(function () {
                             Entry.hw.sendQueue['OUT1'] = 0x01;
                             Entry.hw.sendQueue['OUT2'] = 0x01;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 script.timeFlag = 0;
                             }, 100);
                         }, 200);
@@ -2090,9 +3616,9 @@ Entry.Neobot.getBlocks = function() {
                         script.timeFlag = 1;
 
                         Entry.hw.sendQueue[port] = 0xBA;
-                        setTimeout(function() {
+                        setTimeout(function () {
                             Entry.hw.sendQueue[port] = 0x01;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 script.timeFlag = 0;
                             }, 100);
                         }, 200);
@@ -2190,7 +3716,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_servo',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 if (!script.isStart) {
                     var degree = Entry.parseNumber(script.getStringValue('DEGREE'));
                     var port = script.getStringField('PORT', script);
@@ -2211,11 +3737,11 @@ Entry.Neobot.getBlocks = function() {
 
                         script.isStart = true;
                         script.timeFlag = 1;
-                        setTimeout(function() {
+                        setTimeout(function () {
                             // for speed
                             Entry.hw.sendQueue['OUT1'] = 0xfa - speed;
                             Entry.hw.sendQueue['OUT2'] = 0xfa - speed;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 // for degree
                                 if (degree > 180) {
                                     degree = 180;
@@ -2242,10 +3768,10 @@ Entry.Neobot.getBlocks = function() {
 
                         script.isStart = true;
                         script.timeFlag = 1;
-                        setTimeout(function() {
+                        setTimeout(function () {
                             // for speed
                             Entry.hw.sendQueue[port] = 0xfa - speed;
-                            setTimeout(function() {
+                            setTimeout(function () {
                                 // for degree
                                 if (degree > 180) {
                                     degree = 180;
@@ -2338,7 +3864,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_servo',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var direction = script.getNumberField('DIRECTION');
                 var speed = script.getNumberField('SPEED');
@@ -2401,7 +3927,7 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_servo',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 if (port == 'ALL') {
                     Entry.hw.sendQueue['OUT1'] = 0xfe;
