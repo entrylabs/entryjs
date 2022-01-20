@@ -325,6 +325,7 @@ EntryStatic.getAllBlocks = function() {
                 'boolean_basic_operator',
                 'boolean_and_or',
                 'boolean_not',
+                'is_boost_mode',
             ],
         },
         {
