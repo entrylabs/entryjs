@@ -90,6 +90,12 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_neopixel_setColor_all: '네오픽셀 %1(으)로 모두 켜기%2',
                 CodeWiz_neopixel_setColor_all2: '네오픽셀 빨강%1초록%2파랑%3(으)로 모두 켜기%4',
                 CodeWiz_neopixel_off_all: '네오픽셀 모두 끄기%1',
+                CodeWiz_neopixel_OnPixelRandomColor:'네오픽셀 %1번 LED 무작위 색으로 켜기%2',
+                CodeWiz_neopixel_fillRandom:'네오픽셀 무작위 색으로 채우기%1',
+                CodeWiz_neopixel_rotate:'네오픽셀 LED %1으로 회전시키기%2',
+                CodeWiz_neopixel_shift:'네오픽셀 LED %1으로 밀기%2',
+                CodeWiz_neopixel_gradationRGB:'네오픽셀 %1번부터 %2번까지 RGB그라데이션(%3,%4)으로 켜기%5',
+                CodeWiz_neopixel_gradationHSL:'네오픽셀 %1번부터 %2번까지 HSL그라데이션(%3,%4)으로 켜기%5',
 
                 CodeWiz_OLED_title: 'OLED',
                 CodeWiz_OLED_clear: 'OLED 지우기%1',
@@ -131,16 +137,14 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_HuskyLens_writeTextHuskyLens: '허스키렌즈 (%1,%2)에 %3출력%4',
                 CodeWiz_HuskyLens_clearTextHuskyLens: '허스키렌즈 텍스트 지우기%1',
 
-                CodeWiz_InfraredThermometer_title: '비접촉온도센서',
-                CodeWiz_InfraredThermometer_read: '비접촉온도센서 %1에 %2로 읽기%3',
-
                 CodeWiz_Servo_title: '서보모터',
                 CodeWiz_Servo_setAngle: '서보모터(%1) 각도를 %2(으)로 바꾸기%3',
                 CodeWiz_Servo_menuSpeed: '무한회전 서보모터(%1) %2속도로 정하기%3',
                 CodeWiz_Servo_customSpeed: '무한회전 서보모터(%1) %2속도로 정하기(-100~100)%3',
 
-                CodeWiz_Dc_title: 'WizCar 모터',
+                CodeWiz_Dc_title: 'DC 모터',
                 CodeWiz_Dc_setValue: 'WizCar 모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
+                CodeWiz_Dc_setValue_Waterpump: '워터펌프(%1)에 %2내보내기(0~1023)%3',
 
                 CodeWiz_DotMatrix_title: '도트매트릭스',
                 CodeWiz_DotMatrix_init: '도트매트릭스 %1개 DIN%2, CS%3, CLK%4로 설정%5',
@@ -154,6 +158,15 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_ColorSensor_title: '컬러센서',
                 CodeWiz_ColorSensor_isColor: 'MCON 컬러센서 감지된 색이 %1인가%2',
                 CodeWiz_ColorSensor_getColorValue: 'MCON 컬러센서 %1값%2',
+
+                CodeWiz_DHT_title: '디지털 온습도',
+                CodeWiz_DHT_init: '디지털 온습도 pin%1에 설정%2',
+                CodeWiz_DHT_getValue: '디지털 온습도 %1값%2',
+
+                CodeWiz_etcReadSensor_title: '기타 입력센서',
+                CodeWiz_etcReadSensor_mconRead: 'MCON%1(pin%2)의 측정값%3',
+                CodeWiz_etcReadSensor_digitalRead: '%1(pin%2)의 측정값%3',
+                CodeWiz_etcReadSensor_InfraredThermometerRead: '비접촉온도센서 %1에 %2로 읽기%3',
             },
 
             Helper: {
@@ -182,6 +195,21 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_neopixel_setColor_all2: `모든 LED를 빨강, 초록, 파랑에 입력된 값의 색으로 켭니다.
                 각 값을 0~255 사이 값으로 지정합니다.`,
                 CodeWiz_neopixel_off_all: `모든 LED를 끕니다.`,
+                CodeWiz_neopixel_OnPixelRandomColor:`입력한 번호의 LED를 무작위 색으로 켭니다.`,
+                CodeWiz_neopixel_fillRandom:`모든 LED를 무작위 색으로 채웁니다.`,
+                CodeWiz_neopixel_rotate:`모든 LED를 지정한 방향으로 회전시킵니다.
+                방향은 ▼을 눌러 설정합니다.`,
+                CodeWiz_neopixel_shift:`모든 LED를 지정한 방향으로 밀어냅니다.
+                빈자리는 기존 색으로 채워집니다.
+                방향은 ▼을 눌러 설정합니다.`,
+                CodeWiz_neopixel_gradationRGB:`지정범위의 LED를 선택한 색의 그라데이션으로 채웁니다.
+                왼쪽색부터 오른쪽색까지 RGB색표현의 그라데이션으로 채워집니다.
+                범위는 초기화한 LED범위를 벗어날 수 없으며 서로 다른 값이여야 합니다.
+                LED 번호가 작은 값은 왼쪽에 큰 값은 오른쪽에 위치해야합니다.`,
+                CodeWiz_neopixel_gradationHSL:`지정범위의 LED를 선택한 색의 그라데이션으로 채웁니다.
+                왼쪽색부터 오른쪽색까지 HSL색표현의 그라데이션으로 채워집니다.
+                범위는 초기화한 LED범위를 벗어날 수 없으며 서로 다른 값이여야 합니다.
+                LED 번호가 작은 값은 왼쪽에 큰 값은 오른쪽에 위치해야합니다.`,
 
                 CodeWiz_OLED_clear: `OLED에 표시된 내용을 지웁니다.`,
                 CodeWiz_OLED_mirror: `OLED에 표시할 내용의 출력 상태를 설정합니다.
@@ -246,9 +274,6 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_HuskyLens_writeTextHuskyLens: `허스키렌즈 화면의 지정된 좌표에 입력된 데이터를 출력합니다.`,
                 CodeWiz_HuskyLens_clearTextHuskyLens: `허스키렌즈 화면에 출력되어 있는 데이터를 지웁니다.`,
 
-                CodeWiz_InfraredThermometer_read: `선택된 커넥터(MCON/SCON)에 연결된 비접촉 온도 센서에 인식된 온도를 알려줍니다.
-                ▼을 눌러 온도 단위를 선택합니다.`,
-
                 CodeWiz_Servo_setAngle: `선택된 커넥터(MCON/SCON)에 연결된 180도 서보모터의 각도를 입력된 각도로 회전시킵니다.(0~180)`,
                 CodeWiz_Servo_menuSpeed: `선택된 커넥터(MCON/SCON)에 무한회전 서보모터를 지정된 속도로 회전시킵니다.
                 ▼을 눌러 속도를 선택합니다.(빠른/보통/느림/멈춘)`,
@@ -260,6 +285,8 @@ Entry.CodeWiz.setLanguage = function() {
 
                 CodeWiz_Dc_setValue: `선택된 WizCar 모터를 지정한 방향의 입력한 속도로 회전시킵니다.
                 ▼을 눌러 회전시킬 모터(MOTOR_L, MOROT_R)와 방향(반시계, 시계)을 선택하고 속도는 0~1023 사이 값으로 직접 입력합니다.`,
+                CodeWiz_Dc_setValue_Waterpump: `선택된 워터펌프를 입력한 속도로 회전시킵니다.
+                ▼을 눌러 회전시킬 모터(MOTOR_L, MOROT_R)를 선택하고 속도는 0~1023 사이 값으로 직접 입력합니다.`,
 
                 CodeWiz_DotMatrix_init: `도트매트릭스가 연결된 핀을 설정합니다.
 
@@ -282,6 +309,19 @@ Entry.CodeWiz.setLanguage = function() {
                 ▼을 빨강, 초록, 파랑, 검정, 흰색을 선택할 수 있습니다.`,
                 CodeWiz_ColorSensor_getColorValue: `MCON에 연결된 컬러센서에 인식된 빨강의 색상 값을 0~255 사이값으로 알려줍니다.
                 ▼을 눌러 초록, 파랑을 선택할 수 있습니다.`,
+
+                CodeWiz_DHT_init:``,
+                CodeWiz_DHT_getValue:``,
+
+                CodeWiz_etcReadSensor_mconRead: `가변저항/워터센서/토양수분센서의 측정값
+                선택한 센서에 따라서 값이 적절히 매핑되어 반환됩니다.`,
+                CodeWiz_etcReadSensor_digitalRead: `버튼/포토인터럽트의 측정값
+                해당핀의 digitalRead값을 가져옵니다.
+                버튼의 경우 눌렸을 때 참을 반환하기 위해서 인버스를 취하고,
+                포토인터럽트는 읽은 값 그대로 반환됩니다.
+                `,
+                CodeWiz_etcReadSensor_InfraredThermometerRead: `선택된 커넥터(MCON/SCON)에 연결된 비접촉 온도 센서에 인식된 온도를 알려줍니다.
+                ▼을 눌러 온도 단위를 선택합니다.`,
             },
         },
     };
@@ -305,6 +345,12 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_neopixel_setColor_all',
     'CodeWiz_neopixel_setColor_all2',
     'CodeWiz_neopixel_off_all',
+    'CodeWiz_neopixel_OnPixelRandomColor',
+    'CodeWiz_neopixel_fillRandom',
+    'CodeWiz_neopixel_rotate',
+    'CodeWiz_neopixel_shift',
+    'CodeWiz_neopixel_gradationRGB',
+    'CodeWiz_neopixel_gradationHSL',
 
     'CodeWiz_OLED_title',
     'CodeWiz_OLED_clear',
@@ -343,9 +389,6 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_HuskyLens_writeTextHuskyLens',
     'CodeWiz_HuskyLens_clearTextHuskyLens',
 
-    'CodeWiz_InfraredThermometer_title',
-    'CodeWiz_InfraredThermometer_read',
-
     'CodeWiz_Servo_title',
     'CodeWiz_Servo_setAngle',
     'CodeWiz_Servo_menuSpeed',
@@ -353,6 +396,7 @@ Entry.CodeWiz.blockMenuBlocks = [
 
     'CodeWiz_Dc_title',
     'CodeWiz_Dc_setValue',
+    'CodeWiz_Dc_setValue_Waterpump',
 
     'CodeWiz_DotMatrix_title',
     'CodeWiz_DotMatrix_init',
@@ -366,6 +410,15 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_ColorSensor_title',
     'CodeWiz_ColorSensor_isColor',
     'CodeWiz_ColorSensor_getColorValue',
+
+    'CodeWiz_DHT_title',
+    'CodeWiz_DHT_init',
+    'CodeWiz_DHT_getValue',
+
+    'CodeWiz_etcReadSensor_title',
+    'CodeWiz_etcReadSensor_mconRead',
+    'CodeWiz_etcReadSensor_digitalRead',
+    'CodeWiz_etcReadSensor_InfraredThermometerRead',
 ];
 Entry.CodeWiz.preWait = function() {
     return new Promise((resolve) => {
@@ -1145,6 +1198,314 @@ Entry.CodeWiz.getBlocks = function() {
                     value: {
                         opcode: 6,
                         params: [],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_neopixel_OnPixelRandomColor: {
+            // 랜덤색상 켜기 - 단일
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', null],
+                type: 'CodeWiz_neopixel_OnPixelRandomColor',
+            },
+            paramsKeyMap: {
+                NUM: 0,
+            },
+            class: 'CodeWiz_neopixel',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                let num = script.getNumberValue('NUM', script) - 1;
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 3,
+                        params: [
+                            num, 
+                            Math.floor(Math.random()*256), 
+                            Math.floor(Math.random()*256),
+                            Math.floor(Math.random()*256)
+                        ],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_neopixel_fillRandom: {
+            // 랜덤색상 켜기 - 전체
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'CodeWiz_neopixel_fillRandom',
+            },
+            paramsKeyMap: {},
+            class: 'CodeWiz_neopixel',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 43,
+                        params: [],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_neopixel_rotate: {
+            // rotate 네오픽셀
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['역방향', '0'],
+                        ['정방향', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_neopixel_rotate',
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            class: 'CodeWiz_neopixel',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                let _dir = script.getNumberValue('DIR', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 44,
+                        params: [_dir],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_neopixel_shift: {
+            // shift 네오픽셀
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['역방향', '0'],
+                        ['정방향', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_neopixel_shift',
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            class: 'CodeWiz_neopixel',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                let _dir = script.getNumberValue('DIR', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 45,
+                        params: [_dir],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_neopixel_gradationRGB: {
+            // RGB그라데이션
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', '8', '#ff0000', '#00ff00'],
+                type: 'CodeWiz_neopixel_gradationRGB',
+            },
+            paramsKeyMap: {
+                START: 0,
+                END: 1,
+                S_COLOR:2,
+                E_COLOR: 3,
+            },
+            class: 'CodeWiz_neopixel',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _start = script.getNumberValue('START', script) - 1;
+                let _end = script.getNumberValue('END', script) - 1;
+                let _sColor = script.getStringField('S_COLOR', script);
+                let _eColor = script.getStringField('E_COLOR', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 46,
+                        params: [_start, _end, _sColor, _eColor],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_neopixel_gradationHSL: {
+            // HSL그라데이션
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Color',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['1', '8', '#ff0000', '#611ca1'],
+                type: 'CodeWiz_neopixel_gradationHSL',
+            },
+            paramsKeyMap: {
+                START: 0,
+                END: 1,
+                S_COLOR:2,
+                E_COLOR: 3,
+            },
+            class: 'CodeWiz_neopixel',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _start = script.getNumberValue('START', script) - 1;
+                let _end = script.getNumberValue('END', script) - 1;
+                let _sColor = script.getStringField('S_COLOR', script);
+                let _eColor = script.getStringField('E_COLOR', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 47,
+                        params: [_start, _end, _sColor, _eColor],
                     },
                 };
                 Entry.CodeWiz.sendOrder(order);
@@ -3205,97 +3566,7 @@ Entry.CodeWiz.getBlocks = function() {
                 await Entry.CodeWiz.checkComplete();
             },
         },
-        CodeWiz_InfraredThermometer_title: {
-            skeleton: 'basic_text',
-            skeletonOptions: {
-                box: {
-                    offsetX: this.getOffsetX(Lang.template.CodeWiz_InfraredThermometer_title),
-                    offsetY: 5,
-                },
-            },
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            fontColor: '#333333',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.template.CodeWiz_InfraredThermometer_title,
-                    color: '#333333',
-                    align: 'left',
-                },
-            ],
-            def: {
-                type: 'CodeWiz_InfraredThermometer_title',
-            },
-            class: 'CodeWiz_InfraredThermometer',
-            isNotFor: ['CodeWiz'],
-            events: {},
-        },
-        CodeWiz_InfraredThermometer_read: {
-            // Block UI : "비접촉온도센서 %1에 %2로 읽기%3",
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['SCON', '0'],
-                        ['MCON', '1'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['℃', '0'],
-                        ['℉', '1'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'CodeWiz_InfraredThermometer_read',
-            },
-            paramsKeyMap: {
-                IS_M: 0,
-                IS_F: 1,
-            },
-            class: 'CodeWiz_InfraredThermometer',
-            isNotFor: ['CodeWiz'],
-            async func(sprite, script) {
-                if (Entry.CodeWiz.intervalId) {
-                    await Entry.CodeWiz.preWait();
-                }
-                let _isM = script.getNumberValue('IS_M', script);
-                let _isF = script.getNumberValue('IS_F', script);
 
-                const order = {
-                    type: Entry.CodeWiz.sensorTypes.READ,
-                    value: {
-                        opcode: 8,
-                        params: [_isM, _isF],
-                    },
-                };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
-
-                return Entry.hw.portData.runOK.value ?? 0;
-            },
-        },
         CodeWiz_Servo_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
@@ -3523,7 +3794,7 @@ Entry.CodeWiz.getBlocks = function() {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: this.getOffsetX(Lang.template.CodeWiz_Dc_title) + 5,
+                    offsetX: this.getOffsetX(Lang.template.CodeWiz_Dc_title),
                     offsetY: 5,
                 },
             },
@@ -3618,7 +3889,68 @@ Entry.CodeWiz.getBlocks = function() {
                 await Entry.CodeWiz.checkComplete();
             },
         },
-
+        CodeWiz_Dc_setValue_Waterpump: {
+            // 워터펌프
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['MOTOR_L', '0'],
+                        ['MOTOR_R', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, '1023'],
+                type: 'CodeWiz_Dc_setValue_Waterpump',
+            },
+            paramsKeyMap: {
+                PIN: 0,
+                VALUE: 1,
+            },
+            class: 'CodeWiz_Dc',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _pin = script.getNumberValue('PIN', script);
+                let _dir = script.getNumberValue('DIR', script);
+                let _value = Number.parseInt(script.getNumberValue('VALUE', script));
+                if (_value < 0) {
+                    _value = 0;
+                } else if (_value > 1023) {
+                    _value = 1023;
+                }
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 36,
+                        params: [_pin, 1, _value],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
         CodeWiz_DotMatrix_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
@@ -4243,6 +4575,379 @@ Entry.CodeWiz.getBlocks = function() {
                     value: {
                         opcode: 9,
                         params: [_color],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+
+                return Entry.hw.portData.runOK.value ?? 0;
+            },
+        },
+
+        CodeWiz_DHT_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.CodeWiz_DHT_title),
+                    offsetY: 5,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#333333',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.CodeWiz_DHT_title,
+                    color: '#333333',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'CodeWiz_DHT_title',
+            },
+            class: 'CodeWiz_DHT',
+            isNotFor: ['CodeWiz'],
+            events: {},
+        },
+        CodeWiz_DHT_init: {
+            // 디지털온습도 설정
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                        ['27', '27'],
+                        ['32', '32'],
+                        ['33', '33'],
+                        ['18', '18'],
+                        ['19', '19'],
+                    ],
+                    value: '18',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_DHT_init',
+            },
+            paramsKeyMap: {
+                PIN: 0,
+            },
+            class: 'CodeWiz_DHT',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                let _pin = script.getNumberValue('PIN', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.WRITE,
+                    value: {
+                        opcode: 48,
+                        params: [_pin],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+            },
+        },
+        CodeWiz_DHT_getValue: {
+            // 디지털 온습도 값
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['℃', '0'],
+                        ['℉', '1'],
+                        ['습도', '2'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_DHT_getValue',
+            },
+            paramsKeyMap: {
+                TYPE: 0,
+            },
+            class: 'CodeWiz_DHT',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+
+                let _type = script.getNumberValue('TYPE', script);
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.READ,
+                    value: {
+                        opcode: 12,
+                        params: [_type],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+
+                return Entry.hw.portData.runOK.value ?? 0.0;
+            },
+        },
+
+        CodeWiz_etcReadSensor_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 5+this.getOffsetX(Lang.template.CodeWiz_etcReadSensor_title),
+                    offsetY: 5,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#333333',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.CodeWiz_etcReadSensor_title,
+                    color: '#333333',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'CodeWiz_etcReadSensor_title',
+            },
+            class: 'CodeWiz_etcReadSensor',
+            isNotFor: ['CodeWiz'],
+            events: {},
+        },
+        CodeWiz_etcReadSensor_mconRead: {
+            // 가변저항, 워터센서, 토양수분센서
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['가변저항', '0'],
+                        ['워터센서', '1'],
+                        ['토양수분센서', '2'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['32', '32'],
+                        ['33', '33'],
+                        ['36', '36'],
+                        ['39', '39'],
+                    ],
+                    value: '36',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_etcReadSensor_mconRead',
+            },
+            paramsKeyMap: {
+                TYPE: 0,
+                PIN: 1,
+            },
+            class: 'CodeWiz_etcReadSensor',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _type = script.getNumberValue('TYPE', script);
+                let _pin = script.getNumberValue('PIN', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.READ,
+                    value: {
+                        opcode: 10,
+                        params: [_type, _pin],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+
+                return Entry.hw.portData.runOK.value ?? 0;
+            },
+        },
+        CodeWiz_etcReadSensor_digitalRead: {
+            // 버튼, 포토인터럽트
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['버튼', '0'],
+                        ['포토인터럽트', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['13', '13'],
+                        ['14', '14'],
+                        ['15', '15'],
+                        ['27', '27'],
+                        ['32', '32'],
+                        ['33', '33'],
+                        ['18', '18'],
+                        ['19', '19'],
+                    ],
+                    value: '18',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_etcReadSensor_digitalRead',
+            },
+            paramsKeyMap: {
+                TYPE: 0,
+                PIN: 1,
+            },
+            class: 'CodeWiz_etcReadSensor',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _type = script.getNumberValue('TYPE', script);
+                let _pin = script.getNumberValue('PIN', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.READ,
+                    value: {
+                        opcode: 11,
+                        params: [_type, _pin],
+                    },
+                };
+                Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete();
+
+                return Entry.hw.portData.runOK.value ?? 0;
+            },
+        },
+        
+
+        CodeWiz_etcReadSensor_InfraredThermometerRead: {
+            // Block UI : "비접촉온도센서 %1에 %2로 읽기%3",
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['SCON', '0'],
+                        ['MCON', '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['℃', '0'],
+                        ['℉', '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'CodeWiz_etcReadSensor_InfraredThermometerRead',
+            },
+            paramsKeyMap: {
+                IS_M: 0,
+                IS_F: 1,
+            },
+            class: 'CodeWiz_etcReadSensor',
+            isNotFor: ['CodeWiz'],
+            async func(sprite, script) {
+                if (Entry.CodeWiz.intervalId) {
+                    await Entry.CodeWiz.preWait();
+                }
+                let _isM = script.getNumberValue('IS_M', script);
+                let _isF = script.getNumberValue('IS_F', script);
+
+                const order = {
+                    type: Entry.CodeWiz.sensorTypes.READ,
+                    value: {
+                        opcode: 8,
+                        params: [_isM, _isF],
                     },
                 };
                 Entry.CodeWiz.sendOrder(order);
