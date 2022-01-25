@@ -2456,7 +2456,6 @@ Entry.CodeWiz.getBlocks = function() {
                     size: 12,
                 },
             ],
-            events: {},
             def: {
                 params: ['코드위즈 Magic!!', null],
                 type: 'CodeWiz_OLED_printHG',
@@ -2510,6 +2509,61 @@ Entry.CodeWiz.getBlocks = function() {
             isNotFor: ['CodeWiz'],
             events: {},
         },
+        // CodeWiz_DIGITAL_OUTPUT_setup: {
+        //     // Block UI : "터치센서 %1핀 출력으로 사용%2",
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Dropdown',
+        //             options: [
+        //                 ['13', '13'],
+        //                 ['14', '14'],
+        //                 ['15', '15'],
+        //                 ['27', '27'],
+        //                 ['32', '32'],
+        //                 ['33', '33'],
+        //             ],
+        //             value: '13',
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Indicator',
+        //             img: 'block_icon/hardware_icon.svg',
+        //             size: 12,
+        //         },
+        //     ],
+        //     events: {},
+        //     def: {
+        //         params: [],
+        //         type: 'CodeWiz_DIGITAL_OUTPUT_setup',
+        //     },
+        //     paramsKeyMap: {
+        //         PIN: 0,
+        //     },
+        //     class: 'CodeWiz_DIGITAL_OUTPUT',
+        //     isNotFor: ['CodeWiz'],
+        //     async func(sprite, script) {
+        //         if (Entry.CodeWiz.intervalId) {
+        //             await Entry.CodeWiz.preWait();
+        //         }
+
+        //         let _pin = script.getNumberValue('PIN', script);
+        //         const order = {
+        //             type: Entry.CodeWiz.sensorTypes.WRITE,
+        //             value: {
+        //                 opcode: 24,
+        //                 params: [_pin],
+        //             },
+        //         };
+        //         Entry.CodeWiz.sendOrder(order);
+        //         await Entry.CodeWiz.checkComplete();
+        //     },
+        // },
         CodeWiz_DIGITAL_OUTPUT_digitalWrite: {
             // Block UI : "터치센서 디지털 %1(으)로 %2내보내기%3",
             color: EntryStatic.colorSet.block.default.HARDWARE,
