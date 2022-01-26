@@ -144,13 +144,8 @@
         self._hiddenInput.style.position = 'absolute';
         self._hiddenInput.style.opacity = 0;
         self._hiddenInput.style.pointerEvents = 'none';
-        const _canvas = $(self._canvas);
         self._hiddenInput.style.left = '-500px';
-        if (self._topPosition) {
-            self._hiddenInput.style.top = `${_canvas.offset().top + _canvas.height()}px`;
-        } else {
-            self._hiddenInput.style.top = '-200px';
-        }
+        self._hiddenInput.style.top = '0px';
         self._hiddenInput.style.width = `${self._width}px`;
         self._hiddenInput.style.height = `${self._height}px`;
         self._hiddenInput.style.zIndex = -999;
