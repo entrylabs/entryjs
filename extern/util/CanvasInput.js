@@ -727,7 +727,7 @@
                 clearInterval(self._cursorInterval);
             }
 
-            requestAnimationFrame(() => {
+            requestAnimationFrame(function() {
                 self._cursorInterval = setInterval(function() {
                     self._cursor = !self._cursor;
                     self.render();
