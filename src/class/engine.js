@@ -1031,7 +1031,7 @@ Entry.Engine = class Engine {
         Entry.windowResized.notify();
     }
 
-    copyMouseMoveEvent(event) {
+    copyEvent(event) {
         const eventClone = new event.constructor(event.type, event);
         window.self.dispatchEvent(eventClone);
     }

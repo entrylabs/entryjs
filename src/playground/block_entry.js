@@ -7833,11 +7833,6 @@ function inheritBlockSchema() {
 function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
-    if (EntryStatic.isPracticalCourse) {
-        const practicalCourseBlockModule = require('../playground/block_entry_mini');
-        Object.assign(Entry.block, practicalCourseBlockModule.practicalCourseBlock);
-        applySetLanguage(practicalCourseBlockModule);
-    }
 }
 
 function applySetLanguage(hasSetLanguageObj) {
