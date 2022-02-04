@@ -360,7 +360,7 @@ EntryStatic.getAllBlocks = function() {
                 // 'robotis_humidity_value_dream',
                 // 'robotis_humidity_value_boolean_dream',
                 // 'robotis_temperature_value_dream',
-                // 'robotis_temperature_value_boolean_dream',
+                //   'robotis_temperature_value_boolean_dream',
             ].concat(EntryStatic.DynamicPracticalHardwareBlocks['hw_sensor']),
         },
         {
