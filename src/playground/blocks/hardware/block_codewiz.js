@@ -247,8 +247,14 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_OLED_printHG:`입력한 내용(한글포함)을 OLED에 출력합니다.
                 ▼을 눌러 ‘⭕’를 선택하면 아랫줄로 커서를 이동시키고 ‘❌‘를 선택하면 마지막 글자 오른쪽으로 커서를 이동시킵니다.`,
 
-                CodeWiz_DIGITAL_OUTPUT_digitalWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 HIGH 또는 LOW 를 내보냅니다.`,
-                CodeWiz_DIGITAL_OUTPUT_pwmWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 입력된 값을 내보냅니다.`,
+                CodeWiz_DIGITAL_OUTPUT_digitalWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 HIGH 또는 LOW 를 내보냅니다.
+                
+                <현재 활용 가능한 확장도구>
+                진동모터`,
+                CodeWiz_DIGITAL_OUTPUT_pwmWrite: `지정된 핀(터치센서 또는 SCON)에 연결된 센서로 입력된 값을 내보냅니다.
+                
+                <현재 활용 가능한 확장도구>
+                프로펠러`,
 
                 CodeWiz_HuskyLens_initHuskyLens: `허스키렌즈 시작을 설정합니다.`,
                 CodeWiz_HuskyLens_setModeOfHuskyLens: `허스키렌즈를 선택된 알고리즘으로 설정합니다.
@@ -310,8 +316,8 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_ColorSensor_getColorValue: `MCON에 연결된 컬러센서에 인식된 빨강의 색상 값을 0~255 사이값으로 알려줍니다.
                 ▼을 눌러 초록, 파랑을 선택할 수 있습니다.`,
 
-                CodeWiz_DHT_init:``,
-                CodeWiz_DHT_getValue:``,
+                CodeWiz_DHT_init:`지정한 핀으로 디지털 온습도를 설정합니다.`,
+                CodeWiz_DHT_getValue:`앞서 설정한 디지털 온습도에서 선택한 값을 가져옵니다.`,
 
                 CodeWiz_etcReadSensor_mconRead: `가변저항/워터센서/토양수분센서의 측정값
                 선택한 센서에 따라서 값이 적절히 매핑되어 반환됩니다.`,
