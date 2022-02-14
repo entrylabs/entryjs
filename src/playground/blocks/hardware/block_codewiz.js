@@ -452,7 +452,7 @@ Entry.CodeWiz.preWait = function() {
                 // Entry.CodeWiz.preWaitResult = Entry.CodeWiz.preWaitList.shift() || null;
                 resolve();
             }
-        }, 11);
+        }, 17);
     });
 };
 Entry.CodeWiz.checkComplete = function(timeout) {
@@ -468,7 +468,7 @@ Entry.CodeWiz.checkComplete = function(timeout) {
                 Entry.CodeWiz.timeoutId = null;
                 resolve();
             }
-        }, 11);
+        }, 5);
         Entry.CodeWiz.timeoutId = setTimeout(() => {
             clearInterval(Entry.CodeWiz.intervalId);
             // console.log(Entry.CodeWiz.intervalId, 'timeOut');
@@ -4948,8 +4948,8 @@ Entry.CodeWiz.getBlocks = function() {
                 };
                 Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete();
-
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal = Entry.hw.portData.runOK.value;
+                return Number.isInteger(retVal)?retVal: 0;
             },
         },
         CodeWiz_Joystick_readButton: {
@@ -4989,7 +4989,7 @@ Entry.CodeWiz.getBlocks = function() {
                 Entry.CodeWiz.sendOrder(order);
                 await Entry.CodeWiz.checkComplete();
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                return Entry.hw.portData.runOK.value ?? false;
             },
         },
 
