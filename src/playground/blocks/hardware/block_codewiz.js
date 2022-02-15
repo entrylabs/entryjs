@@ -9,7 +9,6 @@ Entry.CodeWiz = {
         ko: '코드위즈',
         en: 'CodeWiz',
     },
-
     setZero: function() {
         Entry.hw.sendQueue = {
             ORDER: {},
@@ -21,26 +20,34 @@ Entry.CodeWiz = {
             Entry.hw.update();
         }, 100);
     },
-    getHashKey() {
-        let key = new Date().getSeconds().toString(16);
-        if (key.length === 1) {
-            key += ((Math.random() * 16) | 0).toString(16);
-        }
-        return Entry.generateHash() + key;
+    getHashKey(opcode) {
+        // let key = new Date().getSeconds().toString(16);
+        // if (key.length === 1) {
+        //     key += ((Math.random() * 16) | 0).toString(16);
+        // }
+        // return Entry.generateHash() + key;
+        // return Entry.generateHash(6)+opcode;
+        return Date.now().toString().substring(6)+opcode;
     },
     sendOrder(order) {
         const sq = Entry.hw.sendQueue;
+        Entry.CodeWiz.intervalId=true;
         if (!sq.ORDER) {
             sq.ORDER = {};
-        }
-        const id = this.getHashKey();
+        }//order.value.opcodescript.key
+        const id = this.getHashKey(order.value.opcode);
         sq.ORDER[id] = order;
         Entry.hw.update();
         // return id;
         this.deleteOrder(id);
+
+        return id;
     },
     deleteOrder(id) {
-        Entry.hw.portData.runOK = false;
+        // Entry.hw.portData.runOK = false;
+        /** */
+        Entry.hw.portData[id]={value:null}
+        /** */
         delete Entry.hw.sendQueue.ORDER[id];
         Entry.hw.update();
     },
@@ -452,23 +459,23 @@ Entry.CodeWiz.preWait = function() {
                 // Entry.CodeWiz.preWaitResult = Entry.CodeWiz.preWaitList.shift() || null;
                 resolve();
             }
-        }, 17);
+        }, 11);
     });
 };
-Entry.CodeWiz.checkComplete = function(timeout) {
+Entry.CodeWiz.checkComplete = function(timeout, id) {
     let _promise = new Promise((resolve) => {
-        timeout = timeout ?? 1000;
-
+        timeout = timeout?? 1000;
         Entry.CodeWiz.intervalId = setInterval(() => {
-            // console.log(Entry.CodeWiz.intervalId, 'runOK:', Entry.hw.portData.runOK);
-            if (Entry.hw.portData.runOK) {
+            // console.log(Entry.CodeWiz.intervalId, 'runOK:', Entry.hw.portData[id]);
+            let ret = Entry.hw.portData[id]?.value;
+            if (ret!==undefined&& ret !== null) {
                 clearInterval(Entry.CodeWiz.intervalId);
                 clearTimeout(Entry.CodeWiz.timeoutId);
                 Entry.CodeWiz.intervalId = null;
                 Entry.CodeWiz.timeoutId = null;
                 resolve();
             }
-        }, 5);
+        }, 7);
         Entry.CodeWiz.timeoutId = setTimeout(() => {
             clearInterval(Entry.CodeWiz.intervalId);
             // console.log(Entry.CodeWiz.intervalId, 'timeOut');
@@ -578,7 +585,7 @@ Entry.CodeWiz.getBlocks = function() {
             func: function(sprite, script) {
                 var sensor = script.getField('GYRO_TYPE', script);
                 var hw_sensorData = Entry.hw.portData;
-                return hw_sensorData[sensor] ?? 0;
+                return hw_sensorData[sensor]?? 0;
             },
         },
         CodeWiz_isPushedButton: {
@@ -759,13 +766,8 @@ Entry.CodeWiz.getBlocks = function() {
             class: 'CodeWiz_buzzer',
             isNotFor: ['CodeWiz'],
             async func(sprite, script) {
-                // console.log('script:', script);
                 if (Entry.CodeWiz.intervalId) {
-                    // Entry.CodeWiz.preWaitList.push(script.key);
-                    // while (Entry.CodeWiz.preWaitResult !== script.key) {
                     await Entry.CodeWiz.preWait();
-                    // }
-                    // Entry.CodeWiz.preWaitResult = null;
                 }
                 let octave = Number.parseInt(script.getValue('OCTAVE', script));
                 let note = Number.parseInt(script.getValue('NOTE', script));
@@ -778,9 +780,10 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [octave, note, beat],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
+                const id = Entry.CodeWiz.sendOrder(order);
 
-                await Entry.CodeWiz.checkComplete(1234);
+                await Entry.CodeWiz.checkComplete(1234, id);
+                delete Entry.hw.portData[id];
             },
         },
 
@@ -866,8 +869,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _count],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_brightness: {
@@ -918,8 +922,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_setColor_one: {
@@ -973,8 +978,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [num, ...colorValue],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_setColor_one2: {
@@ -1037,8 +1043,9 @@ Entry.CodeWiz.getBlocks = function() {
                     },
                 };
 
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_off_one: {
@@ -1081,8 +1088,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [num],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_setColor_all: {
@@ -1130,8 +1138,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [...colorValue],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_setColor_all2: {
@@ -1186,8 +1195,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [r, g, b],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_off_all: {
@@ -1223,8 +1233,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_OnPixelRandomColor: {
@@ -1272,8 +1283,9 @@ Entry.CodeWiz.getBlocks = function() {
                         ],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_fillRandom: {
@@ -1309,8 +1321,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_rotate: {
@@ -1360,8 +1373,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_dir],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_shift: {
@@ -1411,8 +1425,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_dir],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_gradationRGB: {
@@ -1471,8 +1486,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_start, _end, _sColor, _eColor],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_gradationHSL: {
@@ -1531,8 +1547,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_start, _end, _sColor, _eColor],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_neopixel_wheeeeeeel: {
@@ -1569,8 +1586,10 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                // console.log(script.key);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
 
@@ -1632,8 +1651,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_mirror: {
@@ -1683,8 +1703,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_setSize: {
@@ -1733,8 +1754,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_setPosition: {
@@ -1797,8 +1819,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_x, _y],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_println: {
@@ -1842,8 +1865,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_isCollision: {
@@ -1893,8 +1917,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_specialChar: {
@@ -1959,8 +1984,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_setFont: {
@@ -2026,8 +2052,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value, _size],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_startScroll: {
@@ -2104,8 +2131,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value, _st, _ed],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_stopScroll: {
@@ -2141,8 +2169,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawPoint: {
@@ -2218,8 +2247,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_x, _y, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawLine1: {
@@ -2318,8 +2348,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_sx, _sy, _ex, _ey, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawLine2: {
@@ -2406,8 +2437,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_sx, _sy, _len, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawLine3: {
@@ -2494,8 +2526,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_sx, _sy, _len, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawRect: {
@@ -2609,8 +2642,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_sx, _sy, _width, _height, _isFill, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawCircle: {
@@ -2710,8 +2744,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_rx, _ry, _rad, _isFill, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_drawPoligon: {
@@ -2846,8 +2881,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_x1, _y1, _x2, _y2, _x3, _y3, _isFill, _color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_OLED_printHG: {
@@ -2903,8 +2939,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_value, _isLB],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DIGITAL_OUTPUT_title: {
@@ -2999,8 +3036,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _val],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DIGITAL_OUTPUT_pwmWrite: {
@@ -3069,8 +3107,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _val],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
 
@@ -3132,8 +3171,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_HuskyLens_setModeOfHuskyLens: {
@@ -3187,8 +3227,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [mode],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_HuskyLens_readHuskyLens: {
@@ -3224,8 +3265,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_HuskyLens_isLearnedHuskyLens: {
@@ -3267,10 +3309,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [learnId],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                let retVal = Entry.hw.portData[id]?.value ?? false;
+                delete Entry.hw.portData[id];
 
-                return Entry.hw.portData.runOK.value ?? false;
+                return retVal;
             },
         },
         CodeWiz_HuskyLens_isContainHuskyLens: {
@@ -3325,10 +3369,11 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_learnId, _type],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
-
-                return Entry.hw.portData.runOK.value ?? false;
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                let retVal= Entry.hw.portData[id]?.value ?? false;
+                delete Entry.hw.portData[id];
+                return retVal;
             },
         },
         CodeWiz_HuskyLens_getCountLearnedHuskyLens: {
@@ -3364,10 +3409,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                return retVal;
             },
         },
         CodeWiz_HuskyLens_hasTypeHuskyLens: {
@@ -3417,10 +3464,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_type],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? false;
+                let retVal= Entry.hw.portData[id]?.value ?? false;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_HuskyLens_getArrowInfoHuskyLens: {
@@ -3472,10 +3521,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_arrowType],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_HuskyLens_getBoxInfoHuskyLens: {
@@ -3528,10 +3579,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_boxType],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_HuskyLens_writeTextHuskyLens: {
@@ -3586,8 +3639,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_x, _y, _text],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_HuskyLens_clearTextHuskyLens: {
@@ -3623,8 +3677,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
 
@@ -3714,8 +3769,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_Servo_menuSpeed: {
@@ -3782,8 +3838,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_Servo_customSpeed: {
@@ -3846,8 +3903,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
 
@@ -3946,8 +4004,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, _dir, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_Dc_setValue_Waterpump: {
@@ -4007,8 +4066,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin, 1, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_title: {
@@ -4128,8 +4188,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_count, ..._pins],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_setBrightness: {
@@ -4188,8 +4249,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_num, _brightness],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_printString: {
@@ -4243,8 +4305,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_num, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_setLine: {
@@ -4334,8 +4397,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_num, _numLine, _isRow, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_setDot: {
@@ -4418,8 +4482,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_num, _numRow, _numCol, _value],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_clear: {
@@ -4467,8 +4532,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_num - 1],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
         CodeWiz_DotMatrix_clearAll: {
@@ -4503,8 +4569,9 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [-1],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                delete Entry.hw.portData[id];
             },
         },
 
@@ -4583,10 +4650,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? false;
+                let retVal= Entry.hw.portData[id]?.value ?? false;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_ColorSensor_getColorValue: {
@@ -4637,10 +4706,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_color],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
 
@@ -4723,8 +4794,8 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pin],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
             },
         },
         CodeWiz_DHT_getValue: {
@@ -4775,10 +4846,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_type],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0.0;
+                let retVal= Entry.hw.portData[id]?.value ?? 0.0;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_Joystick_title: {
@@ -4895,8 +4968,8 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_pinX, _pinY, _pinB, _range],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
             },
         },
         CodeWiz_Joystick_readAxis: {
@@ -4946,10 +5019,14 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_type],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
-                let retVal = Entry.hw.portData.runOK.value;
-                return Number.isInteger(retVal)?retVal: 0;
+
+                const id =Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                
+                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                // console.log(_type===0?"X:":"Y:",retVal);
+                return retVal
             },
         },
         CodeWiz_Joystick_readButton: {
@@ -4986,10 +5063,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
-
-                return Entry.hw.portData.runOK.value ?? false;
+                const id =Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
+                let retVal= Entry.hw.portData[id]?.value ?? false;
+                delete Entry.hw.portData[id];
+                // console.log("Button:",retVal);
+                return retVal
             },
         },
 
@@ -5081,10 +5160,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_type, _pin],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal= Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_etcReadSensor_digitalRead: {
@@ -5153,10 +5234,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_type, _pin],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal= Entry.hw.portData[id]?.value ?? false;
+                delete Entry.hw.portData[id];
+                return retVal
             },
         },
         CodeWiz_etcReadSensor_InfraredThermometerRead: {
@@ -5219,10 +5302,12 @@ Entry.CodeWiz.getBlocks = function() {
                         params: [_isM, _isF],
                     },
                 };
-                Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete();
+                const id = Entry.CodeWiz.sendOrder(order);
+                await Entry.CodeWiz.checkComplete(1000, id);
 
-                return Entry.hw.portData.runOK.value ?? 0;
+                let retVal = Entry.hw.portData[id]?.value ?? 0;
+                delete Entry.hw.portData[id];
+                return retVal;
             },
         },
         //endregion CodeWiz 코드위즈
