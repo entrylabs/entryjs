@@ -223,7 +223,8 @@ Entry.CodeWiz.setLanguage = function() {
                 왼쪽색부터 오른쪽색까지 HSL색표현의 그라데이션으로 채워집니다.
                 범위는 초기화한 LED범위를 벗어날 수 없으며 서로 다른 값이여야 합니다.
                 LED 번호가 작은 값은 왼쪽에 큰 값은 오른쪽에 위치해야합니다.`,
-                CodeWiz_neopixel_wheeeeeeel:`모든 LED를 휠시켜 색상을 나타냅니다.`,
+                CodeWiz_neopixel_wheeeeeeel:`녹색, 빨강, 파랑의 세 가지색을 기준으로 섞은 색을 순환시켜 켜주는 블록입니다.
+                이 블록을 사용해서 흐르는 듯한 네오픽셀을 표시할 수 있습니다.`,
 
                 CodeWiz_OLED_clear: `OLED에 표시된 내용을 지웁니다.`,
                 CodeWiz_OLED_mirror: `OLED에 표시할 내용의 출력 상태를 설정합니다.
