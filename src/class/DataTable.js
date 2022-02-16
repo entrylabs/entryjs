@@ -5,6 +5,7 @@ import _filter from 'lodash/filter';
 import _flatten from 'lodash/flatten';
 import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
+import _isEmpty from 'lodash/isEmpty';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -205,6 +206,10 @@ class DataTable {
     }
 
     setTables(tables = []) {
+        if (_isEmpty(tables)) {
+            return;
+        }
+
         tables.forEach((table) => {
             const data = table || { name: Lang.Workspace.data_table };
             data.name = Entry.getOrderedName(data.name, this.#tables, 'name');

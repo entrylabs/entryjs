@@ -551,6 +551,14 @@ Entry.Stage = class Stage {
         this.canvas.addChildAt(videoContainer, 2);
     }
 
+    getCanvasElement(id) {
+        let canvas = document.getElementById(id);
+        if (!canvas) {
+            canvas = window.top.document.getElementById(id);
+        }
+        return canvas;
+    }
+
     /**
      * show inputfield from the canvas
      */
@@ -578,7 +586,7 @@ Entry.Stage = class Stage {
             const isWebGL = GEHelper.isWebGL;
             const classRef = isWebGL ? window.PIXICanvasInput : CanvasInput;
             const inputField = new classRef({
-                canvas: document.getElementById('entryCanvas'),
+                canvas: THIS.getCanvasElement('entryCanvas'),
                 fontSize: 20,
                 fontFamily: EntryStatic.fontFamily || 'NanumGothic',
                 fontColor: '#2c313d',
