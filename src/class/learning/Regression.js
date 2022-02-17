@@ -174,14 +174,15 @@ class Regression {
                     }
                 })
             }
-            
             this.#result = {
                 graphData: (graphData.originalPoints || []).slice(0, 1000),
                 accuracy,
                 normResult,
                 rsquared,
-                equation: `Y = ${a.map((a, i) => i === 0 ? `${a}X` : `${addSign(a)}X^${i + 1}`).join('')} ${addSign(b)}`
-            }
+                equation: `Y = ${a
+                    .map((a, i) => `${addSign(a)}X<sub>${i + 1}</sub>`)
+                    .join('')} ${addSign(b)}`,
+            };
             this.#isTrained = true;
             this.#chart?.load({
                 source: this.chartData,
@@ -213,8 +214,9 @@ class Regression {
         };
     }
     async predict(data) {
+        tf.engine().startScope();
         const { inputMin, inputMax, outputMax, outputMin } = this.convertNomalResult();
-        return tf.tidy(() => {
+        const result = tf.tidy(() => {
             let convertedData;
             if(Array.isArray(data)) {
                 convertedData = tf.tensor2d([data]);
@@ -225,8 +227,11 @@ class Regression {
             const preds = this.#model.predict(convertedData).mul(outputMax.sub(outputMin)).add(outputMin);
             const [result] = preds.dataSync();
             this.#predictResult = _floor(result, 2);
+            preds.dispose();
             return this.#predictResult;
         });
+        tf.engine().endScope();
+        return result;
     }
 
     get chartData() {

@@ -149,13 +149,8 @@ import * as PIXI from 'pixi.js';
         self._hiddenInput.style.position = 'absolute';
         self._hiddenInput.style.opacity = 0;
         self._hiddenInput.style.pointerEvents = 'none';
-        const _canvas = $(self._canvas);
         self._hiddenInput.style.left = '-500px';
-        if (self._topPosition) {
-            self._hiddenInput.style.top = `${_canvas.offset().top + _canvas.height()}px`;
-        } else {
-            self._hiddenInput.style.top = '-200px';
-        }
+        self._hiddenInput.style.top = '0px';
         self._hiddenInput.style.width = `${self._width}px`;
         self._hiddenInput.style.height = `${self._height}px`;
         self._hiddenInput.style.zIndex = -999;
@@ -759,10 +754,13 @@ import * as PIXI from 'pixi.js';
             if (self._cursorInterval) {
                 clearInterval(self._cursorInterval);
             }
-            self._cursorInterval = setInterval(() => {
-                self._cursor = !self._cursor;
-                self.render();
-            }, 500);
+
+            requestAnimationFrame(() => {
+                self._cursorInterval = setInterval(() => {
+                    self._cursor = !self._cursor;
+                    self.render();
+                }, 500);
+            });
 
             // check if this is Chrome for Android (there is a bug with returning incorrect character key codes)
             const nav = navigator.userAgent.toLowerCase();
@@ -992,11 +990,10 @@ import * as PIXI from 'pixi.js';
         mousedown(e, self) {
             e = Entry.Utils.convertMouseEvent(e);
             const roundRect = Entry.stage.getBoundRect();
-            const scrollPos = Entry.Utils.getScrollPos();
-            const x = ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480;
-            const y = ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270;
-
-            const mouse = self._mousePos(e);
+            const offsetX = e.offsetX || e.clientX - roundRect.left;
+            const offsetY = e.offsetY || e.clientY - roundRect.top;
+            const x = (offsetX / roundRect.width - 0.5) * 480;
+            const y = (offsetY / roundRect.height - 0.5) * -270;
             const isOver = self._overInput(x, y);
 
             // setup the 'click' event
@@ -1418,8 +1415,7 @@ import * as PIXI from 'pixi.js';
          * @return {Boolean}   True if it is over the input box.
          */
         _overInput(x, y) {
-            const self = this;
-            return x >= -138 && x <= 148 && y >= -112 && y <= -91;
+            return x >= -226 && x <= 183 && y >= -110 && y <= -73;
         },
 
         /**

@@ -325,6 +325,7 @@ EntryStatic.getAllBlocks = function() {
                 'boolean_basic_operator',
                 'boolean_and_or',
                 'boolean_not',
+                'is_boost_mode',
             ],
         },
         {
@@ -436,6 +437,7 @@ EntryStatic.getAllBlocks = function() {
                 'is_number_learning_group_2',
                 'is_number_learning_group_3',
                 'insert_data_for_test',
+                'video_capture_for_image_test',
                 'insert_text_block_for_test',
                 'test_result',
                 'accuracy_of_result',

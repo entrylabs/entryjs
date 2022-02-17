@@ -5,6 +5,7 @@ import _filter from 'lodash/filter';
 import _flatten from 'lodash/flatten';
 import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
+import _isEmpty from 'lodash/isEmpty';
 import DataTableSource from './source/DataTableSource';
 import { DataAnalytics, ModalChart } from '@entrylabs/tool';
 
@@ -185,7 +186,7 @@ class DataTable {
         this.dataAnalytics = new DataAnalytics({ container: view, data: {}, isShow: false })
             .on('submit', this.saveTable)
             .on('alert', ({ message, title = Lang.DataAnalytics.max_row_count_error_title }) =>
-                entrylms.alert(message, title)
+                Entry.modal.alert(message, title)
             )
             .on('toast', (message) => {
                 const { title, content } = message;
@@ -205,6 +206,10 @@ class DataTable {
     }
 
     setTables(tables = []) {
+        if (_isEmpty(tables)) {
+            return;
+        }
+
         tables.forEach((table) => {
             const data = table || { name: Lang.Workspace.data_table };
             data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
@@ -249,7 +254,7 @@ class DataTable {
         const { chart = [], fields, rows } = source;
         const container = Entry.Dom('div', {
             class: 'entry-table-chart',
-            parent: $('body'),
+            parent: $(Entry.modalContainer),
         })[0];
         return new ModalChart({
             data: {

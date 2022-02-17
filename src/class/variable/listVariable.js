@@ -369,7 +369,7 @@ class ListVariable extends Variable {
                 //     .rr(20, -2, wrapperWidth, 17, 2);
                 this.scrollButton_.x = totalWidth - 6;
                 this.scrollPosition = Math.floor(
-                    ((this.scrollButton_.y - 23) / (this.getHeight() - 23 - 30)) *
+                    ((this.scrollButton_.y - 25) / (this.getHeight() - 25 - 30)) *
                         (arr.length - maxView)
                 );
             } else {

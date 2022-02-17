@@ -69,6 +69,7 @@ Entry.Engine = class Engine {
             /** @type {!Element} */
             this.view_ = controlView;
             this.view_.addClass('entryEngine_w').addClass('entryEngineWorkspace_w');
+            this.view_.addClass('test');
 
             this.speedButton = Entry.createElement('button')
                 .addClass(
@@ -120,9 +121,14 @@ Entry.Engine = class Engine {
             this.mouseViewInput = Entry.createElement('input').appendTo(this.mouseView);
             $(this.mouseViewInput).attr('readonly', 'readonly');
 
-            this.buttonWrapper = Entry.createElement('div')
-                .addClass('entryEngineButtonWrapper')
-                .appendTo(this.view_);
+            this.buttonWrapper = Entry.createElement('div').addClass('entryEngineButtonWrapper');
+            this.view_.after(this.buttonWrapper);
+
+            /*
+              TODO markup
+              오브젝트 추가하기, 시작하기, 미사용버튼, 기본 일시정지/다시시작,
+              전체화면 일시정지/다시시작, 기본/전체화면 정지 순서
+             */
             this.addButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryAddButtonWorkspace_w')
@@ -667,6 +673,7 @@ Entry.Engine = class Engine {
 
         this.selectedObject = Entry.stage.selectedObject;
         Entry.stage.selectObject();
+        Entry.dispatchEvent('closeBackPack');
         Entry.dispatchEvent('run');
     }
 
@@ -973,6 +980,11 @@ Entry.Engine = class Engine {
     }
 
     toggleFullScreen(popupClassName) {
+        Entry.dispatchEvent('toggleFullScreen');
+        if (!Entry.fullScreenEnable) {
+            return;
+        }
+
         if (!this.popup) {
             this.popup = new Entry.Popup(popupClassName);
             if (Entry.engine.speedPanelOn) {
@@ -988,14 +1000,41 @@ Entry.Engine = class Engine {
                 popup.window_.appendChild(Entry.engine.runButton[0]);
             }
             popup.window_.appendChild(Entry.engine.view_);
-            if (Entry.type === 'workspace' && Entry.targetChecker) {
-                popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
+            if (Entry.type === 'workspace') {
+                Entry.engine.view_.appendChild(this.buttonWrapper);
+                if (Entry.targetChecker) {
+                    popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
+                }
+            }
+
+            if (window.top !== window.self) {
+                window.top.addEventListener('pointermove', this.copyEvent);
+                window.top.addEventListener('pointerdown', this.copyEvent);
+                window.top.addEventListener('pointerup', this.copyEvent);
+                window.top.addEventListener('pointerupoutside', this.copyEvent);
+                window.top.addEventListener('pointercancel', this.copyEvent);
+                window.top.addEventListener('mouseup', this.copyEvent);
+                window.top.addEventListener('mousemove', this.copyEvent);
             }
         } else {
+            if (window.top !== window.self) {
+                window.top.removeEventListener('pointermove', this.copyEvent);
+                window.top.removeEventListener('pointerdown', this.copyEvent);
+                window.top.removeEventListener('pointerup', this.copyEvent);
+                window.top.removeEventListener('pointerupoutside', this.copyEvent);
+                window.top.removeEventListener('pointercancel', this.copyEvent);
+                window.top.removeEventListener('mouseup', this.copyEvent);
+                window.top.removeEventListener('mousemove', this.copyEvent);
+            }
             this.popup.remove();
             this.popup = null;
         }
         Entry.windowResized.notify();
+    }
+
+    copyEvent(event) {
+        const eventClone = new event.constructor(event.type, event);
+        window.self.dispatchEvent(eventClone);
     }
 
     closeFullScreen() {

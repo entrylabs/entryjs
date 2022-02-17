@@ -195,6 +195,7 @@ Entry.initialize_ = function() {
 
     this.helper = new EntryBlockHelper();
     this.youtube = new Entry.Youtube();
+    this.modal = new Entry.Modal();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
 
@@ -361,7 +362,7 @@ Entry.createDom = function(container, type) {
             this.engine.generateView(this.engineView, type);
 
             const canvas = _createCanvasElement('entryCanvasWorkspace');
-            engineView.insertBefore(canvas, this.engine.buttonWrapper);
+            this.engine.mouseView.after(canvas);
 
             canvas.addEventListener('mousewheel', (evt) => {
                 const mousePosition = Entry.stage.mouseCoordinate;
@@ -372,12 +373,12 @@ Entry.createDom = function(container, type) {
                     const list = tempList[i];
                     if (wheelDirection) {
                         if (list.scrollButton_.y >= 46) {
-                            list.scrollButton_.y -= 23;
+                            list.scrollButton_.y -= 25;
                         } else {
-                            list.scrollButton_.y = 23;
+                            list.scrollButton_.y = 25;
                         }
                     } else {
-                        list.scrollButton_.y += 23;
+                        list.scrollButton_.y += 25;
                     }
                     list.updateView();
                 }
@@ -558,6 +559,12 @@ Entry.parseOptions = function(options) {
     if (options.textCodingEnable) {
         this.textCodingEnable = options.textCodingEnable;
     }
+
+    this.fullScreenEnable = options.fullScreenEnable;
+    if (this.fullScreenEnable === undefined) {
+        this.fullScreenEnable = true;
+    }
+    this.modalContainer = options.modalContainer || $('body')[0];
 };
 
 Entry.initFonts = function(fonts) {

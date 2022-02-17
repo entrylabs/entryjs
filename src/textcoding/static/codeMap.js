@@ -192,6 +192,15 @@ Entry.CodeMap = {};
                 hide: 'HIDE',
             },
         ],
+        text_change_font: [
+            EntryStatic.fonts.reduce(
+                (obj, { family }) => ({
+                    ...obj,
+                    [family.toLowerCase()]: family,
+                }),
+                {}
+            ),
+        ],
     };
 
     cc.Arduino = {

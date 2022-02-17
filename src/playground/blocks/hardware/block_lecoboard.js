@@ -1,6 +1,6 @@
 'use strict';
 
-Entry.Lecoboard = {
+Entry.lecoboard = {
     id: '3C.1',
     name: 'lecoboard',
     url: 'http://www.fnj.or.kr/',
@@ -172,7 +172,7 @@ Entry.Lecoboard = {
     },
 };
 
-Entry.Lecoboard.setLanguage = function() {
+Entry.lecoboard.setLanguage = function() {
     return {
         ko: {
             template: {
@@ -202,9 +202,7 @@ Entry.Lecoboard.setLanguage = function() {
                 lecoboard_lcd_command: 'LCD 설정 %1 %2',
                 lecoboard_set_lcd: 'LCD %1번째줄 %2번째칸에 %3을 출력하기 %4',
                 lecoboard_send_ble: '블루투스로 %1을 보내기 %2',
-                lecoboard_get_bluetooth: '블루투스에서 읽어오기',                
-                lecoboard_arm_control: '로봇팔 X%1 Y%2 Z%3 %4',
-                lecoboard_arm_gripper_control: '로봇팔 그리퍼 A%1 G%2 %3',
+                lecoboard_get_bluetooth: '블루투스에서 읽어오기',     
                 /*
                 lecoboard_dc_motor_for_sec: '%1번 DC모터 %2방향으로 속력%3 으로 %4초 동안 동작하기 %5',*/
             },
@@ -240,14 +238,12 @@ Entry.Lecoboard.setLanguage = function() {
                 lecoboard_set_lcd: 'Set LCD data %1 %2 %3 %4',
                 lecoboard_send_ble: 'BLE print %1 %2',
                 lecoboard_get_bluetooth: 'Read from BLE',
-                lecoboard_arm_control: 'Arm X%1 Y%2 Z%3 %4',
-                lecoboard_arm_gripper_control: 'Arm gripper A%1 G%2 %3',
             },
         },
     };
 };
 
-Entry.Lecoboard.blockMenuBlocks = [
+Entry.lecoboard.blockMenuBlocks = [
     'lecoboard_led_rgb_toggle',
     'lecoboard_dual_led_color_toggle',
     'lecoboard_dual_led_toggle',
@@ -276,11 +272,9 @@ Entry.Lecoboard.blockMenuBlocks = [
     'lecoboard_set_lcd',
     'lecoboard_send_ble',
     'lecoboard_get_bluetooth',    
-    'lecoboard_arm_control',
-    'lecoboard_arm_gripper_control',
 ];
 
-Entry.Lecoboard.getBlocks = function() {
+Entry.lecoboard.getBlocks = function() {
     return {
         lecoboard_arm_control: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -348,7 +342,7 @@ Entry.Lecoboard.getBlocks = function() {
                 port=31;
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[1] = {
-                    type: Entry.Lecoboard.sensorTypes.ARM_XYZ,
+                    type: Entry.lecoboard.sensorTypes.ARM_XYZ,
                     data: {
                         value_x,
                         value_y,
@@ -357,31 +351,6 @@ Entry.Lecoboard.getBlocks = function() {
                     time: new Date().getTime(),
                 };  
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'lecoboard_arm_control(%1, %2, %3)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_arm_gripper_control: {
@@ -439,7 +408,7 @@ Entry.Lecoboard.getBlocks = function() {
                 port=32;
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.Lecoboard.sensorTypes.ARM_WG,
+                    type: Entry.lecoboard.sensorTypes.ARM_WG,
                     data: {
                         value_w,
                         value_g,
@@ -447,26 +416,6 @@ Entry.Lecoboard.getBlocks = function() {
                     time: new Date().getTime(),
                 };    
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'lecoboard_arm_gripper_control(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                                defaultType: 'number',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_port_highlow_list: {
@@ -564,36 +513,19 @@ Entry.Lecoboard.getBlocks = function() {
                 */
 
                 if (typeof value === 'string') value = value.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value) > -1) value = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value) > -1) value = 0;
+                if (Entry.lecoboard.highList.indexOf(value) > -1) value = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value) > -1) value = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
+             
         },
         lecoboard_digital_pwm: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -662,24 +594,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_analog_input_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -712,31 +626,6 @@ Entry.Lecoboard.getBlocks = function() {
             func(sprite, script) {
                 return script.getField('PORT');
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    ['1', '3'],
-                                    ['2', '4'],
-                                    ['3', '5'],
-                                    ['4', '6'],
-                                ],
-                                value: '3',
-                                fontSize: 11,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'lecoboard_analog_input_list',
-                    },
-                ],
-            },
         },
         lecoboard_button_read_bool: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -764,7 +653,7 @@ Entry.Lecoboard.getBlocks = function() {
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue.GET[Entry.Lecoboard.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue.GET[Entry.lecoboard.sensorTypes.DIGITAL] = {
                     port,
                     time: new Date().getTime(),
                 };
@@ -800,7 +689,7 @@ Entry.Lecoboard.getBlocks = function() {
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue.GET[Entry.Lecoboard.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue.GET[Entry.lecoboard.sensorTypes.DIGITAL] = {
                     port,
                     time: new Date().getTime(),
                 };
@@ -868,25 +757,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
                 return Entry.hw.portData.ULTRASONIC || 0;
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_analog_read: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -920,21 +790,6 @@ Entry.Lecoboard.getBlocks = function() {
                 let port = script.getValue('PORT', script);
                 const ANALOG = Entry.hw.portData.ANALOG;
                 return ANALOG ? ANALOG[port] || 0 : 0;
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_cds_read: {
@@ -1003,7 +858,7 @@ Entry.Lecoboard.getBlocks = function() {
             func(sprite, script) {
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[7] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: 1,
                     time: new Date().getTime(),
                 };
@@ -1105,7 +960,7 @@ Entry.Lecoboard.getBlocks = function() {
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue.GET[Entry.Lecoboard.sensorTypes.DIGITAL] = {
+                Entry.hw.sendQueue.GET[Entry.lecoboard.sensorTypes.DIGITAL] = {
                     port,
                     time: new Date().getTime(),
                 };
@@ -1204,29 +1059,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return result;
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.convert_scale(%1, %2, %3)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
         },
         lecoboard_dual_color_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1312,32 +1144,18 @@ Entry.Lecoboard.getBlocks = function() {
 
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port1] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value1,
                     time: new Date().getTime(),
                 };
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port2] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value2,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_dual_led_toggle: {
@@ -1388,45 +1206,27 @@ Entry.Lecoboard.getBlocks = function() {
                 let value2 = script.getValue('VALUE2');
 
                 if (typeof value1 === 'string') value1 = value1.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value1) > -1) value1 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value1) > -1) value1 = 0;
+                if (Entry.lecoboard.highList.indexOf(value1) > -1) value1 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value1) > -1) value1 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port1] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value1,
                     time: new Date().getTime(),
                 };
                 if (typeof value2 === 'string') value2 = value2.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value2) > -1) value2 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value2) > -1) value2 = 0;
+                if (Entry.lecoboard.highList.indexOf(value2) > -1) value2 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value2) > -1) value2 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port2] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value2,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_led_rgb_toggle: {
@@ -1488,32 +1288,32 @@ Entry.Lecoboard.getBlocks = function() {
                 let value3 = script.getValue('VALUE3');
 
                 if (typeof value1 === 'string') value1 = value1.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value1) > -1) value1 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value1) > -1) value1 = 0;
+                if (Entry.lecoboard.highList.indexOf(value1) > -1) value1 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value1) > -1) value1 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port1] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value1,
                     time: new Date().getTime(),
                 };
                 if (typeof value2 === 'string') value2 = value2.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value2) > -1) value2 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value2) > -1) value2 = 0;
+                if (Entry.lecoboard.highList.indexOf(value2) > -1) value2 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value2) > -1) value2 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port2] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value2,
                     time: new Date().getTime(),
                 };
                 if (typeof value3 === 'string') value3 = value3.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value3) > -1) value3 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value3) > -1) value3 = 0;
+                if (Entry.lecoboard.highList.indexOf(value3) > -1) value3 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value3) > -1) value3 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port3] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value3,
                     time: new Date().getTime(),
                 };
@@ -1591,42 +1391,42 @@ Entry.Lecoboard.getBlocks = function() {
                 let value4 = script.getValue('VALUE4');
 
                 if (typeof value1 === 'string') value1 = value1.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value1) > -1) value1 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value1) > -1) value1 = 0;
+                if (Entry.lecoboard.highList.indexOf(value1) > -1) value1 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value1) > -1) value1 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port1] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value1,
                     time: new Date().getTime(),
                 };
                 if (typeof value2 === 'string') value2 = value2.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value2) > -1) value2 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value2) > -1) value2 = 0;
+                if (Entry.lecoboard.highList.indexOf(value2) > -1) value2 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value2) > -1) value2 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port2] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value2,
                     time: new Date().getTime(),
                 };
                 if (typeof value3 === 'string') value3 = value3.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value3) > -1) value3 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value3) > -1) value3 = 0;
+                if (Entry.lecoboard.highList.indexOf(value3) > -1) value3 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value3) > -1) value3 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port3] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value3,
                     time: new Date().getTime(),
                 };
                 if (typeof value4 === 'string') value4 = value4.toLowerCase();
-                if (Entry.Lecoboard.highList.indexOf(value4) > -1) value4 = 255;
-                else if (Entry.Lecoboard.lowList.indexOf(value4) > -1) value4 = 0;
+                if (Entry.lecoboard.highList.indexOf(value4) > -1) value4 = 255;
+                else if (Entry.lecoboard.lowList.indexOf(value4) > -1) value4 = 0;
                 else throw new Error();
                 if (!Entry.hw.sendQueue.SET) Entry.hw.sendQueue.SET = {};
                 Entry.hw.sendQueue.SET[port4] = {
-                    type: Entry.Lecoboard.sensorTypes.DIGITAL,
+                    type: Entry.lecoboard.sensorTypes.DIGITAL,
                     data: value4,
                     time: new Date().getTime(),
                 };
@@ -1675,41 +1475,6 @@ Entry.Lecoboard.getBlocks = function() {
             func(sprite, script) {
                 return script.getField('NOTE');
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.silent, '0'],
-                                    [Lang.Blocks.do_name, 'C'],
-                                    [Lang.Blocks.do_sharp_name, 'CS'],
-                                    [Lang.Blocks.re_name, 'D'],
-                                    [Lang.Blocks.re_sharp_name, 'DS'],
-                                    [Lang.Blocks.mi_name, 'E'],
-                                    [Lang.Blocks.fa_name, 'F'],
-                                    [Lang.Blocks.fa_sharp_name, 'FS'],
-                                    [Lang.Blocks.sol_name, 'G'],
-                                    [Lang.Blocks.sol_sharp_name, 'GS'],
-                                    [Lang.Blocks.la_name, 'A'],
-                                    [Lang.Blocks.la_sharp_name, 'AS'],
-                                    [Lang.Blocks.si_name, 'B'],
-                                    [Lang.Blocks.do_name, 'C2'],
-                                ],
-                                value: 'C',
-                                fontSize: 11,
-                                converter: Entry.block.converters.returnStringValueUpperCase,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'lecoboard_tone_list',
-                    },
-                ],
-            },
         },
         arduino_ext_tone_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1737,15 +1502,6 @@ Entry.Lecoboard.getBlocks = function() {
             },
             func(sprite, script) {
                 return script.getNumberValue('NOTE');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'arduino_ext_tone_value',
-                    },
-                ],
             },
         },
         arduino_ext_octave_list: {
@@ -1781,15 +1537,6 @@ Entry.Lecoboard.getBlocks = function() {
             func(sprite, script) {
                 return script.getField('OCTAVE');
             },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'arduino_ext_octave_list',
-                    },
-                ],
-            },
         },
         lecoboard_buzzer_number: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1813,15 +1560,6 @@ Entry.Lecoboard.getBlocks = function() {
             },
             func(sprite, script) {
                 return script.getNumberValue('NOTE');
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'lecoboard_buzzer_number',
-                    },
-                ],
             },
         },
         lecoboard_set_tone: {
@@ -1871,7 +1609,7 @@ Entry.Lecoboard.getBlocks = function() {
 
                 let note = script.getValue('NOTE', script);
                 if (!Entry.Utils.isNumber(note)) {
-                    note = Entry.Lecoboard.toneTable[note];
+                    note = Entry.lecoboard.toneTable[note];
                 }
 
                 if (note < 0) {
@@ -1892,7 +1630,7 @@ Entry.Lecoboard.getBlocks = function() {
 
                 if (duration === 0) {
                     sq.SET[port] = {
-                        type: Entry.Lecoboard.sensorTypes.TONE,
+                        type: Entry.lecoboard.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -1902,7 +1640,7 @@ Entry.Lecoboard.getBlocks = function() {
                 let value = 0;
 
                 if (note != 0) {
-                    value = Entry.Lecoboard.toneMap[note][octave];
+                    value = Entry.lecoboard.toneMap[note][octave];
                 }
 
                 duration = duration * 1000;
@@ -1910,7 +1648,7 @@ Entry.Lecoboard.getBlocks = function() {
                 script.timeFlag = 1;
 
                 sq.SET[port] = {
-                    type: Entry.Lecoboard.sensorTypes.TONE,
+                    type: Entry.lecoboard.sensorTypes.TONE,
                     data: {
                         value,
                         duration,
@@ -1919,24 +1657,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_set_freq_tone: {
@@ -2010,7 +1730,7 @@ Entry.Lecoboard.getBlocks = function() {
 
                 if (duration === 0) {
                     sq.SET[port] = {
-                        type: Entry.Lecoboard.sensorTypes.TONE,
+                        type: Entry.lecoboard.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -2022,7 +1742,7 @@ Entry.Lecoboard.getBlocks = function() {
                 script.timeFlag = 1;
 
                 sq.SET[port] = {
-                    type: Entry.Lecoboard.sensorTypes.TONE,
+                    type: Entry.lecoboard.sensorTypes.TONE,
                     data: {
                         value,
                         duration,
@@ -2031,28 +1751,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1, %2 , %3)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_set_tone_off: {
@@ -2100,7 +1798,7 @@ Entry.Lecoboard.getBlocks = function() {
                     let note = 0;
                     let duration = 0;
                     sq.SET[port] = {
-                        type: Entry.Lecoboard.sensorTypes.TONE,
+                        type: Entry.lecoboard.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -2108,20 +1806,6 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_set_tone_long: {
@@ -2160,7 +1844,7 @@ Entry.Lecoboard.getBlocks = function() {
 
                 let note = script.getValue('NOTE', script);
                 if (!Entry.Utils.isNumber(note)) {
-                    note = Entry.Lecoboard.toneTable[note];
+                    note = Entry.lecoboard.toneTable[note];
                 }
 
                 if (note < 0) {
@@ -2179,7 +1863,7 @@ Entry.Lecoboard.getBlocks = function() {
                 let value = 0;
 
                 if (note != 0) {
-                    value = Entry.Lecoboard.toneMap[note][octave];
+                    value = Entry.lecoboard.toneMap[note][octave];
                 }
 
                 duration = duration * 1000;
@@ -2187,7 +1871,7 @@ Entry.Lecoboard.getBlocks = function() {
                 script.timeFlag = 1;
 
                 sq.SET[port] = {
-                    type: Entry.Lecoboard.sensorTypes.TONE,
+                    type: Entry.lecoboard.sensorTypes.TONE,
                     data: {
                         value,
                         duration,
@@ -2196,20 +1880,6 @@ Entry.Lecoboard.getBlocks = function() {
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_set_tone_off: {
@@ -2242,7 +1912,7 @@ Entry.Lecoboard.getBlocks = function() {
                     let note = 0;
                     let duration = 0;
                     sq.SET[port] = {
-                        type: Entry.Lecoboard.sensorTypes.TONE,
+                        type: Entry.lecoboard.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -2250,20 +1920,6 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.tone(%1)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_servomotor_list: {
@@ -2358,30 +2014,12 @@ Entry.Lecoboard.getBlocks = function() {
                     sq.SET = {};
                 }
                 sq.SET[port] = {
-                    type: Entry.Lecoboard.sensorTypes.SERVO_PIN,
+                    type: Entry.lecoboard.sensorTypes.SERVO_PIN,
                     data: value,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.servomotorWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
             },
         },
         lecoboard_dc_motor: {
@@ -2482,7 +2120,7 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port1] = {
-                    type: Entry.Lecoboard.sensorTypes.PWM,
+                    type: Entry.lecoboard.sensorTypes.PWM,
                     data: value1,
                     time: new Date().getTime(),
                 };
@@ -2490,14 +2128,13 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port2] = {
-                    type: Entry.Lecoboard.sensorTypes.PWM,
+                    type: Entry.lecoboard.sensorTypes.PWM,
                     data: value2,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['lecoboard.dc_motor(%1, %2, %3, %4)'] },
         },
         lecoboard_dc_motor_for_sec: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2609,7 +2246,7 @@ Entry.Lecoboard.getBlocks = function() {
                         Entry.hw.sendQueue.SET = {};
                     }
                     Entry.hw.sendQueue.SET[port1] = {
-                        type: Entry.Lecoboard.sensorTypes.PWM,
+                        type: Entry.lecoboard.sensorTypes.PWM,
                         data: value1,
                         time: new Date().getTime(),
                     };
@@ -2617,7 +2254,7 @@ Entry.Lecoboard.getBlocks = function() {
                         Entry.hw.sendQueue.SET = {};
                     }
                     Entry.hw.sendQueue.SET[port2] = {
-                        type: Entry.Lecoboard.sensorTypes.PWM,
+                        type: Entry.lecoboard.sensorTypes.PWM,
                         data: value2,
                         time: new Date().getTime(),
                     };
@@ -2636,12 +2273,12 @@ Entry.Lecoboard.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.hw.sendQueue.SET[port1] = {
-                        type: Entry.Lecoboard.sensorTypes.PWM,
+                        type: Entry.lecoboard.sensorTypes.PWM,
                         data: 0,
                         time: new Date().getTime(),
                     };
                     Entry.hw.sendQueue.SET[port2] = {
-                        type: Entry.Lecoboard.sensorTypes.PWM,
+                        type: Entry.lecoboard.sensorTypes.PWM,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -2650,7 +2287,6 @@ Entry.Lecoboard.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['lecoboard.dc_motor(%1, %2, %3, %4, %5)'] },
         },
         lecoboard_dc_motor_stop: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2697,7 +2333,7 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port1] = {
-                    type: Entry.Lecoboard.sensorTypes.PWM,
+                    type: Entry.lecoboard.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
                 };
@@ -2705,24 +2341,23 @@ Entry.Lecoboard.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port2] = {
-                    type: Entry.Lecoboard.sensorTypes.PWM,
+                    type: Entry.lecoboard.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
                 };
                 Entry.hw.sendQueue.SET[port3] = {
-                    type: Entry.Lecoboard.sensorTypes.PWM,
+                    type: Entry.lecoboard.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
                 };
                 Entry.hw.sendQueue.SET[port4] = {
-                    type: Entry.Lecoboard.sensorTypes.PWM,
+                    type: Entry.lecoboard.sensorTypes.PWM,
                     data: 0,
                     time: new Date().getTime(),
                 };
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: ['lecoboard.dc_motor(%1)'] },
         },
 
         lecoboard_list_digital_lcd_line: {
@@ -2873,7 +2508,7 @@ Entry.Lecoboard.getBlocks = function() {
                     }
 
                     sq.SET[1] = {
-                        type: Entry.Lecoboard.sensorTypes.LCD,
+                        type: Entry.lecoboard.sensorTypes.LCD,
                         data: {
                             line: line,
                             column: column,
@@ -2899,7 +2534,6 @@ Entry.Lecoboard.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['lecoboard_set_lcd(%1, %2, %3)'] },
         },
         lecoboard_list_lcd_command: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -2976,7 +2610,7 @@ Entry.Lecoboard.getBlocks = function() {
                 }
 
                 sq.SET[0] = {
-                    type: Entry.Lecoboard.sensorTypes.LCD_COMMAND,
+                    type: Entry.lecoboard.sensorTypes.LCD_COMMAND,
                     data: {
                         value: value,
                         command: command,
@@ -2986,7 +2620,6 @@ Entry.Lecoboard.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: [] },
         },
         lecoboard_send_ble: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3044,7 +2677,7 @@ Entry.Lecoboard.getBlocks = function() {
                     }
 
                     sq.SET[1] = {
-                        type: Entry.Lecoboard.sensorTypes.BLE_WRITE,
+                        type: Entry.lecoboard.sensorTypes.BLE_WRITE,
                         data: {
                             text0: text[0],
                             text1: text[1],
@@ -3068,7 +2701,6 @@ Entry.Lecoboard.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['lecoboard_send_ble(%1)'] },
         },
         lecoboard_get_bluetooth: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -3093,16 +2725,15 @@ Entry.Lecoboard.getBlocks = function() {
                 if (!Entry.hw.sendQueue.GET) {
                     Entry.hw.sendQueue.GET = {};
                 }
-                Entry.hw.sendQueue.GET[Entry.Lecoboard.sensorTypes.BLE_READ] = {
+                Entry.hw.sendQueue.GET[Entry.lecoboard.sensorTypes.BLE_READ] = {
                     port,
                     time: new Date().getTime(),
                 };
 
                 return getString ? getString.slice(0, getString.length - 1) : ' ';
             },
-            syntax: { js: [], py: ['lecoboard.get_digital_bluetooth()'] },
         },
     };
 };
 
-module.exports = Entry.Lecoboard;
+module.exports = Entry.lecoboard;

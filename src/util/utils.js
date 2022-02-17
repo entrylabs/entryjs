@@ -36,8 +36,9 @@ Entry.loadProject = async function(project) {
     Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
-    DataTable.setTables(project.tables);
-    Entry.aiLearning.load(project.learning);
+    DataTable?.setTables(project.tables);
+    Entry.aiLearning?.load(project.learning);
+    // TO-DO : 아래 조건문 체크(시리얼 연결에 필수여부 확인)
     if (project.externalModulesLite) {
         await Entry.loadLiteExternalModules(project);
     }
@@ -49,8 +50,7 @@ Entry.loadProject = async function(project) {
     Entry.container.setObjects(project.objects);
     Entry.FPS = project.speed ? project.speed : 60;
     GEHelper.Ticker.setFPS(Entry.FPS);
-    Entry.aiUtilizeBlocks = project.aiUtilizeBlocks || [];
-
+    Entry.aiUtilizeBlocks = project?.aiUtilizeBlocks || [];
     if (Entry.aiUtilizeBlocks.length > 0) {
         for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
             if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
@@ -116,9 +116,11 @@ Entry.loadProject = async function(project) {
         Entry.loadInterfaceState(project.interface);
     }
 
-    if (window.parent && window.parent.childIframeLoaded) {
-        window.parent.childIframeLoaded();
-    }
+    try {
+        if (window.parent && window.parent.childIframeLoaded) {
+            window.parent.childIframeLoaded();
+        }
+    } catch (e) {}
     return project;
 };
 
@@ -165,7 +167,7 @@ Entry.exportProject = function(project) {
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
     project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
-    project.learning = Entry.aiLearning.toJSON();
+    project.learning = Entry.aiLearning?.toJSON();
     project.externalModules = entryModuleLoader.moduleList;
     project.externalModulesLite = entryModuleLoader.moduleListLite;
     if (!objects || !objects.length) {
@@ -314,6 +316,14 @@ Entry.getDom = function(query) {
     }
 };
 
+function toggleEngineContainer(isVisible) {
+    const splitterSelector = '.entryObjectSelectedImgWorkspace';
+    $(Entry.engineContainer)
+        .css('padding', isVisible ? '' : '0')
+        .children(`:not(${splitterSelector})`)
+        .toggleClass('entryRemove', !isVisible);
+}
+
 /**
  * Resize element's size.
  * @param {!json} interfaceModel
@@ -343,9 +353,13 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
+        let isEngineContainerVisible = true;
         let canvasSize = interfaceModel.canvasWidth;
         if (!canvasSize) {
             canvasSize = 324;
+        } else if (canvasSize < 162) {
+            canvasSize = 16;
+            isEngineContainerVisible = false;
         } else if (canvasSize < 324) {
             canvasSize = 324;
         } else if (canvasSize > 640) {
@@ -358,13 +372,15 @@ Entry.resizeElement = function(interfaceModel) {
         Entry.engine.view_.style.width = `${canvasSize - 24}px`;
         Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
 
+        toggleEngineContainer(isEngineContainerVisible);
+
         let menuWidth = interfaceModel.menuWidth;
         if (!menuWidth) {
             menuWidth = 258;
         } else if (menuWidth < 258) {
             menuWidth = 258;
-        } else if (menuWidth > 308) {
-            menuWidth = 308;
+        } else if (menuWidth > 516) {
+            menuWidth = 516;
         }
         interfaceModel.menuWidth = menuWidth;
 
@@ -710,64 +726,96 @@ Entry.Utils.bindIOSDeviceWatch = function() {
     }
 };
 
+function addEntryEvent(dom, event, func) {
+    if (dom && event) {
+        dom.on(event, func);
+    }
+}
+
+function removeEntryEvent(dom, event, func) {
+    if (dom && event) {
+        dom.off(event, func);
+    }
+}
+
 Entry.Utils.bindGlobalEvent = function(options) {
     const doc = $(document);
+    let parentDoc;
+    if (window.parent !== window.self) {
+        try {
+            parentDoc = $(window.parent.document);
+        } catch (e) {}
+    }
     if (options === undefined) {
         options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup', 'dispose'];
     }
 
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
-            $(window).off('resize');
+            removeEntryEvent($(window), 'resize');
+            if (parentDoc) {
+                removeEntryEvent($(window.parent), 'resize');
+            }
             Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
-        $(window).on('resize', (e) => {
+        const func = (e) => {
             Entry.windowResized.notify(e);
-        });
+        };
+        addEntryEvent($(window), 'resize', func);
+        if (parentDoc) {
+            addEntryEvent($(window.parent), 'resize', func);
+        }
         Entry.Utils.bindIOSDeviceWatch();
     }
 
     if (options.indexOf('mousedown') > -1) {
         if (Entry.documentMousedown) {
-            doc.off('mousedown');
+            removeEntryEvent(doc, 'mousedown');
+            removeEntryEvent(parentDoc, 'mousedown');
             Entry.documentMousedown.clear();
         }
         Entry.documentMousedown = new Entry.Event(window);
-        doc.on('mousedown', (e) => {
-            const selectedBlock = document.querySelector('.selected');
+        const func = (e) => {
+            const selectedBlock = document.querySelector('.block.selected');
             if (selectedBlock) {
                 selectedBlock.classList.remove('selected');
             }
-        });
+        };
+        addEntryEvent(doc, 'mousedown', func);
+        addEntryEvent(parentDoc, 'mousedown', func);
     }
 
     if (options.indexOf('mousemove') > -1) {
         if (Entry.documentMousemove) {
-            doc.off('touchmove mousemove');
+            removeEntryEvent(doc, 'touchmove mousemove');
+            removeEntryEvent(parentDoc, 'touchmove mousemove');
             Entry.documentMousemove.clear();
         }
 
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
-        doc.on('touchmove mousemove', (e) => {
+        const func = (e) => {
             if (e.originalEvent && e.originalEvent.touches) {
                 e = e.originalEvent.touches[0];
             }
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
-        });
+        };
+        addEntryEvent(doc, 'touchmove mousemove', func);
+        addEntryEvent(parentDoc, 'touchmove mousemove', func);
     }
 
     if (options.indexOf('keydown') > -1) {
         if (Entry.keyPressed) {
-            doc.off('keydown');
+            removeEntryEvent(doc, 'keydown');
+            removeEntryEvent(parentDoc, 'keydown');
             Entry.keyPressed.clear();
         }
         Entry.pressedKeys = [];
         Entry.keyPressed = new Entry.Event(window);
-        doc.on('keydown', (e) => {
+        const func = (e) => {
             const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
@@ -776,16 +824,19 @@ Entry.Utils.bindGlobalEvent = function(options) {
                 Entry.pressedKeys.push(keyCode);
             }
             Entry.keyPressed.notify(e);
-        });
+        };
+        addEntryEvent(doc, 'keydown', func);
+        addEntryEvent(parentDoc, 'keydown', func);
     }
 
     if (options.indexOf('keyup') > -1) {
         if (Entry.keyUpped) {
-            doc.off('keyup');
+            removeEntryEvent(doc, 'keyup');
+            removeEntryEvent(parentDoc, 'keyup');
             Entry.keyUpped.clear();
         }
         Entry.keyUpped = new Entry.Event(window);
-        doc.on('keyup', (e) => {
+        const func = (e) => {
             const keyCode = Entry.Utils.inputToKeycode(e);
             if (!keyCode) {
                 return;
@@ -795,7 +846,9 @@ Entry.Utils.bindGlobalEvent = function(options) {
                 Entry.pressedKeys.splice(index, 1);
             }
             Entry.keyUpped.notify(e);
-        });
+        };
+        addEntryEvent(doc, 'keyup', func);
+        addEntryEvent(parentDoc, 'keyup', func);
     }
 
     if (options.indexOf('dispose') > -1) {
@@ -1857,7 +1910,7 @@ Entry.Utils.addNewBlock = function(item) {
         (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
             !Entry.TextCodingUtil.canUsePythonFunctions(functions))
     ) {
-        return entrylms.alert(Lang.Menus.object_import_syntax_error);
+        return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
     }
 
     const objectIdMap = {};
@@ -1868,7 +1921,9 @@ Entry.Utils.addNewBlock = function(item) {
         }
     });
     DataTable.setTables(tables);
-    Entry.aiLearning.load(learning);
+    if (!Entry.options.aiUtilizeDisable) {
+        Entry.aiLearning.load(learning);
+    }
     handleOptionalBlocksActive(item);
 
     Entry.variableContainer.appendMessages(messages);
@@ -1909,7 +1964,7 @@ Entry.Utils.addNewObject = function(sprite) {
             (!Entry.TextCodingUtil.canUsePythonVariables(variables) ||
                 !Entry.TextCodingUtil.canUsePythonFunctions(functions))
         ) {
-            return entrylms.alert(Lang.Menus.object_import_syntax_error);
+            return Entry.modal.alert(Lang.Menus.object_import_syntax_error);
         }
         const objectIdMap = {};
         DataTable.setTables(tables);
@@ -2865,4 +2920,22 @@ Entry.Utils.combineCloudVariable = ({ variables, cloudVariable }) => {
         }
         return variable;
     });
+};
+
+Entry.Utils.asyncAnimationFrame = (func) => {
+    let captureTimeout = false;
+
+    const asyncFunc = () => {
+        if (func instanceof Promise) {
+            func().then(() => {
+                captureTimeout = requestAnimationFrame(asyncFunc);
+            });
+        } else if (func instanceof Function) {
+            func();
+            captureTimeout = requestAnimationFrame(asyncFunc);
+        }
+    };
+
+    captureTimeout = requestAnimationFrame(asyncFunc);
+    return captureTimeout;
 };

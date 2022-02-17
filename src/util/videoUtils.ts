@@ -75,6 +75,7 @@ class VideoUtils implements MediaUtilsInterface {
     public canvasVideo: PIXI.Sprite | createjs.Bitmap;
     public inMemoryCanvas: HTMLCanvasElement;
 
+    private captureTimeout: any = null;
     public flipStatus: FlipStatus = {
         horizontal: false,
         vertical: false,
@@ -150,17 +151,15 @@ class VideoUtils implements MediaUtilsInterface {
 
     // issue 12160 bug , 강제로 usermedia를 가져오도록 하기 위함 enumerateDevices자체로는 권한 요청을 하지 않음
     async checkPermission() {
-        await navigator.permissions
-            .query({ name: 'camera' })
-            .then(async (permission) => {
-                console.log('camera state', permission.state);
-                if (permission.state !== 'granted') {
-                    await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
-                }
-            })
-            .catch(async (error) => {
-                console.log('Got error :', error);
-            });
+        if (navigator.permissions) {
+            const permission = await navigator.permissions.query({ name: 'camera' });
+            console.log('camera state', permission.state);
+            if (permission.state !== 'granted') {
+                await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+            }
+        } else {
+            await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+        }
     }
 
     async initialize() {
@@ -170,7 +169,7 @@ class VideoUtils implements MediaUtilsInterface {
         await this.checkPermission();
         const inputList = await getInputList();
         this.videoInputList = inputList
-            .filter((input) => input.kind === 'videoinput')
+            .filter((input) => input.kind === 'videoinput' && input.deviceId)
             .map((item) => [item.label, item.deviceId]);
         await this.compatabilityChecker();
         // inMemoryCanvas라는 실제로 보이지 않는 캔버스를 이용해서 imageData 값을 추출.
@@ -188,18 +187,13 @@ class VideoUtils implements MediaUtilsInterface {
         // const tempTarget = document.getElementsByClassName('uploadInput')[0];
         // tempTarget.parentNode.insertBefore(this.tempCanvas, tempTarget);
         // //motion test
-
+        if (this.isFirefox) {
+            this._VIDEO_HEIGHT = 480;
+            this.CANVAS_HEIGHT = 360;
+        }
+        let stream;
         try {
-            /*
-                NT11576  #11683
-                파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
-                이로인해 다른 브라우저에 비해서 잘려보임
-            */
-            if (this.isFirefox) {
-                this._VIDEO_HEIGHT = 480;
-                this.CANVAS_HEIGHT = 360;
-            }
-            const stream = await navigator.mediaDevices.getUserMedia({
+            stream = await navigator.mediaDevices.getUserMedia({
                 audio: false,
                 video: {
                     deviceId: { exact: this.videoInputList[0][1] },
@@ -207,7 +201,18 @@ class VideoUtils implements MediaUtilsInterface {
                     height: this._VIDEO_HEIGHT,
                 },
             });
+        } catch (err) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
+        }
 
+        try {
+            /*
+                NT11576  #11683
+                파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
+                이로인해 다른 브라우저에 비해서 잘려보임
+            */
             this.motionWorker.onmessage = (e: { data: { type: String; message: any } }) => {
                 const { type, message } = e.data;
                 if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -516,12 +521,35 @@ class VideoUtils implements MediaUtilsInterface {
             requestAnimationFrame(this.imageDetection.bind(this));
         }, 100);
     }
+
+    startCapturedImage(
+        callback: Function,
+        { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }
+    ) {
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        this.captureTimeout = Entry.Utils.asyncAnimationFrame(async () => {
+            const context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.drawImage(this.video, 0, 0, width, height);
+            callback && (await callback(canvas));
+        });
+        Entry.addEventListener('stop', () => {
+            this.stopCaptureImage();
+        });
+        return this.captureTimeout;
+    }
+
+    stopCaptureImage() {
+        this.captureTimeout && cancelAnimationFrame(this.captureTimeout);
+    }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
      * @param sprite Entry Entity Object
      */
     motionDetect(sprite: any) {
-        if (!this.inMemoryCanvas) {
+        if (!this.inMemoryCanvas || !this.isRunning) {
             return;
         }
         // 움직임 감지 기본 범위는 전체 캔버스 범위
