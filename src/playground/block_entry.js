@@ -314,7 +314,7 @@ function getBlocks() {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
-            isNotFor: ['arduinoLiteConnectButton'],
+            isNotFor: ['arduinoLiteConnect'],
             class: 'arduino_default',
             params: [
                 {
@@ -327,11 +327,34 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        Entry.hwLite.connect();
+                        console.log("하드웨어 선택 풀팝업으로 이동");
                     },
                 ],
             },
         },
+        //아래 버튼은 connect로 바로 연결해버려서 하드웨어 실패화면에 적용필요
+        // arduino_lite_reconnect: {
+        //     skeleton: 'basic_button',
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     template: '%1',
+        //     isNotFor: ['arduinoLiteConnectButton'],
+        //     class: 'arduino_default',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.arduino_lite_reconnect,
+        //             color: EntryStatic.colorSet.common.BUTTON,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     events: {
+        //         mousedown: [
+        //             function() {
+        //                 Entry.hwLite.connect();
+        //             },
+        //         ],
+        //     },
+        // },
         arduino_lite_disconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -354,49 +377,49 @@ function getBlocks() {
                 ],
             },
         },
-        arduino_lite_add_button: {
-            skeleton: 'basic_button',
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            template: '%1',
-            isNotFor: ['arduinoLiteConnect'],
-            class: 'arduino_default',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.arduino_lite_add_button,
-                    color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'center',
-                },
-            ],
-            events: {
-                mousedown: [
-                    function() {
-                        Entry.do('playgroundClickAddHardwareLiteBlock');
-                    },
-                ],
-            },
-        },
+        // arduino_lite_add_button: {
+        //     skeleton: 'basic_button',
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     template: '%1',
+        //     isNotFor: ['arduinoLiteConnect'],
+        //     class: 'arduino_default',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.arduino_lite_add_button,
+        //             color: EntryStatic.colorSet.common.BUTTON,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     events: {
+        //         mousedown: [
+        //             function() {
+        //                 Entry.do('playgroundClickAddHardwareLiteBlock');
+        //             },
+        //         ],
+        //     },
+        // },
 
         //region hardware 하드웨어 기본
-        arduino_noti_light: {
-            skeleton: 'basic_text_light',
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            template: '%1',
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.Blocks.arduino_noti_text_light,
-                    color: EntryStatic.colorSet.common.BUTTON,
-                    align: 'center',
-                },
-            ],
-            def: {
-                type: 'arduino_noti_light',
-            },
-            class: 'arduino_default_noti',
-            isNotFor: ['arduinoDisconnected'],
-            events: {},
-        },
+        // arduino_noti_light: {
+        //     skeleton: 'basic_text_light',
+        //     color: EntryStatic.colorSet.common.TRANSPARENT,
+        //     template: '%1',
+        //     params: [
+        //         {
+        //             type: 'Text',
+        //             text: Lang.Blocks.arduino_noti_text_light,
+        //             color: EntryStatic.colorSet.common.BUTTON,
+        //             align: 'center',
+        //         },
+        //     ],
+        //     def: {
+        //         type: 'arduino_noti_light',
+        //     },
+        //     class: 'arduino_default_noti',
+        //     isNotFor: ['arduinoDisconnected'],
+        //     events: {},
+        // },
         arduino_noti: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,

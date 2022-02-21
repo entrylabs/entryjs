@@ -551,7 +551,7 @@ Lang.Blocks = {
     "ARDUINO_open_connector": "연결 프로그램 열기",
     "ARDUINO_download_source": "• 엔트리 아두이노 소스",
     "ARDUINO_reconnect": "하드웨어 연결하기",
-    "arduino_noti_text": "모바일 기기는 추후 지원 합니다.",
+    "arduino_noti_text": "하드웨어 연결은 PC 환경에서만 가능합니다.\n브라우저로 연결할 때는 하드웨어 연결프로그램이 필요하지 않습니다.",
     "ROBOT_reconnect": "로봇 연결하기",
     "ARDUINO_program": "프로그램 실행하기",
     "ARDUINO_cloud_pc_connector": "클라우드 PC 연결하기",
