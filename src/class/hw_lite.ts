@@ -1,6 +1,7 @@
 import { TextEncoder } from 'util';
 import ExtraBlockUtils from '../util/extrablockUtils';
 import HardwareMonitor from './hardware/hardwareMonitor';
+import hardwareLite from '../playground/blocks/hardwareLite';
 
 enum HardwareStatement {
     disconnected = 'disconnected',
@@ -52,7 +53,7 @@ export default class HardwareLite {
         this.status = HardwareStatement.disconnected;
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
         this.setExternalModule.bind(this);
-        this.getHardwareList();
+        this.initHardwareLiteList();
     }
 
     setZero() {
@@ -145,15 +146,9 @@ export default class HardwareLite {
         blockMenu.reDraw();
     }
 
-    async getHardwareList() {
-        const list = await fetch(`${Entry.moduleliteBaseUrl}`);
-        const parsed = await list.json();
-        Entry.HARDWARE_LITE_LIST = parsed.map((item: any) => {
-            return {
-                ...item,
-                imageName: `${Entry.moduleliteBaseUrl}${item.name}/files/image`,
-            };
-        });
+    initHardwareLiteList() {
+        // TO-DO : 추후 모듈화 적용시 외부모듈에서 가져오도록 수정예정
+        hardwareLite.initHardwareLiteList();
     }
 
     async constantServing() {

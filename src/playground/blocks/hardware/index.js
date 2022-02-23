@@ -10,7 +10,6 @@
  * ...
  */
 Entry.HARDWARE_LIST = {};
-Entry.HARDWARE_LITE_LIST = {};
 
 /*
  * index.js 를 제외한 해당 폴더의 모든 모듈을 import 한다.
