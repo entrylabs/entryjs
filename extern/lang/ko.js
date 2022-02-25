@@ -2459,7 +2459,7 @@ Lang.Menus = {
     not_supported_function: '이 기기에서는 지원하지 않는 기능입니다.',
     offline_download_confirm:
         '엔트리 오프라인 버전은 PC에서만 이용가능합니다. 다운로드 하시겠습니까?',
-    hardware_download_confirm: '엔트리 하드웨어는 PC에서만 이용가능합니다. 다운로드 하시겠습니까?',
+    hardware_download_confirm: '엔트리 하드웨어는 PC에서만 이용가능합니다.  다운로드 하시겠습니까?',
     copy_text: '텍스트를 복사하세요.',
     select_openArea_space: '작품 공유 공간을 선택해 주세요',
     mission_guide: '미션 해결하기 안내',
