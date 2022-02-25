@@ -203,6 +203,7 @@ Entry.moduleManager = instance;
  * @return Promise
  */
 Entry.loadExternalModules = async (project = {}) => {
+    // dummyComment
     const { externalModules = [] } = project;
     await Promise.all(externalModules.map(instance.loadModule.bind(instance)));
 };
