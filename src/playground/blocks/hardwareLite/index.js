@@ -15,11 +15,6 @@ function addHardwareLiteList(module) {
     }
 }
 
-function getHardwareLiteModuleList() {
-    return Object.values(Entry.HARDWARE_LITE_LIST);
-}
-
-// CONSIDER : 아래 두 로직을 hw_Lite에서 생성자 타이밍에 함수로 호출하는법 고려
 function initHardwareLiteList() {
     moduleListReq.keys().forEach((fileName) => {
         const module = moduleListReq(fileName);
@@ -38,6 +33,7 @@ function initHardwareLiteList() {
         if (Entry.HARDWARE_LITE_LIST[moduleId]) {
             Entry.HARDWARE_LITE_LIST[moduleId].title = { ko: metaData.title };
             Entry.HARDWARE_LITE_LIST[moduleId].description = metaData.description;
+            Entry.HARDWARE_LITE_LIST[moduleId].linkBox = { desc: '고객센터', url: Entry.HARDWARE_LITE_LIST[moduleId].url }
         } else {
             console.error(`Error, HardwareLiteID ${moduleId} not contain module`);
         };

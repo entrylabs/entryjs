@@ -162,10 +162,11 @@ class EntryModuleLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
+    // 모듈화 적용시, 팝업이벤트로부터 모듈name값만 받아서 동적으로 로드한다.
     async registerHardwareLiteModule(moduleName: string, isDeveloping: boolean) {
-        if (!isDeveloping) {
-            await this.loadModuleFromLocalOrOnline(moduleName, true);
-        }
+        // if (!isDeveloping) {
+        //     await this.loadModuleFromLocalOrOnline(moduleName, true);
+        // }
         Entry.hwLite.banClassAllHardwareLite();
         // @ts-ignore
         const moduleObject = Entry[moduleName] as EntryHardwareBlockModule;

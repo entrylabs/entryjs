@@ -327,7 +327,7 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        console.log("하드웨어 선택 풀팝업으로 이동");
+                        Entry.do('playgroundClickAddHardwareLiteBlock');
                     },
                 ],
             },
