@@ -131,6 +131,12 @@ export default class Hardware {
      * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
      */
     refreshHardwareBlockMenu() {
+        // NOTE : 하드웨어 웹연결과 충돌을 방지
+        if(Entry.hwLite.status !== 'disconnected'){
+            console.log('canel refreshHardwareBlockMenu() for HwLITE');
+            return;
+        }
+
         const workspace = Entry.getMainWS();
         const blockMenu = workspace && workspace.blockMenu;
 
@@ -504,6 +510,12 @@ export default class Hardware {
                     const prevResult = await prevPromise;
                     if (prevResult) {
                         return true;
+                    }
+                    
+                    // NOTE : 하드웨어 웹연결과 충돌을 방지
+                    if(Entry.hwLite.status !== 'disconnected'){
+                        console.log('canel connectionTry for HwLITE');
+                        return;
                     }
 
                     try {

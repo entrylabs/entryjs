@@ -7,6 +7,7 @@ enum HardwareStatement {
     disconnected = 'disconnected',
     connected = 'connected',
     willDisconnect = 'willDisconnect',
+    connectFailed = 'connectFailed',
 }
 
 class LineBreakTransformer {
@@ -90,7 +91,6 @@ export default class HardwareLite {
         this.hwModule = moduleObject;
         this.banClassAllHardwareLite();
         Entry.dispatchEvent('hwLiteChanged');
-        this.refreshHardwareLiteBlockMenu();
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
             this._setHardwareMonitorTemplate();
         }
@@ -114,35 +114,42 @@ export default class HardwareLite {
     }
 
     refreshHardwareLiteBlockMenu() {
+        console.log(
+            `Activate refreshHardwareLiteBlockMenu \nstatus : ${this.status}\nthis.hwModule : ${this.hwModule} `
+        );
         const blockMenu = Entry.getMainWS()?.blockMenu;
         if (!blockMenu) {
             return;
         }
-        if (this.status === HardwareStatement.disconnected) {
-            blockMenu.banClass('arduinoLiteConnected', true);
-            blockMenu.unbanClass('arduinoLiteConnect', true);
-            if (this.hwModule) {
-                blockMenu.unbanClass('arduinoLiteConnectButton');
-            } else {
-                blockMenu.banClass('arduinoLiteConnectButton');
-            }
-        } else {
-            if (this.hwModule) {
-                blockMenu.banClass('arduinoLiteConnectButton');
-            }
-            blockMenu.unbanClass('arduinoLiteConnected', true);
-            blockMenu.banClass('arduinoLiteConnect', true);
-        }
 
-        if (!this.hwModule) {
-            // NOTE 이 코드는 하드웨어 블록 초기화 작업도 겸하므로 삭제금지
-            this.banClassAllHardwareLite();
+        switch (this.status) {
+            case HardwareStatement.disconnected:
+                blockMenu.banClass('arduinoLiteConnected', true);
+                blockMenu.banClass('arduinoLiteConnectFailed', true);
+                blockMenu.unbanClass('arduinoLiteDisconnected', true);
+                blockMenu.unbanClass('arduinoDisconnected', true);
+                this.banClassAllHardwareLite();
+                Entry.moduleManager.moduleListLite = [];
+                break;
+            case HardwareStatement.connected:
+                blockMenu.banClass('arduinoLiteConnectFailed', true);
+                blockMenu.banClass('arduinoLiteDisconnected', true);
+                blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.unbanClass('arduinoLiteConnected', true);
+                blockMenu.unbanClass(this.hwModule?.name, true);
+                break;
+            case HardwareStatement.connectFailed:
+                blockMenu.banClass('arduinoLiteDisconnected', true);
+                blockMenu.banClass('arduinoLiteConnected', true);
+                blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.unbanClass('arduinoLiteConnectFailed', true);
+                this.banClassAllHardwareLite();
+                break;
         }
-        if (this.hwModule) {
-            blockMenu.unbanClass(this.hwModule?.name, true);
-        }
-        blockMenu.hwLiteCodeOutdated = true;
-        blockMenu._generateHwLiteCode(true);
+        // blockMenu.hwLiteCodeOutdated = true;
+        // blockMenu._generateHwLiteCode(true);
+        blockMenu.hwCodeOutdated = true;
+        blockMenu._generateHwCode(true);
         blockMenu.reDraw();
     }
 
@@ -170,10 +177,10 @@ export default class HardwareLite {
             setTimeout(() => {
                 this.constantServing();
             }, this.hwModule.duration || 0);
-        } catch (err) {
-            this.status === HardwareStatement.disconnected;
-            console.error(err);
-            this.disconnect();
+        } catch (error) {
+            console.error(error);
+            this.status = HardwareStatement.connectFailed;
+            this.refreshHardwareLiteBlockMenu();
             return;
         }
     }
@@ -183,62 +190,67 @@ export default class HardwareLite {
             return;
         }
         // @ts-ignore
-        const port = await navigator.serial.requestPort();
-        const { portData } = this.hwModule || {};
-        await port.open(
-            portData || {
-                baudRate: 9600,
-                dataBits: 8,
-                parity: 'none',
-                bufferSize: 256,
-                stopBits: 1,
+        try {
+            const port = await navigator.serial.requestPort();
+            const { portData } = this.hwModule || {};
+            await port.open(
+                portData || {
+                    baudRate: 9600,
+                    dataBits: 8,
+                    parity: 'none',
+                    bufferSize: 256,
+                    stopBits: 1,
+                }
+            );
+            this.port = port;
+            const encoder = new TextEncoderStream();
+            const writable = port.writable;
+
+            this.connectionType = portData?.connectionType;
+            // if () {
+            //     const writableStream = encoder.readable.pipeTo(port.writable);
+            //     const writer = encoder.writable.getWriter();
+            //     this.writableStream = writableStream;
+            //     const lineReader = port.readable
+            //         .pipeThrough(new TextDecoderStream())
+            //         .pipeThrough(new TransformStream(new LineBreakTransformer()))
+            //         .getReader();
+            //     this.writer = writer;
+            //     this.reader = lineReader;
+            // } else {
+            if (portData?.writeAscii || portData?.connectionType === 'ascii') {
+                const writableStream = encoder.readable.pipeTo(writable);
+                this.writableStream = writableStream;
+                this.writer = encoder.writable.getWriter();
+            } else {
+                this.writer = port.writable.getWriter();
             }
-        );
-        this.port = port;
-        const encoder = new TextEncoderStream();
-        const writable = port.writable;
 
-        this.connectionType = portData?.connectionType;
-        // if () {
-        //     const writableStream = encoder.readable.pipeTo(port.writable);
-        //     const writer = encoder.writable.getWriter();
-        //     this.writableStream = writableStream;
-        //     const lineReader = port.readable
-        //         .pipeThrough(new TextDecoderStream())
-        //         .pipeThrough(new TransformStream(new LineBreakTransformer()))
-        //         .getReader();
-        //     this.writer = writer;
-        //     this.reader = lineReader;
-        // } else {
-        if (portData?.writeAscii || portData?.connectionType === 'ascii') {
-            const writableStream = encoder.readable.pipeTo(writable);
-            this.writableStream = writableStream;
-            this.writer = encoder.writable.getWriter();
-        } else {
-            this.writer = port.writable.getWriter();
-        }
-
-        let readable = port.readable;
-        if (portData?.readAscii || this.connectionType === 'ascii') {
-            readable = readable.pipeThrough(new TextDecoderStream());
-        }
-        if (this.hwModule?.delimeter || this.connectionType === 'ascii') {
-            readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
-        }
-        this.reader = readable.getReader();
-        // }
-
-        this.status = HardwareStatement.connected;
-        this.refreshHardwareLiteBlockMenu();
-        if (this.hwModule?.initialHandshake) {
-            const result = await this.hwModule.initialHandshake();
-            if (!result) {
-                this.disconnect();
-                return;
+            let readable = port.readable;
+            if (portData?.readAscii || this.connectionType === 'ascii') {
+                readable = readable.pipeThrough(new TextDecoderStream());
             }
-        }
-        if (portData?.constantServing) {
-            this.constantServing();
+            if (this.hwModule?.delimeter || this.connectionType === 'ascii') {
+                readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
+            }
+            this.reader = readable.getReader();
+            // }
+
+            this.status = HardwareStatement.connected;
+            this.refreshHardwareLiteBlockMenu();
+            if (this.hwModule?.initialHandshake) {
+                const result = await this.hwModule.initialHandshake();
+                if (!result) {
+                    throw new Error('Handshake Error : 디바이스와 연결에 실패하였습니다.');
+                }
+            }
+            if (portData?.constantServing) {
+                this.constantServing();
+            }
+        } catch (error) {
+            console.error(error);
+            this.status = HardwareStatement.connectFailed;
+            this.refreshHardwareLiteBlockMenu();
         }
     }
 
@@ -258,14 +270,16 @@ export default class HardwareLite {
             this.reader = null;
             this.writer = null;
             this.writableStream = null;
-            this.refreshHardwareLiteBlockMenu();
+            this.hwModule = null;
             this.status = HardwareStatement.disconnected;
+            // this.refreshHardwareLiteBlockMenu();
             Entry.dispatchEvent('hwLiteChanged');
-            Entry.toast.alert(
-                Lang.Hw.hw_module_terminaltion_title,
-                Lang.Hw.hw_module_terminaltion_desc,
-                false
-            );
+            // CHECK : 연결 해제시에도 toast 알림을 날려야 하는지? 한다면 종류는 뭘로
+            // Entry.toast.alert(
+            //     Lang.Workspace.hw_connection_termination_desc,
+            //     Lang.Workspace.hw_connection_termination_desc2,
+            //     false
+            // );
         }
     }
 

@@ -163,13 +163,12 @@ class EntryModuleLoader {
     }
 
     // 모듈화 적용시, 팝업이벤트로부터 모듈name값만 받아서 동적으로 로드한다.
-    async registerHardwareLiteModule(moduleName: string, isDeveloping: boolean) {
-        // if (!isDeveloping) {
-        //     await this.loadModuleFromLocalOrOnline(moduleName, true);
-        // }
+    async registerHardwareLiteModule(moduleObject: EntryHardwareBlockModule) {
+        if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
+            return;
+        }
         Entry.hwLite.banClassAllHardwareLite();
         // @ts-ignore
-        const moduleObject = Entry[moduleName] as EntryHardwareBlockModule;
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
@@ -323,7 +322,7 @@ Entry.loadLiteExternalModules = async (project = {}) => {
 Entry.loadLiteTestModule = async (file: File, name: string) => {
     const result = await file.text();
     await Entry.moduleManager.loadScript(name, result, true);
-    Entry.moduleManager.registerHardwareLiteModule(name, true);
+    // Entry.moduleManager.registerHardwareLiteModule(name);
 };
 
 Entry.loadLiteTestModuleUploader = () => {
