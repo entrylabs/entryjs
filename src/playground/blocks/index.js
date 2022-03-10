@@ -1,6 +1,7 @@
 'use strict';
 
 const hardware = require('./hardware/index');
+const hardwareLite = require('./hardwareLite/index');
 const _union = require('lodash/union');
 const _flatten = require('lodash/flatten');
 
@@ -117,13 +118,16 @@ function registerHardwareBlockToStatic(hardwareModules) {
 module.exports = {
     getBlocks() {
         const hardwareModules = hardware.getHardwareModuleList();
+        const hardwareLiteModules = hardwareLite.getHardwareLiteModuleList();
         registerHardwareBlockToStatic(hardwareModules);
+        registerHardwareBlockToStatic(hardwareLiteModules);
         const basicAndExpansionBlockObjectList = getBlockObject(
             basicBlockList
                 .concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
                 .concat(Object.values(Entry.AI_UTILIZE_BLOCK_LIST))
         );
         const hardwareBlockObjectList = getHardwareBlockObject(hardwareModules);
-        return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
+        const hardwareLiteBlockObjectList = getHardwareBlockObject(hardwareLiteModules);
+        return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList, hardwareLiteBlockObjectList);
     },
 };

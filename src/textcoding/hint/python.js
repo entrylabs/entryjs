@@ -42,7 +42,7 @@ Entry.PyHint = function(syntax) {
 
     Entry.addEventListener('hwChanged', hwFunc);
 
-    Entry.addEventListener('hwLiteChanged', hwLiteFunc);
+    // Entry.addEventListener('hwLiteChanged', hwLiteFunc);
 
     if (Entry.hw.hwModule) hwFunc();
 };

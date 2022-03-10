@@ -1,7 +1,6 @@
 import { TextEncoder } from 'util';
 import ExtraBlockUtils from '../util/extrablockUtils';
 import HardwareMonitor from './hardware/hardwareMonitor';
-import hardwareLite from '../playground/blocks/hardwareLite';
 
 enum HardwareStatement {
     disconnected = 'disconnected',
@@ -54,7 +53,6 @@ export default class HardwareLite {
         this.status = HardwareStatement.disconnected;
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
         this.setExternalModule.bind(this);
-        this.initHardwareLiteList();
     }
 
     setZero() {
@@ -129,7 +127,6 @@ export default class HardwareLite {
                 blockMenu.unbanClass('arduinoLiteDisconnected', true);
                 blockMenu.unbanClass('arduinoDisconnected', true);
                 this.banClassAllHardwareLite();
-                Entry.moduleManager.moduleListLite = [];
                 break;
             case HardwareStatement.connected:
                 blockMenu.banClass('arduinoLiteConnectFailed', true);
@@ -151,11 +148,6 @@ export default class HardwareLite {
         blockMenu.hwCodeOutdated = true;
         blockMenu._generateHwCode(true);
         blockMenu.reDraw();
-    }
-
-    initHardwareLiteList() {
-        // TO-DO : 추후 모듈화 적용시 외부모듈에서 가져오도록 수정예정
-        hardwareLite.initHardwareLiteList();
     }
 
     async constantServing() {

@@ -38,13 +38,6 @@ Entry.loadProject = async function(project) {
     Entry.variableContainer.setFunctions(project.functions);
     DataTable?.setTables(project.tables);
     Entry.aiLearning?.load(project.learning);
-    // TO-DO : 아래 조건문 체크(시리얼 연결에 필수여부 확인)
-    if (project.externalModulesLite) {
-        await Entry.loadLiteExternalModules(project);
-    }
-    if (project.externalModules) {
-        await Entry.loadExternalModules(project);
-    }
     Entry.scene.addScenes(project.scenes);
     Entry.stage.initObjectContainers();
     Entry.container.setObjects(project.objects);

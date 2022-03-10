@@ -40,6 +40,12 @@ function initHardwareLiteList() {
     });
 }
 
+function getHardwareLiteModuleList() {
+    return Object.values(Entry.HARDWARE_LITE_LIST);
+}
+
+initHardwareLiteList();
+
 module.exports = {
-    initHardwareLiteList,
+    getHardwareLiteModuleList,
 };
