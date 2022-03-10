@@ -136,7 +136,7 @@ module.exports = {
                         message = Entry.convertToRoundedDecimals(message, 3);
                         new Entry.Dialog(sprite, message, mode);
                         sprite.syncDialogVisible(sprite.getVisible());
-                        setTimeout(function() {
+                        setTimeout(() => {
                             script.timeFlag = 0;
                         }, timeValue * 1000);
                     }
