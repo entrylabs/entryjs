@@ -405,7 +405,7 @@ function getBlocks() {
             params: [
                 {
                     type: 'Text',
-                    text: '테스트 하드웨어',
+                    text: '',
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
@@ -7939,6 +7939,12 @@ function inheritBlockSchema() {
 
 function assignBlocks() {
     Entry.block.converters = getConverters();
+    Entry.block.changeBlockText = function(key, text) {
+        const block = this[key];
+        if(block) {
+            block.params[0].text = text;
+        }
+    }
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
 }
 

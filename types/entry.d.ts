@@ -62,7 +62,10 @@ declare interface IEntry extends EntryOptions {
     TEXT_ALIGN_LEFT: number;
     TEXT_ALIGN_CENTER: number;
     TEXT_ALIGN_RIGHT: number;
-    block: { [blockName: string]: EntryBlock };
+    block: {
+        [blockName: string]: EntryBlock;
+        changeBlockText: (key: string, text: string) => void;
+    };
     hwLite: typeof import('../src/class/hw_lite').default;
     hw: import('../src/class/hw').default; // HW instance
     interfaceState: { [key: string]: any };

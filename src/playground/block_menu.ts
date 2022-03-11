@@ -1150,6 +1150,10 @@ class BlockMenu extends ModelClass<Schema> {
         this.workspace?.board?.observe(this, '_handleBoardDragBlock', ['dragBlock']);
     }
 
+    changeTypeThreadByBlockKey(key: string) {
+        this.getThreadByBlockKey(key)?.getFirstBlock().changeType();
+    }
+
     private _generateView(categoryData: CategoryData[]) {
         categoryData && this._generateCategoryView(categoryData);
 

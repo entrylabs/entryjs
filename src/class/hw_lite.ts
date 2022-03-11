@@ -88,6 +88,7 @@ export default class HardwareLite {
     setExternalModule(moduleObject: EntryHardwareLiteBlockModule) {
         this.hwModule = moduleObject;
         this.banClassAllHardwareLite();
+        Entry.block.changeBlockText('arduino_lite_device_name', this.hwModule.title.ko);
         Entry.dispatchEvent('hwLiteChanged');
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
             this._setHardwareMonitorTemplate();
