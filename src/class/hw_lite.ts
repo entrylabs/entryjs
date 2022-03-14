@@ -169,7 +169,7 @@ export default class HardwareLite {
 
             setTimeout(() => {
                 this.constantServing();
-            }, this.hwModule.duration || 0);
+            }, this.hwModule.duration || 100);
         } catch (error) {
             console.error(error);
             this.status = HardwareStatement.connectFailed;
@@ -240,6 +240,13 @@ export default class HardwareLite {
             if (portData?.constantServing) {
                 this.constantServing();
             }
+
+            Entry.toast.success(
+                Lang.Msgs.hw_connection_success,
+                this.hwMonitor
+                    ? Lang.Msgs.hw_connection_success_desc
+                    : Lang.Msgs.hw_connection_success_desc2
+            );
         } catch (error) {
             console.error(error);
             this.status = HardwareStatement.connectFailed;
@@ -268,11 +275,11 @@ export default class HardwareLite {
             // this.refreshHardwareLiteBlockMenu();
             Entry.dispatchEvent('hwLiteChanged');
             // CHECK : 연결 해제시에도 toast 알림을 날려야 하는지? 한다면 종류는 뭘로
-            // Entry.toast.alert(
-            //     Lang.Workspace.hw_connection_termination_desc,
-            //     Lang.Workspace.hw_connection_termination_desc2,
-            //     false
-            // );
+            Entry.toast.alert(
+                Lang.Msgs.hw_module_terminaltion_title,
+                Lang.Msgs.hw_module_terminaltion_desc,
+                false
+            );
         }
     }
 
@@ -292,8 +299,8 @@ export default class HardwareLite {
         try {
             if (this.status === HardwareStatement.disconnected) {
                 Entry.toast.alert(
-                    Lang.Hw.hw_module_terminaltion_title,
-                    Lang.Hw.hw_module_terminaltion_desc,
+                    Lang.Msgs.hw_module_terminaltion_title,
+                    Lang.Msgs.hw_module_terminaltion_desc,
                     false
                 );
                 throw new Error('HARDWARE LITE NOT CONNECTED');
