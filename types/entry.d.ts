@@ -65,6 +65,7 @@ declare interface IEntry extends EntryOptions {
     block: {
         [blockName: string]: EntryBlock;
         changeBlockText: (key: string, text: string) => void;
+        changeBlockEvent: (key: string, event: string, callback: Function) => void;
     };
     hwLite: typeof import('../src/class/hw_lite').default;
     hw: import('../src/class/hw').default; // HW instance

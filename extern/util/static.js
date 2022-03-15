@@ -512,6 +512,7 @@ EntryStatic.getAllBlocks = function() {
                 // 'download_guide',
                 'arduino_download_source',
                 'arduino_lite_connect',
+                'arduino_lite_guide',
                 'arduino_noti',
                 'arduino_lite_alert',
             ].concat(EntryStatic.DynamicHardwareBlocks),

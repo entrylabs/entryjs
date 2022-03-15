@@ -332,6 +332,33 @@ function getBlocks() {
                 ],
             },
         },
+        arduino_lite_guide: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteGuide'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_guide,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        window.open('https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0');
+                    },
+                ],
+            },
+        },
         arduino_lite_reconnect: {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -369,11 +396,7 @@ function getBlocks() {
                 },
             ],
             events: {
-                mousedown: [
-                    function() {
-                        entrylms.alert('펌웨어 다운로드');
-                    },
-                ],
+                mousedown: [],
             },
         },
         arduino_lite_disconnect: {
@@ -7943,6 +7966,12 @@ function assignBlocks() {
         const block = this[key];
         if(block) {
             block.params[0].text = text;
+        }
+    }
+    Entry.block.changeBlockEvent = function(key, event, callback){
+        const block = this[key];
+        if(block) {
+            block.events[event] = [callback];
         }
     }
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());

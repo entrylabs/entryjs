@@ -9,6 +9,8 @@ enum HardwareStatement {
     connectFailed = 'connectFailed',
 }
 
+const ARDUINO_BOARD_IDS: string[] = ['1.1', '4.2', '8.1'];
+
 class LineBreakTransformer {
     private container: string;
     constructor() {
@@ -95,6 +97,21 @@ export default class HardwareLite {
         }
     }
 
+    getConnectFailedMenu() {
+        this.status = HardwareStatement.connectFailed;
+        this.refreshHardwareLiteBlockMenu();
+    }
+
+    setFirmwareDownloadButton(callback: Function) {
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace && workspace.blockMenu;
+        if (!blockMenu) {
+            return;
+        }
+        Entry.block.changeBlockEvent('arduino_lite_download_firmware', 'mousedown', callback);
+        blockMenu.changeTypeThreadByBlockKey('arduino_lite_download_firmware');
+    }
+
     private _setHardwareMonitorTemplate() {
         if (!this.hwMonitor) {
             this.hwMonitor = new HardwareMonitor(this.hwModule);
@@ -113,9 +130,6 @@ export default class HardwareLite {
     }
 
     refreshHardwareLiteBlockMenu() {
-        console.log(
-            `Activate refreshHardwareLiteBlockMenu \nstatus : ${this.status}\nthis.hwModule : ${this.hwModule} `
-        );
         const blockMenu = Entry.getMainWS()?.blockMenu;
         if (!blockMenu) {
             return;
@@ -125,6 +139,7 @@ export default class HardwareLite {
             case HardwareStatement.disconnected:
                 blockMenu.banClass('arduinoLiteConnected', true);
                 blockMenu.banClass('arduinoLiteConnectFailed', true);
+                blockMenu.banClass('arduinoLiteGuide', true);
                 blockMenu.unbanClass('arduinoLiteDisconnected', true);
                 blockMenu.unbanClass('arduinoDisconnected', true);
                 this.banClassAllHardwareLite();
@@ -133,6 +148,7 @@ export default class HardwareLite {
                 blockMenu.banClass('arduinoLiteConnectFailed', true);
                 blockMenu.banClass('arduinoLiteDisconnected', true);
                 blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.banClass('arduinoLiteGuide', true);
                 blockMenu.unbanClass('arduinoLiteConnected', true);
                 blockMenu.unbanClass(this.hwModule?.name, true);
                 break;
@@ -141,6 +157,18 @@ export default class HardwareLite {
                 blockMenu.banClass('arduinoLiteConnected', true);
                 blockMenu.banClass('arduinoDisconnected', true);
                 blockMenu.unbanClass('arduinoLiteConnectFailed', true);
+                if(typeof this.hwModule?.id === 'string'){
+                    if (ARDUINO_BOARD_IDS.includes(this.hwModule.id)) {
+                        blockMenu.unbanClass('arduinoLiteGuide', true);
+                    }
+                }else if(this.hwModule?.id instanceof Array){
+                    for(const id in this.hwModule.id){
+                        if (ARDUINO_BOARD_IDS.includes(id)) {
+                            blockMenu.unbanClass('arduinoLiteGuide', true);
+                            return;
+                        }
+                    }
+                }
                 this.banClassAllHardwareLite();
                 break;
         }
@@ -172,8 +200,7 @@ export default class HardwareLite {
             }, this.hwModule.duration || 100);
         } catch (error) {
             console.error(error);
-            this.status = HardwareStatement.connectFailed;
-            this.refreshHardwareLiteBlockMenu();
+            this.getConnectFailedMenu();
             return;
         }
     }
@@ -249,8 +276,7 @@ export default class HardwareLite {
             );
         } catch (error) {
             console.error(error);
-            this.status = HardwareStatement.connectFailed;
-            this.refreshHardwareLiteBlockMenu();
+            this.getConnectFailedMenu();
         }
     }
 
@@ -272,9 +298,7 @@ export default class HardwareLite {
             this.writableStream = null;
             this.hwModule = null;
             this.status = HardwareStatement.disconnected;
-            // this.refreshHardwareLiteBlockMenu();
             Entry.dispatchEvent('hwLiteChanged');
-            // CHECK : 연결 해제시에도 toast 알림을 날려야 하는지? 한다면 종류는 뭘로
             Entry.toast.alert(
                 Lang.Msgs.hw_module_terminaltion_title,
                 Lang.Msgs.hw_module_terminaltion_desc,
