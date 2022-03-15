@@ -157,12 +157,12 @@ export default class HardwareLite {
                 blockMenu.banClass('arduinoLiteConnected', true);
                 blockMenu.banClass('arduinoDisconnected', true);
                 blockMenu.unbanClass('arduinoLiteConnectFailed', true);
-                if(typeof this.hwModule?.id === 'string'){
+                if (typeof this.hwModule?.id === 'string') {
                     if (ARDUINO_BOARD_IDS.includes(this.hwModule.id)) {
                         blockMenu.unbanClass('arduinoLiteGuide', true);
                     }
-                }else if(this.hwModule?.id instanceof Array){
-                    for(const id in this.hwModule.id){
+                } else if (this.hwModule?.id instanceof Array) {
+                    for (const id in this.hwModule.id) {
                         if (ARDUINO_BOARD_IDS.includes(id)) {
                             blockMenu.unbanClass('arduinoLiteGuide', true);
                             return;
@@ -192,12 +192,16 @@ export default class HardwareLite {
             }
 
             const { value, done } = await this.reader.read();
+            if (done) {
+                this.getConnectFailedMenu();
+                return;
+            }
             this.hwModule?.handleLocalData(value);
             this._updatePortData();
 
             setTimeout(() => {
                 this.constantServing();
-            }, this.hwModule.duration || 100);
+            }, this.hwModule.duration || 0);
         } catch (error) {
             console.error(error);
             this.getConnectFailedMenu();
