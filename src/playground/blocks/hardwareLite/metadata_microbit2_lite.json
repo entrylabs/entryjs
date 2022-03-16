@@ -1,9 +1,0 @@
-{
-  "name": "Microbit2lite",
-  "version": "1.0.0",
-  "type": "hardware",
-  "title": "Microbit (V1 + V2)",
-  "description": "Microbit 1, 2와 호환 가능한 모듈입니다",
-  "imageName": "microbit2lite",
-  "moduleId": "220301"
-}
