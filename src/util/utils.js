@@ -25,7 +25,7 @@ Entry.clipboard = null;
  * Load project
  * @param {*} project
  */
-Entry.loadProject = async function(project) {
+Entry.loadProject = function(project) {
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
@@ -54,6 +54,7 @@ Entry.loadProject = async function(project) {
             }
         }
     }
+
     Entry.expansionBlocks = project.expansionBlocks || [];
     if (Entry.expansionBlocks.length > 0) {
         for (const type in Entry.EXPANSION_BLOCK_LIST) {
@@ -163,6 +164,7 @@ Entry.exportProject = function(project) {
     project.learning = Entry.aiLearning?.toJSON();
     project.externalModules = entryModuleLoader.moduleList;
     project.externalModulesLite = entryModuleLoader.moduleListLite;
+    
     if (!objects || !objects.length) {
         return false;
     }

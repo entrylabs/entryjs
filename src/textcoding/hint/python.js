@@ -14,7 +14,7 @@ Entry.PyHint = function(syntax) {
 
     CodeMirror.registerHelper('hint', 'python', this.pythonHint.bind(this));
 
-    const hwFunc = function(e) {
+    var hwFunc = function(e) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
@@ -27,7 +27,7 @@ Entry.PyHint = function(syntax) {
         }
     }.bind(this);
 
-    const hwLiteFunc = function(e) {
+    var hwLiteFunc = function(e) {
         if (Entry.hwLite.hwModule) {
             var name = Entry.hwLite.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
@@ -66,7 +66,10 @@ Entry.PyHint = function(syntax) {
 
         switch (lastToken.type) {
             case 'builtin':
-                if (tokens[tokens.length - 2] && tokens[tokens.length - 2].string === 'def')
+                if (
+                    tokens[tokens.length - 2] &&
+                    tokens[tokens.length - 2].string === 'def'
+                )
                     searchString = null;
                 else searchString = lastToken.string;
             case 'def':
@@ -81,7 +84,10 @@ Entry.PyHint = function(syntax) {
                 if (!searchString) searchString = lastToken.string;
             case 'variable':
                 if (!searchString) searchString = lastToken.string;
-                result = this.fuzzySearch(this.getScope('_global'), searchString);
+                result = this.fuzzySearch(
+                    this.getScope('_global'),
+                    searchString
+                );
                 result = result.map(function(key) {
                     var localSyntax = syntax;
                     var displayText = key.split('#')[0];
@@ -111,9 +117,17 @@ Entry.PyHint = function(syntax) {
                 var searchResult;
                 var searchScope = this.getScope(variableToken.string);
                 if (searchScope.length)
-                    searchResult = this.fuzzySearch(searchScope, lastToken.string);
-                else if (Entry.variableContainer.getListByName(variableToken.string)) {
-                    searchResult = this.fuzzySearch(this.getScope('%2'), lastToken.string);
+                    searchResult = this.fuzzySearch(
+                        searchScope,
+                        lastToken.string
+                    );
+                else if (
+                    Entry.variableContainer.getListByName(variableToken.string)
+                ) {
+                    searchResult = this.fuzzySearch(
+                        this.getScope('%2'),
+                        lastToken.string
+                    );
                     variableToken.string = '%2';
                 } else searchResult = [];
                 result = searchResult.map(function(key) {
@@ -153,7 +167,8 @@ Entry.PyHint = function(syntax) {
                         key.indexOf('%') < 0 &&
                         syntax[key].key.indexOf('function_field') < 0
                     ) {
-                        if (key.substr(0, 6) === 'def on') this.scope._global.push(key);
+                        if (key.substr(0, 6) === 'def on')
+                            this.scope._global.push(key);
                     }
                 }
             }
@@ -164,7 +179,8 @@ Entry.PyHint = function(syntax) {
                 if (
                     name === 'Arduino' &&
                     (extName === 'Ext') !==
-                        (blockSyntax.class && blockSyntax.class.indexOf('Ext') > 0)
+                        (blockSyntax.class &&
+                            blockSyntax.class.indexOf('Ext') > 0)
                 )
                     return false;
                 return k.indexOf('#') < 0 && !blockSyntax.deprecated;
@@ -183,7 +199,9 @@ Entry.PyHint = function(syntax) {
             var syntax = this.syntax[name];
             var keys = Object.keys(syntax);
             keys = keys.filter(function(k) {
-                return k.indexOf('#') < 0 && !Entry.block[syntax[k].key].deprecated;
+                return (
+                    k.indexOf('#') < 0 && !Entry.block[syntax[k].key].deprecated
+                );
             });
             keys = keys.map(function(k) {
                 return name + '.' + k;
@@ -284,7 +302,9 @@ Entry.PyHint = function(syntax) {
         var blockType = blockSyntax.key;
         if (
             blockSyntax.isDefault &&
-            Entry.playground.mainWorkspace.blockMenu.getThreadByBlockKey(blockType)
+            Entry.playground.mainWorkspace.blockMenu.getThreadByBlockKey(
+                blockType
+            )
         ) {
             return blockType;
         } else {
