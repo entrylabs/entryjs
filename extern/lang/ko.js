@@ -561,7 +561,14 @@ Lang.Blocks = {
     ARDUINO_open_connector: '연결 프로그램 열기',
     ARDUINO_download_source: '• 엔트리 아두이노 소스',
     ARDUINO_reconnect: '하드웨어 연결하기',
-    arduino_noti_text: '모바일 기기는 추후 지원 합니다.',
+    arduino_noti_text: '하드웨어 연결은 PC 환경에서만 가능합니다.\n브라우저로 연결할 때는 하드웨어 연결프로그램이 필요하지 않습니다.',
+    arduino_lite_alert: '하드웨어를 찾을 수 없습니다.\n하드웨어에 펌웨어가 설치되었는지,\nPC와 하드웨어가 연결되어 있는지 \n다시 확인해 주세요.',
+    arduino_lite_guide: '아두이노 연결 가이드',
+    arduino_lite_reconnect: '하드웨어 다시 연결',
+    arduino_lite_download_firmware: '펌웨어 다운로드',
+    arduino_lite_connect: '브라우저로 연결하기',
+    arduino_lite_disconnect: '하드웨어 선택 취소',
+    ARDUINO_LITE: '하드웨어 라이트',
     ROBOT_reconnect: '로봇 연결하기',
     ARDUINO_program: '프로그램 실행하기',
     ARDUINO_cloud_pc_connector: '클라우드 PC 연결하기',
@@ -6385,45 +6392,36 @@ Lang.Helper = {
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_number_learning_group_3:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    bitbrick_when_button_pressed:
-        "비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.",
+    bitbrick_when_button_pressed: '비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.',
     bitbrick_when_sensor_get_value:
-        "비트브릭 센서의 값과 오른쪽에 입력한 값을 비교합니다.\n< : 센서 값이 오른쪽에 위치한 값보다 작은 경우 ‘참’으로 판단합니다.\n> : 센서 값이 오른쪽에 위치한 값보다 큰 경우 ‘참으로 판단합니다.\n= :  센서 값이 오른쪽에 위치한 값과 같은 경우 ‘참으로 판단합니다.",
+        '비트브릭 센서의 값과 오른쪽에 입력한 값을 비교합니다.\n< : 센서 값이 오른쪽에 위치한 값보다 작은 경우 ‘참’으로 판단합니다.\n> : 센서 값이 오른쪽에 위치한 값보다 큰 경우 ‘참으로 판단합니다.\n= :  센서 값이 오른쪽에 위치한 값과 같은 경우 ‘참으로 판단합니다.',
     bitbrick_sensor_value:
-        "비트브릭 센서를 사용할 수 있는 블록입니다. 센서값의 범위는 0 ~1023입니다. 메인보드에 연결된 센서의 종류와 포트번호를 자동으로 인식합니다. 블록 안의 화살표를 눌러 사용하려고 하는 센서를 선택하세요.",
-    bitbrick_convert_scale:
-        "비트브릭 센서의 값의 범위를 바꿀 수 있습니다.",
-    bitbrick_is_touch_pressed:
-        "비트브릭 센서 중 버튼을 눌렀을 경우 ‘참’으로 판단합니다.",
-    bitbrick_turn_off_color_led:
-        "비트브릭 엘이디를 끕니다.",
+        '비트브릭 센서를 사용할 수 있는 블록입니다. 센서값의 범위는 0 ~1023입니다. 메인보드에 연결된 센서의 종류와 포트번호를 자동으로 인식합니다. 블록 안의 화살표를 눌러 사용하려고 하는 센서를 선택하세요.',
+    bitbrick_convert_scale: '비트브릭 센서의 값의 범위를 바꿀 수 있습니다.',
+    bitbrick_is_touch_pressed: '비트브릭 센서 중 버튼을 눌렀을 경우 ‘참’으로 판단합니다.',
+    bitbrick_turn_off_color_led: '비트브릭 엘이디를 끕니다.',
     bitbrick_turn_on_color_led_by_rgb:
-        "비트브릭 엘이디를 빛의 삼원색인 빨강,초록,파랑을 혼합하여 켭니다. 값의 범위는 0 ~ 255입니다.",
-    bitbrick_turn_on_color_led_by_picker:
-        "비트브릭 엘이디를 색상 창을 사용해 켭니다.",
+        '비트브릭 엘이디를 빛의 삼원색인 빨강,초록,파랑을 혼합하여 켭니다. 값의 범위는 0 ~ 255입니다.',
+    bitbrick_turn_on_color_led_by_picker: '비트브릭 엘이디를 색상 창을 사용해 켭니다.',
     bitbrick_turn_on_color_led_by_value:
-        "비트브릭 엘이디를 색상 값으로 켭니다. 값의 범위는 0 ~ 199입니다.",
+        '비트브릭 엘이디를 색상 값으로 켭니다. 값의 범위는 0 ~ 199입니다.',
     bitbrick_buzzer:
-        "비트브릭 버저를 사용하여 소리를 냅니다. 값의 범위는 0 ~ 96입니다. 값이 0일 때는 버저 소리를 끕니다.",
-    bitbrick_turn_off_all_motors:
-        "비트브릭 모터를 모두 끕니다.",
+        '비트브릭 버저를 사용하여 소리를 냅니다. 값의 범위는 0 ~ 96입니다. 값이 0일 때는 버저 소리를 끕니다.',
+    bitbrick_turn_off_all_motors: '비트브릭 모터를 모두 끕니다.',
     bitbrick_dc_speed:
-        "비트브릭 디씨모터의 속도를 제어합니다. 속도 값의 범위는 –100 ~ 100입니다. 음수(-)일 때는 반시계방향으로 회전합니다. 양수(+)일 때는 시계방향으로 회전합니다. 속도가 0일 때는 회전을 멈춥니다.",
+        '비트브릭 디씨모터의 속도를 제어합니다. 속도 값의 범위는 –100 ~ 100입니다. 음수(-)일 때는 반시계방향으로 회전합니다. 양수(+)일 때는 시계방향으로 회전합니다. 속도가 0일 때는 회전을 멈춥니다.',
     bitbrick_dc_direction_speed:
-        "비트브릭 디씨모터의 방향과 속력을 제어합니다. 방향은 시계방향과 반시계방향을 선택할 수 있습니다. 속력 값의 범위는 0 ~ 100입니다. 속력이 0일 때는 회전을 멈춥니다.",
+        '비트브릭 디씨모터의 방향과 속력을 제어합니다. 방향은 시계방향과 반시계방향을 선택할 수 있습니다. 속력 값의 범위는 0 ~ 100입니다. 속력이 0일 때는 회전을 멈춥니다.',
     bitbrick_servomotor_angle:
-        "비트브릭 서보모터의 각도를 제어합니다. 각도 값의 범위는 0 ~ 180입니다.",
-    diaboard_when_button_pressed:			
-        "선택한 버튼을 누르거나 누르지 않으면 아래에 연결된 블록들을 실행합니다.",
-    diaboard_when_color_is:					
-        "선택한 색상을 컬러센서가 감지하면 아래에 연결된 블록들을 실행합니다.",
-    diaboard_when_sensor_is:				
+        '비트브릭 서보모터의 각도를 제어합니다. 각도 값의 범위는 0 ~ 180입니다.',
+    diaboard_when_button_pressed:
+        '선택한 버튼을 누르거나 누르지 않으면 아래에 연결된 블록들을 실행합니다.',
+    diaboard_when_color_is: '선택한 색상을 컬러센서가 감지하면 아래에 연결된 블록들을 실행합니다.',
+    diaboard_when_sensor_is:
         "선택한 센서의 값과 오른쪽의 값을 비교하여 아래에 연결된 블록들을 실행합니다.\n< : 센서값이 오른쪽 값보다 작은 경우 '참'으로 판단합니다.\n> : 센서값이 오른쪽 값보다 큰 경우 '참'으로 판단합니다.\n= : 센서값이 오른쪽 값과 같은 경우 '참'으로 판단합니다.",
-    diaboard_button_pressed:				
-        "선택한 버튼을 누르거나 누르지 않은 경우 '참'으로 판단합니다.",
-    diaboard_color_sensor_is:				
-        "선택한 색상을 컬러센서가 감지한 경우 '참'으로 판단합니다.",
-    diaboard_sensor_condition:				
+    diaboard_button_pressed: "선택한 버튼을 누르거나 누르지 않은 경우 '참'으로 판단합니다.",
+    diaboard_color_sensor_is: "선택한 색상을 컬러센서가 감지한 경우 '참'으로 판단합니다.",
+    diaboard_sensor_condition:
         "선택한 센서의 값과 오른쪽의 값을 비교합니다.\n< : 센서값이 오른쪽 값보다 작은 경우 '참'으로 판단합니다.\n> : 센서값이 오른쪽 값보다 큰 경우 '참'으로 판단합니다.\n= : 센서값이 오른쪽 값과 같은 경우 '참'으로 판단합니다.",
     diaboard_color_sensor_seven_hue:		
         "컬러센서가 감지하는 색상을 7가지로 분류한 값입니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
@@ -6790,6 +6788,7 @@ Lang.template = {
     sensorBoard_led: '%1  LED %2   %3',
     arduino_download_connector: '%1',
     download_guide: '%1',
+    arduino_lite_guide: '%1',
     arduino_download_source: '%1',
     arduino_connected: '%1',
     arduino_connect: '%1',
@@ -6934,6 +6933,7 @@ Lang.template = {
     load_ai_utilize_train_block: '인공지능 모델 학습하기',
     expansion_block_descriptions: '확장 블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
     aiUtilize_block_descriptions: 'AI 활용블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
+    hardware_lite_descriptions: '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다. \r\n하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
     weather_title_text: '날씨',
     translate_title_text: '번역',
     festival_title_text: '행사',

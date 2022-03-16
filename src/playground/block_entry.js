@@ -310,24 +310,153 @@ function getBlocks() {
                 ],
             },
         },
-        //region hardware 하드웨어 기본
-        arduino_noti_light: {
-            skeleton: 'basic_text_light',
+        arduino_lite_connect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoDisconnected'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.do('playgroundClickAddHardwareLiteBlock');
+                    },
+                ],
+            },
+        },
+        arduino_lite_guide: {
+            skeleton: 'clickable_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteGuide'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_guide,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        window.open('https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0');
+                    },
+                ],
+            },
+        },
+        arduino_lite_reconnect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnectFailed'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_reconnect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.connect();
+                    },
+                ],
+            },
+        },
+        arduino_lite_download_firmware: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnectFailed'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_download_firmware,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [],
+            },
+        },
+        arduino_lite_disconnect: {
+            skeleton: 'basic_button',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
+            class: 'arduino_default',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_disconnect,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            events: {
+                mousedown: [
+                    function() {
+                        Entry.hwLite.disconnect();
+                    },
+                ],
+            },
+        },
+        arduino_lite_device_name: {
+            skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
             params: [
                 {
                     type: 'Text',
-                    text: Lang.Blocks.arduino_noti_text_light,
-                    color: EntryStatic.colorSet.common.BUTTON,
+                    text: '',
+                    color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
             ],
             def: {
-                type: 'arduino_noti_light',
+                type: 'arduino_lite_device_name',
             },
-            class: 'arduino_default_noti',
-            isNotFor: ['arduinoDisconnected'],
+            class: 'arduino_lite_device_name',
+            isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
+            events: {},
+        },
+        arduino_lite_alert: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_alert,
+                    color: EntryStatic.colorSet.common.ALERT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_lite_alert',
+            },
+            class: 'arduino_lite_alert',
+            isNotFor: ['arduinoLiteConnectFailed'],
             events: {},
         },
         arduino_noti: {
@@ -441,6 +570,7 @@ function getBlocks() {
             ],
             events: {},
         },
+
         arduino_connect: {
             skeleton: 'basic_text',
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -7832,6 +7962,18 @@ function inheritBlockSchema() {
 
 function assignBlocks() {
     Entry.block.converters = getConverters();
+    Entry.block.changeBlockText = function(key, text) {
+        const block = this[key];
+        if (block) {
+            block.params[0].text = text;
+        }
+    };
+    Entry.block.changeBlockEvent = function(key, event, callback) {
+        const block = this[key];
+        if (block) {
+            block.events[event] = [callback];
+        }
+    };
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
 }
 
@@ -7847,9 +7989,11 @@ function applySetLanguage(hasSetLanguageObj) {
 
 Entry.reloadBlock = function() {
     Object.values(Entry.HARDWARE_LIST).forEach(applySetLanguage);
+    Object.values(Entry.HARDWARE_LITE_LIST).forEach(applySetLanguage);
     assignBlocks();
     inheritBlockSchema();
 };
+
 Entry.reloadBlock();
 
 if (typeof exports === 'object') {

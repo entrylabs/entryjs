@@ -163,7 +163,8 @@ Entry.exportProject = function(project) {
     project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
     project.learning = Entry.aiLearning?.toJSON();
     project.externalModules = entryModuleLoader.moduleList;
-
+    project.externalModulesLite = entryModuleLoader.moduleListLite;
+    
     if (!objects || !objects.length) {
         return false;
     }

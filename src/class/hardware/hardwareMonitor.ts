@@ -348,7 +348,7 @@ export default class HardwareMonitor {
                     port.group.getElementsByTagName('rect')[1].attr({ fill: '#00CFCA' });
                 }
             } else {
-                let value = sendQueue[key];
+                let value = sendQueue ? sendQueue[key] : portData[key];
                 if (objectKeys.length > 0) {
                     $.each(objectKeys, (idx, valueKey) => {
                         if ($.isPlainObject(value)) {
@@ -537,7 +537,7 @@ export default class HardwareMonitor {
             } else {
                 path = `M${(x + prevPointer) / 2},${y}l0,${
                     portY > y ? 28 : -3
-                    }H${portX}L${portX},${portY}`;
+                }H${portX}L${portX},${portY}`;
             }
         } else if (x < portX && portX < prevPointer) {
             // right side
@@ -545,7 +545,7 @@ export default class HardwareMonitor {
         } else {
             path = `m${(prevPointer + x) / 2},${y}l0,${
                 portY > y ? 28 : -3
-                }H${portX}L${portX},${portY}`;
+            }H${portX}L${portX},${portY}`;
         }
 
         port.group.attr({ transform: `translate(${groupX},${y})` });

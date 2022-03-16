@@ -27,7 +27,22 @@ Entry.PyHint = function(syntax) {
         }
     }.bind(this);
 
+    var hwLiteFunc = function(e) {
+        if (Entry.hwLite.hwModule) {
+            var name = Entry.hwLite.hwModule.name;
+            name = name[0].toUpperCase() + name.slice(1);
+            if (name === 'ArduinoExt') this.addScope('Arduino', 'Ext');
+            else this.addScope(name);
+            this.lastHW = name;
+        } else {
+            this.removeScope(this.lastHW);
+            this.lastHW = null;
+        }
+    };
+
     Entry.addEventListener('hwChanged', hwFunc);
+
+    // Entry.addEventListener('hwLiteChanged', hwLiteFunc);
 
     if (Entry.hw.hwModule) hwFunc();
 };

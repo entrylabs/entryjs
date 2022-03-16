@@ -4,13 +4,19 @@ declare interface EntryOptions {
     hardwareEnable?: boolean;
     mediaFilePath?: string;
     moduleBaseUrl?: string;
+    moduleliteBaseUrl?: string;
     dataTableDisable?: boolean;
+    offlineModulePath?: string;
 }
 
 /**
  * 엔트리 실제 인스턴스에 대한 정의
  */
 declare interface IEntry extends EntryOptions {
+    externalModulesLite: any;
+    loadLiteTestModule: (file: file, name: string) => Promise<void>;
+    loadLiteTestModuleUploader: () => void;
+    HWLite: typeof import('../src/class/hw_lite').default;
     HW: typeof import('../src/class/hw').default;
     Intro: typeof import('../src/class/intro').default;
     PropertyPanel: typeof import('../src/class/property_panel').default;
@@ -45,6 +51,7 @@ declare interface IEntry extends EntryOptions {
 
     // 엔트리에서 네임스페이스에 할당되어있는 특정 객체들
     HARDWARE_LIST: { [hardwareName: string]: any };
+    HARDWARE_LITE_LIST: { [hardwareName: string]: any };
     KeyboardCode: {
         map: { [keyname: string]: number };
         codeToKeyCode: { [keyname: string]: number };
@@ -55,7 +62,12 @@ declare interface IEntry extends EntryOptions {
     TEXT_ALIGN_LEFT: number;
     TEXT_ALIGN_CENTER: number;
     TEXT_ALIGN_RIGHT: number;
-    block: { [blockName: string]: EntryBlock };
+    block: {
+        [blockName: string]: EntryBlock;
+        changeBlockText: (key: string, text: string) => void;
+        changeBlockEvent: (key: string, event: string, callback: Function) => void;
+    };
+    hwLite: typeof import('../src/class/hw_lite').default;
     hw: import('../src/class/hw').default; // HW instance
     interfaceState: { [key: string]: any };
 
@@ -81,12 +93,38 @@ declare interface IEntry extends EntryOptions {
     assert(predicate: any, message: string): void;
     resizeElement(interfaceModel?: any): void;
     loadExternalModules(project: any): Promise<void>;
+    loadLiteExternalModules: (project?: any) => Promise<void>;
     bindAnimationCallbackOnce(element: any, func: () => void): void;
     createElement<K extends keyof HTMLElementTagNameMap>(
         type: HTMLElement | K,
         elementId?: string
     ): HTMLElementTagNameMap[K];
     do(commandName: string, ...args: any[]): any;
+}
+
+declare type IHardwareType = 'serial' | 'bluetooth' | 'hid' | 'ble';
+declare type IHardwareControlType = 'slave' | 'master';
+
+declare interface IHardwareModuleConfig {
+    type: IHardwareType;
+    control: IHardwareControlType;
+    duration: number;
+    baudRate: number;
+    commType: 'ascii' | 'utf8' | 'utf16le' | 'ucs2' | 'base64' | 'binary' | 'hex' | undefined;
+    firmwarecheck?: boolean;
+
+    vendor: string | string[] | { [key in 'win32' | 'darwin']: string | string[] };
+    pnpId: string | string[];
+    comName: string;
+
+    lostTimer?: number;
+    flowControl?: 'hardware' | 'software';
+    byteDelimiter?: number[];
+    delimiter?: string;
+
+    advertise?: number;
+    softwareReset?: boolean;
+    stream?: 'string';
 }
 
 declare var Entry: IEntry;

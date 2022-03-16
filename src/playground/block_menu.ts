@@ -305,13 +305,14 @@ class BlockMenu extends ModelClass<Schema> {
             blockView.attach();
             blockView.set({ display: true });
             shouldReDraw && blockView.reDraw();
-
-            const className = Entry.block[type].class;
-            if (pastClass && pastClass !== className) {
-                this._createSplitter(marginFromTop);
-                marginFromTop += vPadding;
+            if (Entry.block[type]) {
+                const className = Entry.block[type].class;
+                if (pastClass && pastClass !== className) {
+                    this._createSplitter(marginFromTop);
+                    marginFromTop += vPadding;
+                }
+                pastClass = className;
             }
-            pastClass = className;
 
             let left = hPadding - blockView.offsetX;
             if (this._align === 'CENTER') {
@@ -587,7 +588,6 @@ class BlockMenu extends ModelClass<Schema> {
         }
 
         const oldView = this._selectedCategoryView;
-
         const name = this._convertSelector(selector);
         if (selector !== undefined && !name) {
             this.align();
@@ -1104,6 +1104,10 @@ class BlockMenu extends ModelClass<Schema> {
             .appendTo(this.blockMenuWrapperForTrashcan);
 
         this.workspace?.board?.observe(this, '_handleBoardDragBlock', ['dragBlock']);
+    }
+
+    changeTypeThreadByBlockKey(key: string) {
+        this.getThreadByBlockKey(key)?.getFirstBlock().changeType();
     }
 
     private _generateView(categoryData: CategoryData[]) {
