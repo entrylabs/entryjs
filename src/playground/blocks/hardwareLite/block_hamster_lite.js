@@ -16,7 +16,7 @@
         constructor() {
             this.id = '2.4';
             this.url = 'http://www.robomation.net';
-            this.imageName = 'hamsterLite.png';
+            this.imageName = 'hamsterlite.png';
             this.name = 'HamsterLite';
             this.delimeter = '\r';
             this.blockMenuBlocks = [
