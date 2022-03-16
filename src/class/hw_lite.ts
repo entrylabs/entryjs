@@ -172,8 +172,6 @@ export default class HardwareLite {
                 this.banClassAllHardwareLite();
                 break;
         }
-        // blockMenu.hwLiteCodeOutdated = true;
-        // blockMenu._generateHwLiteCode(true);
         blockMenu.hwCodeOutdated = true;
         blockMenu._generateHwCode(true);
         blockMenu.reDraw();
@@ -231,17 +229,6 @@ export default class HardwareLite {
             const writable = port.writable;
 
             this.connectionType = portData?.connectionType;
-            // if () {
-            //     const writableStream = encoder.readable.pipeTo(port.writable);
-            //     const writer = encoder.writable.getWriter();
-            //     this.writableStream = writableStream;
-            //     const lineReader = port.readable
-            //         .pipeThrough(new TextDecoderStream())
-            //         .pipeThrough(new TransformStream(new LineBreakTransformer()))
-            //         .getReader();
-            //     this.writer = writer;
-            //     this.reader = lineReader;
-            // } else {
             if (portData?.writeAscii || portData?.connectionType === 'ascii') {
                 const writableStream = encoder.readable.pipeTo(writable);
                 this.writableStream = writableStream;
@@ -258,7 +245,6 @@ export default class HardwareLite {
                 readable = readable.pipeThrough(new TransformStream(new LineBreakTransformer()));
             }
             this.reader = readable.getReader();
-            // }
 
             this.status = HardwareStatement.connected;
             this.refreshHardwareLiteBlockMenu();
