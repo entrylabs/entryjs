@@ -1,8 +1,7 @@
 'use strict';
 
-const _ = require('lodash');
-const _clamp = _.clamp;
-const _get = _.get;
+const _clamp = require('lodash/clamp');
+const _get = require('lodash/get');
 
 const functionKeys = {
     TEST_MESSAGE: 0xfa,
