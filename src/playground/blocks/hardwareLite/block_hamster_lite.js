@@ -1761,10 +1761,8 @@
                     motoring.note = 0;
                     script.isPlaying = false;
                 }
-                self._sendToHamster();
                 return script;
             } else if (script.isPlaying) {
-                self._sendToHamster();
                 return script;
             } else {
                 delete script.isStart;
