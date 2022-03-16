@@ -7964,16 +7964,16 @@ function assignBlocks() {
     Entry.block.converters = getConverters();
     Entry.block.changeBlockText = function(key, text) {
         const block = this[key];
-        if(block) {
+        if (block) {
             block.params[0].text = text;
         }
-    }
-    Entry.block.changeBlockEvent = function(key, event, callback){
+    };
+    Entry.block.changeBlockEvent = function(key, event, callback) {
         const block = this[key];
-        if(block) {
+        if (block) {
             block.events[event] = [callback];
         }
-    }
+    };
     Entry.block = Object.assign(Entry.block, getBlocks(), blocks.getBlocks());
 }
 
