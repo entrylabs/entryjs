@@ -855,6 +855,23 @@ Entry.BlockView = class BlockView {
         delete this.originPos;
     }
 
+    _getMagnetsInThread() {
+        const magnet = {};
+
+        const previous = this.magnet.previous;
+        if (previous) {
+            magnet.previous = previous;
+        }
+
+        const lastBlock = this.block.thread.getLastBlock();
+        const next = lastBlock.view.magnet.next;
+        if (next) {
+            magnet.next = next;
+        }
+
+        return magnet;
+    }
+
     _updateCloseBlock() {
         if (!this._skeleton.magnets) {
             return;
@@ -864,7 +881,8 @@ Entry.BlockView = class BlockView {
         const { scale = 1 } = board || {};
         const x = this.x / scale;
         const y = this.y / scale;
-        for (const type in this.magnet) {
+        const magnets = this._getMagnetsInThread();
+        for (const type in magnets) {
             const view = _.result(
                 board.getNearestMagnet(x, type === 'next' ? y + this.getBelowHeight() : y, type),
                 'view'
@@ -1171,8 +1189,10 @@ Entry.BlockView = class BlockView {
         this.disableMouseEvent = false;
         this.moveTo(0, 0, false);
         const { _nextGroup: parentSvgGroup, _nextCommentGroup: parentCommentGroup } = view;
-        parentSvgGroup.appendChild(this.svgGroup);
-        parentCommentGroup && parentCommentGroup.appendChild(this.svgCommentGroup);
+        parentSvgGroup && parentSvgGroup.appendChild && parentSvgGroup.appendChild(this.svgGroup);
+        parentCommentGroup &&
+            parentCommentGroup.appendChild &&
+            parentCommentGroup.appendChild(this.svgCommentGroup);
     }
 
     _toGlobalCoordinate(dragMode, doNotUpdatePos) {
