@@ -716,6 +716,7 @@ Entry.BlockView = class BlockView {
         delete this.isVerticalMove;
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
+        delete this.magnetsOfThread;
     }
 
     vimBoardEvent(event, type, block) {
@@ -881,8 +882,10 @@ Entry.BlockView = class BlockView {
         const { scale = 1 } = board || {};
         const x = this.x / scale;
         const y = this.y / scale;
-        const magnets = this._getMagnetsInThread();
-        for (const type in magnets) {
+        if (!this.magnetsOfThread) {
+            this.magnetsOfThread = this._getMagnetsInThread();
+        }
+        for (const type in this.magnetsOfThread) {
             const view = _.result(
                 board.getNearestMagnet(x, type === 'next' ? y + this.getBelowHeight() : y, type),
                 'view'
