@@ -5136,6 +5136,8 @@ Lang.Msgs = {
     hw_connection_success_desc2: '하드웨어와 정상적으로 연결되었습니다.',
     hw_module_terminaltion_title: '하드웨어 연결 해제',
     hw_module_terminaltion_desc: '하드웨어와 연결이 해제되었습니다.',
+    hw_module_load_fail_title: '모듈 로드 실패',
+    hw_module_load_fail_desc: '로드에 실패했습니다. 관리자에게 문의하세요.',
     ie_page_title: '이 브라우저는<br/>지원하지 않습니다.',
     ie_page_desc:
         '엔트리는 인터넷 익스플로러 11 버전 이상 또는 크롬 브라우저에서 이용하실 수 있습니다.<br/>윈도우 업데이트를 진행하시거나, 크롬 브라우저를 설치해주세요.<br/>엔트리 오프라인 버전은 인터넷이 연결되어 있지 않아도 사용할 수 있습니다. 지금 다운받아서 시작해보세요!',
