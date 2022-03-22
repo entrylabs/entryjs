@@ -47,21 +47,6 @@ class Vim {
                 Vim.INEDITABLE_LINE_PY = 3;
             }
         });
-
-        // Entry.addEventListener('hwLiteChanged', (e) => {
-        //     if (Entry.hwLite.hwModule) {
-        //         let name = Entry.hwLite.hwModule.name;
-        //         name = name[0].toUpperCase() + name.slice(1);
-        //         if (name === 'ArduinoExt') {
-        //             name = 'Arduino';
-        //         }
-        //         Vim.PYTHON_IMPORT_HW = `\nimport ${name}\n`;
-        //         Vim.INEDITABLE_LINE_PY = 4;
-        //     } else {
-        //         Vim.PYTHON_IMPORT_HW = '';
-        //         Vim.INEDITABLE_LINE_PY = 3;
-        //     }
-        // });
     }
 
     createDom(dom) {
