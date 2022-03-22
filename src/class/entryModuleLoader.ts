@@ -121,28 +121,23 @@ class EntryModuleLoader {
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
-        const prevModuleBlocks =
-            Entry.HARDWARE_LIST[`${moduleObject.id}`] &&
-            Entry.HARDWARE_LIST[`${moduleObject.id}`].blockMenuBlocks;
-        // clear prevModule if present
-        if (prevModuleBlocks) {
-            let removedCnt = 0;
-            for (const key of Object.keys(Entry.block)) {
-                if (prevModuleBlocks.indexOf(key) > -1) {
-                    delete Entry.block[`${key}`];
-                    removedCnt++;
-                }
-                if (removedCnt == prevModuleBlocks.length) {
-                    break;
-                }
-            }
-        }
 
         if (typeof moduleObject.id === 'string') {
-            Entry.HARDWARE_LIST[`${moduleObject.id}`] = moduleObject;
+            const prevModuleBlocks =
+                Entry.HARDWARE_LIST[moduleObject.id] &&
+                Entry.HARDWARE_LIST[moduleObject.id].blockMenuBlocks;
+            if (prevModuleBlocks) {
+                this.removePrevModuleBlock(prevModuleBlocks);
+            }
+            Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
         } else if (moduleObject.id instanceof Array) {
             moduleObject.id.forEach((id) => {
-                Entry.HARDWARE_LIST[`${id}`] = moduleObject;
+                const prevModuleBlocks =
+                    Entry.HARDWARE_LIST[id] && Entry.HARDWARE_LIST[id].blockMenuBlocks;
+                if (prevModuleBlocks) {
+                    this.removePrevModuleBlock(prevModuleBlocks);
+                }
+                Entry.HARDWARE_LIST[id] = moduleObject;
             });
         }
 
@@ -162,16 +157,26 @@ class EntryModuleLoader {
         Entry.dispatchEvent('hwChanged');
     }
 
+    // clear prevModule if present
+    removePrevModuleBlock(prevModuleBlocks: Array<string>) {
+        let removedCnt = 0;
+        for (const key of Object.keys(Entry.block)) {
+            if (prevModuleBlocks.indexOf(key) > -1) {
+                delete Entry.block[key];
+                removedCnt++;
+            }
+            if (removedCnt == prevModuleBlocks.length) {
+                break;
+            }
+        }
+    }
+
     // 모듈화 적용시, 팝업이벤트로부터 모듈name값만 받아서 동적으로 로드한다.
     async registerHardwareLiteModule(moduleObject: EntryHardwareBlockModule) {
         if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
             return;
         }
         Entry.hwLite.banClassAllHardwareLite();
-        // @ts-ignore
-        if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
-            return;
-        }
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
