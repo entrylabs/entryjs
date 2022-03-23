@@ -129,6 +129,11 @@ export default class HardwareLite {
         }
     }
 
+    isHwLiteSupportAgent() {
+        const userAgentString = navigator.userAgent.toLowerCase();
+        return userAgentString.indexOf('chrome') >= 0 && userAgentString.indexOf('window') < 0;
+    }
+
     refreshHardwareLiteBlockMenu() {
         const blockMenu = Entry.getMainWS()?.blockMenu;
         if (!blockMenu) {
@@ -142,12 +147,16 @@ export default class HardwareLite {
                 blockMenu.banClass('arduinoLiteGuide', true);
                 blockMenu.unbanClass('arduinoLiteDisconnected', true);
                 blockMenu.unbanClass('arduinoDisconnected', true);
+                this.isHwLiteSupportAgent()
+                    ? blockMenu.unbanClass('arduinoLiteSupported', true)
+                    : blockMenu.banClass('arduinoLiteSupported', true);
                 this.banClassAllHardwareLite();
                 break;
             case HardwareStatement.connected:
                 blockMenu.banClass('arduinoLiteConnectFailed', true);
                 blockMenu.banClass('arduinoLiteDisconnected', true);
                 blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.banClass('arduinoLiteSupported', true);
                 blockMenu.banClass('arduinoLiteGuide', true);
                 blockMenu.unbanClass('arduinoLiteConnected', true);
                 blockMenu.unbanClass(this.hwModule?.name, true);
@@ -156,6 +165,7 @@ export default class HardwareLite {
                 blockMenu.banClass('arduinoLiteDisconnected', true);
                 blockMenu.banClass('arduinoLiteConnected', true);
                 blockMenu.banClass('arduinoDisconnected', true);
+                blockMenu.banClass('arduinoLiteSupported', true);
                 blockMenu.unbanClass('arduinoLiteConnectFailed', true);
                 if (typeof this.hwModule?.id === 'string') {
                     if (ARDUINO_BOARD_IDS.includes(this.hwModule.id)) {
