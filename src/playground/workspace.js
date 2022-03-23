@@ -200,6 +200,7 @@ Entry.Workspace = class Workspace {
                             if (result) {
                                 Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
                                 Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
+                                Entry.hwLite.banClassAllHardwareLite();
                                 Entry.playground.dataTable.removeAllBlocks();
                                 Entry.aiLearning.removeAllBlocks();
                                 changeToPythonMode();

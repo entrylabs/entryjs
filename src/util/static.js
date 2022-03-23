@@ -175,6 +175,9 @@ Entry.STATIC = {
 
         playgroundClickAddAIUtilizeBlock: 1103,
         playgroundClickAddAIUtilizeBlockCancel: 1104,
+
+        playgroundClickAddHardwareLiteBlock: 1105,
+        playgroundClickAddHardwareLiteBlockCancel: 1106,
     },
 
     RECORDABLE: {

@@ -1,3 +1,6 @@
+import fetch from 'isomorphic-fetch';
+import cryptojs from 'crypto-js';
+import HardwareLite from './hw_lite';
 type EntryBlockRegisterSchema = {
     blockName: string;
     block: EntryBlock;
@@ -6,29 +9,83 @@ type EntryBlockRegisterSchema = {
 
 class EntryModuleLoader {
     public moduleList: string[] = [];
+    public moduleListLite: string[] = [];
 
     /**
+     * @deprecated
      * 해당 url 을 동적으로 로드한다.
      * 해당 함수는 굉장히 위험하므로 추가적인 방어로직이 필요하다.
+     * key는 로컬에서 파일을 암호화 하여 entry-hw 에서 전달, 해당 파일을 로컬에 있는 키로 1차 검증, 서버로 2차 검증을 통한 무결성/보안 확보
+     * 오프라인의 경우, 오픈소스임으로, 로컬상태에서의 비정상적인 사용에 대한 제약이 힘든 부분이 있음. 다만, 온라인이 되는 경우 서버 검증을 사용 할 수 있음
      */
     // bl.loadModule(moduleName: string) bl.loadBlock(blockName, block)...
-    loadModule(moduleName: string): Promise<void> {
-        // 이미 로드된 모듈은 다시 로드하지 않는다.
-        if (this.moduleList.includes(moduleName)) {
-            return Promise.resolve();
+    async loadModule(moduleInfo: { name: string; file: string }): Promise<void> {
+        if (!moduleInfo.file || !moduleInfo.name) {
+            return;
         }
 
-        return new Promise((resolve, reject) => {
-            const scriptElementId = `entryModuleScript${Date.now()}`;
-
-            if (!moduleName) {
-                return;
+        let blockFile = moduleInfo.file;
+        if (Entry.offlineModulePath) {
+            if (window.sendSync) {
+                blockFile = window.sendSync('decryptBlock', blockFile);
             }
+        }
+
+        const key = cryptojs.SHA1(blockFile);
+        // sha1 key를 이용한 블럭 파일 검증.
+        if (window.navigator.onLine) {
+            try {
+                const sha1Result = await fetch(
+                    `${Entry.moduleBaseUrl}key/${moduleInfo.name}/${key}`
+                );
+                if (sha1Result.status != 200) {
+                    throw new Error('MODULE NOT VERIFIED');
+                }
+            } catch (e) {
+                throw new Error('MODULE NOT VERIFIED');
+            }
+        }
+        if (!moduleInfo) {
+            return;
+        }
+        await this.loadScript(moduleInfo.name, blockFile);
+    }
+
+    async loadModuleFromLocalOrOnline(name: string, isLite?: boolean) {
+        const lowerCaseName = isLite ? name : name.toLowerCase();
+        const baseUrl = isLite ? Entry.moduleliteBaseUrl : Entry.moduleBaseUrl;
+        let path = `${baseUrl}${name}/files/block`;
+        if (Entry.offlineModulePath) {
+            path = `file://${Entry.offlineModulePath}/${lowerCaseName}/block`;
+        }
+        const response = await fetch(path);
+        if (response.status != 200) {
+            throw new Error('MODULE NOT EXIST');
+        }
+        let result = await response.text();
+        const key = cryptojs.SHA1(result).toString();
+        const isValid = Entry.HARDWARE_LITE_LIST.some(
+            (item: any) => item.name == name && item.sha1 == key
+        );
+        if (!isValid) {
+            return alert('NOT VALID MODULE');
+        }
+        if (Entry.offlineModulePath) {
+            if (window.sendSync) {
+                result = window.sendSync('decryptBlock', result);
+            }
+        }
+        await this.loadScript(name, result, isLite);
+    }
+
+    async loadScript(name: string, code: string, isLite?: boolean) {
+        return await new Promise(async (resolve, reject) => {
+            const scriptElementId = `entryModuleScript${Date.now()}`;
             const scriptElement = document.createElement('script');
             scriptElement.id = scriptElementId;
 
             scriptElement.onload = () => {
-                !this.moduleList.includes(moduleName) && this.moduleList.push(moduleName);
+                this.moduleListLite = [name];
                 scriptElement.remove();
                 resolve();
             };
@@ -37,10 +94,15 @@ class EntryModuleLoader {
                 reject(e);
             };
 
-            scriptElement.src = `${Entry.moduleBaseUrl}${moduleName}/files/block`;
+            const blobedBlock = new Blob([code], {
+                type: 'text/javascript',
+            });
+            const blobUrl = URL.createObjectURL(blobedBlock);
 
+            scriptElement.src = blobUrl;
             // noinspection JSCheckFunctionSignatures
             document.body.appendChild(scriptElement);
+            URL.revokeObjectURL(blobUrl);
         });
     }
 
@@ -61,9 +123,20 @@ class EntryModuleLoader {
         }
 
         if (typeof moduleObject.id === 'string') {
+            const prevModuleBlocks =
+                Entry.HARDWARE_LIST[moduleObject.id] &&
+                Entry.HARDWARE_LIST[moduleObject.id].blockMenuBlocks;
+            if (prevModuleBlocks) {
+                this.removePrevModuleBlock(prevModuleBlocks);
+            }
             Entry.HARDWARE_LIST[moduleObject.id] = moduleObject;
         } else if (moduleObject.id instanceof Array) {
             moduleObject.id.forEach((id) => {
+                const prevModuleBlocks =
+                    Entry.HARDWARE_LIST[id] && Entry.HARDWARE_LIST[id].blockMenuBlocks;
+                if (prevModuleBlocks) {
+                    this.removePrevModuleBlock(prevModuleBlocks);
+                }
                 Entry.HARDWARE_LIST[id] = moduleObject;
             });
         }
@@ -71,7 +144,6 @@ class EntryModuleLoader {
         this.setLanguageTemplates(moduleObject);
         const blockObjects = moduleObject.getBlocks();
         const blockMenuBlocks = moduleObject.blockMenuBlocks;
-
         this.loadBlocks({
             categoryName: 'arduino',
             blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
@@ -83,6 +155,40 @@ class EntryModuleLoader {
 
         Entry.hw.setExternalModule(moduleObject);
         Entry.dispatchEvent('hwChanged');
+    }
+
+    // clear prevModule if present
+    removePrevModuleBlock(prevModuleBlocks: Array<string>) {
+        let removedCnt = 0;
+        for (const key of Object.keys(Entry.block)) {
+            if (prevModuleBlocks.indexOf(key) > -1) {
+                delete Entry.block[key];
+                removedCnt++;
+            }
+            if (removedCnt == prevModuleBlocks.length) {
+                break;
+            }
+        }
+    }
+
+    // 모듈화 적용시, 팝업이벤트로부터 모듈name값만 받아서 동적으로 로드한다.
+    async registerHardwareLiteModule(moduleObject: EntryHardwareBlockModule) {
+        if (!moduleObject.getBlocks || !moduleObject.blockMenuBlocks) {
+            return;
+        }
+        Entry.hwLite.banClassAllHardwareLite();
+        this.setLanguageTemplates(moduleObject);
+        const blockObjects = moduleObject.getBlocks();
+        const blockMenuBlocks = moduleObject.blockMenuBlocks;
+        this.loadBlocks({
+            categoryName: 'arduino',
+            blockSchemas: Object.entries(blockObjects).map(([blockName, block]) => ({
+                blockName,
+                block,
+                isBlockShowBlockMenu: blockMenuBlocks.indexOf(blockName) > -1,
+            })),
+        });
+        Entry.hwLite.setExternalModule(moduleObject);
     }
 
     /**
@@ -110,7 +216,6 @@ class EntryModuleLoader {
             categoryName: 'expansion',
             blockSchemas,
         });
-        // (5. 모듈리스트에 등록한다. 등록이 이루어지는 경우, 엔트리 verified 블록인지 외부 url 로드된 블록인지 판단해야 한다.)
     }
 
     loadBlocks({
@@ -120,7 +225,7 @@ class EntryModuleLoader {
         categoryName: string;
         blockSchemas: EntryBlockRegisterSchema[];
     }) {
-        const blockMenu = Entry.getMainWS().blockMenu;
+        const blockMenu = Entry.getMainWS()?.blockMenu;
 
         blockSchemas.forEach((blockSchema) => {
             this.applyDefaultProperties(blockSchema);
@@ -132,11 +237,13 @@ class EntryModuleLoader {
             }
 
             Entry.block[blockName] = block;
-
-            if (isBlockShowBlockMenu) {
+            if (isBlockShowBlockMenu && blockMenu) {
                 blockMenu.addCategoryData(categoryName, blockName);
             }
         });
+        if (!blockMenu) {
+            return;
+        }
 
         blockMenu.reDraw();
     }
@@ -204,5 +311,41 @@ Entry.moduleManager = instance;
  */
 Entry.loadExternalModules = async (project = {}) => {
     const { externalModules = [] } = project;
-    await Promise.all(externalModules.map(instance.loadModule.bind(instance)));
+    await Promise.all(externalModules.map(instance.loadModuleFromLocalOrOnline.bind(instance)));
+};
+
+Entry.loadLiteExternalModules = async (project = {}) => {
+    const { externalModulesLite = [] } = project;
+    Entry.externalModulesLite = externalModulesLite;
+    await Promise.all(externalModulesLite.map(instance.registerHardwareLiteModule.bind(instance)));
+};
+
+/**
+ * 개발용 코드, path를 통해서 블럭을 로딩할수 있음.
+ * @param path
+ */
+Entry.loadLiteTestModule = async (file: File, name: string) => {
+    const result = await file.text();
+    await Entry.moduleManager.loadScript(name, result, true);
+    // Entry.moduleManager.registerHardwareLiteModule(name);
+};
+
+Entry.loadLiteTestModuleUploader = () => {
+    const headerBtns = document.querySelector('section');
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    const nameInput = document.createElement('input');
+    nameInput.type = 'text';
+    const loadButton = document.createElement('button');
+    loadButton.innerText = '적용';
+    const handleUpdate = async () => {
+        const file = fileInput.files[0];
+        fileInput.value = null;
+        await Entry.loadLiteTestModule(file, nameInput.value);
+    };
+
+    loadButton.onclick = handleUpdate;
+    headerBtns.prepend(loadButton);
+    headerBtns.prepend(fileInput);
+    headerBtns.prepend(nameInput);
 };
