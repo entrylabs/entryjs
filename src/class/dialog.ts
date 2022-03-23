@@ -7,6 +7,7 @@ type EntryObjectEntity = any;
 
 type NotchType = 'ne' | 'nw' | 'se' | 'sw';
 
+const _cache = new Map();
 class EntryDialog {
     private parent: EntryObjectEntity;
     private padding = 10;
@@ -29,7 +30,8 @@ class EntryDialog {
             return;
         }
         if (entity.dialog) {
-            entity.dialog.remove();
+            entity.dialog.update();
+            return;
         }
         entity.dialog = this;
         this.parent = entity;
@@ -49,26 +51,63 @@ class EntryDialog {
         }
     }
 
-    /**
-     * Set position
-     */
-    update() {
+    private getNotchType(bound: any) {
         const parentObj = this.parent.object;
-        let bound = GEHelper.calcParentBound(parentObj);
-        if (!bound && this.parent.type === 'textBox') {
-            if (!this._isNoContentTried) {
-                this.parent.setText(' ');
-                bound = GEHelper.calcParentBound(parentObj);
-                this._isNoContentTried = true;
+        const entity = parentObj.entity;
+        const cache = _cache.get(parentObj.id) || {};
+        const { x, y } = cache;
+        let notchType = cache.notchType;
+
+        if (entity.x != x || entity.y != y) {
+            if (bound.y - 20 - this.border > -135) {
+                notchType = 'n';
             } else {
-                delete this._isNoContentTried;
-                return;
+                notchType = 's';
             }
+            if (bound.x + bound.width / 2 < 0) {
+                notchType += 'e';
+            } else {
+                notchType += 'w';
+            }
+            _cache.set(parentObj.id, {
+                notchType,
+                x: entity.x,
+                y: entity.y,
+            });
         }
+
+        return notchType;
+    }
+
+    private setNotchPositionForPixi(bound: any) {
+        const notchType = this.getNotchType(bound);
+        if (notchType.includes('n')) {
+            this.object.y = Math.max(
+                bound.y - this.height / 2 - 20 - this.padding,
+                -135 + this.height / 2 + this.padding
+            );
+        } else {
+            this.object.y = Math.min(
+                bound.y + bound.height + this.height / 2 + 20 + this.padding,
+                135 - this.height / 2 - this.padding
+            );
+        }
+        if (notchType.includes('e')) {
+            this.object.x = Math.min(
+                bound.x + this.object.width / 2 + this.width / 2,
+                240 - this.width / 2 - this.padding
+            );
+        } else {
+            this.object.x = Math.max(
+                bound.x - this.width / 2,
+                -240 + this.width / 2 + this.padding
+            );
+        }
+        return notchType;
+    }
+
+    private setNotchPositionForCreateJs(bound: any) {
         let notchType = '';
-        if (!this.object) {
-            return;
-        }
         if (bound.y - 20 - this.border > -135) {
             this.object.y = Math.max(
                 bound.y - this.height / 2 - 20 - this.padding,
@@ -95,6 +134,36 @@ class EntryDialog {
             );
             notchType += 'w';
         }
+        return notchType;
+    }
+
+    /**
+     * Set position
+     */
+    update() {
+        const parentObj = this.parent.object;
+        let bound = GEHelper.calcParentBound(parentObj);
+        if (!bound && this.parent.type === 'textBox') {
+            if (!this._isNoContentTried) {
+                this.parent.setText(' ');
+                bound = GEHelper.calcParentBound(parentObj);
+                this._isNoContentTried = true;
+            } else {
+                delete this._isNoContentTried;
+                return;
+            }
+        }
+        if (!this.object) {
+            return;
+        }
+
+        let notchType = '';
+
+        if (GEHelper.isWebGL) {
+            notchType = this.setNotchPositionForPixi(bound);
+        } else {
+            notchType = this.setNotchPositionForCreateJs(bound);
+        }
 
         if (this.notch.type != notchType) {
             this.object.removeChild(this.notch);
@@ -107,6 +176,7 @@ class EntryDialog {
     }
 
     remove() {
+        _cache.clear();
         Entry.stage.unloadDialog(this);
         this.parent.dialog = null;
         Entry.requestUpdate = true;
