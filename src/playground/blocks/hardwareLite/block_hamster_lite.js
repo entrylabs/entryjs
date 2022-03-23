@@ -169,7 +169,7 @@
 
         get monitorTemplate() {
             return {
-                imgPath: 'hw/Hamster.png',
+                imgPath: 'hw_lite/hamsterlite.png',
                 width: 256,
                 height: 256,
                 listPorts: {
