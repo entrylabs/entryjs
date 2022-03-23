@@ -670,9 +670,8 @@ module.exports = {
                     js: [],
                     py: [
                         {
-                            syntax: '(%2 // %4)',
-                            template: '%2 // %4',
-                            params: [null, null, null, null, null, 'QUOTIENT'],
+                            syntax: '(%2 %6 %4)',
+                            template: '%2 %6 %4',
                             blockType: 'param',
                             textParams: [
                                 undefined,
@@ -695,37 +694,7 @@ module.exports = {
                                     value: 'QUOTIENT',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
-                                    converter: Entry.block.converters.returnStringValue,
-                                },
-                            ],
-                        },
-                        {
-                            syntax: '(%2 % %4)',
-                            template: '%2 % %4',
-                            params: [null, null, null, null, null, 'MOD'],
-                            blockType: 'param',
-                            textParams: [
-                                undefined,
-                                {
-                                    type: 'Block',
-                                    accept: 'string',
-                                },
-                                undefined,
-                                {
-                                    type: 'Block',
-                                    accept: 'string',
-                                },
-                                undefined,
-                                {
-                                    type: 'Dropdown',
-                                    options: [
-                                        [Lang.Blocks.CALC_quotient_and_mod_sub_1, 'QUOTIENT'],
-                                        [Lang.Blocks.CALC_quotient_and_mod_sub_2, 'MOD'],
-                                    ],
-                                    value: 'QUOTIENT',
-                                    fontSize: 11,
-                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
-                                    converter: Entry.block.converters.returnStringValue,
+                                    converter: Entry.block.converters.returnOperator,
                                 },
                             ],
                         },

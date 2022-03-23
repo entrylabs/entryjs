@@ -132,6 +132,8 @@ function getConverters() {
             '/': 'DIVIDE',
             AND: 'and',
             OR: 'or',
+            QUOTIENT: '//',
+            MOD: '%',
         };
         return map[value];
     };
