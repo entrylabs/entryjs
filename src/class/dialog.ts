@@ -30,8 +30,7 @@ class EntryDialog {
             return;
         }
         if (entity.dialog) {
-            entity.dialog.update();
-            return;
+            entity.dialog.remove(true);
         }
         entity.dialog = this;
         this.parent = entity;
@@ -94,7 +93,7 @@ class EntryDialog {
         }
         if (notchType.includes('e')) {
             this.object.x = Math.min(
-                bound.x + this.object.width / 2 + this.width / 2,
+                bound.x + bound.width + this.width / 2,
                 240 - this.width / 2 - this.padding
             );
         } else {
@@ -175,8 +174,10 @@ class EntryDialog {
         Entry.requestUpdate = true;
     }
 
-    remove() {
-        _cache.clear();
+    remove(saveCache: boolean) {
+        if (!saveCache) {
+            _cache.clear();
+        }
         Entry.stage.unloadDialog(this);
         this.parent.dialog = null;
         Entry.requestUpdate = true;
