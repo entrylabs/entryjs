@@ -416,7 +416,7 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        Entry.hwLite.disconnect();
+                        Entry.hwLite.removeHardwareLiteModule();
                     },
                 ],
             },
