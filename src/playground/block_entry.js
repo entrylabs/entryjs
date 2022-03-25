@@ -314,7 +314,7 @@ function getBlocks() {
             skeleton: 'basic_button',
             color: EntryStatic.colorSet.common.TRANSPARENT,
             template: '%1',
-            isNotFor: ['arduinoDisconnected'],
+            isNotFor: ['arduinoLiteSupported'],
             class: 'arduino_default',
             params: [
                 {

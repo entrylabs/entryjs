@@ -84,14 +84,10 @@ export default class Hardware {
         try {
             await Entry.moduleManager.loadModuleFromLocalOrOnline(moduleinfo.name);
         } catch (e) {
-            // Entry.toast.alert(
-            //     Lang.Hw.hw_module_load_fail_title,
-            //     `${moduleName} ${Lang.Hw.hw_module_load_fail_desc}`
-            // );
             console.log(e);
             Entry.toast.alert(
-                '모듈 로드 실패',
-                `${moduleinfo.name} 로드에 실패했습니다. 관리자에게 문의하세요`
+                Lang.Msgs.hw_module_load_fail_title,
+                `${moduleinfo.name} ${Lang.Msgs.hw_module_load_fail_desc}`
             );
         }
     }
@@ -131,8 +127,7 @@ export default class Hardware {
      * 현재 하드웨어 로드가 외부 모듈에 의한 것인 경우는 연결이 해제되어도 블록숨김을 실행하지 않는다.
      */
     refreshHardwareBlockMenu() {
-        // NOTE : 하드웨어 웹연결과 충돌을 방지
-        if(Entry.hwLite.status !== 'disconnected'){
+        if (Entry.hwLite.status !== 'disconnected') {
             console.log('canel refreshHardwareBlockMenu() for HwLITE');
             return;
         }
@@ -511,9 +506,9 @@ export default class Hardware {
                     if (prevResult) {
                         return true;
                     }
-                    
+
                     // NOTE : 하드웨어 웹연결과 충돌을 방지
-                    if(Entry.hwLite.status !== 'disconnected'){
+                    if (Entry.hwLite.status !== 'disconnected') {
                         console.log('canel connectionTry for HwLITE');
                         return;
                     }
