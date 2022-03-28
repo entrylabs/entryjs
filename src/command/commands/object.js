@@ -312,6 +312,44 @@ import VideoUtils from '../../util/videoUtils';
         undo: 'objectAddAIUtilizeBlocks',
     };
 
+    c[COMMAND_TYPES.objectAddHardwareLiteBlocks] = {
+        do(module) {
+            Entry.hwLite.getConnectFailedMenu();
+            if (typeof Entry.hardwareLiteBlocks == 'undefined') {
+                Entry.hardwareLiteBlocks = [];
+            }
+            Entry.hardwareLiteBlocks = _.union(Entry.hardwareLiteBlocks, [module.id]);
+            Entry.hwLite.setExternalModule(module);
+        },
+        state(module) {
+            return [module];
+        },
+        log(module) {
+            return [['module', module]];
+        },
+        dom: ['.btn_confirm_modal'],
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        validate: false,
+        undo: 'objectRemoveHardwareLiteBlocks',
+    };
+
+    c[COMMAND_TYPES.objectRemoveHardwareLiteBlocks] = {
+        do(module) {
+            Entry.hardwareLiteBlocks = [];
+            Entry.hwLite.disconnect();
+        },
+        state(module) {
+            return [module];
+        },
+        log(module) {
+            return [['module', module]];
+        },
+        dom: ['.btn_confirm_modal'],
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        validate: false,
+        undo: 'objectAddHardwareLiteBlocks',
+    };
+
     c[COMMAND_TYPES.objectNameEdit] = {
         do(objectId, newName) {
             const object = Entry.container.getObject(objectId);

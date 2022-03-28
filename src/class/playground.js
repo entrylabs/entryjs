@@ -1451,6 +1451,14 @@ Entry.Playground = class Playground {
         }
     }
 
+    addHardwareLiteModule(module) {
+        Entry.hwLite.addHardwareLiteModule(module);
+    }
+
+    removeHardwareLiteModule() {
+        Entry.hwLite.removeHardwareLiteModule();
+    }
+
     addExpansionBlocks(items) {
         Entry.expansion.addExpansionBlocks(items.map(({ name }) => name));
     }

@@ -100,6 +100,10 @@ declare interface IEntry extends EntryOptions {
         elementId?: string
     ): HTMLElementTagNameMap[K];
     do(commandName: string, ...args: any[]): any;
+
+    expansionBlocks: any;
+    aiUtilizeBlocks: any;
+    hardwareLiteBlocks: any;
 }
 
 declare type IHardwareType = 'serial' | 'bluetooth' | 'hid' | 'ble';

@@ -276,12 +276,18 @@ export default class HardwareLite {
             );
         } catch (error) {
             console.error(error);
+            Entry.toast.alert(
+                Lang.Msgs.hw_module_terminaltion_title,
+                Lang.Msgs.hw_module_terminaltion_desc,
+                false
+            );
             this.getConnectFailedMenu();
         }
     }
 
     async disconnect() {
         try {
+            Entry.hardwareLiteBlocks = [];
             this.status = HardwareStatement.willDisconnect;
             await this.reader?.cancel();
             await this.writer?.abort();
@@ -347,6 +353,12 @@ export default class HardwareLite {
     }
     sendAsciiAsBuffer(asciiStr: string) {
         this.writer.write(Buffer.from(asciiStr, 'utf8'));
+    }
+    addHardwareLiteModule(module: EntryHardwareLiteBlockModule) {
+        Entry.do('objectAddHardwareLiteBlocks', module);
+    }
+    removeHardwareLiteModule() {
+        Entry.do('objectRemoveHardwareLiteBlocks', this.hwModule);
     }
 }
 
