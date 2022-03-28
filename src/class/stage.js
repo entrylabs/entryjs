@@ -791,7 +791,7 @@ Entry.Stage = class Stage {
             destroyOption = { children: true, texture: false, baseTexture: false };
             this.objectContainers.forEach((c) => c.destroy(destroyOption));
             //this.handle.destroy(); // 추상화 아직 안됨.
-            PIXIAtlasManager.clearProject();
+            PIXIAtlasManager?.clearProject?.();
         } else {
             //do nothing
         }

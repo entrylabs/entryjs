@@ -88,6 +88,9 @@ Entry.STATIC = {
         objectAddAIUtilizeBlocks: 221,
         objectRemoveAIUtilizeBlocks: 222,
 
+        objectAddHardwareLiteBlocks: 223,
+        objectRemoveHardwareLiteBlocks: 224,
+
         do: 301,
         undo: 302,
         redo: 303,
