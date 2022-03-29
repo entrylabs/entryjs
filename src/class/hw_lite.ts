@@ -44,6 +44,7 @@ export default class HardwareLite {
     static setExternalModule: any;
     static refreshHardwareLiteBlockMenu: any;
     static banClassAllHardwareLite: any;
+    static isHwLiteSupportAgent: any;
     private playground: any;
     private connectionType: 'ascii' | 'bytestream' | undefined;
     textEncoder: TextEncoder;

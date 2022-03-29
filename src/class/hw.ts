@@ -551,9 +551,11 @@ export default class Hardware {
         switch (statement) {
             case disconnected:
                 blockMenu.unbanClass('arduinoDisconnected', true);
-                blockMenu.unbanClass('arduinoLiteSupported', true);
                 blockMenu.banClass('arduinoConnected', true);
                 blockMenu.banClass('arduinoConnect', true);
+                Entry.hwLite?.isHwLiteSupportAgent()
+                    ? blockMenu.unbanClass('arduinoLiteSupported', true)
+                    : blockMenu.banClass('arduinoLiteSupported', true);
                 break;
             case socketConnected:
                 blockMenu.banClass('arduinoLiteSupported', true);
