@@ -1897,7 +1897,13 @@ Lang.Blocks = {
     "table_max": "max",
     "table_min": "min",
     "table_avg": "average",
-    "table_stdev": "standard deviation"
+    "table_stdev": "standard deviation",
+    "arduino_lite_reconnect": "再接続する",
+    "arduino_lite_download_firmware": "ファームウェア",
+    "arduino_lite_download_driver": "ドライバー",
+    "arduino_lite_connect": "ブラウザーで接続",
+    "arduino_lite_disconnect": "キャンセル",
+    "arduino_lite_guide": "• connection guide",
 };
 Lang.video_body_coord_params = {
     "left_eye": "左眼",
