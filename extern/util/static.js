@@ -506,6 +506,7 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_connect',
                 'arduino_lite_disconnect',
                 'arduino_lite_device_name',
+                'arduino_lite_connected_noti',
                 'arduino_lite_reconnect',
                 'arduino_lite_download_firmware',
                 'arduino_download_connector',

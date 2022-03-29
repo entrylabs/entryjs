@@ -1101,7 +1101,8 @@ Lang.Blocks = {
     "table_max": "max",
     "table_min": "min",
     "table_avg": "average",
-    "table_stdev": "standard deviation"
+    "table_stdev": "standard deviation",
+    "arduino_lite_connected_noti": "Please save the project\nwith the device selected.",
 };
 Lang.video_body_coord_params = {
     "left_eye": "Left Eye",

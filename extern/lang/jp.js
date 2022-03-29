@@ -565,6 +565,7 @@ Lang.Blocks = {
     "ARDUINO_arduino_get_sensor_number_3": "3",
     "ARDUINO_arduino_get_sensor_number_4": "4",
     "ARDUINO_arduino_get_sensor_number_5": "5",
+    "arduino_lite_connected_noti": "ハードウェアを選択した状態で\n作品を保存してください。",
     "blacksmith_toggle_on": "on",
     "blacksmith_toggle_off": "off",
     "blacksmith_lcd_first_line": "first",
