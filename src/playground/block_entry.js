@@ -438,7 +438,26 @@ function getBlocks() {
             def: {
                 type: 'arduino_lite_device_name',
             },
-            class: 'arduino_lite_device_name',
+            class: 'arduino_lite_device_info',
+            isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
+            events: {},
+        },
+        arduino_lite_connected_noti: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            template: '%1',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.arduino_lite_connected_noti,
+                    color: EntryStatic.colorSet.common.BUTTON,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'arduino_lite_connected_noti',
+            },
+            class: 'arduino_lite_device_info',
             isNotFor: ['arduinoLiteConnectFailed', 'arduinoLiteConnected'],
             events: {},
         },
