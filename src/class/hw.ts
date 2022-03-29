@@ -180,8 +180,8 @@ export default class Hardware {
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                Lang.Hw.hw_module_terminaltion_title,
-                Lang.Hw.hw_module_terminaltion_desc,
+                Lang.Msgs.hw_connection_termination_title,
+                Lang.Msgs.hw_connection_termination_desc,
                 false
             );
         }
@@ -551,9 +551,11 @@ export default class Hardware {
         switch (statement) {
             case disconnected:
                 blockMenu.unbanClass('arduinoDisconnected', true);
-                blockMenu.unbanClass('arduinoLiteSupported', true);
                 blockMenu.banClass('arduinoConnected', true);
                 blockMenu.banClass('arduinoConnect', true);
+                Entry.hwLite?.isHwLiteSupportAgent()
+                    ? blockMenu.unbanClass('arduinoLiteSupported', true)
+                    : blockMenu.banClass('arduinoLiteSupported', true);
                 break;
             case socketConnected:
                 blockMenu.banClass('arduinoLiteSupported', true);
