@@ -278,8 +278,8 @@ export default class HardwareLite {
         } catch (error) {
             console.error(error);
             Entry.toast.alert(
-                Lang.Msgs.hw_module_terminaltion_title,
-                Lang.Msgs.hw_module_terminaltion_desc,
+                Lang.Msgs.hw_connection_failed_title,
+                Lang.Msgs.hw_connection_failed_desc,
                 false
             );
             this.getConnectFailedMenu();
@@ -307,8 +307,8 @@ export default class HardwareLite {
             this.status = HardwareStatement.disconnected;
             Entry.dispatchEvent('hwLiteChanged');
             Entry.toast.alert(
-                Lang.Msgs.hw_module_terminaltion_title,
-                Lang.Msgs.hw_module_terminaltion_desc,
+                Lang.Msgs.hw_connection_termination_title,
+                Lang.Msgs.hw_connection_termination_desc,
                 false
             );
         }
@@ -330,8 +330,8 @@ export default class HardwareLite {
         try {
             if (this.status === HardwareStatement.disconnected) {
                 Entry.toast.alert(
-                    Lang.Msgs.hw_module_terminaltion_title,
-                    Lang.Msgs.hw_module_terminaltion_desc,
+                    Lang.Msgs.hw_connection_failed_title,
+                    Lang.Msgs.hw_connection_failed_desc,
                     false
                 );
                 throw new Error('HARDWARE LITE NOT CONNECTED');

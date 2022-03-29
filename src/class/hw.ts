@@ -180,8 +180,8 @@ export default class Hardware {
 
             Entry.dispatchEvent('hwChanged');
             Entry.toast.alert(
-                Lang.Hw.hw_module_terminaltion_title,
-                Lang.Hw.hw_module_terminaltion_desc,
+                Lang.Msgs.hw_connection_termination_title,
+                Lang.Msgs.hw_connection_termination_desc,
                 false
             );
         }
