@@ -590,6 +590,11 @@ export default class Hardware {
             this.currentDeviceKey = undefined;
             this.hwModule = undefined;
             Entry.dispatchEvent('hwChanged');
+            Entry.toast.alert(
+                Lang.Msgs.hw_connection_termination_title,
+                Lang.Msgs.hw_connection_termination_desc,
+                false
+            );
         }
     }
 
