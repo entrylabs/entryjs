@@ -881,7 +881,6 @@ Entry.BlockView = class BlockView {
         const y = this.y / scale;
         if (!this.magnetsOfThread) {
             this.magnetsOfThread = this._getMagnetsInThread();
-            console.log(this.magnetsOfThread);
         }
         for (const type in this.magnetsOfThread) {
             const view = _.result(
