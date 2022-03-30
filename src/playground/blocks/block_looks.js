@@ -117,7 +117,7 @@ module.exports = {
                     OPTION: 2,
                 },
                 class: 'say',
-                isNotFor: ['textBox'],
+                isNotFor: [],
                 func(sprite, script) {
                     if (!script.isStart) {
                         let [timeValue, message] = script.getValues(['SECOND', 'VALUE'], script);
@@ -136,7 +136,7 @@ module.exports = {
                         message = Entry.convertToRoundedDecimals(message, 3);
                         new Entry.Dialog(sprite, message, mode);
                         sprite.syncDialogVisible(sprite.getVisible());
-                        setTimeout(function() {
+                        setTimeout(() => {
                             script.timeFlag = 0;
                         }, timeValue * 1000);
                     }
@@ -241,7 +241,7 @@ module.exports = {
                     OPTION: 1,
                 },
                 class: 'say',
-                isNotFor: ['textBox'],
+                isNotFor: [],
                 func(sprite, script) {
                     let message = script.getValue('VALUE', script);
                     if (message === '') {
@@ -285,7 +285,7 @@ module.exports = {
                     type: 'remove_dialog',
                 },
                 class: 'say',
-                isNotFor: ['textBox'],
+                isNotFor: [],
                 func(sprite, script) {
                     if (sprite.dialog) {
                         sprite.dialog.remove();

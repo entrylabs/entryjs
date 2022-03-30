@@ -504,15 +504,24 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_open',
                 'arduino_cloud_pc_open',
                 'arduino_connect',
+                'arduino_lite_disconnect',
+                'arduino_lite_device_name',
+                'arduino_lite_connected_noti',
+                'arduino_lite_reconnect',
+                'arduino_lite_download_firmware',
                 'arduino_download_connector',
                 // 'download_guide',
                 'arduino_download_source',
+                'arduino_lite_connect',
+                'arduino_lite_guide',
                 'arduino_noti',
+                'arduino_lite_alert',
             ].concat(EntryStatic.DynamicHardwareBlocks),
         },
     ];
 };
 EntryStatic.DynamicHardwareBlocks = [];
+EntryStatic.DynamicHardwareLiteBlocks = [];
 EntryStatic.discussCategories = [
     // 'notice',
     'qna',
@@ -961,6 +970,7 @@ EntryStatic.colorSet = {
         TEXT: '#333',
         BUTTON_BACKGROUND_DISABLED: '#f9f9f9',
         BUTTON_DISABLED: '#cbcbcb',
+        ALERT: '#FB2729',
     },
 };
 

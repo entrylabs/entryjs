@@ -1896,7 +1896,13 @@ Lang.Blocks = {
     "table_max": "max",
     "table_min": "min",
     "table_avg": "average",
-    "table_stdev": "standard deviation"
+    "table_stdev": "standard deviation",
+    "arduino_lite_reconnect": "Retry",
+    "arduino_lite_download_firmware": "Download Firmware",
+    "arduino_lite_download_driver": "Download Driver",
+    "arduino_lite_connect": "Web Connection",
+    "arduino_lite_disconnect": "Cancel",
+    "arduino_lite_guide": "• connection guide",
 };
 Lang.video_body_coord_params = {
     "left_eye": "Left Eye",
@@ -4692,6 +4698,10 @@ Lang.Msgs = {
     "hw_connection_success": "Hardware connection success",
     "hw_connection_success_desc": "Double click the hardware icon to check sensor values",
     "hw_connection_success_desc2": "Hardware connection is successful",
+    "hw_connection_termination_title": "Disconnected",
+    "hw_connection_termination_desc": "The device has been disconnected.",
+    "hw_connection_failed_title": "Connection Failed",
+    "hw_connection_failed_desc": "Please make sure that\nthe device used in the project is connected.",
     "ie_page_title": "This browser is not supported",
     "ie_page_desc": "Entry is available in Internet Explorer 10 or higher or in Chrome browser.<br/>Please update the Windows or install a Chrome browser.<br/>Offline versions are available even though the internet is not connected. Get download now!",
     "ie_page_chrome_download": "Chrome<br/>download",
