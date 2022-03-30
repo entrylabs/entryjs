@@ -67,6 +67,16 @@ Entry.loadProject = function(project) {
         }
     }
 
+    Entry.hardwareLiteBlocks = project.hardwareLiteBlocks || [];
+    if (Entry.hardwareLiteBlocks.length > 0) {
+        for (const type in Entry.HARDWARE_LITE_LIST) {
+            if (Entry.hardwareLiteBlocks.indexOf(type) > -1) {
+                const module = Entry.HARDWARE_LITE_LIST[type];
+                Entry.playground.addHardwareLiteModule(module);
+            }
+        }
+    }
+
     if (!Entry.engine.projectTimer) {
         Entry.variableContainer.generateTimer();
     }
@@ -115,6 +125,7 @@ Entry.loadProject = function(project) {
             window.parent.childIframeLoaded();
         }
     } catch (e) {}
+
     return project;
 };
 
@@ -161,8 +172,10 @@ Entry.exportProject = function(project) {
     project.interface = Entry.captureInterfaceState();
     project.expansionBlocks = Entry.expansionBlocks;
     project.aiUtilizeBlocks = Entry.aiUtilizeBlocks;
+    project.hardwareLiteBlocks = Entry.hardwareLiteBlocks;
     project.learning = Entry.aiLearning?.toJSON();
     project.externalModules = entryModuleLoader.moduleList;
+    project.externalModulesLite = entryModuleLoader.moduleListLite;
 
     if (!objects || !objects.length) {
         return false;

@@ -799,6 +799,7 @@ EntryStatic.colorSet = {
         BUTTON: '#4f80ff',
         BUTTON_BACKGROUND: '#eee',
         TEXT: '#333',
+        ALERT: '#FB2729',
     },
 };
 

@@ -240,7 +240,7 @@ class DataTable {
             source.modal = this.createChart(source, chartIndex);
         }
         source.forceApply();
-        source.modal.show({ chartIndex });
+        source.modal.show(undefined, { chartIndex });
         this.modal = source.modal;
     }
 

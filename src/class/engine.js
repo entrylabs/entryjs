@@ -723,6 +723,7 @@ Entry.Engine = class Engine {
         Entry.scene.loadStartSceneSnapshot();
         Entry.Func.clearThreads();
         Entry.Utils.setVolume(1);
+        Entry.hwLite.setZero();
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
         Entry.soundInstances = [];

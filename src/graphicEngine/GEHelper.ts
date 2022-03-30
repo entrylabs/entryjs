@@ -794,7 +794,7 @@ class _BrushHelper extends GEHelperBase {
     newShape(brush: PIXIBrushAdaptor | any) {
         if (this._isWebGL) {
             const shape = PIXIHelper.newPIXIGraphics();
-            brush.internal_setShape(shape);
+            brush.internalSetShape(shape);
             return shape;
         } else {
             return new createjs.Shape(brush);

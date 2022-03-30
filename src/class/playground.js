@@ -611,6 +611,9 @@ Entry.Playground = class Playground {
         if (Entry.hw) {
             Entry.hw.refreshHardwareBlockMenu();
         }
+        if (Entry.hwLite) {
+            Entry.hwLite.refreshHardwareLiteBlockMenu();
+        }
     }
 
     /**
@@ -1448,6 +1451,14 @@ Entry.Playground = class Playground {
         }
     }
 
+    addHardwareLiteModule(module) {
+        Entry.hwLite.addHardwareLiteModule(module);
+    }
+
+    removeHardwareLiteModule() {
+        Entry.hwLite.removeHardwareLiteModule();
+    }
+
     addExpansionBlocks(items) {
         Entry.expansion.addExpansionBlocks(items.map(({ name }) => name));
     }
@@ -2226,6 +2237,19 @@ Entry.Playground = class Playground {
         Object.values(Entry.AI_UTILIZE_BLOCK_LIST).forEach((block) => {
             blockMenu.banClass(block.name, true);
             blockMenu.banClass(`${block.name}_legacy`, true);
+        });
+    }
+
+    banHardwareLiteBlock() {
+        const blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) {
+            return;
+        }
+
+        Object.values(Entry.HARDWARE_LITE_LIST).forEach((block) => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(`${block.name}_legacy`, true);
+            blockMenu.banClass(`${block.name.toLowerCase()}`, true);
         });
     }
 

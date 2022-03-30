@@ -10,6 +10,7 @@ import { GEDragHelper } from '../graphicEngine/GEDragHelper';
 const FONT_PADDING_TOP_EXCEPTIONS = ['Nanum Gothic Coding', 'SDMapssi'];
 const TEXT_BOX_REPOSITION_THRESHOLD = 10;
 const TEXT_BOX_REPOSITION_OFFSET = 10;
+const TEXT_BOX_WEBGL_OFFSET = 5.9;
 
 /**
  * Construct entity class
@@ -1520,6 +1521,21 @@ Entry.EntityObject = class EntityObject {
         }
     }
 
+    // 통상적 높이 계산을 위한 Method
+    getMeasuredLineHeight() {
+        if (!this.invisibleCanvas) {
+            if (this.textObject.canvas) {
+                this.invisibleCanvas = this.textObject.canvas;
+            } else {
+                this.invisibleCanvas = Entry.Dom($('<canvas id="invisibleCanvas"></canvas>'))[0];
+            }
+        }
+        const fontCanvas = this.invisibleCanvas;
+        const context = fontCanvas.getContext('2d');
+        context.font = this.textObject.font;
+        return Math.round(context.measureText('M').width * 100) / 100;
+    }
+
     alignTextBox() {
         if (this.type !== 'textBox') {
             return;
@@ -1528,7 +1544,8 @@ Entry.EntityObject = class EntityObject {
         const isWebGL = GEHelper.isWebGL;
         if (this.lineBreak) {
             if (isWebGL) {
-                textObject.y = -this.getHeight() / 2 + TEXT_BOX_REPOSITION_OFFSET;
+                textObject.y =
+                    -this.getHeight() / 2 + TEXT_BOX_REPOSITION_OFFSET - TEXT_BOX_WEBGL_OFFSET;
             } else {
                 const desiredValue =
                     textObject.getMeasuredLineHeight() / 2 -
