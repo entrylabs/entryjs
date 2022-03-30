@@ -271,9 +271,7 @@ export default class HardwareLite {
 
             Entry.toast.success(
                 Lang.Msgs.hw_connection_success,
-                this.hwMonitor
-                    ? Lang.Msgs.hw_connection_success_desc
-                    : Lang.Msgs.hw_connection_success_desc2
+                Lang.Msgs.hw_connection_success_desc2
             );
         } catch (error) {
             console.error(error);
