@@ -857,17 +857,14 @@ Entry.BlockView = class BlockView {
     }
 
     _getMagnetsInThread() {
-        const magnet = {};
-
-        const previous = this.magnet.previous;
-        if (previous) {
-            magnet.previous = previous;
-        }
+        const magnet = { ...this.magnet };
 
         const lastBlock = this.block.thread.getLastBlock();
         const next = lastBlock.view.magnet.next;
         if (next) {
             magnet.next = next;
+        } else {
+            delete magnet.next;
         }
 
         return magnet;
