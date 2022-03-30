@@ -342,14 +342,10 @@ export default class Hardware {
         this._banClassAllHardware();
         Entry.dispatchEvent('hwChanged');
 
-        let descMsg;
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
-            descMsg = Lang.Msgs.hw_connection_success_desc;
             this._setHardwareMonitorTemplate();
-        } else {
-            descMsg = Lang.Msgs.hw_connection_success_desc2;
         }
-        Entry.toast.success(Lang.Msgs.hw_connection_success, descMsg);
+        Entry.toast.success(Lang.Msgs.hw_connection_success, Lang.Msgs.hw_connection_success_desc2);
     }
 
     openHardwareDownloadPopup() {
