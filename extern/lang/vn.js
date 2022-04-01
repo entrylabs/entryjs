@@ -1903,6 +1903,7 @@ Lang.Blocks = {
     "arduino_lite_connect": "Web Connection",
     "arduino_lite_disconnect": "Cancel",
     "arduino_lite_guide": "• connection guide",
+    "dummy_for_offline_2.0.45": "dummy commit",
 };
 Lang.video_body_coord_params = {
     "left_eye": "Left Eye",
