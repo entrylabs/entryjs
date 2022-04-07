@@ -200,7 +200,7 @@ export default class HardwareLite {
 
     async writePortData(data: string) {
         if (data && this.status === HardwareStatement.connected) {
-            this.writer.write(Buffer.from(data));
+            const result = await this.writer.write(Buffer.from(data));
         }
     }
 
@@ -215,7 +215,9 @@ export default class HardwareLite {
             if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
                 const reqLocal = this.hwModule?.requestLocalData();
                 if (reqLocal && this.status === HardwareStatement.connected) {
-                    this.writer.write(Buffer.from(reqLocal));
+                    if (Entry.engine.isState('run')) {
+                        this.writer.write(Buffer.from(reqLocal));
+                    }
                 }
             }
 
@@ -382,6 +384,15 @@ export default class HardwareLite {
     }
     removeHardwareLiteModule() {
         Entry.do('objectRemoveHardwareLiteBlocks', this.hwModule);
+    }
+
+    update() {
+        if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
+            const reqLocal = this.hwModule?.requestLocalData();
+            if (reqLocal && this.status === HardwareStatement.connected) {
+                this.writer.write(Buffer.from(reqLocal));
+            }
+        }
     }
 }
 

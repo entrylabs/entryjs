@@ -5,7 +5,9 @@
 // - portData 파라미터 확인
 // - 모니터링 로직 확인
 
-(function () {
+import _range from 'lodash/range';
+
+(function() {
     Entry.ArduinoLite = new (class ArduinoLite {
         constructor() {
             this.id = ['1.1', '4.2', '8.1'];
@@ -17,7 +19,7 @@
                 en: 'Arduino',
             };
             // duration도 미확인
-            this.duration = 0;
+            this.duration = 32;
             this.blockMenuBlocks = [
                 'arduinolite_get_number_sensor_value',
                 'arduinolite_get_digital_value',
@@ -35,6 +37,8 @@
                 bufferSize: 512,
                 constantServing: true,
             };
+            this.readablePorts = [];
+            this.remainValue = null;
             this.setZero();
         }
 
@@ -44,17 +48,11 @@
             this.digitalValue = new Array(14).fill(0);
             this.remoteDigitalValue = new Array(14).fill(0);
             this.analogValue = new Array(6).fill(0);
+            this.readablePorts = _range(0, 19);
 
-            // this.remoteDigitalValue = new Array(14).fill(0);
-            // this.readablePorts = null;
-            // this.remainValue = null;
-
-            // Entry.hw.sendQueue.readablePorts = [];
-            // for (let port = 0; port < 20; port++) {
-            //     Entry.hw.sendQueue[port] = 0;
-            //     Entry.hw.sendQueue.readablePorts.push(port);
-            // }
-            // Entry.hw.update();
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
+            }
         }
 
         // 아두이노 에서 값 읽어오
@@ -62,9 +60,8 @@
             // console.log(typeof data, data);
             //hw_lite객체에서 기기로부터 읽어온 스트림을 data파라미터로 넘겨줌
             // data: Native Buffer
-            for (var i = 0; i < 32; i++) {
-                // console.log(`var i : ${i} : ", ${data[i]}`);
-                var chunk;
+            for (let i = 0; i < 32; i++) {
+                let chunk;
                 if (!this.remainValue) {
                     chunk = data[i];
                 } else {
@@ -73,64 +70,52 @@
                 }
                 if (chunk >> 7) {
                     if ((chunk >> 6) & 1) {
-                        var nextChunk = data[i + 1];
+                        const nextChunk = data[i + 1];
                         if (!nextChunk && nextChunk !== 0) {
                             this.remainValue = chunk;
                         } else {
                             this.remainValue = null;
 
-                            var port = (chunk >> 3) & 7;
-                            this.analogValue[port] =
-                                ((chunk & 7) << 7) + (nextChunk & 127);
+                            const port = (chunk >> 3) & 7;
+                            this.analogValue[port] = ((chunk & 7) << 7) + (nextChunk & 127);
                         }
                         i++;
                     } else {
-                        var port = (chunk >> 2) & 15;
+                        const port = (chunk >> 2) & 15;
                         this.digitalValue[port] = chunk & 1;
                     }
                 }
             }
-            // console.log("this.remainValue", this.remainValue);
-            // console.log("this.analogValue", this.analogValue);
-            // console.log("this.digitalValue", this.digitalValue);
         }
 
-        // 아두이노에 값쓰기  
         requestLocalData() {
-            var queryString = [];
-            var readablePorts = [
-                0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-            ];
+            const queryString = [];
+            const readablePorts = this.readablePorts;
+
             if (readablePorts) {
-                for (var i in readablePorts) {
-                    var query = (5 << 5) + (readablePorts[i] << 1);
+                for (const i in readablePorts) {
+                    const query = (5 << 5) + (readablePorts[i] << 1);
                     queryString.push(query);
                 }
             }
-            // var readablePortsValues =
-            //     (readablePorts && Object.values(readablePorts)) || [];
-            for (var port = 0; port < 14; port++) {
-                // if (readablePortsValues.indexOf(port) > -1) {
-                //     continue;
-                // }
-                var value = this.remoteDigitalValue[port];
+            const readablePortsValues = (readablePorts && Object.values(readablePorts)) || [];
+            for (let port = 0; port < 14; port++) {
+                if (readablePortsValues.indexOf(port) > -1) {
+                    continue;
+                }
+                const value = this.remoteDigitalValue[port];
                 if (value === 255 || value === 0) {
-                    if(value === 255){
-                        console.log('digital pin on');
-                    }
-                    var query = (7 << 5) + (port << 1) + (value == 255 ? 1 : 0);
+                    const query = (7 << 5) + (port << 1) + (value == 255 ? 1 : 0);
                     queryString.push(query);
                 } else if (value > 0 && value < 255) {
-                    var query = (6 << 5) + (port << 1) + (value >> 7);
+                    let query = (6 << 5) + (port << 1) + (value >> 7);
                     queryString.push(query);
                     query = value & 127;
                     queryString.push(query);
                 }
             }
-            // console.log("this.digitalValue : ", this.digitalValue);
-            // console.log("queryString : ", queryString);
             return queryString;
-        };
+        }
 
         // get monitorTemplate() {
         //     return {
@@ -247,7 +232,8 @@
                         arduinolite_get_digital_value: '디지털 %1 번 센서값  ',
                         arduinolite_toggle_led: '디지털 %1 번 핀 %2 %3',
                         arduinolite_toggle_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
-                        arduinolite_convert_scale: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
+                        arduinolite_convert_scale:
+                            '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ',
                     },
                     Device: {
                         arduinolite: '아두이노',
@@ -305,7 +291,8 @@
                                     {
                                         type: 'TextInput',
                                         value: 10,
-                                        converter: Entry.block.converters.returnStringOrNumberByValue,
+                                        converter:
+                                            Entry.block.converters.returnStringOrNumberByValue,
                                     },
                                 ],
                                 keyOption: 'arduinolite_text',
@@ -501,7 +488,8 @@
                                         fontSize: 11,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringOrNumberByValue,
+                                        converter:
+                                            Entry.block.converters.returnStringOrNumberByValue,
                                     },
                                 ],
                                 keyOption: 'arduinolite_get_pwm_port_number',
@@ -605,12 +593,16 @@
                     isNotFor: ['ArduinoLite'],
                     func(sprite, script) {
                         if (Entry.hwLite.hwModule.name === 'ArduinoExtLite') {
-                            console.log("ArduinoExtLite is not supported");
+                            console.log('ArduinoExtLite is not supported');
                             // TO-DO : 아두이노 확장 웹연결 지원시 추가
                             // return Entry.block.arduinolite_ext_get_digital.func(sprite, script);
                         } else {
-                            const signal = script.getNumberValue('PORT', script);
-                            return Entry.ArduinoLite.digitalValue[signal];
+                            const port = script.getNumberValue('PORT', script);
+                            const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
+                            if (idx === -1) {
+                                Entry.ArduinoLite.readablePorts.push(port);
+                            }
+                            return Entry.ArduinoLite.digitalValue[port];
                         }
                     },
                     syntax: {
@@ -680,6 +672,10 @@
                         const operator = script.getField('OPERATOR');
                         const value = operator == 'on' ? 255 : 0;
                         Entry.ArduinoLite.remoteDigitalValue[port] = value;
+                        const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
+                        if (idx >= 0) {
+                            Entry.ArduinoLite.readablePorts.splice(idx, 1);
+                        }
                         return script.callReturn();
                     },
                     syntax: {
@@ -864,7 +860,8 @@
                         let isFloat = false;
 
                         if (
-                            (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                            (Entry.Utils.isNumber(stringValue4) &&
+                                stringValue4.indexOf('.') > -1) ||
                             (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                         ) {
                             isFloat = true;
@@ -872,12 +869,12 @@
 
                         let result = value1;
                         if (value2 > value3) {
-                            var swap = value2;
+                            const swap = value2;
                             value2 = value3;
                             value3 = swap;
                         }
                         if (value4 > value5) {
-                            var swap = value4;
+                            const swap = value4;
                             value4 = value5;
                             value5 = swap;
                         }
@@ -929,7 +926,7 @@
                 },
                 //endregion arduino 아두이노
             };
-        };
+        }
     })();
 })();
 
