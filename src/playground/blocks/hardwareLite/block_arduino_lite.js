@@ -8,7 +8,7 @@
 (function () {
     Entry.ArduinoLite = new (class ArduinoLite {
         constructor() {
-            this.id = '1.1';
+            this.id = ['1.1', '4.2', '8.1'];
             this.name = 'ArduinoLite';
             this.url = 'http://www.arduino.cc/';
             this.imageName = 'arduinolite.png';
@@ -17,7 +17,7 @@
                 en: 'Arduino',
             };
             // duration도 미확인
-            this.duration = 16;
+            this.duration = 0;
             this.blockMenuBlocks = [
                 'arduinolite_get_number_sensor_value',
                 'arduinolite_get_digital_value',
@@ -26,8 +26,8 @@
                 'arduinolite_convert_scale',
             ];
             this.portData = {
-                // TODO : json 데이터 체크해서 수정
-                baudRate: 57600,
+                baudRate: 9600,
+                duration: 32,
                 // 미확정
                 dataBits: 8,
                 parity: 'none',
@@ -40,12 +40,14 @@
 
         setZero() {
             // NOTICE : 센서보드라이트 에서는 sendQueue로직 없음
+            this.port = new Array(14).fill(0);
             this.digitalValue = new Array(14).fill(0);
+            this.remoteDigitalValue = new Array(14).fill(0);
             this.analogValue = new Array(6).fill(0);
 
-            this.remoteDigitalValue = new Array(14).fill(0);
-            this.readablePorts = null;
-            this.remainValue = null;
+            // this.remoteDigitalValue = new Array(14).fill(0);
+            // this.readablePorts = null;
+            // this.remainValue = null;
 
             // Entry.hw.sendQueue.readablePorts = [];
             // for (let port = 0; port < 20; port++) {
@@ -55,10 +57,13 @@
             // Entry.hw.update();
         }
 
+        // 아두이노 에서 값 읽어오
         handleLocalData(data) {
+            // console.log(typeof data, data);
             //hw_lite객체에서 기기로부터 읽어온 스트림을 data파라미터로 넘겨줌
             // data: Native Buffer
             for (var i = 0; i < 32; i++) {
+                // console.log(`var i : ${i} : ", ${data[i]}`);
                 var chunk;
                 if (!this.remainValue) {
                     chunk = data[i];
@@ -85,11 +90,14 @@
                     }
                 }
             }
+            // console.log("this.remainValue", this.remainValue);
+            // console.log("this.analogValue", this.analogValue);
+            // console.log("this.digitalValue", this.digitalValue);
         }
 
+        // 아두이노에 값쓰기  
         requestLocalData() {
             var queryString = [];
-
             var readablePorts = [
                 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
             ];
@@ -99,15 +107,17 @@
                     queryString.push(query);
                 }
             }
-            var readablePortsValues =
-                (readablePorts && Object.values(readablePorts)) || [];
-            var digitalValue = this.remoteDigitalValue;
+            // var readablePortsValues =
+            //     (readablePorts && Object.values(readablePorts)) || [];
             for (var port = 0; port < 14; port++) {
-                if (readablePortsValues.indexOf(port) > -1) {
-                    continue;
-                }
-                var value = digitalValue[port];
+                // if (readablePortsValues.indexOf(port) > -1) {
+                //     continue;
+                // }
+                var value = this.remoteDigitalValue[port];
                 if (value === 255 || value === 0) {
+                    if(value === 255){
+                        console.log('digital pin on');
+                    }
                     var query = (7 << 5) + (port << 1) + (value == 255 ? 1 : 0);
                     queryString.push(query);
                 } else if (value > 0 && value < 255) {
@@ -117,109 +127,111 @@
                     queryString.push(query);
                 }
             }
+            // console.log("this.digitalValue : ", this.digitalValue);
+            // console.log("queryString : ", queryString);
             return queryString;
         };
 
-        get monitorTemplate() {
-            return {
-                imgPath: 'hw_lite/arduinolite.png',
-                width: 605,
-                height: 434,
-                listPorts: {
-                    '2': {
-                        name: `${Lang.Hw.port_en} 2 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '3': {
-                        name: `${Lang.Hw.port_en} 3 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '4': {
-                        name: `${Lang.Hw.port_en} 4 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '5': {
-                        name: `${Lang.Hw.port_en} 5 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '6': {
-                        name: `${Lang.Hw.port_en} 6 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '7': {
-                        name: `${Lang.Hw.port_en} 7 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '8': {
-                        name: `${Lang.Hw.port_en} 8 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '9': {
-                        name: `${Lang.Hw.port_en} 9 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '10': {
-                        name: `${Lang.Hw.port_en} 10 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '11': {
-                        name: `${Lang.Hw.port_en} 11 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '12': {
-                        name: `${Lang.Hw.port_en} 12 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    '13': {
-                        name: `${Lang.Hw.port_en} 13 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    a0: {
-                        name: `${Lang.Hw.port_en} A0 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    a1: {
-                        name: `${Lang.Hw.port_en} A1 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    a2: {
-                        name: `${Lang.Hw.port_en} A2 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    a3: {
-                        name: `${Lang.Hw.port_en} A3 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    a4: {
-                        name: `${Lang.Hw.port_en} A4 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                    a5: {
-                        name: `${Lang.Hw.port_en} A5 ${Lang.Hw.port_ko}`,
-                        type: 'input',
-                        pos: { x: 0, y: 0 },
-                    },
-                },
-                mode: 'both',
-            }
-        }
+        // get monitorTemplate() {
+        //     return {
+        //         imgPath: 'hw_lite/arduinolite.png',
+        //         width: 605,
+        //         height: 434,
+        //         listPorts: {
+        //             '2': {
+        //                 name: `${Lang.Hw.port_en} 2 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '3': {
+        //                 name: `${Lang.Hw.port_en} 3 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '4': {
+        //                 name: `${Lang.Hw.port_en} 4 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '5': {
+        //                 name: `${Lang.Hw.port_en} 5 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '6': {
+        //                 name: `${Lang.Hw.port_en} 6 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '7': {
+        //                 name: `${Lang.Hw.port_en} 7 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '8': {
+        //                 name: `${Lang.Hw.port_en} 8 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '9': {
+        //                 name: `${Lang.Hw.port_en} 9 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '10': {
+        //                 name: `${Lang.Hw.port_en} 10 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '11': {
+        //                 name: `${Lang.Hw.port_en} 11 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '12': {
+        //                 name: `${Lang.Hw.port_en} 12 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             '13': {
+        //                 name: `${Lang.Hw.port_en} 13 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             a0: {
+        //                 name: `${Lang.Hw.port_en} A0 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             a1: {
+        //                 name: `${Lang.Hw.port_en} A1 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             a2: {
+        //                 name: `${Lang.Hw.port_en} A2 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             a3: {
+        //                 name: `${Lang.Hw.port_en} A3 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             a4: {
+        //                 name: `${Lang.Hw.port_en} A4 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //             a5: {
+        //                 name: `${Lang.Hw.port_en} A5 ${Lang.Hw.port_ko}`,
+        //                 type: 'input',
+        //                 pos: { x: 0, y: 0 },
+        //             },
+        //         },
+        //         mode: 'both',
+        //     }
+        // }
 
         // getMonitorPort() {
         //     return {
@@ -503,11 +515,28 @@
                     fontColor: '#fff',
                     skeleton: 'basic_string_field',
                     statements: [],
+                    // params: [
+                    //     {
+                    //         type: 'Block',
+                    //         accept: 'string',
+                    //         defaultType: 'number',
+                    //     },
+                    // ],
                     params: [
                         {
-                            type: 'Block',
-                            accept: 'string',
-                            defaultType: 'number',
+                            type: 'Dropdown',
+                            options: [
+                                ['0', '0'],
+                                ['1', '1'],
+                                ['2', '2'],
+                                ['3', '3'],
+                                ['4', '4'],
+                                ['5', '5'],
+                            ],
+                            value: '0',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                         },
                     ],
                     events: {},
@@ -522,7 +551,7 @@
                     paramsKeyMap: {
                         VALUE: 0,
                     },
-                    class: 'arduinolite_value',
+                    class: 'arduino_value',
                     isNotFor: ['ArduinoLite'],
                     func(sprite, script) {
                         // const signal = script.getValue('VALUE', script);
@@ -572,7 +601,7 @@
                     paramsKeyMap: {
                         PORT: 0,
                     },
-                    class: 'arduinolite_value',
+                    class: 'arduino_value',
                     isNotFor: ['ArduinoLite'],
                     func(sprite, script) {
                         if (Entry.hwLite.hwModule.name === 'ArduinoExtLite') {
@@ -644,13 +673,13 @@
                         VALUE: 0,
                         OPERATOR: 1,
                     },
-                    class: 'arduinolite_set',
+                    class: 'arduino_set',
                     isNotFor: ['ArduinoLite'],
                     func(sprite, script) {
                         const port = script.getNumberValue('VALUE');
                         const operator = script.getField('OPERATOR');
                         const value = operator == 'on' ? 255 : 0;
-                        Entry.ArduinoLite.digitalValue[port] = value;
+                        Entry.ArduinoLite.remoteDigitalValue[port] = value;
                         return script.callReturn();
                     },
                     syntax: {
@@ -720,7 +749,7 @@
                         PORT: 0,
                         VALUE: 1,
                     },
-                    class: 'arduinolite_set',
+                    class: 'arduino_set',
                     isNotFor: ['ArduinoLite'],
                     func(sprite, script) {
                         const port = script.getNumberValue('PORT');
@@ -821,7 +850,7 @@
                         VALUE4: 3,
                         VALUE5: 4,
                     },
-                    class: 'arduinolite',
+                    class: 'arduino',
                     isNotFor: ['ArduinoLite'],
                     func(sprite, script) {
                         const value1 = script.getNumberValue('VALUE1', script);

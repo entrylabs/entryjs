@@ -1,0 +1,9 @@
+{
+    "name": "SensorboardLite",
+    "version": "1",
+    "type": "hardware",
+    "title": "E-Sensor board",
+    "description": "E-센서보드(유선연결)",
+    "imageName": "sensorboardlite.png",
+    "moduleId": "010201"
+}
