@@ -7,7 +7,7 @@
 
 import _range from 'lodash/range';
 
-(function() {
+(function () {
     Entry.ArduinoLite = new (class ArduinoLite {
         constructor() {
             this.id = ['1.1', '4.2', '8.1'];
@@ -30,7 +30,6 @@ import _range from 'lodash/range';
             this.portData = {
                 baudRate: 9600,
                 duration: 32,
-                // 미확정
                 dataBits: 8,
                 parity: 'none',
                 stopBits: 1,
@@ -43,7 +42,6 @@ import _range from 'lodash/range';
         }
 
         setZero() {
-            // NOTICE : 센서보드라이트 에서는 sendQueue로직 없음
             this.port = new Array(14).fill(0);
             this.digitalValue = new Array(14).fill(0);
             this.remoteDigitalValue = new Array(14).fill(0);
@@ -55,10 +53,8 @@ import _range from 'lodash/range';
             }
         }
 
-        // 아두이노 에서 값 읽어오
+        // 디바이스에서 값을 읽어온다.
         handleLocalData(data) {
-            // console.log(typeof data, data);
-            //hw_lite객체에서 기기로부터 읽어온 스트림을 data파라미터로 넘겨줌
             // data: Native Buffer
             for (let i = 0; i < 32; i++) {
                 let chunk;
@@ -88,6 +84,7 @@ import _range from 'lodash/range';
             }
         }
 
+        //디바이스에 값을 쓴다.
         requestLocalData() {
             const queryString = [];
             const readablePorts = this.readablePorts;
@@ -115,6 +112,20 @@ import _range from 'lodash/range';
                 }
             }
             return queryString;
+        }
+
+        addReadablePort(port){
+            const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
+            if (idx === -1) {
+                Entry.ArduinoLite.readablePorts.push(port);
+            }
+        }
+
+        removeReadablePort(port){
+            const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
+            if (idx >= 0) {
+                Entry.ArduinoLite.readablePorts.splice(idx, 1);
+            }
         }
 
         // get monitorTemplate() {
@@ -228,6 +239,10 @@ import _range from 'lodash/range';
             return {
                 ko: {
                     template: {
+                        arduinolite_text: '%1',
+                        arduinolite_get_sensor_number: '%1',
+                        arduinolite_get_port_number: '%1',
+                        arduinolite_get_pwm_port_number: '%1',
                         arduinolite_get_number_sensor_value: '아날로그 %1 번 센서값  ',
                         arduinolite_get_digital_value: '디지털 %1 번 센서값  ',
                         arduinolite_toggle_led: '디지털 %1 번 핀 %2 %3',
@@ -244,6 +259,10 @@ import _range from 'lodash/range';
                 },
                 en: {
                     template: {
+                        arduinolite_text: '%1',
+                        arduinolite_get_sensor_number: '%1',
+                        arduinolite_get_port_number: '%1',
+                        arduinolite_get_pwm_port_number: '%1',
                         arduinolite_get_number_sensor_value: 'Analog %1 Sensor value  ',
                         arduinolite_get_digital_value: 'Digital %1 Sensor value  ',
                         arduinolite_toggle_led: 'Digital %1 Pin %2 %3',
@@ -503,28 +522,11 @@ import _range from 'lodash/range';
                     fontColor: '#fff',
                     skeleton: 'basic_string_field',
                     statements: [],
-                    // params: [
-                    //     {
-                    //         type: 'Block',
-                    //         accept: 'string',
-                    //         defaultType: 'number',
-                    //     },
-                    // ],
                     params: [
                         {
-                            type: 'Dropdown',
-                            options: [
-                                ['0', '0'],
-                                ['1', '1'],
-                                ['2', '2'],
-                                ['3', '3'],
-                                ['4', '4'],
-                                ['5', '5'],
-                            ],
-                            value: '0',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                            type: 'Block',
+                            accept: 'string',
+                            defaultType: 'number',
                         },
                     ],
                     events: {},
@@ -598,10 +600,7 @@ import _range from 'lodash/range';
                             // return Entry.block.arduinolite_ext_get_digital.func(sprite, script);
                         } else {
                             const port = script.getNumberValue('PORT', script);
-                            const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
-                            if (idx === -1) {
-                                Entry.ArduinoLite.readablePorts.push(port);
-                            }
+                            Entry.ArduinoLite.addReadablePort(port);
                             return Entry.ArduinoLite.digitalValue[port];
                         }
                     },
@@ -672,10 +671,7 @@ import _range from 'lodash/range';
                         const operator = script.getField('OPERATOR');
                         const value = operator == 'on' ? 255 : 0;
                         Entry.ArduinoLite.remoteDigitalValue[port] = value;
-                        const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
-                        if (idx >= 0) {
-                            Entry.ArduinoLite.readablePorts.splice(idx, 1);
-                        }
+                        Entry.ArduinoLite.removeReadablePort(port);
                         return script.callReturn();
                     },
                     syntax: {
@@ -753,7 +749,8 @@ import _range from 'lodash/range';
                         value = Math.round(value);
                         value = Math.max(value, 0);
                         value = Math.min(value, 255);
-                        Entry.ArduinoLite.digitalValue[port] = value;
+                        Entry.ArduinoLite.remoteDigitalValue[port] = value;
+                        Entry.ArduinoLite.removeReadablePort(port)
                         return script.callReturn();
                     },
                     syntax: {
