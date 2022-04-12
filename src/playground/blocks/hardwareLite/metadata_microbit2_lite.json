@@ -1,0 +1,9 @@
+{
+    "name": "Microbit2lite",
+    "version": "2",
+    "type": "hardware",
+    "title": "마이크로비트 v2",
+    "description": "@ Micro:bit Educational Foundation",
+    "imageName": "microbit2lite.png",
+    "moduleId": "220301"
+}

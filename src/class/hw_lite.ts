@@ -174,9 +174,9 @@ export default class HardwareLite {
                     }
                 } else if (this.hwModule?.id instanceof Array) {
                     for (const id in this.hwModule.id) {
-                        if (ARDUINO_BOARD_IDS.includes(id)) {
+                        if (ARDUINO_BOARD_IDS.includes(this.hwModule.id[id])) {
                             blockMenu.unbanClass('arduinoLiteGuide', true);
-                            return;
+                            break;
                         }
                     }
                 }
@@ -188,6 +188,25 @@ export default class HardwareLite {
         blockMenu.reDraw();
     }
 
+    async readPortData() {
+        const { value, done } = await this.reader.read();
+        if (done) {
+            this.getConnectFailedMenu();
+            return;
+        }
+
+        return value;
+    }
+
+    async writePortData(data: string) {
+        if (data && this.status === HardwareStatement.connected) {
+            const result = await this.writer.write(Buffer.from(data));
+        }
+    }
+
+    /**
+     * 디바이스와 duration 간격으로 지속적 통신
+     */
     async constantServing() {
         try {
             if (this.status === HardwareStatement.disconnected) {
@@ -196,7 +215,9 @@ export default class HardwareLite {
             if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
                 const reqLocal = this.hwModule?.requestLocalData();
                 if (reqLocal && this.status === HardwareStatement.connected) {
-                    this.writer.write(Buffer.from(reqLocal));
+                    if (Entry.engine.isState('run')) {
+                        this.writer.write(Buffer.from(reqLocal));
+                    }
                 }
             }
 
@@ -222,8 +243,9 @@ export default class HardwareLite {
         if (this.status === HardwareStatement.connected) {
             return;
         }
-        // @ts-ignore
+
         try {
+            // @ts-ignore
             const port = await navigator.serial.requestPort();
             const { portData } = this.hwModule || {};
             await port.open(
@@ -313,18 +335,17 @@ export default class HardwareLite {
     }
 
     /**
-     *
+     * 디바이스와 1회성 통신
      * @param data
      * @returns Promise resolves to resulting message
      */
-
     async sendAsync(data?: Buffer | string, isResetReq?: boolean, callback?: Function) {
         if (!data) {
             return;
         }
         // @ts-ignore
         const encodedData = typeof data === 'string' ? data : Buffer.from(data, 'utf8');
-        await this.connect();
+
         try {
             if (this.status === HardwareStatement.disconnected) {
                 Entry.toast.alert(
@@ -340,14 +361,19 @@ export default class HardwareLite {
                 return;
             }
             const { value, done } = await this.reader.read();
+
+            if (done) {
+                // 더이상 읽을 chunk가 없음
+            }
+
             if (callback) {
                 return callback(value);
             }
-            this.hwModule?.handleLocalData(value);
             this._updatePortData();
             return value;
         } catch (err) {
             console.error(err);
+            this.getConnectFailedMenu();
         }
     }
     sendAsciiAsBuffer(asciiStr: string) {
@@ -358,6 +384,15 @@ export default class HardwareLite {
     }
     removeHardwareLiteModule() {
         Entry.do('objectRemoveHardwareLiteBlocks', this.hwModule);
+    }
+
+    update() {
+        if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
+            const reqLocal = this.hwModule?.requestLocalData();
+            if (reqLocal && this.status === HardwareStatement.connected) {
+                this.writer.write(Buffer.from(reqLocal));
+            }
+        }
     }
 }
 
