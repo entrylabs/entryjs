@@ -174,9 +174,9 @@ export default class HardwareLite {
                     }
                 } else if (this.hwModule?.id instanceof Array) {
                     for (const id in this.hwModule.id) {
-                        if (ARDUINO_BOARD_IDS.includes(id)) {
+                        if (ARDUINO_BOARD_IDS.includes(this.hwModule.id[id])) {
                             blockMenu.unbanClass('arduinoLiteGuide', true);
-                            return;
+                            break;
                         }
                     }
                 }
