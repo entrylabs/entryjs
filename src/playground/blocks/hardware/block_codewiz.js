@@ -160,8 +160,7 @@ Entry.CodeWiz.setLanguage = function() {
                 CodeWiz_Servo_customSpeed: '무한회전 서보모터(%1) %2속도로 정하기(-100~100)%3',
 
                 CodeWiz_Dc_title: 'DC 모터',
-                CodeWiz_Dc_setValue: 'WizCar 모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
-                CodeWiz_Dc_setCarSpeed: 'WizCar 모터에 %1,%2내보내기(-1000~1000)%3',
+                CodeWiz_Dc_setCarSpeed: 'WizCar모터에 왼쪽%1, 오른쪽%2 내보내기(-1000~1000)%3',
                 CodeWiz_Dc_setValue_Waterpump: '워터펌프(%1)에 %2내보내기(0~1023)%3',
 
                 CodeWiz_DotMatrix_title: '도트매트릭스',
@@ -319,10 +318,8 @@ Entry.CodeWiz.setLanguage = function() {
                 속도 > 0 : 모터가 지정된 속도로 정방향 회전합니다.
                 속도 < 0 : 모터가 지정된 속도로 역방향 회전합니다.`,
 
-                CodeWiz_Dc_setValue: `선택된 WizCar 모터를 지정한 방향의 입력한 속도로 회전시킵니다.
-                ▼을 눌러 회전시킬 모터(MOTOR_L, MOROT_R)와 방향(반시계, 시계)을 선택하고 속도는 0~1023 사이 값으로 직접 입력합니다.`,
-                
-                CodeWiz_Dc_setCarSpeed: 'WizCar 모터에 %1,%2내보내기(-1000~1000)%3',
+                CodeWiz_Dc_setCarSpeed: `WizCar 모터를 입력한 속도로 각각 회전시킵니다.
+                각 속력는 0~1000 사이 값이고 뒤로 움직이는 방향에는 숫자 앞에 '-'를 붙입니다.`,
                 CodeWiz_Dc_setValue_Waterpump: `선택된 워터펌프를 입력한 속도로 회전시킵니다.
                 ▼을 눌러 회전시킬 모터(MOTOR_L, MOROT_R)를 선택하고 속도는 0~1023 사이 값으로 직접 입력합니다.`,
 
@@ -439,7 +436,6 @@ Entry.CodeWiz.blockMenuBlocks = [
     'CodeWiz_Servo_customSpeed',
 
     'CodeWiz_Dc_title',
-    'CodeWiz_Dc_setValue',
     'CodeWiz_Dc_setCarSpeed',
     'CodeWiz_Dc_setValue_Waterpump',
 
@@ -4072,81 +4068,6 @@ Entry.CodeWiz.getBlocks = function() {
             isNotFor: ['CodeWiz'],
             events: {},
         },
-        CodeWiz_Dc_setValue: {
-            // Block UI : 'WizCar 모터(%1)에 %2방향으로 %3내보내기(0~1023)%4',
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['MOTOR_L', '0'],
-                        ['MOTOR_R', '1'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['시계', '0'],
-                        ['반시계', '1'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null, null, '1023'],
-                type: 'CodeWiz_Dc_setValue',
-            },
-            paramsKeyMap: {
-                PIN: 0,
-                DIR: 1,
-                VALUE: 2,
-            },
-            class: 'CodeWiz_Dc',
-            isNotFor: ['CodeWiz'],
-            async func(sprite, script) {
-                if (Entry.CodeWiz.intervalId) {
-                    await Entry.CodeWiz.preWait();
-                }
-                let _pin = script.getNumberValue('PIN', script);
-                let _dir = script.getNumberValue('DIR', script);
-                let _value = Number.parseInt(script.getNumberValue('VALUE', script));
-                if (_value < 0) {
-                    _value = 0;
-                } else if (_value > 1023) {
-                    _value = 1023;
-                }
-                const order = {
-                    type: Entry.CodeWiz.sensorTypes.WRITE,
-                    value: {
-                        opcode: 36,
-                        params: [_pin, _dir, _value],
-                    },
-                };
-                const id = Entry.CodeWiz.sendOrder(order);
-                await Entry.CodeWiz.checkComplete(1000, id);
-                delete Entry.hw.portData[id];
-            },
-        },
         CodeWiz_Dc_setCarSpeed: {
             // Block UI : 'WizCar 모터에 %1,%2내보내기(-1000~1000)%3',
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -4187,7 +4108,7 @@ Entry.CodeWiz.getBlocks = function() {
                 let _rValue = Number.parseInt(script.getNumberValue('R_VALUE', script));
                 _lValue=Math.min(Math.max(-1000, _lValue), 1000);
                 _rValue=Math.min(Math.max(-1000, _rValue), 1000);
-                console.log(_lValue, _rValue);
+                
                 const order = {
                     type: Entry.CodeWiz.sensorTypes.WRITE,
                     value: {
