@@ -286,11 +286,11 @@
         }
 
         getResponse(response) {
-            console.log("in getResponse : ", response);
-            if (typeof response === 'string' && response.indexOf(';') > -1) {
+            if (typeof response === 'string' && response.indexOf(';') > -1 && response.indexOf('ValueError') <= -1) {
                 return response.split(';')[1];
             } else {
                 console.error("Error: microbit's response is not variable, ", response);
+                Entry.hwLite.handleConnectErrorInEngineRun(response);
             }
         }
 

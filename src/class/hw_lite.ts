@@ -36,6 +36,7 @@ class LineBreakTransformer {
 
 export default class HardwareLite {
     private status: HardwareStatement;
+    private HardwareStatement: any;
     private port: any; // serialport
     private writer: any; // SerialPort.writer;
     private reader: any; //SerialPort.reader;
@@ -54,6 +55,7 @@ export default class HardwareLite {
         this.playground = playground;
         this.hwModule = null;
         this.status = HardwareStatement.disconnected;
+        this.HardwareStatement = HardwareStatement;
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
         this.setExternalModule.bind(this);
     }
@@ -189,19 +191,56 @@ export default class HardwareLite {
     }
 
     async readPortData() {
-        const { value, done } = await this.reader.read();
-        if (done) {
-            this.getConnectFailedMenu();
-            return;
-        }
+        try {
+            if (this.status === HardwareStatement.connected && Entry.engine.isState('run')) {
+                const { value, done } = await this.reader.read();
 
-        return value;
+                if (!value) {
+                    this.reader.cancel();
+                    throw new Error("reader's value is undefined. check device");
+                }
+                return value;
+            }
+        } catch (error) {
+            console.error(error);
+            this.getConnectFailedMenu();
+        }
     }
 
     async writePortData(data: string) {
         if (data && this.status === HardwareStatement.connected) {
             const result = await this.writer.write(Buffer.from(data));
         }
+    }
+
+    async removeSerialPort() {
+        try {
+            await this.reader?.cancel();
+            await this.writer?.abort();
+            if (this.connectionType === 'ascii' && this.writableStream) {
+                await this.writableStream;
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            await this.port?.close();
+            this.port = null;
+            this.reader = null;
+            this.writer = null;
+            this.writableStream = null;
+        }
+    }
+
+    // engine 동작중 에러 발생시 호출, 디바이스에 read, write가 모두 안되는 것이 전제
+    async handleConnectErrorInEngineRun(toastMessage: string) {
+        // Engin.toggleStop에서 setZero가 실행되지 않도록 상태변경
+        this.status = HardwareStatement.willDisconnect;
+        if (Entry.engine.isState('run')) {
+            await Entry.engine.toggleStop();
+        }
+        await this.removeSerialPort();
+        this.getConnectFailedMenu();
+        Entry.toast.alert(Lang.Msgs.hw_connection_failed_title, toastMessage, false);
     }
 
     /**
@@ -312,7 +351,7 @@ export default class HardwareLite {
             this.status = HardwareStatement.willDisconnect;
             await this.reader?.cancel();
             await this.writer?.abort();
-            if (this.connectionType === 'ascii') {
+            if (this.connectionType === 'ascii' && this.writableStream) {
                 await this.writableStream;
             }
         } catch (err) {
@@ -347,7 +386,7 @@ export default class HardwareLite {
         const encodedData = typeof data === 'string' ? data : Buffer.from(data, 'utf8');
 
         try {
-            if (this.status === HardwareStatement.disconnected) {
+            if (this.status !== HardwareStatement.connected) {
                 Entry.toast.alert(
                     Lang.Msgs.hw_connection_failed_title,
                     Lang.Msgs.hw_connection_failed_desc,
@@ -356,15 +395,10 @@ export default class HardwareLite {
                 throw new Error('HARDWARE LITE NOT CONNECTED');
             }
             await this.writer.write(encodedData);
-
             if (isResetReq) {
                 return;
             }
             const { value, done } = await this.reader.read();
-
-            if (done) {
-                // 더이상 읽을 chunk가 없음
-            }
 
             if (callback) {
                 return callback(value);
