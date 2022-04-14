@@ -349,8 +349,13 @@ export default class HardwareLite {
         try {
             Entry.hardwareLiteBlocks = [];
             this.status = HardwareStatement.willDisconnect;
-            await this.reader?.cancel();
-            await this.writer?.abort();
+            
+            // 디바이스가 제거되었을 때, reader만 단독 예외처리
+            await this.reader?.cancel().catch((error: any) => {
+                console.error(error);
+            });
+
+            await this.writer?.close();
             if (this.connectionType === 'ascii' && this.writableStream) {
                 await this.writableStream;
             }
