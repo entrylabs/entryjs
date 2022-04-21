@@ -1,3 +1,4 @@
+import throttle from 'lodash/throttle';
 import { TextEncoder } from 'util';
 import ExtraBlockUtils from '../util/extrablockUtils';
 import HardwareMonitor from './hardware/hardwareMonitor';
@@ -50,18 +51,26 @@ export default class HardwareLite {
     private connectionType: 'ascii' | 'bytestream' | undefined;
     textEncoder: TextEncoder;
     private hwMonitor?: HardwareMonitor;
+    private isSendAsyncRun: boolean;
+    private sendAsyncWithThrottle: any;
 
     constructor(playground: any) {
         this.playground = playground;
         this.hwModule = null;
         this.status = HardwareStatement.disconnected;
         this.HardwareStatement = HardwareStatement;
+        this.isSendAsyncRun = false;
         Entry.addEventListener('hwLiteChanged', this.refreshHardwareLiteBlockMenu.bind(this));
+        Entry.addEventListener('beforeStop', this.checkConditionBeforeStop.bind(this));
         this.setExternalModule.bind(this);
     }
 
     setZero() {
         this.hwModule?.setZero();
+    }
+
+    checkConditionBeforeStop(){
+        this.isSendAsyncRun = false;
     }
 
     isActive(name: string) {
@@ -98,6 +107,7 @@ export default class HardwareLite {
         if (Entry.propertyPanel && this.hwModule.monitorTemplate) {
             this._setHardwareMonitorTemplate();
         }
+        this.sendAsyncWithThrottle = throttle(this.sendAsync, this.hwModule.duration);
     }
 
     getConnectFailedMenu() {
@@ -215,8 +225,12 @@ export default class HardwareLite {
 
     async removeSerialPort() {
         try {
-            await this.reader?.cancel();
-            await this.writer?.abort();
+            // INFO: 디바이스가 제거되었을 때, reader만 단독 예외처리
+            await this.reader?.cancel().catch((error: any) => {
+                console.error(error);
+            });
+
+            await this.writer?.close();
             if (this.connectionType === 'ascii' && this.writableStream) {
                 await this.writableStream;
             }
@@ -232,15 +246,22 @@ export default class HardwareLite {
     }
 
     // engine 동작중 에러 발생시 호출, 디바이스에 read, write가 모두 안되는 것이 전제
-    async handleConnectErrorInEngineRun(toastMessage: string) {
-        // Engin.toggleStop에서 setZero가 실행되지 않도록 상태변경
+    async handleConnectErrorInEngineRun() {
+        // INFO: Engin.toggleStop에서 setZero가 실행되지 않도록 상태변경
+        if (this.status === HardwareStatement.willDisconnect) {
+            return;
+        }
         this.status = HardwareStatement.willDisconnect;
         if (Entry.engine.isState('run')) {
             await Entry.engine.toggleStop();
         }
         await this.removeSerialPort();
         this.getConnectFailedMenu();
-        Entry.toast.alert(Lang.Msgs.hw_connection_failed_title, toastMessage, false);
+        Entry.toast.alert(
+            Lang.Msgs.hw_connection_failed_title,
+            Lang.Msgs.hw_connection_failed_desc,
+            false
+        );
     }
 
     /**
@@ -349,8 +370,8 @@ export default class HardwareLite {
         try {
             Entry.hardwareLiteBlocks = [];
             this.status = HardwareStatement.willDisconnect;
-            
-            // 디바이스가 제거되었을 때, reader만 단독 예외처리
+
+            // INFO: 디바이스가 제거되었을 때, reader만 단독 예외처리
             await this.reader?.cancel().catch((error: any) => {
                 console.error(error);
             });
@@ -384,7 +405,12 @@ export default class HardwareLite {
      * @returns Promise resolves to resulting message
      */
     async sendAsync(data?: Buffer | string, isResetReq?: boolean, callback?: Function) {
-        if (!data) {
+        if (this.isSendAsyncRun) {
+            return;
+        } else {
+            this.isSendAsyncRun = true;
+        }
+        if (!data || this.status !== HardwareStatement.connected) {
             return;
         }
         // @ts-ignore
@@ -401,10 +427,10 @@ export default class HardwareLite {
             }
             await this.writer.write(encodedData);
             if (isResetReq) {
+                this.isSendAsyncRun = false;
                 return;
             }
             const { value, done } = await this.reader.read();
-
             if (callback) {
                 return callback(value);
             }
@@ -413,6 +439,8 @@ export default class HardwareLite {
         } catch (err) {
             console.error(err);
             this.getConnectFailedMenu();
+        }finally{
+            this.isSendAsyncRun = false;
         }
     }
     sendAsciiAsBuffer(asciiStr: string) {
@@ -426,9 +454,13 @@ export default class HardwareLite {
     }
 
     update() {
-        if (this.hwModule?.portData?.constantServing !== 'ReadOnly') {
+        if (this.status !== HardwareStatement.connected) {
+            console.error('Cannot update hwLite queue. Check connection status.');
+            return;
+        }
+        if (this.hwModule?.portData?.constantServing) {
             const reqLocal = this.hwModule?.requestLocalData();
-            if (reqLocal && this.status === HardwareStatement.connected) {
+            if (reqLocal) {
                 this.writer.write(Buffer.from(reqLocal));
             }
         }

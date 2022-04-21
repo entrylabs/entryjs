@@ -4,7 +4,7 @@
     Entry.Microbit2lite = new (class Microbit2Lite {
         constructor() {
             this.commandStatus = {};
-            this.commandValue = {};
+            this.retryLimitCnt = 5;
             this.portData = {
                 baudRate: 115200,
                 dataBits: 8,
@@ -13,6 +13,7 @@
                 bufferSize: 512,
                 connectionType: 'ascii',
             };
+            this.duration = 32;
             this.functionKeys = {
                 GET_ANALOG: 'get-analog',
                 GET_DIGITAL: 'get-digital',
@@ -271,7 +272,8 @@
             return value;
         }
         setZero() {
-            return Entry.hwLite.sendAsync(this.functionKeys.RESET, true);
+            this.commandStatus = {};
+            return Entry.hwLite.sendAsyncWithThrottle(this.functionKeys.RESET, true);
         }
 
         waitMilliSec(milli) {
@@ -285,13 +287,50 @@
             return `${entityId}-${type}${payload ? '-' + payload : ''}`;
         }
 
+        getCommandType(command) {
+            if (typeof command === 'string' && command.indexOf(';') > -1) {
+                return command.split(';')[0];
+            } else {
+                console.error("Error: microbit's response is not variable, ", command);
+                Entry.hwLite.handleConnectErrorInEngineRun();
+            }
+        }
+
         getResponse(response) {
             if (typeof response === 'string' && response.indexOf(';') > -1 && response.indexOf('ValueError') <= -1) {
                 return response.split(';')[1];
+            } else if (response === 'command removed') {
+                console.log("Microbit's command removed. Too many requests");
             } else {
                 console.error("Error: microbit's response is not variable, ", response);
-                Entry.hwLite.handleConnectErrorInEngineRun(response);
+                Entry.hwLite.handleConnectErrorInEngineRun();
             }
+        }
+
+        async getResponseWithSync(command) {
+            if (!Entry.engine.isState('run')) {
+                return;
+            }
+            const result = await Entry.hwLite.sendAsyncWithThrottle(command);
+
+            if (!result || (this.getCommandType(command) !== this.getCommandType(result))) {
+                if (!this.commandStatus[command]) {
+                    this.commandStatus[command] = 1;
+                    throw new Entry.Utils.AsyncError();
+                } else if (this.commandStatus[command] <= this.retryLimitCnt) {
+                    this.commandStatus[command]++;
+                    throw new Entry.Utils.AsyncError();
+                } else if (this.commandStatus[command] > this.retryLimitCnt) {
+                    delete this.commandStatus[command];
+                    return 'command removed';
+                } else {
+                    console.error("UnExpected Microbit command");
+                }
+            } else {
+                delete this.commandStatus[command];
+            }
+
+            return result;
         }
 
         // 언어 적용
@@ -954,7 +993,7 @@
                     },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_ANALOG};${value}`
                         );
                         return this.getResponse(response);
@@ -1004,7 +1043,7 @@
 
                         const parsedPayload = `${pin};${value}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_ANALOG};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1035,7 +1074,7 @@
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_DIGITAL};${value}`
                         );
                         return this.getResponse(response);
@@ -1085,7 +1124,7 @@
                         const value = script.getValue('VALUE');
                         const parsedPayload = `${pin};${value}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_DIGITAL};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1124,7 +1163,7 @@
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(`${command};`);
+                        const response = await this.getResponseWithSync(`${command};`);
                         return this.getResponse(response);
                     },
                 },
@@ -1193,7 +1232,7 @@
 
                         const parsedPayload = `${x};${y};${value}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_LED};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1247,7 +1286,7 @@
                         }
                         const parsedPayload = `${x};${y}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_LED};${parsedPayload}`
                         );
                         const parsedResponse = this.getResponse(response);
@@ -1358,7 +1397,7 @@
                     func: async (sprite, script) => {
                         const value = this._clamp(script.getNumberValue('VALUE'), 0, 62);
                         const parsedPayload = `${this.presetImage[value]}`;
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1396,7 +1435,7 @@
                         }
                         const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1440,7 +1479,7 @@
                             /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
                             ''
                         );
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_STRING};${payload}`
                         );
                         return this.getResponse(response);
@@ -1466,7 +1505,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.RESET_SCREEN};`
                         );
                         return this.getResponse(response);
@@ -1505,7 +1544,7 @@
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(`${command};${value}`);
+                        const response = await this.getResponseWithSync(`${command};${value}`);
                         this.getResponse(response);
                     },
                 },
@@ -1542,7 +1581,7 @@
                             this._clamp(script.getNumberValue('CHANNEL'), 0, 83)
                         );
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SETTING_RADIO};${channel}`
                         );
                         return this.getResponse(response);
@@ -1574,7 +1613,7 @@
                     func: async (sprite, script) => {
                         const value = script.getStringValue('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_RADIO};${value}`
                         );
                         return this.getResponse(response);
@@ -1595,7 +1634,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_RADIO};`
                         );
                         return this.getResponse(response);
@@ -1649,7 +1688,7 @@
 
                         const parsedPayload = `${beat};${bpm}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.CHANGE_TEMPO};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1699,7 +1738,7 @@
                         const note = script.getField('NOTE');
                         const parsedPayload = `${scale}:${note}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.PLAY_TONE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1760,7 +1799,7 @@
                     func: async (sprite, script) => {
                         const value = this._clamp(script.getNumberValue('VALUE'), 0, 20);
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.PLAY_MELODY};${value}`
                         );
                         this.getResponse(response);
@@ -1802,7 +1841,7 @@
                     func: async (sprite, script) => {
                         const value = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_BTN};`
                         );
                         const parsedResponse = this.getResponse(response);
@@ -1849,7 +1888,7 @@
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_ACC};${axis}`
                         );
                         return this.getResponse(response);
@@ -1893,7 +1932,7 @@
                     func: async (sprite, script) => {
                         const gesture = script.getField('GESTURE');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_GESTURE};`
                         );
                         const parsedResponse = this.getResponse(response);
@@ -1919,7 +1958,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_DIRECTION};`
                         );
                         return this.getResponse(response);
@@ -1958,7 +1997,7 @@
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_FIELD_STRENGTH};${axis}`
                         );
                         return this.getResponse(response);
@@ -1979,7 +2018,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_LIGHT_LEVEL};`
                         );
                         return this.getResponse(response);
@@ -2000,7 +2039,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_TEMPERATURE};`
                         );
                         return this.getResponse(response);
@@ -2050,7 +2089,7 @@
                         );
 
                         const parsedPayload = `${pin};${value}`;
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_SERVO_ANGLE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -2116,7 +2155,7 @@
                                 : this.functionKeys.SET_SERVO_MICRO;
 
                         const parsedPayload = `${pin};${value}`;
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${command};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -2163,7 +2202,7 @@
                             ]);
                         }
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_LOGO};`
                         );
                         const parsedResponse = this.getResponse(response);
