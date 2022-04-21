@@ -1544,8 +1544,8 @@
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
 
-                        const response = await this.getResponseWithSync(`${command};${value}`);
-                        this.getResponse(response);
+                        const response = await this.getResponseWithSync(`${command};`);
+                        return this.getResponse(response);
                     },
                 },
                 microbit2lite_radio_setting: {
@@ -2209,6 +2209,121 @@
                         if (parsedResponse == '1') {
                             return 1;
                         } else return 0;
+                    },
+                },
+                microbit2lite_get_sound_level: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [],
+                    events: {},
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    def: {
+                        type: 'microbit2lite_get_sound_level',
+                    },
+                    paramsKeyMap: {},
+                    func: async (sprite, script) => {
+                        const response = await this.getResponseWithSync(
+                            `${this.functionKeys.GET_SOUND_LEVEL};`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2lite_speaker_toggle: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.on, this.functionKeys.SPEAKER_ON],
+                                [Lang.Blocks.off, this.functionKeys.SPEAKER_OFF],
+                            ],
+                            value: this.functionKeys.SPEAKER_ON,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    def: {
+                        type: 'microbit2lite_speaker_toggle',
+                    },
+                    paramsKeyMap: { VALUE: 0 },
+                    func: async (sprite, script) => {
+                        if (this.version === '1') {
+                            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                                Lang.Msgs.microbit2_compatible_error,
+                            ]);
+                        }
+                        const command = script.getField('VALUE');
+                        const response = await this.getResponseWithSync(
+                            `${command};`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2lite_play_sound_effect: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.GIGGLE, 21],
+                                [Lang.Blocks.HAPPY, 22],
+                                [Lang.Blocks.HELLO, 23],
+                                [Lang.Blocks.MYSTERIOUS, 24],
+                                [Lang.Blocks.SAD, 25],
+                                [Lang.Blocks.SLIDE, 26],
+                                [Lang.Blocks.SOARING, 27],
+                                [Lang.Blocks.SPRING, 28],
+                                [Lang.Blocks.TWINKLE, 29],
+                                [Lang.Blocks.YAWN, 30],
+                            ],
+                            value: 21,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    def: {
+                        type: 'microbit2lite_play_sound_effect',
+                    },
+                    paramsKeyMap: {
+                        VALUE: 0,
+                    },
+                    func: async (sprite, script) => {
+                        const value = this._clamp(script.getNumberValue('VALUE'), 21, 30);
+                        const parsedPayload = `${value}`;
+
+                        const response = await this.getResponseWithSync(
+                            `${this.functionKeys.PLAY_SOUND};${parsedPayload}`
+                        );
+                        return this.getResponse(response);
                     },
                 },
             };
