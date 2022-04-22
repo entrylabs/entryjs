@@ -132,7 +132,11 @@ export default class HardwareLite {
 
     isHwLiteSupportAgent() {
         const userAgentString = navigator.userAgent.toLowerCase();
-        return userAgentString.indexOf('chrome') >= 0 && userAgentString.indexOf('window') < 0;
+        return (
+            userAgentString.indexOf('chrome') >= 0 &&
+            userAgentString.indexOf('window') < 0 &&
+            userAgentString.indexOf('electron') < 0
+        );
     }
 
     refreshHardwareLiteBlockMenu() {
