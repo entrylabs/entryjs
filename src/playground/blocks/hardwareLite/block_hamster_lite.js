@@ -343,6 +343,9 @@
             this.timeouts = [];
 
             this.__removeAllTimeouts();
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
+            }
         }
 
         getMonitorPort() {
