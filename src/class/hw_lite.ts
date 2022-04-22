@@ -69,7 +69,7 @@ export default class HardwareLite {
         this.hwModule?.setZero();
     }
 
-    checkConditionBeforeStop(){
+    checkConditionBeforeStop() {
         this.isSendAsyncRun = false;
     }
 
@@ -144,7 +144,11 @@ export default class HardwareLite {
 
     isHwLiteSupportAgent() {
         const userAgentString = navigator.userAgent.toLowerCase();
-        return userAgentString.indexOf('chrome') >= 0 && userAgentString.indexOf('window') < 0;
+        return (
+            userAgentString.indexOf('chrome') >= 0 &&
+            userAgentString.indexOf('window') < 0 &&
+            userAgentString.indexOf('electron') < 0
+        );
     }
 
     refreshHardwareLiteBlockMenu() {
@@ -439,7 +443,7 @@ export default class HardwareLite {
         } catch (err) {
             console.error(err);
             this.getConnectFailedMenu();
-        }finally{
+        } finally {
             this.isSendAsyncRun = false;
         }
     }
