@@ -645,7 +645,7 @@ import _range from 'lodash/range';
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -719,7 +719,7 @@ import _range from 'lodash/range';
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],

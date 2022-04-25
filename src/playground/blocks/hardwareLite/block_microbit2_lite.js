@@ -4,7 +4,7 @@
     Entry.Microbit2lite = new (class Microbit2Lite {
         constructor() {
             this.commandStatus = {};
-            this.commandValue = {};
+            this.retryLimitCnt = 5;
             this.portData = {
                 baudRate: 115200,
                 dataBits: 8,
@@ -13,6 +13,7 @@
                 bufferSize: 512,
                 connectionType: 'ascii',
             };
+            this.duration = 32;
             this.functionKeys = {
                 GET_ANALOG: 'get-analog',
                 GET_DIGITAL: 'get-digital',
@@ -271,7 +272,8 @@
             return value;
         }
         setZero() {
-            return Entry.hwLite.sendAsync(this.functionKeys.RESET, true);
+            this.commandStatus = {};
+            return Entry.hwLite.sendAsyncWithThrottle(this.functionKeys.RESET, true);
         }
 
         waitMilliSec(milli) {
@@ -285,13 +287,50 @@
             return `${entityId}-${type}${payload ? '-' + payload : ''}`;
         }
 
+        getCommandType(command) {
+            if (typeof command === 'string' && command.indexOf(';') > -1) {
+                return command.split(';')[0];
+            } else {
+                console.error("Error: microbit's response is not variable, ", command);
+                Entry.hwLite.handleConnectErrorInEngineRun();
+            }
+        }
+
         getResponse(response) {
-            console.log("in getResponse : ", response);
-            if (typeof response === 'string' && response.indexOf(';') > -1) {
+            if (typeof response === 'string' && response.indexOf(';') > -1 && response.indexOf('ValueError') <= -1) {
                 return response.split(';')[1];
+            } else if (response === 'command removed') {
+                console.log("Microbit's command removed. Too many requests");
             } else {
                 console.error("Error: microbit's response is not variable, ", response);
+                Entry.hwLite.handleConnectErrorInEngineRun();
             }
+        }
+
+        async getResponseWithSync(command) {
+            if (!Entry.engine.isState('run')) {
+                return;
+            }
+            const result = await Entry.hwLite.sendAsyncWithThrottle(command);
+
+            if (!result || (this.getCommandType(command) !== this.getCommandType(result))) {
+                if (!this.commandStatus[command]) {
+                    this.commandStatus[command] = 1;
+                    throw new Entry.Utils.AsyncError();
+                } else if (this.commandStatus[command] <= this.retryLimitCnt) {
+                    this.commandStatus[command]++;
+                    throw new Entry.Utils.AsyncError();
+                } else if (this.commandStatus[command] > this.retryLimitCnt) {
+                    delete this.commandStatus[command];
+                    return 'command removed';
+                } else {
+                    console.error("UnExpected Microbit command");
+                }
+            } else {
+                delete this.commandStatus[command];
+            }
+
+            return result;
         }
 
         // 언어 적용
@@ -954,7 +993,7 @@
                     },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_ANALOG};${value}`
                         );
                         return this.getResponse(response);
@@ -982,7 +1021,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1004,7 +1043,7 @@
 
                         const parsedPayload = `${pin};${value}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_ANALOG};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1035,7 +1074,7 @@
                     paramsKeyMap: { VALUE: 0 },
                     func: async (sprite, script) => {
                         const value = script.getValue('VALUE');
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_DIGITAL};${value}`
                         );
                         return this.getResponse(response);
@@ -1069,7 +1108,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1085,7 +1124,7 @@
                         const value = script.getValue('VALUE');
                         const parsedPayload = `${pin};${value}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_DIGITAL};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1110,7 +1149,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1124,7 +1163,7 @@
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(`${command};`);
+                        const response = await this.getResponseWithSync(`${command};`);
                         return this.getResponse(response);
                     },
                 },
@@ -1154,7 +1193,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1193,7 +1232,7 @@
 
                         const parsedPayload = `${x};${y};${value}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_LED};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1247,7 +1286,7 @@
                         }
                         const parsedPayload = `${x};${y}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_LED};${parsedPayload}`
                         );
                         const parsedResponse = this.getResponse(response);
@@ -1342,7 +1381,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1358,7 +1397,7 @@
                     func: async (sprite, script) => {
                         const value = this._clamp(script.getNumberValue('VALUE'), 0, 62);
                         const parsedPayload = `${this.presetImage[value]}`;
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1375,7 +1414,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1396,7 +1435,7 @@
                         }
                         const parsedPayload = `${processedValue.join(':').replace(/,/gi, '')}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_CUSTOM_IMAGE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1414,7 +1453,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1440,7 +1479,7 @@
                             /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
                             ''
                         );
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_STRING};${payload}`
                         );
                         return this.getResponse(response);
@@ -1454,7 +1493,7 @@
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1466,7 +1505,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.RESET_SCREEN};`
                         );
                         return this.getResponse(response);
@@ -1491,7 +1530,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1505,8 +1544,8 @@
                     func: async (sprite, script) => {
                         const command = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(`${command};${value}`);
-                        this.getResponse(response);
+                        const response = await this.getResponseWithSync(`${command};`);
+                        return this.getResponse(response);
                     },
                 },
                 microbit2lite_radio_setting: {
@@ -1523,7 +1562,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1542,7 +1581,7 @@
                             this._clamp(script.getNumberValue('CHANNEL'), 0, 83)
                         );
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SETTING_RADIO};${channel}`
                         );
                         return this.getResponse(response);
@@ -1560,7 +1599,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1574,7 +1613,7 @@
                     func: async (sprite, script) => {
                         const value = script.getStringValue('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_RADIO};${value}`
                         );
                         return this.getResponse(response);
@@ -1595,7 +1634,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_RADIO};`
                         );
                         return this.getResponse(response);
@@ -1619,7 +1658,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1649,7 +1688,7 @@
 
                         const parsedPayload = `${beat};${bpm}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.CHANGE_TEMPO};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1680,7 +1719,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1699,7 +1738,7 @@
                         const note = script.getField('NOTE');
                         const parsedPayload = `${scale}:${note}`;
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.PLAY_TONE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -1744,7 +1783,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -1760,7 +1799,7 @@
                     func: async (sprite, script) => {
                         const value = this._clamp(script.getNumberValue('VALUE'), 0, 20);
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.PLAY_MELODY};${value}`
                         );
                         this.getResponse(response);
@@ -1802,7 +1841,7 @@
                     func: async (sprite, script) => {
                         const value = script.getField('VALUE');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_BTN};`
                         );
                         const parsedResponse = this.getResponse(response);
@@ -1849,7 +1888,7 @@
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_ACC};${axis}`
                         );
                         return this.getResponse(response);
@@ -1893,7 +1932,7 @@
                     func: async (sprite, script) => {
                         const gesture = script.getField('GESTURE');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_GESTURE};`
                         );
                         const parsedResponse = this.getResponse(response);
@@ -1919,7 +1958,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_DIRECTION};`
                         );
                         return this.getResponse(response);
@@ -1958,7 +1997,7 @@
                     func: async (sprite, script) => {
                         const axis = script.getField('AXIS');
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_FIELD_STRENGTH};${axis}`
                         );
                         return this.getResponse(response);
@@ -1979,7 +2018,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_LIGHT_LEVEL};`
                         );
                         return this.getResponse(response);
@@ -2000,7 +2039,7 @@
                     },
                     paramsKeyMap: {},
                     func: async (sprite, script) => {
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_TEMPERATURE};`
                         );
                         return this.getResponse(response);
@@ -2029,7 +2068,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2050,7 +2089,7 @@
                         );
 
                         const parsedPayload = `${pin};${value}`;
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.SET_SERVO_ANGLE};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -2089,7 +2128,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2116,7 +2155,7 @@
                                 : this.functionKeys.SET_SERVO_MICRO;
 
                         const parsedPayload = `${pin};${value}`;
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${command};${parsedPayload}`
                         );
                         return this.getResponse(response);
@@ -2163,13 +2202,128 @@
                             ]);
                         }
 
-                        const response = await Entry.hwLite.sendAsync(
+                        const response = await this.getResponseWithSync(
                             `${this.functionKeys.GET_LOGO};`
                         );
                         const parsedResponse = this.getResponse(response);
                         if (parsedResponse == '1') {
                             return 1;
                         } else return 0;
+                    },
+                },
+                microbit2lite_get_sound_level: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [],
+                    events: {},
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    def: {
+                        type: 'microbit2lite_get_sound_level',
+                    },
+                    paramsKeyMap: {},
+                    func: async (sprite, script) => {
+                        const response = await this.getResponseWithSync(
+                            `${this.functionKeys.GET_SOUND_LEVEL};`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2lite_speaker_toggle: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.on, this.functionKeys.SPEAKER_ON],
+                                [Lang.Blocks.off, this.functionKeys.SPEAKER_OFF],
+                            ],
+                            value: this.functionKeys.SPEAKER_ON,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    def: {
+                        type: 'microbit2lite_speaker_toggle',
+                    },
+                    paramsKeyMap: { VALUE: 0 },
+                    func: async (sprite, script) => {
+                        if (this.version === '1') {
+                            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                                Lang.Msgs.microbit2_compatible_error,
+                            ]);
+                        }
+                        const command = script.getField('VALUE');
+                        const response = await this.getResponseWithSync(
+                            `${command};`
+                        );
+                        return this.getResponse(response);
+                    },
+                },
+                microbit2lite_play_sound_effect: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#ffffff',
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.GIGGLE, 21],
+                                [Lang.Blocks.HAPPY, 22],
+                                [Lang.Blocks.HELLO, 23],
+                                [Lang.Blocks.MYSTERIOUS, 24],
+                                [Lang.Blocks.SAD, 25],
+                                [Lang.Blocks.SLIDE, 26],
+                                [Lang.Blocks.SOARING, 27],
+                                [Lang.Blocks.SPRING, 28],
+                                [Lang.Blocks.TWINKLE, 29],
+                                [Lang.Blocks.YAWN, 30],
+                            ],
+                            value: 21,
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    def: {
+                        type: 'microbit2lite_play_sound_effect',
+                    },
+                    paramsKeyMap: {
+                        VALUE: 0,
+                    },
+                    func: async (sprite, script) => {
+                        const value = this._clamp(script.getNumberValue('VALUE'), 21, 30);
+                        const parsedPayload = `${value}`;
+
+                        const response = await this.getResponseWithSync(
+                            `${this.functionKeys.PLAY_SOUND};${parsedPayload}`
+                        );
+                        return this.getResponse(response);
                     },
                 },
             };
