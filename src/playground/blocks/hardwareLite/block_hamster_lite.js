@@ -2722,7 +2722,7 @@
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2764,7 +2764,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2816,7 +2816,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2866,7 +2866,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2927,7 +2927,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2995,7 +2995,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3058,7 +3058,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3129,7 +3129,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3206,7 +3206,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3290,7 +3290,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3376,7 +3376,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3456,7 +3456,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3511,7 +3511,7 @@
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3570,7 +3570,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3866,7 +3866,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3915,7 +3915,7 @@
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3950,7 +3950,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -3994,7 +3994,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -4034,7 +4034,7 @@
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -4102,7 +4102,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -4727,7 +4727,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5336,7 +5336,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5386,7 +5386,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5436,7 +5436,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5508,7 +5508,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5726,7 +5726,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5803,7 +5803,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5875,7 +5875,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -5923,7 +5923,7 @@
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
