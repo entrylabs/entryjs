@@ -7,7 +7,7 @@
 
 import _range from 'lodash/range';
 
-(function () {
+(function() {
     Entry.ArduinoLite = new (class ArduinoLite {
         constructor() {
             this.id = ['1.1', '4.2', '8.1'];
@@ -114,126 +114,19 @@ import _range from 'lodash/range';
             return queryString;
         }
 
-        addReadablePort(port){
+        addReadablePort(port) {
             const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
             if (idx === -1) {
                 Entry.ArduinoLite.readablePorts.push(port);
             }
         }
 
-        removeReadablePort(port){
+        removeReadablePort(port) {
             const idx = Entry.ArduinoLite.readablePorts.indexOf(port);
             if (idx >= 0) {
                 Entry.ArduinoLite.readablePorts.splice(idx, 1);
             }
         }
-
-        // get monitorTemplate() {
-        //     return {
-        //         imgPath: 'hw_lite/arduinolite.png',
-        //         width: 605,
-        //         height: 434,
-        //         listPorts: {
-        //             '2': {
-        //                 name: `${Lang.Hw.port_en} 2 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '3': {
-        //                 name: `${Lang.Hw.port_en} 3 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '4': {
-        //                 name: `${Lang.Hw.port_en} 4 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '5': {
-        //                 name: `${Lang.Hw.port_en} 5 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '6': {
-        //                 name: `${Lang.Hw.port_en} 6 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '7': {
-        //                 name: `${Lang.Hw.port_en} 7 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '8': {
-        //                 name: `${Lang.Hw.port_en} 8 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '9': {
-        //                 name: `${Lang.Hw.port_en} 9 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '10': {
-        //                 name: `${Lang.Hw.port_en} 10 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '11': {
-        //                 name: `${Lang.Hw.port_en} 11 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '12': {
-        //                 name: `${Lang.Hw.port_en} 12 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             '13': {
-        //                 name: `${Lang.Hw.port_en} 13 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             a0: {
-        //                 name: `${Lang.Hw.port_en} A0 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             a1: {
-        //                 name: `${Lang.Hw.port_en} A1 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             a2: {
-        //                 name: `${Lang.Hw.port_en} A2 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             a3: {
-        //                 name: `${Lang.Hw.port_en} A3 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             a4: {
-        //                 name: `${Lang.Hw.port_en} A4 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //             a5: {
-        //                 name: `${Lang.Hw.port_en} A5 ${Lang.Hw.port_ko}`,
-        //                 type: 'input',
-        //                 pos: { x: 0, y: 0 },
-        //             },
-        //         },
-        //         mode: 'both',
-        //     }
-        // }
-
-        // getMonitorPort() {
-        //     return {
-        //         //TODO : 통신때마다 모니터되는 포트 업데이트 하기위해 현재 포트값들 리턴
-        //     }
-        // }
 
         setLanguage() {
             return {
@@ -750,7 +643,7 @@ import _range from 'lodash/range';
                         value = Math.max(value, 0);
                         value = Math.min(value, 255);
                         Entry.ArduinoLite.remoteDigitalValue[port] = value;
-                        Entry.ArduinoLite.removeReadablePort(port)
+                        Entry.ArduinoLite.removeReadablePort(port);
                         return script.callReturn();
                     },
                     syntax: {

@@ -1,6 +1,6 @@
 'use strict';
 
-(function () {
+(function() {
     Entry.Microbit2lite = new (class Microbit2Lite {
         constructor() {
             this.commandStatus = {};
@@ -284,7 +284,7 @@
         }
 
         generateCodeId(entityId, type, payload) {
-            return `${entityId}-${type}${payload ? '-' + payload : ''}`;
+            return `${entityId}-${type}${payload ? `-${payload}` : ''}`;
         }
 
         getCommandType(command) {
@@ -297,7 +297,11 @@
         }
 
         getResponse(response) {
-            if (typeof response === 'string' && response.indexOf(';') > -1 && response.indexOf('ValueError') <= -1) {
+            if (
+                typeof response === 'string' &&
+                response.indexOf(';') > -1 &&
+                response.indexOf('ValueError') <= -1
+            ) {
                 return response.split(';')[1];
             } else if (response === 'command removed') {
                 console.log("Microbit's command removed. Too many requests");
@@ -313,7 +317,7 @@
             }
             const result = await Entry.hwLite.sendAsyncWithThrottle(command);
 
-            if (!result || (this.getCommandType(command) !== this.getCommandType(result))) {
+            if (!result || this.getCommandType(command) !== this.getCommandType(result)) {
                 if (!this.commandStatus[command]) {
                     this.commandStatus[command] = 1;
                     throw new Entry.Utils.AsyncError();
@@ -324,7 +328,7 @@
                     delete this.commandStatus[command];
                     return 'command removed';
                 } else {
-                    console.error("UnExpected Microbit command");
+                    console.error('UnExpected Microbit command');
                 }
             } else {
                 delete this.commandStatus[command];
@@ -944,7 +948,7 @@
             };
         }
 
-        getBlocks = function () {
+        getBlocks = function() {
             return {
                 microbit2lite_common_title: {
                     skeleton: 'basic_text',
@@ -1852,7 +1856,9 @@
                             return 1;
                         } else if (parsedResponse == '3' && value == 'ab') {
                             return 1;
-                        } else return 0;
+                        } else {
+                            return 0;
+                        }
                     },
                 },
                 microbit2lite_get_acc: {
@@ -2208,7 +2214,9 @@
                         const parsedResponse = this.getResponse(response);
                         if (parsedResponse == '1') {
                             return 1;
-                        } else return 0;
+                        } else {
+                            return 0;
+                        }
                     },
                 },
                 microbit2lite_get_sound_level: {
@@ -2269,9 +2277,7 @@
                             ]);
                         }
                         const command = script.getField('VALUE');
-                        const response = await this.getResponseWithSync(
-                            `${command};`
-                        );
+                        const response = await this.getResponseWithSync(`${command};`);
                         return this.getResponse(response);
                     },
                 },
