@@ -15,8 +15,8 @@ import _range from 'lodash/range';
             this.url = 'http://www.arduino.cc/';
             this.imageName = 'arduinolite.png';
             this.title = {
-                ko: '아두이노',
-                en: 'Arduino',
+                ko: '아두이노 우노',
+                en: 'Arduino Uno',
             };
             // duration도 미확인
             this.duration = 32;

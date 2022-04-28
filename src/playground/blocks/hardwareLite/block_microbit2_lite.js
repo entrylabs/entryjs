@@ -186,8 +186,8 @@
             this.url = 'http://microbit.org/ko/';
             this.imageName = 'microbit2lite.png';
             this.title = {
-                en: 'Microbit v2',
-                ko: '마이크로비트 v2',
+                en: 'Microbit',
+                ko: '마이크로비트',
             };
             this.name = 'Microbit2lite';
             this.digitalPins = [
