@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "type": "hardware",
     "title": "햄스터",
-    "description": "로보메이션 햄스터",
+    "description": "로보메이션",
     "imageName": "hamsterLite",
     "moduleId": "020401"
 }
