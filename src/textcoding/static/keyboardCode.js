@@ -111,8 +111,6 @@ Entry.KeyboardCode = {};
         backslash: 220,
 
         // legacy keyinput support
-        '8': 8,
-        '9': 9,
         '13': 13,
         '16': 16,
         '17': 17,

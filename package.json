@@ -56,11 +56,12 @@
         "isomorphic-fetch": "^2.2.1",
         "jest": "^24.9.0",
         "lodash": "^4.17.15",
-        "pixi.js": "^5.2.1",
         "mathjs": "^7.1.0",
+        "pixi.js": "5.3.7",
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "skmeans": "^0.11.3",
+        "socket.io-client": "^4.5.0",
         "uid": "^0.0.2",
         "webpack": "^4.41.4",
         "worker-loader": "^2.0.0",
@@ -84,7 +85,7 @@
         "@types/jquery": "^3.3.38",
         "@types/lodash": "^4.14.155",
         "@types/node": "^14.0.11",
-        "@types/pixi.js": "^5.0.0",
+        "@types/pixi.js": "5.0.0",
         "@types/socket.io-client": "^1.4.33",
         "@types/webpack-env": "^1.15.2",
         "@typescript-eslint/parser": "^3.1.0",
@@ -123,5 +124,8 @@
         "webpack-manifest-plugin": "^2.0.4",
         "webpack-merge": "^4.2.2",
         "webpack-strip-block": "^0.2.0"
+    },
+    "resolutions": {
+        "pixi.js": "5.3.7"
     }
 }

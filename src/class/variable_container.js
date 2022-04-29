@@ -2707,7 +2707,7 @@ Entry.VariableContainer = class VariableContainer {
         return `
         <li>
             <span class="cnt">${+index + startIndex}</span>
-            <input value="${xssFilters.inSingleQuotedAttr(
+            <input value="${xssFilters.inDoubleQuotedAttr(
                 value
             )}" type="text" data-index="${index}"/>
             <a class="del" data-index="${index}"></a>
