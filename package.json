@@ -61,7 +61,7 @@
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
         "skmeans": "^0.11.3",
-        "socket.io-client": "^4.5.0",
+        "socket.io-client": "^2.3.0",
         "uid": "^0.0.2",
         "webpack": "^4.41.4",
         "worker-loader": "^2.0.0",
