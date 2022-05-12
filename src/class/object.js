@@ -886,6 +886,9 @@ Entry.EntryObject = class {
         this.updateCoordinateView(true);
         this.updateRotationView(true);
 
+        Entry.addEventListener('run', this.setDisabled);
+        Entry.addEventListener('dispatchEventDidToggleStop', this.setEnabled);
+
         return this.view_;
     }
 
@@ -1184,6 +1187,8 @@ Entry.EntryObject = class {
                     return;
                 }
                 Entry.do('removeObject', this.id);
+                Entry.removeEventListener('run', this.setDisabled);
+                Entry.removeEventListener('dispatchEventDidToggleStop', this.setEnabled);
             });
         }
         return deleteView;
@@ -1221,6 +1226,40 @@ Entry.EntryObject = class {
         nameView.value = this.name;
         return nameView;
     }
+
+    setDisabled = () => {
+        if (this.nameView_) {
+            this.nameView_.disabled = true;
+        }
+        if (this.rotateInput_) {
+            this.rotateInput_.disabled = true;
+        }
+        if (this.directionInput_) {
+            this.directionInput_.disabled = true;
+        }
+        if (this.coordinateView_) {
+            this.coordinateView_.sizeInput_.disabled = true;
+            this.coordinateView_.xInput_.disabled = true;
+            this.coordinateView_.yInput_.disabled = true;
+        }
+    };
+
+    setEnabled = () => {
+        if (this.nameView_) {
+            this.nameView_.disabled = false;
+        }
+        if (this.rotateInput_) {
+            this.rotateInput_.disabled = false;
+        }
+        if (this.directionInput_) {
+            this.directionInput_.disabled = false;
+        }
+        if (this.coordinateView_) {
+            this.coordinateView_.sizeInput_.disabled = false;
+            this.coordinateView_.xInput_.disabled = false;
+            this.coordinateView_.yInput_.disabled = false;
+        }
+    };
 
     createWrapperView() {
         const wrapperView = Entry.createElement('div').addClass('entryObjectWrapperWorkspace');
