@@ -24,6 +24,29 @@ module.exports = {
                     ],
                 },
             },
+            valueFunctionAddButton: {
+                skeleton: 'basic_button',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+                isNotFor: ['functionInit'],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Workspace.function_create,
+                        color: EntryStatic.colorSet.common.BUTTON,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'valueFunctionAddButton',
+                },
+                events: {
+                    mousedown: [
+                        function() {
+                            Entry.do('funcEditStart', Entry.generateHash(), null, 'asd');
+                        },
+                    ],
+                },
+            },
         };
     },
 };

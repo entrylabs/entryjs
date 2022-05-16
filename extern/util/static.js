@@ -381,7 +381,7 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'func',
-            blocks: ['functionAddButton'],
+            blocks: ['functionAddButton', 'valueFunctionAddButton'],
         },
         {
             category: 'analysis',

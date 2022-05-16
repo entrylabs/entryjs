@@ -41,7 +41,8 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
     };
 
     c[COMMAND_TYPES.funcEditStart] = {
-        do(id, json) {
+        do(id, json, a) {
+            console.log(id, json, a);
             const func = Entry.variableContainer.getFunction(id);
             if (func) {
                 Entry.Func.edit(id);
