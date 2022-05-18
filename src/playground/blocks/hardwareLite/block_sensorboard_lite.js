@@ -13,7 +13,7 @@ import _range from 'lodash/range';
                 ko: 'E-센서보드',
                 en: 'E-Sensorboard',
             };
-            this.duration = 16;
+            this.duration = 32;
             this.blockMenuBlocks = [
                 'sensorboardlite_get_named_sensor_value',
                 'sensorboardlite_is_button_pressed',
@@ -38,9 +38,9 @@ import _range from 'lodash/range';
         }
         setZero() {
             this.port = new Array(12).fill(0);
-            this.analogValue = new Array(6).fill(0);
             this.digitalValue = new Array(12).fill(0);
             this.remoteDigitalValue = new Array(12).fill(0);
+            this.analogValue = new Array(6).fill(0);
             this.readablePorts = _range(0, 19);
 
             if (Entry.hwLite) {
@@ -89,10 +89,10 @@ import _range from 'lodash/range';
             }
             const readablePortsValues = (readablePorts && Object.values(readablePorts)) || [];
             for (let port = 0; port < 12; port++) {
-                // if (readablePortsValues.indexOf(port) > -1) {
-                //     continue;
-                // }
-                const value = this.digitalValue[port];
+                if (readablePortsValues.indexOf(port) > -1) {
+                    continue;
+                }
+                const value = this.remoteDigitalValue[port];
                 if (value === 255 || value === 0) {
                     const query = (7 << 5) + (port << 1) + (value == 255 ? 1 : 0);
                     queryString.push(query);
@@ -150,6 +150,7 @@ import _range from 'lodash/range';
             };
         }
 
+        // TODO : block_arduino_lite.js와 공통블럭 상속하도록 변경
         getBlocks() {
             return {
                 sensorboardlite_get_named_sensor_value: {
@@ -274,11 +275,10 @@ import _range from 'lodash/range';
                     class: 'sensorBoard',
                     isNotFor: ['SensorboardLite'],
                     func(sprite, script) {
-                        // Entry.SensorboardLite.digitalValue[script.getField('PORT')] =
-                        //     script.getNumberField('OPERATOR');
-                        const port = script.getField('PORT');
+                        const port = script.getNumberValue('PORT');
                         const operator = script.getNumberField('OPERATOR');
                         Entry.SensorboardLite.remoteDigitalValue[port] = operator;
+                        Entry.SensorboardLite.removeReadablePort(port);
                         return script.callReturn();
                     },
                     syntax: { js: [], py: ['Sensorboard.led(%1, %2)'] },
@@ -476,7 +476,7 @@ import _range from 'lodash/range';
                     func(sprite, script) {
                         const port = script.getNumberValue('VALUE');
                         const operator = script.getField('OPERATOR');
-                        Entry.SensorboardLite.digitalValue[port] = operator;
+                        Entry.SensorboardLite.remoteDigitalValue[port] = operator;
                         Entry.SensorboardLite.removeReadablePort(port);
                         return script.callReturn();
                     },
