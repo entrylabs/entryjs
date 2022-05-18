@@ -356,7 +356,9 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        window.open('https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0');
+                        window.open(
+                            'https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0'
+                        );
                     },
                 ],
             },
@@ -1571,6 +1573,59 @@ function getBlocks() {
                 ],
             },
         },
+        function_create_value: {
+            template: '함수 정의하기 %1 %2 %3 asd %4 asd',
+            skeleton: 'basic_create_value',
+            statements: [
+                {
+                    accept: 'basic',
+                },
+            ],
+            color: EntryStatic.colorSet.block.default.FUNC,
+            outerLine: EntryStatic.colorSet.block.darken.FUNC,
+            event: 'funcDef',
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'param',
+                    value: {
+                        type: 'function_field_label',
+                        params: [Lang.Blocks.FUNC],
+                        copyable: false,
+                    },
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/func_icon.svg',
+                    size: 11,
+                },
+                {
+                    type: 'LineBreak',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            paramsKeyMap: {
+                FIELD: 0,
+                VALUE: 3,
+            },
+            func(scope, script) {
+                const value = script.getValue('VALUE', script);
+                script.executor.result = value;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'function_create',
+                    },
+                ],
+            },
+        },
         function_general: {
             skeleton: 'basic',
             color: EntryStatic.colorSet.block.default.FUNC,
@@ -1642,6 +1697,77 @@ function getBlocks() {
                 }
 
                 Entry.callStackLength--;
+            },
+            syntax: { js: [], py: [''] },
+        },
+        function_value: {
+            skeleton: 'basic_string_field',
+            color: EntryStatic.colorSet.block.default.FUNC,
+            outerLine: EntryStatic.colorSet.block.darken.FUNC,
+            params: [],
+            events: {
+                dataAdd: [
+                    function(block) {
+                        const vc = Entry.variableContainer;
+                        if (vc) {
+                            vc.addRef('_functionRefs', block);
+                        }
+                    },
+                ],
+                dataDestroy: [
+                    function(block) {
+                        const vc = Entry.variableContainer;
+                        if (vc) {
+                            vc.removeRef('_functionRefs', block);
+                        }
+                    },
+                ],
+                dblclick: [
+                    function(blockView) {
+                        const mode = blockView.getBoard().workspace.getMode();
+                        if (mode !== Entry.Workspace.MODE_BOARD) {
+                            return;
+                        }
+                        if (Entry.type !== 'workspace') {
+                            return;
+                        }
+                        const block = blockView.block;
+                        const id = block.getFuncId();
+                        Entry.do('funcEditStart', id);
+                    },
+                ],
+            },
+            func(entity) {
+                if (!this.initiated) {
+                    this.initiated = true;
+                    Entry.callStackLength++;
+
+                    if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+                        Entry.toast.alert(
+                            Lang.Workspace.RecursiveCallWarningTitle,
+                            Lang.Workspace.RecursiveCallWarningContent
+                        );
+                        throw new Error();
+                    }
+
+                    const func = Entry.variableContainer.getFunction(this.block.getFuncId());
+                    this.funcCode = func.content;
+                    this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
+                    this.funcExecutor.register.params = this.getParams();
+                    this.funcExecutor.register.paramMap = func.paramMap;
+                    this.funcExecutor.parentExecutor = this.executor;
+                    this.funcExecutor.isFuncExecutor = true;
+                }
+                this.funcExecutor.execute();
+                if (!this.funcExecutor.isEnd()) {
+                    this.funcCode.removeExecutor(this.funcExecutor);
+                    return Entry.STATIC.BREAK;
+                }
+
+                console.log('this.funcExecutor.value', this.funcExecutor.result);
+                Entry.callStackLength--;
+
+                return this.funcExecutor.result;
             },
             syntax: { js: [], py: [''] },
         },

@@ -110,8 +110,10 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         const blockView = _.result(this._valueBlock, 'view');
 
-        if (blockView) {
+        if (y === 0 && blockView) {
             y = blockView.height * -0.5;
+        } else if (y > 0) {
+            y = y - 10;
         }
 
         if (!(x || y)) {

@@ -368,12 +368,14 @@ class EntryFunc {
             outputBlock = outputBlock.getOutputBlock();
         }
 
-        schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
-        schemaParams.push({
-            type: 'Indicator',
-            img: 'block_icon/func_icon.svg',
-            size: 12,
-        });
+        if (this.targetFunc.type !== 'value') {
+            schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
+            schemaParams.push({
+                type: 'Indicator',
+                img: 'block_icon/func_icon.svg',
+                size: 12,
+            });
+        }
 
         const funcName = `func_${targetFunc.id}`;
         const block = Entry.block[funcName];
@@ -480,13 +482,18 @@ class EntryFunc {
         this.menuCode = undefined;
     }
 
-    static _generateFunctionSchema(functionId) {
+    static _generateFunctionSchema(functionId, type = 'normal') {
         const prefixedFunctionId = `func_${functionId}`;
         if (Entry.block[prefixedFunctionId]) {
             return;
         }
         let BlockSchema = function() {};
         BlockSchema.prototype = Entry.block.function_general;
+
+        if (type === 'value') {
+            BlockSchema.prototype = Entry.block.function_value;
+        }
+
         BlockSchema = new BlockSchema();
         BlockSchema.changeEvent = new Entry.Event();
         BlockSchema.template = Lang.template.function_general;
@@ -510,19 +517,26 @@ class EntryFunc {
         }
     }
 
-    constructor(func) {
-        this.id = func && func.id ? func.id : Entry.generateHash();
+    constructor(func = {}) {
+        const { type = 'normal', id = Entry.generateHash() } = func;
+        this.id = id;
+        this.type = type;
         let content;
         //inspect empty content
         if (func && func.content && func.content.length > 4) {
             content = func.content;
+        }
+
+        let codeType = 'function_create';
+        if (type === 'value') {
+            codeType = 'function_create_value';
         }
         this.content = content
             ? new Entry.Code(content)
             : new Entry.Code([
                   [
                       {
-                          type: 'function_create',
+                          type: codeType,
                           copyable: false,
                           deletable: false,
                           x: 40,
@@ -535,7 +549,7 @@ class EntryFunc {
         this.hashMap = {};
         this.paramMap = {};
 
-        EntryFunc._generateFunctionSchema(this.id);
+        EntryFunc._generateFunctionSchema(this.id, type);
 
         if (func && func.content) {
             const blockMap = this.content._blockMap;
