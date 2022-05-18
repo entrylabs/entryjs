@@ -1,9 +1,0 @@
-{
-    "name": "NeobotLite",
-    "version": "1.0.0",
-    "type": "hardware",
-    "title": "네오봇",
-    "description": "네오봇",
-    "imageName": "neobotlite",
-    "moduleId": "050101"
-}
