@@ -138,66 +138,45 @@ Entry.Dodaland.getBlocks = function() {
                 console.log(pitchName, noteName);
             },
         },
-        dodaland_select_instrument: {
+        dodaland_press_start_button: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['피아노', '2'],
-                        ['전자피아노', '6'],
-                        ['글로켄슈필', '10'],
-                        ['오르골', '11'],
-                        ['종', '15'],
-                        ['오르간', '20'],
-                        ['어쿠스틱 기타', '25'],
-                        ['전자기타', '31'],
-                        ['베이스', '34'],
-                        ['바이올린', '41'],
-                        ['비올라', '42'],
-                        ['첼로', '43'],
-                        ['더블 베이스', '44'],
-                        ['하프', '47'],
-                        ['목소리', '53'],
-                        ['트럼펫', '58'],
-                        ['튜바', '62'],
-                        ['색소폰', '65'],
-                        ['오보에', '69'],
-                        ['호른', '70'],
-                        ['클라리넷', '72'],
-                        ['플루트', '74'],
-                        ['팬플루트', '76'],
-                        ['오카리나', '80'],
-                        ['단소', '83'],
-                        ['비', '97'],
-                        ['보석', '99'],
-                        ['밴조', '106'],
-                        ['칼림바', '109'],
-                        ['핸드벨', '113'],
-                        ['우드블럭', '116'],
-                        ['오리', '121'],
-                        ['파도', '123'],
-                        ['전화벨', '125'],
-                    ],
-                    fontSize: 11,
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_play.svg',
+                    size: 12,
                 },
             ],
             def: {
-                params: ['2'],
-                type: 'dodaland_select_instrument',
+                type: 'dodaland_press_start_button',
             },
-            paramsKeyMap: {
-                INSTRUMENT_NAME: 0,
-            },
-            class: 'blocks',
+            class: 'buttons',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
-                const instrumentName = script.getValue('INSTRUMENT_NAME', script);
-                console.log(instrumentName);
-                Entry.hw.sendQueue[
-                    'command'
-                ] = `{"doda-control":{"def-normal-inst":${instrumentName}}}`;
+                Entry.hw.sendQueue['command'] = '{"doda-button":{"play":true}}';
+                Entry.hw.update();
+            },
+        },
+        dodaland_press_stop_button: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/start_icon_play.svg',
+                    size: 12,
+                },
+            ],
+            def: {
+                type: 'dodaland_press_stop_button',
+            },
+            class: 'buttons',
+            isNotFor: ['dodaland'],
+            func: (sprite, script) => {
+                Entry.hw.sendQueue['command'] = '{"doda-button":{"stop":true}}';
                 Entry.hw.update();
             },
         },
@@ -270,6 +249,7 @@ Entry.Dodaland.getBlocks = function() {
                 ONOFF: 1,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const channelNumber = script.getValue('CHANNEL_NUMBER', script);
                 const onOrOff = script.getValue('ONOFF', script);
@@ -322,6 +302,7 @@ Entry.Dodaland.getBlocks = function() {
                 ON_OR_OFF: 2,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const xLocation = script.getNumberValue('X', script);
                 const yLocation = script.getNumberValue('Y', script);
@@ -337,6 +318,70 @@ Entry.Dodaland.getBlocks = function() {
                     }":[${channelNumber}]}}`;
                     Entry.hw.update();
                 }
+            },
+        },
+        dodaland_select_instrument: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['피아노', '2'],
+                        ['전자피아노', '6'],
+                        ['글로켄슈필', '10'],
+                        ['오르골', '11'],
+                        ['종', '15'],
+                        ['오르간', '20'],
+                        ['어쿠스틱 기타', '25'],
+                        ['전자기타', '31'],
+                        ['베이스', '34'],
+                        ['바이올린', '41'],
+                        ['비올라', '42'],
+                        ['첼로', '43'],
+                        ['더블 베이스', '44'],
+                        ['하프', '47'],
+                        ['목소리', '53'],
+                        ['트럼펫', '58'],
+                        ['튜바', '62'],
+                        ['색소폰', '65'],
+                        ['오보에', '69'],
+                        ['호른', '70'],
+                        ['클라리넷', '72'],
+                        ['플루트', '74'],
+                        ['팬플루트', '76'],
+                        ['오카리나', '80'],
+                        ['단소', '83'],
+                        ['비', '97'],
+                        ['보석', '99'],
+                        ['밴조', '106'],
+                        ['칼림바', '109'],
+                        ['핸드벨', '113'],
+                        ['우드블럭', '116'],
+                        ['오리', '121'],
+                        ['파도', '123'],
+                        ['전화벨', '125'],
+                    ],
+                    fontSize: 11,
+                },
+            ],
+            def: {
+                params: ['2'],
+                type: 'dodaland_select_instrument',
+            },
+            paramsKeyMap: {
+                INSTRUMENT_NAME: 0,
+            },
+            class: 'blocks',
+            isNotFor: ['dodaland'],
+            func: (sprite, script) => {
+                const instrumentName = script.getValue('INSTRUMENT_NAME', script);
+                console.log(instrumentName);
+                Entry.hw.sendQueue[
+                    'command'
+                ] = `{"doda-control":{"def-normal-inst":${instrumentName}}}`;
+                Entry.hw.update();
             },
         },
         dodaland_play_channel: {
@@ -399,6 +444,7 @@ Entry.Dodaland.getBlocks = function() {
                 CHANNEL_NUMBER: 0,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const channelNumber = script.getValue('CHANNEL_NUMBER', script);
                 console.log(channelNumber);
@@ -441,6 +487,7 @@ Entry.Dodaland.getBlocks = function() {
                 Y: 1,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const xLocation = script.getNumberValue('X', script);
                 const yLocation = script.getNumberValue('Y', script);
@@ -478,6 +525,7 @@ Entry.Dodaland.getBlocks = function() {
                 ENABLE: 0,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const controlEnable = script.getValue('ENABLE', script);
                 console.log(controlEnable);
@@ -509,6 +557,7 @@ Entry.Dodaland.getBlocks = function() {
                 ENABLE: 0,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const controlEnable = script.getValue('ENABLE', script);
                 console.log(controlEnable);
@@ -540,6 +589,7 @@ Entry.Dodaland.getBlocks = function() {
                 ENABLE: 0,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 const controlEnable = script.getValue('ENABLE', script);
                 console.log(controlEnable);
@@ -572,6 +622,7 @@ Entry.Dodaland.getBlocks = function() {
                 VALUE: 0,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 let controlValue = script.getNumberValue('VALUE', script);
                 if (controlValue > 100) {
@@ -605,6 +656,7 @@ Entry.Dodaland.getBlocks = function() {
                 VALUE: 0,
             },
             class: 'blocks',
+            isNotFor: ['dodaland'],
             func: (sprite, script) => {
                 let controlValue = script.getNumberValue('VALUE', script);
                 if (controlValue > 100) {
@@ -612,46 +664,6 @@ Entry.Dodaland.getBlocks = function() {
                 }
                 console.log(controlValue);
                 Entry.hw.sendQueue['command'] = `{"doda-control":{"set-tempo":${controlValue}}}`;
-                Entry.hw.update();
-            },
-        },
-        dodaland_press_start_button: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/start_icon_play.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                type: 'dodaland_press_start_button',
-            },
-            class: 'buttons',
-            func: (sprite, script) => {
-                Entry.hw.sendQueue['command'] = '{"doda-button":{"play":true}}';
-                Entry.hw.update();
-            },
-        },
-        dodaland_press_stop_button: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/start_icon_play.svg',
-                    size: 12,
-                },
-            ],
-            def: {
-                type: 'dodaland_press_stop_button',
-            },
-            class: 'buttons',
-            func: (sprite, script) => {
-                Entry.hw.sendQueue['command'] = '{"doda-button":{"stop":true}}';
                 Entry.hw.update();
             },
         },
