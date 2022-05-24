@@ -281,6 +281,8 @@ Entry.BlockView = class BlockView {
 
     changeType(type) {
         this._schema = Entry.block[type || this.type];
+        this._skeleton = Entry.skeleton[this._schema.skeleton];
+
         this._updateSchema();
     }
 

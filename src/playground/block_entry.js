@@ -1574,7 +1574,7 @@ function getBlocks() {
             },
         },
         function_create_value: {
-            template: '함수 정의하기 %1 %2 %3 asd %4 asd',
+            template: '함수 정의하기 %1 %2 %3 결과값을 %4 (으)로 정하기',
             skeleton: 'basic_create_value',
             statements: [
                 {
@@ -1611,10 +1611,18 @@ function getBlocks() {
                 FIELD: 0,
                 VALUE: 3,
             },
-            func(scope, script) {
-                const value = script.getValue('VALUE', script);
-                script.executor.result = value;
-                return script.callReturn();
+            statementsKeyMap: {
+                DO: 0,
+            },
+            func(sprite, script) {
+                if (!script.isFunc) {
+                    script.isFunc = true;
+                    script.executor.result = script;
+                    return script.getStatement('DO', script);
+                } else {
+                    delete script.isFunc;
+                    return script.callReturn();
+                }
             },
             syntax: {
                 js: [],
@@ -1737,7 +1745,7 @@ function getBlocks() {
                     },
                 ],
             },
-            func(entity) {
+            async func(entity) {
                 if (!this.initiated) {
                     this.initiated = true;
                     Entry.callStackLength++;
@@ -1758,16 +1766,29 @@ function getBlocks() {
                     this.funcExecutor.parentExecutor = this.executor;
                     this.funcExecutor.isFuncExecutor = true;
                 }
-                this.funcExecutor.execute();
-                if (!this.funcExecutor.isEnd()) {
-                    this.funcCode.removeExecutor(this.funcExecutor);
-                    return Entry.STATIC.BREAK;
+                const ab = this.funcExecutor.execute();
+                if (ab.promises.length) {
+                    const ac = await Promise.all(ab.promises);
+                    console.log('ac', ac);
                 }
+                // else if (!this.funcExecutor.isEnd()) {
+                //     this.funcCode.removeExecutor(this.funcExecutor);
+                //     return Entry.STATIC.BREAK;
+                // }
 
-                console.log('this.funcExecutor.value', this.funcExecutor.result);
+                console.log(
+                    'this.funcExecutor.value',
+                    this.funcExecutor.isEnd(),
+                    ab,
+                    this.funcExecutor.result
+                );
                 Entry.callStackLength--;
 
-                return this.funcExecutor.result;
+                const scope = this.funcExecutor.result;
+                scope.values = scope.getParams();
+                const a = scope.getValue('VALUE', scope);
+                console.log('3', a);
+                return a;
             },
             syntax: { js: [], py: [''] },
         },

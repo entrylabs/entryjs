@@ -1806,10 +1806,11 @@ Entry.VariableContainer = class VariableContainer {
     getFunctionJSON() {
         return _.reduce(
             this.functions_,
-            (acc, { id, content }) => [
+            (acc, { id, content, type = 'normal' }) => [
                 ...acc,
                 {
                     id,
+                    type,
                     content: content.stringify(),
                 },
             ],

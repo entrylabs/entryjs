@@ -37,6 +37,7 @@ class EntryFunc {
     }
 
     static edit(func) {
+        console.log('func', func);
         let funcElement = func;
         if (typeof func === 'string') {
             funcElement = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(func)[2]);
@@ -368,7 +369,7 @@ class EntryFunc {
             outputBlock = outputBlock.getOutputBlock();
         }
 
-        if (this.targetFunc.type !== 'value') {
+        if (targetFunc.type !== 'value') {
             schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
             schemaParams.push({
                 type: 'Indicator',
@@ -482,9 +483,36 @@ class EntryFunc {
         this.menuCode = undefined;
     }
 
-    static _generateFunctionSchema(functionId, type = 'normal') {
+    static changeType(func, type = 'normal') {
+        func.destroy();
+        func.type = type;
+        delete func.block;
+        delete func.blockMenuBlock;
+        EntryFunc._generateFunctionSchema(func.id, type, true);
+
+        if (func && func.content) {
+            const blockMap = func.content._blockMap;
+            for (const key in blockMap) {
+                EntryFunc.registerParamBlock(blockMap[key].type);
+            }
+            EntryFunc.generateWsBlock(func);
+        }
+
+        EntryFunc.registerFunction(func);
+        const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
+        const block = func.content.getThread(0).getFirstBlock();
+        block.set({ statements: [] });
+        block.changeType(blockType);
+
+        EntryFunc.updateMenu();
+
+        // b = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec('0q91')[2]);
+        // Entry.Func.changeType(b, 'value')
+    }
+
+    static _generateFunctionSchema(functionId, type = 'normal', isUpdate) {
         const prefixedFunctionId = `func_${functionId}`;
-        if (Entry.block[prefixedFunctionId]) {
+        if (!isUpdate && Entry.block[prefixedFunctionId]) {
             return;
         }
         let BlockSchema = function() {};
@@ -497,6 +525,10 @@ class EntryFunc {
         BlockSchema = new BlockSchema();
         BlockSchema.changeEvent = new Entry.Event();
         BlockSchema.template = Lang.template.function_general;
+
+        if (type === 'value') {
+            BlockSchema.template = Lang.template.function_value;
+        }
 
         Entry.block[prefixedFunctionId] = BlockSchema;
     }

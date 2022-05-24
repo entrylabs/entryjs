@@ -1,10 +1,27 @@
+import _take from 'lodash/take';
+import _takeRight from 'lodash/takeRight';
+
+const getFirstBoxWidth = (blockView: any): number => {
+    const contents = _take(blockView._contents, 3);
+    return contents.reduce<number>((acc, content: any) => {
+        console.log('content.box.width', content.box.width, acc);
+        return acc + content.box.width;
+    }, 20);
+};
+
+const getSecondBoxWidth = (blockView: any): number => {
+    const contents = _takeRight(blockView._contents, 3);
+    return contents.reduce<number>((acc, content: any) => {
+        console.log('content.box.width', content.box.width, acc);
+        return acc + content.box.width;
+    }, 20);
+};
+
 Entry.skeleton.basic_create_value = {
     executable: true,
     path(blockView) {
-        let width = blockView.contentWidth;
         let height = blockView.contentHeight % 1000000;
         height = Math.max(30, height + 2);
-        width = Math.max(0, width + 2 - height / 2);
         const statements = blockView._statements;
         let statementHeight = statements[0] ? statements[0].height : 20;
         const halfHeight = height / 2;
@@ -13,7 +30,7 @@ Entry.skeleton.basic_create_value = {
 
         return `M 0 0                
                 V 1
-                h ${width}
+                h ${getFirstBoxWidth(blockView)}
                 a 14 14 0 0 1 0 28
                 H 26
                 l -6 6
@@ -21,7 +38,7 @@ Entry.skeleton.basic_create_value = {
                 v ${statementHeight}
                 l 6 6
                 l 6 -6
-                h ${width - 15}
+                h ${getSecondBoxWidth(blockView) - 15}
                 a ${halfHeight} ${halfHeight} 0 0 1 0 ${height}
                 H 0
                 z`;

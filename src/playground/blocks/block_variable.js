@@ -586,6 +586,7 @@ module.exports = {
                     const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     const { isRealTime_ } = variable;
 
+                    console.log('2');
                     if (!isRealTime_) {
                         variable.setValue(value);
                         return script.callReturn();
