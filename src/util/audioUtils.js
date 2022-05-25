@@ -110,37 +110,8 @@ class AudioUtils {
             const scriptNode = audioContext.createScriptProcessor(512, 1, 1);
             const streamDest = audioContext.createMediaStreamDestination();
             const mediaRecorder = new MediaRecorder(streamDest.stream);
-            // mediaRecorder.onstop = async (event) => {
-            //     const blob = new Blob(this._audioChunks, { type: 'audio/ogg; codecs=opus' });
-            //     const audio = document.createElement('audio');
-            //     audio.style = { width: 100, height: 100 };
-            //     audio.src = await window.URL.createObjectURL(blob);
-
-            //     audio.controls = true;
-
-            //     audio.oncanplay = () => {
-            //         document.body.prepend(audio);
-            //     };
-            //     this._audioChunks = [];
-            // };
-            // mediaRecorder.ondataavailable = (event) => {
-            //     if (!this._audioChunks) {
-            //         this._audioChunks = [];
-            //     }
-            //     this._audioChunks.push(event.data);
-            // };
             // 순서대로 노드 커넥션을 맺는다.
-            this._connectNodes(
-                streamSrc,
-                // highpassFilter,
-                // gainNode,
-                // highpassFilter2,
-                // gainNode2,
-                // reducerNode,
-                analyserNode,
-                scriptNode,
-                streamDest
-            );
+            this._connectNodes(streamSrc, analyserNode, scriptNode, streamDest);
             scriptNode.onaudioprocess = this._handleScriptProcess(analyserNode);
 
             this._audioContext = audioContext;
@@ -168,8 +139,6 @@ class AudioUtils {
     }
 
     async startRecord(recordMilliSecond, language) {
-        //getMediaStream 은 만약 stream 이 없는 경우
-        await this.getMediaStream();
         return await new Promise(async (resolve, reject) => {
             this.resolveFunc = resolve;
             if (!this.isInitialized) {
