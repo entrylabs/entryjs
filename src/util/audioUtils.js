@@ -147,7 +147,7 @@ class AudioUtils {
                 return;
             }
             // this.isRecording = true;
-            if (!this._audioContext || this._audioContext.state === 'suspended') {
+            if (this._audioContext.state === 'suspended') {
                 this.isInitialized = false;
                 await this.initialize();
             }
