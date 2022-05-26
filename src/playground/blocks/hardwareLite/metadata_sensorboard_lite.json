@@ -2,8 +2,8 @@
     "name": "SensorboardLite",
     "version": "1.0.0",
     "type": "hardware",
-    "title": "E-Sensor board",
-    "description": "E-센서보드(유선연결)",
+    "title": "E-센서보드 (유선연결)",
+    "description": "새로운교육",
     "imageName": "sensorboardlite",
     "moduleId": "010201"
 }
