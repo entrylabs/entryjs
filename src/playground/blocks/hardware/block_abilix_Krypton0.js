@@ -277,6 +277,7 @@ Entry.Krypton0.getBlocks = function() {
                 } else {
                     delete script.isStart;
                     delete script.timeFlag;
+                    
                     Entry.engine.isContinue = false;
                     Entry.hw.sendQueue.LMOTOR = 0;
                     Entry.hw.sendQueue.RMOTOR = 0;
