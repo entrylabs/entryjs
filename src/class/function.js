@@ -20,18 +20,6 @@ class EntryFunc {
         func.blockMenuBlock = this._targetFuncBlock;
     }
 
-    static executeFunction(threadHash) {
-        let script = this.threads[threadHash];
-        script = Entry.Engine.computeThread(script.entity, script);
-        if (script) {
-            this.threads[threadHash] = script;
-            return true;
-        } else {
-            delete this.threads[threadHash];
-            return false;
-        }
-    }
-
     static clearThreads() {
         this.threads = {};
     }
