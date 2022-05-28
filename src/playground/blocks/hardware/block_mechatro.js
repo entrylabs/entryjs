@@ -199,7 +199,7 @@ class mechatro {
                     mechatro_get_sensor_value: "%1 센서값",
                     mechatro_set_get_sensor_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
                     mechatro_get_ultrasonic_value: "초음파센서 Trig %1 Echo %2 의 거리값 [cm]",
-                    mechatro_get_temperature: "%1 온도 센서 값",
+                    mechatro_get_temperature: "%1 온도 센서 값 (TMP36)",
                     mechatro_set_blue_pw: "블루투스 비밀번호 : %1%2%3%4로 정하기%5",
                     mechatro_set_dc_motor: "%1모터 속도 %2로 정하기%3",
                     mechatro_set_digital: "%1번 %2 %3",
@@ -221,7 +221,7 @@ class mechatro {
                     mechatro_get_sensor_value: 'Analog %1 Sensor value',
                     mechatro_set_get_sensor_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
                     mechatro_get_ultrasonic_value: "Read ultrasonic sensor trig pin %1 echo pin %2",
-                    mechatro_get_temperature: "temperature %1 Sensor",
+                    mechatro_get_temperature: "temperature %1 Sensor (TMP36)",
                     mechatro_set_blue_pw: "Change PW of Bluetooth to %1%2%3%4 %5",
                     mechatro_set_dc_motor: "Set %1 motor speed to %2 %3",
                     mechatro_set_digital: "Digital %1 Pin %2 %3",
@@ -779,7 +779,7 @@ class mechatro {
                     const mode = Entry.mechatro.portMode.SET_ANALOG_IN;
                     Entry.mechatro.transferMode(portNo, mode);
                     if (Entry.hw.portData[portNo] !== undefined) {
-                        return Math.round(Entry.hw.portData[portNo] * 4.883 - 500) / 10.0;
+                        return Math.round((Entry.hw.portData[portNo] * 0.4883 - 50));
                     } else {
                         return 0;
                     }
@@ -971,6 +971,9 @@ class mechatro {
                     const echo = script.getNumberField('ECHO', script);
                     const mode = Entry.mechatro.portMode.SET_ULTRASONIC;
                     Entry.mechatro.transferModeValue(trig, mode, echo);
+                    // 받는 값 업데이트 포트를 Disable 함. 디지털, 아날로그핀 설정으로 업데이트가 되지 안도록 함.
+                    // Echo 포트의 업데이트는 triger 포트에서 업데이트를 시켜줌
+                    Entry.mechatro.transferModeValue(echo,Entry.mechatro.portMode.SET_PORT_DISABLE);
                     Entry.mechatro.eventState.ENABLE[trig] = false;
                     Entry.mechatro.eventState.ENABLE[echo] = false;
                     if (Entry.hw.portData.hasOwnProperty(echo)) {
