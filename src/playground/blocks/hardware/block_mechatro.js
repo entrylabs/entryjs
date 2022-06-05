@@ -144,6 +144,7 @@ class mechatro {
         };
 
         this.prev_sensor_data = { '2': 0, '4': 0, '5': 0, '6': 0, '7': 0, '10': 0 };
+        this.tonePin = 0;
 
         this.eventState = {
             FALLING: {
@@ -966,14 +967,13 @@ class mechatro {
                 class: 'MechatroGet',
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
-                    
                     const trig = script.getNumberField('TIRG', script);
                     const echo = script.getNumberField('ECHO', script);
                     const mode = Entry.mechatro.portMode.SET_ULTRASONIC;
                     Entry.mechatro.transferModeValue(trig, mode, echo);
                     // 받는 값 업데이트 포트를 Disable 함. 디지털, 아날로그핀 설정으로 업데이트가 되지 안도록 함.
                     // Echo 포트의 업데이트는 triger 포트에서 업데이트를 시켜줌
-                    Entry.mechatro.transferModeValue(echo,Entry.mechatro.portMode.SET_PORT_DISABLE);
+                    Entry.mechatro.transferModeValue(echo, Entry.mechatro.portMode.SET_PORT_DISABLE);
                     Entry.mechatro.eventState.ENABLE[trig] = false;
                     Entry.mechatro.eventState.ENABLE[echo] = false;
                     if (Entry.hw.portData.hasOwnProperty(echo)) {
@@ -981,7 +981,7 @@ class mechatro {
                     } else {
                         return 0;
                     }
-               },
+                },
                 syntax: {
                     js: [],
                     py: [
@@ -1225,47 +1225,56 @@ class mechatro {
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
                     const portNo = script.getNumberField('PORT', script);
+                    Entry.mechatro.tonePin = portNo;
                     let mode;
-
                     if (!script.isStart) {
-                        let duration = script.getNumberValue('DURATION', script);
-                        if (duration < 0) {
-                            duration = 0;
-                        }
-                        duration = duration * 1000;
+                        script.isStart = true;
+                        script.timeFlag = 1;
 
                         let note = script.getNumberField('NOTE', script);
                         let octave = script.getNumberField('OCTAVE', script);
                         let value = (octave << 4) | (note - 1);
+                        let duration = script.getNumberValue('DURATION', script);
 
-                        script.isStart = true;
-                        script.timeFlag = 1;
+                        duration = duration * 1000;
+                        if (duration < 100) {   //  100ms 이상만 연주, 통신 속도 및 음 후반부 50ms 무음처리 위함
+                            duration = 50;
+                        }
 
-                        if (duration === 0 || note === 0) {
+                        if (duration === 50 || note === 0) {   // 음 후반 50ms 무음 처리, 동일음 연속사용시 음간 구분
                             mode = Entry.mechatro.portMode.SET_NO_TONE;
                             Entry.mechatro.transferMode(portNo, mode);
-                            Entry.mechatro.eventState.ENABLE[portNo] = true;                            
+                            Entry.mechatro.eventState.ENABLE[portNo] = true;
+                            Entry.mechatro.tonePin = 0;
                         } else {
                             mode = Entry.mechatro.portMode.SET_TONE;
+                            Entry.mechatro.transferModeValue(3, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);    // 모터 사용 중지
+                            Entry.mechatro.transferModeValue(11, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);   // 모터 사용 중지
                             Entry.mechatro.transferModeValue(portNo, mode, value);
                             Entry.mechatro.eventState.ENABLE[portNo] = false;
                         }
 
                         setTimeout(() => {
+                            script.timeFlag = 2;
+                        }, duration - 50);
+
+                        setTimeout(() => {
                             script.timeFlag = 0;
-                        }, duration + 32);
+                        }, duration);
+
                         return script;
                     } else if (script.timeFlag == 1) {
                         return script;
-                    } else {
+                    } else if (script.timeFlag == 2) {
                         mode = Entry.mechatro.portMode.SET_NO_TONE;
                         Entry.mechatro.transferMode(portNo, mode);
                         Entry.mechatro.eventState.ENABLE[portNo] = true;
-
+                        Entry.mechatro.tonePin = 0;
+                        return script;
+                    } else {
                         delete script.timeFlag;
                         delete script.isStart;
                         Entry.engine.isContinue = false;
-
                         return script.callReturn();
                     }
                 },
@@ -1374,6 +1383,7 @@ class mechatro {
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
                     let portNo = script.getNumberField('PORT', script);
+                    Entry.mechatro.tonePin = portNo;
                     let note = script.getNumberField('NOTE', script);
                     let octave = script.getNumberField('OCTAVE', script);
                     let mode;
@@ -1383,10 +1393,13 @@ class mechatro {
                         mode = Entry.mechatro.portMode.SET_NO_TONE;
                         Entry.mechatro.transferMode(portNo, mode);
                         Entry.mechatro.eventState.ENABLE[portNo] = true;
+                        Entry.mechatro.tonePin = 0;
                     } else {
                         mode = Entry.mechatro.portMode.SET_TONE;
+                        Entry.mechatro.transferModeValue(3, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);
+                        Entry.mechatro.transferModeValue(11, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);
                         Entry.mechatro.transferModeValue(portNo, mode, value);
-                        Entry.mechatro.eventState.ENABLE[portNo] = false; 
+                        Entry.mechatro.eventState.ENABLE[portNo] = false;
                     }
                     return script.callReturn();
                 },
@@ -1472,6 +1485,10 @@ class mechatro {
                     value = Math.max(value, 0);
                     value = Math.min(value, 200);
 
+                    if (Entry.mechatro.tonePin) {   // 22.6.5 톤 중복 사용 금지처리
+                        Entry.mechatro.transferMode(Entry.mechatro.tonePin, Entry.mechatro.portMode.SET_NO_TONE);
+                        Entry.mechatro.tonePin = 0;
+                    }
                     Entry.mechatro.transferModeValue(portNo, mode, value);
                     return script.callReturn();
                 },
