@@ -3,7 +3,7 @@ import Extension from '../extensions/extension';
 // 1px * 1px jpeg iamge
 const NULL_IMAGE =
     // eslint-disable-next-line max-len
-    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAA1JREFUGFdjKOHk+Q8AAwcBicFO+5EAAAAASUVORK5CYII=';
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
 let EntryPaint;
 Entry.Painter = class Painter {
     constructor(view) {
