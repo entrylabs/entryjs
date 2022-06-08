@@ -1,6 +1,6 @@
 import Extension from '../extensions/extension';
 
-// 1px * 1px jpeg iamge
+// 1px * 1px png iamge
 const NULL_IMAGE =
     // eslint-disable-next-line max-len
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
