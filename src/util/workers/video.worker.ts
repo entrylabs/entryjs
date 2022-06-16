@@ -25,7 +25,7 @@ type FlipStatus = {
 let mobileNet: any = null;
 let coco: any = null;
 let faceLoaded: boolean = false;
-const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
+// const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
 
 // 메인 스레드에서 전달받은 이미지 프레임 반영용 캔버스
 let offCanvas: OffscreenCanvas = null;
@@ -156,9 +156,11 @@ ctx.onmessage = async function(e: {
         image: ImageBitmap;
         target: IndicatorType;
         mode: String;
+        weightsUrl: string;
     };
 }) {
-    const { type } = e.data;
+    const { type, weightsUrl } = e.data;
+    console.log("ai face model test", weightsUrl);
     switch (type) {
         case 'init':
             dimension.width = e.data.width;
@@ -200,10 +202,17 @@ ctx.onmessage = async function(e: {
                     faceapi.nets.faceLandmark68Net.loadFromUri(weightsUrl),
                     faceapi.nets.ageGenderNet.loadFromUri(weightsUrl),
                     faceapi.nets.faceExpressionNet.loadFromUri(weightsUrl),
-                ]).then(() => {
-                    faceLoaded = true;
-                    this.postMessage({ type: 'init', message: 'face' });
-                }),
+                ])
+                    .then(() => {
+                        faceLoaded = true;
+                        this.postMessage({ type: 'init', message: 'face' });
+                        console.log('weightsUrl success :', weightsUrl);
+                    })
+                    .catch((event) => {
+                        console.log('weightsUrl event: ', event);
+                        console.log('weightsUrl fail', weightsUrl);
+                    }),
+                ,
             ]);
             await warmup();
             this.postMessage({ type: 'init', message: 'warmup' });

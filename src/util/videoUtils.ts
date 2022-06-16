@@ -277,8 +277,12 @@ class VideoUtils implements MediaUtilsInterface {
                             break;
                     }
                 };
+                const weightsUrl = (window.navigator.userAgent.indexOf('Electron') > -1) ?
+                    window.weightsPath() :
+                    `${self.location.origin}/lib/entry-js/weights`;
                 this.worker.postMessage({
                     type: 'init',
+                    weightsUrl: weightsUrl,
                     width: this.CANVAS_WIDTH,
                     height: this.CANVAS_HEIGHT,
                 });
