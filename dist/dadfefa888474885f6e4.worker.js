@@ -18160,7 +18160,7 @@ var ctx = self;
 var mobileNet = null;
 var coco = null;
 var faceLoaded = false;
-var weightsUrl = self.location.origin + "/lib/entry-js/weights";
+// const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
 // 메인 스레드에서 전달받은 이미지 프레임 반영용 캔버스
 var offCanvas = null;
 // 얼굴 인식 모델 옵션
@@ -18336,14 +18336,15 @@ function poseDetect(force) {
 }
 ctx.onmessage = function (e) {
     return __awaiter(this, void 0, void 0, function () {
-        var type, _a, image, ctx_1, _b, target, mode, targetMode;
+        var _a, type, weightsUrl, _b, image, ctx_1, _c, target, mode, targetMode;
         var _this = this;
-        return __generator(this, function (_c) {
-            switch (_c.label) {
+        return __generator(this, function (_d) {
+            switch (_d.label) {
                 case 0:
-                    type = e.data.type;
-                    _a = type;
-                    switch (_a) {
+                    _a = e.data, type = _a.type, weightsUrl = _a.weightsUrl;
+                    console.log("ai face model test", weightsUrl);
+                    _b = type;
+                    switch (_b) {
                         case 'init': return [3 /*break*/, 1];
                         case 'estimate': return [3 /*break*/, 4];
                         case 'option': return [3 /*break*/, 5];
@@ -18389,17 +18390,24 @@ ctx.onmessage = function (e) {
                                 face_api_js__WEBPACK_IMPORTED_MODULE_2__["nets"].faceLandmark68Net.loadFromUri(weightsUrl),
                                 face_api_js__WEBPACK_IMPORTED_MODULE_2__["nets"].ageGenderNet.loadFromUri(weightsUrl),
                                 face_api_js__WEBPACK_IMPORTED_MODULE_2__["nets"].faceExpressionNet.loadFromUri(weightsUrl),
-                            ]).then(function () {
+                            ])
+                                .then(function () {
                                 faceLoaded = true;
                                 _this.postMessage({ type: 'init', message: 'face' });
+                                console.log('weightsUrl success :', weightsUrl);
+                            })
+                                .catch(function (event) {
+                                console.log('weightsUrl event: ', event);
+                                console.log('weightsUrl fail', weightsUrl);
                             }),
+                            ,
                         ])];
                 case 2:
                     // 각각의 모델 pre-load
-                    _c.sent();
+                    _d.sent();
                     return [4 /*yield*/, warmup()];
                 case 3:
-                    _c.sent();
+                    _d.sent();
                     this.postMessage({ type: 'init', message: 'warmup' });
                     // console.log('video worker loaded');
                     return [3 /*break*/, 10];
@@ -18412,7 +18420,7 @@ ctx.onmessage = function (e) {
                     options = e.data.option;
                     return [3 /*break*/, 10];
                 case 6:
-                    _b = e.data, target = _b.target, mode = _b.mode;
+                    _c = e.data, target = _c.target, mode = _c.mode;
                     targetMode = mode === 'on';
                     modelStatus[target] = targetMode;
                     return [3 /*break*/, 10];
