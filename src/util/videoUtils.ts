@@ -278,7 +278,6 @@ class VideoUtils implements MediaUtilsInterface {
                     }
                 };
                 const weightsUrl = this.getWeightUrl();
-                console.log("test weightsUrl", weightsUrl);
                 this.worker.postMessage({
                     weightsUrl: weightsUrl,
                     type: 'init',
