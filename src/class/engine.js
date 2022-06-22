@@ -1247,15 +1247,3 @@ Entry.Engine = class Engine {
         });
     }
 };
-
-Entry.Engine.computeThread = function(entity, script) {
-    Entry.engine.isContinue = true;
-    let isSame = false;
-    while (script && Entry.engine.isContinue && !isSame) {
-        Entry.engine.isContinue = !script.isRepeat;
-        const newScript = script.run();
-        isSame = newScript && newScript === script;
-        script = newScript;
-    }
-    return script;
-};

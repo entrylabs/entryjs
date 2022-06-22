@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.castarter_v2 = {
-    id: ['4D.1','4D.2'],
+    id: ['4D.1','4D.2','4D.3'],
     name: 'castarter_v2',
     url: 'http://codingarray.cc/',
     imageName: 'castarter_v2.png',
