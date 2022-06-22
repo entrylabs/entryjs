@@ -38,7 +38,3 @@ extern/closure-library
 .idea/
 dist/
 
-yarn.lock
-package-lock.json
-
-
