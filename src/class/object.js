@@ -1216,6 +1216,17 @@ Entry.EntryObject = class {
                 e.preventDefault();
             }
         });
+        nameView.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (!_.includes(this.view_.classList, 'selectedObject')) {
+                this._rightClick(e);
+            }
+        });
+        nameView.addEventListener('focus', () => {
+            if (!_.includes(this.view_.classList, 'selectedObject')) {
+                nameView.blur();
+            }
+        });
 
         const onKeyPressed = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
