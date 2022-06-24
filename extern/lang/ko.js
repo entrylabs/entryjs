@@ -5398,6 +5398,8 @@ Lang.Workspace = {
     confirm_firmware_hwlite_block_pass: '이미 설치함',
     select_hwlite_block_duplicated: '1개의 하드웨어만 선택해 주세요.',
     select_hwlite_block_none: '연결할 하드웨어를 선택해 주세요.',
+    select_firmware_hwlite_title: '펌웨어 다운로드',
+    select_firmware_hwlite_content: '버전에 맞는 펌웨어를 다운로드 받아\n하드웨어에 설치해 주세요.',
     sound_add: '소리 추가하기',
     sound_remove_fail: '소리 삭제 실패',
     sound_remove_ok: '소리 삭제 완료',
