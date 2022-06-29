@@ -15,6 +15,7 @@
             };
             this.duration = 32;
             this.functionKeys = {
+                LOCALDATA: 'localdata',
                 GET_ANALOG: 'get-analog',
                 GET_DIGITAL: 'get-digital',
                 SET_ANALOG: 'set-analog',
@@ -273,7 +274,7 @@
         }
         setZero() {
             this.commandStatus = {};
-            return Entry.hwLite.sendAsyncWithThrottle(this.functionKeys.RESET, true);
+            return Entry.hwLite.sendAsyncWithThrottle(this.functionKeys.RESET);
         }
 
         waitMilliSec(milli) {

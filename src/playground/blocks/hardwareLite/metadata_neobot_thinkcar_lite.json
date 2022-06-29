@@ -1,0 +1,9 @@
+{
+    "name": "NeobotThinkCarLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "네오씽카(ThinkCar)",
+    "description": "네오씽카(ThinkCar)",
+    "imageName": "neobot_thinkcar_lite",
+    "moduleId": "050701"
+}
