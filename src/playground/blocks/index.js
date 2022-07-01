@@ -76,7 +76,7 @@ function getHardwareBlockObject(items) {
                 Object.assign(blockObject, 'getBlocks' in item ? item.getBlocks() : {});
             }
         } catch (err) {
-            console.log(err, item);
+            console.error(err, item);
         }
     });
     return blockObject;
