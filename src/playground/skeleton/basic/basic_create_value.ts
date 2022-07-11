@@ -3,18 +3,12 @@ import _takeRight from 'lodash/takeRight';
 
 const getFirstBoxWidth = (blockView: any): number => {
     const contents = _take(blockView._contents, 3);
-    return contents.reduce<number>((acc, content: any) => {
-        console.log('content.box.width', content.box.width, acc);
-        return acc + content.box.width;
-    }, 20);
+    return contents.reduce<number>((acc, content: any) => acc + content.box.width, 20);
 };
 
 const getSecondBoxWidth = (blockView: any): number => {
     const contents = _takeRight(blockView._contents, 3);
-    return contents.reduce<number>((acc, content: any) => {
-        console.log('content.box.width', content.box.width, acc);
-        return acc + content.box.width;
-    }, 20);
+    return contents.reduce<number>((acc, content: any) => acc + content.box.width, 20);
 };
 
 Entry.skeleton.basic_create_value = {
@@ -44,7 +38,6 @@ Entry.skeleton.basic_create_value = {
                 z`;
     },
     magnets(blockView) {
-        const height = blockView ? Math.max(blockView.height, 30) : 30;
         return {};
     },
     box(blockView) {
