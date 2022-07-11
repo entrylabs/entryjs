@@ -437,4 +437,11 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         return block;
     }
+
+    getFields() {
+        if (!this._blockView) {
+            return [];
+        }
+        return this._blockView.getFields();
+    }
 };
