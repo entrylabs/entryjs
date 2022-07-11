@@ -972,7 +972,8 @@ Entry.BlockView = class BlockView {
         const magnet = this._skeleton.magnets(this);
 
         if (magnet.next) {
-            this._nextGroup.attr('transform', `translate(${magnet.next.x},${magnet.next.y})`);
+            this._nextGroup &&
+                this._nextGroup.attr('transform', `translate(${magnet.next.x},${magnet.next.y})`);
             this._nextCommentGroup &&
                 this._nextCommentGroup.attr(
                     'transform',
