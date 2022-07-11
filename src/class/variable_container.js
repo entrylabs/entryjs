@@ -6,6 +6,7 @@
 import SimpleBar from 'simplebar';
 import xssFilters from 'xss-filters';
 import CloudVariable from '../extensions/CloudVariable';
+import _get from 'lodash/get';
 
 /**
  * Block variable constructor
@@ -256,6 +257,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.container.selectObject(object.object_, true);
             }
         } else if (object instanceof Entry.Func) {
+            this.generateFuncSettingView(object);
+            this.updateFuncSettingView(object);
             this.renderFunctionReference(object);
         } else {
             this.renderMessageReference(object);
@@ -387,6 +390,297 @@ Entry.VariableContainer = class VariableContainer {
 
         this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
         this.listSettingView && this.listSettingView.appendChild(usedWrapper);
+    }
+
+    generateFuncSettingView(func) {
+        const createElement = Entry.createElement;
+
+        const element = createElement('div')
+            .addClass('attr_inner_box')
+            .bindOnClick((e) => e.stopPropagation());
+
+        if (this.funcSettingView) {
+            $(this.funcSettingView).remove();
+            delete this.funcSettingView;
+        }
+        this.funcSettingView = element;
+
+        const funcAttr = createElement('div')
+            .addClass('func_attr')
+            .appendTo(element);
+        if (this._isPythonMode()) {
+            funcAttr.addClass('hidden');
+        }
+        const boxSubject = createElement('span')
+            .addClass('box_sjt')
+            .appendTo(funcAttr);
+        boxSubject.textContent = Lang.Workspace.func_property;
+
+        this.generateFuncDefaultView(funcAttr, func);
+        this.generateFuncLocalVariableView(funcAttr, func);
+        this.generateFuncValuesView(funcAttr, func);
+        // func.innerBox && $(func.innerBox).remove();
+        // let innerBox;
+
+        this.funcSettingView.func = funcAttr;
+        func.listElement.appendChild(this.funcSettingView);
+    }
+
+    generateFuncDefaultView(element, func) {
+        const createElement = Entry.createElement;
+
+        // 슬라이드 입력창
+        const checkInputBox = createElement('div')
+            .addClass('check_inpt')
+            .appendTo(element);
+
+        const resultCheckBox = createElement('div')
+            .addClass('chk_box')
+            .appendTo(checkInputBox);
+        element.resultCheck = createElement('span')
+            .addClass('entryFuncAddResultCheckWorkspace')
+            .bindOnClick(() => {
+                const caller = [...this._functionRefs].find(
+                    (item) => item.block.data.type === `func_${func.id}`
+                );
+
+                if (caller) {
+                    return Entry.modal.alert('asd');
+                }
+
+                Entry.do('funcChangeType', func);
+            })
+            .appendTo(resultCheckBox);
+
+        const resultCheckText = createElement('span')
+            .addClass('chk_text')
+            .appendTo(resultCheckBox);
+        resultCheckText.textContent = Lang.Workspace.check_result_value;
+    }
+
+    generateFuncLocalVariableView(element, func) {
+        const createElement = Entry.createElement;
+
+        const checkInputBox = createElement('div')
+            .addClass('check_inpt')
+            .appendTo(element);
+
+        const localVarCheckBox = createElement('div')
+            .addClass('chk_box')
+            .appendTo(checkInputBox);
+
+        element.localVarCheck = createElement('span')
+            .addClass('entryFuncAddLocalVarCheckWorkspace')
+            .bindOnClick(() => {
+                console.log('asd', func.localVariables, func.useLocalVariables);
+
+                Entry.do('toggleFuncUseLocalVariables', func);
+            })
+            .appendTo(localVarCheckBox);
+
+        const localVarCheckText = createElement('span')
+            .addClass('chk_text')
+            .bindOnClick(() => {
+                element.localVarCheck.click();
+            })
+            .appendTo(localVarCheckBox);
+        localVarCheckText.textContent = Lang.Workspace.check_local_variable;
+
+        const countInputBox = createElement('div')
+            .addClass('cnt_inpt')
+            .appendTo(checkInputBox);
+
+        const buttonMinus = createElement('a')
+            .addClass('btn_cnt')
+            .bindOnClick((e) => {
+                const disabled = e?.target?.hasAttribute('disabled');
+                if (disabled) {
+                    return;
+                }
+                Entry.do('funcLocalVarChangeLength', func, 'minus');
+                // countInput.value = func.localVariables?.length || 0;
+            })
+            .appendTo(countInputBox);
+        buttonMinus.textContent = '-';
+        buttonMinus.href = '#';
+        this.funcSettingView.minus = buttonMinus;
+
+        const limitValue = 10;
+        const maxlength = 2;
+
+        const buttonPlus = createElement('a')
+            .addClass('btn_cnt')
+            .bindOnClick((e) => {
+                const disabled = e?.target?.hasAttribute('disabled');
+                if (disabled) {
+                    return;
+                }
+                console.log('plus');
+                const variableLength = func.localVariables.length;
+                if (variableLength < limitValue) {
+                    Entry.do('funcLocalVarChangeLength', func, 'plus');
+                    // countInput.value = func.localVariables?.length || 0;
+                }
+            })
+            .appendTo(countInputBox);
+        buttonPlus.textContent = '+';
+        buttonPlus.href = '#';
+        this.funcSettingView.plus = buttonPlus;
+
+        const countInput = createElement('input').appendTo(countInputBox);
+        countInput.setAttribute('type', 'text');
+        countInput.setAttribute('maxlength', maxlength);
+        countInput.value = func.localVariables?.length || 0;
+
+        countInput.onblur = (e) => {
+            const disabled = e?.target?.hasAttribute('disabled');
+            if (disabled) {
+                return;
+            }
+            console.log('blur', e, e.target);
+            let value = _get(e, 'target.value', 0);
+            if (value >= limitValue) {
+                value = limitValue;
+            }
+            Entry.do('funcLocalVarChangeLength', func, value);
+        };
+        countInput.onkeypress = Entry.Utils.blurWhenEnter;
+        this.funcSettingView.lengthInput = countInput;
+    }
+
+    generateFuncValuesView(element, func) {
+        const createElement = Entry.createElement;
+
+        const countGroup = createElement('div')
+            .addClass('cnt_group')
+            .appendTo(element);
+        const scrollBox = createElement('div')
+            .addClass('scroll_box')
+            .appendTo(countGroup);
+        const el = new SimpleBar(scrollBox, { autoHide: false });
+        const parent = /* html */ `<ol class="cnt_list">{1}</ol>`;
+        this.funcSettingView.countGroup = countGroup;
+        this.funcSettingView.scrollBox = scrollBox;
+        this.funcSettingView.simpleBar = el;
+        const listValues = el.getContentElement();
+        this.funcSettingView.listValues = listValues;
+        const infinityScroll = new Entry.VirtualScroll(listValues, {
+            dataWrapper: parent,
+            itemHeight: 35,
+            groupSize: 10,
+        });
+        this.funcSettingView.infinityScroll = infinityScroll;
+
+        const $listValues = $(listValues);
+        $listValues.empty();
+        $listValues.off();
+
+        const localVariables = func.getLocalVariables() || [];
+
+        const fragment = createElement('div');
+        Entry.createElement('p')
+            .addClass('caution_dsc')
+            .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
+        this.funcSettingView.emptyVariable = fragment;
+
+        if (localVariables?.length === 0) {
+            listValues.appendChild(fragment);
+        } else {
+            const data = localVariables?.map((data, i) => {
+                const value = String(data.name).replace(/\$/g, '&#36;');
+                return this.createListValueElement(i, value, 0);
+            });
+
+            infinityScroll.assignData(data);
+            infinityScroll.show();
+            $listValues.on(
+                'change',
+                'input',
+                _.debounce((e) => {
+                    const { target } = e;
+                    const index = target.getAttribute('data-index');
+                    func.changeNameLocalVariable(target.value, index);
+                })
+            );
+            $listValues.on('focus', 'input', Entry.Utils.setFocused);
+            $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
+            $listValues.on('click', 'a', function() {
+                const index = this.getAttribute('data-index');
+                // localVariables.splice(index, 1);
+                // this.updateListSettingView();
+                Entry.do('removeFuncLocalVariableByIndex', func, index);
+            });
+        }
+    }
+
+    updateFuncScrollBar(func) {
+        const view = this.funcSettingView;
+        if (!view) {
+            return;
+        }
+
+        const {
+            infinityScroll,
+            listValues,
+            lengthInput,
+            simpleBar,
+            scrollBox,
+            emptyVariable,
+        } = view;
+
+        lengthInput.value = func.localVariables?.length || 0;
+
+        const localVariables = func.getLocalVariables();
+
+        const $listValues = $(listValues);
+        if (localVariables?.length === 0) {
+            $listValues.empty();
+            listValues.appendChild(emptyVariable);
+        } else {
+            const data = localVariables?.map((data, i) => {
+                const value = String(data.name).replace(/\$/g, '&#36;');
+                return this.createListValueElement(i, value, 0);
+            });
+
+            infinityScroll.assignData(data);
+            infinityScroll.show();
+
+            if (localVariables?.length > 4) {
+                scrollBox.addClass('on');
+            } else {
+                scrollBox.removeClass('on');
+            }
+        }
+        simpleBar.recalculate();
+    }
+
+    updateFuncSettingView(func) {
+        const view = this.funcSettingView;
+        if (!view) {
+            return;
+        }
+
+        if (func.type === 'value') {
+            view.func.resultCheck.addClass('on');
+        } else {
+            view.func.resultCheck.removeClass('on');
+        }
+
+        if (func.useLocalVariables) {
+            view.func.localVarCheck.addClass('on');
+            this.funcSettingView.minus.removeAttribute('disabled');
+            this.funcSettingView.plus.removeAttribute('disabled');
+            this.funcSettingView.lengthInput.removeAttribute('disabled');
+            this.funcSettingView.countGroup.removeAttribute('disabled');
+        } else {
+            view.func.localVarCheck.removeClass('on');
+            this.funcSettingView.minus.setAttribute('disabled', '');
+            this.funcSettingView.plus.setAttribute('disabled', '');
+            this.funcSettingView.lengthInput.setAttribute('disabled', '');
+            this.funcSettingView.countGroup.setAttribute('disabled', '');
+        }
+
+        this.updateFuncScrollBar(func);
     }
 
     /**
@@ -1005,6 +1299,7 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
         Entry.Func.edit(new Entry.Func(data));
+        Entry.Func.save();
     }
 
     removeBlocksInFunctionByType(blockType) {
@@ -1170,7 +1465,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt_box')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                if (!Entry.isTextMode) {
+                if (!Entry.Func.isEdit && !Entry.isTextMode) {
                     Entry.do('funcEditStart', func.id);
                 }
                 return this.select(func);
@@ -1806,11 +2101,13 @@ Entry.VariableContainer = class VariableContainer {
     getFunctionJSON() {
         return _.reduce(
             this.functions_,
-            (acc, { id, content, type = 'normal' }) => [
+            (acc, { id, content, type = 'normal', useLocalVariables, localVariables }) => [
                 ...acc,
                 {
                     id,
                     type,
+                    localVariables,
+                    useLocalVariables,
                     content: content.stringify(),
                 },
             ],
