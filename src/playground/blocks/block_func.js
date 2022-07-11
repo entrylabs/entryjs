@@ -24,25 +24,626 @@ module.exports = {
                     ],
                 },
             },
-            valueFunctionAddButton: {
-                skeleton: 'basic_button',
-                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
-                isNotFor: ['functionInit'],
+            function_name: {
+                template: '%1',
+                skeleton: 'basic_text',
+                skeletonOptions: {
+                    contentPos: {
+                        x: 16,
+                    },
+                },
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: EntryStatic.colorSet.common.TEXT,
                 params: [
                     {
                         type: 'Text',
-                        text: Lang.Workspace.function_create,
+                        text: '',
+                        color: EntryStatic.colorSet.common.TEXT,
+                        align: 'left',
+                    },
+                ],
+                class: 'properties',
+                isNotFor: ['functionEdit'],
+                events: {},
+            },
+
+            showFunctionPropsButton: {
+                template: '%1',
+                skeleton: 'basic_button',
+                color: EntryStatic.colorSet.common.BUTTON_BACKGROUND,
+                class: 'properties',
+                isNotFor: ['functionEdit'],
+                params: [
+                    {
+                        type: 'Text',
+                        text: '함수 속성 보기',
                         color: EntryStatic.colorSet.common.BUTTON,
                         align: 'center',
                     },
                 ],
                 def: {
-                    type: 'valueFunctionAddButton',
+                    type: 'showFunctionPropsButton',
                 },
                 events: {
                     mousedown: [
                         function() {
-                            Entry.do('funcEditStart', Entry.generateHash(), null, 'value');
+                            Entry.do(
+                                'playgroundChangeViewMode',
+                                'variable',
+                                Entry.playground.selectedViewMode
+                            );
+                            Entry.variableContainer.selectFilter('func');
+                        },
+                    ],
+                },
+            },
+
+            set_func_variable: {
+                template: '%1 를 %2 (으)로 정하기 %3',
+                color: EntryStatic.colorSet.block.default.FUNC,
+                outerLine: EntryStatic.colorSet.block.darken.FUNC,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName() {
+                            const func = Entry.Func.targetFunc || {};
+                            const localVariables = func.localVariables || [];
+                            return localVariables.map(({ name }, idx) => [
+                                name,
+                                `${func.id}_${idx}`,
+                            ]);
+                        },
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.FUNC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/func_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
+                        },
+                    ],
+                    dataDestroy: [
+                        function(block) {
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
+                        },
+                    ],
+                },
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: ['10'],
+                        },
+                        null,
+                    ],
+                    type: 'set_func_variable',
+                },
+                paramsKeyMap: {
+                    VARIABLE: 0,
+                    VALUE: 1,
+                },
+                class: 'local_variable',
+                isNotFor: ['useLocalVariables'],
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const value = script.getValue('VALUE', script);
+                    const [funcId, idx] = variableId.split('_');
+                    const func = Entry.variableContainer.getFunction(funcId, idx);
+
+                    func.setValue(value, idx);
+
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: '%1 = %2',
+                            passTest: true,
+                            blockType: 'variable',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'variables',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
+                                },
+                                {
+                                    type: 'Block',
+                                    accept: 'string',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            get_func_variable: {
+                template: '%1 %2',
+                color: EntryStatic.colorSet.block.default.FUNC,
+                outerLine: EntryStatic.colorSet.block.darken.FUNC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName() {
+                            const func = Entry.Func.targetFunc || {};
+                            const localVariables = func.localVariables || [];
+                            return localVariables.map(({ name }, idx) => [
+                                name,
+                                `${func.id}_${idx}`,
+                            ]);
+                        },
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.FUNC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.VARIABLE_get_variable_1,
+                        color: 'white',
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            console.log('func data add');
+                            // const vc = Entry.variableContainer;
+                            // if (vc) {
+                            //     vc.addRef('_variableRefs', block);
+                            // }
+                        },
+                    ],
+                    dataDestroy: [
+                        function(block) {
+                            console.log('func data Destroy');
+                            // const vc = Entry.variableContainer;
+                            // if (vc) {
+                            //     vc.removeRef('_variableRefs', block);
+                            // }
+                        },
+                    ],
+                },
+                def: {
+                    params: [null],
+                    type: 'get_func_variable',
+                },
+                paramsKeyMap: {
+                    VARIABLE: 0,
+                },
+                class: 'local_variable',
+                isNotFor: ['useLocalVariables'],
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const [funcId, idx] = variableId.split('_');
+                    const func = Entry.variableContainer.getFunction(funcId, idx);
+                    return func.getValue(idx);
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            function_create_value: {
+                template: '함수 정의하기 %1 %2 %3 결과값을 %4 (으)로 정하기',
+                skeleton: 'basic_create_value',
+                statements: [
+                    {
+                        accept: 'basic',
+                    },
+                ],
+                color: EntryStatic.colorSet.block.default.FUNC,
+                outerLine: EntryStatic.colorSet.block.darken.FUNC,
+                event: 'funcDef',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'param',
+                        value: {
+                            type: 'function_field_label',
+                            params: [Lang.Blocks.FUNC],
+                            copyable: false,
+                        },
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/func_icon.svg',
+                        size: 11,
+                    },
+                    {
+                        type: 'LineBreak',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                ],
+                paramsKeyMap: {
+                    FIELD: 0,
+                    VALUE: 3,
+                },
+                statementsKeyMap: {
+                    DO: 0,
+                },
+                func(sprite, script) {
+                    if (!script.isFunc) {
+                        script.isFunc = true;
+                        script.executor.result = script;
+                        return script.getStatement('DO', script);
+                    } else {
+                        delete script.isFunc;
+                        return script.callReturn();
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: '%1',
+                            keyOption: 'function_create_value',
+                        },
+                    ],
+                },
+            },
+            function_general: {
+                skeleton: 'basic',
+                color: EntryStatic.colorSet.block.default.FUNC,
+                outerLine: EntryStatic.colorSet.block.darken.FUNC,
+                class: 'function_executor',
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/func_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_functionRefs', block);
+                            }
+                        },
+                    ],
+                    dataDestroy: [
+                        function(block) {
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_functionRefs', block);
+                            }
+                        },
+                    ],
+                    dblclick: [
+                        function(blockView) {
+                            const mode = blockView.getBoard().workspace.getMode();
+                            if (mode !== Entry.Workspace.MODE_BOARD) {
+                                return;
+                            }
+                            if (Entry.type !== 'workspace') {
+                                return;
+                            }
+                            const block = blockView.block;
+                            const id = block.getFuncId();
+                            Entry.do('funcEditStart', id);
+                        },
+                    ],
+                },
+                func(entity) {
+                    if (!this.initiated) {
+                        this.initiated = true;
+                        Entry.callStackLength++;
+
+                        if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+                            Entry.toast.alert(
+                                Lang.Workspace.RecursiveCallWarningTitle,
+                                Lang.Workspace.RecursiveCallWarningContent
+                            );
+                            throw new Error();
+                        }
+
+                        const func = Entry.variableContainer.getFunction(this.block.getFuncId());
+                        this.funcCode = func.content;
+                        this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
+                        this.funcExecutor.register.params = this.getParams();
+                        this.funcExecutor.register.paramMap = func.paramMap;
+                        this.funcExecutor.parentExecutor = this.executor;
+                        this.funcExecutor.isFuncExecutor = true;
+                    }
+                    this.funcExecutor.execute();
+                    if (!this.funcExecutor.isEnd()) {
+                        this.funcCode.removeExecutor(this.funcExecutor);
+                        return Entry.STATIC.BREAK;
+                    }
+
+                    Entry.callStackLength--;
+                },
+                syntax: { js: [], py: [''] },
+            },
+            function_value: {
+                skeleton: 'basic_string_field',
+                color: EntryStatic.colorSet.block.default.FUNC,
+                outerLine: EntryStatic.colorSet.block.darken.FUNC,
+                class: 'function_executor',
+                params: [],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_functionRefs', block);
+                            }
+                        },
+                    ],
+                    dataDestroy: [
+                        function(block) {
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_functionRefs', block);
+                            }
+                        },
+                    ],
+                    dblclick: [
+                        function(blockView) {
+                            const mode = blockView.getBoard().workspace.getMode();
+                            if (mode !== Entry.Workspace.MODE_BOARD) {
+                                return;
+                            }
+                            if (Entry.type !== 'workspace') {
+                                return;
+                            }
+                            const block = blockView.block;
+                            const id = block.getFuncId();
+                            Entry.do('funcEditStart', id);
+                        },
+                    ],
+                },
+                async func(entity) {
+                    if (!this.initiated) {
+                        this.initiated = true;
+                        Entry.callStackLength++;
+
+                        if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
+                            Entry.toast.alert(
+                                Lang.Workspace.RecursiveCallWarningTitle,
+                                Lang.Workspace.RecursiveCallWarningContent
+                            );
+                            throw new Error();
+                        }
+
+                        const func = Entry.variableContainer.getFunction(this.block.getFuncId());
+                        this.funcCode = func.content;
+                        this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
+                        this.funcExecutor.register.params = this.getParams();
+                        this.funcExecutor.register.paramMap = func.paramMap;
+                        this.funcExecutor.parentExecutor = this.executor;
+                        this.funcExecutor.isFuncExecutor = true;
+                    }
+                    const ab = this.funcExecutor.execute();
+                    if (ab.promises.length) {
+                        const ac = await Promise.all(ab.promises);
+                        console.log('ac', ac);
+                    }
+                    // else if (!this.funcExecutor.isEnd()) {
+                    //     this.funcCode.removeExecutor(this.funcExecutor);
+                    //     return Entry.STATIC.BREAK;
+                    // }
+
+                    console.log(
+                        'this.funcExecutor.value',
+                        this.funcExecutor.isEnd(),
+                        ab,
+                        this.funcExecutor.result
+                    );
+                    Entry.callStackLength--;
+
+                    const scope = this.funcExecutor.result;
+                    scope.values = scope.getParams();
+                    const a = scope.getValue('VALUE', scope);
+                    console.log('3', a);
+                    return a;
+                },
+                syntax: { js: [], py: [''] },
+            },
+            function_field_label: {
+                skeleton: 'basic_param',
+                isNotFor: ['functionEdit'],
+                color: '#f9c535',
+                params: [
+                    {
+                        type: 'TextInput',
+                        value: Lang.Blocks.FUNCTION_explanation_1,
+                    },
+                    {
+                        type: 'Output',
+                        accept: 'param',
+                    },
+                ],
+                paramsKeyMap: {
+                    NAME: 0,
+                    NEXT: 1,
+                },
+                def: {
+                    params: [Lang.Blocks.FUNCTION_explanation_1],
+                    type: 'function_field_label',
+                },
+                //"syntax": {"js": [], "py": ["%1function_field_label#"]}
+                syntax: { js: [], py: ['name'] },
+            },
+            function_field_string: {
+                skeleton: 'basic_param',
+                isNotFor: ['functionEdit'],
+                color: EntryStatic.colorSet.block.lighten.CALC,
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        restore: true,
+                    },
+                    {
+                        type: 'Output',
+                        accept: 'param',
+                    },
+                ],
+                paramsKeyMap: {
+                    PARAM: 0,
+                    NEXT: 1,
+                },
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: [Lang.template.function_param_string],
+                        },
+                    ],
+                    type: 'function_field_string',
+                },
+                syntax: { js: [], py: ['value'] },
+            },
+            function_field_boolean: {
+                skeleton: 'basic_param',
+                isNotFor: ['functionEdit'],
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'boolean',
+                        restore: true,
+                    },
+                    {
+                        type: 'Output',
+                        accept: 'param',
+                    },
+                ],
+                paramsKeyMap: {
+                    PARAM: 0,
+                    NEXT: 1,
+                },
+                def: {
+                    params: [
+                        {
+                            type: 'True',
+                            params: [Lang.template.function_param_boolean],
+                        },
+                    ],
+                    type: 'function_field_boolean',
+                },
+                syntax: { js: [], py: ['boolean'] },
+            },
+            function_param_string: {
+                skeleton: 'basic_string_field',
+                color: EntryStatic.colorSet.block.lighten.CALC,
+                fontColor: '#000',
+                template: '%1 %2',
+                events: {
+                    viewAdd: [
+                        function() {
+                            if (Entry.Func.isEdit) {
+                                Entry.Func.refreshMenuCode();
+                            }
+                        },
+                    ],
+                },
+                func() {
+                    return this.executor.register.params[
+                        this.executor.register.paramMap[this.block.type]
+                    ];
+                },
+                syntax: { js: [], py: [''] },
+            },
+            function_param_boolean: {
+                skeleton: 'basic_boolean_field',
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                template: '%1 %2',
+                events: {
+                    viewAdd: [
+                        function() {
+                            if (Entry.Func.isEdit) {
+                                Entry.Func.refreshMenuCode();
+                            }
+                        },
+                    ],
+                },
+                func() {
+                    return this.executor.register.params[
+                        this.executor.register.paramMap[this.block.type]
+                    ];
+                },
+                syntax: { js: [], py: [''] },
+            },
+            function_create: {
+                skeleton: 'basic_create',
+                statements: [
+                    {
+                        accept: 'basic',
+                    },
+                ],
+                color: EntryStatic.colorSet.block.default.FUNC,
+                outerLine: EntryStatic.colorSet.block.darken.FUNC,
+                event: 'funcDef',
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'param',
+                        value: {
+                            type: 'function_field_label',
+                            params: [Lang.Blocks.FUNC],
+                            copyable: false,
+                        },
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/func_icon.svg',
+                        size: 11,
+                    },
+                ],
+                paramsKeyMap: {
+                    FIELD: 0,
+                },
+                statementsKeyMap: {
+                    DO: 0,
+                },
+                func(sprite, script) {
+                    console.log('function_create');
+                    if (!script.isFunc) {
+                        script.isFunc = true;
+                        script.executor.result = script;
+                        return script.getStatement('DO', script);
+                    } else {
+                        delete script.isFunc;
+                        return script.callReturn();
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: '%1',
+                            keyOption: 'function_create',
                         },
                     ],
                 },
