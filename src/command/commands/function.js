@@ -124,4 +124,113 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
         dom: ['variableContainer', 'functionAddButton'],
         undo: 'funcRemove',
     };
+
+    c[COMMAND_TYPES.funcChangeType] = {
+        do(func) {
+            let type = 'value';
+            if (func.type === 'value') {
+                type = 'normal';
+            }
+            Entry.Func.changeType(func, type);
+        },
+        state(func) {
+            return [func];
+        },
+        log(func) {
+            return [['funcId', func.id]];
+        },
+        validate: false,
+        dom: ['variableContainer', 'functionAddButton'],
+        undo: 'funcChangeType',
+    };
+
+    c[COMMAND_TYPES.funcLocalVarChangeLength] = {
+        do(func, value) {
+            if (value === 'minus') {
+                func.removeLastLocalVariable();
+            } else if (value === 'plus') {
+                const value = func.defaultLocalVariable();
+                func.appendLocalVariable(value);
+            } else {
+                let length = func.localVariables?.length || 0;
+                if (Entry.Utils.isNumber(value) && value >= 0) {
+                    length = value;
+                }
+                func.setLocalVariableLength(length);
+            }
+        },
+        state(func, value) {
+            let prevValue;
+            if (value === 'minus') {
+                prevValue = 'plus';
+            } else if (value === 'plus') {
+                prevValue = 'minus';
+            } else {
+                prevValue = func.localVariables?.length || 0;
+            }
+            return [func, prevValue];
+        },
+        log(func, value) {
+            return [
+                ['funcId', func.id],
+                ['value', value],
+            ];
+        },
+        validate: false,
+        dom: ['variableContainer', 'funcLocalVarChangeLength', '&2'],
+        undo: 'funcLocalVarChangeLength',
+    };
+    c[COMMAND_TYPES.toggleFuncUseLocalVariables] = {
+        do(func) {
+            func.toggleFunctionUseLocalVariables();
+        },
+        state(func) {
+            return [func];
+        },
+        log(func, value) {
+            return [
+                ['funcId', func.id],
+                ['value', value],
+            ];
+        },
+        validate: false,
+        dom: ['variableContainer', 'toggleFuncUseLocalVariables', '&2'],
+        undo: 'toggleFuncUseLocalVariables',
+    };
+    c[COMMAND_TYPES.insertFuncLocalVariable] = {
+        do(func, value, index) {
+            func.insertFuncLocalVariable(value, index);
+        },
+        state(func, _value, index) {
+            return [func, index];
+        },
+        log(func, value, index) {
+            return [
+                ['funcId', func.id],
+                ['value', value],
+                ['index', index],
+            ];
+        },
+        validate: false,
+        dom: ['variableContainer', 'insertFuncLocalVariable', '&2'],
+        undo: 'removeFuncLocalVariableByIndex',
+    };
+    c[COMMAND_TYPES.removeFuncLocalVariableByIndex] = {
+        do(func, index) {
+            func.removeLocalVariable(index);
+        },
+        state(func, index) {
+            const value = func.localVariables[index];
+            return [func, value, index];
+        },
+        log(func, index) {
+            return [
+                ['funcId', func.id],
+                ['index', index],
+            ];
+        },
+        validate: false,
+        dom: ['variableContainer', 'removeFuncLocalVariableByIndex', '&2'],
+        undo: 'insertFuncLocalVariable',
+    };
 })(Entry.Command);
