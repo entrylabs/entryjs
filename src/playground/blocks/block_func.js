@@ -73,6 +73,7 @@ module.exports = {
                                 Entry.playground.selectedViewMode
                             );
                             Entry.variableContainer.selectFilter('func');
+                            Entry.variableContainer.select(Entry.Func.targetFunc);
                         },
                     ],
                 },

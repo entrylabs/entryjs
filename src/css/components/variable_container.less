@@ -1043,10 +1043,6 @@
 .entryVariableSplitterWorkspace .list.local_list .inpt_box:before {
     .backgroundImage('ic_attr_list_local_on.png');
 }
-.entryVariableSplitterWorkspace .list.default_func .inpt_box:before {
-    left: 10px;
-    .backgroundImage('ic_attr_func_on.png');
-}
 .entryVariableSplitterWorkspace .list.default_message .inpt_box:before {
     left: 10px;
     .backgroundImage('ic_attr_message_on.png');
@@ -1120,7 +1116,6 @@
 .entryVariableSplitterWorkspace .list.default_message .inpt:after {
     display: none;
 }
-.entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box,
 .entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box {
     background-color: #fff;
     -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
@@ -1179,161 +1174,314 @@
     }
 }
 
-.entryVariableSplitterWorkspace .list .attr_inner_box {
-    .func_attr {
-        .check_inpt {
-            padding: 5px 0;
-
-            .entryFuncAddLocalVarCheckWorkspace,
-            .entryFuncAddResultCheckWorkspace {
-                display: inline-block;
-                width: 16px;
-                height: 16px;
-                background-size: 16px auto;
-                vertical-align: top;
-                .backgroundImage('btn_checkbox.png');
-            }
-
-            .entryFuncAddLocalVarCheckWorkspace.on,
-            .entryFuncAddResultCheckWorkspace.on {
-                .backgroundImage('btn_checkbox_on.png');
-            }
-
-            .chk_text {
-                display: inline-block;
-                margin-left: 8px;
-                font-size: 12px;
-                line-height: 16px;
-                font-weight: 600;
-                color: #2c313d;
-                letter-spacing: -0.4px;
-                vertical-align: top;
-            }
-
-            .cnt_inpt {
-                float: right;
-                overflow: hidden;
-                position: relative;
-                -webkit-box-sizing: content-box;
-                box-sizing: content-box;
-                width: 40px;
-                height: 32px;
-                padding: 0 32px;
-                border-radius: 4px;
-
-                .btn_cnt {
-                    overflow: hidden;
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 32px;
-                    height: 32px;
-                    background-color: #f2f2f2;
-                    border: 1px solid #e2e2e2;
-                    border-radius: 4px 0 0 4px;
-                    font-size: 24px;
-                    color: #2c313d;
-                    text-decoration: none;
-                    text-align: center;
-                    line-height: 34px;
-
-                    + .btn_cnt {
-                        left: auto;
-                        right: 0;
-                        border-radius: 0 4px 4px 0;
-                    }
-
-                    &[disabled] {
-                        opacity: 0.5;
-                        cursor: not-allowed;
-                    }
-                }
-
-                input[type='text'] {
-                    width: 40px;
-                    height: 32px;
-                    padding: 9px 0 7px;
-                    border: 1px solid #e2e2e2;
-                    outline: 0;
-                    background-color: #fff;
-                    font-size: 12px;
-                    color: #2c313d;
-                    font-weight: 600;
-                    line-height: 14px;
-                    text-align: center;
-                    -webkit-box-sizing: border-box;
-                    box-sizing: border-box;
-
-                    &[disabled] {
-                        opacity: 0.5;
-                        cursor: not-allowed;
-                    }
-                }
-            }
+.entryVariableAdd_box {
+    .entryVariableAddWorkspace {
+        &.funcAddButton {
+            margin: 12px;
+            width: calc(100% - 24px);
+            font-size: 12px;
+            letter-spacing: -0.28px;
+            line-height: 40px;
         }
+    }
+}
 
-        .cnt_group {
-            margin-top: 40px;
-            &[disabled] {
-                display: none;
-            }
+.entryVariableSplitterWorkspace {
+    .attr_box {
+        .list {
+            &.default_func {
+                .del {
+                    .backgroundImage('layers_icon_close_nor_new.svg');
+                    background-color: transparent;
+                    background-repeat: no-repeat;
+                    border: none;
+                    cursor: pointer;
+                }
 
-            .scroll_box {
-                max-height: 160px;
-            }
+                &.unfold {
+                    border: solid 1px #aac5d5;
 
-            .scroll_box.on {
-                padding-right: 20px;
-            }
+                    .caution_dsc {
+                        background-color: #d6e9f4;
+                    }
 
-            .cnt_list {
-                margin: 0;
-                padding: 0;
-                list-style: none;
+                    .inpt_box {
+                        &::after {
+                            .backgroundImage('layers_arrow_up_nor.svg');
+                        }
+                        background-color: #d6e9f4;
+                    }
 
-                li {
-                    position: relative;
-                    margin: 8px 0 0 0;
-                    padding: 0 34px 0 28px;
-
-                    &:first-child {
-                        margin-top: 0;
+                    .attr_inner_box {
+                        background-color: #d6e9f4;
                     }
                 }
 
-                .cnt {
-                    position: absolute;
-                    left: 0;
-                    top: 50%;
-                    width: 28px;
-                    padding-right: 8px;
-                    margin-top: -6px;
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: #2c313d;
-                    line-height: 12px;
-                    text-align: right;
+                .inpt_box {
+                    &::before {
+                        left: 10px;
+                        .backgroundImage('ic_attr_func_on.svg');
+                    }
+
+                    &::after {
+                        width: 10px;
+                        height: 8px;
+                        .backgroundImage('layers_arrow_down_nor.svg');
+                        background-size: auto;
+                        background-repeat: no-repeat;
+                    }
+
+                    background-color: #f7fcff;
+
+                    .inpt {
+                        input[type='text'],
+                        span {
+                            font-size: 10px;
+                            line-height: 10px;
+                        }
+                    }
                 }
 
-                .del {
-                    right: 0;
-                    top: 0;
+                .attr_inner_box {
+                    padding: 0;
+
+                    .func_attr {
+                        padding: 15px 14px 15px 20px;
+                        border-bottom: 1px solid #aac5d5;
+
+                        .box_sjt {
+                            &::before {
+                                width: 3px;
+                                height: 3px;
+                                background-color: #728997;
+                            }
+                            position: relative;
+                            left: -10px;
+                            margin-bottom: 8px;
+                        }
+
+                        .check_inpt {
+                            margin: 3px 0 3px;
+
+                            .entryFuncAddLocalVarCheckWorkspace,
+                            .entryFuncAddResultCheckWorkspace {
+                                display: inline-block;
+                                width: 18px;
+                                height: 18px;
+                                background-size: 18px;
+                                vertical-align: top;
+                                .backgroundImage('btn_checkbox.svg');
+                            }
+
+                            .entryFuncAddLocalVarCheckWorkspace.on,
+                            .entryFuncAddResultCheckWorkspace.on {
+                                .backgroundImage('btn_checkbox_on.svg');
+                            }
+
+                            .chk_text {
+                                display: inline-block;
+                                margin-left: 10px;
+                                font-size: 10px;
+                                font-weight: bold;
+                                letter-spacing: -0.4px;
+                                color: #4d616e;
+                                line-height: 18px;
+                                font-weight: 600;
+                                vertical-align: top;
+                            }
+
+                            .cnt_inpt {
+                                margin: 3px 0 0 28px;
+                                overflow: hidden;
+                                position: relative;
+                                -webkit-box-sizing: content-box;
+                                box-sizing: content-box;
+                                width: 78px;
+                                height: 24px;
+                                border-radius: 4px;
+                                border: solid 1px #aac5d5;
+
+                                .btn_cnt {
+                                    display: inline-block;
+                                    overflow: hidden;
+                                    width: 24px;
+                                    height: 24px;
+                                    background-color: #ecf8ff;
+                                    border-radius: 4px 0 0 4px;
+                                    font-size: 24px;
+                                    color: #2c313d;
+                                    text-decoration: none;
+                                    text-align: center;
+                                    line-height: 24px;
+
+                                    &::before {
+                                        content: ' ';
+                                        display: inline-block;
+                                        position: relative;
+                                        top: -3px;
+                                        width: 8px;
+                                        height: 8px;
+                                        .backgroundImage('btn_minus.svg');
+                                        background-position-y: center;
+                                        background-repeat: no-repeat;
+                                    }
+
+                                    &.plus {
+                                        &::before {
+                                            .backgroundImage('btn_plus.svg');
+                                        }
+                                        border-radius: 0 4px 4px 0;
+                                    }
+
+                                    &[disabled] {
+                                        opacity: 0.5;
+                                        cursor: not-allowed;
+                                    }
+                                }
+
+                                input[type='text'] {
+                                    width: 30px;
+                                    height: 24px;
+                                    background-color: #fff;
+                                    outline: 0;
+                                    font-size: 10px;
+                                    letter-spacing: -0.4px;
+                                    color: #2c313d;
+                                    font-weight: 600;
+                                    line-height: 14px;
+                                    text-align: center;
+                                    vertical-align: top;
+                                    border: 0;
+
+                                    &[disabled] {
+                                        opacity: 0.5;
+                                        cursor: not-allowed;
+                                    }
+                                }
+                            }
+                        }
+
+                        .cnt_group {
+                            margin-top: 10px;
+                            margin-left: 28px;
+
+                            .cnt_label {
+                                font-size: 10px;
+                                font-weight: 600;
+                                letter-spacing: -0.4px;
+                                color: #4d616e;
+                                margin-bottom: 5px;
+                            }
+
+                            &[disabled] {
+                                display: none;
+                            }
+
+                            .scroll_box {
+                                max-height: 135px;
+                            }
+
+                            .scroll_box.on {
+                                padding-right: 20px;
+                            }
+
+                            .cnt_list {
+                                margin: 0;
+                                padding: 0;
+                                list-style: none;
+
+                                li {
+                                    position: relative;
+                                    margin-top: 4px;
+                                    padding: 0 39px 0 0;
+
+                                    &:first-child {
+                                        margin-top: 0;
+                                    }
+                                }
+
+                                .cnt {
+                                    position: absolute;
+                                    left: 10px;
+                                    font-size: 10px;
+                                    font-weight: 600;
+                                    letter-spacing: -0.4px;
+                                    color: #979797;
+                                    line-height: 24px;
+                                }
+
+                                .del {
+                                    right: 0;
+                                    top: 0;
+                                }
+
+                                input[type='text'] {
+                                    width: 100%;
+                                    height: 24px;
+                                    padding-left: 20px;
+                                    border: 1px solid #aac5d5;
+                                    border-radius: 4px;
+                                    outline: 0;
+                                    background-color: #fff;
+                                    font-size: 10px;
+                                    font-weight: 600;
+                                    letter-spacing: -0.4px;
+                                    color: #2c313d;
+                                    line-height: 24px;
+                                    -webkit-box-sizing: border-box;
+                                    box-sizing: border-box;
+                                }
+                            }
+                        }
+                    }
                 }
 
-                input[type='text'] {
-                    width: 100%;
-                    padding: 6px 8px 5px;
-                    border: 1px solid #e2e2e2;
-                    border-radius: 4px;
-                    outline: 0;
-                    background-color: #fff;
-                    font-size: 12px;
-                    font-weight: 600;
-                    color: #2c313d;
-                    letter-spacing: -0.2px;
-                    line-height: 11px;
-                    -webkit-box-sizing: border-box;
-                    box-sizing: border-box;
+                .use_block {
+                    padding: 15px 14px 11px 20px;
+
+                    .box_sjt {
+                        &::before {
+                            content: '';
+                            display: inline-block;
+                            border-radius: 50%;
+                            margin: 3px 8px 0 0;
+                            vertical-align: top;
+                            width: 3px;
+                            height: 3px;
+                            background-color: #728997;
+                        }
+
+                        position: relative;
+                        left: -10px;
+                        margin-bottom: 5px;
+                        display: block;
+                        font-size: 12px;
+                        font-weight: 600;
+                        color: #2c313d;
+                        letter-spacing: -0.4px;
+                        line-height: 12px;
+                    }
+
+                    .obj_list {
+                        li {
+                            padding: 3px 4px 3px 42px;
+                            border: none;
+                            height: 24px;
+
+                            .thmb {
+                                border: solid 1px #aac5d5;
+                                width: 22px;
+                                height: 24px;
+                            }
+
+                            .text {
+                                height: 24px;
+                                font-size: 10px;
+                                line-height: 24px;
+                                color: #4d616e;
+                            }
+                        }
+                    }
                 }
             }
         }

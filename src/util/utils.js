@@ -2946,3 +2946,12 @@ Entry.Utils.asyncAnimationFrame = (func) => {
     captureTimeout = requestAnimationFrame(asyncFunc);
     return captureTimeout;
 };
+
+Entry.Utils.stringFormat = (text, ...args) => {
+    let result = text;
+    for (let i = 0; i < args.length; i++) {
+        const regexp = new RegExp(`\\{${i}\\}`, 'gi');
+        result = result.replace(regexp, args[i]);
+    }
+    return result;
+};

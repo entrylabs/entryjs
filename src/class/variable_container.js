@@ -150,7 +150,9 @@ Entry.VariableContainer = class VariableContainer {
         listAddButton.textContent = Lang.Workspace.list_create;
         this.listAddButton_ = listAddButton;
 
-        const functionAddButton = createElement('button').addClass('entryVariableAddWorkspace');
+        const functionAddButton = createElement('button')
+            .addClass('entryVariableAddWorkspace')
+            .addClass('funcAddButton');
         functionAddButton.textContent = Lang.Workspace.function_add;
         this.functionAddButton_ = functionAddButton;
     }
@@ -259,7 +261,6 @@ Entry.VariableContainer = class VariableContainer {
         } else if (object instanceof Entry.Func) {
             this.generateFuncSettingView(object);
             this.updateFuncSettingView(object);
-            this.renderFunctionReference(object);
         } else {
             this.renderMessageReference(object);
         }
@@ -342,7 +343,6 @@ Entry.VariableContainer = class VariableContainer {
         if (variable.type === 'variable') {
             usedSubject.textContent = Lang.Workspace.Variable_used_objects;
         } else {
-            // variable.type === 'list'
             usedSubject.textContent = Lang.Workspace.List_used_objects;
         }
 
@@ -419,8 +419,7 @@ Entry.VariableContainer = class VariableContainer {
         this.generateFuncDefaultView(funcAttr, func);
         this.generateFuncLocalVariableView(funcAttr, func);
         this.generateFuncValuesView(funcAttr, func);
-        // func.innerBox && $(func.innerBox).remove();
-        // let innerBox;
+        this.renderFunctionReference(func);
 
         this.funcSettingView.func = funcAttr;
         func.listElement.appendChild(this.funcSettingView);
@@ -472,8 +471,6 @@ Entry.VariableContainer = class VariableContainer {
         element.localVarCheck = createElement('span')
             .addClass('entryFuncAddLocalVarCheckWorkspace')
             .bindOnClick(() => {
-                console.log('asd', func.localVariables, func.useLocalVariables);
-
                 Entry.do('toggleFuncUseLocalVariables', func);
             })
             .appendTo(localVarCheckBox);
@@ -498,34 +495,12 @@ Entry.VariableContainer = class VariableContainer {
                     return;
                 }
                 Entry.do('funcLocalVarChangeLength', func, 'minus');
-                // countInput.value = func.localVariables?.length || 0;
             })
             .appendTo(countInputBox);
-        buttonMinus.textContent = '-';
-        buttonMinus.href = '#';
         this.funcSettingView.minus = buttonMinus;
 
         const limitValue = 10;
         const maxlength = 2;
-
-        const buttonPlus = createElement('a')
-            .addClass('btn_cnt')
-            .bindOnClick((e) => {
-                const disabled = e?.target?.hasAttribute('disabled');
-                if (disabled) {
-                    return;
-                }
-                console.log('plus');
-                const variableLength = func.localVariables.length;
-                if (variableLength < limitValue) {
-                    Entry.do('funcLocalVarChangeLength', func, 'plus');
-                    // countInput.value = func.localVariables?.length || 0;
-                }
-            })
-            .appendTo(countInputBox);
-        buttonPlus.textContent = '+';
-        buttonPlus.href = '#';
-        this.funcSettingView.plus = buttonPlus;
 
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
@@ -537,7 +512,6 @@ Entry.VariableContainer = class VariableContainer {
             if (disabled) {
                 return;
             }
-            console.log('blur', e, e.target);
             let value = _get(e, 'target.value', 0);
             if (value >= limitValue) {
                 value = limitValue;
@@ -545,15 +519,42 @@ Entry.VariableContainer = class VariableContainer {
             Entry.do('funcLocalVarChangeLength', func, value);
         };
         countInput.onkeypress = Entry.Utils.blurWhenEnter;
+
+        const buttonPlus = createElement('a')
+            .addClass('btn_cnt')
+            .addClass('plus')
+            .bindOnClick((e) => {
+                const disabled = e?.target?.hasAttribute('disabled');
+                if (disabled) {
+                    return;
+                }
+                const variableLength = func.localVariables.length;
+                if (variableLength < limitValue) {
+                    Entry.do('funcLocalVarChangeLength', func, 'plus');
+                }
+            })
+            .appendTo(countInputBox);
+        this.funcSettingView.plus = buttonPlus;
+
         this.funcSettingView.lengthInput = countInput;
     }
 
     generateFuncValuesView(element, func) {
+        const localVariables = func.getLocalVariables() || [];
+
+        if (localVariables?.length === 0) {
+            return;
+        }
+
         const createElement = Entry.createElement;
 
         const countGroup = createElement('div')
             .addClass('cnt_group')
             .appendTo(element);
+        const countLabel = createElement('div')
+            .addClass('cnt_label')
+            .appendTo(countGroup);
+        countLabel.textContent = Lang.Workspace.local_variable;
         const scrollBox = createElement('div')
             .addClass('scroll_box')
             .appendTo(countGroup);
@@ -566,7 +567,7 @@ Entry.VariableContainer = class VariableContainer {
         this.funcSettingView.listValues = listValues;
         const infinityScroll = new Entry.VirtualScroll(listValues, {
             dataWrapper: parent,
-            itemHeight: 35,
+            itemHeight: 24,
             groupSize: 10,
         });
         this.funcSettingView.infinityScroll = infinityScroll;
@@ -575,42 +576,28 @@ Entry.VariableContainer = class VariableContainer {
         $listValues.empty();
         $listValues.off();
 
-        const localVariables = func.getLocalVariables() || [];
+        const data = localVariables?.map((data, i) => {
+            const value = String(data.name).replace(/\$/g, '&#36;');
+            return this.createListValueElement(i, value, 1);
+        });
 
-        const fragment = createElement('div');
-        Entry.createElement('p')
-            .addClass('caution_dsc')
-            .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
-        this.funcSettingView.emptyVariable = fragment;
-
-        if (localVariables?.length === 0) {
-            listValues.appendChild(fragment);
-        } else {
-            const data = localVariables?.map((data, i) => {
-                const value = String(data.name).replace(/\$/g, '&#36;');
-                return this.createListValueElement(i, value, 0);
-            });
-
-            infinityScroll.assignData(data);
-            infinityScroll.show();
-            $listValues.on(
-                'change',
-                'input',
-                _.debounce((e) => {
-                    const { target } = e;
-                    const index = target.getAttribute('data-index');
-                    func.changeNameLocalVariable(target.value, index);
-                })
-            );
-            $listValues.on('focus', 'input', Entry.Utils.setFocused);
-            $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
-            $listValues.on('click', 'a', function() {
-                const index = this.getAttribute('data-index');
-                // localVariables.splice(index, 1);
-                // this.updateListSettingView();
-                Entry.do('removeFuncLocalVariableByIndex', func, index);
-            });
-        }
+        infinityScroll.assignData(data);
+        infinityScroll.show();
+        $listValues.on(
+            'change',
+            'input',
+            _.debounce((e) => {
+                const { target } = e;
+                const index = target.getAttribute('data-index');
+                func.changeNameLocalVariable(target.value, index);
+            })
+        );
+        $listValues.on('focus', 'input', Entry.Utils.setFocused);
+        $listValues.on('keypress', 'input', Entry.Utils.blurWhenEnter);
+        $listValues.on('click', 'a', function() {
+            const index = this.getAttribute('data-index');
+            Entry.do('removeFuncLocalVariableByIndex', func, index);
+        });
     }
 
     updateFuncScrollBar(func) {
@@ -619,37 +606,29 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
 
-        const {
-            infinityScroll,
-            listValues,
-            lengthInput,
-            simpleBar,
-            scrollBox,
-            emptyVariable,
-        } = view;
+        const localVariables = func.getLocalVariables() || [];
+        const { infinityScroll, countGroup, lengthInput, simpleBar, scrollBox } = view;
 
         lengthInput.value = func.localVariables?.length || 0;
 
-        const localVariables = func.getLocalVariables();
-
-        const $listValues = $(listValues);
         if (localVariables?.length === 0) {
-            $listValues.empty();
-            listValues.appendChild(emptyVariable);
+            countGroup.addClass('entryRemove');
+            return;
+        }
+        countGroup.removeClass('entryRemove');
+
+        const data = localVariables?.map((data, i) => {
+            const value = String(data.name).replace(/\$/g, '&#36;');
+            return this.createListValueElement(i, value, 1);
+        });
+
+        infinityScroll.assignData(data);
+        infinityScroll.show();
+
+        if (localVariables?.length > 4) {
+            scrollBox.addClass('on');
         } else {
-            const data = localVariables?.map((data, i) => {
-                const value = String(data.name).replace(/\$/g, '&#36;');
-                return this.createListValueElement(i, value, 0);
-            });
-
-            infinityScroll.assignData(data);
-            infinityScroll.show();
-
-            if (localVariables?.length > 4) {
-                scrollBox.addClass('on');
-            } else {
-                scrollBox.removeClass('on');
-            }
+            scrollBox.removeClass('on');
         }
         simpleBar.recalculate();
     }
@@ -687,26 +666,34 @@ Entry.VariableContainer = class VariableContainer {
      * @param {object} variable
      */
     renderFunctionReference(func) {
+        const createElement = Entry.createElement;
         const callers = [...this._functionRefs].filter(
             (item) => item.block.data.type === `func_${func.id}`
         );
 
         func.usedView && $(func.usedView).remove();
-        let usedWrapper;
+        const wrapper = createElement('div').addClass('use_block');
+
+        const boxSubject = createElement('span')
+            .addClass('box_sjt')
+            .appendTo(wrapper);
 
         if (callers.length) {
-            usedWrapper = Entry.createElement('div').addClass('use_block');
-            const listView = Entry.createElement('ul')
+            boxSubject.textContent = Entry.Utils.stringFormat(
+                Lang.Workspace.use_block_objects1,
+                callers.length
+            );
+            const listView = createElement('ul')
                 .addClass('obj_list')
-                .appendTo(usedWrapper);
+                .appendTo(wrapper);
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
-                const element = Entry.createElement('li');
+                const element = createElement('li');
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
                 element.appendChild(thumb);
-                const nameElement = Entry.createElement('span').addClass('text');
+                const nameElement = createElement('span').addClass('text');
                 nameElement.textContent = caller.object.name;
                 element.appendChild(nameElement);
                 element.bindOnClick(() => {
@@ -724,12 +711,14 @@ Entry.VariableContainer = class VariableContainer {
             });
             listView.appendChild(fragment);
         } else {
-            usedWrapper = Entry.createElement('p').addClass('caution_dsc');
-            usedWrapper.textContent = Lang.Workspace.no_use;
+            boxSubject.textContent = Entry.Utils.stringFormat(
+                Lang.Workspace.use_block_objects2,
+                callers.length
+            );
         }
 
-        func.usedView = usedWrapper;
-        func.listElement.appendChild(usedWrapper);
+        func.usedView = wrapper;
+        this.funcSettingView && this.funcSettingView.appendChild(wrapper);
     }
 
     /**
@@ -797,6 +786,19 @@ Entry.VariableContainer = class VariableContainer {
                 elem.removeChild(elem.lastChild);
             }
         }
+
+        const arrItems = [this.messages_, this.variables_, this.lists_, this.functions_];
+        arrItems.forEach((items) => {
+            Object.values(items).forEach((item) => {
+                if (item.listElement) {
+                    item.listElement
+                        .removeClass('unfold')
+                        .removeClass('selected')
+                        .addClass('fold');
+                }
+            });
+        });
+
         if (this.listSettingView) {
             $(this.listSettingView).remove();
             delete this.listSettingView;
@@ -804,6 +806,10 @@ Entry.VariableContainer = class VariableContainer {
         if (this.variableSettingView) {
             $(this.variableSettingView).remove();
             delete this.variableSettingView;
+        }
+        if (this.funcSettingView) {
+            $(this.funcSettingView).remove();
+            delete this.funcSettingView;
         }
     }
 
@@ -917,6 +923,7 @@ Entry.VariableContainer = class VariableContainer {
         const gLength = (globalV || []).length;
         const lLength = (localV || []).length;
         globalListTitle.textContent = `${Lang.Workspace.Variable_used_at_all_objects} (${gLength})`;
+        // eslint-disable-next-line max-len
         localListTitle.textContent = `${Lang.Workspace.Variable_used_at_special_object} (${lLength})`;
         this.foldTab(globalList, isGlobalFolded, gLength);
         this.foldTab(localList, isLocalFolded, lLength);
@@ -1461,6 +1468,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const view = Entry.createElement('div').addClass('list default_func');
 
+        const that = this;
         const editBoxWrapper = createElement('div')
             .addClass('inpt_box')
             .bindOnClick((e) => {
@@ -1468,6 +1476,7 @@ Entry.VariableContainer = class VariableContainer {
                 if (!Entry.Func.isEdit && !Entry.isTextMode) {
                     Entry.do('funcEditStart', func.id);
                 }
+
                 return this.select(func);
             })
             .appendTo(view);
