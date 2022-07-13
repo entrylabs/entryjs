@@ -444,7 +444,7 @@ Entry.VariableContainer = class VariableContainer {
                 );
 
                 if (caller) {
-                    return Entry.modal.alert('asd');
+                    return Entry.modal.alert(Lang.Msgs.cannot_delete_function);
                 }
 
                 Entry.do('funcChangeType', func);
@@ -471,7 +471,28 @@ Entry.VariableContainer = class VariableContainer {
         element.localVarCheck = createElement('span')
             .addClass('entryFuncAddLocalVarCheckWorkspace')
             .bindOnClick(() => {
-                Entry.do('toggleFuncUseLocalVariables', func);
+                const isUseBlock = func.content.hasBlockType([
+                    'set_func_variable',
+                    'get_func_variable',
+                ]);
+                if (isUseBlock) {
+                    Entry.modal
+                        .confirm(Lang.Msgs.local_variable_deletion_warning)
+                        .then((result) => {
+                            if (result) {
+                                func.content
+                                    .getBlockList(false, ['set_func_variable', 'get_func_variable'])
+                                    .map(
+                                        Entry.Utils.runAsyncCurry(async (block) => {
+                                            Entry.do('destroyBlock', block).isPass(true);
+                                        })
+                                    );
+                                Entry.do('toggleFuncUseLocalVariables', func);
+                            }
+                        });
+                } else {
+                    Entry.do('toggleFuncUseLocalVariables', func);
+                }
             })
             .appendTo(localVarCheckBox);
 

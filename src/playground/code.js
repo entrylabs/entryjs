@@ -358,9 +358,7 @@ Entry.Code = class Code {
     }
 
     hasBlockType(type) {
-        return this.getThreads().some((thread) => {
-            return thread.hasBlockType(type);
-        });
+        return this.getThreads().some((thread) => thread.hasBlockType(type));
     }
 
     findById(id) {

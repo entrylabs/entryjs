@@ -1,3 +1,5 @@
+const { Lang } = require('../../../extern/lang/ko');
+
 module.exports = {
     getBlocks() {
         return {
@@ -78,9 +80,8 @@ module.exports = {
                     ],
                 },
             },
-
             set_func_variable: {
-                template: '%1 를 %2 (으)로 정하기 %3',
+                template: Lang.template.set_variable,
                 color: EntryStatic.colorSet.block.default.FUNC,
                 outerLine: EntryStatic.colorSet.block.darken.FUNC,
                 skeleton: 'basic',
@@ -111,24 +112,6 @@ module.exports = {
                         size: 11,
                     },
                 ],
-                events: {
-                    dataAdd: [
-                        function(block) {
-                            const vc = Entry.variableContainer;
-                            if (vc) {
-                                vc.addRef('_variableRefs', block);
-                            }
-                        },
-                    ],
-                    dataDestroy: [
-                        function(block) {
-                            const vc = Entry.variableContainer;
-                            if (vc) {
-                                vc.removeRef('_variableRefs', block);
-                            }
-                        },
-                    ],
-                },
                 def: {
                     params: [
                         null,
@@ -209,26 +192,6 @@ module.exports = {
                         color: 'white',
                     },
                 ],
-                events: {
-                    dataAdd: [
-                        function(block) {
-                            console.log('func data add');
-                            // const vc = Entry.variableContainer;
-                            // if (vc) {
-                            //     vc.addRef('_variableRefs', block);
-                            // }
-                        },
-                    ],
-                    dataDestroy: [
-                        function(block) {
-                            console.log('func data Destroy');
-                            // const vc = Entry.variableContainer;
-                            // if (vc) {
-                            //     vc.removeRef('_variableRefs', block);
-                            // }
-                        },
-                    ],
-                },
                 def: {
                     params: [null],
                     type: 'get_func_variable',
@@ -250,7 +213,6 @@ module.exports = {
                 },
             },
             function_create_value: {
-                template: '함수 정의하기 %1 %2 %3 결과값을 %4 (으)로 정하기',
                 skeleton: 'basic_create_value',
                 statements: [
                     {
