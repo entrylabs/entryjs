@@ -203,10 +203,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        'start',
-                        null,
-                    ],
+                    params: ['start', null],
                     type: 'video_capture_for_image_test',
                 },
                 pyHelpDef: {
@@ -406,9 +403,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        null,
-                    ],
+                    params: [null],
                     type: 'retrain_model',
                 },
                 pyHelpDef: {
@@ -434,8 +429,7 @@ module.exports = {
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
                 skeleton: 'basic_boolean_field',
                 statements: [],
-                params: [
-                ],
+                params: [],
                 events: {},
                 def: {
                     type: 'model_is_trained',
@@ -474,10 +468,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        'show',
-                        null,
-                    ],
+                    params: ['show', null],
                     type: 'set_train_visible',
                 },
                 pyHelpDef: {
@@ -523,10 +514,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        'open',
-                        null,
-                    ],
+                    params: ['open', null],
                     type: 'set_train_chart',
                 },
                 pyHelpDef: {
@@ -619,7 +607,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -636,7 +624,7 @@ module.exports = {
                     type: 'get_regression_predict_1',
                 },
                 paramsKeyMap: {
-                    ATTR1: 1
+                    ATTR1: 1,
                 },
                 class: 'ai_learning',
                 isNotFor: ['regression_attr_1'],
@@ -668,7 +656,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -1254,10 +1242,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        0,
-                        null,
-                    ],
+                    params: [0, null],
                     type: 'set_cluster_option_k',
                 },
                 pyHelpDef: {
@@ -1303,10 +1288,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        null,
-                        null,
-                    ],
+                    params: [null, null],
                     type: 'set_cluster_option_centroids',
                 },
                 pyHelpDef: {
@@ -1375,16 +1357,16 @@ module.exports = {
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                         defaultValue: (value, options) => {
-                            if(options[0] && options[0][1]){
+                            if (options[0] && options[0][1]) {
                                 return options[0][1];
                             }
                             return value || 0;
-                        }
+                        },
                     },
                 ],
                 events: {},
                 def: {
-                    params: [1,0],
+                    params: [1, 0],
                     type: 'get_cluster_centriod_value',
                 },
                 pyHelpDef: {
@@ -1426,7 +1408,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -1443,7 +1425,7 @@ module.exports = {
                     type: 'get_cluster_centriod_index_1',
                 },
                 paramsKeyMap: {
-                    ATTR1: 1
+                    ATTR1: 1,
                 },
                 class: 'ai_learning',
                 isNotFor: ['cluster_attr_1'],
@@ -1475,7 +1457,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -1494,7 +1476,7 @@ module.exports = {
                                 return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -1545,7 +1527,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -2036,10 +2018,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        10,
-                        null,
-                    ],
+                    params: [10, null],
                     type: 'set_number_learning_option_k',
                 },
                 pyHelpDef: {
@@ -2079,7 +2058,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -2129,7 +2108,7 @@ module.exports = {
                                 return fields[select?.[0]?.[0]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -3596,7 +3575,7 @@ module.exports = {
                                 return options[0][1];
                             }
                             return value || 0;
-                        }
+                        },
                     },
                 ],
                 events: {},
@@ -3665,7 +3644,7 @@ module.exports = {
                                 return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -3775,7 +3754,7 @@ module.exports = {
                                 return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -3906,7 +3885,7 @@ module.exports = {
                                 return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',
@@ -4058,7 +4037,7 @@ module.exports = {
                                 return fields[select?.[0]?.[1]] || Lang.AiLearning.model_attr_str;
                             }
                             return Lang.AiLearning.model_attr_str;
-                        }
+                        },
                     },
                     {
                         type: 'Block',

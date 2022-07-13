@@ -5,7 +5,20 @@ import LearningView from './LearningView';
 import Chart from './Chart';
 import DataTable from '../DataTable';
 
-const GRAPH_COLOR = ['#4f80ff', '#f16670', '#6e5ae6', '#00b6b1', '#9fbaff', '#fcad93', '#c5b4ff', '#b3c3cd', '#2d51ac', '#a23941', '#423496', '#2a7d7f'];
+const GRAPH_COLOR = [
+    '#4f80ff',
+    '#f16670',
+    '#6e5ae6',
+    '#00b6b1',
+    '#9fbaff',
+    '#fcad93',
+    '#c5b4ff',
+    '#b3c3cd',
+    '#2d51ac',
+    '#a23941',
+    '#423496',
+    '#2a7d7f',
+];
 
 export const classes = [
     'ai_learning_train',
@@ -56,9 +69,7 @@ class Cluster {
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
         }
-        this.#fields = table?.select?.[0]?.map((index) => {
-            return table?.fields[index];
-        });
+        this.#fields = table?.select?.[0]?.map((index) => table?.fields[index]);
     }
 
     setTable() {
@@ -181,7 +192,9 @@ class Cluster {
     findColor(id, a, b) {
         const { centroids, graphData } = this.#result;
         if (id === 'y') {
-            const { type = 0 } = graphData?.find(({ x, y }) => String(x) === String(a) && String(y) === String(b)) || {};
+            const { type = 0 } =
+                graphData?.find(({ x, y }) => String(x) === String(a) && String(y) === String(b)) ||
+                {};
             return GRAPH_COLOR[type];
         } else if (id === 'centroid' && b) {
             const type = centroids?.findIndex(([x]) => String(x) === String(a)) || 0;
@@ -203,6 +216,7 @@ class Cluster {
                 point: {
                     pattern: [
                         'circle',
+                        // eslint-disable-next-line max-len
                         "<g><circle cx='10' cy='10' r='10'></circle><rect x='5' y='5' width='10' height='10' style='fill:#fff'></rect></g>",
                     ],
                 },
@@ -255,19 +269,19 @@ export default Cluster;
 
 function convertGraphData(data, centroids, indexes, attr) {
     return data
-        .map((cur, index) => {
-            return cur.reduce(
-                (acc, cur, idx, arr) => {
+        .map((cur, index) =>
+            cur.reduce(
+                (acc, cur, idx) => {
                     if (idx === attr[0]) {
-                        acc['x'] = cur;
+                        acc.x = cur;
                     } else if (idx === attr[1]) {
-                        acc['y'] = cur;
+                        acc.y = cur;
                     }
                     return acc;
                 },
                 { index, type: indexes[index] }
-            );
-        })
+            )
+        )
         .concat(
             centroids.map(([x = 0, centroid = 0], type) => ({
                 x,
@@ -280,7 +294,7 @@ function convertGraphData(data, centroids, indexes, attr) {
 function eudist(a, b) {
     let sum = 0;
     for (let i = 0; i < a.length; i++) {
-        let d = (a[i] || 0) - (b[i] || 0);
+        const d = (a[i] || 0) - (b[i] || 0);
         sum += d * d;
     }
 
@@ -301,14 +315,14 @@ function predictCluster(arr, k, centroids) {
 }
 
 function kmeans(inputs, trainParam) {
-    let dim = inputs[0].length;
+    const dim = inputs[0].length;
     let centroids = [];
 
     if (!trainParam.initialCentroids) {
-        let _idxs = {};
+        const _idxs = {};
 
         while (centroids.length < trainParam.k) {
-            let idx = Math.floor(Math.random() * inputs.length);
+            const idx = Math.floor(Math.random() * inputs.length);
 
             if (!_idxs[idx]) {
                 _idxs[idx] = true;
@@ -316,8 +330,8 @@ function kmeans(inputs, trainParam) {
             }
         }
     } else if (trainParam.initialCentroids === 'random') {
-        let maxs = new Array(dim).fill(-Infinity);
-        let mins = new Array(dim).fill(Infinity);
+        const maxs = new Array(dim).fill(-Infinity);
+        const mins = new Array(dim).fill(Infinity);
         for (let i = 0; i < dim; i++) {
             for (let j = 0; j < inputs.length; j++) {
                 if (inputs[j][i] < mins[i]) {
@@ -330,7 +344,7 @@ function kmeans(inputs, trainParam) {
         }
 
         for (let i = 0; i < trainParam.k; i++) {
-            let temp = [];
+            const temp = [];
             for (let j = 0; j < dim; j++) {
                 temp.push(Math.random() * (maxs[j] - mins[j]) + mins[j]);
             }
