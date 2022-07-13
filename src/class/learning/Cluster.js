@@ -13,6 +13,9 @@ export const classes = [
     'cluster_attr_1',
     'cluster_attr_2',
     'cluster_attr_3',
+    'cluster_attr_4',
+    'cluster_attr_5',
+    'cluster_attr_6',
     'ai_learning_train_chart',
 ];
 
@@ -164,14 +167,14 @@ class Cluster {
         this.#trainCallback(100);
     }
 
-    predict({ x, y }) {
+    predict(arr = []) {
         if (!this.isTrained) {
             return;
         }
         const { k } = this.#trainParam;
         const { centroids } = this.#result;
 
-        this.#predictResult = predictCluster(x, y, k, centroids) + 1;
+        this.#predictResult = predictCluster(arr, k, centroids) + 1;
         return this.#predictResult;
     }
 
@@ -284,11 +287,11 @@ function eudist(a, b) {
     return sum;
 }
 
-function predictCluster(x, y, k, centroids) {
+function predictCluster(arr, k, centroids) {
     let min = Infinity;
     let closestCentroidIndex = 0;
     for (let i = 0; i < k; i++) {
-        let dist = eudist([x, y], centroids[i]);
+        const dist = eudist(arr, centroids[i]);
         if (dist < min) {
             min = dist;
             closestCentroidIndex = i;
@@ -353,8 +356,7 @@ function kmeans(inputs, trainParam) {
 
         // set inputs idx (closest centroid index)
         for (let i = 0; i < inputs.length; i++) {
-            const [x, y] = inputs[i];
-            indexes[i] = predictCluster(x, y, trainParam.k, centroids);
+            indexes[i] = predictCluster(inputs[i], trainParam.k, centroids);
         }
 
         // move centroid to avg inputs

@@ -124,7 +124,7 @@ export default class AILearning {
             });
         } else if (type === 'number') {
             this.#tableData = tableData || createDataTable(classes, name);
-            this.#module = new NumberClassification({ 
+            this.#module = new NumberClassification({
                 name,
                 result,
                 url,
@@ -134,7 +134,7 @@ export default class AILearning {
             this.#labels = this.#module.getLabels();
         } else if (type === 'cluster') {
             this.#tableData = tableData || createDataTable(classes, name);
-            this.#module = new Cluster({ 
+            this.#module = new Cluster({
                 name,
                 result,
                 trainParam,
@@ -142,7 +142,7 @@ export default class AILearning {
             });
         } else if (type === 'regression') {
             this.#tableData = tableData || createDataTable(classes, name);
-            this.#module = new Regression({ 
+            this.#module = new Regression({
                 name,
                 result,
                 url,

@@ -14,7 +14,10 @@ export const classes = [
     'regression_attr_1',
     'regression_attr_2',
     'regression_attr_3',
-    'ai_learning_train_chart'
+    'regression_attr_4',
+    'regression_attr_5',
+    'regression_attr_6',
+    'ai_learning_train_chart',
 ];
 
 class Regression {
@@ -50,8 +53,8 @@ class Regression {
         this.#result = result;
         this.#table = table;
         this.#trainCallback = (value) => {
-            this.#view.setValue(value)
-        };;
+            this.#view.setValue(value);
+        };
         this.#isTrained = true;
 
         this.#attrLength = table?.select?.[0]?.length || 0;
@@ -80,7 +83,7 @@ class Regression {
         }
         this.#table.data = tableSource.rows;
     }
-    
+
     destroy() {
         this.#view.destroy();
         if (this.#chart) {
@@ -94,6 +97,7 @@ class Regression {
     }
 
     unbanBlocks(blockMenu) {
+        console.log('length', `regression_attr_${this.#attrLength}`);
         blockMenu.unbanClass(`ai_learning_train`);
         blockMenu.unbanClass(`ai_learning_regression`);
         blockMenu.unbanClass(`regression_attr_${this.#attrLength}`);
