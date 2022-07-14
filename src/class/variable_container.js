@@ -7,6 +7,7 @@ import SimpleBar from 'simplebar';
 import xssFilters from 'xss-filters';
 import CloudVariable from '../extensions/CloudVariable';
 import _get from 'lodash/get';
+import _isFunction from 'lodash/isFunction';
 
 /**
  * Block variable constructor
@@ -53,6 +54,10 @@ Entry.VariableContainer = class VariableContainer {
         this.listView_ = null;
 
         Entry.addEventListener('workspaceChangeMode', this.updateList.bind(this));
+        Entry.addEventListener(
+            'changeFuncVariableListSize',
+            this.updateFuncVariableList.bind(this)
+        );
     }
 
     #removeChildrenClass({ children }, className) {
@@ -516,6 +521,7 @@ Entry.VariableContainer = class VariableContainer {
                     return;
                 }
                 Entry.do('funcLocalVarChangeLength', func, 'minus');
+                Entry.dispatchEvent('changeFuncVariableListSize');
             })
             .appendTo(countInputBox);
         this.funcSettingView.minus = buttonMinus;
@@ -538,6 +544,7 @@ Entry.VariableContainer = class VariableContainer {
                 value = limitValue;
             }
             Entry.do('funcLocalVarChangeLength', func, value);
+            Entry.dispatchEvent('changeFuncVariableListSize');
         };
         countInput.onkeypress = Entry.Utils.blurWhenEnter;
 
@@ -552,6 +559,7 @@ Entry.VariableContainer = class VariableContainer {
                 const variableLength = func.localVariables.length;
                 if (variableLength < limitValue) {
                     Entry.do('funcLocalVarChangeLength', func, 'plus');
+                    Entry.dispatchEvent('changeFuncVariableListSize');
                 }
             })
             .appendTo(countInputBox);
@@ -627,16 +635,24 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
 
+        if (!view.infinityScroll) {
+            this.generateFuncValuesView(this.funcSettingView.func, func);
+            requestAnimationFrame(() => {
+                this.updateFuncScrollBar(func);
+            });
+            return;
+        }
+
         const localVariables = func.getLocalVariables() || [];
         const { infinityScroll, countGroup, lengthInput, simpleBar, scrollBox } = view;
 
         lengthInput.value = func.localVariables?.length || 0;
 
         if (localVariables?.length === 0) {
-            countGroup.addClass('entryRemove');
+            countGroup?.addClass('entryRemove');
             return;
         }
-        countGroup.removeClass('entryRemove');
+        countGroup?.removeClass('entryRemove');
 
         const data = localVariables?.map((data, i) => {
             const value = String(data.name).replace(/\$/g, '&#36;');
@@ -671,13 +687,13 @@ Entry.VariableContainer = class VariableContainer {
             this.funcSettingView.minus.removeAttribute('disabled');
             this.funcSettingView.plus.removeAttribute('disabled');
             this.funcSettingView.lengthInput.removeAttribute('disabled');
-            this.funcSettingView.countGroup.removeAttribute('disabled');
+            this.funcSettingView?.countGroup?.removeAttribute('disabled');
         } else {
             view.func.localVarCheck.removeClass('on');
             this.funcSettingView.minus.setAttribute('disabled', '');
             this.funcSettingView.plus.setAttribute('disabled', '');
             this.funcSettingView.lengthInput.setAttribute('disabled', '');
-            this.funcSettingView.countGroup.setAttribute('disabled', '');
+            this.funcSettingView?.countGroup?.setAttribute('disabled', '');
         }
 
         this.updateFuncScrollBar(func);
@@ -778,6 +794,17 @@ Entry.VariableContainer = class VariableContainer {
                 break;
         }
         this.updateSelected();
+    }
+
+    updateFuncVariableList() {
+        [
+            ...(Entry.block?.set_func_variable?.events?.updateFuncVariableList || []),
+            ...(Entry.block?.get_func_variable?.events?.updateFuncVariableList || []),
+        ].forEach((fn) => {
+            if (_isFunction(fn)) {
+                fn();
+            }
+        });
     }
 
     makeChildVariableViews(arr, viewFunc, parent = this.listView_) {

@@ -112,6 +112,18 @@ module.exports = {
                         size: 11,
                     },
                 ],
+                events: {
+                    updateFuncVariableList: [
+                        function() {
+                            const func = Entry.Func.targetFunc || {};
+                            func?.content
+                                ?.getBlockList(false, 'set_func_variable')
+                                ?.forEach((block) => {
+                                    block?.view?.getParam(0)?.updateValue(true);
+                                });
+                        },
+                    ],
+                },
                 def: {
                     params: [
                         null,
@@ -192,6 +204,18 @@ module.exports = {
                         color: 'white',
                     },
                 ],
+                events: {
+                    updateFuncVariableList: [
+                        function() {
+                            const func = Entry.Func.targetFunc || {};
+                            func?.content
+                                ?.getBlockList(false, 'get_func_variable')
+                                ?.forEach((block) => {
+                                    block?.view?.getParam(0)?.updateValue(true);
+                                });
+                        },
+                    ],
+                },
                 def: {
                     params: [null],
                     type: 'get_func_variable',

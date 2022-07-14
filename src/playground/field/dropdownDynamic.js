@@ -83,6 +83,10 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         return super.getTextByValue(value);
     }
 
+    updateValue(reDraw) {
+        return this._updateValue(reDraw);
+    }
+
     async _updateValue(reDraw) {
         const object = this._block.getCode().object;
         let options = [];
