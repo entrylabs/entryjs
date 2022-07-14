@@ -143,6 +143,7 @@ class VideoUtils implements MediaUtilsInterface {
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
     private isFront = true;
+    private initializing: boolean = false;
     public videoInputList: string[][] = [];
 
     constructor() {
@@ -163,6 +164,18 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async initialize() {
+        if (this.initializing) {
+            return;
+        }
+        this.initializing = true;
+        try {
+            await this._initialize();
+        } finally {
+            this.initializing = false;
+        }
+    }
+
+    async _initialize() {
         if (this.isInitialized) {
             return;
         }
