@@ -40,19 +40,12 @@ Entry.iCOBOT = {
 	
     sensorTypes: {
         ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
+        SENSOR: 1,
+        MOTOR: 2,
         BUZZER: 3,
-        SERVO: 4,
+        RGBLED: 4,
         TONE: 5,
         TEMP: 6,
-        USONIC: 7,
-        TIMER: 8,
-        RD_BT: 9,
-        WRT_BT: 10,
-        RGBLED: 11,
-        MOTOR: 12,
-        LASER: 13,
     },
     toneTable: {
         '0': 0,
@@ -86,26 +79,26 @@ Entry.iCOBOT = {
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},	
-    sValue1: 0,               // LEEJC 2020/03/17
+    sValue1: 0,
     sValue2: 0	
 };
 
 Entry.iCOBOT.blockMenuBlocks = [
-		'icobot_buzzer_onoff',			
-        'icobot_set_digital_buzzer',
 		'icobot_get_cds_value',
 		'icobot_get_sound_value',
+		'icobot_get_analog_temp_value',
 		'icobot_get_distsensor_value',
-		//'icobot_get_humidity_value',	
-		//'icobot_get_temperature_value',	
-		//'icobot_get_analog_temp_value',
-        'icobot_digital_rgbled_onoff',   
-        'icobot_digital_rgbled_off',       
+		'icobot_buzzer_onoff',		
+        'icobot_set_digital_buzzer_notime',		
+        'icobot_set_digital_buzzer',
+        'icobot_digital_rgbled_off',    
+        'icobot_digital_rgbled_onoff',      
         'icobot_digital_set_rgbled_value',
         'icobot_digital_rgbled_percent',  
-		'icobot_digital_set_motor_direction',
-		'icobot_digital_set_motor_speed',
 		'icobot_digital_motor_stop',	
+		'icobot_digital_set_motor_speed',
+		'icobot_digital_set_motor_direction',
+		'icobot_digital_set_motor_angle',
 ];
 
 Entry.iCOBOT.setLanguage = function() {
@@ -113,18 +106,18 @@ Entry.iCOBOT.setLanguage = function() {
         ko: {
             template: {
 				"icobot_buzzer_onoff": "부저 %1 %2",				
-                "icobot_set_digital_buzzer": "부저를 %1 옥타브 %2 음 %3 초 연주 %4",	
+                "icobot_set_digital_buzzer": "부저를 %1 옥타브 %2 음 %3 초 연주 %4",
+                "icobot_set_digital_buzzer_notime": "부저를 %1 옥타브 %2 음 연주 %3",	
 				"icobot_get_cds_value": "조도 센서 값",
 				"icobot_get_sound_value": "사운드(소리)감지 센서 값",
 				"icobot_get_distsensor_value": "거리(IR) %1 센서 값",
-				//"icobot_get_humidity_value": "습도 센서 값",	
-				//"icobot_get_temperature_value": "온도 센서 값",	
-				//"icobot_get_analog_temp_value": "%1 센서 값",	        
+				"icobot_get_analog_temp_value": "%1 센서 값",	        
                 "icobot_digital_rgbled_onoff": "RGB LED %1 색 켜기 %2",	
 				"icobot_digital_rgbled_off": "RGB LED 끄기 %1",	                
                 "icobot_digital_set_rgbled_value": "RGB LED 빨강 %1 초록 %2 파랑 %3 으로 켜기 %4",
 				"icobot_digital_set_motor_direction": "%1 모터 방향을 %2 방향으로 정하기 %3",
-				"icobot_digital_set_motor_speed": "%1 모터의 속도를 %2 %로 정하기 %3", 
+				"icobot_digital_set_motor_angle": "%1 방향으로 %2 도 회전하기 %3",
+				"icobot_digital_set_motor_speed": "%1 모터의 속도를 %2 로 정하기 %3", 
 				"icobot_digital_motor_stop": "%1 모터 정지하기 %2",			
             }
         },
@@ -132,17 +125,17 @@ Entry.iCOBOT.setLanguage = function() {
             template: {
 				"icobot_buzzer_onoff": "Buzzer %1 %2",				
                 "icobot_set_digital_buzzer": "Play Buzzer %1 Octave %2 Note %3 Sec %4",	
+                "icobot_set_digital_buzzer_notime": "Play Buzzer %1 Octave %2 Note %3",
 				"icobot_get_cds_value": "CDS Sensor Value",
 				"icobot_get_sound_value": "Sound Sensor Value",
-				"icobot_get_distsensor_value": "Distance(IR) %1 Sensor Value",
-				//"icobot_get_humidity_value": "Humidity Sensor Value",	
-				//"icobot_get_temperature_value": "Temperature Sensor Value",	
-				//"icobot_get_analog_temp_value": "%1 Sensor Value",		                
+				"icobot_get_distsensor_value": "Distance(IR) %1 Sensor Value",	
+				"icobot_get_analog_temp_value": "%1 Sensor Value",		                
                 "icobot_digital_rgbled_onoff": "RGB LED %1 Color Turn On %2",	
 				"icobot_digital_rgbled_off": "RGB LED Turn Off %1",	                	
                 "icobot_digital_set_rgbled_value": "Turn On RGB LED with RED %1 GREEN %2 BLUE %3 value %4",
-				"icobot_digital_set_motor_direction": "Set %1 Motor Direction to %2 %3",		
-				"icobot_digital_set_motor_speed": "Set %1 Motor Speed to %2 % %3", 	
+				"icobot_digital_set_motor_direction": "Set %1 Motor Direction to %2 %3",	
+				"icobot_digital_set_motor_angle": "Rotation %2 degrees in direction %1 %3",	
+				"icobot_digital_set_motor_speed": "Set %1 Motor Speed to %2 %3", 	
 				"icobot_digital_motor_stop": "Stop %1 Motor %2",					
             }
         }
@@ -254,7 +247,7 @@ Entry.iCOBOT.getBlocks = function() {
                         ['7', '7'],
                         ['8', '8'],
                     ],
-                    value: '3',
+                    value: '4',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -353,8 +346,8 @@ Entry.iCOBOT.getBlocks = function() {
                         type: 'icobot_list_digital_tone',
                     },
                     {
-                        type: 'text',
-                        params: ['1'],
+                        type: 'number',
+						params: ["1"],
                     },
                     null,
                 ],
@@ -369,8 +362,8 @@ Entry.iCOBOT.getBlocks = function() {
             isNotFor: ['iCOBOT'],
             func: function(sprite, script) {
                 var port = 6;
-                var duration = script.getNumberValue('DURATION');
                 var octave = script.getNumberValue('OCTAVE') - 1;
+                var duration = script.getNumberValue('DURATION', script);
                 var value = 0;
 
                 if (!script.isStart) 
@@ -417,7 +410,7 @@ Entry.iCOBOT.getBlocks = function() {
                             value: value,
                             duration: duration,
                         },
-                        time: new Date().getTime(),
+                        time: new Date().getTime(),  //millis()여서 duration에 1000를 곱함
                     };
 
                     setTimeout(function() 
@@ -447,142 +440,83 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		
-        icobot_digital_port_list: {
+		// 1. 부저 - 2) 부저 옥타브/음/초 동안 연주
+        icobot_set_digital_buzzer_notime: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            skeleton: 'basic',
             statements: [],
-            template: '%1',
+            template: Lang.template.icobot_set_digital_buzzer_notime,
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['IN/OUT1', '0'],
-                        ['IN/OUT2', '1'],
-                        ['IN/OUT3', '2'],
-                        ['IN/OUT4', '3'],						
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_bzr2.png',
+                    size: 11,
                 },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    {
+                        type: 'icobot_list_digital_octave',						
+                    },
+                    {
+                        type: 'icobot_list_digital_tone',
+                    },
+                    null,
+                ],
+                type: 'icobot_set_digital_buzzer_notime',
             },
             paramsKeyMap: {
-                PORT: 0,
+                OCTAVE: 0,				
+                NOTE: 1,
             },
+            class: 'iCOBOT_BUZ',
+            isNotFor: ['iCOBOT'],
             func: function(sprite, script) {
-                return script.getStringField('PORT');
-            },
-        },
+                var port = 6;
+                var octave = script.getNumberValue('OCTAVE') - 1;
+                var duration = 7;
+                var value = 0;
 
-        icobot_digital_moter_port_list: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
+                var note = script.getValue('NOTE');
+                if (!Entry.Utils.isNumber(note)) 
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['왼쪽', '1'],
-                        ['오른쪽', '3'],						
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func: function(sprite, script) {
-                return script.getStringField('PORT');
-            },
-        },
+                    note = Entry.iCOBOT.toneTable[note];
+                }
+                if (note < 0) note = 0;
+                else if (note > 12) note = 12;
+                
+                if (!Entry.hw.sendQueue['SET']) 
+                {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                
+                if (octave < 0) octave = 0;
+                else if (octave > 8) octave = 8;
+                if (note != 0) value = Entry.iCOBOT.toneMap[note][octave];
 
-		icobot_motor_direction_list: 
-		{
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
+                Entry.hw.sendQueue['SET'][port] = 
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['전진', '0'],
-                        ['후진', '1'],		
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
+                    type: Entry.iCOBOT.sensorTypes.TONE,
+                    data: 
+                    {
+                        value: value,
+                        duration: duration,
+                    },
+                    time: new Date().getTime(),
+                };
             },
-            paramsKeyMap: {
-                DIR: 0,
-            },
-            func: function(sprite, script) {
-                return script.getStringField('DIR');
-            },
-        },
-		
-        icobot_analog_port_list: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['FRONT', '2'],
-                        ['LEFT', '10'],
-                        ['RIGHT', '5'],
-                        ['B/LEFT', '1'],
-                        ['B/MID', '8'],
-                        ['B/RIGHT', '3'],
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func: function(sprite, script) {
-                return script.getField('PORT');
-            },
+            syntax: { js: [], py: [] },
         },
 		
 		// 3. 빛 - 1) 센서 값 				
@@ -593,16 +527,7 @@ Entry.iCOBOT.getBlocks = function() {
             skeleton: 'basic_string_field',
             template: Lang.template.icobot_get_cds_value,
             statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-            ],
+            params: [],
             events: {},
             def: {
                 type: 'icobot_get_cds_value',
@@ -610,11 +535,11 @@ Entry.iCOBOT.getBlocks = function() {
             paramsKeyMap: {},
             class: 'iCOBOT_ANA',
             isNotFor: ['iCOBOT'],
-            func: function(sprite, script) 
+            func: function(sprite, script)
 			{
                 var port = 0;
-                var ANALOG = Entry.hw.portData.ANALOG;
-                return ANALOG[port];
+                var CDS = Entry.hw.portData.SENSOR;
+                return CDS[port];
             },
             syntax: { js: [], py: [] },
         },
@@ -644,115 +569,14 @@ Entry.iCOBOT.getBlocks = function() {
             paramsKeyMap: {},
             class: 'iCOBOT_ANA',
             isNotFor: ['iCOBOT'],
-            func: function(sprite, script) 
+            func: function(sprite, script)
 			{
                 var port = 4;
-                var ANALOG = Entry.hw.portData.ANALOG;
-                return ANALOG[port];
+                var SOUND = Entry.hw.portData.SENSOR;
+                return SOUND[port];
             },
             syntax: { js: [], py: [] },
         },
-		
-		/*
-         // 8. 습도 - 1) 센서 값 				
-         icobot_get_humidity_value: {
-             color: EntryStatic.colorSet.block.default.HARDWARE,
-             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-             fontColor: '#fff',
-             skeleton: 'basic_string_field',
-             template: Lang.template.icobot_get_temp_value,
-             statements: [],
-             params: [
-                 {
-                     type: 'Block',
-                     accept: 'string',
-                 },
-                 {
-                     type: 'Block',
-                     accept: 'string',
-                 },				
-             ],
-             events: {},
-             def: {
-                 type: 'icobot_get_humidity_value',
-             },
-             paramsKeyMap: {},
-             class: 'iCOBOT_TMP',
-             isNotFor: ['iCOBOT'],
-             func: function(sprite, script) 
-             {
-                 var port = 7;				
-                 
-                 if (!Entry.hw.sendQueue['SET']) {
-                     Entry.hw.sendQueue['SET'] = {};
-                 }
-                 delete Entry.hw.sendQueue['SET'][port];
-                         
-                 if (!Entry.hw.sendQueue['GET']) {
-                     Entry.hw.sendQueue['GET'] = {};
-                 }
-                 Entry.hw.sendQueue['GET'][
-                     Entry.iCOBOT.sensorTypes.TEMP		
-                 ] = {
-                     port,
-                     time: new Date().getTime(),
-                 };
- 
-                 var temp = Entry.hw.portData.TEMP[0];
-                 return temp || 0;                
-             },
-             syntax: { js: [], py: [] },
-         },
-		
-         // 8. 온도 - 1) 센서 값 				
-         icobot_get_temperature_value: {
-             color: EntryStatic.colorSet.block.default.HARDWARE,
-             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-             fontColor: '#fff',
-             skeleton: 'basic_string_field',
-             template: Lang.template.icobot_get_temp_value,
-             statements: [],
-             params: [
-                 {
-                     type: 'Block',
-                     accept: 'string',
-                 },
-                 {
-                     type: 'Block',
-                     accept: 'string',
-                 },				
-             ],
-             events: {},
-             def: {
-                 type: 'icobot_get_temperature_value',
-             },
-             paramsKeyMap: {},
-             class: 'iCOBOT_TMP',
-             isNotFor: ['iCOBOT'],
-             func: function(sprite, script) 
-             {
-                 var port = 4;			
-                 
-                 if (!Entry.hw.sendQueue['SET']) {
-                     Entry.hw.sendQueue['SET'] = {};
-                 }
-                 delete Entry.hw.sendQueue['SET'][port];
-                         
-                 if (!Entry.hw.sendQueue['GET']) {
-                     Entry.hw.sendQueue['GET'] = {};
-                 }
-                 Entry.hw.sendQueue['GET'][
-                     Entry.iCOBOT.sensorTypes.TEMP		
-                 ] = {
-                     port,
-                     time: new Date().getTime(),
-                 };
- 
-                 var temp = Entry.hw.portData.TEMP[0];
-                 return temp || 0;                
-             },
-             syntax: { js: [], py: [] },
-         },
 				
          icobot_analog_temp_name: {
               color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -786,19 +610,16 @@ Entry.iCOBOT.getBlocks = function() {
                   return script.getField('PORT');
               },
           },
+
 		// 8. 온습도 - 1) 센서 값 				
         icobot_get_analog_temp_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
             fontColor: '#fff',
             skeleton: 'basic_string_field',
-            template: Lang.template.icobot_get_temp_value,
+            template: Lang.template.icobot_get_analog_temp_value,
             statements: [],
             params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -814,47 +635,82 @@ Entry.iCOBOT.getBlocks = function() {
                 type: 'icobot_get_analog_temp_value',
             },
             paramsKeyMap: {
-				MODE: 0,
+				TYPE: 0,
             },
-            class: 'iCOBOT_TMP',
+            class: 'iCOBOT_ANA',
             isNotFor: ['iCOBOT'],
             func: function(sprite, script) 
             {
                 var port = 7;
-                var mode = script.getNumberValue('MODE', script);				
+                var type = script.getNumberValue('TYPE');			
                 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                Entry.hw.sendQueue['SET'][port];
-				delete Entry.hw.sendQueue['SET'][port];
+                delete Entry.hw.sendQueue['SET'][port];
         				
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.iCOBOT.sensorTypes.TEMP		
-                ] = {
-                    port,
+                Entry.hw.sendQueue['GET'][Entry.iCOBOT.sensorTypes.TEMP]
+                 = {
+                    port: port,
+                    data: type,
                     time: new Date().getTime(),
                 };
 
                 var temp;
                 switch(type)
                 {
-                    case 0: temp = Entry.hw.portData.TEMP[0];        // humidity
-                        break;
-                    case 1: temp = Entry.hw.portData.TEMP[1];        // temp_F
-                        temp = Math.round(temp*1.8+32);                                               
-                        break;                
-                    case 2: temp = Entry.hw.portData.TEMP[1];        // temp_C              
-                        break;                                                
+                    case 0: temp = Entry.hw.portData.TEMP;        // humidity
+                                break;
+                    case 1: temp = Entry.hw.portData.TEMP;        // temp_F
+                                temp = Math.round(temp*1.8+32);                                               
+                                break;                
+                    case 2: temp = Entry.hw.portData.TEMP;        // temp_C              
+                                break;                                                
                 }
                 return temp || 0;                
             },
             syntax: { js: [], py: [] },
         },
-        */
+		
+        icobot_analog_distsensor_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+			fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['FRONT', '2'],
+                        ['LEFT', '7'],
+                        ['RIGHT', '5'],
+                        ['B/LEFT', '1'],
+                        ['B/MID', '6'],
+                        ['B/RIGHT', '3'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('PORT');
+            },
+        },
+
 		// 6. 거리 - 1) 센서 값		
         icobot_get_distsensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -873,7 +729,7 @@ Entry.iCOBOT.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'icobot_analog_port_list',
+                        type: 'icobot_analog_distsensor_list',
                     },
                 ],
                 type: 'icobot_get_distsensor_value',
@@ -881,15 +737,13 @@ Entry.iCOBOT.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'iCOBOT_IR',
+            class: 'iCOBOT_ANA',
             isNotFor: ['iCOBOT'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-
-                if (port[0] === 'A') port = port.substring(1);
-
-                return ANALOG ? (1023-ANALOG[port]) || 0 : 0;
+            func: function(sprite, script)
+			{
+                var port = script.getValue('PORT', script);	
+                var IR = Entry.hw.portData.SENSOR;
+                return IR[port];
             },
             syntax: { js: [], py: [] },
         },
@@ -1137,6 +991,147 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },      
 
+        icobot_digital_moter_port_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+			fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['양쪽', '2'],	
+                        ['왼쪽', '1'],
+                        ['오른쪽', '3'],						
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+
+		icobot_motor_direction_list: 
+		{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+			fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['전진', '0'],
+                        ['후진', '1'],		
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('DIR');
+            },
+        }, 
+
+        icobot_digital_moter_angle_port_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+			fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['왼쪽', '1'],
+                        ['오른쪽', '3'],						
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+        },
+
+		icobot_motor_angle_list: 
+		{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+			fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['30도', '0'],
+                        ['45도', '1'],	
+                        ['60도', '2'],
+                        ['90도', '3'],	
+                        ['120도', '4'],	
+                        ['135도', '5'],	
+                        ['150도', '6'],	
+                        ['180도', '7'],	
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DIR: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('DIR');
+            },
+        },
+
 		// 15. DC 모터 - 1) 방향 바꾸기		
 		icobot_digital_set_motor_direction: 
 		{
@@ -1191,7 +1186,77 @@ Entry.iCOBOT.getBlocks = function() {
                 Entry.hw.sendQueue['SET'][port] = 
 				{
                     type: Entry.iCOBOT.sensorTypes.MOTOR,
-                    data: [mode, dir],
+                    data: 
+                    {
+                        mode: mode,
+                        value: dir,
+                    },
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+
+		// 15. DC 모터 - 1) 회전하기		
+		icobot_digital_set_motor_angle: 
+		{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+			fontColor: '#fff',			
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },				
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_dc.png',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'icobot_digital_moter_angle_port_list',
+                    },			
+                    {
+                        type: 'icobot_motor_angle_list',
+                    },		
+                    null,
+                ],
+                type: 'icobot_digital_set_motor_angle',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+				DIR: 1,
+			},
+            class: 'iCOBOT_DC',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script) 
+			{
+                var port = script.getNumberValue('PORT', script);
+                var dir = script.getNumberValue('DIR', script);
+				var mode = 4;
+						
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = 
+				{
+                    type: Entry.iCOBOT.sensorTypes.MOTOR,
+                    data: 
+                    {
+                        mode: mode,
+                        value: dir,
+                    },
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
@@ -1248,7 +1313,7 @@ Entry.iCOBOT.getBlocks = function() {
                 var speed = script.getNumberValue('SPEED', script);
 				var mode = 2;
 						
-                speed = Math.min(100, speed);
+                speed = Math.min(1000, speed);
                 speed = Math.max(0, speed);		                           
                 
                 if (!Entry.hw.sendQueue['SET']) {
@@ -1257,7 +1322,11 @@ Entry.iCOBOT.getBlocks = function() {
                 Entry.hw.sendQueue['SET'][port] = 
 				{
                     type: Entry.iCOBOT.sensorTypes.MOTOR,
-                    data: [mode, speed],
+                    data: 
+                    {
+                        mode: mode,
+                        value: speed,
+                    },
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
@@ -1311,7 +1380,11 @@ Entry.iCOBOT.getBlocks = function() {
                 Entry.hw.sendQueue['SET'][port] = 
 				{
                     type: Entry.iCOBOT.sensorTypes.MOTOR,
-                    data: [mode, speed],
+                    data: 
+                    {
+                        mode: mode,
+                        value: speed,
+                    },
                     time: new Date().getTime(),
                 };
                 return script.callReturn();
