@@ -39,7 +39,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Text',
-                        text: '',
+                        text: '123123',
                         color: EntryStatic.colorSet.common.TEXT,
                         align: 'left',
                     },
