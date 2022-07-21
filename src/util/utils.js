@@ -2948,6 +2948,9 @@ Entry.Utils.asyncAnimationFrame = (func) => {
 };
 
 Entry.Utils.stringFormat = (text, ...args) => {
+    if (!text) {
+        return text;
+    }
     let result = text;
     for (let i = 0; i < args.length; i++) {
         const regexp = new RegExp(`\\{${i}\\}`, 'gi');

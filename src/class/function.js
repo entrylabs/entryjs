@@ -175,8 +175,22 @@ class EntryFunc {
         localVariable.value = value;
     }
 
+    static changeFunctionName(name) {
+        Entry.Mutator.mutate(
+            'function_name',
+            {
+                template: _truncate(name, {
+                    length: 20,
+                }),
+            },
+            { type: 'noChange', isRestore: undefined }
+        );
+    }
+
     static initBlock(blockMenu) {
-        blockMenu.banClass('useLocalVariable');
+        blockMenu.banClass('functionEdit', true);
+        blockMenu.banClass('useLocalVariables', true);
+        this.changeFunctionName('');
     }
 
     static registerFunction(func) {
@@ -255,6 +269,39 @@ class EntryFunc {
     }
 
     static initEditView(content) {
+        if (this.targetFunc) {
+            const defBlock = this.targetFunc.content.getEventMap('funcDef')[0];
+
+            if (defBlock) {
+                let outputBlock = defBlock.params[0];
+                let functionNmaeTemplate = '';
+                let booleanIndex = 0;
+                let stringIndex = 0;
+
+                while (outputBlock) {
+                    const value = outputBlock.params[0];
+                    const valueType = value.type;
+                    switch (outputBlock.type) {
+                        case 'function_field_label':
+                            functionNmaeTemplate = `${functionNmaeTemplate} ${value}`;
+                            break;
+                        case 'function_field_boolean':
+                            booleanIndex++;
+                            // eslint-disable-next-line max-len
+                            functionNmaeTemplate += ` <${Lang.Blocks.FUNCTION_logical_variable} ${booleanIndex}>`;
+                            break;
+                        case 'function_field_string':
+                            stringIndex++;
+                            // eslint-disable-next-line max-len
+                            functionNmaeTemplate += ` (${Lang.Blocks.FUNCTION_character_variable} ${stringIndex})`;
+                            break;
+                    }
+
+                    outputBlock = outputBlock.getOutputBlock();
+                }
+                this.changeFunctionName(functionNmaeTemplate);
+            }
+        }
         if (!this.menuCode) {
             this.setupMenuCode();
         }
@@ -575,15 +622,7 @@ class EntryFunc {
             outputBlock = outputBlock.getOutputBlock();
         }
 
-        Entry.Mutator.mutate(
-            'function_name',
-            {
-                template: _truncate(functionNmaeTemplate, {
-                    length: 20,
-                }),
-            },
-            { type: 'noChange', isRestore: undefined }
-        );
+        this.changeFunctionName(functionNmaeTemplate);
 
         if (targetFunc.type !== 'value') {
             schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
