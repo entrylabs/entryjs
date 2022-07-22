@@ -26,7 +26,7 @@
         "jquery": true
     },
     "parserOptions": {
-        "ecmaVersion": 11,
+        "ecmaVersion": 2020,
         "sourceType": "module",
         "ecmaFeatures": {
             "jsx": true
