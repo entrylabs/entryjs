@@ -17,6 +17,8 @@ class Executor {
         this.id = Entry.Utils.generateId();
     }
 
+    static MAXIMUM_CALLSTACK = 100;
+
     execute(isFromOrigin) {
         if (Entry.isTurbo && !this.isUpdateTime) {
             this.isUpdateTime = performance.now();
