@@ -1,5 +1,9 @@
 const { Lang } = require('../../../extern/lang/ko');
 
+const waitTick = () =>
+    new Promise((r) => {
+        requestAnimationFrame(r);
+    });
 module.exports = {
     getBlocks() {
         return {
@@ -340,7 +344,7 @@ module.exports = {
                         },
                     ],
                 },
-                func(entity) {
+                async func(entity) {
                     if (!this.initiated) {
                         this.initiated = true;
                         Entry.callStackLength++;
@@ -361,10 +365,13 @@ module.exports = {
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
                     }
-                    this.funcExecutor.execute();
+                    const { promises } = await this.funcExecutor.execute();
+                    if (promises.length) {
+                        await Promise.all(promises);
+                    }
+
                     if (!this.funcExecutor.isEnd()) {
-                        this.funcCode.removeExecutor(this.funcExecutor);
-                        return Entry.STATIC.BREAK;
+                        return Entry.STATIC.CONTINUE;
                     }
 
                     Entry.callStackLength--;
@@ -430,29 +437,32 @@ module.exports = {
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
                     }
-                    const ab = this.funcExecutor.execute();
-                    if (ab.promises.length) {
-                        const ac = await Promise.all(ab.promises);
-                        console.log('ac', ac);
-                    }
-                    // else if (!this.funcExecutor.isEnd()) {
-                    //     this.funcCode.removeExecutor(this.funcExecutor);
-                    //     return Entry.STATIC.BREAK;
-                    // }
 
-                    console.log(
-                        'this.funcExecutor.value',
-                        this.funcExecutor.isEnd(),
-                        ab,
-                        this.funcExecutor.result
-                    );
+                    while (true) {
+                        console.log('isPause', Entry.engine.state, this.funcExecutor.isPause());
+                        console.log();
+
+                        if (Entry.engine.isState('pause')) {
+                            await waitTick();
+                            continue;
+                        }
+                        const { promises } = this.funcExecutor.execute();
+                        if (promises.length) {
+                            await Promise.all(promises);
+                        }
+
+                        if (!this.funcExecutor.isEnd()) {
+                            await waitTick();
+                        } else {
+                            break;
+                        }
+                    }
+
                     Entry.callStackLength--;
 
                     const scope = this.funcExecutor.result;
                     scope.values = scope.getParams();
-                    const a = scope.getValue('VALUE', scope);
-                    console.log('3', a);
-                    return a;
+                    return scope.getValue('VALUE', scope);
                 },
                 syntax: { js: [], py: [''] },
             },
@@ -615,7 +625,6 @@ module.exports = {
                     DO: 0,
                 },
                 func(sprite, script) {
-                    console.log('function_create');
                     if (!script.isFunc) {
                         script.isFunc = true;
                         script.executor.result = script;
