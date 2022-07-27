@@ -356,7 +356,9 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        window.open('https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0');
+                        window.open(
+                            'https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0'
+                        );
                     },
                 ],
             },
@@ -1614,7 +1616,7 @@ function getBlocks() {
                     },
                 ],
             },
-            func(entity) {
+            async func(entity) {
                 if (!this.initiated) {
                     this.initiated = true;
                     Entry.callStackLength++;
@@ -1635,12 +1637,16 @@ function getBlocks() {
                     this.funcExecutor.parentExecutor = this.executor;
                     this.funcExecutor.isFuncExecutor = true;
                 }
-                this.funcExecutor.execute();
-                if (!this.funcExecutor.isEnd()) {
-                    this.funcCode.removeExecutor(this.funcExecutor);
-                    return Entry.STATIC.BREAK;
+                const { promises } = await this.funcExecutor.execute();
+                if (promises.length) {
+                    await Promise.all(promises);
                 }
 
+                if (!this.funcExecutor.isEnd()) {
+                    return Entry.STATIC.CONTINUE;
+                }
+
+                this.funcCode.removeExecutor(this.funcExecutor);
                 Entry.callStackLength--;
             },
             syntax: { js: [], py: [''] },
