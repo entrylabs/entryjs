@@ -547,8 +547,8 @@ Entry.Stage = class Stage {
     }
 
     initVideoContainer() {
-        const videoContainer = GEHelper.getNewContainer();
-        this.canvas.addChildAt(videoContainer, 2);
+        this.videoContainer = GEHelper.getNewContainer();
+        this.canvas.addChildAt(this.videoContainer, 2);
     }
 
     getCanvasElement(id) {

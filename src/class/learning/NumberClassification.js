@@ -12,7 +12,10 @@ export const classes = [
     'ai_learning_number',
     'number_learning_attr_1',
     'number_learning_attr_2',
-    'number_learning_attr_3'
+    'number_learning_attr_3',
+    'number_learning_attr_4',
+    'number_learning_attr_5',
+    'number_learning_attr_6',
 ];
 
 class NumberClassification {
