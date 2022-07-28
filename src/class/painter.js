@@ -187,7 +187,7 @@ Entry.Painter = class Painter {
         return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
             2,
             4
-        )}/image/${filename}.${imageType}`;
+        )}/image/${filename}.${imageType === 'svg' ? 'svg' : 'png'}`;
     }
 
     addPicture(picture = {}, isChangeShape) {
@@ -208,6 +208,10 @@ Entry.Painter = class Painter {
                     graphicsMode: this.isImport ? this.graphicsMode.VECTOR : '',
                 });
                 break;
+            default:
+                this.entryPaint.addBitmap(imageSrc, {
+                    graphicsMode: this.isImport ? this.graphicsMode.BITMAP : '',
+                });
         }
     }
 
