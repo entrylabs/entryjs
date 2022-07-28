@@ -1616,19 +1616,10 @@ function getBlocks() {
                     },
                 ],
             },
-            async func(entity) {
+            func(entity) {
                 if (!this.initiated) {
                     this.initiated = true;
                     Entry.callStackLength++;
-
-                    if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-                        Entry.toast.alert(
-                            Lang.Workspace.RecursiveCallWarningTitle,
-                            Lang.Workspace.RecursiveCallWarningContent
-                        );
-                        throw new Error();
-                    }
-
                     const func = Entry.variableContainer.getFunction(this.block.getFuncId());
                     this.funcCode = func.content;
                     this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
@@ -1637,16 +1628,22 @@ function getBlocks() {
                     this.funcExecutor.parentExecutor = this.executor;
                     this.funcExecutor.isFuncExecutor = true;
                 }
-                const { promises } = await this.funcExecutor.execute();
-                if (promises.length) {
-                    await Promise.all(promises);
-                }
+
+                const { promises } = this.funcExecutor.execute();
 
                 if (!this.funcExecutor.isEnd()) {
-                    return Entry.STATIC.CONTINUE;
+                    if (promises.length) {
+                        return Entry.Code.funcAsyncExecute(
+                            this.funcCode,
+                            this.funcExecutor,
+                            promises
+                        );
+                    } else {
+                        this.funcCode.removeExecutor(this.funcExecutor);
+                        return Entry.STATIC.BREAK;
+                    }
                 }
 
-                this.funcCode.removeExecutor(this.funcExecutor);
                 Entry.callStackLength--;
             },
             syntax: { js: [], py: [''] },
