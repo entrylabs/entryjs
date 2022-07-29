@@ -202,7 +202,7 @@ ${entryjs}/src/blocks/**/*
 
 ### 저장
    : 아래의 Entry 함수를 이용해 필수정보들을 JSON형태로 저장할 수 있습니다.
-    저장된 프로젝트는 Entry.loadProject(project) 를 이용해 다시 로드할 수 있습니다.
+    저장된 프로젝트는 Entry.loadProject(project) 를 이용해 다시 로드할 수 있습니다
     
 ```javascript
     var project = Entry.exportProject();
