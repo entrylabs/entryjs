@@ -549,7 +549,7 @@ Lang.Blocks = {
     "ARDUINO": "Hardware",
     "ARDUINO_download_connector": "• 接続ソフトをダウンロード",
     "ARDUINO_open_connector": "接続ソフトを開く",
-    "ARDUINO_download_source": "• ENTRYのArduinoコード",
+    "ARDUINO_download_source": "• ENTRYのArduinoコード ",
     "ARDUINO_reconnect": "ハードウェアに接続する",
     "arduino_noti_text": "モバイル機器でのハードウェア\n    接続は今後対応予定です。",
     "ROBOT_reconnect": "ロボットを連結する",
