@@ -3,6 +3,7 @@ import audioUtils from '../util/audioUtils';
 
 const EntryEngineState = {
     stop: 'stop',
+    stopping: 'stopping',
     pause: 'pause',
     run: 'run',
 };
@@ -681,6 +682,7 @@ Entry.Engine = class Engine {
      * toggle this engine state stop
      */
     async toggleStop() {
+        this.state = EntryEngineState.stopping;
         Entry.dispatchEvent('beforeStop');
         try {
             await Promise.all(this.execPromises);
