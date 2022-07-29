@@ -466,4 +466,37 @@ Entry.Code = class Code {
         this.clear();
         this.destroyView();
     }
+
+    static funcNextTick(funcCode, funcExecutor, promises) {
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    resolve(await Entry.Code.recursion(funcCode, funcExecutor, promises));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    }
+
+    static funcAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
+        await Promise.all(_promises);
+        if (Entry.engine.isState('pause')) {
+            return this.funcNextTick(funcCode, funcExecutor, promises);
+        } else if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return Entry.STATIC.BREAK;
+        }
+
+        const { promises } = funcExecutor.execute();
+
+        if (!funcExecutor.isEnd()) {
+            if (promises.length) {
+                return this.funcNextTick(funcCode, funcExecutor, promises);
+            } else {
+                funcCode.removeExecutor(funcExecutor);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    };
 };
