@@ -475,7 +475,6 @@ Entry.Code = class Code {
             funcCode.removeExecutor(funcExecutor);
             return Entry.STATIC.BREAK;
         }
-
         return new Promise((resolve, reject) => {
             requestAnimationFrame(async () => {
                 const result = funcExecutor.execute();
