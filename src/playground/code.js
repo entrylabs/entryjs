@@ -470,7 +470,7 @@ Entry.Code = class Code {
     static funcAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
         await Promise.all(_promises);
         if (Entry.engine.isState('pause')) {
-            return this.funcAsyncExecute(funcCode, funcExecutor);
+            return this.funcAsyncExecute(funcCode, funcExecutor, _promises);
         } else if (!Entry.engine.isState('run')) {
             funcCode.removeExecutor(funcExecutor);
             return Entry.STATIC.BREAK;
