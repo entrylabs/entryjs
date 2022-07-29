@@ -68,8 +68,6 @@ EntryStatic.subjectList = [
 
 EntryStatic.lectureLevels = [1, 2, 3];
 
-// EntryStatic.lectureLevels = ['level_high', 'level_mid','level_row'];
-
 EntryStatic.lectureGrades = [
     'e_1',
     'e_2',
