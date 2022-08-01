@@ -224,9 +224,7 @@ Entry.Code = class Code {
     }
 
     clearExecutors() {
-        this.executors.forEach((e) => {
-            return e.end();
-        });
+        this.executors.forEach((e) => e.end());
         Entry.dispatchEvent('blockExecuteEnd');
         this.executors = [];
     }
@@ -302,22 +300,18 @@ Entry.Code = class Code {
             return [];
         }
 
-        return this.getThreads().filter((t) => {
-            return _.result(t.getFirstBlock(), 'category') === categoryName;
-        });
+        return this.getThreads().filter(
+            (t) => _.result(t.getFirstBlock(), 'category') === categoryName
+        );
     }
 
     toJSON(excludeData, option) {
         const params = [false, undefined, excludeData, option];
-        return this.getThreads().map((t) => {
-            return t.toJSON(...params);
-        });
+        return this.getThreads().map((t) => t.toJSON(...params));
     }
 
     countBlock() {
-        return this.getThreads().reduce((cnt, thread) => {
-            return cnt + thread.countBlock();
-        }, 0);
+        return this.getThreads().reduce((cnt, thread) => cnt + thread.countBlock(), 0);
     }
 
     moveBy(x, y) {
@@ -358,9 +352,7 @@ Entry.Code = class Code {
     }
 
     hasBlockType(type) {
-        return this.getThreads().some((thread) => {
-            return thread.hasBlockType(type);
-        });
+        return this.getThreads().some((thread) => thread.hasBlockType(type));
     }
 
     findById(id) {
@@ -443,23 +435,17 @@ Entry.Code = class Code {
 
     getBlockList(excludePrimitive, type) {
         return _.chain(this.getThreads())
-            .map((t) => {
-                return t.getBlockList(excludePrimitive, type);
-            })
+            .map((t) => t.getBlockList(excludePrimitive, type))
             .flatten(true)
             .value();
     }
 
     removeBlocksByType(type) {
-        this.getBlockList(false, type).forEach((b) => {
-            return b.doDestroy();
-        });
+        this.getBlockList(false, type).forEach((b) => b.doDestroy());
     }
 
     isAllThreadsInOrigin() {
-        return this.getThreads().every((thread) => {
-            return thread.isInOrigin();
-        });
+        return this.getThreads().every((thread) => thread.isInOrigin());
     }
 
     destroy() {
@@ -475,6 +461,7 @@ Entry.Code = class Code {
             funcCode.removeExecutor(funcExecutor);
             return Entry.STATIC.BREAK;
         }
+
         return new Promise((resolve, reject) => {
             requestAnimationFrame(async () => {
                 const result = funcExecutor.execute();
@@ -483,16 +470,18 @@ Entry.Code = class Code {
                 if (!funcExecutor.isEnd()) {
                     if (promises.length) {
                         try {
-                            resolve(await this.funcAsyncExecute(funcCode, funcExecutor, promises));
+                            return resolve(
+                                await this.funcAsyncExecute(funcCode, funcExecutor, promises)
+                            );
                         } catch (e) {
-                            reject(e);
+                            return reject(e);
                         }
                     } else {
                         funcCode.callStackLength--;
                         funcCode.removeExecutor(funcExecutor);
-                        resolve(Entry.STATIC.BREAK);
                     }
                 }
+                return resolve(Entry.STATIC.BREAK);
             });
         });
     };
