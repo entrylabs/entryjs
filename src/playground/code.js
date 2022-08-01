@@ -479,9 +479,10 @@ Entry.Code = class Code {
                     } else {
                         funcCode.callStackLength--;
                         funcCode.removeExecutor(funcExecutor);
+                        return resolve(Entry.STATIC.BREAK);
                     }
                 }
-                return resolve(Entry.STATIC.BREAK);
+                return resolve();
             });
         });
     };
