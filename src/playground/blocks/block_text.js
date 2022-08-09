@@ -316,7 +316,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Color',
+                        type: 'Block',
+                        accept: 'string',
                     },
                     {
                         type: 'Indicator',
@@ -326,7 +327,12 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null],
+                    params: [
+                        {
+                            type: 'color',
+                        },
+                        null,
+                    ],
                     type: 'text_change_font_color',
                 },
                 paramsKeyMap: {
@@ -335,7 +341,7 @@ module.exports = {
                 class: 'text',
                 isNotFor: ['sprite'],
                 func(sprite, script) {
-                    const color = script.getField('VALUE', script);
+                    const color = script.getStringValue('VALUE', script);
                     sprite.setColorWithLog(color);
                     return script.callReturn();
                 },
