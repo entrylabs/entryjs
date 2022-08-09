@@ -68,7 +68,11 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [[Lang.Blocks.speak, 'speak']],
+                        options: [
+                            [Lang.Blocks.speak, 'speak'],
+                            [Lang.Blocks.think, 'think'],
+                            // [Lang.Blocks.yell, 'yell'],
+                        ],
                         value: 'speak',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.LOOKS,
@@ -106,7 +110,10 @@ module.exports = {
                             type: 'number',
                             params: ['B&value'],
                         },
-                        null,
+                        {
+                            type: 'text',
+                            params: ['C&value'],
+                        },
                         null,
                     ],
                     type: 'dialog_time',
@@ -178,7 +185,11 @@ module.exports = {
                                 },
                                 {
                                     type: 'Dropdown',
-                                    options: [[Lang.Blocks.speak, 'speak']],
+                                    options: [
+                                        [Lang.Blocks.speak, 'speak'],
+                                        [Lang.Blocks.think, 'think'],
+                                        // [Lang.Blocks.yell, 'yell'],
+                                    ],
                                     value: 'speak',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
@@ -201,7 +212,11 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [[Lang.Blocks.speak, 'speak']],
+                        options: [
+                            [Lang.Blocks.speak, 'speak'],
+                            [Lang.Blocks.think, 'think'],
+                            // [Lang.Blocks.yell, 'yell'],
+                        ],
                         value: 'speak',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.LOOKS,
@@ -231,7 +246,10 @@ module.exports = {
                             type: 'text',
                             params: ['A&value'],
                         },
-                        null,
+                        {
+                            type: 'text',
+                            params: ['B&value'],
+                        },
                         null,
                     ],
                     type: 'dialog',
