@@ -986,7 +986,14 @@ Entry.addTwoNumber = function(a, b) {
 /*
  * HTML hex colour code to RGB colour value
  */
-Entry.hex2rgb = function(hex) {
+Entry.hex2rgb = function(hexstr) {
+    let hex = hexstr[0] === '#' ? hexstr : `#${hexstr}`;
+    if (hex.length === 4) {
+        hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+    }
+    if (!/^#[0-9a-f]{6}?$/i.test(hex)) {
+        hex = '#000000';
+    }
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
