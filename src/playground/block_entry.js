@@ -918,7 +918,7 @@ function getBlocks() {
                 ],
             },
         },
-        gx_coordinate: {
+        get_x_coordinate: {
             color: EntryStatic.colorSet.block.lighten.CALC,
             skeleton: 'basic_string_field',
             statements: [],
