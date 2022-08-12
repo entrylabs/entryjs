@@ -6008,6 +6008,7 @@ Lang.template = {
     "set_brush_tranparency": "thiết lập độ trong suốt của cọ bằng %1 % %2",
     "number": "%1",
     "angle": "%1",
+    "color": "%1",
     "get_x_coordinate": "%1",
     "get_y_coordinate": "%1",
     "get_angle": "%1",

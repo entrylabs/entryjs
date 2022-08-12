@@ -880,6 +880,44 @@ function getBlocks() {
                 ],
             },
         },
+        color: {
+            color: EntryStatic.colorSet.block.default.BRUSH,
+            outerLine: EntryStatic.colorSet.block.darken.BRUSH,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'Color',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('VALUE');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'color',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                codeMap: 'Entry.CodeMap.Entry.set_color[0]',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
         get_x_coordinate: {
             color: EntryStatic.colorSet.block.lighten.CALC,
             skeleton: 'basic_string_field',
