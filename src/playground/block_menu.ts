@@ -9,6 +9,7 @@ import includes from 'lodash/includes';
 import head from 'lodash/head';
 import find from 'lodash/find';
 import ModelClass from '../core/modelClass';
+import Hammer from 'hammerjs';
 
 const VARIABLE = 'variable';
 const HW = 'arduino';
@@ -221,6 +222,31 @@ class BlockMenu extends ModelClass<Schema> {
 
         Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
         Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+        this.initBlockDoubleClickEvent();
+    }
+
+    initBlockDoubleClickEvent() {
+        const hammer = new Hammer(this.code.board.svgBlockGroup);
+        hammer.on('doubletap', (e: { target: HTMLElement }) => {
+            const blockId = e.target.getAttribute('blockId');
+            if (!blockId) {
+                return;
+            }
+            const targetBlock = this.code.findById(blockId);
+            if (targetBlock.type.startsWith('func_')) {
+                return;
+            }
+            const { width, height } = targetBlock.view;
+            const { scale, svg } = this.workspace.board;
+            const { left, top, right, bottom } = svg.getBoundingClientRect();
+            const boardCenterX = (Math.min(window.innerWidth, right) - left) / 2;
+            const boardCenterY = (Math.min(window.innerHeight, bottom) - top) / 2;
+            const block = targetBlock.toJSON(true);
+            block.x = boardCenterX - (width * scale) / 2;
+            block.y = boardCenterY - (height * scale) / 2;
+
+            Entry.do('addThread', [block]);
+        });
     }
 
     foldBlockMenu() {

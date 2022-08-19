@@ -143,6 +143,7 @@ class VideoUtils implements MediaUtilsInterface {
     private stream: MediaStream;
     private imageCapture: typeof ImageCapture;
     private isFront = true;
+    private initializing: boolean = false;
     public videoInputList: string[][] = [];
 
     constructor() {
@@ -163,6 +164,18 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     async initialize() {
+        if (this.initializing) {
+            return;
+        }
+        this.initializing = true;
+        try {
+            await this._initialize();
+        } finally {
+            this.initializing = false;
+        }
+    }
+
+    async _initialize() {
         if (this.isInitialized) {
             return;
         }
@@ -277,7 +290,9 @@ class VideoUtils implements MediaUtilsInterface {
                             break;
                     }
                 };
+                const weightsUrl = this.getWeightUrl();
                 this.worker.postMessage({
+                    weightsUrl: weightsUrl,
                     type: 'init',
                     width: this.CANVAS_WIDTH,
                     height: this.CANVAS_HEIGHT,
@@ -384,6 +399,12 @@ class VideoUtils implements MediaUtilsInterface {
         } catch (err) {
             console.log(err);
         }
+    }
+
+    getWeightUrl() {
+        return window.navigator.userAgent.indexOf('Electron') > -1
+            ? `file://${window.weightsPath()}`
+            : `${self.location.origin}/lib/entry-js/weights`;
     }
 
     videoOnLoadHandler() {

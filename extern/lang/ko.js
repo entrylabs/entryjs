@@ -5401,6 +5401,8 @@ Lang.Workspace = {
     confirm_firmware_hwlite_block_pass: '이미 설치함',
     select_hwlite_block_duplicated: '1개의 하드웨어만 선택해 주세요.',
     select_hwlite_block_none: '연결할 하드웨어를 선택해 주세요.',
+    select_firmware_hwlite_title: '펌웨어 다운로드',
+    select_firmware_hwlite_content: '버전에 맞는 펌웨어를 다운로드 받아\n하드웨어에 설치해 주세요.',
     sound_add: '소리 추가하기',
     sound_remove_fail: '소리 삭제 실패',
     sound_remove_ok: '소리 삭제 완료',
@@ -6376,6 +6378,9 @@ Lang.Helper = {
     get_regression_predict_1: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_2: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_3: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
+    get_regression_predict_4: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
+    get_regression_predict_5: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
+    get_regression_predict_6: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_accuracy: '모델의 결정계수를 값으로 반환합니다.',
     set_cluster_option_k:
         "군집의 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 군집 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
@@ -6390,6 +6395,12 @@ Lang.Helper = {
         '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
     get_cluster_centriod_index_3:
         '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
+    get_cluster_centriod_index_4:
+        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
+    get_cluster_centriod_index_5:
+        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
+    get_cluster_centriod_index_6:
+        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
     set_number_learning_option_k:
         "이웃 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 이웃 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     get_number_learning_predict_1:
@@ -6398,17 +6409,35 @@ Lang.Helper = {
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
     get_number_learning_predict_3:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
+    get_number_learning_predict_4:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
+    get_number_learning_predict_5:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
+    get_number_learning_predict_6:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
     get_number_learning_predict_param_1:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     get_number_learning_predict_param_2:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     get_number_learning_predict_param_3:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
+    get_number_learning_predict_param_4:
+        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
+    get_number_learning_predict_param_5:
+        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
+    get_number_learning_predict_param_6:
+        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     is_number_learning_group_1:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_number_learning_group_2:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_number_learning_group_3:
+        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_number_learning_group_4:
+        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_number_learning_group_5:
+        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_number_learning_group_6:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     bitbrick_when_button_pressed: '비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.',
     bitbrick_when_sensor_get_value:
@@ -6962,6 +6991,9 @@ Lang.template = {
     get_regression_predict_1: '%1 %2 의 예측값',
     get_regression_predict_2: '%1 %2 %3 %4 의 예측값',
     get_regression_predict_3: '%1 %2 %3 %4 %5 %6 의 예측값',
+    get_regression_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 예측값',
+    get_regression_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 예측값',
+    get_regression_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 예측값',
     get_regression_accuracy: '결정계수',
     set_cluster_option_k: '군집을 %1 개로 바꾸기 %2',
     set_cluster_option_centroids: '중심점 기준을 %1 로 바꾸기 %2',
@@ -6970,16 +7002,28 @@ Lang.template = {
     get_cluster_centriod_index_1: '%1 %2의 군집',
     get_cluster_centriod_index_2: '%1 %2 %3 %4의 군집',
     get_cluster_centriod_index_3: '%1 %2 %3 %4 %5 %6의 군집',
+    get_cluster_centriod_index_4: '%1 %2 %3 %4 %5 %6 %7 %8의 군집',
+    get_cluster_centriod_index_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10의 군집',
+    get_cluster_centriod_index_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12의 군집',
     set_number_learning_option_k: '이웃을 %1 개로 바꾸기 %2',
     get_number_learning_predict_1: '%1 %2 의 분류 결과',
     get_number_learning_predict_2: '%1 %2 %3 %4의 분류 결과',
     get_number_learning_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
+    get_number_learning_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
+    get_number_learning_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
+    get_number_learning_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
     get_number_learning_predict_param_1: '%1 %2 의 %3 에 대한 %4',
     get_number_learning_predict_param_2: '%1 %2 %3 %4 의 %5 에 대한 %6',
     get_number_learning_predict_param_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 %8',
+    get_number_learning_predict_param_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 %10',
+    get_number_learning_predict_param_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 %12',
+    get_number_learning_predict_param_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 %14',
     is_number_learning_group_1: '%1 %2 의 분류 결과가 %3 인가?',
     is_number_learning_group_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
     is_number_learning_group_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
+    is_number_learning_group_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
+    is_number_learning_group_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
+    is_number_learning_group_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
     audio_title_text: '오디오 감지',
     check_microphone: '마이크가 연결되었는가?',
     get_microphone_volume: '마이크 소리크기',

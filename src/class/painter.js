@@ -1,5 +1,9 @@
 import Extension from '../extensions/extension';
 
+// 1px * 1px png iamge
+const NULL_IMAGE =
+    // eslint-disable-next-line max-len
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAAtJREFUGFdjYAACAAAFAAGq1chRAAAAAElFTkSuQmCC';
 let EntryPaint;
 Entry.Painter = class Painter {
     constructor(view) {
@@ -183,7 +187,7 @@ Entry.Painter = class Painter {
         return `${Entry.defaultPath}/uploads/${filename.substring(0, 2)}/${filename.substring(
             2,
             4
-        )}/image/${filename}.${imageType}`;
+        )}/image/${filename}.${imageType === 'svg' ? 'svg' : 'png'}`;
     }
 
     addPicture(picture = {}, isChangeShape) {
@@ -204,6 +208,10 @@ Entry.Painter = class Painter {
                     graphicsMode: this.isImport ? this.graphicsMode.VECTOR : '',
                 });
                 break;
+            default:
+                this.entryPaint.addBitmap(imageSrc, {
+                    graphicsMode: this.isImport ? this.graphicsMode.BITMAP : '',
+                });
         }
     }
 
@@ -219,7 +227,7 @@ Entry.Painter = class Painter {
         if (!Entry.stage.selectedObject) {
             return;
         }
-        const dataURL = this.entryPaint.getDataURL();
+        const dataURL = this.entryPaint.getDataURL() || NULL_IMAGE;
         if (this.entryPaint.mode === this.graphicsMode.VECTOR) {
             this.file.svg = this.entryPaint.exportSVG();
         } else {

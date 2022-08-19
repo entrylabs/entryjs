@@ -3,6 +3,7 @@ import audioUtils from '../util/audioUtils';
 
 const EntryEngineState = {
     stop: 'stop',
+    stopping: 'stopping',
     pause: 'pause',
     run: 'run',
 };
@@ -681,6 +682,7 @@ Entry.Engine = class Engine {
      * toggle this engine state stop
      */
     async toggleStop() {
+        this.state = EntryEngineState.stopping;
         Entry.dispatchEvent('beforeStop');
         try {
             await Promise.all(this.execPromises);
@@ -1037,6 +1039,9 @@ Entry.Engine = class Engine {
     copyEvent(event) {
         const eventClone = new event.constructor(event.type, event);
         window.self.dispatchEvent(eventClone);
+        if (GEHelper.isWebGL && ['mousemove', 'pointermove'].includes(event.type)) {
+            window.document.dispatchEvent(eventClone);
+        }
     }
 
     closeFullScreen() {
@@ -1243,16 +1248,4 @@ Entry.Engine = class Engine {
             this.execPromises[index + i] = execPromise;
         });
     }
-};
-
-Entry.Engine.computeThread = function(entity, script) {
-    Entry.engine.isContinue = true;
-    let isSame = false;
-    while (script && Entry.engine.isContinue && !isSame) {
-        Entry.engine.isContinue = !script.isRepeat;
-        const newScript = script.run();
-        isSame = newScript && newScript === script;
-        script = newScript;
-    }
-    return script;
 };
