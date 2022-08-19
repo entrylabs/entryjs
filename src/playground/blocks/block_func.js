@@ -344,19 +344,10 @@ module.exports = {
                         },
                     ],
                 },
-                async func(entity) {
+                func(entity) {
                     if (!this.initiated) {
                         this.initiated = true;
                         Entry.callStackLength++;
-
-                        if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-                            Entry.toast.alert(
-                                Lang.Workspace.RecursiveCallWarningTitle,
-                                Lang.Workspace.RecursiveCallWarningContent
-                            );
-                            throw new Error();
-                        }
-
                         const func = Entry.variableContainer.getFunction(this.block.getFuncId());
                         this.funcCode = func.content;
                         this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
@@ -365,13 +356,20 @@ module.exports = {
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
                     }
-                    const { promises } = await this.funcExecutor.execute();
-                    if (promises.length) {
-                        await Promise.all(promises);
-                    }
+
+                    const { promises } = this.funcExecutor.execute();
 
                     if (!this.funcExecutor.isEnd()) {
-                        return Entry.STATIC.CONTINUE;
+                        if (promises.length) {
+                            return Entry.Code.funcAsyncExecute(
+                                this.funcCode,
+                                this.funcExecutor,
+                                promises
+                            );
+                        } else {
+                            this.funcCode.removeExecutor(this.funcExecutor);
+                            return Entry.STATIC.BREAK;
+                        }
                     }
 
                     Entry.callStackLength--;
@@ -416,19 +414,10 @@ module.exports = {
                         },
                     ],
                 },
-                async func(entity) {
+                func(entity) {
                     if (!this.initiated) {
                         this.initiated = true;
                         Entry.callStackLength++;
-
-                        if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-                            Entry.toast.alert(
-                                Lang.Workspace.RecursiveCallWarningTitle,
-                                Lang.Workspace.RecursiveCallWarningContent
-                            );
-                            throw new Error();
-                        }
-
                         const func = Entry.variableContainer.getFunction(this.block.getFuncId());
                         this.funcCode = func.content;
                         this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
@@ -438,28 +427,22 @@ module.exports = {
                         this.funcExecutor.isFuncExecutor = true;
                     }
 
-                    while (true) {
-                        console.log('isPause', Entry.engine.state, this.funcExecutor.isPause());
-                        console.log();
+                    const { promises } = this.funcExecutor.execute();
 
-                        if (Entry.engine.isState('pause')) {
-                            await waitTick();
-                            continue;
-                        }
-                        const { promises } = this.funcExecutor.execute();
+                    if (!this.funcExecutor.isEnd()) {
                         if (promises.length) {
-                            await Promise.all(promises);
-                        }
-
-                        if (!this.funcExecutor.isEnd()) {
-                            await waitTick();
+                            return Entry.Code.funcValueAsyncExecute(
+                                this.funcCode,
+                                this.funcExecutor,
+                                promises
+                            );
                         } else {
-                            break;
+                            this.funcCode.removeExecutor(this.funcExecutor);
+                            return Entry.STATIC.BREAK;
                         }
                     }
 
                     Entry.callStackLength--;
-
                     const scope = this.funcExecutor.result;
                     scope.values = scope.getParams();
                     return scope.getValue('VALUE', scope);
