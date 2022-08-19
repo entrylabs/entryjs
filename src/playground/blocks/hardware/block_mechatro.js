@@ -1553,7 +1553,7 @@ class mechatro {
                     P1: 1,
                     P2: 2,
                     P3: 3,
-                    RUNTIME: 7,
+                    RUNTIME: 4,
                 },
                 class: 'set_motor',
                 isNotFor: ['mechatro'],
