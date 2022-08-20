@@ -222,7 +222,7 @@ class mechatro {
                     mechatro_set_digital: "Digital %1 Pin %2 %3",
                     mechatro_set_pwm: "Digital %1 Pin %2 %3",
                     mechatro_set_servo_position: "Set servo pin %1 angle %2, speed %3[˚/1s] %4",
-                    mechatro_set_servo_positions: "%Servo 1 %2 %3 %4 time %5",
+                    mechatro_set_servo_positions: "%Servo D2%1 D5%2 D6%3 D10%4 time %5",
                     //mechatro_set_servo_speed: "Set servo pin %1 speed %2 degree per second %3",
                     mechatro_set_threshold: "Set %1 threshold : %2%3",
                     mechatro_set_tone: "Play tone pin %1 on note %2 octave %3 %4",
