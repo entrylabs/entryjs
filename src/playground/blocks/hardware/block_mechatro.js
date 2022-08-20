@@ -1542,7 +1542,7 @@ class mechatro {
                         },
                         {
                             type: 'number',
-                            params: ['0.0~12.0'],
+                            params: ['0.5~12.0'],
                         },
                         null,
                     ],
