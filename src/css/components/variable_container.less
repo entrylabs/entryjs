@@ -7,7 +7,8 @@
     bottom: 0px;
     padding: 16px 16px 0 8px;
     background-color: #ecf8ff;
-    border: 1px solid #d6e9f4;
+    // border: 1px solid #d6e9f4;
+    box-shadow: 0 0 0 1px #d6e9f4 inset;
     border-radius: 0 0 0 6px;
 }
 
@@ -38,28 +39,55 @@
     margin: 0;
     cursor: pointer;
     vertical-align: top;
-}
-.entryVariableSelectButtonWorkspace div {
-    position: relative;
-    height: 40px;
-    padding-left: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #728997;
-    background-color: #fff;
-    letter-spacing: -0.4px;
-    line-height: 40px;
-}
-.entryVariableSelectButtonWorkspace.selected div {
-    color: #4f80ff;
-    z-index: 10;
-}
-.entryVariableSelectButtonWorkspace.allButton div {
-    height: 80px;
-    padding: 0;
-    border-radius: 6px 0 0 6px;
-    text-align: center;
-    line-height: 80px;
+
+    div {
+        &:before {
+            position: absolute;
+            left: 15px;
+            top: 9px;
+            width: 20px;
+            height: 20px;
+            background-size: 20px auto;
+            vertical-align: top;
+            content: '';
+        }
+
+        position: relative;
+        height: 40px;
+        padding-left: 8px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #728997;
+        background-color: #fff;
+        letter-spacing: -0.4px;
+        line-height: 40px;
+    }
+
+    &.selected div {
+        color: #4f80ff;
+        z-index: 10;
+    }
+
+    &.allButton div {
+        height: 80px;
+        padding: 0;
+        border-radius: 4px 0 0 4px;
+        text-align: center;
+        line-height: 80px;
+
+        &:after {
+            right: -1px;
+            border-radius: 4px 0 0 4px;
+        }
+    }
+
+    .text {
+        display: block;
+        overflow: hidden;
+        margin: 0 8px 0 28px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
 }
 
 .entryVariableSelectButtonWorkspace.message div {
@@ -88,10 +116,6 @@
     border-color: #4f80ff;
 }
 
-.entryVariableSelectButtonWorkspace.allButton div:after {
-    right: -1px;
-    border-radius: 6px 0 0 6px;
-}
 .entryVariableSelectButtonWorkspace.allButton div .text {
     margin: 0;
 }
@@ -110,55 +134,36 @@
     border-radius: 0 0 6px 0;
 }
 
-.entryVariableSelectButtonWorkspace div:before {
-    position: absolute;
-    left: 8px;
-    top: 8px;
-    width: 22px;
-    height: 22px;
-    background-size: 22px auto;
-    vertical-align: top;
-    content: '';
-}
-
 .entryVariableSelectButtonWorkspace.allButton div:before {
     display: none;
 }
 
 .entryVariableSelectButtonWorkspace.variable div:before {
-    .backgroundImage('ic_attr_variable.png');
+    .backgroundImage('ic_attr_variable.svg');
 }
 .entryVariableSelectButtonWorkspace.message div:before {
-    .backgroundImage('ic_attr_message.png');
+    .backgroundImage('ic_attr_message.svg');
 }
 .entryVariableSelectButtonWorkspace.list div:before {
     margin-right: 6px;
-    .backgroundImage('ic_attr_list.png');
+    .backgroundImage('ic_attr_list.svg');
 }
 .entryVariableSelectButtonWorkspace.func div:before {
-    .backgroundImage('ic_attr_func.png');
+    .backgroundImage('ic_attr_func.svg');
 }
 
 .entryVariableSelectButtonWorkspace.variable.selected div:before {
-    .backgroundImage('ic_attr_variable_on.png');
+    .backgroundImage('ic_attr_variable_on.svg');
 }
 .entryVariableSelectButtonWorkspace.message.selected div:before {
-    .backgroundImage('ic_attr_message_on.png');
+    .backgroundImage('ic_attr_message_on.svg');
 }
 .entryVariableSelectButtonWorkspace.list.selected div:before {
     margin-right: 6px;
-    .backgroundImage('ic_attr_list_on.png');
+    .backgroundImage('ic_attr_list_on.svg');
 }
 .entryVariableSelectButtonWorkspace.func.selected div:before {
-    .backgroundImage('ic_attr_func_on.png');
-}
-
-.entryVariableSelectButtonWorkspace .text {
-    display: block;
-    overflow: hidden;
-    margin: 0 8px 0 34px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    .backgroundImage('ic_attr_func_on.svg');
 }
 
 .entryVariableListElementWorkspace {
@@ -206,41 +211,11 @@
     color: #cbcbcb;
     cursor: default;
 }
-.entryVariableAdd_box .entryVariableAddSpaceWorkspace {
-    padding: 16px 10px;
-    background-color: #d6e9f4;
-}
 .entryVariableAdd_box.entryVariableContainerTextMode .entryVariableAddSpaceWorkspace {
     display: none;
 }
-.entryVariableAdd_box .message_inpt {
-    padding: 16px 26px 16px 8px;
-    border-top: 1px solid #d6e9f4;
-}
 .entryVariableAdd_box .message_inpt.off {
     display: none;
-}
-.entryVariableAdd_box .message_inpt input[type='text'] {
-    width: 100%;
-    padding: 6px 8px 5px;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-    outline: 0;
-    background-color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2c313d;
-    letter-spacing: -0.2px;
-    line-height: 11px;
-}
-.entryVariableAdd_box .message_inpt input[type='text']::-webkit-input-placeholder {
-    color: #979797;
-}
-.entryVariableAdd_box .message_inpt input[type='text']:-ms-input-placeholder {
-    color: #979797;
-}
-.entryVariableAdd_box .message_inpt input[type='text']::-ms-input-placeholder {
-    color: #979797;
 }
 .entryVariableAdd_box .message_inpt input[type='text']::placeholder {
     color: #979797;
@@ -253,28 +228,30 @@
     display: none;
 }
 .entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputLabelWorkspace {
-    display: block;
-    font-size: 12px;
+    position: relative;
+    left: -10px;
+    margin-bottom: 8px;
+    display: inline-block;
+    font-size: 11px;
     font-weight: 600;
     color: #2c313d;
-    line-height: 14px;
+    line-height: 11px;
     vertical-align: top;
 }
 .entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputLabelWorkspace:before {
+    content: '';
     display: inline-block;
     overflow: hidden;
-    width: 4px;
-    height: 4px;
     border-radius: 50%;
-    background-color: #4f80ff;
-    margin: 3px 10px 0 0;
+    margin: 3px 7px 0 0;
     vertical-align: top;
-    content: '';
+    width: 3px;
+    height: 3px;
+    background-color: #728997;
 }
 .entryVariableAddSpaceNameWrapperWorkspace .entryVariableAddSpaceInputWorkspace {
     overflow: hidden;
     width: 100%;
-    margin-top: 9px;
     padding: 6px 8px 5px;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
@@ -383,64 +360,12 @@
     }
 }
 
-.entryVariableAddSpaceButtonWrapperWorkspace {
-    overflow: hidden;
-    margin-top: 16px;
-    padding-top: 16px;
-    border-top: 1px solid #aac5d5;
-    font-size: 0;
-    text-align: center;
-}
-.entryVariableAddSpaceButtonWorkspace {
-    display: inline-block;
-    overflow: hidden;
-    width: 64px;
-    height: 32px;
-    margin: 0 8px;
-    border: 1px solid #4f80ff;
-    border-radius: 4px;
-    background-color: #fff;
-    font-size: 14px;
-    font-weight: 600;
-    color: #4f80ff;
-    text-align: center;
-    text-decoration: none;
-    line-height: 30px;
-    vertical-align: top;
-}
-.entryVariableAddSpaceConfirmWorkspace {
-    color: #fff;
-    background-color: #4f80ff;
-}
 .entryVariableSplitterWorkspace {
     border: 1px solid #d6e9f4;
     border-width: 1px 0;
 }
 .entryVariableSplitterWorkspace + .entryVariableSplitterWorkspace {
     border-top: 0;
-}
-.entryVariableSplitterWorkspace .attr_link {
-    position: relative;
-    display: block;
-    padding: 18px 10px 16px 24px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2c313d;
-    text-decoration: none;
-    word-break: break-all;
-    cursor: default;
-    line-height: 14px;
-}
-.entryVariableSplitterWorkspace .attr_link:before {
-    overflow: hidden;
-    position: absolute;
-    left: 10px;
-    top: 21px;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background-color: #4f80ff;
-    content: '';
 }
 .entryVariableSplitterWorkspace .list {
     overflow: hidden;
@@ -450,13 +375,6 @@
 }
 .entryVariableSplitterWorkspace .list + .list {
     border-top: 1px solid #d6e9f4;
-}
-.entryVariableSplitterWorkspace .list .inpt_box {
-    position: relative;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    padding: 13px 112px 13px 38px;
-    background-color: #d6e9f4;
 }
 .entryVariableSplitterWorkspace .list.default_val + .list,
 .entryVariableSplitterWorkspace .list.global_val + .list,
@@ -478,34 +396,10 @@
 .entryVariableSplitterWorkspace.all .list.unfold .inpt_box {
     background-color: #fff;
 }
-.entryVariableSplitterWorkspace .list .inpt_box:before {
-    position: absolute;
-    left: 10px;
-    top: 14px;
-    width: 22px;
-    height: 22px;
-    background-size: 22px auto;
-    content: '';
-}
-.entryVariableSplitterWorkspace .list .inpt {
-    position: relative;
-    height: 24px;
-    padding-right: 16px;
-}
 .entryVariableSplitterWorkspace .list .inpt .editBoxInput {
     border: 1px solid #e2e2e2;
     background-color: #f9f9f9;
     color: #cbcbcb;
-}
-.entryVariableSplitterWorkspace .list .inpt:after {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 8px;
-    height: 6px;
-    margin-top: -3px;
-    background-size: 8px auto;
-    content: '';
 }
 .entryVariableSplitterWorkspace .list .inpt input[type='text'] {
     width: 100%;
@@ -566,131 +460,27 @@
     vertical-align: top;
     content: '';
 }
-.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    position: relative;
-    padding: 0 34px 10px 0;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #ecf8ff;
-}
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt.hidden {
     display: none;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt label {
-    -webkit-box-flex: 0;
-    -ms-flex: 0 1 auto;
-    flex: 0 1 auto;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2c313d;
-    letter-spacing: -0.4px;
-    vertical-align: top;
-    line-height: 27px;
-    white-space: nowrap;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt .val_inptbox {
-    display: block;
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 auto;
-    flex: 1 1 auto;
-    margin-left: 8px;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .attr_inpt input[type='text'] {
-    width: 100%;
-    padding: 6px 8px 5px;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-    outline: 0;
-    background-color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2c313d;
-    letter-spacing: -0.2px;
-    line-height: 11px;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt {
-    margin-bottom: 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid #ecf8ff;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .chk_box {
     position: relative;
     font-size: 0;
     cursor: pointer;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .chk_text {
-    display: inline-block;
-    margin: 3px 0 0 8px;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2c313d;
-    letter-spacing: -0.4px;
-    vertical-align: top;
-}
-.entryVariableSplitterWorkspace
-    .list
-    .attr_inner_box
-    .val_attr
-    .slide_inpt
-    .entryVariableAddSpaceCheckWorkspace {
-    display: inline-block;
-    width: 16px;
-    height: 16px;
-    background-size: 16px auto;
-    .backgroundImage('btn_checkbox.png');
-    vertical-align: top;
-}
-.entryVariableSplitterWorkspace
-    .list
-    .attr_inner_box
-    .val_attr
-    .slide_inpt
-    .entryVariableAddSpaceCheckWorkspace {
-    .backgroundImage('btn_checkbox.png');
-}
-.entryVariableSplitterWorkspace
-    .list
-    .attr_inner_box
-    .val_attr
-    .slide_inpt
-    .entryVariableAddSpaceCheckWorkspace.on {
-    .backgroundImage('btn_checkbox_on.png');
+    margin-bottom: 3px;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .cnt_box {
     overflow: hidden;
-    margin-top: 12px;
     font-size: 0;
+    margin-left: 24px;
 }
 .entryVariableSplitterWorkspace .list .attr_inner_box .val_attr .slide_inpt .cnt_box .dash {
-    padding: 0 8px;
-    font-size: 12px;
+    padding: 0 2px;
+    font-size: 10px;
     font-weight: 600;
     color: #2c313d;
     letter-spacing: -0.4px;
     line-height: 24px;
-}
-.entryVariableSplitterWorkspace
-    .list
-    .attr_inner_box
-    .val_attr
-    .slide_inpt
-    .cnt_box
-    input[type='text'] {
-    width: 64px;
-    padding: 6px 8px 5px;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-    outline: 0;
-    background-color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    color: #2c313d;
-    letter-spacing: -0.2px;
-    line-height: 11px;
 }
 .entryVariableSplitterWorkspace
     .list
@@ -704,39 +494,6 @@
     color: #cbcbcb;
 }
 
-.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list {
-    overflow: hidden;
-    margin: 6px 0 -4px 0;
-    padding: 0;
-    list-style: none;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list li {
-    position: relative;
-    -webkit-box-sizing: content-box;
-    box-sizing: content-box;
-    list-style: none;
-    height: 33px;
-    margin: 0;
-    padding: 4px 4px 4px 42px;
-    border-top: 1px solid #ecf8ff;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list li:first-child {
-    border-top: 0;
-}
-.entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list .thmb {
-    overflow: hidden;
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    height: 33px;
-    width: 30px;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-    background-color: #fff;
-    background-size: auto 80%;
-    background-repeat: no-repeat;
-    background-position: center;
-}
 .entryVariableSplitterWorkspace .list .attr_inner_box .use_obj .obj_list .text {
     display: block;
     overflow: hidden;
@@ -981,16 +738,6 @@
     white-space: nowrap;
     line-height: 34px;
 }
-.entryVariableSplitterWorkspace .list .watch {
-    position: absolute;
-    right: 60px;
-    top: 13px;
-    width: 24px;
-    height: 24px;
-    font-size: 0;
-    .backgroundImage('layers_icon_unvisible24.png');
-    background-size: 24px auto;
-}
 .entryVariableSplitterWorkspace .list .caution_dsc {
     display: none;
     padding: 16px 36px 15px;
@@ -1003,24 +750,10 @@
     background-color: #bfd8e6;
 }
 .entryVariableSplitterWorkspace .list .watch.on {
-    .backgroundImage('layers_icon_visible24.png');
-}
-.entryVariableSplitterWorkspace .list .del {
-    overflow: hidden;
-    position: absolute;
-    right: 26px;
-    top: 13px;
-    width: 24px;
-    height: 24px;
-    border: 1px solid #e2e2e2;
-    border-radius: 4px;
-    background: #fff no-repeat 50% 50%;
-    .backgroundImage('layers_icon_close_nor_new.png');
-    background-size: 10px auto;
-    font-size: 0;
+    .backgroundImage('layers_icon_visible24.svg');
 }
 .entryVariableSplitterWorkspace .list.default_val .inpt_box:before {
-    .backgroundImage('ic_attr_variable_on.png');
+    .backgroundImage('ic_attr_variable_on.svg');
 }
 .entryVariableSplitterWorkspace .list.cloud_val .inpt_box:before {
     .backgroundImage('ic_attr_variable_cloud_on.png');
@@ -1032,20 +765,20 @@
     .backgroundImage('ic_attr_variable_local_on.png');
 }
 .entryVariableSplitterWorkspace .list.default_list .inpt_box:before {
-    .backgroundImage('ic_attr_list_on.png');
+    .backgroundImage('ic_attr_list_on.svg');
 }
 .entryVariableSplitterWorkspace .list.cloud_list .inpt_box:before {
-    .backgroundImage('ic_attr_list_cloud_on.png');
+    .backgroundImage('ic_attr_list_cloud.svg');
 }
 .entryVariableSplitterWorkspace .list.real_time_list .inpt_box:before {
-    .backgroundImage('ic_attr_list_real_time_on.png');
+    .backgroundImage('ic_attr_list_real_time.svg');
 }
 .entryVariableSplitterWorkspace .list.local_list .inpt_box:before {
     .backgroundImage('ic_attr_list_local_on.png');
 }
 .entryVariableSplitterWorkspace .list.default_message .inpt_box:before {
     left: 10px;
-    .backgroundImage('ic_attr_message_on.png');
+    .backgroundImage('ic_attr_message_on.svg');
 }
 .entryVariableSplitterWorkspace.fold .attr_link {
     cursor: pointer;
@@ -1053,22 +786,6 @@
 .entryVariableSplitterWorkspace.unfold .attr_link {
     background-color: #fff;
     cursor: pointer;
-}
-.entryVariableSplitterWorkspace.fold .attr_link:before {
-    width: 6px;
-    height: 8px;
-    border-radius: 0;
-    .backgroundImage('layers_arrow_right_nor.png');
-    background-color: inherit;
-    background-size: 6px auto;
-}
-.entryVariableSplitterWorkspace.unfold .attr_link:before {
-    width: 8px;
-    height: 6px;
-    border-radius: 0;
-    .backgroundImage('layers_arrow_up_nor.png');
-    background-color: inherit;
-    background-size: 8px auto;
 }
 .entryVariableSplitterWorkspace .attr_box {
     display: none;
@@ -1088,25 +805,11 @@
 .entryVariableSplitterWorkspace .list.unfold .inpt:after {
     .backgroundImage('layers_arrow_up_nor.png');
 }
-.entryVariableSplitterWorkspace .list.fold .inpt:after {
-    .backgroundImage('layers_arrow_down_nor.png');
-}
+
 .entryVariableSplitterWorkspace .list.default_func .inpt_box,
 .entryVariableSplitterWorkspace .list.default_message .inpt_box {
     padding: 13px 80px 13px 36px;
     background-color: #ecf8ff;
-}
-.entryVariableSplitterWorkspace .list.default_func .inpt_box:after,
-.entryVariableSplitterWorkspace .list.default_message .inpt_box:after {
-    .backgroundImage('layers_arrow_down_nor.png');
-    position: absolute;
-    right: 64px;
-    top: 50%;
-    width: 8px;
-    height: 6px;
-    margin-top: -3px;
-    background-size: 8px auto;
-    content: '';
 }
 .entryVariableSplitterWorkspace .list.default_func .inpt,
 .entryVariableSplitterWorkspace .list.default_message .inpt {
@@ -1120,18 +823,6 @@
     background-color: #fff;
     -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
-}
-.entryVariableSplitterWorkspace .list.default_func.unfold .inpt_box:after,
-.entryVariableSplitterWorkspace .list.default_message.unfold .inpt_box:after {
-    .backgroundImage('layers_arrow_up_nor.png');
-    position: absolute;
-    right: 64px;
-    top: 50%;
-    width: 8px;
-    height: 6px;
-    margin-top: -3px;
-    background-size: 8px auto;
-    content: '';
 }
 .entryVariableAdd_box .message_inpt input[type='text']:focus,
 .entryVariableAdd_box .message_inpt input[type='text']:active {
@@ -1174,21 +865,617 @@
     }
 }
 
+// .entryVariableSplitterWorkspace .attr_box .list.default_message .inpt_box:before
+// .entryVariableSplitterWorkspace .attr_box .list>.list .inpt_box:before
+// .entryVariableSplitterWorkspace .list.default_message .inpt_box
+
 .entryVariableAdd_box {
     .entryVariableAddWorkspace {
-        &.funcAddButton {
-            margin: 12px;
-            width: calc(100% - 24px);
-            font-size: 12px;
-            letter-spacing: -0.28px;
-            line-height: 40px;
-        }
+        display: block;
+        overflow: hidden;
+        height: 40px;
+        border: 1px solid #4f80ff;
+        border-radius: 4px;
+        background-color: #fff;
+        font-weight: 600;
+        color: #4f80ff;
+        text-align: center;
+        text-decoration: none;
+        -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+        margin: 12px;
+        width: calc(100% - 24px);
+        font-size: 12px;
+        letter-spacing: -0.28px;
+        line-height: 40px;
     }
 }
 
 .entryVariableSplitterWorkspace {
+    background-color: #fff;
+    border: 1px solid #d6e9f4;
+
+    &.variable.global.fold {
+        border-bottom: 1px solid #aac5d5;
+    }
+
+    &.variable.unfold {
+        .attr_box {
+            outline: solid 1px #aac5d5;
+
+            .default_val {
+                .inpt_box {
+                    &::before {
+                        left: 8px;
+                    }
+                    .watch {
+                        margin-left: 2px;
+                        margin-right: 8px;
+                    }
+                }
+            }
+        }
+    }
+
+    &.unfold {
+        .attr_link {
+            &::after {
+                width: 24px;
+                height: 24px;
+                border-radius: 0;
+                .backgroundImage('folder_open.svg');
+                background-color: inherit;
+                background-size: auto;
+            }
+        }
+    }
+
+    .attr_link {
+        position: relative;
+        display: block;
+        height: 38px;
+        padding: 0 14px 0 12px;
+        font-size: 10px;
+        letter-spacing: -0.4px;
+        font-weight: 600;
+        color: #2c313d;
+        text-decoration: none;
+        word-break: break-all;
+        cursor: default;
+        line-height: 38px;
+        margin-bottom: 1px;
+
+        &::after {
+            display: inline-block;
+            position: absolute;
+            top: 7px;
+            right: 14px;
+            overflow: hidden;
+            background-color: #4f80ff;
+            content: '';
+            width: 24px;
+            height: 24px;
+            border-radius: 0;
+            .backgroundImage('folder_close.svg');
+            background-color: inherit;
+            background-size: auto;
+        }
+    }
+
     .attr_box {
         .list {
+            // > .list {
+            &.fold {
+                input {
+                    margin-left: 4px;
+                    pointer-events: none;
+                    border: none;
+                    background: transparent;
+                    padding: 0;
+                }
+            }
+
+            &.unfold {
+                .caution_dsc {
+                    background-color: #d6e9f4;
+                }
+
+                .inpt_box {
+                    &::after {
+                        .backgroundImage('layers_arrow_up_nor.svg');
+                    }
+                    background-color: #d6e9f4;
+
+                    .arrowDown {
+                        .backgroundImage('layers_arrow_up_nor.svg');
+                    }
+                }
+
+                .attr_inner_box {
+                    background-color: #d6e9f4;
+                }
+            }
+
+            .inpt_box {
+                display: flex;
+                padding: 13px 0;
+                position: relative;
+                -webkit-box-sizing: content-box;
+                box-sizing: content-box;
+                background-color: #f7fcff;
+                align-items: center;
+
+                &::before {
+                    margin-left: 10px;
+                    width: 24px;
+                    height: 24px;
+                    background-size: 24px auto;
+                    content: '';
+                }
+
+                .watch {
+                    margin-left: 4px;
+                    width: 18px;
+                    height: 18px;
+                    font-size: 0;
+                    .backgroundImage('layers_icon_unvisible24.svg');
+                    background-size: 18px auto;
+
+                    &.on {
+                        .backgroundImage('layers_icon_visible24.svg');
+                    }
+                }
+
+                .inpt {
+                    position: relative;
+                    height: 24px;
+                    flex: 1;
+                    margin-right: 20px;
+
+                    input[type='text'],
+                    span {
+                        font-size: 10px;
+                        line-height: 10px;
+                    }
+                }
+
+                .arrowDown {
+                    width: 10px;
+                    height: 8px;
+                    margin-right: 20px;
+                    background-size: auto;
+                    .backgroundImage('layers_arrow_down_nor.svg');
+                }
+
+                .del {
+                    margin-right: 20px;
+                    width: 20px;
+                    height: 20px;
+                    background-position: 50%;
+                    background-size: auto;
+                    .backgroundImage('layers_icon_close_nor_new.svg');
+                    background-color: transparent;
+                    background-repeat: no-repeat;
+                    cursor: pointer;
+                }
+            }
+
+            .attr_inner_box {
+                padding: 0;
+
+                .box_sjt {
+                    &::before {
+                        width: 3px;
+                        height: 3px;
+                        background-color: #728997;
+                    }
+                    position: relative;
+                    left: -10px;
+                    margin-bottom: 12px;
+                    font-size: 11px;
+                    font-weight: 600;
+                    letter-spacing: -0.44px;
+                }
+
+                .val_attr {
+                    padding: 15px 20px 15px 20px;
+
+                    .attr_inpt {
+                        display: block;
+                        margin-bottom: 12px;
+
+                        label {
+                            display: block;
+                            font-size: 10px;
+                            font-weight: 600;
+                            letter-spacing: -0.4px;
+                            color: #4d616e;
+                            line-height: 10px;
+                            margin-bottom: 5px;
+                        }
+
+                        .val_inptbox {
+                            display: block;
+
+                            input {
+                                width: 100%;
+                                padding: 7px 8px 6px;
+                                border: 1px solid #aac5d5;
+                                border-radius: 4px;
+                                background-color: #fff;
+                                font-size: 10px;
+                                font-weight: bold;
+                                font-stretch: normal;
+                                font-style: normal;
+                                line-height: normal;
+                                letter-spacing: -0.4px;
+                                color: #2c313d;
+                            }
+                        }
+                    }
+
+                    .slide_inpt {
+                        .entryVariableAddSpaceCheckWorkspace {
+                            &.on {
+                                .backgroundImage('btn_checkbox_on.png');
+                            }
+                            display: inline-block;
+                            width: 18px;
+                            height: 18px;
+                            background-size: 18px auto;
+                            .backgroundImage('btn_checkbox.png');
+                            vertical-align: top;
+                            margin-right: 8px;
+                        }
+
+                        .chk_text {
+                            display: inline-block;
+                            font-weight: 600;
+                            letter-spacing: -0.4px;
+                            vertical-align: top;
+                            font-size: 10px;
+                            line-height: 18px;
+                            letter-spacing: -0.4px;
+                            color: #4d616e;
+                        }
+
+                        .cnt_box {
+                            input {
+                                width: 56px;
+                                padding: 7px 8px 6px;
+                                border: 1px solid #aac5d5;
+                                border-radius: 4px;
+                                background-color: #fff;
+                                font-size: 10px;
+                                font-weight: bold;
+                                letter-spacing: -0.4px;
+                                color: #2c313d;
+                            }
+                        }
+                    }
+                }
+
+                .use_obj {
+                    padding: 15px 14px 12px 20px;
+
+                    .box_sjt {
+                        margin-bottom: 8px;
+                    }
+
+                    .obj_list {
+                        li {
+                            position: relative;
+                            height: 24px;
+                            margin-bottom: 6px;
+
+                            .thmb {
+                                position: static;
+                                display: inline-block;
+                                overflow: hidden;
+                                height: 24px;
+                                width: 22px;
+                                border: 1px solid #aac5d5;
+                                border-radius: 4px;
+                                background-color: #fff;
+                                background-size: auto 80%;
+                                background-repeat: no-repeat;
+                                background-position: center;
+                                margin-right: 8px;
+                                vertical-align: top;
+                            }
+
+                            .text {
+                                display: inline-block;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                color: #4d616e;
+                                white-space: nowrap;
+                                line-height: 24px;
+                                font-size: 10px;
+                                font-weight: 600;
+                                letter-spacing: -0.4px;
+                            }
+                        }
+                    }
+                }
+
+                .func_attr {
+                    padding: 15px 14px 15px 20px;
+                    border-bottom: 1px solid #aac5d5;
+
+                    .box_sjt {
+                        &::before {
+                            width: 3px;
+                            height: 3px;
+                            background-color: #728997;
+                        }
+                        position: relative;
+                        left: -10px;
+                        margin-bottom: 8px;
+                    }
+
+                    .check_inpt {
+                        margin: 3px 0 3px;
+
+                        .entryFuncAddLocalVarCheckWorkspace,
+                        .entryFuncAddResultCheckWorkspace {
+                            display: inline-block;
+                            width: 18px;
+                            height: 18px;
+                            background-size: 18px;
+                            vertical-align: top;
+                            .backgroundImage('btn_checkbox.svg');
+                        }
+
+                        .entryFuncAddLocalVarCheckWorkspace.on,
+                        .entryFuncAddResultCheckWorkspace.on {
+                            .backgroundImage('btn_checkbox_on.svg');
+                        }
+
+                        .chk_text {
+                            display: inline-block;
+                            margin-left: 10px;
+                            font-size: 10px;
+                            font-weight: bold;
+                            letter-spacing: -0.4px;
+                            color: #4d616e;
+                            line-height: 18px;
+                            font-weight: 600;
+                            vertical-align: top;
+                        }
+
+                        .cnt_inpt {
+                            margin: 3px 0 0 28px;
+                            overflow: hidden;
+                            position: relative;
+                            -webkit-box-sizing: content-box;
+                            box-sizing: content-box;
+                            width: 78px;
+                            height: 24px;
+                            border-radius: 4px;
+                            border: solid 1px #aac5d5;
+
+                            .btn_cnt {
+                                display: inline-block;
+                                overflow: hidden;
+                                width: 24px;
+                                height: 24px;
+                                background-color: #ecf8ff;
+                                border-radius: 4px 0 0 4px;
+                                font-size: 24px;
+                                color: #2c313d;
+                                text-decoration: none;
+                                text-align: center;
+                                line-height: 24px;
+
+                                &::before {
+                                    content: ' ';
+                                    display: inline-block;
+                                    position: relative;
+                                    top: -3px;
+                                    width: 8px;
+                                    height: 8px;
+                                    .backgroundImage('btn_minus.svg');
+                                    background-position-y: center;
+                                    background-repeat: no-repeat;
+                                }
+
+                                &.plus {
+                                    &::before {
+                                        .backgroundImage('btn_plus.svg');
+                                    }
+                                    border-radius: 0 4px 4px 0;
+                                }
+
+                                &[disabled] {
+                                    opacity: 0.5;
+                                    cursor: not-allowed;
+                                }
+                            }
+
+                            input[type='text'] {
+                                width: 30px;
+                                height: 24px;
+                                background-color: #fff;
+                                outline: 0;
+                                font-size: 10px;
+                                letter-spacing: -0.4px;
+                                color: #2c313d;
+                                font-weight: 600;
+                                line-height: 14px;
+                                text-align: center;
+                                vertical-align: top;
+                                border: 0;
+
+                                &[disabled] {
+                                    opacity: 0.5;
+                                    cursor: not-allowed;
+                                }
+                            }
+                        }
+                    }
+
+                    .cnt_group {
+                        margin-top: 10px;
+                        margin-left: 28px;
+
+                        .cnt_label {
+                            font-size: 10px;
+                            font-weight: 600;
+                            letter-spacing: -0.4px;
+                            color: #4d616e;
+                            margin-bottom: 5px;
+                        }
+
+                        &[disabled] {
+                            display: none;
+                        }
+
+                        .scroll_box {
+                            max-height: 135px;
+                        }
+
+                        .scroll_box.on {
+                            padding-right: 20px;
+                        }
+
+                        .cnt_list {
+                            margin: 0;
+                            padding: 0;
+                            list-style: none;
+
+                            li {
+                                position: relative;
+                                margin-top: 4px;
+                                padding: 0 39px 0 0;
+
+                                &:first-child {
+                                    margin-top: 0;
+                                }
+                            }
+
+                            .cnt {
+                                position: absolute;
+                                left: 10px;
+                                font-size: 10px;
+                                font-weight: 600;
+                                letter-spacing: -0.4px;
+                                color: #979797;
+                                line-height: 24px;
+                            }
+
+                            .del {
+                                right: 0;
+                                top: 0;
+                            }
+
+                            input[type='text'] {
+                                width: 100%;
+                                height: 24px;
+                                padding-left: 20px;
+                                border: 1px solid #aac5d5;
+                                border-radius: 4px;
+                                outline: 0;
+                                background-color: #fff;
+                                font-size: 10px;
+                                font-weight: 600;
+                                letter-spacing: -0.4px;
+                                color: #2c313d;
+                                line-height: 24px;
+                                -webkit-box-sizing: border-box;
+                                box-sizing: border-box;
+                            }
+                        }
+                    }
+                }
+
+                .use_obj {
+                    padding: 15px 14px 15px 20px;
+                    border-top: solid 1px #aac5d5;
+                }
+            }
+
+            .use_block {
+                padding: 15px 14px 11px 20px;
+
+                .box_sjt {
+                    &::before {
+                        content: '';
+                        display: inline-block;
+                        border-radius: 50%;
+                        margin: 3px 8px 0 0;
+                        vertical-align: top;
+                        width: 3px;
+                        height: 3px;
+                        background-color: #728997;
+                    }
+
+                    position: relative;
+                    left: -10px;
+                    margin-bottom: 5px;
+                    display: block;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #2c313d;
+                    letter-spacing: -0.4px;
+                    line-height: 12px;
+                }
+
+                .obj_list {
+                    li {
+                        padding: 3px 4px 3px 42px;
+                        border: none;
+                        height: 24px;
+
+                        .thmb {
+                            border: solid 1px #aac5d5;
+                            width: 22px;
+                            height: 24px;
+                        }
+
+                        .text {
+                            height: 24px;
+                            font-size: 10px;
+                            line-height: 24px;
+                            color: #4d616e;
+                        }
+                    }
+                }
+            }
+
+            &.default_message {
+                &.unfold {
+                    .inpt_box {
+                        -webkit-box-shadow: 0 1px 1px 0 #aac5d5;
+                        box-shadow: 0 1px 1px 0 #aac5d5;
+                    }
+                }
+                .inpt_box {
+                    &::before {
+                        left: 10px;
+                        .backgroundImage('ic_attr_message.svg');
+                    }
+                }
+            }
+
+            &.default_val {
+                .inpt_box {
+                    &::before {
+                        left: 10px;
+                        .backgroundImage('ic_attr_variable.svg');
+                    }
+                }
+            }
+
+            &.default_list {
+                .inpt_box {
+                    &::before {
+                        left: 10px;
+                        .backgroundImage('ic_attr_list.svg');
+                    }
+                }
+            }
+
             &.default_func {
                 .del {
                     .backgroundImage('layers_icon_close_nor_new.svg');
@@ -1220,7 +1507,7 @@
                 .inpt_box {
                     &::before {
                         left: 10px;
-                        .backgroundImage('ic_attr_func_on.svg');
+                        .backgroundImage('ic_attr_func.svg');
                     }
 
                     &::after {
@@ -1483,6 +1770,199 @@
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+.entryVariableAdd_box {
+    .entryVariableAddSpaceWorkspace {
+        border: solid 1px #aac5d5;
+        background-color: #d6e9f4;
+
+        .entryVariableAddSpaceDataWrapperWorkspace {
+            padding: 18px 20px 15px 20px;
+        }
+
+        .entryVariableAddSpaceNameWrapperWorkspace {
+            margin-bottom: 6px;
+        }
+
+        .entryVariableAddSpaceSelectWrapperWorkspace {
+            height: 28px;
+            border: solid 1px #aac5d5;
+            border-radius: 4px;
+            background-color: #fff;
+            white-space: nowrap;
+            margin-bottom: 10px;
+
+            .button {
+                &.on {
+                    color: #4f80ff;
+                    border-color: #4f80ff;
+                }
+                &:nth-child(even) {
+                    border-radius: 0 4px 4px 0;
+                    margin-left: 2px;
+                }
+                display: inline-block;
+                height: 28px;
+                width: 50%;
+                margin-top: -1px;
+                margin-left: -1px;
+                color: #728997;
+                font-size: 9px;
+                font-weight: 600;
+                text-align: center;
+                line-height: 26px;
+                letter-spacing: -0.36px;
+                vertical-align: top;
+                border: solid 1px transparent;
+                border-radius: 4px 0 0 4px;
+                cursor: pointer;
+            }
+        }
+
+        .entryVariableTypeBoxWrapper {
+            &.on {
+                display: block;
+            }
+            display: none;
+            margin-bottom: 10px;
+
+            .entryVariableTypeWrapper {
+                &.on {
+                    .radioButton {
+                        background-color: #4f80ff;
+                    }
+                }
+                color: #4d616e;
+                font-size: 10px;
+                font-weight: 600;
+                line-height: 18px;
+                letter-spacing: -0.4px;
+                vertical-align: top;
+                .radioButton {
+                    display: inline-block;
+                    width: 18px;
+                    height: 18px;
+                    border-radius: 4px;
+                    border: solid 1px #4f80ff;
+                    vertical-align: top;
+                    background-color: #fff;
+                    margin-right: 10px;
+                    margin-bottom: 6px;
+                }
+            }
+        }
+
+        .entryVariableAddSpaceButtonWrapperWorkspace {
+            display: flex;
+            overflow: hidden;
+            margin-top: 10px;
+            border-top: 1px solid #aac5d5;
+            font-size: 0;
+            text-align: center;
+            padding: 15px 18px 18px 8px;
+
+            .entryVariableAddSpaceButtonWorkspace {
+                display: inline-block;
+                flex: 1;
+                height: 32px;
+                color: #2c313d;
+                font-size: 9px;
+                font-weight: 600;
+                letter-spacing: -0.36px;
+                border: 1px solid #aac5d5;
+                border-radius: 4px;
+                background-color: #fff;
+                text-align: center;
+                text-decoration: none;
+                line-height: 30px;
+                margin: 0 2px;
+                cursor: pointer;
+            }
+
+            .entryVariableAddSpaceConfirmWorkspace {
+                color: #fff;
+                background-color: #4f80ff;
+                border-color: #4f80ff;
+            }
+        }
+    }
+
+    .message_inpt {
+        .msdAddSpaceWrapper {
+            padding: 18px 20px 0 20px;
+            border-top: 1px solid #d6e9f4;
+            margin-bottom: 16px;
+
+            .box_sjt {
+                &::before {
+                    content: '';
+                    display: inline-block;
+                    border-radius: 50%;
+                    margin: 3px 8px 0 0;
+                    vertical-align: top;
+                    width: 3px;
+                    height: 3px;
+                    background-color: #728997;
+                }
+
+                position: relative;
+                left: -10px;
+                margin-bottom: 8px;
+                display: block;
+                font-size: 12px;
+                font-weight: 600;
+                color: #2c313d;
+                letter-spacing: -0.4px;
+                line-height: 12px;
+            }
+
+            input {
+                width: 100%;
+                padding: 7px 8px 6px;
+                border: 1px solid #aac5d5;
+                border-radius: 4px;
+                background-color: #fff;
+                color: #2c313d;
+                font-size: 10px;
+                font-weight: 600;
+                letter-spacing: -0.4px;
+            }
+        }
+
+        .entryVariableAddSpaceButtonWrapperWorkspace {
+            display: flex;
+            overflow: hidden;
+            margin-top: 10px;
+            border-top: 1px solid #aac5d5;
+            font-size: 0;
+            text-align: center;
+            padding: 15px 20px 18px 20px;
+
+            .entryVariableAddSpaceButtonWorkspace {
+                &.entryVariableAddSpaceConfirmWorkspace {
+                    color: #fff;
+                    background-color: #4f80ff;
+                    border-color: #4f80ff;
+                }
+                display: inline-block;
+                flex: 1;
+                height: 28px;
+                color: #2c313d;
+                font-size: 9px;
+                font-weight: 600;
+                letter-spacing: -0.36px;
+                border: 1px solid #aac5d5;
+                border-radius: 4px;
+                background-color: #fff;
+                text-align: center;
+                text-decoration: none;
+                line-height: 26px;
+                margin: 0 2px;
+                cursor: pointer;
             }
         }
     }

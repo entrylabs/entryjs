@@ -287,9 +287,18 @@ Entry.VariableContainer = class VariableContainer {
 
         message.usedView && $(message.usedView).remove();
         let usedWrapper;
+        usedWrapper = Entry.createElement('div').addClass('use_block');
+
+        const boxSubject = Entry.createElement('span')
+            .addClass('box_sjt')
+            .appendTo(usedWrapper);
 
         if (callers.length) {
-            usedWrapper = Entry.createElement('div').addClass('use_block');
+            boxSubject.textContent = Entry.Utils.stringFormat(
+                Lang.Workspace.use_block_objects1,
+                callers.length
+            );
+
             const listView = Entry.createElement('ul')
                 .addClass('obj_list')
                 .appendTo(usedWrapper);
@@ -933,7 +942,9 @@ Entry.VariableContainer = class VariableContainer {
         listView.appendChild(this.variableAddPanel.view);
 
         //global list container
-        const globalList = createElement('div').addClass('entryVariableSplitterWorkspace');
+        const globalList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace variable global'
+        );
         let isGlobalFolded = false;
 
         const globalListTitle = Entry.createElement('a')
@@ -949,7 +960,9 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(globalList);
 
         //local list container
-        const localList = createElement('div').addClass('entryVariableSplitterWorkspace');
+        const localList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace variable local'
+        );
         let isLocalFolded = false;
 
         const localListTitle = Entry.createElement('a')
@@ -1536,6 +1549,10 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(editBoxInputWrapper);
         editBoxInput.textContent = func.description;
 
+        const ArrowDownButton = createElement('div')
+            .addClass('arrowDown')
+            .appendTo(editBoxWrapper);
+
         const delButton = createElement('a')
             .addClass('del')
             .bindOnClick((e) => {
@@ -1794,6 +1811,24 @@ Entry.VariableContainer = class VariableContainer {
                 }
             })
             .appendTo(variableWrapper);
+        const watchButton = createElement('a')
+            .addClass('watch')
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                Entry.do('variableSetVisibility', variable.id_, !variable.isVisible());
+                if (variable.isVisible()) {
+                    watchButton.addClass('on');
+                } else {
+                    watchButton.removeClass('on');
+                }
+            })
+            .appendTo(editBoxWrapper);
+        if (variable.isVisible()) {
+            watchButton.addClass('on');
+        } else {
+            watchButton.removeClass('on');
+        }
+        watchButton.href = '#';
         const editBoxInputWrapper = createElement('div')
             .addClass('inpt')
             .appendTo(editBoxWrapper);
@@ -1817,24 +1852,9 @@ Entry.VariableContainer = class VariableContainer {
             targetVariable && Entry.do('variableSetName', targetVariable.getId(), value);
         };
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
-        const watchButton = createElement('a')
-            .addClass('watch')
-            .bindOnClick((e) => {
-                e.stopPropagation();
-                Entry.do('variableSetVisibility', variable.id_, !variable.isVisible());
-                if (variable.isVisible()) {
-                    watchButton.addClass('on');
-                } else {
-                    watchButton.removeClass('on');
-                }
-            })
+        const ArrowDownButton = createElement('div')
+            .addClass('arrowDown')
             .appendTo(editBoxWrapper);
-        if (variable.isVisible()) {
-            watchButton.addClass('on');
-        } else {
-            watchButton.removeClass('on');
-        }
-        watchButton.href = '#';
         const delButton = createElement('a')
             .addClass('del')
             .bindOnClick((e) => {
@@ -1993,6 +2013,10 @@ Entry.VariableContainer = class VariableContainer {
         }, 200);
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
 
+        const ArrowDownButton = createElement('div')
+            .addClass('arrowDown')
+            .appendTo(editBoxWrapper);
+
         const delButton = createElement('a')
             .addClass('del')
             .bindOnClick((e) => {
@@ -2056,6 +2080,24 @@ Entry.VariableContainer = class VariableContainer {
                 }
             })
             .appendTo(listWrapper);
+        const watchButton = createElement('a')
+            .addClass('watch')
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                Entry.do('listSetVisibility', list.id_, !list.isVisible());
+                if (list.isVisible()) {
+                    watchButton.addClass('on');
+                } else {
+                    watchButton.removeClass('on');
+                }
+            })
+            .appendTo(editBoxWrapper);
+        if (list.isVisible()) {
+            watchButton.addClass('on');
+        } else {
+            watchButton.removeClass('on');
+        }
+        watchButton.href = '#';
         const editBoxInputWrapper = createElement('div')
             .addClass('inpt')
             .appendTo(editBoxWrapper);
@@ -2079,24 +2121,9 @@ Entry.VariableContainer = class VariableContainer {
             targetList && Entry.do('listSetName', targetList.getId(), value);
         };
         editBoxInput.onkeydown = Entry.Utils.blurWhenEnter;
-        const watchButton = createElement('a')
-            .addClass('watch')
-            .bindOnClick((e) => {
-                e.stopPropagation();
-                Entry.do('listSetVisibility', list.id_, !list.isVisible());
-                if (list.isVisible()) {
-                    watchButton.addClass('on');
-                } else {
-                    watchButton.removeClass('on');
-                }
-            })
+        const ArrowDownButton = createElement('div')
+            .addClass('arrowDown')
             .appendTo(editBoxWrapper);
-        if (list.isVisible()) {
-            watchButton.addClass('on');
-        } else {
-            watchButton.removeClass('on');
-        }
-        watchButton.href = '#';
         const delButton = createElement('a')
             .addClass('del')
             .bindOnClick((e) => {
@@ -2201,10 +2228,14 @@ Entry.VariableContainer = class VariableContainer {
         this.variableAddPanel.view = variableAddSpace;
         this.variableAddPanel.isOpen = false;
 
+        const variableAddSpaceDataWrapper = createElement('div')
+            .addClass('entryVariableAddSpaceDataWrapperWorkspace')
+            .appendTo(variableAddSpace);
+
         // 입력 폼
         const addSpaceNameWrapper = createElement('div')
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
-            .appendTo(variableAddSpace);
+            .appendTo(variableAddSpaceDataWrapper);
 
         const addSpaceInputLabel = createElement('label')
             .addClass('entryVariableAddSpaceInputLabelWorkspace')
@@ -2238,73 +2269,60 @@ Entry.VariableContainer = class VariableContainer {
         };
         this.variableAddPanel.view.name = addSpaceInput;
 
-        // 모든 오브젝트
-        const addSpaceGlobalWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace on')
+        const addSpaceSelectWrapper = createElement('div')
+            .addClass('entryVariableAddSpaceSelectWrapperWorkspace')
+            .appendTo(variableAddSpaceDataWrapper);
+        const addSpaceGlobalButton = createElement('a')
+            .addClass('button entryVariableAddSpaceGlobalButtonrWorkspace on')
             .bindOnClick(() => {
-                addSpaceLocalWrapper.removeClass('on');
-                addSpaceGlobalWrapper.addClass('on');
+                addSpaceLocalButton.removeClass('on');
+                addSpaceGlobalButton.addClass('on');
+                variableTypeWrapper.addClass('on');
                 return Entry.do('variableAddSetScope', 'global');
             })
-            .appendTo(variableAddSpace);
-        this.variableAddPanel.view.globalCheck = addSpaceGlobalWrapper;
+            .appendTo(addSpaceSelectWrapper);
+        addSpaceGlobalButton.textContent = Lang.Workspace.use_all_objects;
+        this.variableAddPanel.view.globalCheck = addSpaceGlobalButton;
 
-        createElement('span')
-            .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).textContent = Lang.Workspace.use_all_objects;
+        const addSpaceLocalButton = createElement('a')
+            .addClass('button entryVariableAddSpaceLocalButtonrWorkspace')
+            .bindOnClick(() => {
+                addSpaceGlobalButton.removeClass('on');
+                addSpaceLocalButton.addClass('on');
+                variableTypeWrapper.removeClass('on');
+                return Entry.do('variableAddSetScope', 'local');
+            })
+            .appendTo(addSpaceSelectWrapper);
+        addSpaceLocalButton.textContent = Lang.Workspace.Variable_use_this_object;
+        this.variableAddPanel.view.localCheck = addSpaceLocalButton;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceGlobalWrapper);
-
-        // 공유 리스트
-        const addSpaceCloudWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .appendTo(addSpaceGlobalWrapper);
-        variableAddSpace.cloudWrapper = addSpaceCloudWrapper;
-        this.variableAddPanel.view.cloudCheck = addSpaceCloudWrapper;
+        const variableTypeWrapper = createElement('div')
+            .addClass('entryVariableTypeBoxWrapper on')
+            .appendTo(variableAddSpaceDataWrapper);
 
         ['normal', 'cloud', 'real_time'].forEach((type) => {
             const wrapper = createElement('div')
-                .addClass('entryCloudTypeWrapper')
-                .appendTo(addSpaceCloudWrapper)
+                .addClass(`entryVariableTypeWrapper`)
+                .appendTo(variableTypeWrapper)
                 .bindOnClick((e) => {
                     e.stopImmediatePropagation();
                     const { object, isCloud, isRealTime } = this.variableAddPanel.info;
                     !object && Entry.do('variableAddSetCloud', type);
-                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    this.#removeChildrenClass(variableTypeWrapper, 'on');
                     wrapper.addClass('on');
                 });
             if (type === 'normal') {
                 wrapper.addClass('on');
             }
             createElement('span')
-                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-                .appendTo(wrapper).textContent = Lang.Workspace[`variable_create_${type}`];
-            createElement('span')
-                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .addClass(`entryVariable${type}RadioButton radioButton`)
                 .appendTo(wrapper);
+            createElement('span')
+                .addClass(`entryVariable${type}Text`, 'entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`variable_create_${type}`];
         });
-
-        // 이 오브젝트에서 사용
-        const addSpaceLocalWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
-            .bindOnClick(() => {
-                addSpaceGlobalWrapper.removeClass('on');
-                addSpaceCloudWrapper.removeClass('on');
-                addSpaceLocalWrapper.addClass('on');
-                return Entry.do('variableAddSetScope', 'local');
-            })
-            .appendTo(variableAddSpace);
-        this.variableAddPanel.view.localCheck = addSpaceLocalWrapper;
-
-        createElement('span')
-            .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).textContent = Lang.Workspace.Variable_use_this_object;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceLocalWrapper);
+        variableAddSpace.cloudWrapper = variableTypeWrapper;
+        this.variableAddPanel.view.cloudCheck = variableTypeWrapper;
 
         // 확인 취소 버튼
         const addSpaceButtonWrapper = createElement('div')
@@ -2329,8 +2347,7 @@ Entry.VariableContainer = class VariableContainer {
                 that._addVariable();
             })
             .appendTo(addSpaceButtonWrapper);
-        addSpaceConfirmButton.href = '#';
-        addSpaceConfirmButton.textContent = Lang.Buttons.save;
+        addSpaceConfirmButton.textContent = Lang.Buttons.add_variable;
         this.variableAddConfirmButton = addSpaceConfirmButton;
     }
 
@@ -2531,7 +2548,16 @@ Entry.VariableContainer = class VariableContainer {
         this.messageAddPanel.view = msgAddSpace;
         this.messageAddPanel.isOpen = false;
 
-        const msgNameInput = createElement('input').appendTo(msgAddSpace);
+        const msdAddSpaceWrapper = createElement('div')
+            .addClass('msdAddSpaceWrapper')
+            .appendTo(msgAddSpace);
+
+        const boxSubject = Entry.createElement('span')
+            .addClass('box_sjt')
+            .appendTo(msdAddSpaceWrapper);
+        boxSubject.textContent = Lang.Workspace.Message_placeholder_name;
+
+        const msgNameInput = createElement('input').appendTo(msdAddSpaceWrapper);
         msgNameInput.setAttribute('type', 'text');
         msgNameInput.setAttribute('placeholder', Lang.Workspace.message_create_placeholder);
         msgNameInput.onkeydown = Entry.Utils.whenEnter(function() {
@@ -2589,7 +2615,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(buttonWrapper);
         msgConfirm.href = '#';
-        msgConfirm.textContent = Lang.Buttons.save;
+        msgConfirm.textContent = Lang.Buttons.add_message;
 
         msgAddSpace.nameField = msgNameInput;
     }
