@@ -861,7 +861,18 @@
                 }
 
                 .attr_inner_box {
+                    position: relative;
                     background-color: #d6e9f4;
+
+                    .val_type_txt {
+                        position: absolute;
+                        top: 15px;
+                        right: 20px;
+                        font-size: 9px;
+                        font-weight: 600;
+                        letter-spacing: -0.36px;
+                        color: #4d616e;
+                    }
                 }
             }
 
@@ -1150,13 +1161,13 @@
                     .slide_inpt {
                         .entryVariableAddSpaceCheckWorkspace {
                             &.on {
-                                .backgroundImage('btn_checkbox_on.png');
+                                .backgroundImage('btn_checkbox_on.svg');
                             }
                             display: inline-block;
                             width: 18px;
                             height: 18px;
                             background-size: 18px auto;
-                            .backgroundImage('btn_checkbox.png');
+                            .backgroundImage('btn_checkbox.svg');
                             vertical-align: top;
                             margin-right: 8px;
                         }
