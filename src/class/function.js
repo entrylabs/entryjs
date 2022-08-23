@@ -400,6 +400,7 @@ class EntryFunc {
                     category: CATEGORY,
                     x: -9999,
                     copyable: false,
+                    assemble: false,
                     params: [{ type: this.requestParamBlock('string') }],
                 },
             ])
@@ -410,6 +411,7 @@ class EntryFunc {
                 {
                     type: 'function_field_boolean',
                     copyable: false,
+                    assemble: false,
                     category: CATEGORY,
                     x: -9999,
                     params: [{ type: this.requestParamBlock('boolean') }],
