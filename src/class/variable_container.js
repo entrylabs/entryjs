@@ -2795,6 +2795,18 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(varAttr);
         boxSubject.textContent = Lang.Workspace.Variable_property;
 
+        const valTypeText = Entry.createElement('span')
+            .addClass('val_type_txt')
+            .appendTo(varAttr);
+
+        if (variable.isRealTime_) {
+            valTypeText.textContent = Lang.Menus.realtime;
+        } else if (variable.isCloud_) {
+            valTypeText.textContent = Lang.Menus.cloud;
+        } else {
+            valTypeText.textContent = Lang.Menus.normal;
+        }
+
         // 기본 값 입력 창
         const attrInputBox = createElement('div')
             .addClass('attr_inpt')
@@ -2959,6 +2971,18 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('box_sjt')
             .appendTo(listAttr);
         boxSubject.textContent = Lang.Workspace.list_property;
+
+        const valTypeText = Entry.createElement('span')
+            .addClass('val_type_txt')
+            .appendTo(listAttr);
+
+        if (list.isRealTime_) {
+            valTypeText.textContent = Lang.Menus.realtime;
+        } else if (list.isCloud_) {
+            valTypeText.textContent = Lang.Menus.cloud;
+        } else {
+            valTypeText.textContent = Lang.Menus.normal;
+        }
 
         this.generateListImportExportView(listAttr);
         this.generateListCountView(listAttr);
