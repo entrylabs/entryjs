@@ -908,6 +908,7 @@ Lang.Blocks = {
     "SOUND_sound_volume_set_1": "thiết lập âm lượng bằng",
     "SOUND_sound_volume_set_2": "%",
     "speak": "nói",
+    "think": "Think",
     "START": "bắt đầu",
     "START_add_message": "Add a message",
     "START_delete_message": "Remove a message",

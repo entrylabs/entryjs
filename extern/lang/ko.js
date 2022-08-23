@@ -927,6 +927,7 @@ Lang.Blocks = {
     SOUND_sound_volume_set_1: '소리 크기를',
     SOUND_sound_volume_set_2: '% 로 정하기',
     speak: '말하기',
+    think: '생각하기',
     START: '시작',
     START_add_message: '신호 추가하기',
     START_delete_message: '신호 삭제하기',
