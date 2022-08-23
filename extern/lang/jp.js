@@ -909,6 +909,7 @@ Lang.Blocks = {
     "SOUND_sound_volume_set_1": "音の大きさを",
     "SOUND_sound_volume_set_2": "%にする",
     "speak": "言う",
+    "think": "思う",
     "START": "はじめ",
     "START_add_message": "信号を追加する",
     "START_delete_message": "信号を削除する",
