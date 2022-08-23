@@ -212,9 +212,9 @@ Entry.VariableContainer = class VariableContainer {
         this.#removeChildrenClass(cloudCheck, 'on');
         const [normal, cloud, realtime] = cloudCheck.children;
         if (isCloud) {
-            cloud.removeClass('on');
+            cloud.addClass('on');
         } else if (isRealTime) {
-            realtime.removeClass('on');
+            realtime.addClass('on');
         } else {
             normal.addClass('on');
         }
@@ -332,8 +332,15 @@ Entry.VariableContainer = class VariableContainer {
             });
             listView.appendChild(fragment);
         } else {
-            usedWrapper = Entry.createElement('p').addClass('caution_dsc');
-            usedWrapper.textContent = Lang.Workspace.no_use;
+            const caution = Entry.createElement('div')
+                .addClass('caution_dsc')
+                .appendTo(usedWrapper);
+            caution.textContent = Lang.Workspace.no_use;
+
+            boxSubject.textContent = Entry.Utils.stringFormat(
+                Lang.Workspace.use_block_objects2,
+                callers.length
+            );
         }
         message.usedView = usedWrapper;
         message.listElement.appendChild(usedWrapper);
@@ -354,17 +361,15 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('box_sjt')
             .appendTo(usedWrapper);
 
-        if (variable.type === 'variable') {
-            usedSubject.textContent = Lang.Workspace.Variable_used_objects;
-        } else {
-            usedSubject.textContent = Lang.Workspace.List_used_objects;
-        }
-
         const listView = Entry.createElement('ul')
             .addClass('obj_list')
             .appendTo(usedWrapper);
 
         if (callers.length) {
+            usedSubject.textContent = Entry.Utils.stringFormat(
+                Lang.Workspace.use_block_objects1,
+                callers.length
+            );
             const fragment = document.createDocumentFragment();
 
             callers.forEach((caller) => {
@@ -397,8 +402,12 @@ Entry.VariableContainer = class VariableContainer {
             });
             listView.appendChild(fragment);
         } else {
-            Entry.createElement('li')
-                .addClass('text red')
+            usedSubject.textContent = Entry.Utils.stringFormat(
+                Lang.Workspace.use_block_objects2,
+                callers.length
+            );
+            Entry.createElement('div')
+                .addClass('caution_dsc')
                 .appendTo(listView).textContent = Lang.Workspace.no_use;
         }
 
@@ -467,6 +476,17 @@ Entry.VariableContainer = class VariableContainer {
 
         const resultCheckText = createElement('span')
             .addClass('chk_text')
+            .bindOnClick(() => {
+                const caller = [...this._functionRefs].find(
+                    (item) => item.block.data.type === `func_${func.id}`
+                );
+
+                if (caller) {
+                    return Entry.modal.alert(Lang.Msgs.cannot_delete_function);
+                }
+
+                Entry.do('funcChangeType', func);
+            })
             .appendTo(resultCheckBox);
         resultCheckText.textContent = Lang.Workspace.check_result_value;
     }
@@ -757,6 +777,12 @@ Entry.VariableContainer = class VariableContainer {
             });
             listView.appendChild(fragment);
         } else {
+            const caution = createElement('div')
+                .addClass('caution_dsc')
+                .appendTo(wrapper);
+
+            // wrapper.addClass('caution_dsc');
+            caution.textContent = Lang.Workspace.no_use;
             boxSubject.textContent = Entry.Utils.stringFormat(
                 Lang.Workspace.use_block_objects2,
                 callers.length
@@ -1029,7 +1055,9 @@ Entry.VariableContainer = class VariableContainer {
         listView.appendChild(this.listAddPanel.view);
 
         //global list container
-        const globalList = createElement('div').addClass('entryVariableSplitterWorkspace');
+        const globalList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace list global'
+        );
         let isGlobalFolded = false;
 
         const globalListTitle = Entry.createElement('a')
@@ -1045,7 +1073,9 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(globalList);
 
         //local list container
-        const localList = createElement('div').addClass('entryVariableSplitterWorkspace');
+        const localList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace list local'
+        );
         let isLocalFolded = false;
 
         const localListTitle = Entry.createElement('a')
@@ -1780,9 +1810,9 @@ Entry.VariableContainer = class VariableContainer {
 
         if (!variable.object_) {
             if (variable.isCloud_) {
-                variableWrapper.addClass('cloud_list');
+                variableWrapper.addClass('cloud_variable');
             } else if (variable.isRealTime_) {
-                variableWrapper.addClass('real_time_list');
+                variableWrapper.addClass('real_time_variable');
             } else {
                 variableWrapper.addClass('default_val');
             }
@@ -2407,10 +2437,14 @@ Entry.VariableContainer = class VariableContainer {
         this.listAddPanel.view = listAddSpace;
         this.listAddPanel.isOpen = false;
 
+        const variableAddSpaceDataWrapper = createElement('div')
+            .addClass('entryVariableAddSpaceDataWrapperWorkspace')
+            .appendTo(listAddSpace);
+
         // 리스트 만들기
         const addSpaceNameWrapper = createElement('div')
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
-            .appendTo(listAddSpace);
+            .appendTo(variableAddSpaceDataWrapper);
 
         const addSpaceInputLabel = createElement('label')
             .addClass('entryVariableAddSpaceInputLabelWorkspace')
@@ -2443,73 +2477,61 @@ Entry.VariableContainer = class VariableContainer {
         };
         this.listAddPanel.view.name = addSpaceInput;
 
-        // 모든 오브젝트에서 사용
-        const addSpaceGlobalWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace on')
+        const addSpaceSelectWrapper = createElement('div')
+            .addClass('entryVariableAddSpaceSelectWrapperWorkspace')
+            .appendTo(variableAddSpaceDataWrapper);
+
+        const addSpaceGlobalButton = createElement('a')
+            .addClass('button entryVariableAddSpaceGlobalButtonrWorkspace on')
             .bindOnClick(() => {
-                addSpaceLocalWrapper.removeClass('on');
-                addSpaceGlobalWrapper.addClass('on');
+                addSpaceLocalButton.removeClass('on');
+                addSpaceGlobalButton.addClass('on');
+                variableTypeWrapper.addClass('on');
                 return Entry.do('listAddSetScope', 'global');
             })
-            .appendTo(listAddSpace);
-        this.listAddPanel.view.globalCheck = addSpaceGlobalWrapper;
+            .appendTo(addSpaceSelectWrapper);
+        addSpaceGlobalButton.textContent = Lang.Workspace.use_all_objects;
+        this.listAddPanel.view.globalCheck = addSpaceGlobalButton;
 
-        createElement('span')
-            .addClass('Workspace_text')
-            .appendTo(addSpaceGlobalWrapper).textContent = Lang.Workspace.use_all_objects;
+        const addSpaceLocalButton = createElement('a')
+            .addClass('button entryVariableAddSpaceLocalButtonrWorkspace')
+            .bindOnClick(() => {
+                addSpaceGlobalButton.removeClass('on');
+                addSpaceLocalButton.addClass('on');
+                variableTypeWrapper.removeClass('on');
+                return Entry.do('listAddSetScope', 'local');
+            })
+            .appendTo(addSpaceSelectWrapper);
+        addSpaceLocalButton.textContent = Lang.Workspace.Variable_use_this_object;
+        this.listAddPanel.view.localCheck = addSpaceLocalButton;
 
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceGlobalWrapper);
-
-        // 공유 리스트
-        const addSpaceCloudWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
-            .appendTo(addSpaceGlobalWrapper);
-        listAddSpace.cloudWrapper = addSpaceCloudWrapper;
-        this.listAddPanel.view.cloudCheck = addSpaceCloudWrapper;
+        const variableTypeWrapper = createElement('div')
+            .addClass('entryVariableTypeBoxWrapper on')
+            .appendTo(variableAddSpaceDataWrapper);
 
         ['normal', 'cloud', 'real_time'].forEach((type) => {
             const wrapper = createElement('div')
-                .addClass('entryCloudTypeWrapper')
-                .appendTo(addSpaceCloudWrapper)
+                .addClass(`entryVariableTypeWrapper`)
+                .appendTo(variableTypeWrapper)
                 .bindOnClick((e) => {
                     e.stopImmediatePropagation();
                     const { object } = this.listAddPanel.info;
                     !object && Entry.do('listAddSetCloud', type);
-                    this.#removeChildrenClass(addSpaceCloudWrapper, 'on');
+                    this.#removeChildrenClass(variableTypeWrapper, 'on');
                     wrapper.addClass('on');
                 });
             if (type === 'normal') {
                 wrapper.addClass('on');
             }
             createElement('span')
-                .addClass('entryVariableAddSpaceCloudSpanWorkspace')
-                .appendTo(wrapper).textContent = Lang.Workspace[`list_create_${type}`];
-            createElement('span')
-                .addClass('entryVariableAddSpaceCheckWorkspace')
+                .addClass(`entryVariable${type}RadioButton radioButton`)
                 .appendTo(wrapper);
+            createElement('span')
+                .addClass(`entryVariable${type}Text`, 'entryVariableAddSpaceCheckWorkspace')
+                .appendTo(wrapper).textContent = Lang.Workspace[`list_create_${type}`];
         });
-
-        // 이 오브젝트에서 사용
-        const addSpaceLocalWrapper = createElement('div')
-            .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
-            .bindOnClick(() => {
-                addSpaceGlobalWrapper.removeClass('on');
-                addSpaceCloudWrapper.removeClass('on');
-                addSpaceLocalWrapper.addClass('on');
-                return Entry.do('listAddSetScope', 'local');
-            })
-            .appendTo(listAddSpace);
-        this.listAddPanel.view.localCheck = addSpaceLocalWrapper;
-
-        createElement('span')
-            .addClass('Workspace_text')
-            .appendTo(addSpaceLocalWrapper).textContent = Lang.Workspace.Variable_use_this_object;
-
-        createElement('span')
-            .addClass('entryVariableAddSpaceCheckWorkspace')
-            .appendTo(addSpaceLocalWrapper);
+        listAddSpace.cloudWrapper = variableTypeWrapper;
+        this.listAddPanel.view.cloudCheck = variableTypeWrapper;
 
         // 확인 취소 버튼
         const addSpaceButtonWrapper = createElement('div')
@@ -2783,7 +2805,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const attrInputLabel = createElement('label').appendTo(attrInputBox);
         attrInputLabel.setAttribute('for', 'attr_cnt');
-        attrInputLabel.textContent = Lang.Workspace.default_value;
+        attrInputLabel.textContent = Lang.Workspace.variable_default_value;
 
         const attrInputWrapper = createElement('span')
             .appendTo(attrInputBox)
@@ -3003,42 +3025,13 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.do('listChangeLength', id_, 'minus');
             })
             .appendTo(countInputBox);
-        buttonMinus.textContent = '-';
         buttonMinus.href = '#';
+        buttonMinus.setAttribute('tabindex', '-1');
         this.listSettingView.minus = buttonMinus;
 
         //List limit setting. [default value:5000, length: 4]
         let limitValue = 5000;
         let maxlength = 4;
-
-        const array_ = that.selected.getArray();
-        if (array_ && array_.length > 0) {
-            const currentLeng = array_.length.toString().length;
-            // 리스트 카운트가 5000 일떄만 설정
-            maxlength = currentLeng > maxlength ? currentLeng : maxlength;
-            limitValue = array_.length > limitValue ? array_.length : limitValue;
-        }
-
-        const buttonPlus = createElement('a')
-            .addClass('btn_cnt')
-            .bindOnClick(() => {
-                const {
-                    selected: { id_ },
-                } = that;
-
-                const array_ = Entry.variableContainer.selected.getArray();
-                const selectedLength = array_.length;
-
-                if (selectedLength >= limitValue) {
-                    Entry.do('listChangeLength', id_, '');
-                } else {
-                    Entry.do('listChangeLength', id_, 'plus');
-                }
-            })
-            .appendTo(countInputBox);
-        buttonPlus.textContent = '+';
-        buttonPlus.href = '#';
-        this.listSettingView.plus = buttonPlus;
 
         const countInput = createElement('input').appendTo(countInputBox);
         countInput.setAttribute('type', 'text');
@@ -3058,6 +3051,35 @@ Entry.VariableContainer = class VariableContainer {
         };
         countInput.onkeypress = Entry.Utils.blurWhenEnter;
         this.listSettingView.lengthInput = countInput;
+
+        const array_ = that.selected.getArray();
+        if (array_ && array_.length > 0) {
+            const currentLeng = array_.length.toString().length;
+            // 리스트 카운트가 5000 일떄만 설정
+            maxlength = currentLeng > maxlength ? currentLeng : maxlength;
+            limitValue = array_.length > limitValue ? array_.length : limitValue;
+        }
+
+        const buttonPlus = createElement('a')
+            .addClass('btn_cnt plus')
+            .bindOnClick(() => {
+                const {
+                    selected: { id_ },
+                } = that;
+
+                const array_ = Entry.variableContainer.selected.getArray();
+                const selectedLength = array_.length;
+
+                if (selectedLength >= limitValue) {
+                    Entry.do('listChangeLength', id_, '');
+                } else {
+                    Entry.do('listChangeLength', id_, 'plus');
+                }
+            })
+            .appendTo(countInputBox);
+        buttonPlus.href = '#';
+        buttonPlus.setAttribute('tabindex', '-1');
+        this.listSettingView.plus = buttonPlus;
     }
 
     generateListValuesView(element) {
@@ -3066,11 +3088,16 @@ Entry.VariableContainer = class VariableContainer {
         const countGroup = createElement('div')
             .addClass('cnt_group')
             .appendTo(element);
+        const countLabel = createElement('div')
+            .addClass('cnt_label')
+            .appendTo(countGroup);
+        countLabel.textContent = Lang.Workspace.local_variable;
         const scrollBox = createElement('div')
             .addClass('scroll_box')
             .appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
         const parent = /* html */ `<ol class="cnt_list">{1}</ol>`;
+        this.listSettingView.countGroup = countGroup;
         this.listSettingView.scrollBox = scrollBox;
         this.listSettingView.simpleBar = el;
         this.listSettingView.listValues = el.getContentElement();
@@ -3082,6 +3109,12 @@ Entry.VariableContainer = class VariableContainer {
                 groupSize: 10,
             }
         );
+
+        // if (localVariables?.length === 0) {
+        //     countGroup?.addClass('entryRemove');
+        //     return;
+        // }
+        // countGroup?.removeClass('entryRemove');
     }
 
     createListValueElement(index, value, startIndex = 0) {
@@ -3102,9 +3135,10 @@ Entry.VariableContainer = class VariableContainer {
             return;
         }
         list = list || this.selected;
-        const { infinityScroll, listValues, lengthInput, simpleBar, scrollBox } = view;
+        const { infinityScroll, countGroup, listValues, lengthInput, simpleBar, scrollBox } = view;
         const arr = list.getArray() || [];
         lengthInput.value = arr.length;
+
         if (arr.length > 4) {
             scrollBox.addClass('on');
         } else {
@@ -3116,13 +3150,14 @@ Entry.VariableContainer = class VariableContainer {
         $listValues.empty();
         $listValues.off();
         const startIndex = Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
-        if (arr.length === 0) {
-            const fragment = document.createDocumentFragment();
-            Entry.createElement('p')
-                .addClass('caution_dsc')
-                .appendTo(fragment).textContent = Lang.Workspace.empty_of_list;
-            listValues.appendChild(fragment);
-        } else {
+
+        if (arr?.length === 0) {
+            countGroup?.addClass('entryRemove');
+            return;
+        }
+        countGroup?.removeClass('entryRemove');
+
+        if (arr.length) {
             const data = arr.map((data, i) => {
                 const value = String(data.data).replace(/\$/g, '&#36;');
                 return this.createListValueElement(i, value, startIndex);
@@ -3533,6 +3568,7 @@ Entry.VariableContainer = class VariableContainer {
 
     clickVariableAddButton(...args) {
         this._clickAddButton.call(this, 'variable', ...args);
+        this.variableAddPanel.view.cloudCheck.addClass('on');
     }
 
     clickListAddButton(...args) {
