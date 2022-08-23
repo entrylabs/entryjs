@@ -1,6 +1,197 @@
+import _truncate from 'lodash/truncate';
+
 class EntryFunc {
     static isEdit = false;
     static threads = {};
+
+    constructor(func = {}) {
+        const {
+            type = 'normal',
+            id = Entry.generateHash(),
+            localVariables = [],
+            useLocalVariables = false,
+        } = func;
+        this.id = id;
+        this.type = type;
+        this.localVariables = localVariables;
+        this.useLocalVariables = useLocalVariables;
+        let content;
+        //inspect empty content
+        if (func && func.content && func.content.length > 4) {
+            content = func.content;
+        }
+
+        let codeType = 'function_create';
+        if (type === 'value') {
+            codeType = 'function_create_value';
+        }
+        this.content = content
+            ? new Entry.Code(content)
+            : new Entry.Code([
+                  [
+                      {
+                          type: codeType,
+                          copyable: false,
+                          deletable: false,
+                          x: 40,
+                          y: 40,
+                      },
+                  ],
+              ]);
+        this.block = null;
+        this.blockMenuBlock = null;
+        this.hashMap = {};
+        this.paramMap = {};
+
+        EntryFunc._generateFunctionSchema(this.id, type);
+
+        if (func && func.content) {
+            const blockMap = this.content._blockMap;
+            for (const key in blockMap) {
+                EntryFunc.registerParamBlock(blockMap[key].type);
+            }
+            EntryFunc.generateWsBlock(this);
+        }
+
+        EntryFunc.registerFunction(this);
+
+        EntryFunc.updateMenu();
+    }
+
+    destroy() {
+        this.blockMenuBlock && this.blockMenuBlock.destroy();
+    }
+
+    edit() {
+        if (EntryFunc.isEdit) {
+            return;
+        }
+        EntryFunc.isEdit = true;
+        Entry.getMainWS().blockMenu.deleteRendered('variable');
+        if (!EntryFunc.svg) {
+            EntryFunc.isEdit = EntryFunc.initEditView();
+        } else {
+            this.parentView.appendChild(this.svg);
+        }
+    }
+
+    generateBlock() {
+        const generatedInfo = EntryFunc.generateBlock(this);
+        this.block = generatedInfo.block;
+        this.description = generatedInfo.description;
+    }
+
+    defaultLocalVariable() {
+        return {
+            name: this.makeLocalVariableName(),
+            value: 0,
+        };
+    }
+
+    setLocalVariableLength(length) {
+        if (!this.localVariables) {
+            this.localVariables = [];
+        }
+        if (this.localVariables.length >= length) {
+            this.localVariables.splice(length, this.localVariables.length - length);
+        } else {
+            this.localVariables = Array.concat(
+                this.localVariables,
+                Array(length - this.localVariables.length).fill(this.defaultLocalVariable())
+            );
+        }
+        Entry.variableContainer && Entry.variableContainer.updateFuncScrollBar(this);
+    }
+
+    appendLocalVariable(value) {
+        if (!this.localVariables) {
+            this.localVariables = [];
+        }
+        this.localVariables.push(value);
+
+        Entry.variableContainer && Entry.variableContainer.updateFuncScrollBar(this);
+    }
+
+    insertFuncLocalVariable(value, index) {
+        if (!this.localVariables) {
+            this.localVariables = [];
+        }
+        this.localVariables.splice(index, 0, value);
+
+        Entry.variableContainer && Entry.variableContainer.updateFuncScrollBar(this);
+    }
+
+    removeLocalVariable(idx) {
+        if (!Array.isArray(this.localVariables)) {
+            return;
+        }
+        if (this.localVariables.length >= idx) {
+            this.localVariables.splice(idx, 1);
+        }
+        Entry.variableContainer && Entry.variableContainer.updateFuncScrollBar(this);
+    }
+
+    removeLastLocalVariable() {
+        this.removeLocalVariable(this.localVariables.length - 1);
+    }
+
+    toggleFunctionUseLocalVariables() {
+        this.useLocalVariables = !this.useLocalVariables;
+        Entry.variableContainer && Entry.variableContainer.updateFuncSettingView(this);
+    }
+
+    getLocalVariables() {
+        return this.localVariables;
+    }
+
+    makeLocalVariableName() {
+        let name = Lang.Workspace.local_variable;
+        if (this.checkLocalVariableName(name)) {
+            name = Entry.getOrderedName(name, this.localVariables, 'name');
+            Entry.toast.warning(
+                Lang.Workspace.local_variable_rename,
+                Lang.Workspace.local_variable_dup
+            );
+        }
+
+        return name;
+    }
+
+    checkLocalVariableName(name) {
+        return this.localVariables.some((localVariable) => localVariable.name === name);
+    }
+
+    changeNameLocalVariable(name, index) {
+        const localVariable = this.localVariables[index];
+        localVariable.name = name;
+    }
+
+    getValue(idx) {
+        return this.localVariables[idx].value;
+    }
+
+    setValue(value, idx) {
+        const localVariable = this.localVariables[idx];
+        localVariable.value = value;
+    }
+
+    static changeFunctionName(name) {
+        Entry.Mutator.mutate(
+            'function_name',
+            {
+                template: _truncate(name, {
+                    length: 20,
+                }),
+            },
+            { type: 'noChange', isRestore: undefined }
+        );
+    }
+
+    static initBlock(blockMenu) {
+        blockMenu.banClass('functionEdit', true);
+        blockMenu.banClass('useLocalVariables', true);
+        this.changeFunctionName('');
+    }
 
     static registerFunction(func) {
         const workspace = Entry && Entry.getMainWS();
@@ -10,13 +201,21 @@ class EntryFunc {
         const blockMenu = workspace.getBlockMenu();
         const menuCode = blockMenu.code;
 
-        this._targetFuncBlock = menuCode.createThread([
-            {
-                type: `func_${func.id}`,
-                category: 'func',
-                x: -9999,
-            },
-        ]);
+        let index = undefined;
+        if (this._fieldLabel) {
+            index = menuCode.getThreadIndex(this._fieldLabel.thread);
+        }
+
+        this._targetFuncBlock = menuCode.createThread(
+            [
+                {
+                    type: `func_${func.id}`,
+                    category: 'func',
+                    x: -9999,
+                },
+            ],
+            index
+        );
         func.blockMenuBlock = this._targetFuncBlock;
     }
 
@@ -58,6 +257,39 @@ class EntryFunc {
     }
 
     static initEditView(content) {
+        if (this.targetFunc) {
+            const defBlock = this.targetFunc.content.getEventMap('funcDef')[0];
+
+            if (defBlock) {
+                let outputBlock = defBlock.params[0];
+                let functionNmaeTemplate = '';
+                let booleanIndex = 0;
+                let stringIndex = 0;
+
+                while (outputBlock) {
+                    const value = outputBlock.params[0];
+                    const valueType = value.type;
+                    switch (outputBlock.type) {
+                        case 'function_field_label':
+                            functionNmaeTemplate = `${functionNmaeTemplate} ${value}`;
+                            break;
+                        case 'function_field_boolean':
+                            booleanIndex++;
+                            // eslint-disable-next-line max-len
+                            functionNmaeTemplate += ` <${Lang.Blocks.FUNCTION_logical_variable} ${booleanIndex}>`;
+                            break;
+                        case 'function_field_string':
+                            stringIndex++;
+                            // eslint-disable-next-line max-len
+                            functionNmaeTemplate += ` (${Lang.Blocks.FUNCTION_character_variable} ${stringIndex})`;
+                            break;
+                    }
+
+                    outputBlock = outputBlock.getOutputBlock();
+                }
+                this.changeFunctionName(functionNmaeTemplate);
+            }
+        }
         if (!this.menuCode) {
             this.setupMenuCode();
         }
@@ -75,6 +307,7 @@ class EntryFunc {
             }
         });
         content.board.alignThreads();
+
         return true;
     }
 
@@ -100,7 +333,12 @@ class EntryFunc {
 
         delete this.targetFunc;
         EntryFunc.isEdit = false;
-        Entry.getMainWS().blockMenu.deleteRendered('variable');
+
+        const workspace = Entry.getMainWS();
+        const blockMenu = workspace.getBlockMenu();
+
+        blockMenu.deleteRendered('variable');
+
         const blockSchema = Entry.block[`func_${targetFuncId}`];
         if (blockSchema && blockSchema.destroyParamsBackupEvent) {
             blockSchema.destroyParamsBackupEvent.notify();
@@ -258,9 +496,15 @@ class EntryFunc {
             !this.menuCode && this.setupMenuCode();
             blockMenu.banClass('functionInit', true);
             blockMenu.unbanClass('functionEdit', true);
+            if (this.targetFunc && this.targetFunc.useLocalVariables) {
+                blockMenu.unbanClass('useLocalVariables', true);
+            }
+            Entry.variableContainer &&
+                Entry.variableContainer.updateFuncSettingView(this.targetFunc);
         } else {
             !workspace.isVimMode() && blockMenu.unbanClass('functionInit', true);
             blockMenu.banClass('functionEdit', true);
+            blockMenu.banClass('useLocalVariables', true);
         }
         blockMenu.lastSelector === 'func' && blockMenu.align();
     }
@@ -313,6 +557,7 @@ class EntryFunc {
         let stringIndex = 0;
         const schemaParams = [];
         let schemaTemplate = '';
+        let functionNmaeTemplate = '';
         const hashMap = targetFunc.hashMap;
         const paramMap = targetFunc.paramMap;
         const blockIds = [];
@@ -323,6 +568,7 @@ class EntryFunc {
             switch (outputBlock.type) {
                 case 'function_field_label':
                     schemaTemplate = `${schemaTemplate} ${value}`;
+                    functionNmaeTemplate = `${functionNmaeTemplate} ${value}`;
                     break;
                 case 'function_field_boolean':
                     Entry.Mutator.mutate(valueType, {
@@ -336,6 +582,10 @@ class EntryFunc {
                         accept: 'boolean',
                     });
                     schemaTemplate += ` %${booleanIndex + stringIndex}`;
+
+                    // eslint-disable-next-line max-len
+                    functionNmaeTemplate += ` <${Lang.Blocks.FUNCTION_logical_variable} ${booleanIndex}>`;
+
                     blockIds.push(outputBlock.id);
                     break;
                 case 'function_field_string':
@@ -346,6 +596,10 @@ class EntryFunc {
                     paramMap[valueType] = booleanIndex + stringIndex;
                     stringIndex++;
                     schemaTemplate += ` %${booleanIndex + stringIndex}`;
+
+                    // eslint-disable-next-line max-len
+                    functionNmaeTemplate += ` (${Lang.Blocks.FUNCTION_character_variable} ${stringIndex})`;
+
                     schemaParams.push({
                         type: 'Block',
                         accept: 'string',
@@ -356,12 +610,16 @@ class EntryFunc {
             outputBlock = outputBlock.getOutputBlock();
         }
 
-        schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
-        schemaParams.push({
-            type: 'Indicator',
-            img: 'block_icon/func_icon.svg',
-            size: 12,
-        });
+        this.changeFunctionName(functionNmaeTemplate);
+
+        if (targetFunc.type !== 'value') {
+            schemaTemplate += ` %${booleanIndex + stringIndex + 1}`;
+            schemaParams.push({
+                type: 'Indicator',
+                img: 'block_icon/func_icon.svg',
+                size: 12,
+            });
+        }
 
         const funcName = `func_${targetFunc.id}`;
         const block = Entry.block[funcName];
@@ -468,16 +726,56 @@ class EntryFunc {
         this.menuCode = undefined;
     }
 
-    static _generateFunctionSchema(functionId) {
+    static changeType(func, type = 'normal') {
+        func.destroy();
+        func.type = type;
+        delete func.block;
+        delete func.blockMenuBlock;
+        EntryFunc._generateFunctionSchema(func.id, type, true);
+
+        if (func && func.content) {
+            const blockMap = func.content._blockMap;
+            for (const key in blockMap) {
+                EntryFunc.registerParamBlock(blockMap[key].type);
+            }
+            EntryFunc.generateWsBlock(func);
+        }
+
+        EntryFunc.registerFunction(func);
+        const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
+        const block = func.content.getThread(0).getFirstBlock();
+        block.set({ statements: [] });
+        block.changeType(blockType);
+
+        func.block = block;
+
+        EntryFunc.updateMenu();
+
+        // reDrawVariableContainer()
+
+        // b = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec('0q91')[2]);
+        // Entry.Func.changeType(b, 'value')
+    }
+
+    static _generateFunctionSchema(functionId, type = 'normal', isUpdate) {
         const prefixedFunctionId = `func_${functionId}`;
-        if (Entry.block[prefixedFunctionId]) {
+        if (!isUpdate && Entry.block[prefixedFunctionId]) {
             return;
         }
         let BlockSchema = function() {};
         BlockSchema.prototype = Entry.block.function_general;
+
+        if (type === 'value') {
+            BlockSchema.prototype = Entry.block.function_value;
+        }
+
         BlockSchema = new BlockSchema();
         BlockSchema.changeEvent = new Entry.Event();
         BlockSchema.template = Lang.template.function_general;
+
+        if (type === 'value') {
+            BlockSchema.template = Lang.template.function_value;
+        }
 
         Entry.block[prefixedFunctionId] = BlockSchema;
     }
@@ -496,69 +794,6 @@ class EntryFunc {
             });
             Entry.variableContainer.functionAddButton_.addClass('disable');
         }
-    }
-
-    constructor(func) {
-        this.id = func && func.id ? func.id : Entry.generateHash();
-        let content;
-        //inspect empty content
-        if (func && func.content && func.content.length > 4) {
-            content = func.content;
-        }
-        this.content = content
-            ? new Entry.Code(content)
-            : new Entry.Code([
-                  [
-                      {
-                          type: 'function_create',
-                          copyable: false,
-                          deletable: false,
-                          x: 40,
-                          y: 40,
-                      },
-                  ],
-              ]);
-        this.block = null;
-        this.blockMenuBlock = null;
-        this.hashMap = {};
-        this.paramMap = {};
-
-        EntryFunc._generateFunctionSchema(this.id);
-
-        if (func && func.content) {
-            const blockMap = this.content._blockMap;
-            for (const key in blockMap) {
-                EntryFunc.registerParamBlock(blockMap[key].type);
-            }
-            EntryFunc.generateWsBlock(this);
-        }
-
-        EntryFunc.registerFunction(this);
-
-        EntryFunc.updateMenu();
-    }
-
-    destroy() {
-        this.blockMenuBlock && this.blockMenuBlock.destroy();
-    }
-
-    edit() {
-        if (EntryFunc.isEdit) {
-            return;
-        }
-        EntryFunc.isEdit = true;
-        Entry.getMainWS().blockMenu.deleteRendered('variable');
-        if (!EntryFunc.svg) {
-            EntryFunc.isEdit = EntryFunc.initEditView();
-        } else {
-            this.parentView.appendChild(this.svg);
-        }
-    }
-
-    generateBlock() {
-        const generatedInfo = EntryFunc.generateBlock(this);
-        this.block = generatedInfo.block;
-        this.description = generatedInfo.description;
     }
 }
 

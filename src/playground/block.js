@@ -861,6 +861,8 @@ Entry.Block = class Block {
             } else if (parent instanceof Entry.Block) {
                 //statement
                 block = thread.parent;
+            } else if (parent instanceof Entry.FieldBlock) {
+                break;
             } else {
                 block = undefined;
             }

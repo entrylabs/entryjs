@@ -486,4 +486,59 @@ Entry.Code = class Code {
             });
         });
     };
+
+    static getAsyncParamsData = async (scope) => {
+        const values = scope.getParams();
+        const isPromise = values.some((value) => value instanceof Promise);
+        if (!isPromise) {
+            scope.values = values;
+            return scope.getValue('VALUE', scope);
+        } else {
+            const aValues = await Promise.all(values);
+            scope.values = aValues;
+            return scope.getValue('VALUE', scope);
+        }
+    };
+
+    static funcValueAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
+        await Promise.all(_promises);
+        if (Entry.engine.isState('pause')) {
+            const r = this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
+            return r;
+        } else if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            funcCode.callStackLength--;
+                            funcCode.removeExecutor(funcExecutor);
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
 };

@@ -108,6 +108,11 @@ Entry.STATIC = {
         funcEditEnd: 1002,
         funcRemove: 1003,
         funcCreate: 1004,
+        funcChangeType: 1005,
+        funcLocalVarChangeLength: 1006,
+        toggleFuncUseLocalVariables: 1007,
+        insertFuncLocalVariable: 1008,
+        removeFuncLocalVariableByIndex: 1009,
 
         createComment: 1201,
         removeComment: 1202,

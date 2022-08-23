@@ -182,6 +182,7 @@ class Scope {
         if (!schema.func) {
             return;
         }
+
         if (!isPromise) {
             this.values = values;
             return schema.func.call(this, entity, this);
