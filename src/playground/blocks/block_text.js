@@ -37,7 +37,6 @@ module.exports = {
                     const targetId = script.getField('VALUE', script);
                     let targetEntity;
                     if (targetId === 'self') {
-                        console.log(sprite);
                         if (sprite.type !== 'textBox') {
                             throw new Error('textBox가 아닙니다.');
                         }
@@ -329,7 +328,7 @@ module.exports = {
                 def: {
                     params: [
                         {
-                            type: 'color',
+                            type: 'text_color',
                         },
                         null,
                     ],
@@ -341,7 +340,11 @@ module.exports = {
                 class: 'text',
                 isNotFor: ['sprite'],
                 func(sprite, script) {
-                    const color = script.getStringValue('VALUE', script);
+                    let color = script.getStringValue('VALUE', script);
+
+                    if (color.indexOf('#') !== 0) {
+                        color = `#${color}`;
+                    }
                     sprite.setColorWithLog(color);
                     return script.callReturn();
                 },
@@ -354,7 +357,8 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Color',
+                        type: 'Block',
+                        accept: 'string',
                     },
                     {
                         type: 'Indicator',
@@ -364,7 +368,12 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [null],
+                    params: [
+                        {
+                            type: 'text_color',
+                        },
+                        null,
+                    ],
                     type: 'text_change_bg_color',
                 },
                 paramsKeyMap: {
@@ -373,7 +382,10 @@ module.exports = {
                 class: 'text',
                 isNotFor: ['sprite'],
                 func(sprite, script) {
-                    const color = script.getField('VALUE', script);
+                    let color = script.getStringValue('VALUE', script);
+                    if (color.indexOf('#') !== 0) {
+                        color = `#${color}`;
+                    }
                     sprite.setBGColourWithLog(color);
                     return script.callReturn();
                 },
