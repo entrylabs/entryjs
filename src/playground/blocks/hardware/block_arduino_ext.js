@@ -1,5 +1,7 @@
 'use strict';
 
+const { convLayer } = require("face-api.js/build/commonjs/common");
+
 Entry.ArduinoExt = {
     id: '1.9',
     name: 'ArduinoExt',
@@ -614,11 +616,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 } else if (Entry.ArduinoExt.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
-                    throw new Error();
+                    throw new Error();                    
                 }
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
+
                 Entry.hw.sendQueue.SET[port] = {
                     type: Entry.ArduinoExt.sensorTypes.DIGITAL,
                     data: value,
@@ -701,6 +704,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     data: value,
                     time: new Date().getTime(),
                 };
+                //console.log(Entry.hw.sendQueue.SET);
                 return script.callReturn();
             },
             syntax: {
@@ -997,7 +1001,7 @@ Entry.ArduinoExt.getBlocks = function() {
                         },
                         time: new Date().getTime(),
                     };
-
+                    console.log(sq.SET);
                     setTimeout(() => {
                         script.timeFlag = 0;
                     }, duration + 32);
