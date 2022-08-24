@@ -180,9 +180,9 @@ class EntryFunc {
         Entry.Mutator.mutate(
             'function_name',
             {
-                template: _truncate(name, {
+                template: `${Lang.Workspace.func} : ${_truncate(name, {
                     length: 20,
-                }),
+                })}`,
             },
             { type: 'noChange', isRestore: undefined }
         );

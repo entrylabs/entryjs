@@ -35,7 +35,7 @@ module.exports = {
                 skeleton: 'basic_text',
                 skeletonOptions: {
                     contentPos: {
-                        x: 16,
+                        x: 5,
                     },
                 },
                 color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -52,7 +52,6 @@ module.exports = {
                 isNotFor: ['functionEdit'],
                 events: {},
             },
-
             showFunctionPropsButton: {
                 template: '%1',
                 skeleton: 'basic_button',
