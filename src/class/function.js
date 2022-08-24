@@ -735,6 +735,8 @@ class EntryFunc {
         delete func.blockMenuBlock;
         EntryFunc._generateFunctionSchema(func.id, type, true);
 
+        const tempContent = func.content.toJSON();
+
         if (func && func.content) {
             const blockMap = func.content._blockMap;
             for (const key in blockMap) {
@@ -746,11 +748,15 @@ class EntryFunc {
         EntryFunc.registerFunction(func);
         const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
         const block = func.content.getThread(0).getFirstBlock();
-        block.set({ statements: [] });
+
         block.changeType(blockType);
+        func.content.destroy();
+        tempContent[0][0].type = blockType;
+        func.content = new Entry.Code(tempContent);
 
+        const workspace = Entry.getMainWS();
+        workspace.changeOverlayBoardCode(func.content);
         func.block = block;
-
         EntryFunc.updateMenu();
 
         // reDrawVariableContainer()

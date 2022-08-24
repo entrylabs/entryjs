@@ -448,6 +448,22 @@ Entry.VariableContainer = class VariableContainer {
         func.listElement.appendChild(this.funcSettingView);
     }
 
+    isUsedFunction(func) {
+        if ([...this._functionRefs].some((item) => item.block.data.type === `func_${func.id}`)) {
+            return true;
+        } else if (
+            Object.keys(this.functions_).some((key) => {
+                const item = this.functions_[key]?.content.findByType(`func_${func.id}`);
+                console.log(item);
+                return Boolean(item);
+            })
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     generateFuncDefaultView(element, func) {
         const createElement = Entry.createElement;
 
@@ -462,14 +478,9 @@ Entry.VariableContainer = class VariableContainer {
         element.resultCheck = createElement('span')
             .addClass('entryFuncAddResultCheckWorkspace')
             .bindOnClick(() => {
-                const caller = [...this._functionRefs].find(
-                    (item) => item.block.data.type === `func_${func.id}`
-                );
-
-                if (caller) {
+                if (this.isUsedFunction(func)) {
                     return Entry.modal.alert(Lang.Msgs.cannot_delete_function);
                 }
-
                 Entry.do('funcChangeType', func);
             })
             .appendTo(resultCheckBox);
@@ -477,14 +488,9 @@ Entry.VariableContainer = class VariableContainer {
         const resultCheckText = createElement('span')
             .addClass('chk_text')
             .bindOnClick(() => {
-                const caller = [...this._functionRefs].find(
-                    (item) => item.block.data.type === `func_${func.id}`
-                );
-
-                if (caller) {
+                if (this.isUsedFunction(func)) {
                     return Entry.modal.alert(Lang.Msgs.cannot_delete_function);
                 }
-
                 Entry.do('funcChangeType', func);
             })
             .appendTo(resultCheckBox);
@@ -3293,6 +3299,9 @@ Entry.VariableContainer = class VariableContainer {
                 return;
             }
             func.isAdded = true;
+            if (!Entry.isLoadProject) {
+                return;
+            }
             func.content.getBlockList().forEach((block) => {
                 const blockType = block.type;
                 if (blockType.indexOf('func_') > -1 && blockType.substr(5) == id) {

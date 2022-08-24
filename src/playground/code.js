@@ -359,6 +359,14 @@ Entry.Code = class Code {
         return this._blockMap[id];
     }
 
+    findByType(type) {
+        const id = Object.keys(this._blockMap).find((id) => {
+            const block = this._blockMap[id];
+            return block.type === type;
+        });
+        return this._blockMap[id];
+    }
+
     registerBlock(block) {
         this._blockMap[block.id] = block;
     }
