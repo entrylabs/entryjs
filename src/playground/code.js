@@ -40,6 +40,10 @@ Entry.Code = class Code {
 
         const parseCode = Array.isArray(code) ? code : JSON.parse(code);
         parseCode.forEach((t) => {
+            if (Array.isArray(t) && t.length > 1 && t?.[0].type === 'function_create') {
+                t[0].statements.push(t.splice(1, t.length));
+            }
+
             const thread = new Entry.Thread(t, this);
             if (thread.hasData()) {
                 this._data.push(thread);

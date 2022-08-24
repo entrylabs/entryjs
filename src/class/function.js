@@ -138,6 +138,7 @@ class EntryFunc {
     toggleFunctionUseLocalVariables() {
         this.useLocalVariables = !this.useLocalVariables;
         Entry.variableContainer && Entry.variableContainer.updateFuncSettingView(this);
+        EntryFunc.updateMenu();
     }
 
     getLocalVariables() {
@@ -500,6 +501,8 @@ class EntryFunc {
             blockMenu.unbanClass('functionEdit', true);
             if (this.targetFunc && this.targetFunc.useLocalVariables) {
                 blockMenu.unbanClass('useLocalVariables', true);
+            } else {
+                blockMenu.banClass('useLocalVariables', true);
             }
             Entry.variableContainer &&
                 Entry.variableContainer.updateFuncSettingView(this.targetFunc);
