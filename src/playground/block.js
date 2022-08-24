@@ -15,6 +15,7 @@ Entry.Block = class Block {
         emphasized: false,
         readOnly: null,
         copyable: true,
+        assemble: true,
         events: {},
         extensions: [],
     };
