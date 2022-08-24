@@ -1,4 +1,5 @@
 import _truncate from 'lodash/truncate';
+import _trim from 'lodash/trim';
 
 class EntryFunc {
     static isEdit = false;
@@ -180,9 +181,11 @@ class EntryFunc {
         Entry.Mutator.mutate(
             'function_name',
             {
-                template: `${Lang.Workspace.func} : ${_truncate(name, {
-                    length: 20,
-                })}`,
+                template: `${Lang.Workspace.func}: ${_trim(
+                    _truncate(name, {
+                        length: 20,
+                    })
+                )}`,
             },
             { type: 'noChange', isRestore: undefined }
         );
