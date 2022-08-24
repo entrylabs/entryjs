@@ -107,7 +107,8 @@ Entry.BlockToPyParser = class {
                 return syntax;
             }
         } else if (this.isFuncStmtParam(block)) {
-            results.push(block.data.type);
+            const type = block.data.type;
+            results.push(this._funcParamMap.get(type) || type);
         }
 
         if (!syntax && !this.isFuncStmtParam(block)) {
@@ -154,8 +155,17 @@ Entry.BlockToPyParser = class {
             if (statements) {
                 statements.forEach((value) => {
                     const [, index] = value.split('$');
+                    const statementTextCodes = [];
+                    const thread = block.statements[index - 1];
+                    thread.getBlocks().forEach((block) => {
+                        if (this.getFuncInfo(block)) {
+                            statementTextCodes.push(this.makeFuncDef(block, true));
+                        } else {
+                            statementTextCodes.push(this.Block(block));
+                        }
+                    });
                     resultTextCode += Entry.TextCodingUtil.indent(
-                        this.Thread(block.statements[index - 1])
+                        statementTextCodes.join('\n').concat('\n')
                     );
                 });
             }

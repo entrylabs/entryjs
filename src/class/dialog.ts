@@ -17,13 +17,13 @@ class EntryDialog {
     private notch: any;
     private _isNoContentTried: boolean;
     private readonly message_: string;
-    private readonly mode_: 'speak' | 'ask';
+    private readonly mode_: 'speak' | 'ask' | 'yell' | 'think';
     public object: any;
 
     constructor(
         entity: EntryObjectEntity,
         message: string | number,
-        mode: 'speak' | 'ask',
+        mode: 'speak' | 'ask' | 'yell' | 'think',
         isStamp: boolean
     ) {
         if (entity.isEngineStop) {
@@ -42,8 +42,8 @@ class EntryDialog {
         messageString = messageString.match(/.{1,15}/g).join('\n');
         this.message_ = messageString;
         this.mode_ = mode;
-        if (mode === 'speak' || mode === 'ask') {
-            this.generateSpeak();
+        if (mode === 'speak' || mode === 'ask' || mode === 'think' || mode === 'yell') {
+            this.generateSpeak(mode);
         }
         if (!isStamp) {
             Entry.stage.loadDialog(this);
@@ -164,10 +164,15 @@ class EntryDialog {
             notchType = this.setNotchPositionForCreateJs(bound);
         }
 
-        if (this.notch.type != notchType) {
+        if (this.notch && this.notch.type != notchType) {
             this.object.removeChild(this.notch);
-            this.notch = this.createSpeakNotch(notchType as NotchType);
-            this.object.addChild(this.notch);
+            if (this.mode_ === 'think') {
+                this.notch = this.createThinkkNotch(notchType as NotchType);
+                this.object.addChild(this.notch);
+            } else if (this.mode_ === 'speak' || this.mode_ === 'ask') {
+                this.notch = this.createSpeakNotch(notchType as NotchType);
+                this.object.addChild(this.notch);
+            }
         }
 
         this._isNoContentTried && this.parent.setText('');
@@ -242,7 +247,158 @@ class EntryDialog {
         return notch;
     }
 
-    private generateSpeak() {
+    private createThinkkNotch(type: NotchType) {
+        const notch = GEHelper.newGraphic();
+        notch.type = type;
+        const colorSet = EntryStatic.colorSet.canvas || {};
+        const height = this.height + this.padding;
+        const padding = this.padding;
+        const width = this.width;
+        if (type === 'ne') {
+            notch.graphics
+                .f('#ffffff')
+                .ss(3, 2)
+                .s('#ffffff')
+                .mt(3, height)
+                .lt(11, height)
+                .ss(2, 1, 1)
+                .s(colorSet.dialog || '#4f80ff')
+                .mt(2, height)
+                .qt(2, height + 9, 12, height)
+                .de(2, height + 9, 5, 4);
+        } else if (type === 'nw') {
+            notch.graphics
+                .f('#ffffff')
+                .ss(3, 2)
+                .s('#ffffff')
+                .mt(width - 3, height)
+                .lt(width - 11, height)
+                .ss(2, 1, 1)
+                .s(colorSet.dialog || '#4f80ff')
+                .mt(width, height)
+                .qt(width, height + 9, width - 12, height)
+                .de(width - 3, height + 9, 5, 4);
+        } else if (type === 'se') {
+            notch.graphics
+                .f('#ffffff')
+                .ss(3, 2)
+                .s('#ffffff')
+                .mt(3, -padding)
+                .lt(11, -padding)
+                .ss(2, 1, 1)
+                .s(colorSet.dialog || '#4f80ff')
+                .mt(2, -padding)
+                .qt(2, -padding - 9, 12, -padding)
+                .de(0, -padding - 12, 5, 4);
+        } else if (type === 'sw') {
+            notch.graphics
+                .f('#ffffff')
+                .ss(3, 2)
+                .s('#ffffff')
+                .mt(width - 3, -padding)
+                .lt(width - 11, -padding)
+                .ss(2, 1, 1)
+                .s(colorSet.dialog || '#4f80ff')
+                .mt(this.width - 2, -padding)
+                .qt(width - 2, -padding - 9, width - 12, -padding)
+                .de(width - 6, -padding - 12, 5, 4);
+        }
+        return notch;
+    }
+
+    private drawZigZagLineX({ ctx, x1, y1, x2, y2, padding, zigzagSpacing, oneZigZagLength }: any) {
+        let zx = 0;
+        ctx.moveTo(x1 + padding, y1);
+        for (let n = 0; zx < x2 - padding; n++) {
+            zx = (n + 1) * zigzagSpacing + x1 + padding;
+            const zy = (n % 2 == 0 ? -oneZigZagLength : oneZigZagLength) + y1;
+            ctx.lineTo(zx, zy);
+        }
+        ctx.lineTo(x2 - padding, y2);
+    }
+    private drawZigZagLineY({ ctx, x1, y1, x2, y2, padding, zigzagSpacing, oneZigZagLength }: any) {
+        let zy = 0;
+        ctx.moveTo(x1, y1 + padding);
+        for (let n = 0; zy < y2 - padding; n++) {
+            zy = (n + 1) * zigzagSpacing + y1 + padding;
+            const zx = (n % 2 !== 0 ? -oneZigZagLength : oneZigZagLength) + x1;
+            ctx.lineTo(zx, zy);
+        }
+        ctx.lineTo(x2, y2 - padding);
+    }
+    private drawZigZagRect({ x, y, w, h, borderColor, fillColor }: any) {
+        const rect = GEHelper.newGraphic();
+        const zigzagSpacing = 3;
+        const oneZigZagLength = 5;
+        const ctx = rect.graphics;
+        ctx.setStrokeStyle(1);
+        ctx.beginStroke(borderColor);
+        ctx.beginFill(fillColor);
+        const padding = 10;
+        this.drawZigZagLineX({
+            ctx,
+            x1: x,
+            y1: y,
+            x2: x + w,
+            y2: y,
+            padding,
+            zigzagSpacing,
+            oneZigZagLength,
+        });
+        ctx.lineTo(x + w, y + padding);
+        this.drawZigZagLineY({
+            ctx,
+            x1: x + w,
+            y1: y,
+            x2: x + w,
+            y2: y + h,
+            padding,
+            zigzagSpacing,
+            oneZigZagLength,
+        });
+        ctx.lineTo(x + w - padding, y + h);
+        this.drawZigZagLineX({
+            ctx,
+            x1: x,
+            y1: y + h,
+            x2: x + w,
+            y2: y + h,
+            padding,
+            zigzagSpacing,
+            oneZigZagLength,
+        });
+        ctx.moveTo(x + padding, y + h);
+        ctx.lineTo(x, y + h - padding);
+        this.drawZigZagLineY({
+            ctx,
+            x1: x,
+            y1: y,
+            x2: x,
+            y2: y + h,
+            padding,
+            zigzagSpacing,
+            oneZigZagLength,
+        });
+        ctx.moveTo(x + padding, y);
+        ctx.lineTo(x, y + padding);
+        return rect;
+    }
+
+    private drawYellStart({ x, y, w, h, fillColor, borderColor }: any) {
+        const star = GEHelper.newGraphic();
+        const pointSize = 0.2;
+        const radius = Math.sqrt(w * w + h * h) / 2;
+        const sides = 30;
+        const angle = -90;
+        star.graphics
+            .f(fillColor)
+            .ss(2, 'round')
+            .s(borderColor)
+            .drawPolyStar(x + radius / 2, y + radius / 2, radius, sides, pointSize, angle);
+        return star;
+    }
+
+    private generateSpeak(mode: 'speak' | 'ask' | 'yell' | 'think') {
         this.object = GEHelper.newContainer('[dialog] container');
         const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
         const text = GEHelper.textHelper.newText(
@@ -262,27 +418,44 @@ class EntryDialog {
 
         const height = bound.height;
         const width = bound.width >= 10 ? bound.width : 17;
-        const rect = GEHelper.newGraphic();
         const colorSet = EntryStatic.colorSet.canvas || {};
-        rect.graphics
-            .f(colorSet.dialogBG || '#ffffff')
-            .ss(2, 'round')
-            .s(colorSet.dialog || '#4f80ff')
-            .rr(
-                -this.padding,
-                -this.padding,
-                width + 2 * this.padding,
-                height + 2 * this.padding,
-                this.padding
-            );
-        this.object.addChild(rect);
+        if (mode === 'yell') {
+            const rect = this.drawZigZagRect({
+                x: -this.padding,
+                y: -this.padding,
+                w: width + 2 * this.padding,
+                h: height + 2 * this.padding,
+                fillColor: colorSet.dialogBG || '#ffffff',
+                borderColor: colorSet.dialog || '#4f80ff',
+            });
+            this.object.addChild(rect);
+        } else {
+            const rect = GEHelper.newGraphic();
+            rect.graphics
+                .f(colorSet.dialogBG || '#ffffff')
+                .ss(2, 'round')
+                .s(colorSet.dialog || '#4f80ff')
+                .rr(
+                    -this.padding,
+                    -this.padding,
+                    width + 2 * this.padding,
+                    height + 2 * this.padding,
+                    this.padding
+                );
+            this.object.addChild(rect);
+        }
         this.object.regX = width / 2;
         this.object.regY = height / 2;
         this.width = width;
         this.height = height;
-        this.notch = this.createSpeakNotch('ne');
+        if (mode === 'think') {
+            this.notch = this.createThinkkNotch('nw');
+            this.object.addChild(this.notch);
+        } else if (mode === 'speak' || mode === 'ask') {
+            this.notch = this.createSpeakNotch('nw');
+            this.object.addChild(this.notch);
+        }
         this.update();
-        this.object.addChild(this.notch);
         this.object.addChild(text);
         Entry.requestUpdate = true;
     }

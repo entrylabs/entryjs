@@ -453,7 +453,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params })
                 .then((result) => {
                     if (result && result.hasOwnProperty('data')) {
-                        return resolve(result.data.response.body.items.item.totalCnt);
+                        return resolve(result?.data?.response?.body?.items?.item?.[0]?.totalCnt);
                     }
                     resolve(defaultValue);
                 })
@@ -472,7 +472,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
         return new PromiseManager().Promise((resolve) => {
             callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params })
                 .then((result) => {
-                    const items = result.data.response.body.items.item;
+                    const items = result?.data?.response?.body?.items?.item;
                     let item = null;
                     if (items.constructor == Array) {
                         item = items[num - 1];
@@ -529,8 +529,8 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 const defaultValue = 0;
                 const params = {
                     area:
-                    Entry.EXPANSION_BLOCK.festival.locationMap[
-                        script.getField('LOCATION', script)
+                        Entry.EXPANSION_BLOCK.festival.locationMap[
+                            script.getField('LOCATION', script)
                         ].code,
                     month:
                         Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],

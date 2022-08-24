@@ -720,12 +720,34 @@ Entry.EntryObject = class {
         const { backpackDisable } = options;
         const object = this;
         const container = Entry.container;
+        const objects = container._getSortableObjectList();
+        const objectIndex = objects.findIndex((item) => item.key == this.id);
         const contextMenus = [
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
                 callback() {
                     container.addCloneObject(object);
+                },
+            },
+            {
+                text: Lang.Workspace.copy_file,
+                callback() {
+                    container.setCopiedObject(object);
+                },
+            },
+            {
+                text: Lang.Blocks.Paste_blocks,
+                enable: !Entry.engine.isState('run') && !!container.copiedObject,
+                callback() {
+                    if (container.copiedObject) {
+                        container.addCloneObject(container.copiedObject);
+                    } else {
+                        Entry.toast.alert(
+                            Lang.Workspace.add_object_alert,
+                            Lang.Workspace.object_not_found_for_paste
+                        );
+                    }
                 },
             },
             {
@@ -742,24 +764,17 @@ Entry.EntryObject = class {
                 },
             },
             {
-                text: Lang.Workspace.copy_file,
+                text: Lang.Workspace.bring_forward,
+                enable: objectIndex > 0,
                 callback() {
-                    container.setCopiedObject(object);
+                    Entry.do('objectReorder', objectIndex - 1, objectIndex);
                 },
             },
             {
-                text: Lang.Blocks.Paste_blocks,
-                enable: !Entry.engine.isState('run') && !!container.copiedObject,
+                text: Lang.Workspace.send_backward,
+                enable: objectIndex < objects.length - 1,
                 callback() {
-                    const container = Entry.container;
-                    if (container.copiedObject) {
-                        container.addCloneObject(container.copiedObject);
-                    } else {
-                        Entry.toast.alert(
-                            Lang.Workspace.add_object_alert,
-                            Lang.Workspace.object_not_found_for_paste
-                        );
-                    }
+                    Entry.do('objectReorder', objectIndex + 1, objectIndex);
                 },
             },
         ];
@@ -885,6 +900,9 @@ Entry.EntryObject = class {
 
         this.updateCoordinateView(true);
         this.updateRotationView(true);
+
+        Entry.addEventListener('run', this.setDisabled);
+        Entry.addEventListener('dispatchEventDidToggleStop', this.setEnabled);
 
         return this.view_;
     }
@@ -1184,6 +1202,8 @@ Entry.EntryObject = class {
                     return;
                 }
                 Entry.do('removeObject', this.id);
+                Entry.removeEventListener('run', this.setDisabled);
+                Entry.removeEventListener('dispatchEventDidToggleStop', this.setEnabled);
             });
         }
         return deleteView;
@@ -1194,6 +1214,17 @@ Entry.EntryObject = class {
         nameView.addEventListener('click', (e) => {
             if (!_.includes(this.view_.classList, 'selectedObject')) {
                 e.preventDefault();
+            }
+        });
+        nameView.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            if (!_.includes(this.view_.classList, 'selectedObject')) {
+                this._rightClick(e);
+            }
+        });
+        nameView.addEventListener('focus', () => {
+            if (!_.includes(this.view_.classList, 'selectedObject')) {
+                nameView.blur();
             }
         });
 
@@ -1221,6 +1252,40 @@ Entry.EntryObject = class {
         nameView.value = this.name;
         return nameView;
     }
+
+    setDisabled = () => {
+        if (this.nameView_) {
+            this.nameView_.disabled = true;
+        }
+        if (this.rotateInput_) {
+            this.rotateInput_.disabled = true;
+        }
+        if (this.directionInput_) {
+            this.directionInput_.disabled = true;
+        }
+        if (this.coordinateView_) {
+            this.coordinateView_.sizeInput_.disabled = true;
+            this.coordinateView_.xInput_.disabled = true;
+            this.coordinateView_.yInput_.disabled = true;
+        }
+    };
+
+    setEnabled = () => {
+        if (this.nameView_) {
+            this.nameView_.disabled = false;
+        }
+        if (this.rotateInput_) {
+            this.rotateInput_.disabled = false;
+        }
+        if (this.directionInput_) {
+            this.directionInput_.disabled = false;
+        }
+        if (this.coordinateView_) {
+            this.coordinateView_.sizeInput_.disabled = false;
+            this.coordinateView_.xInput_.disabled = false;
+            this.coordinateView_.yInput_.disabled = false;
+        }
+    };
 
     createWrapperView() {
         const wrapperView = Entry.createElement('div').addClass('entryObjectWrapperWorkspace');

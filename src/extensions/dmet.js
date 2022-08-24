@@ -289,7 +289,7 @@ class dmetTable {
     }
 
     #insertRow({ key = CommonUtils.generateId(), index, data = this.#getDefaultData() } = {}) {
-        let value = toNumber(data);
+        const value = toNumber(data);
         if (Array.isArray(data) || index > this.#array.length + 1 || index < 0) {
             if (index === 0) {
                 const fields = [...data];
@@ -314,7 +314,7 @@ class dmetTable {
         if (!key) {
             key = index;
         }
-        let { value: row, key: objKey, x, y } = this.getRow(key);
+        const { value: row, key: objKey, x, y } = this.getRow(key);
         if (!row || (y > -1 && !row[y])) {
             throw { message: 'not found data' };
         }
@@ -332,7 +332,7 @@ class dmetTable {
         if (!key) {
             key = index;
         }
-        let { value: row, key: objKey, x, y } = this.getRow(key);
+        const { value: row, key: objKey, x, y } = this.getRow(key);
         if (!row) {
             throw { message: 'not found row' };
         }
@@ -715,7 +715,7 @@ class dmet {
     }
 
     #objectToJSON(object) {
-        for (let key in object) {
+        for (const key in object) {
             object[key] = object[key].toJSON();
         }
         return object;
@@ -750,15 +750,12 @@ class dmet {
                 }
             });
         } else if (isPlainObject(variables) && variables.isDmet) {
-            this.#list = _mapValues(variables.list, (list) => {
-                return new dmetList(list);
-            });
-            this.#variable = _mapValues(variables.variable, (variable) => {
-                return new dmetVariable(variable);
-            });
-            this.#table = _mapValues(variables.table, (list) => {
-                return new dmetTable(list);
-            });
+            this.#list = _mapValues(variables.list, (list) => new dmetList(list));
+            this.#variable = _mapValues(
+                variables.variable,
+                (variable) => new dmetVariable(variable)
+            );
+            this.#table = _mapValues(variables.table, (list) => new dmetTable(list));
             this.#id = variables.id;
         }
     }

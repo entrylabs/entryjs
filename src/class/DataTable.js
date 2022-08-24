@@ -1,6 +1,8 @@
 import _map from 'lodash/map';
+import _sum from 'lodash/sum';
 import _find from 'lodash/find';
 import _uniq from 'lodash/uniq';
+import _every from 'lodash/every';
 import _filter from 'lodash/filter';
 import _flatten from 'lodash/flatten';
 import _cloneDeep from 'lodash/cloneDeep';
@@ -98,7 +100,7 @@ class DataTable {
     }
 
     addSource(table, view = true) {
-        let data = table || { name: Lang.Workspace.data_table };
+        const data = table || { name: Lang.Workspace.data_table };
         data.name = Entry.getOrderedName(data.name, this.#tables, 'name');
 
         this.#tables.push(table instanceof DataTableSource ? table : new DataTableSource(table));
@@ -177,6 +179,28 @@ class DataTable {
         Entry.playground.reloadPlayground();
         Entry.playground.refreshPlayground();
         Entry.dispatchEvent('dismissModal');
+    }
+
+    getColumnIndex(col) {
+        if (Entry.Utils.isNumber(col)) {
+            return parseFloat(col);
+        }
+
+        if (/[^A-Za-z]|\s/.test(col)) {
+            return 0;
+        }
+
+        // return _.chain(col)
+        //     .toUpper()
+        //     .reduce((prev, curr) => prev * 26 + curr.charCodeAt() - 64, 0)
+        //     .value();
+
+        return _sum(
+            _map(
+                col,
+                (cn, i) => (cn.toUpperCase().charCodeAt(0) - 64) * Math.pow(26, col.length - i - 1)
+            )
+        );
     }
 
     #generateView() {

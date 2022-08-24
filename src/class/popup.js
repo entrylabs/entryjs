@@ -39,6 +39,7 @@ Entry.Popup = class Popup {
      * Remove this popup
      */
     remove() {
+        Entry.dispatchEvent('onPopupClose');
         while (this.window_.hasChildNodes()) {
             if (Entry.type == 'workspace') {
                 Entry.engineContainer.insertBefore(

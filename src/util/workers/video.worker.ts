@@ -25,7 +25,6 @@ type FlipStatus = {
 let mobileNet: any = null;
 let coco: any = null;
 let faceLoaded: boolean = false;
-const weightsUrl = `${self.location.origin}/lib/entry-js/weights`;
 
 // 메인 스레드에서 전달받은 이미지 프레임 반영용 캔버스
 let offCanvas: OffscreenCanvas = null;
@@ -156,9 +155,10 @@ ctx.onmessage = async function(e: {
         image: ImageBitmap;
         target: IndicatorType;
         mode: String;
+        weightsUrl: string;
     };
 }) {
-    const { type } = e.data;
+    const { type, weightsUrl } = e.data;
     switch (type) {
         case 'init':
             dimension.width = e.data.width;

@@ -2,6 +2,7 @@
  *
  */
 'use strict';
+
 class Executor {
     constructor(block, entity, code) {
         this.scope = new Entry.Scope(block, this);
@@ -56,6 +57,12 @@ class Executor {
                 } else if (this.isFuncExecutor) {
                     //function executor
                     throw e;
+                } else if (e.name === 'RangeError') {
+                    Entry.toast.alert(
+                        Lang.Workspace.RecursiveCallWarningTitle,
+                        Lang.Workspace.RecursiveCallWarningContent
+                    );
+                    Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
                 } else {
                     Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
                 }
@@ -95,7 +102,14 @@ class Executor {
                         } else if (e.name === 'IncompatibleError') {
                             Entry.Utils.stopProjectWithToast(this.scope, 'IncompatibleError', e);
                         } else if (this.isFuncExecutor) {
+                            //function executor
                             throw e;
+                        } else if (e.name === 'RangeError') {
+                            Entry.toast.alert(
+                                Lang.Workspace.RecursiveCallWarningTitle,
+                                Lang.Workspace.RecursiveCallWarningContent
+                            );
+                            Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
                         } else {
                             Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
                         }

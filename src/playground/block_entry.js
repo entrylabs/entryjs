@@ -356,7 +356,9 @@ function getBlocks() {
             events: {
                 mousedown: [
                     function() {
-                        window.open('https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0');
+                        window.open(
+                            'https://docs.playentry.org/user/block_hardware.html#POINT-%EC%95%84%EB%91%90%EC%9D%B4%EB%85%B8-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0'
+                        );
                     },
                 ],
             },
@@ -872,6 +874,83 @@ function getBlocks() {
                             {
                                 type: 'Angle',
                                 converter: Entry.block.converters.returnRawNumberValueByKey,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        color: {
+            color: EntryStatic.colorSet.block.default.BRUSH,
+            outerLine: EntryStatic.colorSet.block.darken.BRUSH,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'color',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('VALUE');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'color',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                codeMap: 'Entry.CodeMap.Entry.set_color[0]',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        text_color: {
+            template: Lang.template.color,
+            color: EntryStatic.colorSet.block.default.TEXT,
+            outerLine: EntryStatic.colorSet.block.darken.TEXT,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Color',
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'text_color',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func(sprite, script) {
+                return script.getField('VALUE');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'text_color',
+                        textParams: [
+                            {
+                                type: 'Color',
+                                converter: Entry.block.converters.returnStringValueUpperCase,
+                                codeMap: 'Entry.CodeMap.Entry.set_text_color[0]',
                             },
                         ],
                     },
@@ -1407,241 +1486,6 @@ function getBlocks() {
             },
             func(sprite, script) {
                 return Entry.engine.toggleStop();
-            },
-            syntax: { js: [], py: [''] },
-        },
-        function_field_label: {
-            skeleton: 'basic_param',
-            isNotFor: ['functionEdit'],
-            color: '#f9c535',
-            params: [
-                {
-                    type: 'TextInput',
-                    value: Lang.Blocks.FUNCTION_explanation_1,
-                },
-                {
-                    type: 'Output',
-                    accept: 'param',
-                },
-            ],
-            paramsKeyMap: {
-                NAME: 0,
-                NEXT: 1,
-            },
-            def: {
-                params: [Lang.Blocks.FUNCTION_explanation_1],
-                type: 'function_field_label',
-            },
-            //"syntax": {"js": [], "py": ["%1function_field_label#"]}
-            syntax: { js: [], py: ['name'] },
-        },
-        function_field_string: {
-            skeleton: 'basic_param',
-            isNotFor: ['functionEdit'],
-            color: EntryStatic.colorSet.block.lighten.CALC,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    restore: true,
-                },
-                {
-                    type: 'Output',
-                    accept: 'param',
-                },
-            ],
-            paramsKeyMap: {
-                PARAM: 0,
-                NEXT: 1,
-            },
-            def: {
-                params: [
-                    {
-                        type: 'text',
-                        params: [Lang.template.function_param_string],
-                    },
-                ],
-                type: 'function_field_string',
-            },
-            syntax: { js: [], py: ['value'] },
-        },
-        function_field_boolean: {
-            skeleton: 'basic_param',
-            isNotFor: ['functionEdit'],
-            color: EntryStatic.colorSet.block.default.JUDGE,
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'boolean',
-                    restore: true,
-                },
-                {
-                    type: 'Output',
-                    accept: 'param',
-                },
-            ],
-            paramsKeyMap: {
-                PARAM: 0,
-                NEXT: 1,
-            },
-            def: {
-                params: [
-                    {
-                        type: 'True',
-                        params: [Lang.template.function_param_boolean],
-                    },
-                ],
-                type: 'function_field_boolean',
-            },
-            syntax: { js: [], py: ['boolean'] },
-        },
-        function_param_string: {
-            skeleton: 'basic_string_field',
-            color: EntryStatic.colorSet.block.lighten.CALC,
-            fontColor: '#000',
-            template: '%1 %2',
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.Func.isEdit) {
-                            Entry.Func.refreshMenuCode();
-                        }
-                    },
-                ],
-            },
-            func() {
-                return this.executor.register.params[
-                    this.executor.register.paramMap[this.block.type]
-                ];
-            },
-            syntax: { js: [], py: [''] },
-        },
-        function_param_boolean: {
-            skeleton: 'basic_boolean_field',
-            color: EntryStatic.colorSet.block.default.JUDGE,
-            template: '%1 %2',
-            events: {
-                viewAdd: [
-                    function() {
-                        if (Entry.Func.isEdit) {
-                            Entry.Func.refreshMenuCode();
-                        }
-                    },
-                ],
-            },
-            func() {
-                return this.executor.register.params[
-                    this.executor.register.paramMap[this.block.type]
-                ];
-            },
-            syntax: { js: [], py: [''] },
-        },
-        function_create: {
-            skeleton: 'basic_create',
-            color: EntryStatic.colorSet.block.default.FUNC,
-            outerLine: EntryStatic.colorSet.block.darken.FUNC,
-            event: 'funcDef',
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'param',
-                    value: {
-                        type: 'function_field_label',
-                        params: [Lang.Blocks.FUNC],
-                        copyable: false,
-                    },
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/func_icon.svg',
-                    size: 11,
-                },
-            ],
-            paramsKeyMap: {
-                FIELD: 0,
-            },
-            func() {},
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        keyOption: 'function_create',
-                    },
-                ],
-            },
-        },
-        function_general: {
-            skeleton: 'basic',
-            color: EntryStatic.colorSet.block.default.FUNC,
-            outerLine: EntryStatic.colorSet.block.darken.FUNC,
-            params: [
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/func_icon.svg',
-                    size: 11,
-                },
-            ],
-            events: {
-                dataAdd: [
-                    function(block) {
-                        const vc = Entry.variableContainer;
-                        if (vc) {
-                            vc.addRef('_functionRefs', block);
-                        }
-                    },
-                ],
-                dataDestroy: [
-                    function(block) {
-                        const vc = Entry.variableContainer;
-                        if (vc) {
-                            vc.removeRef('_functionRefs', block);
-                        }
-                    },
-                ],
-                dblclick: [
-                    function(blockView) {
-                        const mode = blockView.getBoard().workspace.getMode();
-                        if (mode !== Entry.Workspace.MODE_BOARD) {
-                            return;
-                        }
-                        if (Entry.type !== 'workspace') {
-                            return;
-                        }
-                        const block = blockView.block;
-                        const id = block.getFuncId();
-                        Entry.do('funcEditStart', id);
-                    },
-                ],
-            },
-            func(entity) {
-                if (!this.initiated) {
-                    this.initiated = true;
-                    Entry.callStackLength++;
-
-                    if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
-                        Entry.toast.alert(
-                            Lang.Workspace.RecursiveCallWarningTitle,
-                            Lang.Workspace.RecursiveCallWarningContent
-                        );
-                        throw new Error();
-                    }
-
-                    const func = Entry.variableContainer.getFunction(this.block.getFuncId());
-                    this.funcCode = func.content;
-                    this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
-                    this.funcExecutor.register.params = this.getParams();
-                    this.funcExecutor.register.paramMap = func.paramMap;
-                    this.funcExecutor.parentExecutor = this.executor;
-                    this.funcExecutor.isFuncExecutor = true;
-                }
-                this.funcExecutor.execute();
-                if (!this.funcExecutor.isEnd()) {
-                    this.funcCode.removeExecutor(this.funcExecutor);
-                    return Entry.STATIC.BREAK;
-                }
-
-                Entry.callStackLength--;
             },
             syntax: { js: [], py: [''] },
         },

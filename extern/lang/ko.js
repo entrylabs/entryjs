@@ -561,8 +561,10 @@ Lang.Blocks = {
     ARDUINO_open_connector: '연결 프로그램 열기',
     ARDUINO_download_source: '• 엔트리 아두이노 소스',
     ARDUINO_reconnect: '하드웨어 연결하기',
-    arduino_noti_text: '하드웨어 연결은 PC에서만 지원됩니다.\n브라우저로 연결할 때는\n연결 프로그램이 필요하지 않습니다.',
-    arduino_lite_alert: '하드웨어를 찾을 수 없습니다.\n하드웨어에 펌웨어가 설치되었는지,\nPC와 하드웨어가 연결되어 있는지 \n다시 확인해 주세요.',
+    arduino_noti_text:
+        '하드웨어 연결은 PC에서만 지원됩니다.\n브라우저로 연결할 때는\n연결 프로그램이 필요하지 않습니다.',
+    arduino_lite_alert:
+        '하드웨어를 찾을 수 없습니다.\n하드웨어에 펌웨어가 설치되었는지,\nPC와 하드웨어가 연결되어 있는지 \n다시 확인해 주세요.',
     arduino_lite_reconnect: '하드웨어 다시 연결',
     arduino_lite_download_firmware: '펌웨어 다운로드',
     arduino_lite_download_driver: '드라이버 다운로드',
@@ -927,6 +929,7 @@ Lang.Blocks = {
     SOUND_sound_volume_set_1: '소리 크기를',
     SOUND_sound_volume_set_2: '% 로 정하기',
     speak: '말하기',
+    think: '생각하기',
     START: '시작',
     START_add_message: '신호 추가하기',
     START_delete_message: '신호 삭제하기',
@@ -5392,12 +5395,15 @@ Lang.Workspace = {
     select_expansion_block: '확장블록 선택',
     deselect_expansion_block_warning: '확장블록이 사용중이므로 삭제할 수 없습니다.',
     deselect_ai_utilize_block_warning: 'AI블록이 사용중이므로 삭제할 수 없습니다.',
-    confirm_firmware_hwlite_block_msg: '%1를 엔트리에 연결하려면 먼저 하드웨어 펌웨어를 설치해야 합니다.',
+    confirm_firmware_hwlite_block_msg:
+        '%1를 엔트리에 연결하려면 먼저 하드웨어 펌웨어를 설치해야 합니다.',
     confirm_firmware_hwlite_block_title: '펌웨어 설치 필요',
     confirm_firmware_hwlite_block_download: '펌웨어 다운로드',
     confirm_firmware_hwlite_block_pass: '이미 설치함',
     select_hwlite_block_duplicated: '1개의 하드웨어만 선택해 주세요.',
     select_hwlite_block_none: '연결할 하드웨어를 선택해 주세요.',
+    select_firmware_hwlite_title: '펌웨어 다운로드',
+    select_firmware_hwlite_content: '버전에 맞는 펌웨어를 다운로드 받아\n하드웨어에 설치해 주세요.',
     sound_add: '소리 추가하기',
     sound_remove_fail: '소리 삭제 실패',
     sound_remove_ok: '소리 삭제 완료',
@@ -6373,6 +6379,9 @@ Lang.Helper = {
     get_regression_predict_1: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_2: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_3: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
+    get_regression_predict_4: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
+    get_regression_predict_5: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
+    get_regression_predict_6: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_accuracy: '모델의 결정계수를 값으로 반환합니다.',
     set_cluster_option_k:
         "군집의 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 군집 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
@@ -6387,6 +6396,12 @@ Lang.Helper = {
         '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
     get_cluster_centriod_index_3:
         '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
+    get_cluster_centriod_index_4:
+        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
+    get_cluster_centriod_index_5:
+        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
+    get_cluster_centriod_index_6:
+        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
     set_number_learning_option_k:
         "이웃 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 이웃 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     get_number_learning_predict_1:
@@ -6395,17 +6410,35 @@ Lang.Helper = {
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
     get_number_learning_predict_3:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
+    get_number_learning_predict_4:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
+    get_number_learning_predict_5:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
+    get_number_learning_predict_6:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
     get_number_learning_predict_param_1:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     get_number_learning_predict_param_2:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     get_number_learning_predict_param_3:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
+    get_number_learning_predict_param_4:
+        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
+    get_number_learning_predict_param_5:
+        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
+    get_number_learning_predict_param_6:
+        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     is_number_learning_group_1:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_number_learning_group_2:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_number_learning_group_3:
+        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_number_learning_group_4:
+        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_number_learning_group_5:
+        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_number_learning_group_6:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     bitbrick_when_button_pressed: '비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.',
     bitbrick_when_sensor_get_value:
@@ -6438,72 +6471,58 @@ Lang.Helper = {
     diaboard_color_sensor_is: "선택한 색상을 컬러센서가 감지한 경우 '참'으로 판단합니다.",
     diaboard_sensor_condition:
         "선택한 센서의 값과 오른쪽의 값을 비교합니다.\n< : 센서값이 오른쪽 값보다 작은 경우 '참'으로 판단합니다.\n> : 센서값이 오른쪽 값보다 큰 경우 '참'으로 판단합니다.\n= : 센서값이 오른쪽 값과 같은 경우 '참'으로 판단합니다.",
-    diaboard_color_sensor_seven_hue:		
-        "컬러센서가 감지하는 색상을 7가지로 분류한 값입니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
-    diaboard_color_sensor_one_hue:			
-        "컬러센서가 감지한 색상값입니다.\n색상(hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)",
-    diaboard_sensor_value:					
-        "선택한 센서가 감지한 값입니다. 값의 범위는 0 ~ 1023입니다. \n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.",
-    diaboard_convert_scale:					
-        "선택한 센서가 감지한 값의 범위를 사용자가 임의로 바꿔서 사용합니다.\n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.",
-    diaboard_led_rainbow:					
-        "엘이디를 무지개 효과로 켭니다.",
-    diaboard_led_rainbow_time:				
-        "엘이디를 입력한 시간만큼 무지개 효과로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
-    diaboard_led_effect:					
-        "엘이디를 선택한 효과와 선택한 색상으로 켭니다.",
-    diaboard_led_effect_time:				
-        "엘이디를 입력한 시간만큼 선택한 효과와 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
-    diaboard_led_six:						
-        "엘이디 1번 ~ 6번을 선택한 색상으로 각자 켭니다.",
-    diaboard_led_one:						
-        "선택한 번호의 엘이디를 선택한 색상으로 켭니다.",
-    diaboard_led_one_time:					
-        "선택한 번호의 엘이디를 입력한 시간만큼 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
-    diaboard_led_hue:						
-        "선택한 번호의 엘이디를 색상(hue)값으로 켭니다.\n색상( hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)",
+    diaboard_color_sensor_seven_hue:
+        '컬러센서가 감지하는 색상을 7가지로 분류한 값입니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양',
+    diaboard_color_sensor_one_hue:
+        '컬러센서가 감지한 색상값입니다.\n색상(hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)',
+    diaboard_sensor_value:
+        '선택한 센서가 감지한 값입니다. 값의 범위는 0 ~ 1023입니다. \n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.',
+    diaboard_convert_scale:
+        '선택한 센서가 감지한 값의 범위를 사용자가 임의로 바꿔서 사용합니다.\n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.',
+    diaboard_led_rainbow: '엘이디를 무지개 효과로 켭니다.',
+    diaboard_led_rainbow_time:
+        '엘이디를 입력한 시간만큼 무지개 효과로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
+    diaboard_led_effect: '엘이디를 선택한 효과와 선택한 색상으로 켭니다.',
+    diaboard_led_effect_time:
+        '엘이디를 입력한 시간만큼 선택한 효과와 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
+    diaboard_led_six: '엘이디 1번 ~ 6번을 선택한 색상으로 각자 켭니다.',
+    diaboard_led_one: '선택한 번호의 엘이디를 선택한 색상으로 켭니다.',
+    diaboard_led_one_time:
+        '선택한 번호의 엘이디를 입력한 시간만큼 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
+    diaboard_led_hue:
+        '선택한 번호의 엘이디를 색상(hue)값으로 켭니다.\n색상( hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)',
     diaboard_led_color:
         "선택한 번호의 엘이디를 현재 컬러센서가 감지한 색상(7가지)으로 켭니다. 컬러센서 색상이 '없음'일 때는 코드를 실행해도 엘이디를 켜지 않습니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
-    diaboard_led_rgb:						
-        "선택한 번호의 엘이디를 빨강, 녹색, 파랑값으로 켭니다.\n빨강, 녹색, 파랑 : 0 ~ 255의 범위로 설정할 수 있습니다.\n(0이하는 0으로, 255이상은 255로 처리됩니다. )",
-    diaboard_led_turn_off_all:				
-        "선택한 번호의 엘이디를 끕니다.",
-    diaboard_servomotor_angle:				
-        "선택한 포트의 서보모터의 각도를 입력한 값으로 정합니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)",
-    diaboard_servomotor_angle_time:			
-        "선택한 포트의 서보모터의 초기각도와 목표각도를 설정해 입력한 시간만큼 각도를 바꿉니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
-    diaboard_dc_direction_speed:			
-        "선택한 포트의 디씨모터의 방향과 속력을 정합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)",
-    diaboard_dc_direction_speed_time:		
-        "선택한 포트의 디씨모터의 방향과 속력을 정하고, 입력한 시간만큼 동작합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
-    diaboard_dc_speed:						
-        "선택한 포트의 디씨모터의 속도를 정합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)",
-    diaboard_dc_speed_time:					
-        "선택한 포트의 디씨모터의 속도를 정하고, 입력한 시간만큼 동작합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
-    diaboard_turn_off_all_motors:			
-        "선택한 포트의 모터를 멈춥니다.",
-    diaboard_buzzer_melody_type:          	
-        "선택한 멜로디를 연주합니다.",
-    diaboard_buzzer_effect_type:          	
-        "선택한 효과음을 냅니다.",
-    diaboard_buzzer_eight_melody_bpm:		
-        "선택한 음들을 입력한 BPM으로 연주합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)",
-    diaboard_buzzer_octave:               	
-        "선택한 옥타브와 음으로 연주합니다.",
-    diaboard_buzzer_octave_rhythm:        	
-        "선택한 옥타브와 음을 입력한 박자로 연주합니다.",
-    diaboard_buzzer_hz:                   	
-        "입력한 주파수로 연주합니다.\n주파수 : 33 ~ 7,900 사이의 범위로 설정할 수 있습니다.\n(33이하는 33으로 7,900이상은 7,900으로 처리됩니다.)",
-    diaboard_buzzer_hz_change:            	
-        "입력한 주파수만큼 바꿔서 연주합니다.",
-    diaboard_buzzer_speed_bpm:            	
-        "입력한 BPM으로 연주 속도를 정합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)",
-    diaboard_buzzer_speed_bpm_change:     	
-        "입력한 BPM만큼 연주 속도를 바꿉니다.",
-    diaboard_buzzer_sleep_rhythm:         	
-        "선택한 박자만큼 쉽니다.",
-    diaboard_buzzer_stop:					
-        "버저음을 멈춥니다."
+    diaboard_led_rgb:
+        '선택한 번호의 엘이디를 빨강, 녹색, 파랑값으로 켭니다.\n빨강, 녹색, 파랑 : 0 ~ 255의 범위로 설정할 수 있습니다.\n(0이하는 0으로, 255이상은 255로 처리됩니다. )',
+    diaboard_led_turn_off_all: '선택한 번호의 엘이디를 끕니다.',
+    diaboard_servomotor_angle:
+        '선택한 포트의 서보모터의 각도를 입력한 값으로 정합니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)',
+    diaboard_servomotor_angle_time:
+        '선택한 포트의 서보모터의 초기각도와 목표각도를 설정해 입력한 시간만큼 각도를 바꿉니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
+    diaboard_dc_direction_speed:
+        '선택한 포트의 디씨모터의 방향과 속력을 정합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)',
+    diaboard_dc_direction_speed_time:
+        '선택한 포트의 디씨모터의 방향과 속력을 정하고, 입력한 시간만큼 동작합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
+    diaboard_dc_speed:
+        '선택한 포트의 디씨모터의 속도를 정합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)',
+    diaboard_dc_speed_time:
+        '선택한 포트의 디씨모터의 속도를 정하고, 입력한 시간만큼 동작합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
+    diaboard_turn_off_all_motors: '선택한 포트의 모터를 멈춥니다.',
+    diaboard_buzzer_melody_type: '선택한 멜로디를 연주합니다.',
+    diaboard_buzzer_effect_type: '선택한 효과음을 냅니다.',
+    diaboard_buzzer_eight_melody_bpm:
+        '선택한 음들을 입력한 BPM으로 연주합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)',
+    diaboard_buzzer_octave: '선택한 옥타브와 음으로 연주합니다.',
+    diaboard_buzzer_octave_rhythm: '선택한 옥타브와 음을 입력한 박자로 연주합니다.',
+    diaboard_buzzer_hz:
+        '입력한 주파수로 연주합니다.\n주파수 : 33 ~ 7,900 사이의 범위로 설정할 수 있습니다.\n(33이하는 33으로 7,900이상은 7,900으로 처리됩니다.)',
+    diaboard_buzzer_hz_change: '입력한 주파수만큼 바꿔서 연주합니다.',
+    diaboard_buzzer_speed_bpm:
+        '입력한 BPM으로 연주 속도를 정합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)',
+    diaboard_buzzer_speed_bpm_change: '입력한 BPM만큼 연주 속도를 바꿉니다.',
+    diaboard_buzzer_sleep_rhythm: '선택한 박자만큼 쉽니다.',
+    diaboard_buzzer_stop: '버저음을 멈춥니다.',
 };
 Lang.Category = {
     entrybot_friends: '엔트리봇 친구들',
@@ -6853,6 +6872,7 @@ Lang.template = {
     set_brush_tranparency: '붓의 투명도를 %1 % 로 정하기 %2',
     number: '%1',
     angle: '%1',
+    color: '%1',
     get_x_coordinate: '%1',
     get_y_coordinate: '%1',
     get_angle: '%1',
@@ -6911,6 +6931,7 @@ Lang.template = {
     function_param_boolean: '판단값',
     function_create: '함수 정의하기 %1 %2',
     function_general: '함수 %1',
+    function_value: '함수',
     expansionBlockAddButton: '%1',
     aiUtilizeBlockAddButton: '%1',
     aiUtilizeModelTrainButton: '%1',
@@ -6948,7 +6969,8 @@ Lang.template = {
     load_ai_utilize_train_block: '인공지능 모델 학습하기',
     expansion_block_descriptions: '확장 블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
     aiUtilize_block_descriptions: 'AI 활용블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
-    hardware_lite_descriptions: '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다. \r\n하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
+    hardware_lite_descriptions:
+        '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다. \r\n하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
     weather_title_text: '날씨',
     translate_title_text: '번역',
     festival_title_text: '행사',
@@ -6971,6 +6993,9 @@ Lang.template = {
     get_regression_predict_1: '%1 %2 의 예측값',
     get_regression_predict_2: '%1 %2 %3 %4 의 예측값',
     get_regression_predict_3: '%1 %2 %3 %4 %5 %6 의 예측값',
+    get_regression_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 예측값',
+    get_regression_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 예측값',
+    get_regression_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 예측값',
     get_regression_accuracy: '결정계수',
     set_cluster_option_k: '군집을 %1 개로 바꾸기 %2',
     set_cluster_option_centroids: '중심점 기준을 %1 로 바꾸기 %2',
@@ -6979,16 +7004,28 @@ Lang.template = {
     get_cluster_centriod_index_1: '%1 %2의 군집',
     get_cluster_centriod_index_2: '%1 %2 %3 %4의 군집',
     get_cluster_centriod_index_3: '%1 %2 %3 %4 %5 %6의 군집',
+    get_cluster_centriod_index_4: '%1 %2 %3 %4 %5 %6 %7 %8의 군집',
+    get_cluster_centriod_index_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10의 군집',
+    get_cluster_centriod_index_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12의 군집',
     set_number_learning_option_k: '이웃을 %1 개로 바꾸기 %2',
     get_number_learning_predict_1: '%1 %2 의 분류 결과',
     get_number_learning_predict_2: '%1 %2 %3 %4의 분류 결과',
     get_number_learning_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
+    get_number_learning_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
+    get_number_learning_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
+    get_number_learning_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
     get_number_learning_predict_param_1: '%1 %2 의 %3 에 대한 %4',
     get_number_learning_predict_param_2: '%1 %2 %3 %4 의 %5 에 대한 %6',
     get_number_learning_predict_param_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 %8',
+    get_number_learning_predict_param_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 %10',
+    get_number_learning_predict_param_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 %12',
+    get_number_learning_predict_param_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 %14',
     is_number_learning_group_1: '%1 %2 의 분류 결과가 %3 인가?',
     is_number_learning_group_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
     is_number_learning_group_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
+    is_number_learning_group_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
+    is_number_learning_group_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
+    is_number_learning_group_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
     audio_title_text: '오디오 감지',
     check_microphone: '마이크가 연결되었는가?',
     get_microphone_volume: '마이크 소리크기',
