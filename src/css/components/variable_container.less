@@ -373,9 +373,6 @@
 .entryVariableSplitterWorkspace .list + .list {
     border-top: 1px solid #d6e9f4;
 }
-.entryVariableSplitterWorkspace .list + .list {
-    border-top: 1px solid #d6e9f4;
-}
 .entryVariableSplitterWorkspace.all .list + .list {
     border-top: 1px solid #d6e9f4;
 }
@@ -666,10 +663,6 @@
     padding: 13px 80px 13px 36px;
     background-color: #ecf8ff;
 }
-.entryVariableSplitterWorkspace .list.default_func .inpt,
-.entryVariableSplitterWorkspace .list.default_message .inpt {
-    padding: 2px 0;
-}
 .entryVariableSplitterWorkspace .list.default_func .inpt:after,
 .entryVariableSplitterWorkspace .list.default_message .inpt:after {
     display: none;
@@ -750,6 +743,17 @@
     background-color: #fff;
     border: 1px solid #d6e9f4;
 
+    .attr_box {
+        border-top: 1px solid #d6e9f4;
+
+        .default_message {
+            &.unfold {
+                border-color: #aac5d5;
+                outline: 1px solid #aac5d5;
+            }
+        }
+    }
+
     &.list.global.fold,
     &.variable.global.fold {
         border-bottom: 1px solid #aac5d5;
@@ -758,8 +762,9 @@
     &.list.unfold,
     &.variable.unfold {
         .attr_box {
-            outline: solid 1px #aac5d5;
+            border-top: 1px solid #d6e9f4;
 
+            .default_message,
             .cloud_list,
             .real_time_list,
             .default_list,
@@ -768,6 +773,10 @@
             .real_time_variable,
             .local_val,
             .default_val {
+                &.unfold {
+                    border-color: #aac5d5;
+                    outline: 1px solid #aac5d5;
+                }
                 .inpt_box {
                     &::before {
                         left: 8px;
@@ -1972,6 +1981,9 @@
     }
 
     .message_inpt {
+        border: solid 1px #aac5d5;
+        background-color: #d6e9f4;
+
         .msdAddSpaceWrapper {
             padding: 18px 20px 0 20px;
             border-top: 1px solid #d6e9f4;
@@ -1993,11 +2005,11 @@
                 left: -10px;
                 margin-bottom: 8px;
                 display: block;
-                font-size: 12px;
+                font-size: 11px;
                 font-weight: 600;
                 color: #2c313d;
-                letter-spacing: -0.4px;
-                line-height: 12px;
+                letter-spacing: -0.44px;
+                line-height: 11px;
             }
 
             input {

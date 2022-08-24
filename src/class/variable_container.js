@@ -2563,7 +2563,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
-        addSpaceConfirmButton.textContent = Lang.Buttons.save;
+        addSpaceConfirmButton.textContent = Lang.Buttons.add_list;
         this.listAddConfirmButton = addSpaceConfirmButton;
     }
 
