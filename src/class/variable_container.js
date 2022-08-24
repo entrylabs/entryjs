@@ -2803,8 +2803,6 @@ Entry.VariableContainer = class VariableContainer {
             valTypeText.textContent = Lang.Menus.realtime;
         } else if (variable.isCloud_) {
             valTypeText.textContent = Lang.Menus.cloud;
-        } else {
-            valTypeText.textContent = Lang.Menus.normal;
         }
 
         // 기본 값 입력 창
@@ -2980,8 +2978,6 @@ Entry.VariableContainer = class VariableContainer {
             valTypeText.textContent = Lang.Menus.realtime;
         } else if (list.isCloud_) {
             valTypeText.textContent = Lang.Menus.cloud;
-        } else {
-            valTypeText.textContent = Lang.Menus.normal;
         }
 
         this.generateListImportExportView(listAttr);
@@ -3115,7 +3111,7 @@ Entry.VariableContainer = class VariableContainer {
         const countLabel = createElement('div')
             .addClass('cnt_label')
             .appendTo(countGroup);
-        countLabel.textContent = Lang.Workspace.local_variable;
+        countLabel.textContent = Lang.Workspace.list_default_value;
         const scrollBox = createElement('div')
             .addClass('scroll_box')
             .appendTo(countGroup);
@@ -3597,6 +3593,7 @@ Entry.VariableContainer = class VariableContainer {
 
     clickListAddButton(...args) {
         this._clickAddButton.call(this, 'list', ...args);
+        this.listAddPanel.view.cloudCheck.addClass('on');
     }
 
     clickMessageAddButton(...args) {
