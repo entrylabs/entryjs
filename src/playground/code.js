@@ -515,8 +515,7 @@ Entry.Code = class Code {
     static funcValueAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
         await Promise.all(_promises);
         if (Entry.engine.isState('pause')) {
-            const r = this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
-            return r;
+            return this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
         } else if (!Entry.engine.isState('run')) {
             funcCode.removeExecutor(funcExecutor);
             return await this.getAsyncParamsData(funcExecutor.result);
@@ -544,6 +543,42 @@ Entry.Code = class Code {
                         } else {
                             funcCode.callStackLength--;
                             funcCode.removeExecutor(funcExecutor);
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
+
+    static funcValueRestExecute = async (funcCode, funcExecutor) => {
+        if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            return resolve(await this.funcValueRestExecute(funcCode, funcExecutor));
                         }
                     }
                     resolve(await this.getAsyncParamsData(funcExecutor.result));
