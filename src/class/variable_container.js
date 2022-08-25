@@ -939,17 +939,19 @@ Entry.VariableContainer = class VariableContainer {
         listView.appendChild(this.messageAddButton_);
         listView.appendChild(this.messageAddPanel.view);
 
-        const messageList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+        const messageList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace message unfold'
+        );
 
         const messageListBox = createElement('div')
             .addClass('attr_box')
             .appendTo(messageList);
 
-        this.makeChildVariableViews(
-            this.messages_,
-            this.createMessageView.bind(this),
-            messageListBox
-        );
+        const list = createElement('div')
+            .addClass('list')
+            .appendTo(messageListBox);
+
+        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), list);
         listView.appendChild(messageList);
     }
 
@@ -1128,7 +1130,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         listView.appendChild(this.functionAddButton_);
 
-        const funcList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+        const funcList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace func unfold'
+        );
 
         const funcListBox = createElement('div')
             .addClass('attr_box')

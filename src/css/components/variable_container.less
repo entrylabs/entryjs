@@ -253,14 +253,14 @@
     overflow: hidden;
     width: 100%;
     padding: 6px 8px 5px;
-    border: 1px solid #e2e2e2;
+    border: 1px solid #aac5d5;
     border-radius: 4px;
     outline: 0;
     background-color: #fff;
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
     color: #2c313d;
-    letter-spacing: -0.2px;
+    letter-spacing: -0.4px;
     line-height: 11px;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -366,9 +366,6 @@
 }
 .entryVariableSplitterWorkspace + .entryVariableSplitterWorkspace {
     border-top: 0;
-}
-.entryVariableSplitterWorkspace .list {
-    overflow: hidden;
 }
 .entryVariableSplitterWorkspace .list + .list {
     border-top: 1px solid #d6e9f4;
@@ -743,6 +740,11 @@
     background-color: #fff;
     border: 1px solid #d6e9f4;
 
+    &.message,
+    &.func {
+        border-top: none;
+    }
+
     .attr_box {
         border-top: 1px solid #d6e9f4;
 
@@ -759,11 +761,16 @@
         border-bottom: 1px solid #aac5d5;
     }
 
-    &.list.unfold,
-    &.variable.unfold {
+    &.entryVariableSplitterWorkspace.unfold {
         .attr_box {
             border-top: 1px solid #d6e9f4;
 
+            .list .list {
+                &:first-child {
+                    margin-top: 0;
+                }
+            }
+            .default_func,
             .default_message,
             .cloud_list,
             .real_time_list,
@@ -776,6 +783,8 @@
                 &.unfold {
                     border-color: #aac5d5;
                     outline: 1px solid #aac5d5;
+                    border-top: none;
+                    margin-top: 1px;
                 }
                 .inpt_box {
                     &::before {
@@ -1571,8 +1580,6 @@
                 }
 
                 &.unfold {
-                    border: solid 1px #aac5d5;
-
                     .caution_dsc {
                         background-color: #d6e9f4;
                     }
@@ -1861,6 +1868,14 @@
 }
 
 .entryVariableAdd_box {
+    .entryVariableSplitterWorkspace {
+        .attr_box {
+            .list.unfold {
+                outline: 1px solid #aac5d5;
+                border-color: #aac5d5;
+            }
+        }
+    }
     .entryVariableAddSpaceWorkspace {
         border: solid 1px #aac5d5;
         background-color: #d6e9f4;
@@ -1883,9 +1898,9 @@
 
             .button {
                 &.on {
-                    color: #ffffff;
-                    border-color: #6c8696;
-                    background-color: #6c8696;
+                    color: #4f80ff;
+                    border-color: #4f80ff;
+                    background-color: #ffffff;
                 }
                 &:nth-child(even) {
                     border-radius: 0 4px 4px 0;
