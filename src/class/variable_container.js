@@ -3397,6 +3397,9 @@ Entry.VariableContainer = class VariableContainer {
                     functions.push({
                         id,
                         content: JSON.stringify(func.content.toJSON()),
+                        type: func.type,
+                        localVariables: func.localVariables,
+                        useLocalVariables: func.useLocalVariables,
                     });
 
                     const contentBlockList = func.content.getBlockList();
