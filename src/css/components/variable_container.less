@@ -1532,7 +1532,8 @@
             }
 
             &.real_time_list,
-            &.cloud_list &.default_list {
+            &.cloud_list,
+            &.default_list {
                 .cnt_group {
                     .del {
                         position: absolute;
@@ -1550,10 +1551,16 @@
                         cursor: pointer;
                     }
                 }
-
                 .inpt_box {
                     &::before {
                         left: 10px;
+                    }
+                }
+            }
+
+            &.default_list {
+                .inpt_box {
+                    &::before {
                         .backgroundImage('ic_attr_list.svg');
                     }
                 }
