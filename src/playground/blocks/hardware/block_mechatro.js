@@ -8,12 +8,6 @@
  *
  *********************************************************/
 
-// 20.07.15
-// 클래스 형식으로 변경
-// afterReceive() 추가
-// 이벤트 블록 추가 : mechatro_event_rising, mechatro_event_falling
-// 송신 자료 구조 변경
-
 class mechatro {
     constructor() {
         this.id = '1F.1';
@@ -109,7 +103,7 @@ class mechatro {
             mode: 'both',
         };
 
-        this.thresHold = {
+        /*this.thresHold = {
             '14': 512,
             '15': 512,
             '16': 512,
@@ -118,32 +112,39 @@ class mechatro {
             '19': 512,
             '20': 512,
             '21': 512,
-        };
+        };*/
 
         this.portMode = {
-            SET_GROUP_DEVICE: 0x80,
+
+            SET_GROUP_COMMAND: 0x80,
             SET_INIT_DEVICE: 0x80,
+            SET_PORT_DISABLE: 0x81,
             SET_BLUE_PW: 0x82,
             SET_NO_TONE: 0x83,
-            SET_DIGITAL_OUT: 0x90,
+            SET_MOTOR_CURRENT: 0x84,
 
-            SET_G_MOTOR: 0xa0,
-            SET_MOTOR_SPEED: 0xa0,
-            SET_MOTOR_CURRENT: 0xb0,
+            SET_MOTOR_SPEED_Free: 0x88,
+            SET_MOTOR_SPEED_Fast: 0x8C,
 
-            SET_G_SERVO_PWM_TON: 0xc0,
+            SET_GROUP_D_OUT: 0xa0,
+            SET_DIGITAL_OUT_L: 0xa0,
+            SET_DIGITAL_OUT_H: 0xb0,
+
+            SET_GROUP_SERVO_PWM_TON: 0xc0,
             SET_SERVO_POSITION: 0xc0,
             SET_SERVO_SPEED: 0xc8,
             SET_PWM: 0xd0,
             SET_TONE: 0xd8,
 
-            SET_G_INPUT: 0xe0,
+            SET_GROUP_INPUT: 0xe0,
             SET_ANALOG_IN: 0xe0,
-            SET_DIGITAL_IN: 0xe8,
-            SET_ULTRASONIC: 0xf0,
+            SET_DIGITAL_IN_L: 0xe8,
+            SET_DIGITAL_IN_H: 0xf0,
+            SET_ULTRASONIC: 0xf8,
         };
 
         this.prev_sensor_data = { '2': 0, '4': 0, '5': 0, '6': 0, '7': 0, '10': 0 };
+        this.tonePin = 0;
 
         this.eventState = {
             FALLING: {
@@ -169,17 +170,15 @@ class mechatro {
 
         // 순서에 따라 화면에 보임
         this.blockMenuBlocks = [
-            // Added 2020-07-04
-            'mechatro_event_rising',
-            'mechatro_event_falling',
-            // Added 2018-02-12
-            'mechatro_set_threshold',
+            'mechatro_event_rising_falling',  // Add 2020-07-04
+            //'mechatro_set_threshold',       // Add 2018-02-12   Del 2022-05-22
             'mechatro_get_digital',
+            'mechatro_get_analog_judgement',  // Add 2022-05-22
             'mechatro_get_sensor_value',
-            'mechatro_set_get_sensor_value_map',
             'mechatro_get_dc_motor_current',
             'mechatro_get_ultrasonic_value',
             'mechatro_get_temperature',
+            'mechatro_set_get_sensor_value_map',
             'mechatro_set_digital',
             'mechatro_set_pwm',
             'mechatro_set_tone',
@@ -190,9 +189,56 @@ class mechatro {
             'mechatro_set_blue_pw',
         ];
     }
+    setLanguage() {
+        return {
+            ko: {
+                // ko.js에 작성하던 내용
+                template: {
+                    mechatro_get_dc_motor_current: "%1모터 전류값[mA]",
+                    mechatro_get_digital: "%1 디지털 값",
+                    mechatro_get_analog_judgement: "%1 %2 %3",
+                    mechatro_get_sensor_value: "%1 센서값",
+                    mechatro_set_get_sensor_value_map: '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                    mechatro_get_ultrasonic_value: "초음파센서 Trig %1 Echo %2 의 거리값 [cm]",
+                    mechatro_get_temperature: "%1 온도 센서 값 (TMP36)",
+                    mechatro_set_blue_pw: "블루투스 비밀번호 : %1%2%3%4로 정하기%5",
+                    mechatro_set_dc_motor: "%1모터 속도 %2로 정하기%3",
+                    mechatro_set_digital: "%1번 %2 %3",
+                    mechatro_set_pwm: "%1PWM을 %2%로 정하기 %3",
+                    mechatro_set_servo_position: "%1서보모터 위치 :%2도로 옮기기 %3",
+                    mechatro_set_servo_speed: "%1서보모터 속도 : 1초당 %2도로 정하기 %3",
+                    //mechatro_set_threshold: "%1 센서 감도 : %2로 정하기%3",
+                    mechatro_set_tone: "%1버저 %2 %3 음으로 연주 %4",
+                    mechatro_set_tone_time: "%1버저 %2 %3 음으로 %4 초 연주 %5",
+                    mechatro_event_rising_falling: "%1 %2 이 %3이 될 때",
+                },
+            },
+            en: {
+                // en.js에 작성하던 내용
+                template: {
+                    mechatro_get_dc_motor_current: 'Get 1%motor current',
+                    mechatro_get_digital: '%1',
+                    mechatro_get_analog_judgement: "%1 %2 %3",
+                    mechatro_get_sensor_value: 'Analog %1 Sensor value',
+                    mechatro_set_get_sensor_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                    mechatro_get_ultrasonic_value: "Read ultrasonic sensor trig pin %1 echo pin %2",
+                    mechatro_get_temperature: "temperature %1 Sensor (TMP36)",
+                    mechatro_set_blue_pw: "Change PW of Bluetooth to %1%2%3%4 %5",
+                    mechatro_set_dc_motor: "Set %1 motor speed to %2 %3",
+                    mechatro_set_digital: "Digital %1 Pin %2 %3",
+                    mechatro_set_pwm: "Digital %1 Pin %2 %3",
+                    mechatro_set_servo_position: "Set servo pin %1 angle as %2 %3",
+                    mechatro_set_servo_speed: "Set servo pin %1 speed %2 degree per second %3",
+                    //mechatro_set_threshold: "Set %1 threshold : %2%3",
+                    mechatro_set_tone: "Play tone pin %1 on note %2 octave %3 %4",
+                    mechatro_set_tone_time: "Play tone pin %1 on note %2 octave %3 beat %4 %5",
+                    mechatro_event_rising_falling: "%1 When %2 is turned %3",
+                },
+            },
+        };
+    }
 
-    setZero() {
-        // 엔트리 정지시 하드웨어 초기화 로직
+    setZero() {                  // 엔트리 정지 시 하드웨어 초기화 로직
         Entry.hw.sendQueue = {
             SEND_DATA: {}, // key 값이 없으면 entry-HW에서 entryJS 정지로 인식
         };
@@ -221,17 +267,24 @@ class mechatro {
     }
 
     afterReceive(pd) {
+        /*
         if (!Entry.engine.isState('run')) {
             // 정지시에도 이전값 저장으로 실행하는 순간 발생할 수 있는 이벤트 발생을 금지
+            // ??????????????????????????????????????????????????????????????????????????????????????????
+            // 값이 상시 없데이트 되므로 불필요할 것으로 생각됨, 필요한지 확인필요
             Object.keys(this.prev_sensor_data).forEach((key) => {
                 this.prev_sensor_data[key] = pd[key];
             });
+            //console.log("afterReceive ", "run");
             return;
         }
-
+        else {
+            //console.log("afterReceive ", "stop");
+        }
+*/
         Object.keys(this.prev_sensor_data).forEach((key) => {
+            // 이벤트 사용 가능 조사 (초음파, PWM, TONE 아웃풋 포트 이벤트 사용 불가)
             if (this.eventState.ENABLE[key]) {
-                //초음파 센서 값 포트 이벤트 사용 정지함.
                 const new_data = pd[key];
                 if (this.prev_sensor_data[key] ^ new_data) {
                     if (new_data) {
@@ -248,12 +301,12 @@ class mechatro {
 
         if (this.eventState.RISING.TRIGGER) {
             this.eventState.RISING.TRIGGER = false;
-            Entry.engine.fireEvent('event_digital_input_is_rising');
+            Entry.engine.fireEvent('event_digital_input');
         }
 
         if (this.eventState.FALLING.TRIGGER) {
             this.eventState.FALLING.TRIGGER = false;
-            Entry.engine.fireEvent('event_digital_input_is_falling');
+            Entry.engine.fireEvent('event_digital_input');
         }
     }
 
@@ -276,18 +329,6 @@ class mechatro {
         };
     }
 
-    transferValue(portNo, value) {
-        // only used in mechatro_set_dc_motor Block
-        if (Entry.hw.sendQueue.SEND_DATA == undefined) {
-            Entry.hw.sendQueue = {
-                SEND_DATA: {},
-            };
-        }
-        Entry.hw.sendQueue.SEND_DATA[portNo] = {
-            VALUE: value,
-        };
-    }
-
     transferMode(portNo, mode) {
         if (Entry.hw.sendQueue.SEND_DATA == undefined) {
             Entry.hw.sendQueue = {
@@ -299,59 +340,9 @@ class mechatro {
         };
     }
 
-    setLanguage() {
-        return {
-            ko: {
-                // ko.js에 작성하던 내용
-                template: {
-                    mechatro_get_dc_motor_current: '%1모터 사용전류값',
-                    mechatro_get_digital: '%1 디지털 값',
-                    mechatro_get_sensor_value: '%1 센서값',
-                    mechatro_set_get_sensor_value_map:
-                        '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
-                    mechatro_get_ultrasonic_value: '초음파센서 Trig %1 Echo %2 의 거리값 [cm]',
-                    mechatro_get_temperature: '%1 온도 센서 값',
-                    mechatro_set_blue_pw: '블루투스 비밀번호 : %1%2%3%4로 정하기%5',
-                    mechatro_set_dc_motor: '%1모터 속도 %2로 정하기%3',
-                    mechatro_set_digital: '%1번 %2 %3',
-                    mechatro_set_pwm: '%1PWM을 %2%로 정하기 %3',
-                    mechatro_set_servo_position: '%1서보모터 위치 :%2도로 옮기기 %3',
-                    mechatro_set_servo_speed: '%1서보모터 속도 : 1초당 %2도로 정하기 %3',
-                    mechatro_set_threshold: '%1 센서 감도 : %2로 정하기%3',
-                    mechatro_set_tone: '%1버저 %2 %3 음으로 연주 %4',
-                    mechatro_set_tone_time: '%1버저 %2 %3 음으로 %4 초 연주 %5',
-                    mechatro_event_rising: '%1 %2 이 참이 될 때',
-                    mechatro_event_falling: '%1 %2 이 거짓이 될 때',
-                },
-            },
-            en: {
-                // en.js에 작성하던 내용
-                template: {
-                    mechatro_get_dc_motor_current: 'Get 1%motor current',
-                    mechatro_get_digital: '%1',
-                    mechatro_get_sensor_value: 'Analog %1 Sensor value',
-                    mechatro_set_get_sensor_value_map: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
-                    mechatro_get_ultrasonic_value: 'Read ultrasonic sensor trig pin %1 echo pin %2',
-                    mechatro_get_temperature: 'temperature %1 Sensor',
-                    mechatro_set_blue_pw: 'Change PW of Bluetooth to %1%2%3%4 %5',
-                    mechatro_set_dc_motor: 'Set %1 motor speed to %2 %3',
-                    mechatro_set_digital: 'Digital %1 Pin %2 %3',
-                    mechatro_set_pwm: 'Digital %1 Pin %2 %3',
-                    mechatro_set_servo_position: 'Set servo pin %1 angle as %2 %3',
-                    mechatro_set_servo_speed: 'Set servo pin %1 speed %2 degree per second %3',
-                    mechatro_set_threshold: 'Set %1 threshold : %2%3',
-                    mechatro_set_tone: 'Play tone pin %1 on note %2 octave %3 %4',
-                    mechatro_set_tone_time: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
-                    mechatro_event_rising: '%1 When %2 is turned true',
-                    mechatro_event_falling: '%1 When %2 is turned false',
-                },
-            },
-        };
-    }
-
     getBlocks() {
         return {
-            mechatro_event_rising: {
+            mechatro_event_rising_falling: {  // Digital Low Hit Only, 
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 fontColor: '#fff',
@@ -378,51 +369,13 @@ class mechatro {
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
-                ],
-                events: {},
-                def: {
-                    params: [null, '2'],
-                    type: 'mechatro_event_rising',
-                },
-                paramsKeyMap: {
-                    PORT: 1,
-                },
-                class: 'MechatroStart',
-                isNotFor: ['mechatro'],
-                event: 'event_digital_input_is_rising',
-                func(sprite, script) {
-                    const portNo = script.getNumberField('PORT', script);
-                    if (Entry.mechatro.eventState.RISING[portNo]) {
-                        Entry.mechatro.eventState.RISING[portNo] = false;
-                        return script.callReturn();
-                    }
-                    return this.die();
-                },
-                syntax: { js: [], py: [] },
-            },
-            mechatro_event_falling: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                fontColor: '#fff',
-                skeleton: 'basic_event',
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/start_icon_hardware.svg',
-                        size: 14,
-                        position: { x: 0, y: -2 },
-                    },
                     {
                         type: 'Dropdown',
                         options: [
-                            ['D2', '2'],
-                            ['D4', '4'],
-                            ['D5', '5'],
-                            ['D6', '6'],
-                            ['D7', '7'],
-                            ['D10', '10'],
+                            ['참', '1'],
+                            ['거짓', '0'],
                         ],
-                        value: '2',
+                        value: '1',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -430,21 +383,29 @@ class mechatro {
                 ],
                 events: {},
                 def: {
-                    params: [null, '2'],
-                    type: 'mechatro_event_falling',
+                    params: [null, '2', '1'],
+                    type: 'mechatro_event_rising_falling',
                 },
                 paramsKeyMap: {
                     PORT: 1,
+                    EDGE: 2,
                 },
                 class: 'MechatroStart',
                 isNotFor: ['mechatro'],
-                event: 'event_digital_input_is_falling',
-                events: {},
+                event: 'event_digital_input',
                 func(sprite, script) {
                     const portNo = script.getNumberField('PORT', script);
-                    if (Entry.mechatro.eventState.FALLING[portNo]) {
-                        Entry.mechatro.eventState.FALLING[portNo] = false;
-                        return script.callReturn();
+                    const toggle = script.getNumberField('EDGE', script);
+                    if (toggle) {
+                        if (Entry.mechatro.eventState.RISING[portNo]) {
+                            Entry.mechatro.eventState.RISING[portNo] = false;
+                            return script.callReturn();
+                        }
+                    } else {
+                        if (Entry.mechatro.eventState.FALLING[portNo]) {
+                            Entry.mechatro.eventState.FALLING[portNo] = false;
+                            return script.callReturn();
+                        }
                     }
                     return this.die();
                 },
@@ -469,8 +430,164 @@ class mechatro {
                             ['A3', '17'],
                             ['A4', '18'],
                             ['A5', '19'],
+                        ],
+                        value: '2',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'mechatro_get_digital',
+                },
+                paramsKeyMap: {
+                    PORT: 0,
+                },
+                class: 'MechatroJudgement',
+                isNotFor: ['mechatro'],
+                func(sprite, script) {
+                    var portNo = script.getNumberField('PORT', script);
+                    var mode;
+                    var value;
+                    if (portNo > 14) {
+                        mode = Entry.mechatro.portMode.SET_DIGITAL_IN_H;
+                    } else {
+                        mode = Entry.mechatro.portMode.SET_DIGITAL_IN_L;
+                    }
+                    Entry.mechatro.transferMode(portNo, mode);
+
+                    if (Entry.hw.portData[portNo] !== undefined) {
+                        value = Entry.hw.portData[portNo];
+                        return value;
+                    } else {
+                        return 0;
+                    }
+                },
+                syntax: { js: [], py: [] },
+            },
+
+            mechatro_get_analog_judgement: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#fff',
+                skeleton: 'basic_boolean_field',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['A2', '16'],
+                            ['A3', '17'],
+                            ['A4', '18'],
+                            ['A5', '19'],
                             ['A6', '20'],
                             ['A7', '21'],
+                        ],
+                        value: '16',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['=', 'EQUAL'],
+                            ['!=', 'NOT_EQUAL'],
+                            ['>', 'GREATER'],
+                            ['<', 'LESS'],
+                            ['≥', 'GREATER_OR_EQUAL'],
+                            ['≤', 'LESS_OR_EQUAL'],
+                        ],
+                        value: 'LESS',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        noArrow: true,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        'LESS',
+                        {
+                            type: 'text',
+                            params: ['512'],
+                        }],
+                    type: 'mechatro_get_analog_judgement',
+                },
+                paramsKeyMap: {
+                    PORT: 0,
+                    OPERATOR: 1,
+                    RIGHTHAND: 2,
+                },
+                class: 'MechatroJudgement',
+                isNotFor: ['mechatro'],
+                func(sprite, script) {
+                    const operator = script.getField('OPERATOR', script);
+                    let [portNo, rightValue] = script.getValues(
+                        ['PORT', 'RIGHTHAND'],
+                        script
+                    );
+                    let mode;
+                    let leftValue;
+
+                    mode = Entry.mechatro.portMode.SET_ANALOG_IN;
+                    Entry.mechatro.transferMode(portNo, mode);
+
+                    if (typeof rightValue === 'string' && rightValue.length) {
+                        const rightNumber = Number(rightValue);
+                        if (!isNaN(rightNumber)) {
+                            rightValue = rightNumber;
+                        }
+                    }
+
+                    if (Entry.hw.portData[portNo] !== undefined) {
+                        leftValue = Entry.hw.portData[portNo];
+                        switch (operator) {
+                            case 'EQUAL':
+                                return leftValue === rightValue;
+                            case 'NOT_EQUAL':
+                                return leftValue != rightValue;
+                            case 'GREATER':
+                                return leftValue > rightValue;
+                            case 'LESS':
+                                return leftValue < rightValue;
+                            case 'GREATER_OR_EQUAL':
+                                return leftValue >= rightValue;
+                            case 'LESS_OR_EQUAL':
+                                return leftValue <= rightValue;
+                        }
+                    } else {
+                        return 0;
+                    }
+                },
+                syntax: { js: [], py: [] },
+            },
+
+            /*mechatro_get_digital: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#fff',
+                skeleton: 'basic_boolean_field',
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['D2', '2'],
+                            ['D4', '4'],
+                            ['D5', '5'],
+                            ['D6', '6'],
+                            ['D7', '7'],
+                            ['D10', '10'],
+                            ['A2', '16'],
+                            ['A3', '17'],
+                            ['A4', '18'],
+                            ['A5', '19'],
                         ],
                         value: '2',
                         fontSize: 11,
@@ -496,7 +613,7 @@ class mechatro {
                     if (portNo > 14) {
                         mode = Entry.mechatro.portMode.SET_ANALOG_IN;
                     } else {
-                        mode = Entry.mechatro.portMode.SET_DIGITAL_IN;
+                        mode = Entry.mechatro.portMode.SET_DIGITAL_IN_L;
                     }
 
                     Entry.mechatro.transferMode(portNo, mode);
@@ -513,6 +630,7 @@ class mechatro {
                 },
                 syntax: { js: [], py: [] },
             },
+            */
             mechatro_get_sensor_value: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -561,7 +679,7 @@ class mechatro {
                 },
                 syntax: { js: [], py: ['mechatro.sensor_value(%1)'] },
             },
-            mechatro_set_threshold: {
+            /*mechatro_set_threshold: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic',
@@ -613,19 +731,16 @@ class mechatro {
                 func(sprite, script) {
                     const portNo = script.getNumberField('PORT', script);
                     let value = script.getValue('VALUE');
-
                     if (!Entry.Utils.isNumber(value)) {
-                        value = 0;
+                        value = 500;
                     }
                     value = Math.max(value, 100);
                     value = Math.min(value, 900);
-
                     Entry.mechatro.thresHold[portNo] = value;
-
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['mechatro.set_threshold(%1, %2)'] },
-            },
+            },*/
             mechatro_get_temperature: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -665,7 +780,7 @@ class mechatro {
                     const mode = Entry.mechatro.portMode.SET_ANALOG_IN;
                     Entry.mechatro.transferMode(portNo, mode);
                     if (Entry.hw.portData[portNo] !== undefined) {
-                        return Math.round(Entry.hw.portData[portNo] * 4.883 - 500) / 10.0;
+                        return Math.round((Entry.hw.portData[portNo] * 0.4883 - 50));
                     } else {
                         return 0;
                     }
@@ -856,7 +971,10 @@ class mechatro {
                     const echo = script.getNumberField('ECHO', script);
                     const mode = Entry.mechatro.portMode.SET_ULTRASONIC;
                     Entry.mechatro.transferModeValue(trig, mode, echo);
-
+                    // 받는 값 업데이트 포트를 Disable 함. 디지털, 아날로그핀 설정으로 업데이트가 되지 안도록 함.
+                    // Echo 포트의 업데이트는 triger 포트에서 업데이트를 시켜줌
+                    Entry.mechatro.transferModeValue(echo, Entry.mechatro.portMode.SET_PORT_DISABLE);
+                    Entry.mechatro.eventState.ENABLE[trig] = false;
                     Entry.mechatro.eventState.ENABLE[echo] = false;
                     if (Entry.hw.portData.hasOwnProperty(echo)) {
                         return Entry.hw.portData[echo];
@@ -899,6 +1017,10 @@ class mechatro {
                             ['D6', '6'],
                             ['D7', '7'],
                             ['D10', '10'],
+                            ['A2', '16'],
+                            ['A3', '17'],
+                            ['A4', '18'],
+                            ['A5', '19'],
                         ],
                         value: '2',
                         fontSize: 11,
@@ -935,7 +1057,13 @@ class mechatro {
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
                     const portNo = script.getNumberField('PORT', script);
-                    const mode = Entry.mechatro.portMode.SET_DIGITAL_OUT;
+                    let mode;
+                    if (portNo < 14) {
+                        mode = Entry.mechatro.portMode.SET_DIGITAL_OUT_L;
+                    }
+                    else {
+                        mode = Entry.mechatro.portMode.SET_DIGITAL_OUT_H;
+                    }
                     const value = script.getNumberField('OPERATOR');
 
                     Entry.mechatro.transferModeValue(portNo, mode, value);
@@ -1000,7 +1128,7 @@ class mechatro {
                     value = Math.min(value, 100);
 
                     Entry.mechatro.transferModeValue(portNo, mode, value);
-
+                    Entry.mechatro.eventState.ENABLE[portNo] = false;
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['mechatro.set_pwm(%1, %2)'] },
@@ -1097,44 +1225,56 @@ class mechatro {
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
                     const portNo = script.getNumberField('PORT', script);
+                    Entry.mechatro.tonePin = portNo;
                     let mode;
-
                     if (!script.isStart) {
-                        let duration = script.getNumberValue('DURATION', script);
-                        if (duration < 0) {
-                            duration = 0;
-                        }
-                        duration = duration * 1000;
+                        script.isStart = true;
+                        script.timeFlag = 1;
 
                         let note = script.getNumberField('NOTE', script);
                         let octave = script.getNumberField('OCTAVE', script);
                         let value = (octave << 4) | (note - 1);
+                        let duration = script.getNumberValue('DURATION', script);
 
-                        script.isStart = true;
-                        script.timeFlag = 1;
+                        duration = duration * 1000;
+                        if (duration < 100) {   //  100ms 이상만 연주, 통신 속도 및 음 후반부 50ms 무음처리 위함
+                            duration = 50;
+                        }
 
-                        if (duration === 0 || note === 0) {
+                        if (duration === 50 || note === 0) {   // 음 후반 50ms 무음 처리, 동일음 연속사용시 음간 구분
                             mode = Entry.mechatro.portMode.SET_NO_TONE;
                             Entry.mechatro.transferMode(portNo, mode);
+                            Entry.mechatro.eventState.ENABLE[portNo] = true;
+                            Entry.mechatro.tonePin = 0;
                         } else {
                             mode = Entry.mechatro.portMode.SET_TONE;
+                            Entry.mechatro.transferModeValue(3, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);    // 모터 사용 중지
+                            Entry.mechatro.transferModeValue(11, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);   // 모터 사용 중지
                             Entry.mechatro.transferModeValue(portNo, mode, value);
+                            Entry.mechatro.eventState.ENABLE[portNo] = false;
                         }
 
                         setTimeout(() => {
+                            script.timeFlag = 2;
+                        }, duration - 50);
+
+                        setTimeout(() => {
                             script.timeFlag = 0;
-                        }, duration + 32);
+                        }, duration);
+
                         return script;
                     } else if (script.timeFlag == 1) {
                         return script;
-                    } else {
+                    } else if (script.timeFlag == 2) {
                         mode = Entry.mechatro.portMode.SET_NO_TONE;
                         Entry.mechatro.transferMode(portNo, mode);
-
+                        Entry.mechatro.eventState.ENABLE[portNo] = true;
+                        Entry.mechatro.tonePin = 0;
+                        return script;
+                    } else {
                         delete script.timeFlag;
                         delete script.isStart;
                         Entry.engine.isContinue = false;
-
                         return script.callReturn();
                     }
                 },
@@ -1243,6 +1383,7 @@ class mechatro {
                 isNotFor: ['mechatro'],
                 func(sprite, script) {
                     let portNo = script.getNumberField('PORT', script);
+                    Entry.mechatro.tonePin = portNo;
                     let note = script.getNumberField('NOTE', script);
                     let octave = script.getNumberField('OCTAVE', script);
                     let mode;
@@ -1251,9 +1392,14 @@ class mechatro {
                     if (note === 0) {
                         mode = Entry.mechatro.portMode.SET_NO_TONE;
                         Entry.mechatro.transferMode(portNo, mode);
+                        Entry.mechatro.eventState.ENABLE[portNo] = true;
+                        Entry.mechatro.tonePin = 0;
                     } else {
                         mode = Entry.mechatro.portMode.SET_TONE;
+                        Entry.mechatro.transferModeValue(3, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);
+                        Entry.mechatro.transferModeValue(11, Entry.mechatro.portMode.SET_MOTOR_SPEED_Free, 100);
                         Entry.mechatro.transferModeValue(portNo, mode, value);
+                        Entry.mechatro.eventState.ENABLE[portNo] = false;
                     }
                     return script.callReturn();
                 },
@@ -1333,12 +1479,17 @@ class mechatro {
                         value = 0;
                     }
 
+                    const mode = Entry.mechatro.portMode.SET_MOTOR_SPEED_Free;
                     value = Math.round(value);
                     value = value + 100;
                     value = Math.max(value, 0);
                     value = Math.min(value, 200);
 
-                    Entry.mechatro.transferValue(portNo, value);
+                    if (Entry.mechatro.tonePin) {   // 22.6.5 톤 중복 사용 금지처리
+                        Entry.mechatro.transferMode(Entry.mechatro.tonePin, Entry.mechatro.portMode.SET_NO_TONE);
+                        Entry.mechatro.tonePin = 0;
+                    }
+                    Entry.mechatro.transferModeValue(portNo, mode, value);
                     return script.callReturn();
                 },
             },
@@ -1378,7 +1529,7 @@ class mechatro {
                     Entry.mechatro.transferMode(portNo, mode);
 
                     if (Entry.hw.portData[portNo] !== undefined) {
-                        return Entry.hw.portData[portNo];
+                        return Entry.hw.portData[portNo] * 10.0; // [cA] → [mA]
                     } else {
                         return 0;
                     }

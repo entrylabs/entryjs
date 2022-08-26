@@ -449,7 +449,7 @@ module.exports = {
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
                         const { array } = table;
-                        return array.length;
+                        return array.length + 1;
                     } else if (property === 'COL') {
                         const labels = table.fields;
                         return labels.length;
