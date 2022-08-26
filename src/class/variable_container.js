@@ -1679,6 +1679,7 @@ Entry.VariableContainer = class VariableContainer {
             playground.reloadPlayground();
         }
 
+        this.select(data);
         this.updateList();
     }
 
@@ -2821,8 +2822,6 @@ Entry.VariableContainer = class VariableContainer {
             valTypeText.textContent = Lang.Menus.realtime;
         } else if (variable.isCloud_) {
             valTypeText.textContent = Lang.Menus.cloud;
-        } else {
-            valTypeText.textContent = '';
         }
 
         // 기본 값 입력 창
@@ -3001,8 +3000,6 @@ Entry.VariableContainer = class VariableContainer {
             valTypeText.textContent = Lang.Menus.realtime;
         } else if (list.isCloud_) {
             valTypeText.textContent = Lang.Menus.cloud;
-        } else {
-            valTypeText.textContent = '';
         }
 
         this.generateListImportExportView(listAttr);
