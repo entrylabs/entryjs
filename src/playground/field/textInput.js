@@ -48,6 +48,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             return;
         }
 
+        this.board.setSelectedBlock(field._blockView);
         this.destroyOption(undefined, true);
         field.renderOptions(fields);
     }

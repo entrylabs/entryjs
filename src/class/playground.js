@@ -599,6 +599,7 @@ Entry.Playground = class Playground {
         this.board = this.mainWorkspace.board;
         this.toast = new Toast(this.board);
         this.blockMenu.banClass('checker');
+        Entry.Func?.initBlock(this.blockMenu);
         Entry.expansion?.banAllExpansionBlock();
         Entry.aiUtilize?.banAllAIUtilizeBlock();
         DataTable?.banAllBlock();

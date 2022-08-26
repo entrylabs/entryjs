@@ -36,7 +36,11 @@ Entry.skeleton.basic_text = {
         // apply scale required.
         const height = Math.max(blockView.contentHeight, 16);
         const width = Math.max(blockView.contentWidth, 16);
-        return { x: width / 2 + 5, y: height / 2 + 1 };
+
+        const { skeletonOptions = {} } = blockView._schema;
+        const { contentPos = {} } = skeletonOptions;
+
+        return Object.assign({ x: width / 2 + 5, y: height / 2 + 1 }, contentPos);
     },
     movable: false,
     readOnly: true,

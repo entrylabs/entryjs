@@ -213,7 +213,9 @@ Entry.Thread = class Thread {
         return false;
 
         function inspectBlock(block) {
-            if (type == block.type) {
+            if (Array.isArray(type) && type.includes(block.type)) {
+                return true;
+            } else if (type === block.type) {
                 return true;
             }
 
@@ -279,7 +281,14 @@ Entry.Thread = class Thread {
                 if (block.constructor !== Entry.Block) {
                     return;
                 }
-                return block.getBlockList(excludePrimitive, type);
+                if (Array.isArray(type)) {
+                    return type.reduce(
+                        (acc, type) => acc.concat(block.getBlockList(excludePrimitive, type)),
+                        []
+                    );
+                } else {
+                    return block.getBlockList(excludePrimitive, type);
+                }
             })
             .flatten()
             .compact()
