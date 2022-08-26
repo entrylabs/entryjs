@@ -565,6 +565,7 @@ Entry.VariableContainer = class VariableContainer {
         const maxlength = 2;
 
         const countInput = createElement('input').appendTo(countInputBox);
+        countInput.setAttribute('autocomplete', 'off');
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
         countInput.value = func.localVariables?.length || 0;
@@ -1588,6 +1589,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('input')
             .appendTo(editBoxInputWrapper);
         editBoxInput.textContent = func.description;
+        editBoxInput.setAttribute('autocomplete', 'off');
 
         const ArrowDownButton = createElement('div')
             .addClass('arrowDown')
@@ -1878,6 +1880,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
             })
             .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('autocomplete', 'off');
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.setAttribute('name', 'inpt_name');
         editBoxInput.value = variable.name_;
@@ -2033,6 +2036,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
             })
             .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('autocomplete', 'off');
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.value = message.name;
         editBoxInput.onfocus = Entry.Utils.setFocused;
@@ -2147,6 +2151,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
             })
             .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('autocomplete', 'off');
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.setAttribute('name', 'inpt_name');
         editBoxInput.value = list.name_;
@@ -2286,6 +2291,7 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
+        addSpaceInput.setAttribute('autocomplete', 'off');
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.Variable_placeholder_content);
@@ -2465,6 +2471,7 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
+        addSpaceInput.setAttribute('autocomplete', 'off');
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_create_placeholder);
@@ -2590,6 +2597,7 @@ Entry.VariableContainer = class VariableContainer {
         boxSubject.textContent = Lang.Workspace.Message_placeholder_name;
 
         const msgNameInput = createElement('input').appendTo(msdAddSpaceWrapper);
+        msgNameInput.setAttribute('autocomplete', 'off');
         msgNameInput.setAttribute('type', 'text');
         msgNameInput.setAttribute('placeholder', Lang.Workspace.message_create_placeholder);
         msgNameInput.onkeydown = Entry.Utils.whenEnter(function() {
@@ -2831,6 +2839,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(attrInputBox)
             .addClass('val_inptbox');
         const attrInput = createElement('input').appendTo(attrInputWrapper);
+        attrInput.setAttribute('autocomplete', 'off');
         attrInput.setAttribute('type', 'text');
         attrInput.value = 0;
         attrInput.onkeypress = Entry.Utils.blurWhenEnter;
@@ -2876,6 +2885,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const minValueInput = createElement('input').appendTo(slideCountBox);
         minValueInput.textContent = Lang.Workspace.min_value;
+        minValueInput.setAttribute('autocomplete', 'off');
         minValueInput.setAttribute('type', 'text');
 
         const v = that.selected;
@@ -2903,6 +2913,7 @@ Entry.VariableContainer = class VariableContainer {
         const maxValueInput = createElement('input').appendTo(slideCountBox);
         maxValueInput.textContent = Lang.Workspace.max_value;
         maxValueInput.setAttribute('type', 'text');
+        maxValueInput.setAttribute('autocomplete', 'off');
 
         if (vType === 'slide') {
             maxValueInput.value = v.maxValue_;
@@ -3064,6 +3075,7 @@ Entry.VariableContainer = class VariableContainer {
         let maxlength = 4;
 
         const countInput = createElement('input').appendTo(countInputBox);
+        countInput.setAttribute('autocomplete', 'off');
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
 
