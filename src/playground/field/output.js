@@ -95,7 +95,9 @@ Entry.FieldOutput = class FieldOutput extends Entry.Field {
             });
         }
 
-        this.box.set({ x, y });
+        if (this.box.x !== x || this.box.y !== y) {
+            this.box.set({ x, y });
+        }
     }
 
     calcWH() {
@@ -103,10 +105,12 @@ Entry.FieldOutput = class FieldOutput extends Entry.Field {
         const blockView = block && block.view;
 
         if (block && blockView) {
-            this.box.set({
-                width: blockView.width,
-                height: blockView.height,
-            });
+            if (this.box.width !== blockView.width || this.box.height !== blockView.height) {
+                this.box.set({
+                    width: blockView.width,
+                    height: blockView.height,
+                });
+            }
         } else {
             this.box.set({
                 width: 0,

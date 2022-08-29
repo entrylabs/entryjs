@@ -96,14 +96,24 @@ module.exports = {
                         menuName() {
                             const func = Entry.Func.targetFunc || {};
                             const localVariables = func.localVariables || [];
-                            return localVariables.map(({ name }, idx) => [
-                                name,
-                                `${func.id}_${idx}`,
-                            ]);
+                            if (localVariables.length) {
+                                return localVariables.map(({ name }, idx) => [
+                                    name,
+                                    `${func.id}_${idx}`,
+                                ]);
+                            } else {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
                         },
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.FUNC,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Block',
@@ -192,14 +202,24 @@ module.exports = {
                         menuName() {
                             const func = Entry.Func.targetFunc || {};
                             const localVariables = func.localVariables || [];
-                            return localVariables.map(({ name }, idx) => [
-                                name,
-                                `${func.id}_${idx}`,
-                            ]);
+                            if (localVariables.length) {
+                                return localVariables.map(({ name }, idx) => [
+                                    name,
+                                    `${func.id}_${idx}`,
+                                ]);
+                            } else {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
                         },
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.FUNC,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Text',

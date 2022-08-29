@@ -169,7 +169,7 @@ class EntryFunc {
     }
 
     getValue(idx) {
-        return this.localVariables[idx].value;
+        return this.localVariables[idx]?.value || 0;
     }
 
     setValue(value, idx) {
@@ -353,7 +353,6 @@ class EntryFunc {
     static save() {
         this.targetFunc.generateBlock(true);
         Entry.variableContainer.saveFunction(this.targetFunc);
-
         this._restoreBoardToVimBoard();
     }
 
@@ -644,6 +643,10 @@ class EntryFunc {
             if (outputBlockIds) {
                 let startPos = 0;
                 while (outputBlockIds[startPos] === blockIds[startPos]) {
+                    if (!outputBlockIds[startPos]) {
+                        break;
+                    }
+
                     startPos++;
                 }
 
@@ -652,6 +655,9 @@ class EntryFunc {
                     outputBlockIds[outputBlockIds.length - endPos - 1] ===
                     blockIds[blockIds.length - endPos - 1]
                 ) {
+                    if (!outputBlockIds[outputBlockIds.length - endPos - 1]) {
+                        break;
+                    }
                     endPos++;
                 }
 
@@ -756,7 +762,6 @@ class EntryFunc {
         const block = func.content.getThread(0).getFirstBlock();
 
         block.changeType(blockType);
-        func.content.destroy();
         tempContent[0][0].type = blockType;
         func.content = new Entry.Code(tempContent);
 
