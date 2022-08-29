@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.cremaker_3Dpen = {
-    id       : 'EF.1',
+    id       : '51.1',
     name     : 'cremaker_3Dpen',
     url      : 'http://www.cremaker.com/',
     imageName: 'Testino.png',
