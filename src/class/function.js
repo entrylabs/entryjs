@@ -1,4 +1,5 @@
 import _truncate from 'lodash/truncate';
+import _trim from 'lodash/trim';
 
 class EntryFunc {
     static isEdit = false;
@@ -138,6 +139,7 @@ class EntryFunc {
     toggleFunctionUseLocalVariables() {
         this.useLocalVariables = !this.useLocalVariables;
         Entry.variableContainer && Entry.variableContainer.updateFuncSettingView(this);
+        EntryFunc.updateMenu();
     }
 
     getLocalVariables() {
@@ -179,9 +181,11 @@ class EntryFunc {
         Entry.Mutator.mutate(
             'function_name',
             {
-                template: _truncate(name, {
-                    length: 20,
-                }),
+                template: `${Lang.Workspace.func}: ${_trim(
+                    _truncate(name, {
+                        length: 20,
+                    })
+                )}`,
             },
             { type: 'noChange', isRestore: undefined }
         );
@@ -500,6 +504,8 @@ class EntryFunc {
             blockMenu.unbanClass('functionEdit', true);
             if (this.targetFunc && this.targetFunc.useLocalVariables) {
                 blockMenu.unbanClass('useLocalVariables', true);
+            } else {
+                blockMenu.banClass('useLocalVariables', true);
             }
             Entry.variableContainer &&
                 Entry.variableContainer.updateFuncSettingView(this.targetFunc);
@@ -735,6 +741,8 @@ class EntryFunc {
         delete func.blockMenuBlock;
         EntryFunc._generateFunctionSchema(func.id, type, true);
 
+        const tempContent = func.content.toJSON();
+
         if (func && func.content) {
             const blockMap = func.content._blockMap;
             for (const key in blockMap) {
@@ -746,11 +754,15 @@ class EntryFunc {
         EntryFunc.registerFunction(func);
         const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
         const block = func.content.getThread(0).getFirstBlock();
-        block.set({ statements: [] });
+
         block.changeType(blockType);
+        func.content.destroy();
+        tempContent[0][0].type = blockType;
+        func.content = new Entry.Code(tempContent);
 
+        const workspace = Entry.getMainWS();
+        workspace.changeOverlayBoardCode(func.content);
         func.block = block;
-
         EntryFunc.updateMenu();
 
         // reDrawVariableContainer()

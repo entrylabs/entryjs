@@ -26,6 +26,7 @@ Entry.clipboard = null;
  * @param {*} project
  */
 Entry.loadProject = function(project) {
+    Entry.isLoadProject = false;
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
@@ -125,7 +126,7 @@ Entry.loadProject = function(project) {
             window.parent.childIframeLoaded();
         }
     } catch (e) {}
-
+    Entry.isLoadProject = true;
     return project;
 };
 

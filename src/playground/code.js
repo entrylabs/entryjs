@@ -40,6 +40,10 @@ Entry.Code = class Code {
 
         const parseCode = Array.isArray(code) ? code : JSON.parse(code);
         parseCode.forEach((t) => {
+            if (Array.isArray(t) && t.length > 1 && t?.[0].type === 'function_create') {
+                t[0].statements.push(t.splice(1, t.length));
+            }
+
             const thread = new Entry.Thread(t, this);
             if (thread.hasData()) {
                 this._data.push(thread);
@@ -359,6 +363,14 @@ Entry.Code = class Code {
         return this._blockMap[id];
     }
 
+    findByType(type) {
+        const id = Object.keys(this._blockMap).find((id) => {
+            const block = this._blockMap[id];
+            return block.type === type;
+        });
+        return this._blockMap[id];
+    }
+
     registerBlock(block) {
         this._blockMap[block.id] = block;
     }
@@ -503,8 +515,7 @@ Entry.Code = class Code {
     static funcValueAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
         await Promise.all(_promises);
         if (Entry.engine.isState('pause')) {
-            const r = this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
-            return r;
+            return this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
         } else if (!Entry.engine.isState('run')) {
             funcCode.removeExecutor(funcExecutor);
             return await this.getAsyncParamsData(funcExecutor.result);
@@ -532,6 +543,42 @@ Entry.Code = class Code {
                         } else {
                             funcCode.callStackLength--;
                             funcCode.removeExecutor(funcExecutor);
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
+
+    static funcValueRestExecute = async (funcCode, funcExecutor) => {
+        if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            return resolve(await this.funcValueRestExecute(funcCode, funcExecutor));
                         }
                     }
                     resolve(await this.getAsyncParamsData(funcExecutor.result));

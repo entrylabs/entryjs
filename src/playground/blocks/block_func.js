@@ -35,7 +35,7 @@ module.exports = {
                 skeleton: 'basic_text',
                 skeletonOptions: {
                     contentPos: {
-                        x: 16,
+                        x: 5,
                     },
                 },
                 color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -52,7 +52,6 @@ module.exports = {
                 isNotFor: ['functionEdit'],
                 events: {},
             },
-
             showFunctionPropsButton: {
                 template: '%1',
                 skeleton: 'basic_button',
@@ -437,8 +436,10 @@ module.exports = {
                                 promises
                             );
                         } else {
-                            this.funcCode.removeExecutor(this.funcExecutor);
-                            return Entry.STATIC.BREAK;
+                            return Entry.Code.funcValueRestExecute(
+                                this.funcCode,
+                                this.funcExecutor
+                            );
                         }
                     }
 

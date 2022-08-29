@@ -448,6 +448,22 @@ Entry.VariableContainer = class VariableContainer {
         func.listElement.appendChild(this.funcSettingView);
     }
 
+    isUsedFunction(func) {
+        if ([...this._functionRefs].some((item) => item.block.data.type === `func_${func.id}`)) {
+            return true;
+        } else if (
+            Object.keys(this.functions_).some((key) => {
+                const item = this.functions_[key]?.content.findByType(`func_${func.id}`);
+                console.log(item);
+                return Boolean(item);
+            })
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     generateFuncDefaultView(element, func) {
         const createElement = Entry.createElement;
 
@@ -462,14 +478,9 @@ Entry.VariableContainer = class VariableContainer {
         element.resultCheck = createElement('span')
             .addClass('entryFuncAddResultCheckWorkspace')
             .bindOnClick(() => {
-                const caller = [...this._functionRefs].find(
-                    (item) => item.block.data.type === `func_${func.id}`
-                );
-
-                if (caller) {
+                if (this.isUsedFunction(func)) {
                     return Entry.modal.alert(Lang.Msgs.cannot_delete_function);
                 }
-
                 Entry.do('funcChangeType', func);
             })
             .appendTo(resultCheckBox);
@@ -477,14 +488,9 @@ Entry.VariableContainer = class VariableContainer {
         const resultCheckText = createElement('span')
             .addClass('chk_text')
             .bindOnClick(() => {
-                const caller = [...this._functionRefs].find(
-                    (item) => item.block.data.type === `func_${func.id}`
-                );
-
-                if (caller) {
+                if (this.isUsedFunction(func)) {
                     return Entry.modal.alert(Lang.Msgs.cannot_delete_function);
                 }
-
                 Entry.do('funcChangeType', func);
             })
             .appendTo(resultCheckBox);
@@ -559,6 +565,7 @@ Entry.VariableContainer = class VariableContainer {
         const maxlength = 2;
 
         const countInput = createElement('input').appendTo(countInputBox);
+        countInput.setAttribute('autocomplete', 'off');
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
         countInput.value = func.localVariables?.length || 0;
@@ -933,17 +940,19 @@ Entry.VariableContainer = class VariableContainer {
         listView.appendChild(this.messageAddButton_);
         listView.appendChild(this.messageAddPanel.view);
 
-        const messageList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+        const messageList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace message unfold'
+        );
 
         const messageListBox = createElement('div')
             .addClass('attr_box')
             .appendTo(messageList);
 
-        this.makeChildVariableViews(
-            this.messages_,
-            this.createMessageView.bind(this),
-            messageListBox
-        );
+        const list = createElement('div')
+            .addClass('list')
+            .appendTo(messageListBox);
+
+        this.makeChildVariableViews(this.messages_, this.createMessageView.bind(this), list);
         listView.appendChild(messageList);
     }
 
@@ -1122,7 +1131,9 @@ Entry.VariableContainer = class VariableContainer {
         }
         listView.appendChild(this.functionAddButton_);
 
-        const funcList = createElement('div').addClass('entryVariableSplitterWorkspace unfold');
+        const funcList = createElement('div').addClass(
+            'entryVariableSplitterWorkspace func unfold'
+        );
 
         const funcListBox = createElement('div')
             .addClass('attr_box')
@@ -1578,6 +1589,7 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('input')
             .appendTo(editBoxInputWrapper);
         editBoxInput.textContent = func.description;
+        editBoxInput.setAttribute('autocomplete', 'off');
 
         const ArrowDownButton = createElement('div')
             .addClass('arrowDown')
@@ -1667,6 +1679,7 @@ Entry.VariableContainer = class VariableContainer {
             playground.reloadPlayground();
         }
 
+        this.select(data);
         this.updateList();
     }
 
@@ -1868,6 +1881,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
             })
             .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('autocomplete', 'off');
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.setAttribute('name', 'inpt_name');
         editBoxInput.value = variable.name_;
@@ -2023,6 +2037,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
             })
             .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('autocomplete', 'off');
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.value = message.name;
         editBoxInput.onfocus = Entry.Utils.setFocused;
@@ -2137,6 +2152,7 @@ Entry.VariableContainer = class VariableContainer {
                 e.stopPropagation();
             })
             .appendTo(editBoxInputWrapper);
+        editBoxInput.setAttribute('autocomplete', 'off');
         editBoxInput.setAttribute('type', 'text');
         editBoxInput.setAttribute('name', 'inpt_name');
         editBoxInput.value = list.name_;
@@ -2276,6 +2292,7 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
+        addSpaceInput.setAttribute('autocomplete', 'off');
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.Variable_placeholder_content);
@@ -2455,6 +2472,7 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
+        addSpaceInput.setAttribute('autocomplete', 'off');
         addSpaceInput.setAttribute('type', 'text');
         addSpaceInput.id = 'entryVariableAddSpaceInputWorkspace';
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_create_placeholder);
@@ -2557,7 +2575,7 @@ Entry.VariableContainer = class VariableContainer {
             })
             .appendTo(addSpaceButtonWrapper);
         addSpaceConfirmButton.href = '#';
-        addSpaceConfirmButton.textContent = Lang.Buttons.save;
+        addSpaceConfirmButton.textContent = Lang.Buttons.add_list;
         this.listAddConfirmButton = addSpaceConfirmButton;
     }
 
@@ -2580,6 +2598,7 @@ Entry.VariableContainer = class VariableContainer {
         boxSubject.textContent = Lang.Workspace.Message_placeholder_name;
 
         const msgNameInput = createElement('input').appendTo(msdAddSpaceWrapper);
+        msgNameInput.setAttribute('autocomplete', 'off');
         msgNameInput.setAttribute('type', 'text');
         msgNameInput.setAttribute('placeholder', Lang.Workspace.message_create_placeholder);
         msgNameInput.onkeydown = Entry.Utils.whenEnter(function() {
@@ -2803,8 +2822,6 @@ Entry.VariableContainer = class VariableContainer {
             valTypeText.textContent = Lang.Menus.realtime;
         } else if (variable.isCloud_) {
             valTypeText.textContent = Lang.Menus.cloud;
-        } else {
-            valTypeText.textContent = Lang.Menus.normal;
         }
 
         // 기본 값 입력 창
@@ -2823,6 +2840,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(attrInputBox)
             .addClass('val_inptbox');
         const attrInput = createElement('input').appendTo(attrInputWrapper);
+        attrInput.setAttribute('autocomplete', 'off');
         attrInput.setAttribute('type', 'text');
         attrInput.value = 0;
         attrInput.onkeypress = Entry.Utils.blurWhenEnter;
@@ -2868,6 +2886,7 @@ Entry.VariableContainer = class VariableContainer {
 
         const minValueInput = createElement('input').appendTo(slideCountBox);
         minValueInput.textContent = Lang.Workspace.min_value;
+        minValueInput.setAttribute('autocomplete', 'off');
         minValueInput.setAttribute('type', 'text');
 
         const v = that.selected;
@@ -2895,6 +2914,7 @@ Entry.VariableContainer = class VariableContainer {
         const maxValueInput = createElement('input').appendTo(slideCountBox);
         maxValueInput.textContent = Lang.Workspace.max_value;
         maxValueInput.setAttribute('type', 'text');
+        maxValueInput.setAttribute('autocomplete', 'off');
 
         if (vType === 'slide') {
             maxValueInput.value = v.maxValue_;
@@ -2980,8 +3000,6 @@ Entry.VariableContainer = class VariableContainer {
             valTypeText.textContent = Lang.Menus.realtime;
         } else if (list.isCloud_) {
             valTypeText.textContent = Lang.Menus.cloud;
-        } else {
-            valTypeText.textContent = Lang.Menus.normal;
         }
 
         this.generateListImportExportView(listAttr);
@@ -3058,6 +3076,7 @@ Entry.VariableContainer = class VariableContainer {
         let maxlength = 4;
 
         const countInput = createElement('input').appendTo(countInputBox);
+        countInput.setAttribute('autocomplete', 'off');
         countInput.setAttribute('type', 'text');
         countInput.setAttribute('maxlength', maxlength);
 
@@ -3115,7 +3134,7 @@ Entry.VariableContainer = class VariableContainer {
         const countLabel = createElement('div')
             .addClass('cnt_label')
             .appendTo(countGroup);
-        countLabel.textContent = Lang.Workspace.local_variable;
+        countLabel.textContent = Lang.Workspace.list_default_value;
         const scrollBox = createElement('div')
             .addClass('scroll_box')
             .appendTo(countGroup);
@@ -3297,6 +3316,9 @@ Entry.VariableContainer = class VariableContainer {
                 return;
             }
             func.isAdded = true;
+            if (!Entry.isLoadProject) {
+                return;
+            }
             func.content.getBlockList().forEach((block) => {
                 const blockType = block.type;
                 if (blockType.indexOf('func_') > -1 && blockType.substr(5) == id) {
@@ -3392,6 +3414,9 @@ Entry.VariableContainer = class VariableContainer {
                     functions.push({
                         id,
                         content: JSON.stringify(func.content.toJSON()),
+                        type: func.type,
+                        localVariables: func.localVariables,
+                        useLocalVariables: func.useLocalVariables,
                     });
 
                     const contentBlockList = func.content.getBlockList();
@@ -3597,6 +3622,7 @@ Entry.VariableContainer = class VariableContainer {
 
     clickListAddButton(...args) {
         this._clickAddButton.call(this, 'list', ...args);
+        this.listAddPanel.view.cloudCheck.addClass('on');
     }
 
     clickMessageAddButton(...args) {
