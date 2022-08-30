@@ -68,8 +68,7 @@ module.exports = {
                         sprite.getX() +
                             value *
                                 Math.cos(
-                                    (sprite.getRotation() + sprite.getDirection() - 90) /
-                                        180 *
+                                    ((sprite.getRotation() + sprite.getDirection() - 90) / 180) *
                                         Math.PI
                                 )
                     );
@@ -77,8 +76,7 @@ module.exports = {
                         sprite.getY() -
                             value *
                                 Math.sin(
-                                    (sprite.getRotation() + sprite.getDirection() - 90) /
-                                        180 *
+                                    ((sprite.getRotation() + sprite.getDirection() - 90) / 180) *
                                         Math.PI
                                 )
                     );
@@ -864,6 +862,12 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.MOVING,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Indicator',
@@ -942,6 +946,12 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.MOVING,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Indicator',
@@ -1445,6 +1455,12 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.MOVING,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Indicator',
@@ -1493,9 +1509,9 @@ module.exports = {
                     if (deltaX === 0 && deltaY === 0) {
                         value = sprite.getDirection() + sprite.getRotation();
                     } else if (deltaX >= 0) {
-                        value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
+                        value = (-Math.atan(deltaY / deltaX) / Math.PI) * 180 + 90;
                     } else {
-                        value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
+                        value = (-Math.atan(deltaY / deltaX) / Math.PI) * 180 + 270;
                     }
                     if (this.entity.parent.getRotateMethod() === 'free') {
                         const nativeDirection = sprite.getDirection() + sprite.getRotation();
@@ -1587,8 +1603,8 @@ module.exports = {
                     value = Number(value);
                     angle = Number(angle);
 
-                    sprite.setX(sprite.getX() + value * Math.cos((angle - 90) / 180 * Math.PI));
-                    sprite.setY(sprite.getY() - value * Math.sin((angle - 90) / 180 * Math.PI));
+                    sprite.setX(sprite.getX() + value * Math.cos(((angle - 90) / 180) * Math.PI));
+                    sprite.setY(sprite.getY() - value * Math.sin(((angle - 90) / 180) * Math.PI));
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
