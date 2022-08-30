@@ -17,12 +17,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.TEXT,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                 ],
                 events: {},
@@ -290,12 +284,6 @@ module.exports = {
                         value: null,
                         menuName: 'fonts',
                         fontSize: 11,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
