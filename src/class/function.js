@@ -761,10 +761,8 @@ class EntryFunc {
             for (const key in blockMap) {
                 EntryFunc.registerParamBlock(blockMap[key].type);
             }
-            EntryFunc.generateWsBlock(func);
         }
 
-        EntryFunc.registerFunction(func);
         const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
         const block = func.content.getThread(0).getFirstBlock();
 
@@ -775,6 +773,9 @@ class EntryFunc {
         const workspace = Entry.getMainWS();
         workspace.changeOverlayBoardCode(func.content);
         func.block = block;
+        Entry.variableContainer.updateList();
+        EntryFunc.registerFunction(func);
+        EntryFunc.generateWsBlock(func, true);
         EntryFunc.updateMenu();
 
         // reDrawVariableContainer()
