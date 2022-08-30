@@ -313,6 +313,12 @@ Entry.BlockMockup = class BlockMockup {
                     value: null,
                     menuName: field.menuName_,
                     fontSize: 11,
+                    defaultValue: (_value, options) => {
+                        if (options[0] && options[0][1]) {
+                            return options[0][1];
+                        }
+                        return null;
+                    },
                 });
                 this.templates.push(this.getFieldCount());
                 if (this.def && this.def.index && this.def.index[opt] !== undefined) {

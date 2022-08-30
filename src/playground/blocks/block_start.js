@@ -597,6 +597,12 @@ module.exports = {
                         textColor: '#fff',
                         bgColor: EntryStatic.colorSet.block.darken.START,
                         arrowColor: EntryStatic.colorSet.arrow.default.START,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Indicator',
@@ -744,6 +750,12 @@ module.exports = {
                         value: null,
                         menuName: 'sprites',
                         fontSize: 11,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Dropdown',
@@ -850,6 +862,12 @@ module.exports = {
                         value: null,
                         menuName: 'allSprites',
                         fontSize: 11,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Dropdown',
@@ -938,6 +956,12 @@ module.exports = {
                         value: null,
                         menuName: 'sprites',
                         fontSize: 11,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Indicator',
