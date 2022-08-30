@@ -1501,12 +1501,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'pictures',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Indicator',
@@ -1756,12 +1750,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'objectSequence',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Indicator',
@@ -1805,12 +1793,6 @@ function getBlocks() {
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.LOOKS,
                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
             ],
             events: {},
@@ -2154,12 +2136,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'sprites',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Indicator',
@@ -2376,12 +2352,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'sounds',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Indicator',
@@ -2420,12 +2390,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'sounds',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Block',
@@ -2481,12 +2445,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'sounds',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Indicator',
@@ -2540,12 +2498,6 @@ function getBlocks() {
                     value: null,
                     menuName: 'sounds',
                     fontSize: 11,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
                 {
                     type: 'Block',
@@ -2616,12 +2568,6 @@ function getBlocks() {
                     fontSize: 10,
                     bgColor: EntryStatic.colorSet.block.darken.SOUND,
                     arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                    defaultValue: (_value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return null;
-                    },
                 },
             ],
             events: {},
