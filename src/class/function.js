@@ -82,9 +82,9 @@ class EntryFunc {
         this.description = generatedInfo.description;
     }
 
-    defaultLocalVariable() {
+    defaultLocalVariable(isForce) {
         return {
-            name: this.makeLocalVariableName(),
+            name: this.makeLocalVariableName(isForce),
             value: 0,
         };
     }
@@ -96,10 +96,10 @@ class EntryFunc {
         if (this.localVariables.length >= length) {
             this.localVariables.splice(length, this.localVariables.length - length);
         } else {
-            this.localVariables = Array.concat(
-                this.localVariables,
-                Array(length - this.localVariables.length).fill(this.defaultLocalVariable())
-            );
+            const max = length - this.localVariables.length;
+            for (let i = 0; i < max; i++) {
+                this.localVariables.push(this.defaultLocalVariable(true));
+            }
         }
         Entry.variableContainer && Entry.variableContainer.updateFuncScrollBar(this);
     }
@@ -146,14 +146,16 @@ class EntryFunc {
         return this.localVariables;
     }
 
-    makeLocalVariableName() {
+    makeLocalVariableName(isForce) {
         let name = Lang.Workspace.local_variable;
         if (this.checkLocalVariableName(name)) {
             name = Entry.getOrderedName(name, this.localVariables, 'name');
-            Entry.toast.warning(
-                Lang.Workspace.local_variable_rename,
-                Lang.Workspace.local_variable_dup
-            );
+            if (!isForce) {
+                Entry.toast.warning(
+                    Lang.Workspace.local_variable_rename,
+                    Lang.Workspace.local_variable_dup
+                );
+            }
         }
 
         return name;

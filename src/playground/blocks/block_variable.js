@@ -296,12 +296,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Text',
@@ -380,12 +374,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Block',
@@ -535,12 +523,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Block',
@@ -656,12 +638,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
@@ -739,12 +715,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
@@ -827,12 +797,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Text',
@@ -956,12 +920,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
@@ -1077,12 +1035,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
@@ -1202,12 +1154,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Block',
@@ -1347,12 +1293,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Block',
@@ -1497,12 +1437,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Text',
@@ -1587,12 +1521,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Text',
@@ -1715,12 +1643,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
@@ -1798,12 +1720,6 @@ module.exports = {
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
-                        defaultValue: (_value, options) => {
-                            if (options[0] && options[0][1]) {
-                                return options[0][1];
-                            }
-                            return null;
-                        },
                     },
                     {
                         type: 'Indicator',
