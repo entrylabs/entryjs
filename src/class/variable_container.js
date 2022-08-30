@@ -1575,7 +1575,11 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt_box')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                if (!Entry.Func.isEdit && !Entry.isTextMode) {
+                if (!Entry.isTextMode) {
+                    if (Entry.Func.isEdit) {
+                        Entry.Func._backupContent = null;
+                        Entry.Func.save();
+                    }
                     Entry.do('funcEditStart', func.id);
                 }
 

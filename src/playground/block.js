@@ -223,11 +223,13 @@ Entry.Block = class Block {
 
         const statements = this._schema.statements || [];
         for (let i = 0; i < statements.length; i++) {
-            this.statements.splice(
-                i,
-                1,
-                new Entry.Thread(this.statements[i], that.getCode(), this)
-            );
+            if (!(this.statements[i] instanceof Entry.Thread)) {
+                this.statements.splice(
+                    i,
+                    1,
+                    new Entry.Thread(this.statements[i], that.getCode(), this)
+                );
+            }
         }
 
         return true;
