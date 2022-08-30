@@ -3156,12 +3156,6 @@ Entry.VariableContainer = class VariableContainer {
                 groupSize: 10,
             }
         );
-
-        // if (localVariables?.length === 0) {
-        //     countGroup?.addClass('entryRemove');
-        //     return;
-        // }
-        // countGroup?.removeClass('entryRemove');
     }
 
     createListValueElement(index, value, startIndex = 0) {

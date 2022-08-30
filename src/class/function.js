@@ -166,6 +166,11 @@ class EntryFunc {
     changeNameLocalVariable(name, index) {
         const localVariable = this.localVariables[index];
         localVariable.name = name;
+        const { playground } = Entry;
+        if (playground) {
+            playground.blockMenu.deleteRendered('func');
+            playground.reloadPlayground();
+        }
     }
 
     getValue(idx) {
