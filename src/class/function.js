@@ -1,5 +1,6 @@
 import _truncate from 'lodash/truncate';
 import _trim from 'lodash/trim';
+import _cloneDeep from 'lodash/cloneDeep';
 
 class EntryFunc {
     static isEdit = false;
@@ -264,6 +265,11 @@ class EntryFunc {
             }
 
             this._backupContent = funcElement.content.stringify();
+            this._backupOption = {
+                type: funcElement.type,
+                useLocalVariables: funcElement.useLocalVariables,
+                localVariables: _cloneDeep(funcElement.localVariables),
+            };
         }, 0);
     }
 
@@ -341,6 +347,7 @@ class EntryFunc {
         }
 
         this._backupContent = null;
+        this._backupOption = null;
 
         delete this.targetFunc;
         EntryFunc.isEdit = false;
@@ -375,6 +382,9 @@ class EntryFunc {
         } else {
             if (this._backupContent) {
                 this.targetFunc.content.load(this._backupContent);
+                this.targetFunc.type = this._backupOption.type;
+                this.targetFunc.useLocalVariables = this._backupOption.useLocalVariables;
+                this.targetFunc.localVariables = this._backupOption.localVariables;
                 this._generateFunctionSchema(this.targetFunc.id);
                 this.generateWsBlock(this.targetFunc, true);
             }
