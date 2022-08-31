@@ -621,7 +621,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(countGroup);
         countLabel.textContent = Lang.Workspace.local_variable;
         const scrollBox = createElement('div')
-            .addClass('scroll_box')
+            .addClass('scroll_box simplebar-content-wrapper')
             .appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
         const parent = /* html */ `<ol class="cnt_list">{1}</ol>`;
@@ -1409,6 +1409,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         Entry.Func.edit(new Entry.Func(data));
         Entry.Func.save();
+        this.select(Entry.Func.targetFunc);
     }
 
     removeBlocksInFunctionByType(blockType) {
