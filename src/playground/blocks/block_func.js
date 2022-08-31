@@ -94,7 +94,7 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName() {
-                            const func = Entry.Func.targetFunc || {};
+                            const func = Entry.Func.targetFunc || Entry.Func.lastTargetFunc || {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
                                 return localVariables.map(({ name }, idx) => [
@@ -200,7 +200,7 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName() {
-                            const func = Entry.Func.targetFunc || {};
+                            const func = Entry.Func.targetFunc || Entry.Func.lastTargetFunc || {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
                                 return localVariables.map(({ name }, idx) => [

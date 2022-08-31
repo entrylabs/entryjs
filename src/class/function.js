@@ -349,6 +349,7 @@ class EntryFunc {
         this._backupContent = null;
         this._backupOption = null;
 
+        this.lastTargetFunc = this.targetFunc;
         delete this.targetFunc;
         EntryFunc.isEdit = false;
 
