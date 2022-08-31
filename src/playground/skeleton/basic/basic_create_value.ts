@@ -42,12 +42,12 @@ Entry.skeleton.basic_create_value = {
     },
     box(blockView) {
         const width = blockView ? blockView.contentWidth : 150;
-        const height = blockView ? blockView.contentHeight : 28;
+        const height = blockView ? blockView.height : 28;
         return {
             offsetX: -8,
             offsetY: 0,
             width: width + 30,
-            height: Math.max(30, height + 2),
+            height: Math.max(30, height),
             marginBottom: 0,
         };
     },
