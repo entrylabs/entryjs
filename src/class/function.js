@@ -774,10 +774,20 @@ class EntryFunc {
         }
 
         const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
-        const block = func.content.getThread(0).getFirstBlock();
+        let block;
+        func.content.getThreads().some((thread, idx) => {
+            const target = thread.getFirstBlock();
+            if (
+                target instanceof Entry.Block &&
+                ['function_create_value', 'function_create'].includes(target?.type)
+            ) {
+                tempContent[idx][0].type = blockType;
+                block = target;
+                return true;
+            }
+        });
 
         block.changeType(blockType);
-        tempContent[0][0].type = blockType;
         func.content = new Entry.Code(tempContent);
 
         const workspace = Entry.getMainWS();
