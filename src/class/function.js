@@ -382,9 +382,9 @@ class EntryFunc {
         } else {
             if (this._backupContent) {
                 this.targetFunc.content.load(this._backupContent);
-                this.targetFunc.type = this._backupOption.type;
                 this.targetFunc.useLocalVariables = this._backupOption.useLocalVariables;
                 this.targetFunc.localVariables = this._backupOption.localVariables;
+                this.changeType(this.targetFunc, this._backupOption.type);
                 this._generateFunctionSchema(this.targetFunc.id);
                 this.generateWsBlock(this.targetFunc, true);
             }
