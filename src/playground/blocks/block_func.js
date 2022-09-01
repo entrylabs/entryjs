@@ -166,7 +166,7 @@ module.exports = {
                     const [funcId, idx] = variableId.split('_');
                     const func = Entry.variableContainer.getFunction(funcId, idx);
 
-                    func.setValue(value, idx);
+                    func.setValue(value, variableId);
 
                     return script.callReturn();
                 },
@@ -262,9 +262,9 @@ module.exports = {
                 isNotFor: ['useLocalVariables'],
                 func(sprite, script) {
                     const variableId = script.getField('VARIABLE', script);
-                    const [funcId, idx] = variableId.split('_');
-                    const func = Entry.variableContainer.getFunction(funcId, idx);
-                    return func.getValue(idx);
+                    const [funcId] = variableId.split('_');
+                    const func = Entry.variableContainer.getFunction(funcId);
+                    return func.getValue(variableId);
                 },
                 syntax: {
                     js: [],
