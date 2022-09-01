@@ -3704,4 +3704,12 @@ Entry.VariableContainer = class VariableContainer {
     _getAddPanel(type = 'variable') {
         return this[`${type}AddPanel`];
     }
+
+    getFunctionByBlockId(blockId) {
+        const findKey = Object.keys(this.functions_).find((key) => {
+            const func = this.functions_[key];
+            return func?.content?._blockMap[blockId];
+        });
+        return this.functions_[findKey];
+    }
 };

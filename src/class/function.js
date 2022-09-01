@@ -258,7 +258,7 @@ class EntryFunc {
         } // edit fail
         this.bindFuncChangeEvent(funcElement);
         this.updateMenu();
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             const schema = Entry.block[`func_${funcElement.id}`];
             if (schema && schema.paramsBackupEvent) {
                 schema.paramsBackupEvent.notify();
@@ -270,7 +270,8 @@ class EntryFunc {
                 useLocalVariables: funcElement.useLocalVariables,
                 localVariables: _cloneDeep(funcElement.localVariables),
             };
-        }, 0);
+            Entry.getMainWS().overlayBoard.reDraw();
+        });
     }
 
     static initEditView(content) {
@@ -349,7 +350,6 @@ class EntryFunc {
         this._backupContent = null;
         this._backupOption = null;
 
-        this.lastTargetFunc = this.targetFunc;
         delete this.targetFunc;
         EntryFunc.isEdit = false;
 
