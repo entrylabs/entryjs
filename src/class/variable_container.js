@@ -663,6 +663,7 @@ Entry.VariableContainer = class VariableContainer {
         $listValues.on('click', 'a', function() {
             const index = this.getAttribute('data-index');
             Entry.do('removeFuncLocalVariableByIndex', func, index);
+            Entry.dispatchEvent('changeFuncVariableListSize');
         });
     }
 
