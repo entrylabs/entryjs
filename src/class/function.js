@@ -185,6 +185,10 @@ class EntryFunc {
         localVariable.value = value;
     }
 
+    getBlockById(blockId) {
+        return this?.content?.findById(blockId);
+    }
+
     static changeFunctionName(name) {
         Entry.Mutator.mutate(
             'function_name',
@@ -258,7 +262,7 @@ class EntryFunc {
         } // edit fail
         this.bindFuncChangeEvent(funcElement);
         this.updateMenu();
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             const schema = Entry.block[`func_${funcElement.id}`];
             if (schema && schema.paramsBackupEvent) {
                 schema.paramsBackupEvent.notify();
@@ -270,7 +274,8 @@ class EntryFunc {
                 useLocalVariables: funcElement.useLocalVariables,
                 localVariables: _cloneDeep(funcElement.localVariables),
             };
-        }, 0);
+            Entry.getMainWS().overlayBoard.reDraw();
+        });
     }
 
     static initEditView(content) {

@@ -8,6 +8,7 @@ import xssFilters from 'xss-filters';
 import CloudVariable from '../extensions/CloudVariable';
 import _get from 'lodash/get';
 import _isFunction from 'lodash/isFunction';
+import _find from 'lodash/find';
 
 /**
  * Block variable constructor
@@ -3703,5 +3704,9 @@ Entry.VariableContainer = class VariableContainer {
 
     _getAddPanel(type = 'variable') {
         return this[`${type}AddPanel`];
+    }
+
+    getFunctionByBlockId(blockId) {
+        return _find(this.functions_, (func) => func.getBlockById(blockId));
     }
 };

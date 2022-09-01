@@ -93,8 +93,11 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName() {
-                            const func = Entry.Func.targetFunc || {};
+                        menuName(block) {
+                            const func =
+                                Entry.variableContainer.getFunctionByBlockId(block.id) ||
+                                Entry.Func.targetFunc ||
+                                {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
                                 return localVariables.map(({ name }, idx) => [
@@ -199,8 +202,11 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName() {
-                            const func = Entry.Func.targetFunc || {};
+                        menuName(block) {
+                            const func =
+                                Entry.variableContainer.getFunctionByBlockId(block.id) ||
+                                Entry.Func.targetFunc ||
+                                {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
                                 return localVariables.map(({ name }, idx) => [
