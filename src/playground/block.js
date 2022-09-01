@@ -18,7 +18,6 @@ Entry.Block = class Block {
         assemble: true,
         events: {},
         extensions: [],
-        func: null,
     };
 
     constructor(block, thread) {
