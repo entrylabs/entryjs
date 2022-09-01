@@ -1,6 +1,7 @@
 import _truncate from 'lodash/truncate';
 import _trim from 'lodash/trim';
 import _cloneDeep from 'lodash/cloneDeep';
+import _find from 'lodash/find';
 
 class EntryFunc {
     static isEdit = false;
@@ -176,12 +177,19 @@ class EntryFunc {
         }
     }
 
-    getValue(idx) {
-        return this.localVariables[idx]?.value || 0;
+    getValue(variableId) {
+        const localVariable = _find(
+            this.localVariables,
+            (localVariable) => localVariable.id === variableId
+        );
+        return localVariable?.value || 0;
     }
 
-    setValue(value, idx) {
-        const localVariable = this.localVariables[idx];
+    setValue(value, variableId) {
+        const localVariable = _find(
+            this.localVariables,
+            (localVariable) => localVariable.id === variableId
+        );
         localVariable.value = value;
     }
 
