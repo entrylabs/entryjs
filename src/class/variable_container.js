@@ -8,6 +8,7 @@ import xssFilters from 'xss-filters';
 import CloudVariable from '../extensions/CloudVariable';
 import _get from 'lodash/get';
 import _isFunction from 'lodash/isFunction';
+import _find from 'lodash/find';
 
 /**
  * Block variable constructor
@@ -3706,10 +3707,6 @@ Entry.VariableContainer = class VariableContainer {
     }
 
     getFunctionByBlockId(blockId) {
-        const findKey = Object.keys(this.functions_).find((key) => {
-            const func = this.functions_[key];
-            return func?.content?._blockMap[blockId];
-        });
-        return this.functions_[findKey];
+        return _find(this.functions_, (func) => func.getBlockById(blockId));
     }
 };

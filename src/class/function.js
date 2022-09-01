@@ -185,6 +185,10 @@ class EntryFunc {
         localVariable.value = value;
     }
 
+    getBlockById(blockId) {
+        return this?.content?.findById(blockId);
+    }
+
     static changeFunctionName(name) {
         Entry.Mutator.mutate(
             'function_name',
