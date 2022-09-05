@@ -710,11 +710,13 @@ Entry.Workspace = class Workspace {
     reDraw() {
         const blockMenu = this.blockMenu;
         const board = this.board;
+        const overlayBoard = this.overlayBoard;
 
         blockMenu && blockMenu.reDraw();
         board && board.reDraw();
+        overlayBoard && overlayBoard.reDraw();
 
-        if (blockMenu || board) {
+        if (blockMenu || board || overlayBoard) {
             this.reDrawEvent.notify();
         }
     }

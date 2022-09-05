@@ -40,6 +40,13 @@ Entry.Code = class Code {
 
         const parseCode = Array.isArray(code) ? code : JSON.parse(code);
         parseCode.forEach((t) => {
+            if (Array.isArray(t) && t.length > 1 && t?.[0].type === 'function_create') {
+                if (!t[0].statements) {
+                    t[0].statements = [];
+                }
+                t[0].statements.push(t.splice(1, t.length));
+            }
+
             const thread = new Entry.Thread(t, this);
             if (thread.hasData()) {
                 this._data.push(thread);
@@ -224,9 +231,7 @@ Entry.Code = class Code {
     }
 
     clearExecutors() {
-        this.executors.forEach((e) => {
-            return e.end();
-        });
+        this.executors.forEach((e) => e.end());
         Entry.dispatchEvent('blockExecuteEnd');
         this.executors = [];
     }
@@ -302,22 +307,18 @@ Entry.Code = class Code {
             return [];
         }
 
-        return this.getThreads().filter((t) => {
-            return _.result(t.getFirstBlock(), 'category') === categoryName;
-        });
+        return this.getThreads().filter(
+            (t) => _.result(t.getFirstBlock(), 'category') === categoryName
+        );
     }
 
     toJSON(excludeData, option) {
         const params = [false, undefined, excludeData, option];
-        return this.getThreads().map((t) => {
-            return t.toJSON(...params);
-        });
+        return this.getThreads().map((t) => t.toJSON(...params));
     }
 
     countBlock() {
-        return this.getThreads().reduce((cnt, thread) => {
-            return cnt + thread.countBlock();
-        }, 0);
+        return this.getThreads().reduce((cnt, thread) => cnt + thread.countBlock(), 0);
     }
 
     moveBy(x, y) {
@@ -358,12 +359,18 @@ Entry.Code = class Code {
     }
 
     hasBlockType(type) {
-        return this.getThreads().some((thread) => {
-            return thread.hasBlockType(type);
-        });
+        return this.getThreads().some((thread) => thread.hasBlockType(type));
     }
 
     findById(id) {
+        return this._blockMap[id];
+    }
+
+    findByType(type) {
+        const id = Object.keys(this._blockMap).find((id) => {
+            const block = this._blockMap[id];
+            return block.type === type;
+        });
         return this._blockMap[id];
     }
 
@@ -443,27 +450,145 @@ Entry.Code = class Code {
 
     getBlockList(excludePrimitive, type) {
         return _.chain(this.getThreads())
-            .map((t) => {
-                return t.getBlockList(excludePrimitive, type);
-            })
+            .map((t) => t.getBlockList(excludePrimitive, type))
             .flatten(true)
             .value();
     }
 
     removeBlocksByType(type) {
-        this.getBlockList(false, type).forEach((b) => {
-            return b.doDestroy();
-        });
+        this.getBlockList(false, type).forEach((b) => b.doDestroy());
     }
 
     isAllThreadsInOrigin() {
-        return this.getThreads().every((thread) => {
-            return thread.isInOrigin();
-        });
+        return this.getThreads().every((thread) => thread.isInOrigin());
     }
 
     destroy() {
         this.clear();
         this.destroyView();
     }
+
+    static funcAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
+        await Promise.all(_promises);
+        if (Entry.engine.isState('pause')) {
+            return this.funcAsyncExecute(funcCode, funcExecutor, _promises);
+        } else if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return Entry.STATIC.BREAK;
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                const result = funcExecutor.execute();
+                const { promises = [] } = result || {};
+
+                if (!funcExecutor.isEnd()) {
+                    if (promises.length) {
+                        try {
+                            return resolve(
+                                await this.funcAsyncExecute(funcCode, funcExecutor, promises)
+                            );
+                        } catch (e) {
+                            return reject(e);
+                        }
+                    } else {
+                        funcCode.callStackLength--;
+                        funcCode.removeExecutor(funcExecutor);
+                        return resolve(Entry.STATIC.BREAK);
+                    }
+                }
+                return resolve();
+            });
+        });
+    };
+
+    static getAsyncParamsData = async (scope) => {
+        const values = scope.getParams();
+        const isPromise = values.some((value) => value instanceof Promise);
+        if (!isPromise) {
+            scope.values = values;
+            return scope.getValue('VALUE', scope);
+        } else {
+            const aValues = await Promise.all(values);
+            scope.values = aValues;
+            return scope.getValue('VALUE', scope);
+        }
+    };
+
+    static funcValueAsyncExecute = async (funcCode, funcExecutor, _promises = []) => {
+        await Promise.all(_promises);
+        if (Entry.engine.isState('pause')) {
+            return this.funcValueAsyncExecute(funcCode, funcExecutor, _promises);
+        } else if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            funcCode.callStackLength--;
+                            funcCode.removeExecutor(funcExecutor);
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
+
+    static funcValueRestExecute = async (funcCode, funcExecutor) => {
+        if (!Entry.engine.isState('run')) {
+            funcCode.removeExecutor(funcExecutor);
+            return await this.getAsyncParamsData(funcExecutor.result);
+        }
+
+        return new Promise((resolve, reject) => {
+            requestAnimationFrame(async () => {
+                try {
+                    const result = funcExecutor.execute();
+                    const { promises = [] } = result || {};
+                    if (!funcExecutor.isEnd()) {
+                        if (promises.length) {
+                            try {
+                                return resolve(
+                                    await this.funcValueAsyncExecute(
+                                        funcCode,
+                                        funcExecutor,
+                                        promises
+                                    )
+                                );
+                            } catch (e) {
+                                return reject(e);
+                            }
+                        } else {
+                            return resolve(await this.funcValueRestExecute(funcCode, funcExecutor));
+                        }
+                    }
+                    resolve(await this.getAsyncParamsData(funcExecutor.result));
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    };
 };

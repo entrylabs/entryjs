@@ -13,6 +13,7 @@ declare interface EntryOptions {
  * 엔트리 실제 인스턴스에 대한 정의
  */
 declare interface IEntry extends EntryOptions {
+    Func: any;
     externalModulesLite: any;
     loadLiteTestModule: (file: file, name: string) => Promise<void>;
     loadLiteTestModuleUploader: () => void;

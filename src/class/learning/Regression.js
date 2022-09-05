@@ -14,7 +14,10 @@ export const classes = [
     'regression_attr_1',
     'regression_attr_2',
     'regression_attr_3',
-    'ai_learning_train_chart'
+    'regression_attr_4',
+    'regression_attr_5',
+    'regression_attr_6',
+    'ai_learning_train_chart',
 ];
 
 class Regression {
@@ -50,8 +53,8 @@ class Regression {
         this.#result = result;
         this.#table = table;
         this.#trainCallback = (value) => {
-            this.#view.setValue(value)
-        };;
+            this.#view.setValue(value);
+        };
         this.#isTrained = true;
 
         this.#attrLength = table?.select?.[0]?.length || 0;
@@ -60,12 +63,8 @@ class Regression {
         }
         this.load(`/uploads/${url}/model.json`);
 
-        this.#fields = table?.select?.[0]?.map((index) => {
-            return table?.fields[index];
-        });
-        this.#predictFields = table?.select?.[1]?.map((index) => {
-            return table?.fields[index];
-        });
+        this.#fields = table?.select?.[0]?.map((index) => table?.fields[index]);
+        this.#predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
 
         if (!isWebGlSupport()) {
             tf.setBackend('cpu');
@@ -80,7 +79,7 @@ class Regression {
         }
         this.#table.data = tableSource.rows;
     }
-    
+
     destroy() {
         this.#view.destroy();
         if (this.#chart) {
@@ -108,15 +107,20 @@ class Regression {
 
     openChart() {
         if (!this.#chartEnable) {
-            return ;
+            return;
         }
         if (!this.#chart) {
             this.#chart = new Chart({
                 source: this.chartData,
                 title: Lang.AiLearning.chart_title,
                 description: `
-                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`)}
-                    <em>${Lang.AiLearning.predict}</em>${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}
+                    ${this.#fields.map(
+                        (field, index) =>
+                            `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`
+                    )}
+                    <em>${Lang.AiLearning.predict}</em>${this.#predictFields[0]}<em>${
+                    Lang.AiLearning.equation
+                }</em>${this.#result.equation}
                 `,
             });
         } else {
@@ -151,7 +155,7 @@ class Regression {
             let currentEpoch = 0;
             let percent = 0;
             this.#trainCallback(1);
-            const { inputs, outputs, totalDataSize } = convertToTfData(this.#table, this.#trainParam);
+            const { inputs, outputs } = convertToTfData(this.#table, this.#trainParam);
             const { model, trainHistory, a, b, graphData = [], rsquared, normResult } = await train(
                 inputs,
                 outputs,
@@ -159,7 +163,7 @@ class Regression {
                 undefined,
                 () => {
                     currentEpoch = currentEpoch + 1;
-                    percent = _floor(currentEpoch/this.#trainParam.epochs * 100);
+                    percent = _floor((currentEpoch / this.#trainParam.epochs) * 100);
                     this.#trainCallback(Math.min(percent, 100));
                 }
             );
@@ -168,11 +172,13 @@ class Regression {
             const accuracy = _max(acc) || 0;
             if (inputs.length == 1) {
                 graphData.predictedPoints.map(({ x, y }) => {
-                    const index = graphData.originalPoints.findIndex((p) => _floor(p.x, 1) === _floor(x, 1));
+                    const index = graphData.originalPoints.findIndex(
+                        (p) => _floor(p.x, 1) === _floor(x, 1)
+                    );
                     if (graphData.originalPoints[index]) {
                         graphData.originalPoints[index].equation = y;
                     }
-                })
+                });
             }
             this.#result = {
                 graphData: (graphData.originalPoints || []).slice(0, 1000),
@@ -187,14 +193,18 @@ class Regression {
             this.#chart?.load({
                 source: this.chartData,
                 description: `
-                    ${this.#fields.map((field, index) => `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em> ${field}`)}
-                    <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${Lang.AiLearning.equation}</em>${this.#result.equation}
-                `
+                    ${this.#fields.map(
+                        (field, index) =>
+                            `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em> ${field}`
+                    )}
+                    <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${
+                    Lang.AiLearning.equation
+                }</em>${this.#result.equation}
+                `,
             });
-        } catch(e) {
+        } catch (e) {
             console.log('train error', e);
         }
-        
     }
 
     async load(url) {
@@ -203,14 +213,14 @@ class Regression {
 
     convertNomalResult() {
         const { inputMin, inputMax, outputMax, outputMin } = this.#result.normResult;
-        if(!Array.isArray(inputMin)) {
+        if (!Array.isArray(inputMin)) {
             return this.#result.normResult;
         }
         return {
             inputMin: tf.tensor1d(inputMin),
             inputMax: tf.tensor1d(inputMax),
             outputMax: tf.tensor1d(outputMax),
-            outputMin: tf.tensor1d(outputMin)
+            outputMin: tf.tensor1d(outputMin),
         };
     }
     async predict(data) {
@@ -218,13 +228,16 @@ class Regression {
         const { inputMin, inputMax, outputMax, outputMin } = this.convertNomalResult();
         const result = tf.tidy(() => {
             let convertedData;
-            if(Array.isArray(data)) {
+            if (Array.isArray(data)) {
                 convertedData = tf.tensor2d([data]);
             } else {
                 convertedData = tf.tensor1d([data]);
             }
             convertedData = convertedData.sub(inputMin).div(inputMax.sub(inputMin));
-            const preds = this.#model.predict(convertedData).mul(outputMax.sub(outputMin)).add(outputMin);
+            const preds = this.#model
+                .predict(convertedData)
+                .mul(outputMax.sub(outputMin))
+                .add(outputMin);
             const [result] = preds.dataSync();
             this.#predictResult = _floor(result, 2);
             preds.dispose();
@@ -241,22 +254,22 @@ class Regression {
                 keys: { value: ['equation', 'y'], x: 'x' },
                 types: {
                     y: 'scatter',
-                    equation: 'line'
+                    equation: 'line',
                 },
             },
             options: {
                 legend: {
-                    show: false
+                    show: false,
                 },
                 tooltip: {
-                    contents: (data) =>{
+                    contents: (data) => {
                         const [{ x, value, id }] = data;
                         return `
                             <div class="chart_handle_wrapper">
                                 ${this.#fields[0]}: ${x}, ${this.#predictFields[0]}: ${value}
                             <div>
                         `;
-                    }
+                    },
                 },
                 line: {
                     connectNull: true,
@@ -266,19 +279,19 @@ class Regression {
                     x: {
                         tick: {
                             fit: false,
-                            count: 15
+                            count: 15,
                         },
-                    }
+                    },
                 },
                 grid: {
                     x: {
-                        show: true
+                        show: true,
                     },
                     y: {
-                        show: true
-                    }
-                }
-            }
+                        show: true,
+                    },
+                },
+            },
         };
     }
 }
@@ -294,20 +307,23 @@ function convertToTfData(data, trainParam) {
     const [attr, predict] = select;
     const { epochs = 1, batchSize = 1 } = trainParam;
     const totalDataSize = Math.ceil(table.length / batchSize) * epochs;
-    return table.reduce((accumulator, row) => {
-        const { inputs = [], outputs = [] } = accumulator;
-        return {
-            inputs: attr.map((i, idx) => {
-                const arr = inputs[idx] || [];
-                return [...arr, parseFloat(row[i]) || 0];
-            }),
-            outputs: predict.map((i, idx) => {
-                const arr = outputs[idx] || [];
-                return [...arr, parseFloat(row[i]) || 0];
-            }),
-            totalDataSize,
-        };
-    }, { inputs: [], outputs: [] });
+    return table.reduce(
+        (accumulator, row) => {
+            const { inputs = [], outputs = [] } = accumulator;
+            return {
+                inputs: attr.map((i, idx) => {
+                    const arr = inputs[idx] || [];
+                    return [...arr, parseFloat(row[i]) || 0];
+                }),
+                outputs: predict.map((i, idx) => {
+                    const arr = outputs[idx] || [];
+                    return [...arr, parseFloat(row[i]) || 0];
+                }),
+                totalDataSize,
+            };
+        },
+        { inputs: [], outputs: [] }
+    );
 }
 
 function convertToTensor(inputs, outputs) {
@@ -351,18 +367,11 @@ function isWebGlSupport() {
     }
 }
 
-
-async function trainModel(
-    model,
-    inputs,
-    outputs,
-    trainParam,
-    onBatchEnd,
-    onEpochEnd) {
+async function trainModel(model, inputs, outputs, trainParam, onBatchEnd, onEpochEnd) {
     model.compile({
         optimizer: tf.train.adam(trainParam.learningRate),
         loss: tf.losses.meanSquaredError,
-        metrics: ['mse', 'acc', 'ce']
+        metrics: ['mse', 'acc', 'ce'],
     });
 
     return await model.fit(inputs, outputs, {
@@ -373,7 +382,7 @@ async function trainModel(
         callbacks: {
             onBatchEnd,
             onEpochEnd,
-        }
+        },
     });
 }
 
@@ -393,32 +402,39 @@ function testModel(model, normalizationData) {
     });
     return Array.from(xs).map((val, i) => ({
         x: val,
-        y: preds[i]
+        y: preds[i],
     }));
 }
 
 function getR2Score(model, normResult, y) {
     const yData = y[0];
-    const yHat = model.predict(normResult.inputs).mul(normResult.outputMax.sub(normResult.outputMin)).add(normResult.outputMin).dataSync();
+    const yHat = model
+        .predict(normResult.inputs)
+        .mul(normResult.outputMax.sub(normResult.outputMin))
+        .add(normResult.outputMin)
+        .dataSync();
     const yMean = yData.reduce((acc, cur) => acc + cur) / yData.length;
 
-    const ssr = yHat.map((e, index) => (e - yData[index]) * (e - yData[index])).reduce((acc, cur) => acc + cur);
-    const sst = yData.map(e => (e - yMean) * (e - yMean)).reduce((acc, cur) => acc + cur);
-    const r2 = 1 - (ssr / sst);
+    const ssr = yHat
+        .map((e, index) => (e - yData[index]) * (e - yData[index]))
+        .reduce((acc, cur) => acc + cur);
+    const sst = yData.map((e) => (e - yMean) * (e - yMean)).reduce((acc, cur) => acc + cur);
+    const r2 = 1 - ssr / sst;
 
     return Math.max(r2, 0);
 }
 
-async function train(
-    inputs,
-    outputs,
-    trainParam,
-    onBatchEnd,
-    onEpochEnd
-) {
+async function train(inputs, outputs, trainParam, onBatchEnd, onEpochEnd) {
     const normResult = convertToTensor(inputs, outputs);
     const model = createModel(inputs.length);
-    const history = await trainModel(model, normResult.inputs, normResult.outputs, trainParam, onBatchEnd, onEpochEnd);
+    const history = await trainModel(
+        model,
+        normResult.inputs,
+        normResult.outputs,
+        trainParam,
+        onBatchEnd,
+        onEpochEnd
+    );
 
     // @ts-ignore
     const weight = model.layers[0].weights[0].val;
@@ -434,16 +450,19 @@ async function train(
     const oi = o.div(inputMax.sub(inputMin));
 
     const a = oi.mul(weight.transpose());
-    const b = bias.mul(o).add(outputMin).sub(a.matMul(inputMin.expandDims(0).transpose()));
+    const b = bias
+        .mul(o)
+        .add(outputMin)
+        .sub(a.matMul(inputMin.expandDims(0).transpose()));
     const r2 = getR2Score(model, normResult, outputs);
-    let graphData = {
+    const graphData = {
         originalPoints: [],
-        predictedPoints: []
+        predictedPoints: [],
     };
     if (inputs.length === 1) {
         graphData.originalPoints = inputs[0].map((e, i) => ({
             x: e,
-            y: outputs[0][i]
+            y: outputs[0][i],
         }));
         graphData.predictedPoints = testModel(model, normResult);
     }
@@ -452,9 +471,9 @@ async function train(
         model,
         normResult,
         trainHistory: history,
-        a: Array.from(a.dataSync()).map(x => _floor(x, 2)),
+        a: Array.from(a.dataSync()).map((x) => _floor(x, 2)),
         b: _floor(b.dataSync()[0], 2),
         rsquared: _floor(r2, 2),
-        graphData
+        graphData,
     };
 }

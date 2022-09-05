@@ -68,8 +68,6 @@ EntryStatic.subjectList = [
 
 EntryStatic.lectureLevels = [1, 2, 3];
 
-// EntryStatic.lectureLevels = ['level_high', 'level_mid','level_row'];
-
 EntryStatic.lectureGrades = [
     'e_1',
     'e_2',
@@ -381,7 +379,13 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'func',
-            blocks: ['functionAddButton'],
+            blocks: [
+                'functionAddButton',
+                'function_name',
+                'showFunctionPropsButton',
+                'set_func_variable',
+                'get_func_variable',
+            ],
         },
         {
             category: 'analysis',
@@ -418,6 +422,9 @@ EntryStatic.getAllBlocks = function() {
                 'get_regression_predict_1',
                 'get_regression_predict_2',
                 'get_regression_predict_3',
+                'get_regression_predict_4',
+                'get_regression_predict_5',
+                'get_regression_predict_6',
                 'get_regression_accuracy',
                 'set_cluster_option_k',
                 'set_cluster_option_centroids',
@@ -426,16 +433,28 @@ EntryStatic.getAllBlocks = function() {
                 'get_cluster_centriod_index_1',
                 'get_cluster_centriod_index_2',
                 'get_cluster_centriod_index_3',
+                'get_cluster_centriod_index_4',
+                'get_cluster_centriod_index_5',
+                'get_cluster_centriod_index_6',
                 'set_number_learning_option_k',
                 'get_number_learning_predict_1',
                 'get_number_learning_predict_2',
                 'get_number_learning_predict_3',
+                'get_number_learning_predict_4',
+                'get_number_learning_predict_5',
+                'get_number_learning_predict_6',
                 'get_number_learning_predict_param_1',
                 'get_number_learning_predict_param_2',
                 'get_number_learning_predict_param_3',
+                'get_number_learning_predict_param_4',
+                'get_number_learning_predict_param_5',
+                'get_number_learning_predict_param_6',
                 'is_number_learning_group_1',
                 'is_number_learning_group_2',
                 'is_number_learning_group_3',
+                'is_number_learning_group_4',
+                'is_number_learning_group_5',
+                'is_number_learning_group_6',
                 'insert_data_for_test',
                 'video_capture_for_image_test',
                 'insert_text_block_for_test',

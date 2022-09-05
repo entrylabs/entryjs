@@ -716,6 +716,9 @@ Entry.Board = class Board {
             if (block instanceof Entry.Comment) {
                 break;
             }
+            if (!block.assemble) {
+                break;
+            }
             const blockView = block.view;
             if (blockView.dragInstance) {
                 break;

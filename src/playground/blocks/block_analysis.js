@@ -391,18 +391,11 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('NUMBER', script) - 1;
-                    let col = script.getValue('FIELD', script);
+                    const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
-                    if (isNaN(col)) {
-                        col = getColumnNumber(col);
-                    } else {
-                        col = Number.parseInt(col, 10);
-                    }
-                    if (table.isExist([row])) {
+                    if (table.isExist([row, col])) {
                         table.replaceValue([row, col], value);
-                    } else {
-                        throw new Error('data not exist');
                     }
                     return script.callReturn();
                 },
@@ -456,7 +449,7 @@ module.exports = {
                     const table = DataTable.getSource(tableId, sprite);
                     if (property === 'ROW') {
                         const { array } = table;
-                        return array.length;
+                        return array.length + 1;
                     } else if (property === 'COL') {
                         const labels = table.fields;
                         return labels.length;
@@ -519,12 +512,13 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const row = script.getNumberValue('ROW', script) - 1;
-                    const col = script.getNumberValue('COL', script);
+                    const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
+
                     if (table.isExist([row, col])) {
                         return table.getValue([row, col]);
                     }
-                    throw new Error('data not exist');
+                    return null;
                 },
                 syntax: {
                     js: [],
@@ -570,13 +564,13 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const col = script.getNumberValue('COL', script);
+                    const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
                     const row = table && table.array.length;
                     if (table.isExist([row, col])) {
                         return table.getValue([row, col]);
                     }
-                    throw new Error('data not exist');
+                    return null;
                 },
                 syntax: {
                     js: [],
@@ -640,7 +634,7 @@ module.exports = {
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
                     const calc = script.getField('CALC', script);
-                    const col = script.getNumberValue('COL', script);
+                    const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
                     const array = table.array.map(({ value = [] }) =>
                         _isNumber(value[col - 1]) ? value[col - 1] : 0

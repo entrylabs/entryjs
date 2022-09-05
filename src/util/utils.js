@@ -26,6 +26,7 @@ Entry.clipboard = null;
  * @param {*} project
  */
 Entry.loadProject = function(project) {
+    Entry.isLoadProject = false;
     if (!project) {
         project = Entry.getStartProject(Entry.mediaFilePath);
     }
@@ -125,7 +126,7 @@ Entry.loadProject = function(project) {
             window.parent.childIframeLoaded();
         }
     } catch (e) {}
-
+    Entry.isLoadProject = true;
     return project;
 };
 
@@ -986,7 +987,14 @@ Entry.addTwoNumber = function(a, b) {
 /*
  * HTML hex colour code to RGB colour value
  */
-Entry.hex2rgb = function(hex) {
+Entry.hex2rgb = function(hexstr) {
+    let hex = hexstr[0] === '#' ? hexstr : `#${hexstr}`;
+    if (hex.length === 4) {
+        hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
+    }
+    if (!/^#[0-9a-f]{6}?$/i.test(hex)) {
+        hex = '#000000';
+    }
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result
         ? {
@@ -2945,4 +2953,16 @@ Entry.Utils.asyncAnimationFrame = (func) => {
 
     captureTimeout = requestAnimationFrame(asyncFunc);
     return captureTimeout;
+};
+
+Entry.Utils.stringFormat = (text, ...args) => {
+    if (!text) {
+        return text;
+    }
+    let result = text;
+    for (let i = 0; i < args.length; i++) {
+        const regexp = new RegExp(`\\{${i}\\}`, 'gi');
+        result = result.replace(regexp, args[i]);
+    }
+    return result;
 };
