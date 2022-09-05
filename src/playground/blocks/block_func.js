@@ -100,10 +100,13 @@ module.exports = {
                                 {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
-                                return localVariables.map(({ name }, idx) => [
-                                    name,
-                                    `${func.id}_${idx}`,
-                                ]);
+                                return localVariables.map((localVariable) => {
+                                    const { id, name } = localVariable;
+                                    if (!id) {
+                                        localVariable.id = `${func.id}_${Entry.generateHash()}`;
+                                    }
+                                    return [name, localVariable.id];
+                                });
                             } else {
                                 return [[Lang.Blocks.no_target, 'null']];
                             }
@@ -163,7 +166,7 @@ module.exports = {
                     const [funcId, idx] = variableId.split('_');
                     const func = Entry.variableContainer.getFunction(funcId, idx);
 
-                    func.setValue(value, idx);
+                    func.setValue(value, variableId);
 
                     return script.callReturn();
                 },
@@ -209,10 +212,13 @@ module.exports = {
                                 {};
                             const localVariables = func.localVariables || [];
                             if (localVariables.length) {
-                                return localVariables.map(({ name }, idx) => [
-                                    name,
-                                    `${func.id}_${idx}`,
-                                ]);
+                                return localVariables.map((localVariable) => {
+                                    const { id, name } = localVariable;
+                                    if (!id) {
+                                        localVariable.id = `${func.id}_${Entry.generateHash()}`;
+                                    }
+                                    return [name, localVariable.id];
+                                });
                             } else {
                                 return [[Lang.Blocks.no_target, 'null']];
                             }
@@ -256,9 +262,9 @@ module.exports = {
                 isNotFor: ['useLocalVariables'],
                 func(sprite, script) {
                     const variableId = script.getField('VARIABLE', script);
-                    const [funcId, idx] = variableId.split('_');
-                    const func = Entry.variableContainer.getFunction(funcId, idx);
-                    return func.getValue(idx);
+                    const [funcId] = variableId.split('_');
+                    const func = Entry.variableContainer.getFunction(funcId);
+                    return func.getValue(variableId);
                 },
                 syntax: {
                     js: [],
