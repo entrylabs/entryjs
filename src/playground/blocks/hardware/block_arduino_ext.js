@@ -997,7 +997,7 @@ Entry.ArduinoExt.getBlocks = function() {
                         },
                         time: new Date().getTime(),
                     };
-                    
+
                     setTimeout(() => {
                         script.timeFlag = 0;
                     }, duration + 32);
