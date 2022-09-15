@@ -277,7 +277,6 @@ export default class Hardware {
         if (!this.socket || this.socket.disconnected) {
             return;
         }
-        // 임시 테스트 용으로 주석처리
 
         if (this.hwModule && this.hwModule.sendMessage) {
             this.hwModule.sendMessage(this);
@@ -289,7 +288,7 @@ export default class Hardware {
             });
         }
 
-        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);        
+        this.hwModule && this.hwModule.afterSend && this.hwModule.afterSend(this.sendQueue);
     }
 
     closeConnection() {
@@ -603,7 +602,6 @@ export default class Hardware {
         if (this.programConnected && this.socket && !this.socket.disconnected) {
             this.socket.emit('message', message);
         }
-        console.log(message);
     }
 
     private _updatePortData(data: HardwareMessageData) {
