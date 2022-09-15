@@ -41,6 +41,9 @@ Entry.Code = class Code {
         const parseCode = Array.isArray(code) ? code : JSON.parse(code);
         parseCode.forEach((t) => {
             if (Array.isArray(t) && t.length > 1 && t?.[0].type === 'function_create') {
+                if (!t[0].statements) {
+                    t[0].statements = [];
+                }
                 t[0].statements.push(t.splice(1, t.length));
             }
 

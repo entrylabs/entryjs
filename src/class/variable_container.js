@@ -8,6 +8,7 @@ import xssFilters from 'xss-filters';
 import CloudVariable from '../extensions/CloudVariable';
 import _get from 'lodash/get';
 import _isFunction from 'lodash/isFunction';
+import _find from 'lodash/find';
 
 /**
  * Block variable constructor
@@ -621,7 +622,7 @@ Entry.VariableContainer = class VariableContainer {
             .appendTo(countGroup);
         countLabel.textContent = Lang.Workspace.local_variable;
         const scrollBox = createElement('div')
-            .addClass('scroll_box')
+            .addClass('scroll_box simplebar-content-wrapper')
             .appendTo(countGroup);
         const el = new SimpleBar(scrollBox, { autoHide: false });
         const parent = /* html */ `<ol class="cnt_list">{1}</ol>`;
@@ -662,6 +663,7 @@ Entry.VariableContainer = class VariableContainer {
         $listValues.on('click', 'a', function() {
             const index = this.getAttribute('data-index');
             Entry.do('removeFuncLocalVariableByIndex', func, index);
+            Entry.dispatchEvent('changeFuncVariableListSize');
         });
     }
 
@@ -1409,6 +1411,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         Entry.Func.edit(new Entry.Func(data));
         Entry.Func.save();
+        this.select(Entry.Func.targetFunc);
     }
 
     removeBlocksInFunctionByType(blockType) {
@@ -1575,7 +1578,11 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('inpt_box')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                if (!Entry.Func.isEdit && !Entry.isTextMode) {
+                if (!Entry.isTextMode) {
+                    if (Entry.Func.isEdit) {
+                        Entry.Func._backupContent = null;
+                        Entry.Func.save();
+                    }
                     Entry.do('funcEditStart', func.id);
                 }
 
@@ -3152,12 +3159,6 @@ Entry.VariableContainer = class VariableContainer {
                 groupSize: 10,
             }
         );
-
-        // if (localVariables?.length === 0) {
-        //     countGroup?.addClass('entryRemove');
-        //     return;
-        // }
-        // countGroup?.removeClass('entryRemove');
     }
 
     createListValueElement(index, value, startIndex = 0) {
@@ -3704,5 +3705,9 @@ Entry.VariableContainer = class VariableContainer {
 
     _getAddPanel(type = 'variable') {
         return this[`${type}AddPanel`];
+    }
+
+    getFunctionByBlockId(blockId) {
+        return _find(this.functions_, (func) => func.getBlockById(blockId));
     }
 };

@@ -219,7 +219,7 @@ Entry.Thread = class Thread {
                 return true;
             }
 
-            const params = block.params;
+            const params = block.params || [];
             for (let k = 0; k < params.length; k++) {
                 const param = params[k];
                 if (param && param.constructor == Entry.Block) {

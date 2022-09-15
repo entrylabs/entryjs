@@ -1,5 +1,7 @@
 import _truncate from 'lodash/truncate';
 import _trim from 'lodash/trim';
+import _cloneDeep from 'lodash/cloneDeep';
+import _find from 'lodash/find';
 
 class EntryFunc {
     static isEdit = false;
@@ -82,9 +84,9 @@ class EntryFunc {
         this.description = generatedInfo.description;
     }
 
-    defaultLocalVariable() {
+    defaultLocalVariable(isForce) {
         return {
-            name: this.makeLocalVariableName(),
+            name: this.makeLocalVariableName(isForce),
             value: 0,
         };
     }
@@ -96,10 +98,10 @@ class EntryFunc {
         if (this.localVariables.length >= length) {
             this.localVariables.splice(length, this.localVariables.length - length);
         } else {
-            this.localVariables = Array.concat(
-                this.localVariables,
-                Array(length - this.localVariables.length).fill(this.defaultLocalVariable())
-            );
+            const max = length - this.localVariables.length;
+            for (let i = 0; i < max; i++) {
+                this.localVariables.push(this.defaultLocalVariable(true));
+            }
         }
         Entry.variableContainer && Entry.variableContainer.updateFuncScrollBar(this);
     }
@@ -146,14 +148,16 @@ class EntryFunc {
         return this.localVariables;
     }
 
-    makeLocalVariableName() {
+    makeLocalVariableName(isForce) {
         let name = Lang.Workspace.local_variable;
         if (this.checkLocalVariableName(name)) {
             name = Entry.getOrderedName(name, this.localVariables, 'name');
-            Entry.toast.warning(
-                Lang.Workspace.local_variable_rename,
-                Lang.Workspace.local_variable_dup
-            );
+            if (!isForce) {
+                Entry.toast.warning(
+                    Lang.Workspace.local_variable_rename,
+                    Lang.Workspace.local_variable_dup
+                );
+            }
         }
 
         return name;
@@ -166,15 +170,31 @@ class EntryFunc {
     changeNameLocalVariable(name, index) {
         const localVariable = this.localVariables[index];
         localVariable.name = name;
+        const { playground } = Entry;
+        if (playground) {
+            playground.blockMenu.deleteRendered('func');
+            playground.reloadPlayground();
+        }
     }
 
-    getValue(idx) {
-        return this.localVariables[idx].value;
+    getValue(variableId) {
+        const localVariable = _find(
+            this.localVariables,
+            (localVariable) => localVariable.id === variableId
+        );
+        return localVariable?.value || 0;
     }
 
-    setValue(value, idx) {
-        const localVariable = this.localVariables[idx];
+    setValue(value, variableId) {
+        const localVariable = _find(
+            this.localVariables,
+            (localVariable) => localVariable.id === variableId
+        );
         localVariable.value = value;
+    }
+
+    getBlockById(blockId) {
+        return this?.content?.findById(blockId);
     }
 
     static changeFunctionName(name) {
@@ -250,14 +270,20 @@ class EntryFunc {
         } // edit fail
         this.bindFuncChangeEvent(funcElement);
         this.updateMenu();
-        setTimeout(() => {
+        requestAnimationFrame(() => {
             const schema = Entry.block[`func_${funcElement.id}`];
             if (schema && schema.paramsBackupEvent) {
                 schema.paramsBackupEvent.notify();
             }
 
             this._backupContent = funcElement.content.stringify();
-        }, 0);
+            this._backupOption = {
+                type: funcElement.type,
+                useLocalVariables: funcElement.useLocalVariables,
+                localVariables: _cloneDeep(funcElement.localVariables),
+            };
+            Entry.getMainWS().overlayBoard.reDraw();
+        });
     }
 
     static initEditView(content) {
@@ -334,6 +360,7 @@ class EntryFunc {
         }
 
         this._backupContent = null;
+        this._backupOption = null;
 
         delete this.targetFunc;
         EntryFunc.isEdit = false;
@@ -353,7 +380,6 @@ class EntryFunc {
     static save() {
         this.targetFunc.generateBlock(true);
         Entry.variableContainer.saveFunction(this.targetFunc);
-
         this._restoreBoardToVimBoard();
     }
 
@@ -369,6 +395,9 @@ class EntryFunc {
         } else {
             if (this._backupContent) {
                 this.targetFunc.content.load(this._backupContent);
+                this.targetFunc.useLocalVariables = this._backupOption.useLocalVariables;
+                this.targetFunc.localVariables = this._backupOption.localVariables;
+                this.changeType(this.targetFunc, this._backupOption.type);
                 this._generateFunctionSchema(this.targetFunc.id);
                 this.generateWsBlock(this.targetFunc, true);
             }
@@ -644,6 +673,10 @@ class EntryFunc {
             if (outputBlockIds) {
                 let startPos = 0;
                 while (outputBlockIds[startPos] === blockIds[startPos]) {
+                    if (!outputBlockIds[startPos]) {
+                        break;
+                    }
+
                     startPos++;
                 }
 
@@ -652,6 +685,9 @@ class EntryFunc {
                     outputBlockIds[outputBlockIds.length - endPos - 1] ===
                     blockIds[blockIds.length - endPos - 1]
                 ) {
+                    if (!outputBlockIds[outputBlockIds.length - endPos - 1]) {
+                        break;
+                    }
                     endPos++;
                 }
 
@@ -748,21 +784,31 @@ class EntryFunc {
             for (const key in blockMap) {
                 EntryFunc.registerParamBlock(blockMap[key].type);
             }
-            EntryFunc.generateWsBlock(func);
         }
 
-        EntryFunc.registerFunction(func);
         const blockType = type === 'normal' ? 'function_create' : 'function_create_value';
-        const block = func.content.getThread(0).getFirstBlock();
+        let block;
+        func.content.getThreads().some((thread, idx) => {
+            const target = thread.getFirstBlock();
+            if (
+                target instanceof Entry.Block &&
+                ['function_create_value', 'function_create'].includes(target?.type)
+            ) {
+                tempContent[idx][0].type = blockType;
+                block = target;
+                return true;
+            }
+        });
 
         block.changeType(blockType);
-        func.content.destroy();
-        tempContent[0][0].type = blockType;
         func.content = new Entry.Code(tempContent);
 
         const workspace = Entry.getMainWS();
         workspace.changeOverlayBoardCode(func.content);
         func.block = block;
+        Entry.variableContainer.updateList();
+        EntryFunc.registerFunction(func);
+        EntryFunc.generateWsBlock(func, true);
         EntryFunc.updateMenu();
 
         // reDrawVariableContainer()

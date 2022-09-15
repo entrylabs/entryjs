@@ -93,17 +93,33 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName() {
-                            const func = Entry.Func.targetFunc || {};
+                        menuName(block) {
+                            const func =
+                                Entry.variableContainer.getFunctionByBlockId(block.id) ||
+                                Entry.Func.targetFunc ||
+                                {};
                             const localVariables = func.localVariables || [];
-                            return localVariables.map(({ name }, idx) => [
-                                name,
-                                `${func.id}_${idx}`,
-                            ]);
+                            if (localVariables.length) {
+                                return localVariables.map((localVariable) => {
+                                    const { id, name } = localVariable;
+                                    if (!id) {
+                                        localVariable.id = `${func.id}_${Entry.generateHash()}`;
+                                    }
+                                    return [name, localVariable.id];
+                                });
+                            } else {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
                         },
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.FUNC,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Block',
@@ -150,7 +166,7 @@ module.exports = {
                     const [funcId, idx] = variableId.split('_');
                     const func = Entry.variableContainer.getFunction(funcId, idx);
 
-                    func.setValue(value, idx);
+                    func.setValue(value, variableId);
 
                     return script.callReturn();
                 },
@@ -189,17 +205,33 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName() {
-                            const func = Entry.Func.targetFunc || {};
+                        menuName(block) {
+                            const func =
+                                Entry.variableContainer.getFunctionByBlockId(block.id) ||
+                                Entry.Func.targetFunc ||
+                                {};
                             const localVariables = func.localVariables || [];
-                            return localVariables.map(({ name }, idx) => [
-                                name,
-                                `${func.id}_${idx}`,
-                            ]);
+                            if (localVariables.length) {
+                                return localVariables.map((localVariable) => {
+                                    const { id, name } = localVariable;
+                                    if (!id) {
+                                        localVariable.id = `${func.id}_${Entry.generateHash()}`;
+                                    }
+                                    return [name, localVariable.id];
+                                });
+                            } else {
+                                return [[Lang.Blocks.no_target, 'null']];
+                            }
                         },
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.FUNC,
                         arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                        defaultValue: (_value, options) => {
+                            if (options[0] && options[0][1]) {
+                                return options[0][1];
+                            }
+                            return null;
+                        },
                     },
                     {
                         type: 'Text',
@@ -230,9 +262,9 @@ module.exports = {
                 isNotFor: ['useLocalVariables'],
                 func(sprite, script) {
                     const variableId = script.getField('VARIABLE', script);
-                    const [funcId, idx] = variableId.split('_');
-                    const func = Entry.variableContainer.getFunction(funcId, idx);
-                    return func.getValue(idx);
+                    const [funcId] = variableId.split('_');
+                    const func = Entry.variableContainer.getFunction(funcId);
+                    return func.getValue(variableId);
                 },
                 syntax: {
                     js: [],

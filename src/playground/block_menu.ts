@@ -330,7 +330,9 @@ class BlockMenu extends ModelClass<Schema> {
             }
             blockView.attach();
             blockView.set({ display: true });
-            shouldReDraw && blockView.reDraw();
+            if (shouldReDraw || (Entry?.Func?.isEdit && blockView?.block?.data?.params?.length)) {
+                blockView.reDraw();
+            }
             if (Entry.block[type]) {
                 const className = Entry.block[type].class;
                 if (pastClass && pastClass !== className) {
@@ -1133,7 +1135,9 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     changeTypeThreadByBlockKey(key: string) {
-        this.getThreadByBlockKey(key)?.getFirstBlock().changeType();
+        this.getThreadByBlockKey(key)
+            ?.getFirstBlock()
+            .changeType();
     }
 
     private _generateView(categoryData: CategoryData[]) {

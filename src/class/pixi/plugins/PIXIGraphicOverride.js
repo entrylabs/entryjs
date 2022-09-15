@@ -130,6 +130,16 @@ class GraphicsAdaptor {
         const [x, r, g, b] = regexResult;
         return (r << 16) + (g << 8) + Number(b);
     }
+
+    quadraticCurveTo(cpX, cpY, toX, toY) {
+        this._gra.quadraticCurveTo(cpX, cpY, toX, toY);
+        return this;
+    }
+
+    drawEllipse(x, y, width, height) {
+        this._gra.drawEllipse(x, y, width, height);
+        return this;
+    }
 }
 
 // createjs tiny api
@@ -144,6 +154,8 @@ GP.ss = GP.setStrokeStyle;
 GP.rect = GP.r = GP.dr = GP.drawRect;
 GP.cp = GP.closePath;
 GP.es = GP.endStroke;
+GP.qt = GP.quadraticCurveTo;
+GP.de = GP.drawEllipse;
 
 export function PIXIGraphicOverride() {
     const p = Graphics.prototype;
