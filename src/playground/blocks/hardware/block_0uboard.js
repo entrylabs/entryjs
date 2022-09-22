@@ -194,7 +194,7 @@ Entry.pyocoding.getBlocks = function() {
               params: [null],
               type: 'pyocoding_serial_set',
           },
-          isNotFor: [ 'pyocoding' ],
+          isNotFor: [ '0uboard' ],
           syntax: undefined,
           paramsKeyMap: {
               NOTE: 0,
@@ -240,7 +240,7 @@ Entry.pyocoding.getBlocks = function() {
                   ],
                   "type": "pyocoding_ble_set"
               },
-              isNotFor: [ "pyocoding" ],
+              isNotFor: [ '0uboard' ],
               paramsKeyMap: {
                   "VALUE1": 0,
               },
@@ -287,7 +287,7 @@ Entry.pyocoding.getBlocks = function() {
                 params: [ null ],
                 "type": "pyocoding_get_analog_value"
               },
-              isNotFor: [ "pyocoding" ],
+              isNotFor: [ '0uboard' ],
               class: "SENSOR",
               paramsKeyMap: {
                   "PORT": 0,
@@ -430,7 +430,7 @@ Entry.pyocoding.getBlocks = function() {
                   "PORT": 0,
                   "VALUE": 1,
               },
-              isNotFor: [ "pyocoding" ],
+              isNotFor: [ '0uboard' ],
               class: "run",
               func: function (sprite, script) {
                   var port = script.getNumberValue("PORT");
@@ -504,7 +504,7 @@ Entry.pyocoding.getBlocks = function() {
                 };
                 return Entry.hw.portData.ULTRASONIC || 0;
             },
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             class: "SENSOR",
         },
         pyocoding_get_digital_button: {
@@ -528,7 +528,7 @@ Entry.pyocoding.getBlocks = function() {
                 "PORT": 0
             },
             class: "digital",
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             func: function (sprite, script) {
                 var port = script.getNumberValue("PORT", script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -561,7 +561,7 @@ Entry.pyocoding.getBlocks = function() {
             paramsKeyMap: {
                  "PORT": 0
              },
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             class: "digital",
             func: function (sprite, script) {
                 var port = script.getNumberValue("PORT", script);
@@ -638,7 +638,7 @@ Entry.pyocoding.getBlocks = function() {
                 "PORT": 0,
                 "VALUE": 1
             },
-            "isNotFor": [ "pyocoding" ],
+            "isNotFor": [ '0uboard' ],
             "class": "run",
             "func": function (sprite, script) {
                 var port = script.getNumberValue("PORT");
@@ -739,7 +739,7 @@ Entry.pyocoding.getBlocks = function() {
                 VALUE: 1,
             },
             class: 'pwm',
-            isNotFor: ['pyocoding'],
+            isNotFor: ['0uboard'],
             func: function(sprite, script) {
                 //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
@@ -843,7 +843,7 @@ Entry.pyocoding.getBlocks = function() {
                 DURATION: 3,
             },
             class: 'pwm',
-            isNotFor: ['pyocoding'],
+            isNotFor: ['0uboard'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 //var port = script.getNumberValue("PORT", script);
@@ -939,7 +939,7 @@ Entry.pyocoding.getBlocks = function() {
                 "VALUE": 1
             },
             class: "ext",
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             func: function (sprite, script) {
                 var port = script.getNumberValue("PORT");
                 var value = script.getNumberValue("VALUE");
@@ -992,7 +992,7 @@ Entry.pyocoding.getBlocks = function() {
               ],
               "type": "pyocoding_oled_set"
           },
-          isNotFor: [ "pyocoding" ],
+          isNotFor: [ '0uboard' ],
           paramsKeyMap: {
               "VALUE1": 0,
               "VALUE2": 1
@@ -1070,7 +1070,7 @@ Entry.pyocoding.getBlocks = function() {
                       VALUE: 2,
                   },
                   class: 'neopixel',
-                  isNotFor: ['pyocoding'],
+                  isNotFor: ['0uboard'],
                   func(sprite, script) {
                     var port = script.getNumberValue("PORT");
                     var mode = 1;
@@ -1204,7 +1204,7 @@ Entry.pyocoding.getBlocks = function() {
                       BRIG: 5,
                   },
                   class: 'neopixel',
-                  isNotFor: ['pyocoding'],
+                  isNotFor: ['0uboard'],
                   func(sprite, script) {
                     var port = script.getNumberValue("INDEX");
                     var pos = script.getNumberValue("POS");
@@ -1335,7 +1335,7 @@ Entry.pyocoding.getBlocks = function() {
                           BRIG: 4,
                       },
                       class: 'neopixel',
-                      isNotFor: ['pyocoding'],
+                      isNotFor: ['0uboard'],
                       func(sprite, script) {
                         var port = script.getNumberValue("INDEX");
                         var red = script.getNumberValue("RED");
