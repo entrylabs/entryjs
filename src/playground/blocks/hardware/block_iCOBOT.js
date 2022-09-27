@@ -589,11 +589,10 @@ Entry.iCOBOT.getBlocks = function() {
                   {
                       type: 'Dropdown',
                       options: [
-                          ['습도', '0'],
-                          ['온도(화씨)', '1'],
-                          ['온도(섭씨)', '2'],
+                          ['습도', '8'],
+                          ['온도(섭씨)', '9'],
                       ],
-                      value: '0',
+                      value: '8',
                       fontSize: 11,
                       bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                       arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -635,42 +634,15 @@ Entry.iCOBOT.getBlocks = function() {
                 type: 'icobot_get_analog_temp_value',
             },
             paramsKeyMap: {
-				TYPE: 0,
+				PORT: 0,
             },
             class: 'iCOBOT_ANA',
             isNotFor: ['iCOBOT'],
             func: function(sprite, script) 
             {
-                var port = 7;
-                var type = script.getNumberValue('TYPE');			
-                
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                delete Entry.hw.sendQueue['SET'][port];
-        				
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
-                }
-                Entry.hw.sendQueue['GET'][Entry.iCOBOT.sensorTypes.TEMP]
-                 = {
-                    port: port,
-                    data: type,
-                    time: new Date().getTime(),
-                };
-
-                var temp;
-                switch(type)
-                {
-                    case 0: temp = Entry.hw.portData.TEMP;        // humidity
-                                break;
-                    case 1: temp = Entry.hw.portData.TEMP;        // temp_F
-                                temp = Math.round(temp*1.8+32);                                               
-                                break;                
-                    case 2: temp = Entry.hw.portData.TEMP;        // temp_C              
-                                break;                                                
-                }
-                return temp || 0;                
+                var port = script.getValue('PORT', script);
+                var temp = Entry.hw.portData.SENSOR;
+                return temp[port];                
             },
             syntax: { js: [], py: [] },
         },
