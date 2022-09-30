@@ -459,7 +459,7 @@ export default class HardwareLite {
 
     update() {
         if (this.status !== HardwareStatement.connected) {
-            console.error('Cannot update hwLite queue. Check connection status.');
+            console.error('Cannot update hwLite queue. Check connection status. ');
             return;
         }
         if (this.hwModule?.portData?.constantServing) {
