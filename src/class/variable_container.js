@@ -742,8 +742,18 @@ Entry.VariableContainer = class VariableContainer {
      */
     renderFunctionReference(func) {
         const createElement = Entry.createElement;
+        const funcId = func.id;
+        const extraIds = Object.keys(this.functions_).filter((id) => {
+            if (id === funcId) {
+                return false;
+            }
+            const { content } = this.functions_[id];
+            return content.findByType(`func_${funcId}`);
+        });
         const callers = [...this._functionRefs].filter(
-            (item) => item.block.data.type === `func_${func.id}`
+            (item) =>
+                item.block.data.type === `func_${func.id}` ||
+                extraIds.some((id) => item.block.data.type === `func_${id}`)
         );
 
         func.usedView && $(func.usedView).remove();
