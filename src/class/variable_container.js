@@ -306,7 +306,7 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
-                const object = !caller.object;
+                const object = caller.object;
                 if (!object.entity) {
                     return;
                 }
@@ -379,7 +379,7 @@ Entry.VariableContainer = class VariableContainer {
 
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
-                const object = !caller.object;
+                const object = caller.object;
                 if (!object.entity) {
                     return;
                 }
@@ -772,7 +772,7 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = createElement('li');
-                const object = !caller.object;
+                const object = caller.object;
                 if (!object.entity) {
                     return;
                 }
