@@ -455,7 +455,6 @@ Entry.VariableContainer = class VariableContainer {
         } else if (
             Object.keys(this.functions_).some((key) => {
                 const item = this.functions_[key]?.content.findByType(`func_${func.id}`);
-                console.log(item);
                 return Boolean(item);
             })
         ) {
