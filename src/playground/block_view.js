@@ -1388,18 +1388,9 @@ Entry.BlockView = class BlockView {
                 if (_.includes(boldTypes, content)) {
                     text.setAttribute('font-weight', '500');
                 }
-
-                // if (content == 'q') {
-                //     const y = parseInt(text.getAttribute('y'), 10);
-                //     text.setAttribute('y', y - 1);
-                // }
-
                 if (_.includes(notResizeTypes, content)) {
                     text.setAttribute('font-size', `${size}px`);
                 }
-                // else {
-                //     text.setAttribute('font-size', `${size * fontWeight}px`);
-                // }
                 text.setAttribute('alignment-baseline', 'auto');
             });
 
@@ -1437,16 +1428,10 @@ Entry.BlockView = class BlockView {
         });
     }
 
-    downloadAsImage(i) {
-        this.getDataUrl().then((data) => {
-            const download = document.createElement('a');
-            download.href = data.src;
-            let name = Lang.Workspace.download_image_name;
-            if (i) {
-                name += i;
-            }
-            download.download = `${name}.png`;
-            download.click();
+    async downloadAsImage(i) {
+        const image = await this.getDataUrl();
+        Entry.dispatchEvent('saveBlockImage', {
+            image,
         });
     }
 
@@ -1747,31 +1732,14 @@ Entry.BlockView = class BlockView {
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
             svgData = svgData.replace(/NS\d+:href/gi, 'href');
-            let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
-            svgData = null;
-            if (notPng) {
-                resolve({
-                    src,
-                    width: boxWidth,
-                    height: boxHeight,
-                });
-                svgGroup = null;
-            } else {
-                this.loadImage(src, boxWidth, boxHeight, notPng, 1.5).then(
-                    (src) => {
-                        svgGroup = null;
-                        resolve({
-                            src,
-                            width: boxWidth,
-                            height: boxHeight,
-                        });
-                    },
-                    (err) => {
-                        reject('error occured');
-                    }
-                );
-            }
-            src = null;
+            const data = Entry.isOffline
+                ? `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`
+                : svgData;
+            resolve({
+                width: boxWidth,
+                height: boxHeight,
+                data,
+            });
         });
     }
 
