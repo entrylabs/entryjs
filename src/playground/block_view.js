@@ -1336,25 +1336,19 @@ Entry.BlockView = class BlockView {
                 svgGroup.setAttribute('class', 'block selected');
             }
             const box = this._skeleton.box(this);
-            const scale = notPng ? 1 : 1.5;
+            const scale = this.getBoard()?.scale || 1;
             let fontWeight = this.isWindow7() ? 0.9 : 0.95;
             if (this.type.indexOf('func_') > -1) {
                 fontWeight *= 0.99;
             }
             svgGroup.setAttribute(
                 'transform',
-                'scale(%SCALE) translate(%X,%Y)'
-                    .replace('%X', -box.offsetX)
-                    .replace('%Y', -box.offsetY)
-                    .replace('%SCALE', scale)
+                'scale(%SCALE) translate(0,0)'.replace('%SCALE', scale)
             );
             this.svgCommentGroup &&
                 svgCommentGroup.setAttribute(
                     'transform',
-                    'scale(%SCALE) translate(%X,%Y)'
-                        .replace('%X', -box.offsetX)
-                        .replace('%Y', -box.offsetY)
-                        .replace('%SCALE', scale)
+                    'scale(%SCALE) translate(0,0)'.replace('%SCALE', scale)
                 );
 
             const defs = this.getBoard().svgDom.find('defs');
@@ -1378,37 +1372,19 @@ Entry.BlockView = class BlockView {
                 text.setAttribute('alignment-baseline', 'auto');
             });
 
-            let counts = 0;
-            if (!images.length) {
-                this.processSvg(svgGroup, scale, defs, notPng)
-                    .then((data) => {
-                        resolve(data);
-                    })
-                    .catch((err) => {
-                        reject(err);
-                    });
-            } else {
-                _.toArray(images).forEach((img) => {
-                    const href = img.getAttribute('href');
-                    this.loadImage(
-                        href,
-                        img.getAttribute('width'),
-                        img.getAttribute('height'),
-                        notPng
-                    ).then((src) => {
-                        img.setAttribute('href', src);
-                        if (++counts == images.length) {
-                            this.processSvg(svgGroup, scale, defs, notPng)
-                                .then((data) => {
-                                    resolve(data);
-                                })
-                                .catch((err) => {
-                                    reject(err);
-                                });
-                        }
-                    });
+            if (images.length) {
+                images.forEach((image) => {
+                    const href = image.getAttribute('href');
+                    image.setAttribute('href', `${location.protocol}//${location.host}${href}`);
                 });
             }
+            this.processSvg(svgGroup, scale, defs, notPng)
+                .then((data) => {
+                    resolve(data);
+                })
+                .catch((err) => {
+                    reject(err);
+                });
         });
     }
 
@@ -1698,20 +1674,18 @@ Entry.BlockView = class BlockView {
         );
     }
 
-    processSvg(svgGroup, scale = 1, defs, notPng) {
+    processSvg(svgGroup, scale = 1, defs) {
         return new Promise((resolve, reject) => {
             let svgData =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
             const bBox = this.svgGroup.getBoundingClientRect();
-            const board = this.getBoard();
-            const { scale: blockScale = scale } = board;
-            // console.log(this);
-            const boxWidth = bBox.width / blockScale;
-            const boxHeight = bBox.height / blockScale;
+            const boxWidth = bBox.width;
+            const boxHeight = bBox.height;
+            const offset = 2 * scale;
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', boxWidth * scale + 20)
-                .replace('%H', boxHeight * scale + 5)
+                .replace('%W', Math.ceil(boxWidth) + offset)
+                .replace('%H', Math.ceil(boxHeight) + offset)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
