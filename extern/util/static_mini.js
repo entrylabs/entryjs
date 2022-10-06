@@ -813,7 +813,7 @@ EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
 
 EntryStatic.DynamicPracticalHardwareBlocks = {};
 
-EntryStatic.hwCategoryList.forEach(category => {
+EntryStatic.hwCategoryList.forEach((category) => {
     EntryStatic.DynamicPracticalHardwareBlocks[category] = [];
 });
 
@@ -852,7 +852,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 

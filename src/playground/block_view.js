@@ -1358,22 +1358,6 @@ Entry.BlockView = class BlockView {
                 );
 
             const defs = this.getBoard().svgDom.find('defs');
-
-            const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
-            style.setAttribute('type', 'text/css');
-            style.textContent = `
-                @font-face {
-                    font-family: EntryNG;
-                    src: local(NanumGothic),
-                        local(나눔고딕),
-                        local(나눔고딕 Regular),
-                        local(Noto Sans JP Regular),
-                        local(Noto Sans JP);
-                    font-weight: normal;
-                    font-style: normal;
-                }`;
-
-            defs.append(style);
             const images = svgGroup.getElementsByTagName('image');
             const texts = svgGroup.getElementsByTagName('text');
 
@@ -1430,8 +1414,8 @@ Entry.BlockView = class BlockView {
 
     async downloadAsImage(i) {
         const image = await this.getDataUrl();
-        Entry.dispatchEvent('saveBlockImage', {
-            image,
+        Entry.dispatchEvent('saveBlockImages', {
+            images: [image],
         });
     }
 
