@@ -1198,26 +1198,19 @@ Entry.Board = class Board {
                 option: {
                     text: Lang.Menus.save_as_image_all,
                     enable: !this.readOnly,
-                    callback() {
+                    async callback() {
                         const threads = that.code.getThreads();
-                        const images = [];
-                        threads.forEach((t, i) => {
-                            const topBlock = t.getFirstBlock();
+                        const promises = threads.map((thread) => {
+                            const topBlock = thread.getFirstBlock();
                             if (!topBlock) {
                                 return;
                             }
-                            if (threads.length > 1 && Entry.isOffline) {
-                                topBlock.view.getDataUrl().then((data) => {
-                                    images.push(data);
-                                    if (images.length == threads.length) {
-                                        Entry.dispatchEvent('saveBlockImages', {
-                                            images,
-                                        });
-                                    }
-                                });
-                            } else {
-                                topBlock.view.downloadAsImage(++i);
-                            }
+                            return topBlock.view.getDataUrl();
+                        });
+
+                        const images = await Promise.all(promises);
+                        Entry.dispatchEvent('saveBlockImages', {
+                            images,
                         });
                     },
                 },

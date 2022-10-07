@@ -1034,7 +1034,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 
