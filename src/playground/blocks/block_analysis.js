@@ -404,6 +404,59 @@ module.exports = {
                     py: [],
                 },
             },
+            // 테이블 $1의 현재 상태를 저장하기
+            save_current_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'save_current_table',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['D&value'],
+                        },
+                        null,
+                    ],
+                    type: 'set_value_from_table',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const table = DataTable.getSource(tableId);
+                    DataTable.saveTable({ selected: table.dataTable });
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             // 테이블 %1 %2 개수
             get_table_count: {
                 color: EntryStatic.colorSet.block.default.ANALYSIS,

@@ -395,6 +395,7 @@ EntryStatic.getAllBlocks = function() {
                 'insert_row_to_table',
                 'delete_row_from_table',
                 'set_value_from_table',
+                'save_current_table',
                 'get_table_count',
                 'get_value_from_table',
                 'get_value_from_last_row',
