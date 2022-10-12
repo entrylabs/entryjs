@@ -721,6 +721,133 @@ module.exports = {
                     py: [],
                 },
             },
+            // 테이블 %1 창 열기
+            open_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'open_table',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value', 'B&value'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    CHART_INDEX: 1,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    DataTable.showTable(tableId);
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            // 테이블 %1 창을 %2 초 동안 열기
+            open_table_wait: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['1'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table_wait',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value', 'B&value'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['B&value'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table_wait',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    SECOND: 1,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const timeValue = script.getNumberValue('SECOND', script);
+                    DataTable.showTable(tableId);
+                    setTimeout(() => {
+                        DataTable.closeTable();
+                    }, timeValue * 1000);
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            // 테이블 %1 의 %2 차트 창 열기
             open_table_chart: {
                 color: EntryStatic.colorSet.block.default.ANALYSIS,
                 outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
@@ -819,7 +946,7 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    DataTable.closeChart();
+                    DataTable.closeModal();
                     return script.callReturn();
                 },
                 syntax: {
