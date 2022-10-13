@@ -97,6 +97,10 @@ class DataTableSource {
         return this.#chart;
     }
 
+    get table() {
+        return [this.fields, ...this.rows];
+    }
+
     get origin() {
         return this.#data.origin;
     }
@@ -106,6 +110,15 @@ class DataTableSource {
             this.#copiedChart = _cloneDeep(this.#chart);
         }
         return this.#copiedChart;
+    }
+
+    get dataTable() {
+        return {
+            id: this.id,
+            name: this.name,
+            chart: this.#chart,
+            table: this.table,
+        };
     }
 
     setArray({ chart, data, fields, name }) {
