@@ -807,7 +807,7 @@ module.exports = {
                         null,
                         {
                             type: 'number',
-                            params: ['1'],
+                            params: ['4'],
                         },
                         null,
                     ],
@@ -838,7 +838,7 @@ module.exports = {
                     const timeValue = script.getNumberValue('SECOND', script);
                     DataTable.showTable(tableId);
                     setTimeout(() => {
-                        DataTable.closeTable();
+                        DataTable.closeModal();
                     }, timeValue * 1000);
                     return script.callReturn();
                 },
