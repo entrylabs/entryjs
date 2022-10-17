@@ -285,6 +285,10 @@ class _GEHelper extends GEHelperBase {
         targetContainer.removeChild(canvasVideo);
     }
 
+    destroyWebcam() {
+        this.videoContainer = null;
+    }
+
     hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
