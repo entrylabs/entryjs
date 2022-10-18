@@ -45,7 +45,6 @@ Entry.iCOBOT = {
         BUZZER: 3,
         RGBLED: 4,
         TONE: 5,
-        TEMP: 6,
     },
     toneTable: {
         '0': 0,
@@ -76,11 +75,66 @@ Entry.iCOBOT = {
         '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
-    highList: ['high', '1', 'on'],
-    lowList: ['low', '0', 'off'],
-    BlockState: {},	
-    sValue1: 0,
-    sValue2: 0	
+    monitorTemplate: {
+        imgPath: 'hw/iCOBOT_Front.png',
+        width: 550,
+        height: 600,
+        listPorts: {
+            BLeft_IR: {
+                name: 'Bottom Left IR',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            BMid_IR: {
+                name: 'Bottom Mid IR',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            BRight_IR: {
+                name: 'Bottom Right IR',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            Real_T: {
+                name: 'Temperature',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            Real_H: {
+                name: 'Humidity',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            Noise: {
+                name: 'Sound',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+        },
+        ports: {
+            Brightness: {
+                name: 'Brightness',
+                type: 'input',
+                pos: { x: 295, y: 350 },
+            },
+            Front_IR: {
+                name: 'Front IR',
+                type: 'input',
+                pos: { x: 250, y: 300 },
+            },
+            Left_IR: {
+                name: 'Left IR',
+                type: 'input',
+                pos: { x: 20, y: 450 },
+            },
+            Right_IR: {
+                name: 'Right IR',
+                type: 'input',
+                pos: { x: 525, y: 450 },
+            },
+        },
+        mode: 'both',
+    },
 };
 
 Entry.iCOBOT.blockMenuBlocks = [
@@ -88,6 +142,7 @@ Entry.iCOBOT.blockMenuBlocks = [
 		'icobot_get_sound_value',
 		'icobot_get_analog_temp_value',
 		'icobot_get_distsensor_value',
+		'icobot_get_discomfort_index_value',
 		'icobot_buzzer_onoff',		
         'icobot_set_digital_buzzer_notime',		
         'icobot_set_digital_buzzer',
@@ -105,38 +160,170 @@ Entry.iCOBOT.setLanguage = function() {
     return {
         ko: {
             template: {
-				"icobot_buzzer_onoff": "부저 %1 %2",				
-                "icobot_set_digital_buzzer": "부저를 %1 옥타브 %2 음 %3 초 연주 %4",
-                "icobot_set_digital_buzzer_notime": "부저를 %1 옥타브 %2 음 연주 %3",	
-				"icobot_get_cds_value": "조도 센서 값",
-				"icobot_get_sound_value": "사운드(소리)감지 센서 값",
-				"icobot_get_distsensor_value": "거리(IR) %1 센서 값",
-				"icobot_get_analog_temp_value": "%1 센서 값",	        
-                "icobot_digital_rgbled_onoff": "RGB LED %1 색 켜기 %2",	
-				"icobot_digital_rgbled_off": "RGB LED 끄기 %1",	                
-                "icobot_digital_set_rgbled_value": "RGB LED 빨강 %1 초록 %2 파랑 %3 으로 켜기 %4",
-				"icobot_digital_set_motor_direction": "%1 모터 방향을 %2 방향으로 정하기 %3",
-				"icobot_digital_set_motor_angle": "%1 방향으로 %2 도 회전하기 %3",
-				"icobot_digital_set_motor_speed": "%1 모터의 속도를 %2 로 정하기 %3", 
-				"icobot_digital_motor_stop": "%1 모터 정지하기 %2",			
+				icobot_get_cds_value: "조도(밝기) 센서 값",
+				icobot_get_sound_value: "사운드(소리)감지 센서 값",
+				icobot_get_distsensor_value: "거리(IR) %1 센서 값",
+				icobot_get_analog_temp_value: "%1 센서 값",
+				icobot_get_discomfort_index_value: "불쾌 지수 값",
+				icobot_buzzer_onoff: "부저 %1 %2",
+                icobot_set_digital_buzzer: "부저를 %1 옥타브 %2 음 %3 초 연주 %4",
+                icobot_set_digital_buzzer_notime: "부저를 %1 옥타브 %2 음 연주 %3",
+                icobot_digital_rgbled_onoff: "RGB LED %1 색 켜기 %2",
+				icobot_digital_rgbled_off: "RGB LED 끄기 %1",
+                icobot_digital_set_rgbled_value: "RGB LED 빨강 %1 초록 %2 파랑 %3 으로 켜기 %4",
+				icobot_digital_set_motor_direction: "%1 모터 방향을 %2 방향으로 정하기 %3",
+				icobot_digital_set_motor_angle: "%1 방향으로 %2 도 회전하기 %3",
+				icobot_digital_set_motor_speed: "%1 모터의 속도를 %2 로 정하기 %3",
+				icobot_digital_motor_stop: "%1 모터 정지하기 %2",
+            },
+            Helper: {
+				icobot_get_cds_value: "현재 조도(밝기) 값을 읽어 옵니다.",
+				icobot_get_sound_value: "현재 주변의 사운드(소리)감지하여 읽어 옵니다.\n 값이 순간적으로 변화합니다.",
+				icobot_get_distsensor_value: "선택한 거리(IR)센서의 값을 읽어 옵니다.\n 값이 클 수록 물체와의 거리가 가까움을 나타내거나, 흰색을 감지하고 있음을 나타냅니다.",
+				icobot_get_analog_temp_value: "현재 온도/습도 값을 읽어 옵니다.",
+				icobot_get_discomfort_index_value: "현재의 온도와 상대습도 값을 이용하여 불쾌 지수 값을 계산합니다.\n\n 불쾌지수 = ((9/5)T)-(0.55(1-RH)((9/5)T-26))+32 \n\n T : 온도,  RH : 상대습도",
+				icobot_buzzer_onoff: "부저를 울리거나, 끌수있습니다.",
+                icobot_set_digital_buzzer: "선택한 계이름과 옥타브의 음을 입력한 시간만큼 소리 냅니다.",
+                icobot_set_digital_buzzer_notime: "선택한 계이름과 옥타브의 음을 계속 소리 냅니다.",
+                icobot_digital_rgbled_onoff: "LED를 선택한 색깔로 켭니다.",
+				icobot_digital_rgbled_off: "LED를 끕니다.",
+                icobot_digital_set_rgbled_value: "LED의 R, G, B 값을 입력한 값으로 각각 설정하여 켭니다.",
+				icobot_digital_set_motor_direction: "선택한 모터의 구동 방향을 정하고, 그 방향으로 이동합니다.",
+				icobot_digital_set_motor_angle: "원하는 각도만큼 i-COBOT이 움직입니다.",
+				icobot_digital_set_motor_speed: "선택한 모터의 속도를 정하고, 그 속도로 구동됩니다.",
+				icobot_digital_motor_stop: "선택한 모터가 정지합니다.",
+            },
+            Blocks: {
+                icobot_Temperature: "온도(°C)",
+                icobot_Humidity: "습도(%)",
+                icobot_ir_front: "정면",
+                icobot_ir_left: "왼쪽",
+                icobot_ir_right: "오른쪽",
+                icobot_ir_bottom_mid: "아래중앙",
+                icobot_ir_bottom_left: "아래왼쪽",
+                icobot_ir_bottom_right: "아래오른쪽",
+                icobot_buzzer_on: "켜기",
+                icobot_buzzer_off: "끄기",
+                icobot_buzzer_silent: "무음",
+                icobot_buzzer_do: "도",
+                icobot_buzzer_do_sharp: "도#(레b)",
+                icobot_buzzer_re: "레",
+                icobot_buzzer_re_sharp: "레#(미b)",
+                icobot_buzzer_mi: "미",
+                icobot_buzzer_fa: "파",
+                icobot_buzzer_fa_sharp: "파#(솔b)",
+                icobot_buzzer_sol: "솔",
+                icobot_buzzer_sol_sharp: "솔#(라b)",
+                icobot_buzzer_la: "라",
+                icobot_buzzer_la_sharp: "라#(시b)",
+                icobot_buzzer_si: "시",
+                icobot_color_white: "흰",
+                icobot_color_red: "빨강",
+                icobot_color_orange: "주황",
+                icobot_color_yellow: "노랑",
+                icobot_color_green: "초록",
+                icobot_color_blue: "파랑",
+                icobot_color_sky_blue: "하늘",
+                icobot_color_purple: "보라",
+                icobot_motor_both_wheels: "양쪽",
+                icobot_motor_left_wheels: "왼쪽",
+                icobot_motor_right_wheels: "오른쪽",
+                icobot_motor_front_move: "전진",
+                icobot_motor_back_move: "후진",
+                icobot_motor_left_turn: "왼쪽",
+                icobot_motor_right_turn: "오른쪽",
+                icobot_motor_30_degrees: "30°",
+                icobot_motor_45_degrees: "45°",
+                icobot_motor_60_degrees: "60°",
+                icobot_motor_90_degrees: "90°",
+                icobot_motor_120_degrees: "120°",
+                icobot_motor_135_degrees: "135°",
+                icobot_motor_150_degrees: "150°",
+                icobot_motor_180_degrees: "180°",
             }
         },
         en: {
             template: {
-				"icobot_buzzer_onoff": "Buzzer %1 %2",				
-                "icobot_set_digital_buzzer": "Play Buzzer %1 Octave %2 Note %3 Sec %4",	
-                "icobot_set_digital_buzzer_notime": "Play Buzzer %1 Octave %2 Note %3",
-				"icobot_get_cds_value": "CDS Sensor Value",
-				"icobot_get_sound_value": "Sound Sensor Value",
-				"icobot_get_distsensor_value": "Distance(IR) %1 Sensor Value",	
-				"icobot_get_analog_temp_value": "%1 Sensor Value",		                
-                "icobot_digital_rgbled_onoff": "RGB LED %1 Color Turn On %2",	
-				"icobot_digital_rgbled_off": "RGB LED Turn Off %1",	                	
-                "icobot_digital_set_rgbled_value": "Turn On RGB LED with RED %1 GREEN %2 BLUE %3 value %4",
-				"icobot_digital_set_motor_direction": "Set %1 Motor Direction to %2 %3",	
-				"icobot_digital_set_motor_angle": "Rotation %2 degrees in direction %1 %3",	
-				"icobot_digital_set_motor_speed": "Set %1 Motor Speed to %2 %3", 	
-				"icobot_digital_motor_stop": "Stop %1 Motor %2",					
+				icobot_get_cds_value: "CDS(Brightness) Sensor Value",
+				icobot_get_sound_value: "Sound Sensor Value",
+				icobot_get_distsensor_value: "Distance(IR) %1 Sensor Value",
+				icobot_get_analog_temp_value: "%1 Sensor Value",
+				icobot_get_discomfort_index_value: "Discomfort Index Value",
+				icobot_buzzer_onoff: "Buzzer %1 %2",
+                icobot_set_digital_buzzer: "Play Buzzer %1 Octave %2 Note %3 Sec %4",
+                icobot_set_digital_buzzer_notime: "Play Buzzer %1 Octave %2 Note %3",
+                icobot_digital_rgbled_onoff: "RGB LED %1 Color Turn On %2",
+				icobot_digital_rgbled_off: "RGB LED Turn Off %1",
+                icobot_digital_set_rgbled_value: "Turn On RGB LED with RED %1 GREEN %2 BLUE %3 value %4",
+				icobot_digital_set_motor_direction: "Set %1 Motor Direction to %2 %3",
+				icobot_digital_set_motor_angle: "Rotation %2 degrees in direction %1 %3",
+				icobot_digital_set_motor_speed: "Set %1 Motor Speed to %2 %3",
+				icobot_digital_motor_stop: "Stop %1 Motor %2",
+            },
+            Helper: {
+				icobot_get_cds_value: "Reads the current value of illumination(Brightness).",
+				icobot_get_sound_value: "Senses the surrounding sound.\n The value changes minute by minute.",
+				icobot_get_distsensor_value: "Reads the value of selected IR sensor.\n A larger value indicates that the distance from the object is close, or that it is detecting a white color.",
+				icobot_get_analog_temp_value: "Reads the value of current temperature or humidity.",
+				icobot_get_discomfort_index_value: "Calculate the Temperature-Humidity Index(THI) using the current temperature and relative humidity values.\n\n THI = ((9/5)T)-(0.55(1-RH)((9/5)T-26))+32 \n\n T : Temperature,  RH : Relative Humidity",
+				icobot_buzzer_onoff: "You can turn the buzzer on or off.",
+                icobot_set_digital_buzzer: "It sounds the pitch you entered until the moment you decided to.",
+                icobot_set_digital_buzzer_notime: "Keep sounding the pitch you entered.",
+                icobot_digital_rgbled_onoff: "Turn the LED on as the selected color.",
+				icobot_digital_rgbled_off: "Turns off the LED.",
+                icobot_digital_set_rgbled_value: "Set the R, G, and B values of the LED to the entered values and turn them on.",
+				icobot_digital_set_motor_direction: "Determine the drive direction of the selected motor, and head to that.",
+				icobot_digital_set_motor_angle: "The i-COBOT turns as much as you want.",
+				icobot_digital_set_motor_speed: "Determine the speed of the motor and drive at that speed.",
+				icobot_digital_motor_stop: "The selected motor stops.",
+            },
+            Blocks: {
+                icobot_Temperature: "Temperature(°C)",
+                icobot_Humidity: "Humidity(%)",
+                icobot_ir_front: "Front",
+                icobot_ir_left: "Left",
+                icobot_ir_right: "Right",
+                icobot_ir_bottom_mid: "Bottom_Mid",
+                icobot_ir_bottom_left: "Bottom_Left",
+                icobot_ir_bottom_right: "Bottom_Right",
+                icobot_buzzer_on: "On",
+                icobot_buzzer_off: "Off",
+                icobot_buzzer_silent: "NoTone",
+                icobot_buzzer_do: "Do",
+                icobot_buzzer_do_sharp: "Do#(Reb)",
+                icobot_buzzer_re: "Re",
+                icobot_buzzer_re_sharp: "Re#(Mib)",
+                icobot_buzzer_mi: "Mi",
+                icobot_buzzer_fa: "Fa",
+                icobot_buzzer_fa_sharp: "Fa#(Solb)",
+                icobot_buzzer_sol: "Sol",
+                icobot_buzzer_sol_sharp: "Sol#(Lab)",
+                icobot_buzzer_la: "La",
+                icobot_buzzer_la_sharp: "La#(Sib)",
+                icobot_buzzer_si: "Si",
+                icobot_color_white: "White",
+                icobot_color_red: "Red",
+                icobot_color_orange: "Orange",
+                icobot_color_yellow: "Yellow",
+                icobot_color_green: "Green",
+                icobot_color_blue: "Blue",
+                icobot_color_sky_blue: "Sky_Blue",
+                icobot_color_purple: "Purple",
+                icobot_motor_both_wheels: "Both",
+                icobot_motor_left_wheels: "Left",
+                icobot_motor_right_wheels: "Right",
+                icobot_motor_front_move: "Front",
+                icobot_motor_back_move: "Back",
+                icobot_motor_left_turn: "Left",
+                icobot_motor_right_turn: "Right",
+                icobot_motor_30_degrees: "30°",
+                icobot_motor_45_degrees: "45°",
+                icobot_motor_60_degrees: "60°",
+                icobot_motor_90_degrees: "90°",
+                icobot_motor_120_degrees: "120°",
+                icobot_motor_135_degrees: "135°",
+                icobot_motor_150_degrees: "150°",
+                icobot_motor_180_degrees: "180°",
             }
         }
     }
@@ -144,6 +331,240 @@ Entry.iCOBOT.setLanguage = function() {
 
 Entry.iCOBOT.getBlocks = function() {
     return {
+        ///////////////////////// 센서 입력 ///////////////////////
+		
+		// 조도(밝기) - 센서 값 				
+        icobot_get_cds_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            template: Lang.template.icobot_get_cds_value,
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'icobot_get_cds_value',
+            },
+            paramsKeyMap: {},
+            class: 'iCOBOT_ANA',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script)
+			{
+                var port = 0;
+                var CDS = Entry.hw.portData.SENSOR;
+
+                return CDS[port];
+            },
+            syntax: { js: [], py: [] },
+        },
+		
+		// 소리(소음) - 센서 값 				
+        icobot_get_sound_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            template: Lang.template.icobot_get_sound_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },				
+            ],
+            events: {},
+            def: {
+                type: 'icobot_get_sound_value',
+            },
+            paramsKeyMap: {},
+            class: 'iCOBOT_ANA',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script)
+			{
+                var port = 4;
+                var SOUND = Entry.hw.portData.SENSOR;
+                return SOUND[port];
+            },
+            syntax: { js: [], py: [] },
+        },
+				
+         icobot_analog_temp_name: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+              fontColor: '#fff',			
+              skeleton: 'basic_string_field',
+              statements: [],
+              template: '%1',
+              params: [
+                  {
+                      type: 'Dropdown',
+                      options: [
+                          [Lang.Blocks.icobot_Temperature, '8'],
+                          [Lang.Blocks.icobot_Humidity, '9'],
+                      ],
+                      value: '8',
+                      fontSize: 11,
+                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                  },
+              ],
+              events: {},
+              def: {
+                  params: [null],
+              },
+              paramsKeyMap: {
+                  PORT: 0,
+              },
+              func: function(sprite, script) {
+                  return script.getField('PORT');
+              },
+          },
+
+		// 온습도 - 센서 값 				
+        icobot_get_analog_temp_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            template: Lang.template.icobot_get_analog_temp_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },				
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'icobot_analog_temp_name',
+                    },					
+                ],
+                type: 'icobot_get_analog_temp_value',
+            },
+            paramsKeyMap: {
+				PORT: 0,
+            },
+            class: 'iCOBOT_ANA',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script) 
+            {
+                var port = script.getValue('PORT', script);
+                var temp = Entry.hw.portData.SENSOR;
+
+                return temp[port];
+            },
+            syntax: { js: [], py: [] },
+        },
+		
+		// 불쾌지수				
+        icobot_get_discomfort_index_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            template: Lang.template.icobot_get_discomfort_index_value,
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'icobot_get_discomfort_index_value',
+            },
+            paramsKeyMap: {},
+            class: 'iCOBOT_ANA',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script)
+			{
+                var temp = Entry.hw.portData.SENSOR;
+                var Temperature = temp[9];
+                var Humidity = (temp[8])/100;
+                var Discomfort_index = (((9/5)*Temperature) - (0.55*(1-Humidity)*(((9/5)*Temperature)-26)) + 32);
+                return Discomfort_index;
+            },
+            syntax: { js: [], py: [] },
+        },
+		
+        icobot_analog_distsensor_list: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+			fontColor: '#fff',			
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.icobot_ir_front, '2'],
+                        [Lang.Blocks.icobot_ir_left, '7'],
+                        [Lang.Blocks.icobot_ir_right, '5'],
+                        [Lang.Blocks.icobot_ir_bottom_left, '1'],
+                        [Lang.Blocks.icobot_ir_bottom_mid, '6'],
+                        [Lang.Blocks.icobot_ir_bottom_right, '3'],
+                    ],
+                    value: '2',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('PORT');
+            },
+        },
+
+		// 거리 - 센서 값		
+        icobot_get_distsensor_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            template: Lang.template.icobot_get_distsensor_value,
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'icobot_analog_distsensor_list',
+                    },
+                ],
+                type: 'icobot_get_distsensor_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'iCOBOT_ANA',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script)
+			{
+                var port = script.getValue('PORT', script);	
+                var IR = Entry.hw.portData.SENSOR;
+                return IR[port];
+            },
+            syntax: { js: [], py: [] },
+        },
+
+		//////////////////////////// 부저 관련 ///////////////////////////////
+
         icobot_digital_port_onoff_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
@@ -155,8 +576,8 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['켜기', '1'],
-                        ['끄기', '0'],
+                        [Lang.Blocks.icobot_buzzer_on, '1'],
+                        [Lang.Blocks.icobot_buzzer_off, '0'],
                     ],					
                     value: '1',
                     fontSize: 11,
@@ -176,7 +597,7 @@ Entry.iCOBOT.getBlocks = function() {
             },
         },	
 		
-		// 1. 부저 - 1) 부저 On/Off 삐소리
+		// 부저 - 부저 On/Off 삐소리
 		icobot_buzzer_onoff: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
@@ -277,19 +698,19 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.silent, '0'],
-                        [Lang.Blocks.do_name, 'C'],
-                        [Lang.Blocks.do_sharp_name, 'CS'],
-                        [Lang.Blocks.re_name, 'D'],
-                        [Lang.Blocks.re_sharp_name, 'DS'],
-                        [Lang.Blocks.mi_name, 'E'],
-                        [Lang.Blocks.fa_name, 'F'],
-                        [Lang.Blocks.fa_sharp_name, 'FS'],
-                        [Lang.Blocks.sol_name, 'G'],
-                        [Lang.Blocks.sol_sharp_name, 'GS'],
-                        [Lang.Blocks.la_name, 'A'],
-                        [Lang.Blocks.la_sharp_name, 'AS'],
-                        [Lang.Blocks.si_name, 'B'],
+                        [Lang.Blocks.icobot_buzzer_silent, '0'],
+                        [Lang.Blocks.icobot_buzzer_do, 'C'],
+                        [Lang.Blocks.icobot_buzzer_do_sharp, 'CS'],
+                        [Lang.Blocks.icobot_buzzer_re, 'D'],
+                        [Lang.Blocks.icobot_buzzer_re_sharp, 'DS'],
+                        [Lang.Blocks.icobot_buzzer_mi, 'E'],
+                        [Lang.Blocks.icobot_buzzer_fa, 'F'],
+                        [Lang.Blocks.icobot_buzzer_fa_sharp, 'FS'],
+                        [Lang.Blocks.icobot_buzzer_sol, 'G'],
+                        [Lang.Blocks.icobot_buzzer_sol_sharp, 'GS'],
+                        [Lang.Blocks.icobot_buzzer_la, 'A'],
+                        [Lang.Blocks.icobot_buzzer_la_sharp, 'AS'],
+                        [Lang.Blocks.icobot_buzzer_si, 'B'],
                     ],
                     value: 'C',
                     fontSize: 11,
@@ -309,7 +730,7 @@ Entry.iCOBOT.getBlocks = function() {
             },
         },
 		
-		// 1. 부저 - 2) 부저 옥타브/음/초 동안 연주
+		// 부저 - 부저 옥타브/음/초 동안 연주
         icobot_set_digital_buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
@@ -440,7 +861,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		
-		// 1. 부저 - 2) 부저 옥타브/음/초 동안 연주
+		// 부저 - 부저 옥타브/음/초 동안 연주
         icobot_set_digital_buzzer_notime: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
@@ -518,209 +939,9 @@ Entry.iCOBOT.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-		
-		// 3. 빛 - 1) 센서 값 				
-        icobot_get_cds_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            template: Lang.template.icobot_get_cds_value,
-            statements: [],
-            params: [],
-            events: {},
-            def: {
-                type: 'icobot_get_cds_value',
-            },
-            paramsKeyMap: {},
-            class: 'iCOBOT_ANA',
-            isNotFor: ['iCOBOT'],
-            func: function(sprite, script)
-			{
-                var port = 0;
-                var CDS = Entry.hw.portData.SENSOR;
-                return CDS[port];
-            },
-            syntax: { js: [], py: [] },
-        },
-		
-		// 3. 소리 - 1) 센서 값 				
-        icobot_get_sound_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            template: Lang.template.icobot_get_sound_value,
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-            ],
-            events: {},
-            def: {
-                type: 'icobot_get_sound_value',
-            },
-            paramsKeyMap: {},
-            class: 'iCOBOT_ANA',
-            isNotFor: ['iCOBOT'],
-            func: function(sprite, script)
-			{
-                var port = 4;
-                var SOUND = Entry.hw.portData.SENSOR;
-                return SOUND[port];
-            },
-            syntax: { js: [], py: [] },
-        },
-				
-         icobot_analog_temp_name: {
-              color: EntryStatic.colorSet.block.default.HARDWARE,
-              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
-              fontColor: '#fff',			
-              skeleton: 'basic_string_field',
-              statements: [],
-              template: '%1',
-              params: [
-                  {
-                      type: 'Dropdown',
-                      options: [
-                          ['습도', '8'],
-                          ['온도(섭씨)', '9'],
-                      ],
-                      value: '8',
-                      fontSize: 11,
-                      bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                      arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                  },
-              ],
-              events: {},
-              def: {
-                  params: [null],
-              },
-              paramsKeyMap: {
-                  PORT: 0,
-              },
-              func: function(sprite, script) {
-                  return script.getField('PORT');
-              },
-          },
 
-		// 8. 온습도 - 1) 센서 값 				
-        icobot_get_analog_temp_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            template: Lang.template.icobot_get_analog_temp_value,
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },				
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'icobot_analog_temp_name',
-                    },					
-                ],
-                type: 'icobot_get_analog_temp_value',
-            },
-            paramsKeyMap: {
-				PORT: 0,
-            },
-            class: 'iCOBOT_ANA',
-            isNotFor: ['iCOBOT'],
-            func: function(sprite, script) 
-            {
-                var port = script.getValue('PORT', script);
-                var temp = Entry.hw.portData.SENSOR;
-                return temp[port];                
-            },
-            syntax: { js: [], py: [] },
-        },
-		
-        icobot_analog_distsensor_list: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-			fontColor: '#fff',			
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['FRONT', '2'],
-                        ['LEFT', '7'],
-                        ['RIGHT', '5'],
-                        ['B/LEFT', '1'],
-                        ['B/MID', '6'],
-                        ['B/RIGHT', '3'],
-                    ],
-                    value: '2',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func: function(sprite, script) {
-                return script.getField('PORT');
-            },
-        },
+		//////////////////////////// LED 관련 ///////////////////////////////
 
-		// 6. 거리 - 1) 센서 값		
-        icobot_get_distsensor_value: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            template: Lang.template.icobot_get_distsensor_value,
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'icobot_analog_distsensor_list',
-                    },
-                ],
-                type: 'icobot_get_distsensor_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'iCOBOT_ANA',
-            isNotFor: ['iCOBOT'],
-            func: function(sprite, script)
-			{
-                var port = script.getValue('PORT', script);	
-                var IR = Entry.hw.portData.SENSOR;
-                return IR[port];
-            },
-            syntax: { js: [], py: [] },
-        },
-
-		//
        icobot_analog_rgb_color_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,		
@@ -732,13 +953,14 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['흰', '1'],
-                        ['빨간', '2'],
-                        ['연두', '3'],
-                        ['파란', '4'],
-                        ['노란', '5'],
-                        ['하늘', '6'],
-                        ['보라', '7'],						
+                        [Lang.Blocks.icobot_color_white, '1'],
+                        [Lang.Blocks.icobot_color_red, '2'],
+                        [Lang.Blocks.icobot_color_orange, '3'],
+                        [Lang.Blocks.icobot_color_yellow, '4'],
+                        [Lang.Blocks.icobot_color_green, '5'],
+                        [Lang.Blocks.icobot_color_blue, '6'],
+                        [Lang.Blocks.icobot_color_sky_blue, '7'],
+                        [Lang.Blocks.icobot_color_purple, '8'],						
                     ],
                     value: '1',
                     fontSize: 11,
@@ -758,7 +980,7 @@ Entry.iCOBOT.getBlocks = function() {
             },
         },
 		
-		// 10. RGBLED - 1) 종류 선택 및 On/Off
+		// RGBLED - 종류 선택 및 On/Off
 		icobot_digital_rgbled_onoff: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -801,21 +1023,23 @@ Entry.iCOBOT.getBlocks = function() {
 
 				switch(color)
 				{
-					case 0:	rLED = gLED = bLED = 0;			            // Black
+					case 0:	rLED = gLED = bLED = 0;			        // Black
 								break;
-					case 1:	rLED = gLED = bLED = 255;		         // white
-								break;					
+					case 1:	rLED = gLED = bLED = 255;		        // white
+								break;
 					case 2:	rLED = 255; gLED = bLED = 0;	        // Red
-								break;				
-					case 3:	rLED = bLED = 0; gLED = 255;	        // Lime
-								break;					
-					case 4:	rLED = gLED = 0; bLED = 255;	        // Blue
-								break;					
-					case 5:	rLED = gLED = 255; bLED = 0;            // Yellow
-								break;					
-					case 6:	rLED = 0; gLED = bLED = 255;            // Cyan
-								break;					
-					case 7:	rLED = bLED = 255; gLED = 0;		   // Magenta
+								break;
+                    case 3:	rLED = 255;gLED = 50; bLED = 0;         // orange
+                                break;
+                    case 4:	rLED = gLED = 255; bLED = 0;            // Yellow
+                                break;
+					case 5:	rLED = bLED = 0; gLED = 255;	        // green
+								break;
+					case 6:	rLED = gLED = 0; bLED = 255;	        // Blue
+								break;
+					case 7:	rLED = 0; gLED = bLED = 255;            // sky_blue
+								break;
+					case 8:	rLED = bLED = 255; gLED = 0;		    // purple
 								break;
 				}
 									
@@ -837,7 +1061,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         
-		// 10. RGBLED - 2) Off
+		// RGBLED - Off
 		icobot_digital_rgbled_off: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -886,7 +1110,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },        
 
-		// 10. RGBLED - 2) RGB 값으로 켜기
+		// RGBLED - RGB 값으로 켜기
 		icobot_digital_set_rgbled_value: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -963,7 +1187,8 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },      
 
-        icobot_digital_moter_port_list: {
+        /////////////////////// 모터 관련 ///////////////////////////////////
+        icobot_digital_motor_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
 			fontColor: '#fff',			
@@ -974,9 +1199,9 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['양쪽', '2'],	
-                        ['왼쪽', '1'],
-                        ['오른쪽', '3'],						
+                        [Lang.Blocks.icobot_motor_both_wheels, '2'],	
+                        [Lang.Blocks.icobot_motor_left_wheels, '1'],
+                        [Lang.Blocks.icobot_motor_right_wheels, '3'],						
                     ],
                     value: '2',
                     fontSize: 11,
@@ -1009,8 +1234,8 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['전진', '0'],
-                        ['후진', '1'],		
+                        [Lang.Blocks.icobot_motor_front_move, '0'],
+                        [Lang.Blocks.icobot_motor_back_move, '1'],		
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1031,7 +1256,7 @@ Entry.iCOBOT.getBlocks = function() {
             },
         }, 
 
-        icobot_digital_moter_angle_port_list: {
+        icobot_digital_motor_angle_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
 			fontColor: '#fff',			
@@ -1042,8 +1267,8 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['왼쪽', '1'],
-                        ['오른쪽', '3'],						
+                        [Lang.Blocks.icobot_motor_left_turn, '1'],
+                        [Lang.Blocks.icobot_motor_right_turn, '3'],						
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1076,14 +1301,14 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['30도', '0'],
-                        ['45도', '1'],	
-                        ['60도', '2'],
-                        ['90도', '3'],	
-                        ['120도', '4'],	
-                        ['135도', '5'],	
-                        ['150도', '6'],	
-                        ['180도', '7'],	
+                        [Lang.Blocks.icobot_motor_30_degrees, '0'],
+                        [Lang.Blocks.icobot_motor_45_degrees, '1'],	
+                        [Lang.Blocks.icobot_motor_60_degrees, '2'],
+                        [Lang.Blocks.icobot_motor_90_degrees, '3'],	
+                        [Lang.Blocks.icobot_motor_120_degrees, '4'],	
+                        [Lang.Blocks.icobot_motor_135_degrees, '5'],	
+                        [Lang.Blocks.icobot_motor_150_degrees, '6'],	
+                        [Lang.Blocks.icobot_motor_180_degrees, '7'],	
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1104,7 +1329,7 @@ Entry.iCOBOT.getBlocks = function() {
             },
         },
 
-		// 15. DC 모터 - 1) 방향 바꾸기		
+		// 모터 - 방향 바꾸기		
 		icobot_digital_set_motor_direction: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1131,7 +1356,7 @@ Entry.iCOBOT.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'icobot_digital_moter_port_list',
+                        type: 'icobot_digital_motor_port_list',
                     },			
                     {
                         type: 'icobot_motor_direction_list',
@@ -1170,7 +1395,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-		// 15. DC 모터 - 1) 회전하기		
+		// 모터 - 회전하기		
 		icobot_digital_set_motor_angle: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1197,7 +1422,7 @@ Entry.iCOBOT.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'icobot_digital_moter_angle_port_list',
+                        type: 'icobot_digital_motor_angle_port_list',
                     },			
                     {
                         type: 'icobot_motor_angle_list',
@@ -1236,7 +1461,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		
-		// 16. DC 모터 - 2) 모터 속도 정하기		
+		// 모터 - 모터 속도 정하기		
 		icobot_digital_set_motor_speed: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1263,7 +1488,7 @@ Entry.iCOBOT.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'icobot_digital_moter_port_list',
+                        type: 'icobot_digital_motor_port_list',
                     },
                     {
                         type: 'number',
@@ -1306,7 +1531,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		
-		// 17. DC 모터 - 4) 모터 정지하기		
+		// 모터 - 모터 정지하기		
 		icobot_digital_motor_stop: 
 		{
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1329,7 +1554,7 @@ Entry.iCOBOT.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'icobot_digital_moter_port_list',
+                        type: 'icobot_digital_motor_port_list',
                     },		
                     null,
                 ],
