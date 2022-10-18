@@ -47,12 +47,17 @@ Entry.EXPANSION_BLOCK_LIST = {
     behaviorConductLifeSafety: Entry.EXPANSION_BLOCK.behaviorConductLifeSafety,
 };
 
+const destroyBlockList = [];
+
 function getBlockObject(items) {
     const blockObject = {};
     items.forEach((item) => {
         try {
             if ('getBlocks' in item) {
                 Object.assign(blockObject, item.getBlocks());
+            }
+            if ('destroy' in item) {
+                destroyBlockList.push(item.destroy);
             }
         } catch (err) {
             console.log(err, item);
@@ -70,7 +75,10 @@ function getHardwareBlockObject(items) {
         // 교과모드, 교과블록 포함 하드웨어 > 교과블록만 출력
         try {
             if (item.hasPracticalCourse && EntryStatic.isPracticalCourse) {
-                Object.assign(blockObject, 'getPracticalBlocks' in item ? item.getPracticalBlocks() : {});
+                Object.assign(
+                    blockObject,
+                    'getPracticalBlocks' in item ? item.getPracticalBlocks() : {}
+                );
                 EntryStatic.hwMiniSupportList.push(item.name);
             } else {
                 Object.assign(blockObject, 'getBlocks' in item ? item.getBlocks() : {});
@@ -105,7 +113,8 @@ function registerHardwareBlockToStatic(hardwareModules) {
                     }
                 }
             } else {
-                EntryStatic.DynamicHardwareBlocks = _union(hardware.blockMenuBlocks || [],
+                EntryStatic.DynamicHardwareBlocks = _union(
+                    hardware.blockMenuBlocks || [],
                     EntryStatic.DynamicHardwareBlocks
                 );
             }
@@ -128,6 +137,12 @@ module.exports = {
         );
         const hardwareBlockObjectList = getHardwareBlockObject(hardwareModules);
         const hardwareLiteBlockObjectList = getHardwareBlockObject(hardwareLiteModules);
-        return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList, hardwareLiteBlockObjectList);
+        return Object.assign(
+            {},
+            basicAndExpansionBlockObjectList,
+            hardwareBlockObjectList,
+            hardwareLiteBlockObjectList
+        );
     },
+    destroyBlockList,
 };

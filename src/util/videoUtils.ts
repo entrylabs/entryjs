@@ -850,6 +850,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.disableAllModels();
         this.turnOffWebcam();
         this.stopVideo();
+        GEHelper.destroyWebcam();
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
