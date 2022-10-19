@@ -75,6 +75,66 @@ Entry.iCOBOT = {
         '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
+    monitorTemplate: {
+        imgPath: 'hw/iCOBOT_Front.png',
+        width: 550,
+        height: 600,
+        listPorts: {
+            BLeft_IR: {
+                name: 'Bottom Left IR',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            BMid_IR: {
+                name: 'Bottom Mid IR',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            BRight_IR: {
+                name: 'Bottom Right IR',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            Real_T: {
+                name: 'Temperature',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            Real_H: {
+                name: 'Humidity',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            Noise: {
+                name: 'Sound',
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+        },
+        ports: {
+            Brightness: {
+                name: 'Brightness',
+                type: 'input',
+                pos: { x: 295, y: 350 },
+            },
+            Front_IR: {
+                name: 'Front IR',
+                type: 'input',
+                pos: { x: 250, y: 300 },
+            },
+            Left_IR: {
+                name: 'Left IR',
+                type: 'input',
+                pos: { x: 20, y: 450 },
+            },
+            Right_IR: {
+                name: 'Right IR',
+                type: 'input',
+                pos: { x: 525, y: 450 },
+            },
+        },
+        mode: 'both',
+    },
 };
 
 Entry.iCOBOT.blockMenuBlocks = [
