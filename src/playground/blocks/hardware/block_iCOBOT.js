@@ -331,7 +331,7 @@ Entry.iCOBOT.setLanguage = function() {
 
 Entry.iCOBOT.getBlocks = function() {
     return {
-        ///////////////////////// 센서 입력 ///////////////////////
+        //1. 센서 입력
 		
 		// 조도(밝기) - 센서 값 				
         icobot_get_cds_value: {
@@ -563,7 +563,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-		//////////////////////////// 부저 관련 ///////////////////////////////
+        //2. 부저 관련
 
         icobot_digital_port_onoff_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -940,7 +940,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 
-		//////////////////////////// LED 관련 ///////////////////////////////
+        //3. LED 관련
 
        icobot_analog_rgb_color_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1187,7 +1187,7 @@ Entry.iCOBOT.getBlocks = function() {
             syntax: { js: [], py: [] },
         },      
 
-        /////////////////////// 모터 관련 ///////////////////////////////////
+        //4. 모터 관련
         icobot_digital_motor_port_list: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,			
