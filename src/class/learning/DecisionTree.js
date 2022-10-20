@@ -10,17 +10,17 @@ const { callApi } = require('../../util/common');
 
 export const classes = [
     'ai_learning_train',
-    'ai_learning_decisionTree',
-    'decisionTree_attr_1',
-    'decisionTree_attr_2',
-    'decisionTree_attr_3',
-    'decisionTree_attr_4',
-    'decisionTree_attr_5',
-    'decisionTree_attr_6',
+    'ai_learning_decisiontree',
+    'decisiontree_attr_1',
+    'decisiontree_attr_2',
+    'decisiontree_attr_3',
+    'decisiontree_attr_4',
+    'decisiontree_attr_5',
+    'decisiontree_attr_6',
 ];
 
 class DecisionTree extends LearningBase {
-    type = 'decisionTree';
+    type = 'decisiontree';
 
     init({ name, url, result, table, trainParam }) {
         this.name = name;
@@ -46,10 +46,18 @@ class DecisionTree extends LearningBase {
         this.setTable();
         this.isTrained = false;
         this.trainCallback(1);
-        const { testRate = 0, maxDepth = 3, minNumSamples = 3 } = this.trainParam;
+        const {
+            testRate = 0.2,
+            maxDepth = 3,
+            minNumSamples = 3,
+            epochs = 1,
+            batchSize = 1,
+        } = this.trainParam;
         const { trainX, trainY, testArr, select, fields, valueMap, numClass } = getData(
             testRate,
-            this.table
+            this.table,
+            epochs,
+            batchSize
         );
 
         this.valueMap = Object.fromEntries(
@@ -90,9 +98,9 @@ class DecisionTree extends LearningBase {
         if (!this.model) {
             throw new Error("can't predict: no model");
         }
-        const xs = array.map(({ data }) => data);
+        const xs = [array];
         const preds = this.model.predict(xs);
-        return preds.map((target) => ({
+        this.predictResult = preds.map((target) => ({
             className: this.valueMap[target + 1],
             probability: 1,
         }));
@@ -114,8 +122,6 @@ function getData(testRate = 0.2, data) {
     const tempMapCount = {};
     const { select = [[0], [1]], data: table, fields } = data;
     const [attr, predict] = select;
-    const { epochs = 1, batchSize = 1 } = this.trainParam;
-    this.totalDataSize = Math.ceil(table.length / batchSize) * epochs;
 
     const dataArray = table
         .map((row) => ({
@@ -126,7 +132,7 @@ function getData(testRate = 0.2, data) {
             x: row.x,
             y: row.y - 1,
         }));
-    const [train, test] = this.sliceArray(dataArray, testRate);
+    const [train, test] = sliceArray(dataArray, testRate);
 
     return {
         trainX: train.map((v) => v.x),
@@ -137,6 +143,14 @@ function getData(testRate = 0.2, data) {
         valueMap: { ...tempMap[predict[0]] },
         numClass: tempMapCount[predict[0]],
     };
+}
+
+function sliceArray(dataArray, testRate) {
+    Utils.shuffle(dataArray);
+    const testNum = Math.floor(dataArray.length * testRate);
+    const testArr = dataArray.slice(0, testNum);
+    const trainArr = dataArray.slice(testNum, dataArray.length);
+    return [trainArr, testArr];
 }
 
 function evaluate(model, validateData = [{ x: 0, y: 0 }], numClass) {
