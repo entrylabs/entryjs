@@ -58,6 +58,7 @@
         "jest": "^24.9.0",
         "lodash": "^4.17.15",
         "mathjs": "^7.1.0",
+        "ml-cart": "^2.1.1",
         "pixi.js": "5.3.7",
         "postcss-flexbugs-fixes": "^4.1.0",
         "simplebar": "^3.1.1",
