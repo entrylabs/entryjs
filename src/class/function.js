@@ -197,6 +197,14 @@ class EntryFunc {
         return this?.content?.findById(blockId);
     }
 
+    getFuncBlockByFuncId(funcId) {
+        return this?.content?.findByType(funcId);
+    }
+
+    getBlockByParamId(paramId) {
+        return this?.content?.findByParamId(paramId);
+    }
+
     static changeFunctionName(name) {
         Entry.Mutator.mutate(
             'function_name',

@@ -1,5 +1,8 @@
 'use strict';
 
+import _find from 'lodash/find';
+import _includes from 'lodash/includes';
+
 Entry.STATEMENT = 0;
 Entry.PARAM = -1;
 Entry.Code = class Code {
@@ -372,6 +375,10 @@ Entry.Code = class Code {
             return block.type === type;
         });
         return this._blockMap[id];
+    }
+
+    findByParamId(paramId) {
+        return _find(this._blockMap, (block) => _includes(block?.params || [], paramId));
     }
 
     registerBlock(block) {
