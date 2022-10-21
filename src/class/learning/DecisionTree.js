@@ -6,6 +6,7 @@ import _mean from 'lodash/mean';
 import LearningBase from './LearningBase';
 import { DecisionTreeClassifier as DTClassifier } from 'ml-cart';
 import Utils from './Utils';
+import Chart from './Chart';
 const { callApi } = require('../../util/common');
 
 export const classes = [
@@ -17,6 +18,7 @@ export const classes = [
     'decisiontree_attr_4',
     'decisiontree_attr_5',
     'decisiontree_attr_6',
+    'ai_learning_train_chart',
 ];
 
 class DecisionTree extends LearningBase {
@@ -31,7 +33,7 @@ class DecisionTree extends LearningBase {
             this.view.setValue(value);
         };
         this.isTrained = true;
-
+        this.chartEnable = true;
         this.attrLength = table?.select?.[0]?.length || 0;
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
@@ -40,6 +42,21 @@ class DecisionTree extends LearningBase {
         if (!Utils.isWebGlSupport()) {
             tf.setBackend('cpu');
         }
+    }
+
+    generateChart() {
+        const { graphData, fields, valueMap } = this.result;
+        this.chart = new Chart(
+            {
+                source: {
+                    graphData,
+                    fields,
+                    valueMap,
+                },
+                title: Lang.AiLearning.chart_title,
+            },
+            'tree'
+        );
     }
 
     async train() {

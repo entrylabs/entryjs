@@ -1,8 +1,12 @@
-import { BillBoard } from '@entrylabs/tool';
+import { BillBoard, Tree } from '@entrylabs/tool';
 
 export default class LearningChart {
-    constructor(modalData) {
-        this.modal = this.createChart(modalData);
+    constructor(modalData, type = 'chart') {
+        if (type === 'tree') {
+            this.modal = this.createTree(modalData);
+        } else {
+            this.modal = this.createChart(modalData);
+        }
         this.modal.show();
     }
 
@@ -34,6 +38,24 @@ export default class LearningChart {
                 source,
                 title,
                 description,
+                togglePause: () => Entry.engine.togglePause(),
+                stop: () => Entry.engine.toggleStop(),
+                isIframe: self !== top,
+            },
+            container,
+        });
+    }
+
+    createTree({ title = '', source }) {
+        const container = Entry.Dom('div', {
+            class: 'entry-learning-chart',
+            parent: $(Entry.modalContainer),
+        })[0];
+
+        return new Tree({
+            data: {
+                source,
+                title,
                 togglePause: () => Entry.engine.togglePause(),
                 stop: () => Entry.engine.toggleStop(),
                 isIframe: self !== top,
