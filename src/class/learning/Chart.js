@@ -22,7 +22,7 @@ export default class LearningChart {
     load(data) {
         this.modal.setData(data);
     }
-    
+
     createChart({ title = '', description = '', source }) {
         const container = Entry.Dom('div', {
             class: 'entry-learning-chart',

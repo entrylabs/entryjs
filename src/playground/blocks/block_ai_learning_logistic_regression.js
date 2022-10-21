@@ -1,102 +1,9 @@
-const DropDownDynamicGenerator = {
-    valueMap: () => {
-        const valueMap = Object.values(Entry.aiLearning.getTrainResult()?.valueMap || []);
-        if (valueMap?.length) {
-            return valueMap.map((name) => [name, name]);
-        } else {
-            return [[Lang.Blocks.no_target, 'null']];
-        }
-    },
-};
-
-const createParamBlock = ({
-    name,
-    length,
-    createFunc,
-    skeleton = 'basic_string_field',
-    params = [],
-}) => {
-    const result = {};
-    new Array(length).fill(0).forEach((_, idx) => {
-        const index = idx + 1;
-        const blockName = `${name}_${index}`;
-        const EmptyArray = new Array(index * 2).fill(0);
-        const lastAttr = {
-            key: 1,
-            value: 1,
-        };
-        const paramsKeyMap = EmptyArray.reduce((acc, cur, idx, array) => {
-            if (idx % 2 !== 0) {
-                return acc;
-            }
-            const index = idx / 2 + 1;
-            acc[`ATTR${index}`] = idx + 1;
-            lastAttr.key = index;
-            lastAttr.value = idx + 1;
-            return acc;
-        }, {});
-        if (params.length) {
-            params.forEach((p, i) => {
-                paramsKeyMap[`ATTR${lastAttr.key + i + 1}`] = lastAttr.value + 1;
-            });
-        }
-        result[blockName] = {
-            color: EntryStatic.colorSet.block.default.AI_LEARNING,
-            outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
-            skeleton,
-            statements: [],
-            params: [
-                ...EmptyArray.map((_, i) => {
-                    if (i % 2 !== 0) {
-                        return {
-                            type: 'Block',
-                            accept: 'string',
-                            defaultType: 'number',
-                        };
-                    }
-                    return {
-                        type: 'TextDynamic',
-                        setValue: () => {
-                            const table = Entry.aiLearning?.getTableData?.();
-                            if (table) {
-                                const {
-                                    select = [],
-                                    fields = [],
-                                } = Entry.aiLearning?.getTableData?.();
-                                return (
-                                    fields[select?.[0]?.[i / 2]] || Lang.AiLearning.model_attr_str
-                                );
-                            }
-                            return Lang.AiLearning.model_attr_str;
-                        },
-                    };
-                }),
-                ...params,
-            ],
-            events: {},
-            def: {
-                type: blockName,
-            },
-            pyHelpDef: {
-                params: [],
-                type: blockName,
-            },
-            paramsKeyMap,
-            class: 'ai_learning',
-            isNotFor: [`logistic_regression_attr_${index}`],
-            func: createFunc(paramsKeyMap),
-            syntax: {
-                js: [],
-                py: [],
-            },
-        };
-    });
-    return result;
-};
+import { createParamBlock, DropDownDynamicGenerator } from './block_ai_learning';
 
 module.exports = {
     getBlocks() {
         const predictBlocks = createParamBlock({
+            type: 'logistic_regression',
             name: 'get_logistic_regression_predict',
             length: 6,
             createFunc: (paramsKeyMap) => async (sprite, script) => {
@@ -109,6 +16,7 @@ module.exports = {
             },
         });
         const probabilityBlocks = createParamBlock({
+            type: 'logistic_regression',
             name: 'get_logistic_regression_probability',
             length: 6,
             createFunc: (paramsKeyMap) => async (sprite, script) => {
@@ -140,6 +48,7 @@ module.exports = {
             ],
         });
         const booleanPredictBlocks = createParamBlock({
+            type: 'logistic_regression',
             name: 'is_logistic_regression_result',
             skeleton: 'basic_boolean_field',
             length: 6,

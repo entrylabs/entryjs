@@ -1,29 +1,5 @@
-const DropDownDynamicGenerator = {
-    labels: () => {
-        if (Entry?.aiLearning?.labels?.length) {
-            return Entry.aiLearning.labels.map((name, index) => [name, index]);
-        } else {
-            return [[Lang.Blocks.no_target, 'null']];
-        }
-    },
-    tableAttrFields: () => {
-        const table = Entry.aiLearning?.getTableData?.();
-        if (table) {
-            const { select = [], fields } = table || {};
-            const attr = select?.[0] || [];
-            return attr.map((fieldIndex, idx) => [fields[fieldIndex], idx]);
-        } else {
-            return [[Lang.Blocks.no_target, 'null']];
-        }
-    },
-    tablePredictDataDistinct: () => {
-        if (Entry.aiLearning.labels) {
-            return Entry.aiLearning.labels.map((item) => [item, item]);
-        } else {
-            return [[Lang.Blocks.no_target, 'null']];
-        }
-    },
-};
+import { DropDownDynamicGenerator } from './block_ai_learning';
+
 module.exports = {
     getBlocks() {
         return {
