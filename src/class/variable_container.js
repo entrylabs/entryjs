@@ -309,6 +309,10 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
+                const object = caller.object;
+                if (!object.entity) {
+                    return;
+                }
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
@@ -387,6 +391,10 @@ Entry.VariableContainer = class VariableContainer {
 
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
+                const object = caller.object;
+                if (!object.entity) {
+                    return;
+                }
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = caller.object.thumbnailView_.cloneNode();
                 thumb.addClass('thmb');
@@ -784,6 +792,10 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = createElement('li');
+                const object = caller.object;
+                if (!object.entity) {
+                    return;
+                }
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
