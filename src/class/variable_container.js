@@ -3228,7 +3228,8 @@ Entry.VariableContainer = class VariableContainer {
 
         if (arr.length) {
             const data = arr.map((data, i) => {
-                const value = String(data.data).replace(/\$/g, '&#36;');
+                const item = data?.data || '';
+                const value = String(item).replace(/\$/g, '&#36;');
                 return this.createListValueElement(i, value, startIndex);
             });
             infinityScroll.assignData(data);
