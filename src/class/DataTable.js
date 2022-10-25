@@ -152,12 +152,12 @@ class DataTable {
     saveTable = ({ selected }) => {
         this.setSource(selected);
         Entry.playground.reloadPlayground();
-        Entry.creationChangedEvent.notify();
+        Entry.creationChangedEvent?.notify();
     };
 
     removeTable = (index) => {
         this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
-        Entry.creationChangedEvent.notify();
+        Entry.creationChangedEvent?.notify();
     };
 
     show(data) {
