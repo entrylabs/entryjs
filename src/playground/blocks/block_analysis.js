@@ -439,7 +439,7 @@ module.exports = {
                         },
                         null,
                     ],
-                    type: 'set_value_from_table',
+                    type: 'save_current_table',
                 },
                 paramsKeyMap: {
                     MATRIX: 0,
@@ -486,6 +486,16 @@ module.exports = {
                     },
                 ],
                 events: {},
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['D&value'],
+                        },
+                        null,
+                    ],
+                    type: 'get_table_count',
+                },
                 def: {
                     params: [null, null],
                     type: 'get_table_count',
