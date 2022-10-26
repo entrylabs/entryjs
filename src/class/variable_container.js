@@ -1441,6 +1441,10 @@ Entry.VariableContainer = class VariableContainer {
      */
     createFunction(data) {
         if (Entry.Func.isEdit) {
+            Entry.modal.alert(
+                Lang.Msgs.warning_function_aleady_being_edited,
+                Lang.Workspace.function_create
+            );
             return;
         }
         Entry.Func.edit(new Entry.Func(data));
