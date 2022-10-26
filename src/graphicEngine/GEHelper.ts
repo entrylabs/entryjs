@@ -289,6 +289,13 @@ class _GEHelper extends GEHelperBase {
         this.videoContainer = null;
     }
 
+    destroy() {
+        this.videoContainer = null;
+        this.faceIndicatorGraphic = null;
+        this.poseIndicatorGraphic = null;
+        this.objectIndicatorGraphic = null;
+    }
+
     hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
         const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
         canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
