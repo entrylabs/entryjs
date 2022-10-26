@@ -395,10 +395,13 @@ EntryStatic.getAllBlocks = function() {
                 'insert_row_to_table',
                 'delete_row_from_table',
                 'set_value_from_table',
+                'save_current_table',
                 'get_table_count',
                 'get_value_from_table',
                 'get_value_from_last_row',
                 'calc_values_from_table',
+                'open_table',
+                'open_table_wait',
                 'open_table_chart',
                 'close_table_chart',
             ],
@@ -1034,7 +1037,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 

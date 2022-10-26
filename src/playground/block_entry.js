@@ -7861,6 +7861,12 @@ Entry.reloadBlock = function() {
 
 Entry.reloadBlock();
 
+Entry.destroyBlock = function() {
+    blocks.destroyBlockList.forEach((fn) => {
+        fn();
+    });
+};
+
 if (typeof exports === 'object') {
     exports.block = Entry.block;
     exports.assignBlocks = assignBlocks;

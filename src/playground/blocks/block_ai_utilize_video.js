@@ -18,6 +18,10 @@ Entry.AI_UTILIZE_BLOCK.video = {
         await VideoUtils.initialize();
         Entry.AI_UTILIZE_BLOCK.video.isInitialized = true;
     },
+    destroy() {
+        VideoUtils.destroy();
+        Entry.AI_UTILIZE_BLOCK.video.isInitialized = false;
+    },
 };
 
 Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
