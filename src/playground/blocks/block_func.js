@@ -1,9 +1,3 @@
-const { Lang } = require('../../../extern/lang/ko');
-
-const waitTick = () =>
-    new Promise((r) => {
-        requestAnimationFrame(r);
-    });
 module.exports = {
     getBlocks() {
         return {
@@ -61,7 +55,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Text',
-                        text: '함수 속성 보기',
+                        text: Lang.Workspace.function_attribute,
                         color: EntryStatic.colorSet.common.BUTTON,
                         align: 'center',
                     },
