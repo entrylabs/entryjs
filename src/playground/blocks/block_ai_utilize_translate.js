@@ -182,7 +182,7 @@ Entry.AI_UTILIZE_BLOCK.translate = {
         dictionary: 'nsmt',
         artificial_intelligence: 'n2mt',
     },
-    apiType: 'nsmt',
+    apiType: 'n2mt',
 };
 
 Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
