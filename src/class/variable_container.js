@@ -9,6 +9,9 @@ import CloudVariable from '../extensions/CloudVariable';
 import _get from 'lodash/get';
 import _isFunction from 'lodash/isFunction';
 import _find from 'lodash/find';
+import _includes from 'lodash/includes';
+import _some from 'lodash/some';
+import _memoize from 'lodash/memoize';
 
 /**
  * Block variable constructor
@@ -282,13 +285,13 @@ Entry.VariableContainer = class VariableContainer {
     renderMessageReference(message) {
         const messageId = message.id;
 
+        const hasInFunction = this.hasParamBlockInFunction(messageId);
         const callers = this._messageRefs.filter(({ block: { params } }) =>
-            _.includes(params, messageId)
+            _includes(params, messageId)
         );
 
         message.usedView && $(message.usedView).remove();
-        let usedWrapper;
-        usedWrapper = Entry.createElement('div').addClass('use_block');
+        const usedWrapper = Entry.createElement('div').addClass('use_block');
 
         const boxSubject = Entry.createElement('span')
             .addClass('box_sjt')
@@ -306,6 +309,10 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
+                const object = caller.object;
+                if (!object.entity) {
+                    return;
+                }
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
@@ -321,7 +328,7 @@ Entry.VariableContainer = class VariableContainer {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
                     }
-                    const block = caller.funcBlock || caller.block;
+                    const block = caller.block;
                     const board = _.result(block.view, 'getBoard');
                     if (board) {
                         board.setSelectedBlock(block.view);
@@ -343,6 +350,14 @@ Entry.VariableContainer = class VariableContainer {
                 callers.length
             );
         }
+
+        if (hasInFunction) {
+            const usedInFunction = Entry.createElement('div')
+                .addClass('used_function_dsc')
+                .appendTo(usedWrapper);
+            usedInFunction.textContent = Lang.Workspace.use_block_function;
+        }
+
         message.usedView = usedWrapper;
         message.listElement.appendChild(usedWrapper);
     }
@@ -353,8 +368,9 @@ Entry.VariableContainer = class VariableContainer {
     renderVariableReference(variable) {
         const variableId = variable.id_;
 
+        const hasInFunction = this.hasParamBlockInFunction(variableId);
         const callers = this._variableRefs.filter(({ block: { params } }) =>
-            _.includes(params, variableId)
+            _includes(params, variableId)
         );
 
         const usedWrapper = Entry.createElement('div').addClass('use_obj');
@@ -375,6 +391,10 @@ Entry.VariableContainer = class VariableContainer {
 
             callers.forEach((caller) => {
                 const element = Entry.createElement('li');
+                const object = caller.object;
+                if (!object.entity) {
+                    return;
+                }
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = caller.object.thumbnailView_.cloneNode();
                 thumb.addClass('thmb');
@@ -391,7 +411,7 @@ Entry.VariableContainer = class VariableContainer {
                         Entry.container.selectObject();
                         Entry.container.selectObject(caller.object.id, true);
                     }
-                    const block = caller.funcBlock || caller.block;
+                    const block = caller.block;
                     const board = _.result(block.view, 'getBoard');
                     if (board) {
                         board.setSelectedBlock(block.view);
@@ -410,6 +430,13 @@ Entry.VariableContainer = class VariableContainer {
             Entry.createElement('div')
                 .addClass('caution_dsc')
                 .appendTo(listView).textContent = Lang.Workspace.no_use;
+        }
+
+        if (hasInFunction) {
+            const usedInFunction = Entry.createElement('div')
+                .addClass('used_function_dsc')
+                .appendTo(listView);
+            usedInFunction.textContent = Lang.Workspace.use_block_function;
         }
 
         this.variableSettingView && this.variableSettingView.appendChild(usedWrapper);
@@ -455,7 +482,6 @@ Entry.VariableContainer = class VariableContainer {
         } else if (
             Object.keys(this.functions_).some((key) => {
                 const item = this.functions_[key]?.content.findByType(`func_${func.id}`);
-                console.log(item);
                 return Boolean(item);
             })
         ) {
@@ -742,8 +768,10 @@ Entry.VariableContainer = class VariableContainer {
      */
     renderFunctionReference(func) {
         const createElement = Entry.createElement;
+        const funcId = func.id;
+        const hasInFunction = this.hasFuncBlockInFunction(funcId);
         const callers = [...this._functionRefs].filter(
-            (item) => item.block.data.type === `func_${func.id}`
+            (item) => item.block.data.type === `func_${funcId}`
         );
 
         func.usedView && $(func.usedView).remove();
@@ -764,6 +792,10 @@ Entry.VariableContainer = class VariableContainer {
             const fragment = document.createDocumentFragment();
             callers.forEach((caller) => {
                 const element = createElement('li');
+                const object = caller.object;
+                if (!object.entity) {
+                    return;
+                }
                 !caller.object.thumbnailView_ && caller.object.generateView();
                 const thumb = element.appendChild(caller.object.thumbnailView_.cloneNode());
                 thumb.addClass('thmb');
@@ -789,13 +821,15 @@ Entry.VariableContainer = class VariableContainer {
             const caution = createElement('div')
                 .addClass('caution_dsc')
                 .appendTo(wrapper);
-
-            // wrapper.addClass('caution_dsc');
             caution.textContent = Lang.Workspace.no_use;
-            boxSubject.textContent = Entry.Utils.stringFormat(
-                Lang.Workspace.use_block_objects2,
-                callers.length
-            );
+            boxSubject.textContent = Lang.Workspace.use_block_objects2;
+        }
+
+        if (hasInFunction) {
+            const usedInFunction = createElement('div')
+                .addClass('used_function_dsc')
+                .appendTo(wrapper);
+            usedInFunction.textContent = Lang.Workspace.use_block_function;
         }
 
         func.usedView = wrapper;
@@ -1407,6 +1441,10 @@ Entry.VariableContainer = class VariableContainer {
      */
     createFunction(data) {
         if (Entry.Func.isEdit) {
+            Entry.modal.alert(
+                Lang.Msgs.warning_function_aleady_being_edited,
+                Lang.Workspace.function_create
+            );
             return;
         }
         Entry.Func.edit(new Entry.Func(data));
@@ -1536,6 +1574,9 @@ Entry.VariableContainer = class VariableContainer {
      * @param {Entry.Func} func
      */
     saveFunction(func) {
+        this.hasBlockInFunction.cache.clear();
+        this.hasParamBlockInFunction.cache.clear();
+        this.hasFuncBlockInFunction.cache.clear();
         /* add to function list when not exist */
         const ws = Entry.getMainWS();
 
@@ -3203,7 +3244,8 @@ Entry.VariableContainer = class VariableContainer {
 
         if (arr.length) {
             const data = arr.map((data, i) => {
-                const value = String(data.data).replace(/\$/g, '&#36;');
+                const item = data?.data || '';
+                const value = String(item).replace(/\$/g, '&#36;');
                 return this.createListValueElement(i, value, startIndex);
             });
             infinityScroll.assignData(data);
@@ -3303,43 +3345,8 @@ Entry.VariableContainer = class VariableContainer {
             block: blockData,
         };
 
-        if (blockData.funcBlock) {
-            datum.funcBlock = blockData.funcBlock;
-            delete blockData.funcBlock;
-        }
-
         this[type].push(datum);
-
-        if (type === '_functionRefs') {
-            const id = blockData.type.substr(5);
-            const func = Entry.variableContainer.functions_[id];
-            if (func.isAdded) {
-                return;
-            }
-            func.isAdded = true;
-            if (!Entry.isLoadProject) {
-                return;
-            }
-            func.content.getBlockList().forEach((block) => {
-                const blockType = block.type;
-                if (blockType.indexOf('func_') > -1 && blockType.substr(5) == id) {
-                    return;
-                }
-
-                [
-                    ...(_.result(block.events, 'viewAdd') || []),
-                    ...(_.result(block.events, 'dataAdd') || []),
-                ].forEach((fn) => {
-                    block.getCode().object = datum.object;
-                    if (fn) {
-                        block.funcBlock = datum.block;
-                        fn(block);
-                    }
-                });
-            });
-        }
         Entry.playground.viewMode_ !== 'default' && this.updateList();
-
         return datum;
     }
 
@@ -3361,32 +3368,6 @@ Entry.VariableContainer = class VariableContainer {
             }
         }
 
-        if (type === '_functionRefs') {
-            const id = block.type.substr(5);
-            const func = Entry.variableContainer.functions_[id];
-            if (!func || func.isRemoved) {
-                return;
-            }
-            func.isRemoved = true;
-            if (func) {
-                func.content.getBlockList().forEach((block) => {
-                    if (block.type.indexOf('func_') > -1) {
-                        if (block.type.substr(5) == id) {
-                            return;
-                        }
-                    }
-
-                    [
-                        ...(_.result(block.events, 'viewDestroy') || []),
-                        ...(_.result(block.events, 'dataDestroy') || []),
-                    ].forEach((fn) => {
-                        if (fn) {
-                            fn(block);
-                        }
-                    });
-                });
-            }
-        }
         Entry.playground.viewMode_ !== 'default' && this.updateList();
     }
 
@@ -3453,8 +3434,8 @@ Entry.VariableContainer = class VariableContainer {
             if (!type) {
                 return;
             }
-            const isMessage = _.includes(EntryStatic.messageBlockList, type);
-            const isVariable = _.includes(EntryStatic.variableBlockList, type);
+            const isMessage = _includes(EntryStatic.messageBlockList, type);
+            const isVariable = _includes(EntryStatic.variableBlockList, type);
 
             if (isMessage || isVariable) {
                 block.data.params.forEach((param) => {
@@ -3710,4 +3691,16 @@ Entry.VariableContainer = class VariableContainer {
     getFunctionByBlockId(blockId) {
         return _find(this.functions_, (func) => func.getBlockById(blockId));
     }
+
+    hasBlockInFunction = _memoize((blockId) =>
+        _some(this.functions_, (func) => Boolean(func.getBlockById(blockId)))
+    );
+
+    hasParamBlockInFunction = _memoize((paramId) =>
+        _some(this.functions_, (func) => Boolean(func.getBlockByParamId(paramId)))
+    );
+
+    hasFuncBlockInFunction = _memoize((funcId) =>
+        _some(this.functions_, (func) => Boolean(func.getFuncBlockByFuncId(`func_${funcId}`)))
+    );
 };
