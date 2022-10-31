@@ -555,7 +555,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                         sensorVals1[i] = sensorVals1[i + 1];
                     }
                     for (let i = 0; i < FILLTERSIZE; i++) {
-                        console.log(i + " array >> " + sensorVals1[i]);
+                        // console.log(i + " array >> " + sensorVals1[i]);
                         fillterVal += sensorVals1[i];
                     }
                     value = Math.abs(Math.round(fillterVal / FILLTERSIZE));
@@ -569,7 +569,7 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                         sensorVals2[i] = sensorVals2[i + 1];
                     }
                     for (let i = 0; i < FILLTERSIZE; i++) {
-                        console.log(i + " array >> " + sensorVals2[i]);
+                        // console.log(i + " array >> " + sensorVals2[i]);
                         fillterVal += sensorVals2[i];
                     }
                     value = Math.round(fillterVal / FILLTERSIZE); 
