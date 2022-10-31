@@ -537,19 +537,17 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
             isNotFor: ['Robotry_Robit_Stage'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
-                let CMS_MAX = 200; 
                 let value = 0;
-                
-
                 const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') {
                     port = port.substring(1); // 아날로그 핀 넘버
                 }
                 if (port === CMS){
-                    let data = Math.pow(2, ANALOG[port] - 70);
+                    let data = Math.pow(2, ANALOG[port] - 75);
                     
                     let fillterVal = 0;
                     data = Math.min(1024, data);
+                    data = Math.max(0, data);
                     sensorVals1[FILLTERSIZE - 1] = data;
                     for (let i = 0; i < FILLTERSIZE - 1; i++) {
                         sensorVals1[i] = sensorVals1[i + 1];
