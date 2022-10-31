@@ -223,6 +223,11 @@ Entry.Robotry_Robit_Stage.blockMenuBlocks = [
  *  주석에 블록이라고 표시된것만 제어 블록임 나머진 포트 리스트
  */
 Entry.Robotry_Robit_Stage.getBlocks = function() {
+    const FILLTERSIZE = 30;
+    let sensorVals1 = new Array(FILLTERSIZE);
+    let sensorVals2 = new Array(FILLTERSIZE);
+    sensorVals1.fill(0);
+    sensorVals2.fill(0);
 
     const ALS = 0;
     const CMS = 1;
@@ -534,24 +539,41 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                 let port = script.getValue('PORT', script);
                 let CMS_MAX = 200; 
                 let value = 0;
+                
 
                 const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') {
                     port = port.substring(1); // 아날로그 핀 넘버
                 }
-                
                 if (port === CMS){
-                    if (ANALOG[port] > 0 && ANALOG[port] < CMS_MAX) {
-                        value = ANALOG[port]  * ( 1024 / CMS_MAX );
-                        value = Math.min(1024, value);
-                        value = Math.max(   0, value);
-                        value = Math.round(value);
+                    let data = Math.pow(2, ANALOG[port] - 70);
+                    
+                    let fillterVal = 0;
+                    data = Math.min(1024, data);
+                    sensorVals1[FILLTERSIZE - 1] = data;
+                    for (let i = 0; i < FILLTERSIZE - 1; i++) {
+                        sensorVals1[i] = sensorVals1[i + 1];
                     }
+                    for (let i = 0; i < FILLTERSIZE; i++) {
+                        console.log(i + " array >> " + sensorVals1[i]);
+                        fillterVal += sensorVals1[i];
+                    }
+                    value = Math.abs(Math.round(fillterVal / FILLTERSIZE));
+                    
                 }
                 else {
-                    value = ANALOG[port]; 
+                    let data = ANALOG[port]; 
+                    let fillterVal = 0;
+                    sensorVals2[FILLTERSIZE - 1] = data;
+                    for (let i = 0; i < FILLTERSIZE - 1; i++) {
+                        sensorVals2[i] = sensorVals2[i + 1];
+                    }
+                    for (let i = 0; i < FILLTERSIZE; i++) {
+                        console.log(i + " array >> " + sensorVals2[i]);
+                        fillterVal += sensorVals2[i];
+                    }
+                    value = Math.round(fillterVal / FILLTERSIZE); 
                 }
-
                 return value;
             },
             syntax: {
