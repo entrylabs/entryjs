@@ -466,6 +466,7 @@ EntryStatic.getAllBlocks = function() {
                 'is_decisiontree_result_5',
                 'is_decisiontree_result_6',
                 'get_decisiontree_result_info',
+                'set_svm_option',
                 'set_cluster_option_k',
                 'set_cluster_option_centroids',
                 'get_cluster_centriod_count',

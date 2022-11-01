@@ -6421,6 +6421,8 @@ Lang.Helper = {
     is_decisiontree_result_4: "입력한 핵심 속성으로 모델이 예측한 값일 경우 '참'으로 판단합니다.",
     is_decisiontree_result_5: "입력한 핵심 속성으로 모델이 예측한 값일 경우 '참'으로 판단합니다.",
     is_decisiontree_result_6: "입력한 핵심 속성으로 모델이 예측한 값일 경우 '참'으로 판단합니다.",
+    set_svm_option:
+        "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_cluster_option_k:
         "군집의 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 군집 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_cluster_option_centroids:
@@ -7072,6 +7074,7 @@ Lang.template = {
     is_decisiontree_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류결과가 %9인가',
     is_decisiontree_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류결과가 %11인가',
     is_decisiontree_result_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류결과가 %13인가',
+    set_svm_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
     set_cluster_option_k: '군집을 %1 개로 바꾸기 %2',
     set_cluster_option_centroids: '중심점 기준을 %1 로 바꾸기 %2',
     get_cluster_centriod_count: '군집 개수',
@@ -8920,6 +8923,7 @@ Lang.AiLearning = {
     train_param_learningRate: '학습률',
     train_param_epochs: '세대',
     train_param_validationRate: '테스트 데이터 비율',
+    train_param_C: 'C',
 };
 Lang.SharePolicy = {
     title: '엔트리 작품/게시물 공유 가이드',
