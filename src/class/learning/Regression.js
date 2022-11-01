@@ -1,12 +1,11 @@
 import * as tf from '@tensorflow/tfjs';
-const { callApi } = require('../../util/common');
 import _floor from 'lodash/floor';
 import _max from 'lodash/max';
-import LearningView from './LearningView';
 import Chart from './Chart';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
-import DataTable from '../DataTable';
+import LearningBase from './LearningBase';
+import Utils from './Utils';
 
 export const classes = [
     'ai_learning_train',
@@ -20,154 +19,69 @@ export const classes = [
     'ai_learning_train_chart',
 ];
 
-class Regression {
-    #attrLength = 0;
-    #trainParam = null;
-    #result = {};
-    #table = {};
-    #trainCallback;
-    #chart = null;
-    #isTrained = false;
-    #chartEnable = false;
-    #view = null;
-    #model = null;
-    #predictResult = null;
-    #name = '';
-    #fields = [];
-    #predictFields = [];
-
-    constructor(params = {}) {
-        const { name, url, result, table, trainParam } = params;
-        this.#view = new LearningView({ name: params.name || '', status: 0 });
-        // 정지시 data 초기화.
-        // 정지시 data 초기화.
-        Entry.addEventListener('stop', () => {
-            this.init({ ...params });
-        });
-        this.init({ ...params });
-    }
+class Regression extends LearningBase {
+    type = 'regression';
 
     init({ name, url, result, table, trainParam }) {
-        this.#name = name;
-        this.#trainParam = trainParam;
-        this.#result = result;
-        this.#table = table;
-        this.#trainCallback = (value) => {
-            this.#view.setValue(value);
+        this.name = name;
+        this.trainParam = trainParam;
+        this.result = result;
+        this.table = table;
+        this.trainCallback = (value) => {
+            this.view.setValue(value);
         };
-        this.#isTrained = true;
+        this.trained = true;
 
-        this.#attrLength = table?.select?.[0]?.length || 0;
-        if (this.#attrLength === 1) {
-            this.#chartEnable = true;
+        this.attrLength = table?.select?.[0]?.length || 0;
+        if (this.attrLength === 1) {
+            this.chartEnable = true;
         }
         this.load(`/uploads/${url}/model.json`);
 
-        this.#fields = table?.select?.[0]?.map((index) => table?.fields[index]);
-        this.#predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
+        this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
+        this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
 
-        if (!isWebGlSupport()) {
+        if (!Utils.isWebGlSupport()) {
             tf.setBackend('cpu');
         }
     }
 
-    setTable() {
-        const tableSource = DataTable.getSource(this.#table.id);
-        if (this.#table.fieldsInfo.length !== tableSource.fields.length) {
-            Entry.toast.alert(Lang.Msgs.warn, Lang.AiLearning.train_param_error);
-            throw Error(Lang.AiLearning.train_param_error);
-        }
-        this.#table.data = tableSource.rows;
-    }
-
-    destroy() {
-        this.#view.destroy();
-        if (this.#chart) {
-            this.#chart.destroy();
-            this.#chart = null;
-        }
-    }
-
-    setVisible(visible) {
-        this.#view.setVisible(visible);
-    }
-
-    unbanBlocks(blockMenu) {
-        blockMenu.unbanClass(`ai_learning_train`);
-        blockMenu.unbanClass(`ai_learning_regression`);
-        blockMenu.unbanClass(`regression_attr_${this.#attrLength}`);
-        if (this.#chartEnable) {
-            blockMenu.unbanClass('ai_learning_train_chart');
-        }
-    }
-
-    isTrained() {
-        return this.#isTrained;
-    }
-
-    openChart() {
-        if (!this.#chartEnable) {
-            return;
-        }
-        if (!this.#chart) {
-            this.#chart = new Chart({
-                source: this.chartData,
-                title: Lang.AiLearning.chart_title,
-                description: `
-                    ${this.#fields.map(
-                        (field, index) =>
-                            `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`
-                    )}
-                    <em>${Lang.AiLearning.predict}</em>${this.#predictFields[0]}<em>${
-                    Lang.AiLearning.equation
-                }</em>${this.#result.equation}
-                `,
-            });
-        } else {
-            this.#chart.show();
-        }
-    }
-
-    closeChart() {
-        this.#chart?.hide();
-    }
-
-    setTrainOption(type, value) {
-        this.#trainParam[type] = value;
-    }
-
-    getTrainOption() {
-        return this.#trainParam;
-    }
-
-    getTrainResult() {
-        return this.#result;
-    }
-
-    getResult() {
-        return this.#predictResult;
+    generateChart() {
+        this.chart = new Chart({
+            source: this.chartData,
+            title: Lang.AiLearning.chart_title,
+            description: `
+                ${this.fields.map(
+                    (field, index) =>
+                        `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em>: ${field}`
+                )}
+                <em>${Lang.AiLearning.predict}</em>${this.predictFields[0]}<em>${
+                Lang.AiLearning.equation
+            }</em>${this.result.equation}
+            `,
+        });
     }
 
     async train() {
         try {
             this.setTable();
-            this.#isTrained = false;
+            this.trained = false;
             let currentEpoch = 0;
             let percent = 0;
-            this.#trainCallback(1);
-            const { inputs, outputs } = convertToTfData(this.#table, this.#trainParam);
+            this.trainCallback(1);
+            const { inputs, outputs } = convertToTfData(this.table, this.trainParam);
             const { model, trainHistory, a, b, graphData = [], rsquared, normResult } = await train(
                 inputs,
                 outputs,
-                this.#trainParam,
+                this.trainParam,
                 undefined,
                 () => {
                     currentEpoch = currentEpoch + 1;
-                    percent = _floor((currentEpoch / this.#trainParam.epochs) * 100);
-                    this.#trainCallback(Math.min(percent, 100));
+                    percent = _floor((currentEpoch / this.trainParam.epochs) * 100);
+                    this.trainCallback(Math.min(percent, 100));
                 }
             );
-            this.#model = model;
+            this.model = model;
             const { acc = [] } = trainHistory?.history || {};
             const accuracy = _max(acc) || 0;
             if (inputs.length == 1) {
@@ -180,7 +94,7 @@ class Regression {
                     }
                 });
             }
-            this.#result = {
+            this.result = {
                 graphData: (graphData.originalPoints || []).slice(0, 1000),
                 accuracy,
                 normResult,
@@ -189,17 +103,17 @@ class Regression {
                     .map((a, i) => `${addSign(a)}X<sub>${i + 1}</sub>`)
                     .join('')} ${addSign(b)}`,
             };
-            this.#isTrained = true;
-            this.#chart?.load({
+            this.trained = true;
+            this.chart?.load({
                 source: this.chartData,
                 description: `
-                    ${this.#fields.map(
+                    ${this.fields.map(
                         (field, index) =>
                             `<em>${Lang.AiLearning.model_attr_str} ${index + 1}</em> ${field}`
                     )}
-                    <em>${Lang.AiLearning.predict}</em> ${this.#predictFields[0]}<em>${
+                    <em>${Lang.AiLearning.predict}</em> ${this.predictFields[0]}<em>${
                     Lang.AiLearning.equation
-                }</em>${this.#result.equation}
+                }</em>${this.result.equation}
                 `,
             });
         } catch (e) {
@@ -208,13 +122,13 @@ class Regression {
     }
 
     async load(url) {
-        this.#model = await tf.loadLayersModel(url);
+        this.model = await tf.loadLayersModel(url);
     }
 
     convertNomalResult() {
-        const { inputMin, inputMax, outputMax, outputMin } = this.#result.normResult;
+        const { inputMin, inputMax, outputMax, outputMin } = this.result.normResult;
         if (!Array.isArray(inputMin)) {
-            return this.#result.normResult;
+            return this.result.normResult;
         }
         return {
             inputMin: tf.tensor1d(inputMin),
@@ -234,14 +148,14 @@ class Regression {
                 convertedData = tf.tensor1d([data]);
             }
             convertedData = convertedData.sub(inputMin).div(inputMax.sub(inputMin));
-            const preds = this.#model
+            const preds = this.model
                 .predict(convertedData)
                 .mul(outputMax.sub(outputMin))
                 .add(outputMin);
             const [result] = preds.dataSync();
-            this.#predictResult = _floor(result, 2);
+            this.predictResult = _floor(result, 2);
             preds.dispose();
-            return this.#predictResult;
+            return this.predictResult;
         });
         tf.engine().endScope();
         return result;
@@ -250,7 +164,7 @@ class Regression {
     get chartData() {
         return {
             data: {
-                json: this.#result.graphData,
+                json: this.result.graphData,
                 keys: { value: ['equation', 'y'], x: 'x' },
                 types: {
                     y: 'scatter',
@@ -266,7 +180,7 @@ class Regression {
                         const [{ x, value, id }] = data;
                         return `
                             <div class="chart_handle_wrapper">
-                                ${this.#fields[0]}: ${x}, ${this.#predictFields[0]}: ${value}
+                                ${this.fields[0]}: ${x}, ${this.predictFields[0]}: ${value}
                             <div>
                         `;
                     },
@@ -356,17 +270,6 @@ function createModel(inputShape) {
     model.add(tf.layers.dense({ inputShape: [inputShape], units: 1 }));
     return model;
 }
-
-function isWebGlSupport() {
-    try {
-        const currentCanvas = document.createElement('canvas');
-        return !!currentCanvas.getContext('webgl', { premultipliedalpha: false });
-    } catch (e) {
-        console.log('error', e);
-        return false;
-    }
-}
-
 async function trainModel(model, inputs, outputs, trainParam, onBatchEnd, onEpochEnd) {
     model.compile({
         optimizer: tf.train.adam(trainParam.learningRate),
@@ -385,7 +288,6 @@ async function trainModel(model, inputs, outputs, trainParam, onBatchEnd, onEpoc
         },
     });
 }
-
 const TEST_POINT_COUNT = 2;
 function testModel(model, normalizationData) {
     const { inputMin, inputMax, outputMin, outputMax } = normalizationData;
