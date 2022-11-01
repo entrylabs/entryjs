@@ -190,7 +190,13 @@ export default class AILearning {
             });
         } else if (type === 'svm') {
             this.#tableData = tableData || createDataTable(classes, name);
-            this.#module = new Svm();
+            this.#module = new Svm({
+                name,
+                result,
+                url,
+                trainParam,
+                table: this.#tableData,
+            });
         }
 
         if (this.#module) {
