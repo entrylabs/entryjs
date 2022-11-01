@@ -48,7 +48,7 @@ class Svm extends LearningBase {
         this.trainCallback = (value) => {
             this.view.setValue(value);
         };
-        // 확인 필요
+        // train 확인 필요
         this.trained = true;
         this.isTrained = true;
         this.chartEnable = false;
@@ -57,9 +57,6 @@ class Svm extends LearningBase {
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
         this.predictFields = table?.select?.[1]?.map((index) => table?.fields[index]);
         this.load(`/uploads/${url}/model.json`);
-        // if (!Utils.isWebGlSupport()) {
-        //     tf.setBackend('cpu');
-        // }
     }
 
     checkTrainOptionValidation() {
@@ -132,11 +129,9 @@ class Svm extends LearningBase {
 
     async load(url) {
         const { data } = await callApi(url, { url });
-        console.log('data : ', data);
         const { serializeModel, result } = data;
         this.model = SVM.load(serializeModel);
         this.valueMap = result?.valueMap;
-        debugger;
         this.result = result;
     }
 
@@ -156,8 +151,6 @@ class Svm extends LearningBase {
     getData(testRate, data) {
         const STR2NUM_MAP = {};
         const STR2NUM_MAP_COUNT = {};
-        // const dataGroups = this.dataGroups;
-        // const [{ data }] = dataGroups[0].dataSet.values() || [];
         const { select = [[0], [1]], data: table, fields } = data;
         const [attr, predict] = select;
 
@@ -171,7 +164,6 @@ class Svm extends LearningBase {
                 y: row.y - 1,
             }));
         const { trainArr, testArr } = this.sliceArray(dataArray, testRate);
-
         return {
             trainX: trainArr.map((v) => v.x),
             trainY: trainArr.map((v) => v.y),
@@ -188,7 +180,7 @@ class Svm extends LearningBase {
         const testNum = Math.floor(dataArray.length * testRate);
         const testArr = dataArray.slice(0, testNum);
         const trainArr = dataArray.slice(testNum, dataArray.length);
-        return [trainArr, testArr];
+        return { trainArr, testArr };
     }
 
     evaluate(model, validateData, numClass) {
