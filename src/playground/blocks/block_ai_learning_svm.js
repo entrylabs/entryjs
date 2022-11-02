@@ -57,6 +57,44 @@ module.exports = {
                     js: [],
                     py: [],
                 },
+            },
+            set_kernel_linear: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'set_kernel_linear',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'set_kernel_linear',
+                },
+                paramsKeyMap: {
+                    TEXT: 0,
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_svm'],
+                async func(sprite, script) {
+                    const defaultValue = { degree: 3, gamma: 1 };
+                    Entry.aiLearning.setTrainOption('kernel', 'linear');
+                    Entry.aiLearning.setTrainOption('degree', defaultValue.degree);
+                    Entry.aiLearning.setTrainOption('gamma', defaultValue.gamma);
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
             }
         };
     }
