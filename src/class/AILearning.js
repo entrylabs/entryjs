@@ -6,10 +6,10 @@ import Classification, { classes as ClassificationClasses } from './learning/Cla
 import NumberClassification, {
     classes as NumberClassificationClasses,
 } from './learning/NumberClassification';
-import DecisionTree, { classes as DecisionTreeClasses } from './learning/decisionTree';
+import DecisionTree, { classes as DecisionTreeClasses } from './learning/DecisionTree';
 import LogisticRegression, {
     classes as LogisticRegressionClasses,
-} from './learning/logisticRegression';
+} from './learning/LogisticRegression';
 import DataTable from './DataTable';
 
 const banClasses = [
