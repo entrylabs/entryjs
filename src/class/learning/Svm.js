@@ -14,8 +14,8 @@ export const classes = [
     'svm_attr_2',
     'svm_attr_3',
     'svm_attr_4',
-    // 'svm_attr_5',
-    // 'svm_attr_6',
+    'svm_attr_5',
+    'svm_attr_6',
 ];
 
 const KERNEL_STRING_TYPE = {
@@ -139,10 +139,10 @@ class Svm extends LearningBase {
         if (!this.model) {
             throw new Error("can't predict: no model");
         }
-        const xs = array.map(({ data }) => data);
+        const xs = [array];
         const preds = this.model.predict(xs);
-        return preds.map((target) => ({
-            className: this.predictValueMap[target + 1],
+        this.predictResult = preds.map((target) => ({
+            className: this.valueMap[target + 1],
             probability: 1,
         }));
     }
