@@ -84,10 +84,8 @@ class Svm extends LearningBase {
     }
 
     async train() {
-        // isTranined, traning값 역할 확인
         this.isTrained = false;
         this.setTable();
-        // this.training = true;
         this.trainCallback(1);
         this.checkTrainOptionValidation();
         const { testRate = 0.2, C, kernel, degree, gamma } = this.trainParam;
@@ -109,7 +107,6 @@ class Svm extends LearningBase {
         this.trainCallback(80);
 
         const { confusionMatrix, score } = this.evaluate(this.model, testArr, numClass);
-        // this.training = false;
 
         const { accuracy, f1, precision, recall } = score;
 
