@@ -20,7 +20,7 @@ jobs:
                   NODE_OPTIONS: '--max-old-space-size=4096'
                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
               with:
-                  node-version: '14.x'
+                  node-version: 14
             - uses: bahmutov/npm-install@v1
             - name: entry build
               env:
