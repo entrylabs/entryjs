@@ -9,7 +9,6 @@ const SVM = require('libsvm-js/asm');
 
 export const classes = [
     'ai_learning_train',
-    'ai_learning_classification_number',
     'ai_learning_svm',
     'svm_attr_1',
     'svm_attr_2',
