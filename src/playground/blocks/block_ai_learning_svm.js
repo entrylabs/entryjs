@@ -4,6 +4,35 @@ import { OPTION_DEFAULT_VALUE, KERNEL_STRING_TYPE } from '.././../class/learning
 
 module.exports = {
     getBlocks() {
+        const params = {
+            getKernelOption() {
+                const param = {
+                    type: 'DropdownDynamic',
+                    value: null,
+                    menuName() {
+                        const value = this.getTargetValue('kernel');
+                        if (value === KERNEL_STRING_TYPE.POLYNOMIAL) {
+                            return [[Lang.AiLearning.train_param_degree, 'degree']]
+                        } else if (value === KERNEL_STRING_TYPE.RBF) {
+                            return [[Lang.AiLearning.train_param_gamma, 'gamma']]
+                        } else {
+                            return;
+                        }
+                    },
+
+                    needDeepCopy: true,
+                    bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    defaultValue: (value, options) => {
+                        if (options.length) {
+                            return options[0][1];
+                        }
+                        return null;
+                    }
+                }
+                return param;
+            }
+        }
         return {
             ...predictBlocks,
             ...booleanPredictBlocks,
@@ -112,17 +141,9 @@ module.exports = {
                         value: 'polynomial',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
+                        dropdownSync: 'kernel',
                     },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.AiLearning.train_param_degree, 'degree'],
-                            [Lang.AiLearning.train_param_gamma, 'gamma'],
-                        ],
-                        value: 'degree',
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
-                    },
+                    params.getKernelOption(),
                     {
                         type: 'Block',
                         accept: 'string',
