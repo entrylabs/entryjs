@@ -1,4 +1,5 @@
 import { createParamBlock, DropDownDynamicGenerator } from './block_ai_learning';
+import { OPTION_DEFAULT_VALUE, KERNEL_STRING_TYPE } from '.././../class/learning/Svm';
 
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
                         type: 'Block',
                         accept: 'string',
                         defaultType: 'number',
-                        value: '0.00001'
+                        value: OPTION_DEFAULT_VALUE.C
                     },
                     {
                         type: 'Indicator',
@@ -90,6 +91,76 @@ module.exports = {
                     Entry.aiLearning.setTrainOption('degree', defaultValue.degree);
                     Entry.aiLearning.setTrainOption('gamma', defaultValue.gamma);
                     return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            set_kernerl_option: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.AiLearning.train_param_kernel_polynomial, KERNEL_STRING_TYPE.POLYNOMIAL],
+                            [Lang.AiLearning.train_param_kernel_rbf, KERNEL_STRING_TYPE.RBF],
+                        ],
+                        value: 'polynomial',
+                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.AiLearning.train_param_degree, 'degree'],
+                            [Lang.AiLearning.train_param_gamma, 'gamma'],
+                        ],
+                        value: 'degree',
+                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                        value: OPTION_DEFAULT_VALUE.degree
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    }
+                ],
+                def: {
+                    type: 'set_kernerl_option',
+                },
+                paramsKeyMap: {
+                    KERNEL: 0,
+                    OPTION: 1,
+                    VALUE: 2,
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_svm'],
+                func(sprite, script) {
+                    // 초기화
+                    Entry.aiLearning.setTrainOption('gamma', OPTION_DEFAULT_VALUE.gamma);
+                    Entry.aiLearning.setTrainOption('degree', OPTION_DEFAULT_VALUE.degree);
+
+                    const kernel = script.getStringField('KERNEL', script);
+                    const option = script.getStringField('OPTION', script);
+                    const value = script.getNumberValue('VALUE', script);
+                    Entry.aiLearning.setTrainOption('kernel', kernel);
+                    Entry.aiLearning.setTrainOption(option, parseFloat(value));
+                    return script.callReturn();
+                },
+                events: {},
+                pyHelpDef: {
+                    params: [],
+                    type: 'set_kernerl_option',
                 },
                 syntax: {
                     js: [],

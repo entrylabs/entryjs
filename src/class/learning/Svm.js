@@ -18,13 +18,13 @@ export const classes = [
     'svm_attr_6',
 ];
 
-const KERNEL_STRING_TYPE = {
+export const KERNEL_STRING_TYPE = {
     LINEAR: 'linear',
     POLYNOMIAL: 'polynomial',
     RBF: 'rbf',
 }
 
-const OPTION_DEFAULT_VALUE = {
+export const OPTION_DEFAULT_VALUE = {
     epochs: 30,
     batchSize: 16,
     k: 4,
