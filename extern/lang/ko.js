@@ -7800,9 +7800,9 @@ Lang.template = {
     learning_title_number_str: '분류: 숫자 모델',
     learning_title_regression_str: '예측: 숫자 모델',
     learning_title_cluster_str: '군집: 숫자 모델',
-    learning_title_logistic_regression_str: '분류: 로지스틱 회기 모델',
-    learning_title_decisiontree_str: '분류: 결정트리 모델',
-    learning_title_svm_str: '분류: SVM 모델',
+    learning_title_logistic_regression_str: '분류: 숫자 - 로지스틱 회기 모델',
+    learning_title_decisiontree_str: '분류: 숫자 - 결정트리 모델',
+    learning_title_svm_str: '분류: 숫자 - SVM 모델',
 };
 Lang.TextCoding = {
     block_name: '블록명',
