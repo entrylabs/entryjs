@@ -25,6 +25,7 @@ const basicBlockList = [
     require('./block_ai_learning_regression'),
     require('./block_ai_learning_logistic_regression'),
     require('./block_ai_learning_decisiontree'),
+    require('./block_ai_learning_svm'),
 ];
 
 Entry.AI_UTILIZE_BLOCK = {};

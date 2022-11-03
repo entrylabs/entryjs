@@ -6709,6 +6709,11 @@ levn@^0.4.1:
     prelude-ls "^1.2.1"
     type-check "~0.4.0"
 
+libsvm-js@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/libsvm-js/-/libsvm-js-0.2.1.tgz#607a0b073fb0a635546ca5b93b7205282051a877"
+  integrity sha512-tN9gh91NCAwSIhjgG3y8pdKETTwnwFvvSFNIrQQuJGVtAu0SO6Y43D7OEKMSVhQLQkgLADlDaqo9uxNGVEzJEA==
+
 load-json-file@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/load-json-file/-/load-json-file-4.0.0.tgz"

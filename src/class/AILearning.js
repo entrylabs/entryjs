@@ -9,7 +9,8 @@ import NumberClassification, {
 import DecisionTree, { classes as DecisionTreeClasses } from './learning/DecisionTree';
 import LogisticRegression, {
     classes as LogisticRegressionClasses,
-} from './learning/LogisticRegression';
+} from './learning/logisticRegression';
+import Svm, { classes as SvmClasses } from './learning/Svm';
 import DataTable from './DataTable';
 
 const banClasses = [
@@ -21,6 +22,7 @@ const banClasses = [
     ...NumberClassificationClasses,
     ...DecisionTreeClasses,
     ...LogisticRegressionClasses,
+    ...SvmClasses,
 ];
 
 export default class AILearning {
@@ -180,6 +182,15 @@ export default class AILearning {
         } else if (type === 'decisionTree') {
             this.#tableData = tableData || createDataTable(classes, name);
             this.#module = new DecisionTree({
+                name,
+                result,
+                url,
+                trainParam,
+                table: this.#tableData,
+            });
+        } else if (type === 'svm') {
+            this.#tableData = tableData || createDataTable(classes, name);
+            this.#module = new Svm({
                 name,
                 result,
                 url,
