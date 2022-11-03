@@ -9,7 +9,7 @@ import NumberClassification, {
 import DecisionTree, { classes as DecisionTreeClasses } from './learning/DecisionTree';
 import LogisticRegression, {
     classes as LogisticRegressionClasses,
-} from './learning/logisticRegression';
+} from './learning/LogisticRegression';
 import Svm, { classes as SvmClasses } from './learning/Svm';
 import DataTable from './DataTable';
 
