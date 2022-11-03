@@ -419,6 +419,7 @@ EntryStatic.getAllBlocks = function() {
                 'learning_title_cluster',
                 'learning_title_logistic_regression',
                 'learning_title_decisiontree',
+                'learning_title_svm',
                 'retrain_model',
                 'model_is_trained',
                 'set_train_visible',

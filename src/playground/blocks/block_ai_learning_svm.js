@@ -34,6 +34,24 @@ module.exports = {
             }
         }
         return {
+            learning_title_svm: {
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.learning_title_svm_str,
+                        color: EntryStatic.colorSet.common.TEXT,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'learning_title_svm',
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_svm'],
+                events: {},
+            },
             ...predictBlocks,
             ...booleanPredictBlocks,
             set_svm_option: {

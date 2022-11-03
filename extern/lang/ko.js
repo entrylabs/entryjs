@@ -7041,6 +7041,7 @@ Lang.template = {
     learning_title_logistic_regression: '%1',
     learning_title_cluster: '%1',
     learning_title_decisiontree: '%1',
+    learning_title_svm: '%1',
     insert_data_for_test: '학습한 모델로 인식하기 %1',
     insert_text_block_for_test: '%1 을(를) 학습한 모델로 인식하기 %2',
     test_result: '인식 결과',
@@ -7801,6 +7802,7 @@ Lang.template = {
     learning_title_cluster_str: '군집: 숫자 모델',
     learning_title_logistic_regression_str: '분류: 로지스틱 회기 모델',
     learning_title_decisiontree_str: '분류: 결정트리 모델',
+    learning_title_svm_str: '분류: SVM 모델',
 };
 Lang.TextCoding = {
     block_name: '블록명',
