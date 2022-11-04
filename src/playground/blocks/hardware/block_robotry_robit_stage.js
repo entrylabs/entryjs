@@ -224,6 +224,8 @@ Entry.Robotry_Robit_Stage.blockMenuBlocks = [
  */
 Entry.Robotry_Robit_Stage.getBlocks = function() {
     const FILLTERSIZE = 30;
+    let checkOnce = false;
+    let stateMIC = false;
     let sensorVals1 = new Array(FILLTERSIZE);
     let sensorVals2 = new Array(FILLTERSIZE);
     sensorVals1.fill(0);
@@ -543,12 +545,30 @@ Entry.Robotry_Robit_Stage.getBlocks = function() {
                     port = port.substring(1); // 아날로그 핀 넘버
                 }
                 if (port === CMS){
-                    let data = Math.pow(2, ANALOG[port] - 75);
-                    
+                    let data = ANALOG[port];
+                    if (checkOnce === false) {
+                        if (data > 80) {
+                            stateMIC = true;
+                        }
+                        else { 
+                            stateMIC = false;
+                        }
+                        checkOnce = true;
+                    }
+                    if (!stateMIC) {
+                        data = data - 77;
+                    }
+                    else {
+                        data = data - 88;
+                    }
+                 
                     let fillterVal = 0;
-                    data = Math.min(1024, data);
+                    
                     data = Math.max(0, data);
+                    data = Math.pow(2, data);
+                    data = Math.min(1024, data);
                     sensorVals1[FILLTERSIZE - 1] = data;
+                    
                     for (let i = 0; i < FILLTERSIZE - 1; i++) {
                         sensorVals1[i] = sensorVals1[i + 1];
                     }
