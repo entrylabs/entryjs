@@ -288,7 +288,6 @@ class DataTable {
     }
 
     closeModal() {
-        console.log(this.modals);
         this.modals.forEach((m) => {
             m.hide();
         });
