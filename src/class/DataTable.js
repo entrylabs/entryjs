@@ -14,7 +14,7 @@ import { DataAnalytics, ModalChart, ModalTable } from '@entrylabs/tool';
 class DataTable {
     #tables = [];
     #view;
-    modal;
+    modals = [];
     selected;
 
     get tables() {
@@ -260,12 +260,14 @@ class DataTable {
             console.log(`not exist souce, table id: ${tableId}`);
             return;
         }
-        if (!source.modal) {
-            source.modal = this.createChart(source, chartIndex);
+        let chart = source.modals.find((m) => m.name === 'chart');
+        if (!chart) {
+            chart = this.createChart(source, chartIndex);
+            source.modals.push(chart);
+            this.modals.push(chart);
         }
         source.forceApply();
-        source.modal.show(undefined, { chartIndex });
-        this.modal = source.modal;
+        chart.show(undefined, { chartIndex });
     }
 
     showTable(tableId) {
@@ -275,18 +277,21 @@ class DataTable {
             console.log(`not exist souce, table id: ${tableId}`);
             return;
         }
-        if (!source.modal) {
-            source.modal = this.createTable(source);
+        let table = source.modals.find((m) => m.name === 'table');
+        if (!table) {
+            table = this.createTable(source);
+            source.modals.push(table);
+            this.modals.push(table);
         }
         source.forceApply();
-        source.modal.show();
-        this.modal = source.modal;
+        table.show();
     }
 
     closeModal() {
-        if (this.modal && this.modal.isShow) {
-            this.modal.hide();
-        }
+        console.log(this.modals);
+        this.modals.forEach((m) => {
+            m.hide();
+        });
     }
 
     createChart(source, chartIndex = 0) {
@@ -295,7 +300,7 @@ class DataTable {
             class: 'entry-table-chart',
             parent: $(Entry.modalContainer),
         })[0];
-        return new ModalChart({
+        const modal = new ModalChart({
             data: {
                 chartIndex,
                 source: { fields, origin: rows, chart },
@@ -305,6 +310,8 @@ class DataTable {
             },
             container,
         });
+        modal.name = 'chart';
+        return modal;
     }
 
     createTable(source) {
@@ -312,7 +319,7 @@ class DataTable {
             class: 'entry-table-modal',
             parent: $(Entry.modalContainer),
         })[0];
-        return new ModalTable({
+        const modal = new ModalTable({
             data: {
                 table: source,
                 tables: this.tables,
@@ -322,11 +329,13 @@ class DataTable {
             },
             container,
         });
+        modal.name = 'table';
+        return modal;
     }
 
     clear() {
         this.#tables = [];
-        this.modal = null;
+        this.modals = [];
     }
 }
 

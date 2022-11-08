@@ -15,7 +15,7 @@ class DataTableSource {
     #source;
     #copiedChart;
     summary;
-    modal;
+    modals = [];
     updated = new Date();
     tab = 'summary';
 
@@ -42,7 +42,7 @@ class DataTableSource {
         this.updated = updatedAt ? new Date(updatedAt) : new Date();
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
-            this.modal = null;
+            this.modals = [];
             this.#data.from({
                 ...source,
                 data: this.#data.origin,
@@ -52,16 +52,18 @@ class DataTableSource {
         });
 
         const apply = (force = false) => {
-            if (this.modal && (force || this.modal.isShow)) {
-                this.modal.setData({
-                    source: {
-                        chart: this.copiedChart,
-                        fields: this.fields,
-                        origin: this.rows,
-                        tab: this.tab,
-                        summary: this.summary,
-                    },
-                });
+            if (this.modals.length > 0 && (force || this.modals.some((modal) => modal.isShow))) {
+                this.modals.forEach((modal) =>
+                    modal.setData({
+                        source: {
+                            chart: this.copiedChart,
+                            fields: this.fields,
+                            origin: this.rows,
+                            tab: this.tab,
+                            summary: this.summary,
+                        },
+                    })
+                );
             }
         };
         this.forceApply = () => apply(true);
