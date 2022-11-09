@@ -144,7 +144,7 @@ module.exports = {
                     py: [],
                 },
             },
-            set_kernerl_option: {
+            set_kernel_option: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
                 skeleton: 'basic',
@@ -175,7 +175,7 @@ module.exports = {
                     }
                 ],
                 def: {
-                    type: 'set_kernerl_option',
+                    type: 'set_kernel_option',
                 },
                 paramsKeyMap: {
                     KERNEL: 0,
@@ -199,7 +199,7 @@ module.exports = {
                 events: {},
                 pyHelpDef: {
                     params: [],
-                    type: 'set_kernerl_option',
+                    type: 'set_kernel_option',
                 },
                 syntax: {
                     js: [],

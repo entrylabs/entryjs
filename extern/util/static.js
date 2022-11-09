@@ -469,7 +469,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_decisiontree_result_info',
                 'set_svm_option',
                 'set_kernel_linear',
-                'set_kernerl_option',
+                'set_kernel_option',
                 'is_svm_result_1',
                 'is_svm_result_2',
                 'is_svm_result_3',
