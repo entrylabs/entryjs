@@ -6399,12 +6399,6 @@ Lang.Helper = {
         '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
     get_logistic_regression_probability_6:
         '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    get_logistic_regression_probability_1: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
-    get_logistic_regression_probability_2: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
-    get_logistic_regression_probability_3: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
-    get_logistic_regression_probability_4: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
-    get_logistic_regression_probability_5: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
-    get_logistic_regression_probability_6: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
     set_decisiontree_option:
         "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_svm_option: "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
