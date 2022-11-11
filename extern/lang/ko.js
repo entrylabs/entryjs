@@ -6387,18 +6387,6 @@ Lang.Helper = {
         "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_logistic_regression_optimizer:
         "모델의 최적화 알고리즘을 변경합니다. 변경한 최적화 알고리즘은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    get_logistic_regression_predict_1:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_logistic_regression_predict_2:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_logistic_regression_predict_3:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_logistic_regression_predict_4:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_logistic_regression_predict_5:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_logistic_regression_predict_6:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
     get_logistic_regression_probability_1:
         '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
     get_logistic_regression_probability_2:
@@ -6417,60 +6405,30 @@ Lang.Helper = {
     get_logistic_regression_probability_4: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
     get_logistic_regression_probability_5: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
     get_logistic_regression_probability_6: '입력한 핵심 속성으로 모델이 예측될 확률을 반환합니다.',
-    is_logistic_regression_result_1: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_logistic_regression_result_2: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_logistic_regression_result_3: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_logistic_regression_result_4: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_logistic_regression_result_5: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_logistic_regression_result_6: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     set_decisiontree_option:
         "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    get_decisiontree_predict_1:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_decisiontree_predict_2:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_decisiontree_predict_3:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_decisiontree_predict_4:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_decisiontree_predict_5:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_decisiontree_predict_6:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    is_decisiontree_result_1:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_decisiontree_result_2:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_decisiontree_result_3:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_decisiontree_result_4:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_decisiontree_result_5:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_decisiontree_result_6:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     set_svm_option: "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_kernel_linear:
         "학습 조건 중 커널을 선형으로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_kernerl_option:
         "학습 조건 중 커널을 다항식 또는 RBF로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    is_svm_result_1: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_svm_result_2: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_svm_result_3: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_svm_result_4: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_svm_result_5: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_svm_result_6: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    get_svm_predict_1:
+    is_result_1: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_2: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_3: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_4: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_5: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_6: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    get_predict_1:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_svm_predict_2:
+    get_predict_2:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_svm_predict_3:
+    get_predict_3:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_svm_predict_4:
+    get_predict_4:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_svm_predict_5:
+    get_predict_5:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_svm_predict_6:
+    get_predict_6:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
     get_result_info: '모델의 성능 평가 지표를 값으로 반환합니다.',
     set_cluster_option_k:
@@ -7092,38 +7050,13 @@ Lang.template = {
     get_regression_accuracy: '결정계수',
     set_logistic_regression_option: '학습 조건 %1 을(를) %2 (으)로 바꾸기 %3',
     set_logistic_regression_optimizer: '최적화 알고리즘을 %1 (으)로 바꾸기 %2',
-    get_logistic_regression_predict_1: '%1 %2 의 분류 결과',
-    get_logistic_regression_predict_2: '%1 %2 %3 %4 의 분류 결과',
-    get_logistic_regression_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
-    get_logistic_regression_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
-    get_logistic_regression_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
-    get_logistic_regression_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
     get_logistic_regression_probability_1: '%1 %2 의 %3 에 대한 확률',
     get_logistic_regression_probability_2: '%1 %2 %3 %4 의 %5 에 대한 확률',
     get_logistic_regression_probability_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 확률',
     get_logistic_regression_probability_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 확률',
     get_logistic_regression_probability_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 확률',
     get_logistic_regression_probability_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 확률',
-    is_logistic_regression_result_1: '%1 %2 의 분류 결과가 %3 인가?',
-    is_logistic_regression_result_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
-    is_logistic_regression_result_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
-    is_logistic_regression_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
-    is_logistic_regression_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
-    is_logistic_regression_result_6:
-        '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
     set_decisiontree_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
-    get_decisiontree_predict_1: '%1 %2 의 분류 결과',
-    get_decisiontree_predict_2: '%1 %2 %3 %4 의 분류 결과',
-    get_decisiontree_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
-    get_decisiontree_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
-    get_decisiontree_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
-    get_decisiontree_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
-    is_decisiontree_result_1: '%1 %2 의 분류 결과가 %3 인가?',
-    is_decisiontree_result_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
-    is_decisiontree_result_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
-    is_decisiontree_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
-    is_decisiontree_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
-    is_decisiontree_result_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
     set_svm_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
     set_kernel_linear: '커널을 선형으로 바꾸기 %1',
     set_kernel_option: '커널을 %1 (으)로 바꾸고 %2 를 %3 (으)로 정하기 %4',
@@ -7131,18 +7064,18 @@ Lang.template = {
     train_param_kernel_rbf: 'RBF',
     train_param_degree: '차수',
     train_param_gamma: '감마',
-    is_svm_result_1: '%1 %2 의 분류 결과가 %3 인가?',
-    is_svm_result_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
-    is_svm_result_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
-    is_svm_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
-    is_svm_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
-    is_svm_result_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
-    get_svm_predict_1: '%1 %2 의 분류 결과',
-    get_svm_predict_2: '%1 %2 %3 %4 의 분류 결과',
-    get_svm_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
-    get_svm_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
-    get_svm_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
-    get_svm_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
+    is_result_1: '%1 %2 의 분류 결과가 %3 인가?',
+    is_result_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
+    is_result_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
+    is_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
+    is_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
+    is_result_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
+    get_predict_1: '%1 %2 의 분류 결과',
+    get_predict_2: '%1 %2 %3 %4 의 분류 결과',
+    get_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
+    get_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
+    get_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
+    get_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
     get_result_info: '모델의 %1',
     set_cluster_option_k: '군집을 %1 개로 바꾸기 %2',
     set_cluster_option_centroids: '중심점 기준을 %1 로 바꾸기 %2',

@@ -21,8 +21,6 @@ module.exports = {
                 isNotFor: ['ai_learning_decisiontree'],
                 events: {},
             },
-            ...predictBlocks,
-            ...booleanPredictBlocks,
             set_decisiontree_option: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -78,48 +76,3 @@ module.exports = {
         };
     },
 };
-
-const predictBlocks = createParamBlock({
-    type: 'decisiontree',
-    name: 'get_decisiontree_predict',
-    length: 6,
-    createFunc: (paramsKeyMap) => async (sprite, script) => {
-        const params = Object.keys(paramsKeyMap).map((key) => script.getNumberValue(key, script));
-        await Entry.aiLearning.predict(params);
-        const result = Entry.aiLearning.getPredictResult();
-        return result.sort((a, b) => b.probability - a.probability)[0].className;
-    },
-});
-const booleanPredictBlocks = createParamBlock({
-    type: 'decisiontree',
-    name: 'is_decisiontree_result',
-    skeleton: 'basic_boolean_field',
-    length: 6,
-    createFunc: (paramsKeyMap) => async (sprite, script) => {
-        const keys = Object.keys(paramsKeyMap);
-        const predictKey = keys.pop();
-        const params = keys.map((key) => script.getNumberValue(key, script));
-        const predict = script.getStringField(predictKey, script);
-        await Entry.aiLearning.predict(params);
-        const predictResult = Entry.aiLearning.getPredictResult();
-        const result = predictResult.find((x) => x.className === predict);
-        return !!result?.probability;
-    },
-    params: [
-        {
-            type: 'DropdownDynamic',
-            value: null,
-            menuName: DropDownDynamicGenerator.valueMap,
-            needDeepCopy: true,
-            fontSize: 11,
-            bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-            arrowColor: EntryStatic.colorSet.common.WHITE,
-            defaultValue: (value, options) => {
-                if (options[0] && options[0][1]) {
-                    return options[0][1];
-                }
-                return value || 0;
-            },
-        },
-    ],
-});

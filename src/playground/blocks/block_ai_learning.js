@@ -110,7 +110,9 @@ const createParamBlock = ({
             },
             paramsKeyMap,
             class: 'ai_learning',
-            isNotFor: [`${type}_attr_${index}`],
+            isNotFor: Array.isArray(type) 
+                ? type.map(element => `${element}_attr_${index}`) 
+                : [`${type}_attr_${index}`],
             func: createFunc(paramsKeyMap),
             syntax: {
                 js: [],
@@ -126,6 +128,8 @@ module.exports = {
     createParamBlock,
     getBlocks() {
         return {
+            ...predictBlocks,
+            ...booleanPredictBlocks,
             learning_title_image: {
                 skeleton: 'basic_text',
                 color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -625,3 +629,48 @@ module.exports = {
         };
     },
 };
+
+const predictBlocks = createParamBlock({
+    type: ['svm', 'logistic_regression', 'decisiontree'],
+    name: 'get_predict',
+    length: 6,
+    createFunc: (paramsKeyMap) => async (sprite, script) => {
+        const params = Object.keys(paramsKeyMap).map((key) => script.getNumberValue(key, script));
+        await Entry.aiLearning.predict(params);
+        const result = Entry.aiLearning.getPredictResult();
+        return result.sort((a, b) => b.probability - a.probability)[0].className;
+    },
+});
+const booleanPredictBlocks = createParamBlock({
+    type: ['svm', 'logistic_regression', 'decisiontree'],
+    name: 'is_result',
+    skeleton: 'basic_boolean_field',
+    length: 6,
+    createFunc: (paramsKeyMap) => async (sprite, script) => {
+        const keys = Object.keys(paramsKeyMap);
+        const predictKey = keys.pop();
+        const params = keys.map((key) => script.getNumberValue(key, script));
+        const predict = script.getStringField(predictKey, script);
+        await Entry.aiLearning.predict(params);
+        const predictResult = Entry.aiLearning.getPredictResult();
+        const result = predictResult.find((x) => x.className === predict);
+        return !!result?.probability;
+    },
+    params: [
+        {
+            type: 'DropdownDynamic',
+            value: null,
+            menuName: DropDownDynamicGenerator.valueMap,
+            needDeepCopy: true,
+            fontSize: 11,
+            bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+            arrowColor: EntryStatic.colorSet.common.WHITE,
+            defaultValue: (value, options) => {
+                if (options[0] && options[0][1]) {
+                    return options[0][1];
+                }
+                return value || 0;
+            },
+        },
+    ],
+});

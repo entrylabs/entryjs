@@ -2,19 +2,6 @@ import { createParamBlock, DropDownDynamicGenerator } from './block_ai_learning'
 
 module.exports = {
     getBlocks() {
-        const predictBlocks = createParamBlock({
-            type: 'logistic_regression',
-            name: 'get_logistic_regression_predict',
-            length: 6,
-            createFunc: (paramsKeyMap) => async (sprite, script) => {
-                const params = Object.keys(paramsKeyMap).map((key) =>
-                    script.getNumberValue(key, script)
-                );
-                await Entry.aiLearning.predict(params);
-                const result = Entry.aiLearning.getPredictResult();
-                return result.sort((a, b) => b.probability - a.probability)[0].className;
-            },
-        });
         const probabilityBlocks = createParamBlock({
             type: 'logistic_regression',
             name: 'get_logistic_regression_probability',
@@ -47,43 +34,8 @@ module.exports = {
                 },
             ],
         });
-        const booleanPredictBlocks = createParamBlock({
-            type: 'logistic_regression',
-            name: 'is_logistic_regression_result',
-            skeleton: 'basic_boolean_field',
-            length: 6,
-            createFunc: (paramsKeyMap) => async (sprite, script) => {
-                const keys = Object.keys(paramsKeyMap);
-                const predictKey = keys.pop();
-                const params = keys.map((key) => script.getNumberValue(key, script));
-                const predict = script.getStringField(predictKey, script);
-                await Entry.aiLearning.predict(params);
-                const predictResult = Entry.aiLearning.getPredictResult();
-                const result = predictResult.find((x) => x.className === predict);
-                return !!result?.probability;
-            },
-            params: [
-                {
-                    type: 'DropdownDynamic',
-                    value: null,
-                    menuName: DropDownDynamicGenerator.valueMap,
-                    needDeepCopy: true,
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                    arrowColor: EntryStatic.colorSet.common.WHITE,
-                    defaultValue: (value, options) => {
-                        if (options[0] && options[0][1]) {
-                            return options[0][1];
-                        }
-                        return value || 0;
-                    },
-                },
-            ],
-        });
         return {
-            ...predictBlocks,
             ...probabilityBlocks,
-            ...booleanPredictBlocks,
             learning_title_logistic_regression: {
                 skeleton: 'basic_text',
                 color: EntryStatic.colorSet.common.TRANSPARENT,
