@@ -200,49 +200,6 @@ module.exports = {
                     py: [],
                 },
             },
-            get_logistic_regression_result_info: {
-                color: EntryStatic.colorSet.block.default.AI_LEARNING,
-                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.AiLearning.accuracy, 'accuracy'],
-                            [Lang.AiLearning.f1, 'f1'],
-                            [Lang.AiLearning.precision, 'precision'],
-                            [Lang.AiLearning.recall, 'recall'],
-                        ],
-                        value: 'accuracy',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
-                    },
-                ],
-                events: {},
-                def: {
-                    type: 'get_logistic_regression_result_info',
-                },
-                pyHelpDef: {
-                    params: [],
-                    type: 'get_logistic_regression_result_info',
-                },
-                paramsKeyMap: {
-                    TYPE: 0,
-                },
-                class: 'ai_learning',
-                isNotFor: ['ai_learning_logistic_regression'],
-                async func(sprite, script) {
-                    const type = script.getField('TYPE', script);
-                    const result = Entry.aiLearning?.getTrainResult();
-                    return result?.[type];
-                },
-                syntax: {
-                    js: [],
-                    py: [],
-                },
-            },
         };
     },
 };

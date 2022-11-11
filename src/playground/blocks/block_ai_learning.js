@@ -611,7 +611,7 @@ module.exports = {
                     TYPE: 0,
                 },
                 class: 'ai_learning',
-                isNotFor: ['ai_learning_svm'],
+                isNotFor: ['ai_learning_svm', 'ai_learning_logistic_regression', 'ai_learning_decisiontree'],
                 async func(sprite, script) {
                     const type = script.getField('TYPE', script);
                     const result = Entry.aiLearning?.getTrainResult();

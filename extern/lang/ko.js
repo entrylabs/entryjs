@@ -6423,10 +6423,8 @@ Lang.Helper = {
     is_logistic_regression_result_4: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_logistic_regression_result_5: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_logistic_regression_result_6: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    get_logistic_regression_result_info: '모델의 성능 평가 지표를 값으로 반환합니다.',
     set_decisiontree_option:
         "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    get_decisiontree_result_info: '모델의 성능 평가 지표를 값으로 반환합니다.',
     get_decisiontree_predict_1:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
     get_decisiontree_predict_2:
@@ -7113,9 +7111,7 @@ Lang.template = {
     is_logistic_regression_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
     is_logistic_regression_result_6:
         '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
-    get_logistic_regression_result_info: '모델의 %1',
     set_decisiontree_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
-    get_decisiontree_result_info: '모델의 %1',
     get_decisiontree_predict_1: '%1 %2 의 분류 결과',
     get_decisiontree_predict_2: '%1 %2 %3 %4 의 분류 결과',
     get_decisiontree_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
