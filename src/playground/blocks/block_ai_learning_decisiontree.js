@@ -73,6 +73,52 @@ module.exports = {
                     py: [],
                 },
             },
+            set_decisiontree_tree: {
+                color: EntryStatic.colorSet.block.default.AI_LEARNING,
+                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.AiLearning.open, 'open'],
+                            [Lang.AiLearning.close, 'close'],
+                        ],
+                        value: 'open',
+                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/ai_utilize_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: ['open', null],
+                    type: 'set_decisiontree_tree',
+                },
+                pyHelpDef: {
+                    params: [],
+                    type: 'set_decisiontree_tree',
+                },
+                paramsKeyMap: {
+                    VISIBLE: 0,
+                },
+                class: 'ai_learning',
+                isNotFor: ['ai_learning_decisiontree'],
+                async func(sprite, script) {
+                    const visible = script.getField('VISIBLE');
+                    Entry.aiLearning.setChartVisible(visible === 'open');
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
         };
     },
 };

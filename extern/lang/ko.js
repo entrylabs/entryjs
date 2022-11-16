@@ -6401,6 +6401,7 @@ Lang.Helper = {
         '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
     set_decisiontree_option:
         "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    set_decisiontree_tree: "학습한 결정 트리를 나타낸 창을 열거나 닫습니다.",
     set_svm_option: "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_kernel_linear:
         "학습 조건 중 커널을 선형으로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
@@ -7051,6 +7052,7 @@ Lang.template = {
     get_logistic_regression_probability_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 확률',
     get_logistic_regression_probability_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 확률',
     set_decisiontree_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
+    set_decisiontree_tree: '학습한 트리 %1 %2',
     set_svm_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
     set_kernel_linear: '커널을 선형으로 바꾸기 %1',
     set_kernel_option: '커널을 %1 (으)로 바꾸고 %2 를 %3 (으)로 정하기 %4',

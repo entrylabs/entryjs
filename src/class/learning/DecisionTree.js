@@ -18,7 +18,6 @@ export const classes = [
     'decisiontree_attr_4',
     'decisiontree_attr_5',
     'decisiontree_attr_6',
-    'ai_learning_train_chart',
 ];
 
 class DecisionTree extends LearningBase {
@@ -33,7 +32,6 @@ class DecisionTree extends LearningBase {
             this.view.setValue(value);
         };
         this.isTrained = true;
-        this.chartEnable = true;
         this.attrLength = table?.select?.[0]?.length || 0;
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
@@ -44,19 +42,39 @@ class DecisionTree extends LearningBase {
         }
     }
 
-    generateChart() {
+    generateTree() {
         const { graphData, fields, valueMap } = this.result;
-        this.chart = new Chart(
+        this.tree = new Chart(
             {
                 source: {
                     graphData,
                     fields,
                     valueMap,
                 },
-                title: Lang.AiLearning.chart_title,
+                title: Lang.AiLearning.tree_title,
             },
             'tree'
         );
+    }
+
+    openChart() {
+        if (!this.tree) {
+            this.generateTree();
+        } else {
+            this.tree.show();
+        }
+    }
+
+    closeChart() {
+        this.tree?.hide();
+    }
+
+    destroy() {
+        if (this.tree) {
+            this.tree.destroy();
+            this.tree = null;
+        }
+        super.destroy();
     }
 
     async train() {
