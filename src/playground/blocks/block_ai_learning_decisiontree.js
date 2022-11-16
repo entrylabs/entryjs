@@ -21,8 +21,6 @@ module.exports = {
                 isNotFor: ['ai_learning_decisiontree'],
                 events: {},
             },
-            ...predictBlocks,
-            ...booleanPredictBlocks,
             set_decisiontree_option: {
                 color: EntryStatic.colorSet.block.default.AI_LEARNING,
                 outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
@@ -75,94 +73,6 @@ module.exports = {
                     py: [],
                 },
             },
-            get_decisiontree_result_info: {
-                color: EntryStatic.colorSet.block.default.AI_LEARNING,
-                outerLine: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.AiLearning.accuracy, 'accuracy'],
-                            [Lang.AiLearning.f1, 'f1'],
-                            [Lang.AiLearning.precision, 'precision'],
-                            [Lang.AiLearning.recall, 'recall'],
-                        ],
-                        value: 'accuracy',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-                        arrowColor: EntryStatic.colorSet.common.WHITE,
-                    },
-                ],
-                events: {},
-                def: {
-                    type: 'get_decisiontree_result_info',
-                },
-                pyHelpDef: {
-                    params: [],
-                    type: 'get_decisiontree_result_info',
-                },
-                paramsKeyMap: {
-                    TYPE: 0,
-                },
-                class: 'ai_learning',
-                isNotFor: ['ai_learning_decisiontree'],
-                async func(sprite, script) {
-                    const type = script.getField('TYPE', script);
-                    const result = Entry.aiLearning?.getTrainResult();
-                    return result?.[type];
-                },
-                syntax: {
-                    js: [],
-                    py: [],
-                },
-            },
         };
     },
 };
-
-const predictBlocks = createParamBlock({
-    type: 'decisiontree',
-    name: 'get_decisiontree_predict',
-    length: 6,
-    createFunc: (paramsKeyMap) => async (sprite, script) => {
-        const params = Object.keys(paramsKeyMap).map((key) => script.getNumberValue(key, script));
-        await Entry.aiLearning.predict(params);
-        const result = Entry.aiLearning.getPredictResult();
-        return result.sort((a, b) => b.probability - a.probability)[0].className;
-    },
-});
-const booleanPredictBlocks = createParamBlock({
-    type: 'decisiontree',
-    name: 'is_decisiontree_result',
-    skeleton: 'basic_boolean_field',
-    length: 6,
-    createFunc: (paramsKeyMap) => async (sprite, script) => {
-        const keys = Object.keys(paramsKeyMap);
-        const predictKey = keys.pop();
-        const params = keys.map((key) => script.getNumberValue(key, script));
-        const predict = script.getStringField(predictKey, script);
-        await Entry.aiLearning.predict(params);
-        const predictResult = Entry.aiLearning.getPredictResult();
-        const result = predictResult.find((x) => x.className === predict);
-        return !!result?.probability;
-    },
-    params: [
-        {
-            type: 'DropdownDynamic',
-            value: null,
-            menuName: DropDownDynamicGenerator.valueMap,
-            needDeepCopy: true,
-            fontSize: 11,
-            bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
-            arrowColor: EntryStatic.colorSet.common.WHITE,
-            defaultValue: (value, options) => {
-                if (options[0] && options[0][1]) {
-                    return options[0][1];
-                }
-                return value || 0;
-            },
-        },
-    ],
-});
