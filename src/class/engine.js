@@ -622,6 +622,9 @@ Entry.Engine = class Engine {
             variableContainer.mapList((variable) => {
                 variable.takeSnapshot();
             });
+            variableContainer.mapFunc((func) => {
+                func.takeSnapshot();
+            });
             this.projectTimer.takeSnapshot();
             container.inputValue.takeSnapshot();
 
@@ -711,6 +714,9 @@ Entry.Engine = class Engine {
         });
         variableContainer.mapList((variable) => {
             variable.loadSnapshot();
+        });
+        variableContainer.mapFunc((func) => {
+            func.loadSnapshot();
         });
         this.stopProjectTimer();
         if (Entry.timerInstances) {

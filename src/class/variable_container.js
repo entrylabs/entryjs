@@ -2249,6 +2249,10 @@ Entry.VariableContainer = class VariableContainer {
         this.lists_.forEach(_.partial(mapFunction, _, param));
     }
 
+    mapFunc(mapFunction, param) {
+        Object.values(this.functions_).forEach(_.partial(mapFunction, _, param));
+    }
+
     /**
      * convert this variable's data to JSON.
      * @return {JSON}
