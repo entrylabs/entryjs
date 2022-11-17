@@ -441,6 +441,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_logistic_regression_probability_5',
                 'get_logistic_regression_probability_6',
                 'set_decisiontree_option',
+                'set_decisiontree_tree',
                 'set_svm_option',
                 'set_kernel_linear',
                 'set_kernel_option',
