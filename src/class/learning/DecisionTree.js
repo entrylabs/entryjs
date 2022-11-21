@@ -24,14 +24,14 @@ class DecisionTree extends LearningBase {
     type = 'decisiontree';
 
     init({ name, url, result, table, trainParam }) {
-        this.name = name;
+        this.name = name; 
         this.trainParam = trainParam;
         this.result = result;
         this.table = table;
         this.trainCallback = (value) => {
             this.view.setValue(value);
         };
-        this.isTrained = true;
+        this.trained = true;
         this.attrLength = table?.select?.[0]?.length || 0;
 
         this.fields = table?.select?.[0]?.map((index) => table?.fields[index]);
@@ -79,7 +79,7 @@ class DecisionTree extends LearningBase {
 
     async train() {
         this.setTable();
-        this.isTrained = false;
+        this.trained = false;
         this.trainCallback(1);
         const {
             testRate = 0.2,
@@ -102,7 +102,7 @@ class DecisionTree extends LearningBase {
         this.model?.train(trainX, trainY);
 
         const { confusionMatrix, score } = evaluate(this.model, testArr, numClass);
-        this.training = false;
+        this.trained = true;
         this.trainCallback(100);
         const { accuracy, f1, precision, recall } = score;
         this.result = {

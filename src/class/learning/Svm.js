@@ -49,7 +49,6 @@ class Svm extends LearningBase {
         };
         // train 확인 필요
         this.trained = true;
-        this.isTrained = true;
         this.chartEnable = false;
         this.attrLength = table?.select?.[0]?.length || 0;
 
@@ -84,7 +83,7 @@ class Svm extends LearningBase {
     }
 
     async train() {
-        this.isTrained = false;
+        this.trained = false;
         this.setTable();
         this.trainCallback(1);
         this.checkTrainOptionValidation();
@@ -111,6 +110,7 @@ class Svm extends LearningBase {
         const { accuracy, f1, precision, recall } = score;
 
         this.trainCallback(100);
+        this.trained = true;
         this.result = {
             select,
             fields,
