@@ -653,8 +653,8 @@ const booleanPredictBlocks = createParamBlock({
         const predict = script.getStringField(predictKey, script);
         await Entry.aiLearning.predict(params);
         const predictResult = Entry.aiLearning.getPredictResult();
-        const result = predictResult.find((x) => x.className === predict);
-        return !!result?.probability;
+        const result = predictResult.sort((a, b) => b.probability - a.probability)[0];
+        return result && !!result.probability && result.className === predict;
     },
     params: [
         {
