@@ -89,7 +89,6 @@ class LogisticRegression extends LearningBase {
             numClass
         );
         const { accuracy, f1, precision, recall } = score;
-        this.training = false;
         this.trained = true;
         this.result = {
             select,
