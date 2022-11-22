@@ -1336,22 +1336,44 @@ Entry.BlockView = class BlockView {
                 svgGroup.setAttribute('class', 'block selected');
             }
             const box = this._skeleton.box(this);
-            const scale = this.getBoard()?.scale || 1;
+            const scale = notPng ? 1 : 1.5;
             let fontWeight = this.isWindow7() ? 0.9 : 0.95;
             if (this.type.indexOf('func_') > -1) {
                 fontWeight *= 0.99;
             }
             svgGroup.setAttribute(
                 'transform',
-                'scale(%SCALE) translate(0,0)'.replace('%SCALE', scale)
+                'scale(%SCALE) translate(%X,%Y)'
+                    .replace('%X', -box.offsetX)
+                    .replace('%Y', -box.offsetY)
+                    .replace('%SCALE', scale)
             );
             this.svgCommentGroup &&
                 svgCommentGroup.setAttribute(
                     'transform',
-                    'scale(%SCALE) translate(0,0)'.replace('%SCALE', scale)
+                    'scale(%SCALE) translate(%X,%Y)'
+                        .replace('%X', -box.offsetX)
+                        .replace('%Y', -box.offsetY)
+                        .replace('%SCALE', scale)
                 );
 
             const defs = this.getBoard().svgDom.find('defs');
+
+            const style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+            style.setAttribute('type', 'text/css');
+            style.textContent = `
+                @font-face {
+                    font-family: EntryNG;
+                    src: local(NanumGothic),
+                        local(나눔고딕),
+                        local(나눔고딕 Regular),
+                        local(Noto Sans JP Regular),
+                        local(Noto Sans JP);
+                    font-weight: normal;
+                    font-style: normal;
+                }`;
+
+            defs.append(style);
             const images = svgGroup.getElementsByTagName('image');
             const texts = svgGroup.getElementsByTagName('text');
 
@@ -1366,32 +1388,65 @@ Entry.BlockView = class BlockView {
                 if (_.includes(boldTypes, content)) {
                     text.setAttribute('font-weight', '500');
                 }
+
+                // if (content == 'q') {
+                //     const y = parseInt(text.getAttribute('y'), 10);
+                //     text.setAttribute('y', y - 1);
+                // }
+
                 if (_.includes(notResizeTypes, content)) {
                     text.setAttribute('font-size', `${size}px`);
                 }
+                // else {
+                //     text.setAttribute('font-size', `${size * fontWeight}px`);
+                // }
                 text.setAttribute('alignment-baseline', 'auto');
             });
 
-            if (images.length) {
-                images.forEach((image) => {
-                    const href = image.getAttribute('href');
-                    image.setAttribute('href', `${location.protocol}//${location.host}${href}`);
+            let counts = 0;
+            if (!images.length) {
+                this.processSvg(svgGroup, scale, defs, notPng)
+                    .then((data) => {
+                        resolve(data);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            } else {
+                _.toArray(images).forEach((img) => {
+                    const href = img.getAttribute('href');
+                    this.loadImage(
+                        href,
+                        img.getAttribute('width'),
+                        img.getAttribute('height'),
+                        notPng
+                    ).then((src) => {
+                        img.setAttribute('href', src);
+                        if (++counts == images.length) {
+                            this.processSvg(svgGroup, scale, defs, notPng)
+                                .then((data) => {
+                                    resolve(data);
+                                })
+                                .catch((err) => {
+                                    reject(err);
+                                });
+                        }
+                    });
                 });
             }
-            this.processSvg(svgGroup, scale, defs, notPng)
-                .then((data) => {
-                    resolve(data);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
         });
     }
 
-    async downloadAsImage(i) {
-        const image = await this.getDataUrl();
-        Entry.dispatchEvent('saveBlockImages', {
-            images: [image],
+    downloadAsImage(i) {
+        this.getDataUrl().then((data) => {
+            const download = document.createElement('a');
+            download.href = data.src;
+            let name = Lang.Workspace.download_image_name;
+            if (i) {
+                name += i;
+            }
+            download.download = `${name}.png`;
+            download.click();
         });
     }
 
@@ -1674,30 +1729,49 @@ Entry.BlockView = class BlockView {
         );
     }
 
-    processSvg(svgGroup, scale = 1, defs) {
+    processSvg(svgGroup, scale = 1, defs, notPng) {
         return new Promise((resolve, reject) => {
             let svgData =
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
             const bBox = this.svgGroup.getBoundingClientRect();
-            const boxWidth = bBox.width;
-            const boxHeight = bBox.height;
-            const offset = 2 * scale;
+            const board = this.getBoard();
+            const { scale: blockScale = scale } = board;
+            // console.log(this);
+            const boxWidth = bBox.width / blockScale;
+            const boxHeight = bBox.height / blockScale;
             svgData = svgData
                 .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
-                .replace('%W', Math.ceil(boxWidth) + offset)
-                .replace('%H', Math.ceil(boxHeight) + offset)
+                .replace('%W', boxWidth * scale + 20)
+                .replace('%H', boxHeight * scale + 5)
                 .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
             svgData = svgData.replace(/NS\d+:href/gi, 'href');
-            const data = Entry.isOffline
-                ? `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`
-                : svgData;
-            resolve({
-                width: boxWidth,
-                height: boxHeight,
-                data,
-            });
+            let src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgData)))}`;
+            svgData = null;
+            if (notPng) {
+                resolve({
+                    src,
+                    width: boxWidth,
+                    height: boxHeight,
+                });
+                svgGroup = null;
+            } else {
+                this.loadImage(src, boxWidth, boxHeight, notPng, 1.5).then(
+                    (src) => {
+                        svgGroup = null;
+                        resolve({
+                            src,
+                            width: boxWidth,
+                            height: boxHeight,
+                        });
+                    },
+                    (err) => {
+                        reject('error occured');
+                    }
+                );
+            }
+            src = null;
         });
     }
 
