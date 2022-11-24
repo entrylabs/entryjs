@@ -193,7 +193,7 @@ export class AtlasImageLoadingInfo {
         this.srcHeight = canvas.height = r.height;
         const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
         ctx.imageSmoothingEnabled = true;
-        ctx.drawImage(img, 0, 0, sw, sh, 0, 0, r.width, r.height);
+        ctx.drawImage(img, 0, 0, r.width, r.height);
         return canvas;
     }
 }

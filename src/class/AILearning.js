@@ -6,6 +6,11 @@ import Classification, { classes as ClassificationClasses } from './learning/Cla
 import NumberClassification, {
     classes as NumberClassificationClasses,
 } from './learning/NumberClassification';
+import DecisionTree, { classes as DecisionTreeClasses } from './learning/DecisionTree';
+import LogisticRegression, {
+    classes as LogisticRegressionClasses,
+} from './learning/LogisticRegression';
+import Svm, { classes as SvmClasses } from './learning/Svm';
 import DataTable from './DataTable';
 
 const banClasses = [
@@ -15,6 +20,9 @@ const banClasses = [
     ...ImageClasses,
     ...ClassificationClasses,
     ...NumberClassificationClasses,
+    ...DecisionTreeClasses,
+    ...LogisticRegressionClasses,
+    ...SvmClasses,
 ];
 
 export default class AILearning {
@@ -161,6 +169,33 @@ export default class AILearning {
                 labels: this.#labels,
                 type,
                 recordTime,
+            });
+        } else if (type === 'logisticRegression') {
+            this.#tableData = tableData || createDataTable(classes, name);
+            this.#module = new LogisticRegression({
+                name,
+                result,
+                url,
+                trainParam,
+                table: this.#tableData,
+            });
+        } else if (type === 'decisionTree') {
+            this.#tableData = tableData || createDataTable(classes, name);
+            this.#module = new DecisionTree({
+                name,
+                result,
+                url,
+                trainParam,
+                table: this.#tableData,
+            });
+        } else if (type === 'svm') {
+            this.#tableData = tableData || createDataTable(classes, name);
+            this.#module = new Svm({
+                name,
+                result,
+                url,
+                trainParam,
+                table: this.#tableData,
             });
         }
 
@@ -309,8 +344,8 @@ function getBlockMenu(playground) {
 }
 
 function createDataTable(classes, name) {
-    if(!classes.length) {
-        return ;
+    if (!classes.length) {
+        return;
     }
     try {
         const [{ samples }] = classes;
@@ -320,10 +355,7 @@ function createDataTable(classes, name) {
             data = JSON.parse(data);
         }
         if (data && data.id && !DataTable.getSource(data.id)) {
-            DataTable.addSource(
-                data,
-                false
-            );
+            DataTable.addSource(data, false);
         }
         return data;
     } catch (e) {

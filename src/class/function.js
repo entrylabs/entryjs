@@ -863,6 +863,18 @@ class EntryFunc {
             Entry.variableContainer.functionAddButton_.addClass('disable');
         }
     }
+
+    takeSnapshot() {
+        this.snapshot_ = {
+            localVariables: _cloneDeep(this.localVariables),
+        };
+    }
+
+    loadSnapshot() {
+        const { localVariables } = this.snapshot_;
+        this.localVariables = localVariables;
+        delete this.snapshot_;
+    }
 }
 
 Entry.Func = EntryFunc;

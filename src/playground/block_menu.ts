@@ -233,7 +233,12 @@ class BlockMenu extends ModelClass<Schema> {
                 return;
             }
             const targetBlock = this.code.findById(blockId);
-            if (targetBlock.type.startsWith('func_')) {
+            if (
+                targetBlock.type.startsWith('func_') ||
+                ['basic_text', 'clickable_text', 'basic_button'].includes(
+                    targetBlock?._schema?.skeleton
+                )
+            ) {
                 return;
             }
             const { width, height } = targetBlock.view;

@@ -6383,6 +6383,49 @@ Lang.Helper = {
     get_regression_predict_5: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_6: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_accuracy: '모델의 결정계수를 값으로 반환합니다.',
+    set_logistic_regression_option:
+        "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    set_logistic_regression_optimizer:
+        "모델의 최적화 알고리즘을 변경합니다. 변경한 최적화 알고리즘은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    get_logistic_regression_probability_1:
+        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
+    get_logistic_regression_probability_2:
+        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
+    get_logistic_regression_probability_3:
+        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
+    get_logistic_regression_probability_4:
+        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
+    get_logistic_regression_probability_5:
+        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
+    get_logistic_regression_probability_6:
+        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
+    set_decisiontree_option:
+        "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    set_decisiontree_tree: "학습한 결정 트리를 나타낸 창을 열거나 닫습니다.",
+    set_svm_option: "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    set_kernel_linear:
+        "학습 조건 중 커널을 선형으로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    set_kernel_option:
+        "학습 조건 중 커널을 다항식 또는 RBF로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    is_result_1: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_2: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_3: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_4: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_5: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    is_result_6: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
+    get_predict_1:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
+    get_predict_2:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
+    get_predict_3:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
+    get_predict_4:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
+    get_predict_5:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
+    get_predict_6:
+        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
+    get_result_info: '모델의 성능 평가 지표를 값으로 반환합니다.',
     set_cluster_option_k:
         "군집의 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 군집 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_cluster_option_centroids:
@@ -6979,7 +7022,10 @@ Lang.template = {
     learning_title_text: '%1',
     learning_title_number: '%1',
     learning_title_regression: '%1',
+    learning_title_logistic_regression: '%1',
     learning_title_cluster: '%1',
+    learning_title_decisiontree: '%1',
+    learning_title_svm: '%1',
     insert_data_for_test: '학습한 모델로 인식하기 %1',
     insert_text_block_for_test: '%1 을(를) 학습한 모델로 인식하기 %2',
     test_result: '인식 결과',
@@ -6997,6 +7043,36 @@ Lang.template = {
     get_regression_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 예측값',
     get_regression_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 예측값',
     get_regression_accuracy: '결정계수',
+    set_logistic_regression_option: '학습 조건 %1 을(를) %2 (으)로 바꾸기 %3',
+    set_logistic_regression_optimizer: '최적화 알고리즘을 %1 (으)로 바꾸기 %2',
+    get_logistic_regression_probability_1: '%1 %2 의 %3 에 대한 확률',
+    get_logistic_regression_probability_2: '%1 %2 %3 %4 의 %5 에 대한 확률',
+    get_logistic_regression_probability_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 확률',
+    get_logistic_regression_probability_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 확률',
+    get_logistic_regression_probability_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 확률',
+    get_logistic_regression_probability_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 확률',
+    set_decisiontree_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
+    set_decisiontree_tree: '학습한 트리 %1 %2',
+    set_svm_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
+    set_kernel_linear: '커널을 선형으로 바꾸기 %1',
+    set_kernel_option: '커널을 %1 (으)로 바꾸고 %2 를 %3 (으)로 정하기 %4',
+    train_param_kernel_polynomial: '다항식',
+    train_param_kernel_rbf: 'RBF',
+    train_param_degree: '차수',
+    train_param_gamma: '감마',
+    is_result_1: '%1 %2 의 분류 결과가 %3 인가?',
+    is_result_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
+    is_result_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
+    is_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
+    is_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
+    is_result_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
+    get_predict_1: '%1 %2 의 분류 결과',
+    get_predict_2: '%1 %2 %3 %4 의 분류 결과',
+    get_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
+    get_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
+    get_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
+    get_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
+    get_result_info: '모델의 %1',
     set_cluster_option_k: '군집을 %1 개로 바꾸기 %2',
     set_cluster_option_centroids: '중심점 기준을 %1 로 바꾸기 %2',
     get_cluster_centriod_count: '군집 개수',
@@ -7683,6 +7759,9 @@ Lang.template = {
     learning_title_number_str: '분류: 숫자 모델',
     learning_title_regression_str: '예측: 숫자 모델',
     learning_title_cluster_str: '군집: 숫자 모델',
+    learning_title_logistic_regression_str: '분류: 숫자 (로지스틱 회귀) 모델',
+    learning_title_decisiontree_str: '분류: 숫자 (결정 트리) 모델',
+    learning_title_svm_str: '분류: 숫자 (SVM) 모델',
 };
 Lang.TextCoding = {
     block_name: '블록명',
@@ -8825,7 +8904,13 @@ Lang.AiLearning = {
     hide: '숨기기',
     open: '열기',
     close: '닫기',
-    probability: '정확도',
+    probability: '신뢰도',
+    accuracy: '정확도',
+    f1: 'F1',
+    precision: '정밀도',
+    recall: '재현율',
+    train_param_optimizer_adam: 'Adam',
+    train_param_optimizer_sgd: 'SGD',
     neighbor_count: '이웃 개수',
     cluster_option_centroids_kmpp: '가장 먼 거리',
     cluster_option_centroids_random: '무작위',
@@ -8835,8 +8920,13 @@ Lang.AiLearning = {
     model_status_2: '상태: 학습완료',
     model_status_3: '상태: 모델없음',
     train_param_learningRate: '학습률',
-    train_param_epochs: '세대',
-    train_param_validationRate: '테스트 데이터 비율',
+    train_param_epochs: '에포크',
+    train_param_validationRate: '검증 데이터 비율',
+    train_param_C: 'C',
+    train_param_kernel_polynomial: '다항식',
+    train_param_kernel_rbf: 'RBF',
+    train_param_degree: '차수',
+    train_param_gamma: '감마',
 };
 Lang.SharePolicy = {
     title: '엔트리 작품/게시물 공유 가이드',
