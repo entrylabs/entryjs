@@ -3,7 +3,7 @@
 const { flattenDiagnosticMessageText } = require("typescript");
 
 Entry.kkmoo = {
-    id: 'FF.1',
+    id: '53.1',
     name: 'kkmoo',
     url: '',
     imageName: 'kkmoo.png',
