@@ -1409,10 +1409,10 @@ Entry.iCOBOT.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.icobot_motor_left_turn, '1'],
-                        [Lang.Blocks.icobot_motor_right_turn, '3'],						
+                        [Lang.Blocks.icobot_motor_left_turn, '3'],
+                        [Lang.Blocks.icobot_motor_right_turn, '1'],						
                     ],
-                    value: '1',
+                    value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
