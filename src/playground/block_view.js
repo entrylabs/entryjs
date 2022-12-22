@@ -1373,7 +1373,7 @@ Entry.BlockView = class BlockView {
             });
 
             if (images.length) {
-                Array.from(images).forEach((image) => {
+                images.forEach((image) => {
                     const href = image.getAttribute('href');
                     image.setAttribute('href', `${location.protocol}//${location.host}${href}`);
                 });
