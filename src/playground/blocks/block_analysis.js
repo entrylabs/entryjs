@@ -345,7 +345,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['2'],
+                            params: ['1'],
                         },
                         {
                             type: 'get_table_fields',
@@ -390,7 +390,7 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const row = script.getNumberValue('NUMBER', script) - 1;
+                    const row = script.getNumberValue('NUMBER', script);
                     const col = DataTable.getColumnIndex(script.getValue('FIELD', script));
                     const value = script.getValue('VALUE', script);
                     const table = DataTable.getSource(tableId, sprite);
@@ -557,7 +557,7 @@ module.exports = {
                         null,
                         {
                             type: 'text',
-                            params: ['2'],
+                            params: ['1'],
                         },
                         {
                             type: 'get_table_fields',
@@ -574,7 +574,7 @@ module.exports = {
                 isNotFor: ['analysis'],
                 func(sprite, script) {
                     const tableId = script.getField('MATRIX', script);
-                    const row = script.getNumberValue('ROW', script) - 1;
+                    const row = script.getNumberValue('ROW', script);
                     const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
 
