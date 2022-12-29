@@ -22,13 +22,19 @@ class DataTable {
     }
 
     get dataTables() {
-        return _map(this.#tables, ({ id, fields, chart, name, origin, summary }) => ({
-            id,
-            name,
-            summary,
-            chart: _cloneDeep(chart),
-            table: [[...fields], ..._cloneDeep(origin)],
-        }));
+        return _map(
+            this.#tables,
+            ({ id, fields, chart, name, origin, summary, provider, description, fieldInfos }) => ({
+                id,
+                name,
+                provider,
+                description,
+                fieldInfos,
+                summary,
+                chart: _cloneDeep(chart),
+                table: [[...fields], ..._cloneDeep(origin)],
+            })
+        );
     }
 
     constructor() {

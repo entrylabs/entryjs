@@ -15,6 +15,9 @@ class DataTableSource {
     #source;
     #copiedChart;
     summary;
+    provider;
+    description;
+    fieldInfos;
     modals = [];
     updated = new Date();
     tab = 'summary';
@@ -30,6 +33,9 @@ class DataTableSource {
             fields = [],
             summary,
             updatedAt,
+            provider,
+            description,
+            fieldInfos,
         } = source;
         this.#name = name;
         this.#id = id;
@@ -38,6 +44,9 @@ class DataTableSource {
         this.#data = new dmetTable(source);
         this.#chart = chart || [];
         this.summary = summary;
+        this.provider = provider;
+        this.description = description;
+        this.fieldInfos = fieldInfos;
         this.tab = tab;
         this.updated = updatedAt ? new Date(updatedAt) : new Date();
         // 정지시 data 초기화.
@@ -136,7 +145,7 @@ class DataTableSource {
 
     isExist(index) {
         const isExist = this.getValue(index);
-        return !!(isExist === 0 || isExist === null || isExist);
+        return !!(isExist === null || isExist);
     }
 
     appendRow(data) {
