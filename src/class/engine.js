@@ -899,6 +899,17 @@ Entry.Engine = class Engine {
     }
 
     /**
+     * @param {string} eventName
+     * @param {string} value
+     */
+    fireEventWithValue(eventName, value) {
+        if (this.state !== EntryEngineState.run) {
+            return;
+        }
+        return Entry.container.mapEntityIncludeCloneOnScene(this.raiseKeyEvent, [eventName, value]);
+    }
+
+    /**
      * this is callback function for map.
      * @param {Entry.EntryObject} object
      * @param {string} eventName
