@@ -86,24 +86,66 @@
 
 .entryPopup.learning_popup {
     z-index: 7001;
+     .entryPopupHelperWindow {
+        min-height: 300px;
+        position: relative;
+        .entryPopupHelperTitle {
+            display: none;
+        }
+        iframe {
+            border: none;
+            height: 100%;
+        }
+        .contentArea {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+    }
     .ai_learning {
         overflow: hidden;
         .learningInputPopup {
-            border: none;
-            height: 248px;
+            height: 435px;
             width: 294px;
-            background-color: #fff;
-            border-bottom-right-radius: 5px;
-            border-bottom-left-radius: 5px;
+            background-color: white;
+            overflow: hidden;
+        }
+        .entryPopupHelperTitle {
+            display: none;
+        }
+        iframe {
+            border: none;
+            height: 100%;
+        }
+        .contentArea {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
         }
         .learningInputPopup.text {
-            height: 165px;
+            height: 191px;
         }
         .learningInputPopup.image {
-            height: 245px;
+            height: 270px;
         }
         .learningInputPopup.speech {
-            height: 250px;
+            width: 294px;
+            height: 280px;
+        }
+        .entryPopupHelperWrapper {
+            .entryPopupHelperCloseButton {
+                cursor: pointer;
+                position: absolute;
+                right: 0;
+                content: ' ';
+                width: 22px;
+                height: 39px;
+                margin-right: 8px;
+                display: inline-block;
+                background-repeat: no-repeat;
+                background-position: center;
+                background-image: url('/img/assets/popup/workspace/btn_close2.svg');
+            }
         }
     }
 }
