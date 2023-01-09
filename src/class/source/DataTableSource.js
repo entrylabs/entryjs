@@ -145,7 +145,7 @@ class DataTableSource {
 
     isExist(index) {
         const isExist = this.getValue(index);
-        return !!(isExist === null || isExist);
+        return !!(isExist === null || isExist === 0 || isExist);
     }
 
     appendRow(data) {
