@@ -407,7 +407,7 @@ class EntryFunc {
                 this.targetFunc.localVariables = this._backupOption.localVariables;
                 this.changeType(this.targetFunc, this._backupOption.type);
                 this._generateFunctionSchema(this.targetFunc.id);
-                this.generateWsBlock(this.targetFunc, true);
+                this.generateWsBlock(this.targetFunc);
             }
         }
         Entry.variableContainer.updateList();
