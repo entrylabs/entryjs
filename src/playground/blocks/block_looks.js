@@ -143,30 +143,27 @@ module.exports = {
                         message = Entry.convertToRoundedDecimals(message, 3);
                         new Entry.Dialog(sprite, message, mode);
                         sprite.syncDialogVisible(sprite.getVisible());
-                        setTimeout(() => {
+                        let timeoutId = 0;
+                        const stopDialog = () => {
                             script.timeFlag = 0;
-                        }, timeValue * 1000);
+                            if (timeoutId) {
+                                clearTimeout(timeoutId);
+                                timeoutId = 0;
+                            }
+                        };
+                        sprite.stopDialog = stopDialog;
+                        timeoutId = setTimeout(stopDialog, timeValue * 1000);
                     }
                     if (script.timeFlag == 0) {
                         delete script.timeFlag;
                         delete script.isStart;
                         if (sprite.dialog) {
                             sprite.dialog.remove();
+                            sprite.stopDialog = undefined;
                         }
                         return script.callReturn();
-                    } else {
-                        if (!sprite.dialog) {
-                            let message = script.getStringValue('VALUE', script);
-                            const mode = script.getField('OPTION', script);
-                            if (!message && typeof message !== 'number') {
-                                message = '    ';
-                            }
-                            message = Entry.convertToRoundedDecimals(message, 3);
-                            new Entry.Dialog(sprite, message, mode);
-                            sprite.syncDialogVisible(sprite.getVisible());
-                        }
-                        return script;
                     }
+                    return script;
                 },
                 syntax: {
                     js: [],
@@ -305,6 +302,9 @@ module.exports = {
                 class: 'say',
                 isNotFor: [],
                 func(sprite, script) {
+                    if (sprite.stopDialog) {
+                        sprite.stopDialog();
+                    }
                     if (sprite.dialog) {
                         sprite.dialog.remove();
                     }
