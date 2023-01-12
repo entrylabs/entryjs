@@ -8,6 +8,7 @@ import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 import entryModuleLoader from '../class/entryModuleLoader';
 import { bignumber, chain } from 'mathjs';
+import { Scheduler } from './scheduler';
 
 Entry.Utils = {};
 
@@ -2376,7 +2377,6 @@ Entry.Utils.getUniqObjectsBlocks = function(objects) {
 
 Entry.Utils.getObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');
-
     return _.chain(objects || Entry.container.objects_)
         .map(({ script }) => {
             if (!(script instanceof Entry.Code)) {
@@ -2386,6 +2386,27 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
+};
+
+const scheduler = new Scheduler();
+
+Entry.Utils.getObjectsBlocksForEventThread = (objects) => {
+    const _typePicker = _.partial(_.result, _, 'type');
+    return new Promise((resolve) => {
+        scheduler.run(function*() {
+            const result = [];
+            const codes = objects || Entry.container.objects_;
+            for (const code of codes) {
+                let script = code.script;
+                if (!(script instanceof Entry.Code)) {
+                    script = new Entry.Code(script);
+                }
+                result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                yield;
+            }
+            resolve(_.flatten(result));
+        });
+    });
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
