@@ -2,7 +2,9 @@ import _get from 'lodash/get';
 
 Entry.BlockCountViewer = class {
     constructor() {
-        Entry.codeChangedEvent = new Entry.Event(window);
+        if (!Entry.codeChangedEvent) {
+            Entry.codeChangedEvent = new Entry.Event(window);
+        }
         Entry.codeChangedEvent.attach(this, this.updateView);
         Entry.addEventListener('loadComplete', this.updateView.bind(this));
     }
@@ -20,10 +22,16 @@ Entry.BlockCountViewer = class {
     async updateView() {
         if (this.blockCountView) {
             const blocks = await Entry.Utils.getObjectsBlocksForEventThread();
-            // const blocks = Entry.Utils.getObjectsBlocks();
             const count = _get(blocks, 'length', 0);
-            //TODO 다국어 적용
-            this.blockCountView.innerHTML = `블록 <strong>${count}</strong> 개`;
+
+            let langText = Lang.Workspace.use_blocks_project;
+            if (count === 1) {
+                langText = Lang.Workspace.use_block_project;
+            }
+            this.blockCountView.innerHTML = Entry.Utils.stringFormat(
+                langText,
+                `<strong>${Entry.shortenNumber(count)}</strong>`
+            );
         }
     }
 

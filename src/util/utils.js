@@ -4,6 +4,7 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
 import _clamp from 'lodash/clamp';
+import _round from 'lodash/round';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 import entryModuleLoader from '../class/entryModuleLoader';
@@ -2986,4 +2987,17 @@ Entry.Utils.stringFormat = (text, ...args) => {
         result = result.replace(regexp, args[i]);
     }
     return result;
+};
+
+Entry.shortenNumber = (num = 0) => {
+    if (num >= 1000000000) {
+        return `${_round(num / 1000000000, 1)}B`;
+    }
+    if (num >= 1000000) {
+        return `${_round(num / 1000000, 1)}M`;
+    }
+    if (num >= 100000) {
+        return `${_round(num / 1000, 1)}K`;
+    }
+    return num;
 };

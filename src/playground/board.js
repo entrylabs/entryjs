@@ -1,4 +1,5 @@
 import debounce from 'lodash/debounce';
+import _get from 'lodash/get';
 
 Entry.Board = class Board {
     constructor(option) {
@@ -24,6 +25,15 @@ Entry.Board = class Board {
         this._bindEvent();
         this.observe(this, 'handleVisibleComment', ['isVisibleComment'], false);
         Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+        if (!Entry.codeChangedEvent) {
+            Entry.codeChangedEvent = new Entry.Event(window);
+        }
+
+        const updateObjectBlockCount = () => {
+            this.updateObjectBlockCount(Entry.container.selectedObject);
+        };
+        Entry.codeChangedEvent.attach(this, updateObjectBlockCount);
+        Entry.addEventListener('loadComplete', updateObjectBlockCount);
 
         Entry.Utils.setSVGDom(this.svgDom);
     }
@@ -103,6 +113,12 @@ Entry.Board = class Board {
         this.svgObjectTitle.board = this;
         this.svgObjectTitle.attr({
             class: 'svgObjectTitle',
+        });
+
+        this.svgObjectBlockCount = this.svgGroup.elem('g');
+        this.svgObjectBlockCount.board = this;
+        this.svgObjectBlockCount.attr({
+            class: 'svgObjectBlockCount',
         });
 
         this.svgThreadGroup = this.svgGroup.elem('g');
@@ -1451,6 +1467,60 @@ Entry.Board = class Board {
 
         this.svgObjectTitle.thumbnail.attr({ href: object.thumbUrl });
         this.svgObjectTitle.name.textContent = object.name;
+        this.updateObjectBlockCount(object);
+    }
+
+    async updateObjectBlockCount(object) {
+        if (!object) {
+            this.clearObjectBlockCount();
+            return;
+        }
+
+        if (!this.svgObjectBlockCount.rect) {
+            const rect = this.svgObjectBlockCount.elem('rect');
+            rect.attr({
+                rx: 10,
+                ry: 10,
+                height: 20,
+                fill: '#ffffff',
+                stroke: '#d6e9f4',
+                strokeWidth: '1',
+            });
+            this.svgObjectBlockCount.rect = rect;
+        }
+
+        if (!this.svgObjectBlockCount.countText) {
+            const countText = this.svgObjectBlockCount.elem('text');
+            countText.style.font = '12px NanumGothic';
+            countText.attr({
+                fill: '#6b6b6b',
+            });
+            this.svgObjectBlockCount.countText = countText;
+        }
+
+        const x = Math.round(this.svgObjectTitle.name.getBoundingClientRect().width) + 8;
+        this.svgObjectBlockCount.countText.attr({
+            x: 44 + x + 8,
+            y: 26,
+        });
+        requestAnimationFrame(() => {
+            this.svgObjectBlockCount.rect.attr({
+                width: this.svgObjectBlockCount.countText.getBoundingClientRect().width + 16,
+                x: 44 + x,
+                y: 12,
+            });
+        });
+        const blocks = await Entry.Utils.getObjectsBlocksForEventThread([object]);
+        const count = _get(blocks, 'length', 0);
+
+        let langText = Lang.Workspace.use_blocks_project;
+        if (count === 1) {
+            langText = Lang.Workspace.use_block_project;
+        }
+        this.svgObjectBlockCount.countText.textContent = Entry.Utils.stringFormat(
+            langText,
+            Entry.shortenNumber(count)
+        );
     }
 
     clearObjectTitle() {
@@ -1464,5 +1534,14 @@ Entry.Board = class Board {
         delete this.svgObjectTitle.frame;
         delete this.svgObjectTitle.thumbnail;
         delete this.svgObjectTitle.name;
+    }
+
+    clearObjectBlockCount() {
+        if (!this.svgObjectBlockCount) {
+            return;
+        }
+
+        this.svgObjectBlockCount.countText?.remove();
+        delete this.svgObjectBlockCount.countText;
     }
 };
