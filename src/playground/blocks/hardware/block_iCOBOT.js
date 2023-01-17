@@ -529,8 +529,8 @@ Entry.iCOBOT.getBlocks = function() {
             func: function(sprite, script)
 			{
                 var temp = Entry.hw.portData.SENSOR;
-                var Temperature = temp[9];
-                var Humidity = (temp[8])/100;
+                var Temperature = temp[8];
+                var Humidity = (temp[9])/100;
                 var Discomfort_index = (((9/5)*Temperature) - (0.55*(1-Humidity)*(((9/5)*Temperature)-26)) + 32);
                 return Discomfort_index;
             },
