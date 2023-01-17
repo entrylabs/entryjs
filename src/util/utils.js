@@ -2391,23 +2391,32 @@ Entry.Utils.getObjectsBlocks = function(objects) {
 
 const scheduler = new Scheduler();
 
-Entry.Utils.getObjectsBlocksForEventThread = (objects) => {
-    const _typePicker = _.partial(_.result, _, 'type');
-    return new Promise((resolve) => {
+Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
+    const job = new Promise((resolve) => {
         scheduler.run(function*() {
             const result = [];
-            const codes = objects || Entry.container.objects_;
+            let codes;
+            if (object) {
+                codes = [object];
+            } else {
+                codes = Entry.container.objects_;
+            }
             for (const code of codes) {
                 let script = code.script;
                 if (!(script instanceof Entry.Code)) {
                     script = new Entry.Code(script);
                 }
-                result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                result.push(script.getBlockListForEventThread(true));
                 yield;
             }
             resolve(_.flatten(result));
         });
     });
+    return job;
+});
+
+Entry.Utils.clearObjectsBlocksForEventThread = () => {
+    Entry.Utils.getObjectsBlocksForEventThread.cache = new _.memoize.Cache();
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {

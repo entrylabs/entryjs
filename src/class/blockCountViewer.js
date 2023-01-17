@@ -5,8 +5,14 @@ Entry.BlockCountViewer = class {
         if (!Entry.codeChangedEvent) {
             Entry.codeChangedEvent = new Entry.Event(window);
         }
-        Entry.codeChangedEvent.attach(this, this.updateView);
-        Entry.addEventListener('loadComplete', this.updateView.bind(this));
+
+        const updateView = () => {
+            Entry.Utils.clearObjectsBlocksForEventThread();
+            this.updateView();
+        };
+
+        Entry.codeChangedEvent.attach(this, updateView);
+        Entry.addEventListener('loadComplete', updateView);
     }
 
     generateView(sceneView, option) {
