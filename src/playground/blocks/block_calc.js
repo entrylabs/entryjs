@@ -1,3 +1,5 @@
+import _get from 'lodash/get';
+
 module.exports = {
     getBlocks() {
         return {
@@ -2391,6 +2393,56 @@ module.exports = {
                             ],
                         },
                     ],
+                },
+            },
+            get_block_count: {
+                template: '%1 의 블록수',
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'blockCount',
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_block_count',
+                },
+                paramsKeyMap: {
+                    OBJECT: 0,
+                },
+                class: 'block',
+                isNotFor: [],
+                async func(sprite, script) {
+                    const objectKey = script.getField('OBJECT', script);
+                    let object;
+                    if (objectKey.indexOf('scene-') === 0) {
+                        const blocks = await Entry.Utils.getObjectsBlocksBySceneId(
+                            objectKey.substr(6)
+                        );
+                        return _get(blocks, 'length', 0);
+                    } else if (objectKey === 'all') {
+                        object = undefined;
+                    } else if (objectKey === 'self') {
+                        object = sprite.parent;
+                    } else if (objectKey.indexOf('object-') === 0) {
+                        object = Entry.container.getObject(objectKey.substr(7));
+                    } else {
+                        return 0;
+                    }
+
+                    const blocks = await Entry.Utils.getObjectsBlocksForEventThread(object);
+                    const count = _get(blocks, 'length', 0);
+                    return count;
                 },
             },
         };

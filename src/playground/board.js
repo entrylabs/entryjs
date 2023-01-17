@@ -1522,18 +1522,6 @@ Entry.Board = class Board {
             langText,
             Entry.shortenNumber(count)
         );
-        // this.svgObjectBlockCount.countText.innerHTML = Entry.Utils.stringFormat(
-        //     langText,
-        //     `<text xml:space="preserve" fill="#6b6b6b" font-weight="bold" style="font: 12px NanumGothic;" x="105" y="26">블록</text><text xml:space="preserve" fill="#6b6b6b" font-weight:"bold" style="font: 12px NanumGothic;" x="105" y="26">${Entry.shortenNumber(
-        //         count
-        //     )}<text xml:space="preserve" fill="#6b6b6b" font-weight="bold" style="font: 12px NanumGothic;" x="105" y="26">개</text>`
-        // );
-        // this.svgObjectBlockCount.countText.innerHTML = Entry.Utils.stringFormat(
-        //     langText,
-        //     `<text xml:space="preserve" fill="#6b6b6b" font-weight="bold" style="font: 12px NanumGothic;" x="105" y="26">블록</text><text xml:space="preserve" fill="#6b6b6b" font-weight:"bold" style="font: 12px NanumGothic;" x="105" y="26">${Entry.shortenNumber(
-        //         count
-        //     )}<text xml:space="preserve" fill="#6b6b6b" font-weight="bold" style="font: 12px NanumGothic;" x="105" y="26">개</text>`
-        // );
     }
 
     clearObjectTitle() {

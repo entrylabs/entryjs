@@ -2391,7 +2391,34 @@ Entry.Utils.getObjectsBlocks = function(objects) {
 
 const scheduler = new Scheduler();
 
+Entry.Utils.getObjectsBlocksBySceneId = _.memoize((sceneId) => {
+    if (!sceneId) {
+        return [];
+    }
+    const _typePicker = _.partial(_.result, _, 'type');
+    const job = new Promise((resolve) => {
+        scheduler2.run(function*() {
+            const result = [];
+            const codes = Entry.container.objects_;
+            for (const code of codes) {
+                if (code?.scene?.id !== sceneId) {
+                    continue;
+                }
+                let script = code.script;
+                if (!(script instanceof Entry.Code)) {
+                    script = new Entry.Code(script);
+                }
+                result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                yield;
+            }
+            resolve(_.flatten(result));
+        });
+    });
+    return job;
+});
+
 Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
+    const _typePicker = _.partial(_.result, _, 'type');
     const job = new Promise((resolve) => {
         scheduler.run(function*() {
             const result = [];
@@ -2406,7 +2433,7 @@ Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
                 if (!(script instanceof Entry.Code)) {
                     script = new Entry.Code(script);
                 }
-                result.push(script.getBlockListForEventThread(true));
+                result.push(script.getBlockListForEventThread(true).map(_typePicker));
                 yield;
             }
             resolve(_.flatten(result));
@@ -2417,6 +2444,7 @@ Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
 
 Entry.Utils.clearObjectsBlocksForEventThread = () => {
     Entry.Utils.getObjectsBlocksForEventThread.cache = new _.memoize.Cache();
+    Entry.Utils.getObjectsBlocksBySceneId.cache = new _.memoize.Cache();
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
