@@ -3026,7 +3026,7 @@ Entry.Utils.stringFormat = (text, ...args) => {
     return result;
 };
 
-Entry.shortenNumber = (num = 0) => {
+Entry.Utils.shortenNumber = (num = 0) => {
     if (num >= 1000000000) {
         return `${_round(num / 1000000000, 1)}B`;
     }
@@ -3037,4 +3037,12 @@ Entry.shortenNumber = (num = 0) => {
         return `${_round(num / 1000, 1)}K`;
     }
     return num;
+};
+
+Entry.Utils.doCodeChange = () => {
+    if (Entry.codeChangedEvent) {
+        console.log('notify');
+        Entry.Utils.clearObjectsBlocksForEventThread();
+        Entry.codeChangedEvent.notify();
+    }
 };

@@ -788,12 +788,9 @@ Entry.Container = class Container {
                 );
             case 'blockCount':
                 result = [
-                    [Lang.Blocks.FLOW_stop_object_all, 'all'],
-                    [Lang.Blocks.oneself, 'self'],
-                    ...this.getAllObjects().map(({ name, id, scene = {} }) => {
-                        const { name: sceneName } = scene;
-                        return [`${sceneName} - ${name}`, `object-${id}`];
-                    }),
+                    [Lang.Blocks.this_project, 'all'],
+                    [Lang.Blocks.this_object, 'self'],
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, `object-${id}`]),
                     ...Entry.scene.getScenes().map(({ name, id }) => [name, `scene-${id}`]),
                 ];
         }

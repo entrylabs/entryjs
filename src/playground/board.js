@@ -1499,7 +1499,8 @@ Entry.Board = class Board {
             this.svgObjectBlockCount.countText = countText;
         }
 
-        const x = Math.round(this.svgObjectTitle.name.getBoundingClientRect().width) + 8;
+        const nameWidth = Math.round(this.svgObjectTitle?.name?.getBoundingClientRect().width || 0);
+        const x = nameWidth + 8;
         this.svgObjectBlockCount.countText.attr({
             x: 44 + x + 8,
             y: 26,
@@ -1520,7 +1521,7 @@ Entry.Board = class Board {
         }
         this.svgObjectBlockCount.countText.textContent = Entry.Utils.stringFormat(
             langText,
-            Entry.shortenNumber(count)
+            Entry.Utils.shortenNumber(count)
         );
     }
 

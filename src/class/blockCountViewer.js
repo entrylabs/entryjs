@@ -36,7 +36,7 @@ Entry.BlockCountViewer = class {
             }
             this.blockCountView.innerHTML = Entry.Utils.stringFormat(
                 langText,
-                `<strong>${Entry.shortenNumber(count)}</strong>`
+                `<strong>${Entry.Utils.shortenNumber(count)}</strong>`
             );
         }
     }

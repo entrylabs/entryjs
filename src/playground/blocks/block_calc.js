@@ -2396,7 +2396,6 @@ module.exports = {
                 },
             },
             get_block_count: {
-                template: '%1 의 블록수',
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,
                 skeleton: 'basic_string_field',
