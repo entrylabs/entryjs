@@ -351,6 +351,7 @@ EntryStatic.getAllBlocks = function() {
                 'index_of_string',
                 'replace_string',
                 'change_string_case',
+                'get_block_count',
             ],
         },
         {

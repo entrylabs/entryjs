@@ -129,11 +129,11 @@ class Variable {
                 this.setY(this.getY());
             } else {
                 //TODO
-                console.log(10 - 240 + Math.floor((variableLength % 66) / 11) * 80, x);
-                console.log(
-                    variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264,
-                    y
-                );
+                // console.log(10 - 240 + Math.floor((variableLength % 66) / 11) * 80, x);
+                // console.log(
+                //     variableIndex * 28 + 20 - 135 - Math.floor(variableLength / 11) * 264,
+                //     y
+                // );
                 this.setX(x - 230);
                 this.setY(y - 105);
                 // this.setX(10 - 240 + Math.floor((variableLength % 66) / 11) * 80);

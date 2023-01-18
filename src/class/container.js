@@ -774,9 +774,7 @@ Entry.Container = class Container {
                 }
                 break;
             case 'fonts':
-                result = EntryStatic.fonts.map((font) => {
-                    return [font.name, font.family];
-                });
+                result = EntryStatic.fonts.map((font) => [font.name, font.family]);
                 break;
             case 'connectedCameras':
                 const inputList = await getInputList();
@@ -788,6 +786,13 @@ Entry.Container = class Container {
                             index,
                         ])
                 );
+            case 'blockCount':
+                result = [
+                    [Lang.Blocks.this_project, 'all'],
+                    [Lang.Blocks.this_object, 'self'],
+                    ...this.getCurrentObjects().map(({ name, id }) => [name, `object-${id}`]),
+                    ...Entry.scene.getScenes().map(({ name, id }) => [name, `scene-${id}`]),
+                ];
         }
         if (!result.length) {
             result = [[Lang.Blocks.no_target, 'null']];
