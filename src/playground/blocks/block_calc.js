@@ -2417,6 +2417,10 @@ module.exports = {
                     params: [null],
                     type: 'get_block_count',
                 },
+                pyHelpDef: {
+                    params: ['A&value'],
+                    type: 'get_block_count',
+                },
                 paramsKeyMap: {
                     OBJECT: 0,
                 },
@@ -2424,6 +2428,9 @@ module.exports = {
                 isNotFor: [],
                 async func(sprite, script) {
                     const objectKey = script.getField('OBJECT', script);
+                    if (!objectKey) {
+                        return 0;
+                    }
                     let object;
                     if (objectKey.indexOf('scene-') === 0) {
                         const blocks = await Entry.Utils.getObjectsBlocksBySceneId(
@@ -2443,6 +2450,27 @@ module.exports = {
                     const blocks = await Entry.Utils.getObjectsBlocksForEventThread(object);
                     const count = _get(blocks, 'length', 0);
                     return count;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.get_block_count(%1)',
+                            blockType: 'param',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'blockCount',
+                                    fontSize: 11,
+                                    textColor: '#fff',
+                                    arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.get_block_count[0]',
+                                },
+                            ],
+                        },
+                    ],
                 },
             },
         };

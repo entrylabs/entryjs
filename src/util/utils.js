@@ -2397,7 +2397,7 @@ Entry.Utils.getObjectsBlocksBySceneId = _.memoize((sceneId) => {
     }
     const _typePicker = _.partial(_.result, _, 'type');
     const job = new Promise((resolve) => {
-        scheduler2.run(function*() {
+        scheduler.run(function*() {
             const result = [];
             const codes = Entry.container.objects_;
             for (const code of codes) {
