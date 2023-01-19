@@ -335,8 +335,10 @@ Entry.Microbit2 = new (class Microbit2 {
                     this.version = major;
                 }
 
+                // INFO: A,B 버튼이벤트 관련 로직
                 const pressedBtn = value.split(':btn:')[1];
                 if (pressedBtn) {
+                    // INFO: 이벤트 중복발생 방지를 위한 쓰로틀링
                     this.firePressedBtnEventWithThrottle(pressedBtn);
                 }
             } else if (codeId) {
