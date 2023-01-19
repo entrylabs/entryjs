@@ -3,7 +3,7 @@
 const _clamp = require('lodash/clamp');
 const _throttle = require('lodash/throttle');
 
-const EVENT_INTERVAL = 100;
+const EVENT_INTERVAL = 150;
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
