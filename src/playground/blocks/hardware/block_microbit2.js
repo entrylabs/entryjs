@@ -322,12 +322,10 @@ Entry.Microbit2 = new (class Microbit2 {
     }
 
     afterReceive(portData) {
-        console.log("portData: ", portData);
         if (portData) {
             let codeId = portData.recentlyWaitDone;
             let value = portData.result;
             if (value && value.indexOf('localdata') > -1) {
-                console.log("value: ", value);
                 const version = value.split(';')[1];
                 if (!version) {
                     return;
@@ -342,7 +340,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     this.firePressedBtnEventWithThrottle(pressedBtn);
                 }
             } else if (codeId) {
-                console.log("codeId: ", codeId);
                 if (codeId.indexOf('reset') > -1) {
                     this.commandStatus = {};
                     this.commandValue = {};
