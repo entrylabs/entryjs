@@ -1,6 +1,9 @@
 'use strict';
 
 const _clamp = require('lodash/clamp');
+const _throttle = require('lodash/throttle');
+
+const EVENT_INTERVAL = 100;
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
@@ -219,7 +222,6 @@ Entry.Microbit2 = new (class Microbit2 {
             [9, 0, 0, 0, 9],
             [0, 9, 9, 9, 0],
         ];
-        this.pressedBtn = -1;
         this.blockMenuBlocks = [
             'microbit2_common_title',
             'microbit2_get_analog',
@@ -257,6 +259,9 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_get_sound_level',
         ];
         this.version = '2';
+        this.firePressedBtnEventWithThrottle = _throttle((pressedBtn) => {
+            Entry.engine.fireEventWithValue('microbit_btn_pressed', pressedBtn);
+        }, EVENT_INTERVAL, { leading: true, trailing: false });
     }
 
     setZero() {
@@ -332,13 +337,9 @@ Entry.Microbit2 = new (class Microbit2 {
                     this.version = major;
                 }
 
-                // 마이크로비트 버튼 이벤트 블록을 위한 처리
                 const pressedBtn = value.split(':btn:')[1];
                 if (pressedBtn) {
-                    this.pressedBtn = pressedBtn;
-                    Entry.engine.fireEventWithValue('microbit_btn_pressed', this.pressedBtn);
-                } else {
-                    this.pressedBtn = -1;
+                    this.firePressedBtnEventWithThrottle(pressedBtn);
                 }
             } else if (codeId) {
                 console.log("codeId: ", codeId);
