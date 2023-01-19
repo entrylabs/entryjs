@@ -242,7 +242,6 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_change_tempo',
             'microbit2_set_tone',
             'microbit2_play_preset_music',
-            'microbit2_btn_event',
             'microbit2_get_btn',
             'microbit2_get_acc',
             'microbit2_get_gesture',
@@ -253,6 +252,7 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_set_servo',
             'microbit2_set_pwm',
             'microbit2_v2_title',
+            'microbit2_btn_event',
             'microbit2_get_logo',
             'microbit2_speaker_toggle',
             'microbit2_play_sound_effect',
@@ -1976,7 +1976,7 @@ Entry.Microbit2 = new (class Microbit2 {
                 paramsKeyMap: {
                     VALUE: 1,
                 },
-                class: 'microbit2_btn_event',
+                class: 'microbit2v2',
                 isNotFor: ['microbit2'],
                 event: 'microbit_btn_pressed',
                 func: (sprite, script) => {
