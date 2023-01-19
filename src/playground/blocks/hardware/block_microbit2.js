@@ -1,10 +1,6 @@
 'use strict';
 
-const _set = require('lodash/set');
-const _get = require('lodash/get');
-const _merge = require('lodash/merge');
 const _clamp = require('lodash/clamp');
-const { version } = require('@babel/core');
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
