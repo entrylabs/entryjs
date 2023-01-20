@@ -1461,7 +1461,7 @@ Entry.Board = class Board {
             const nameText = name.elem('text');
             nameText.addClass('entryBoardObjectName');
             nameText.attr({ x: 44, y: 26, fill: '#6b6b6b' });
-            nameText.style.font = '12px NanumGothicOTFBold';
+            nameText.style.font = '12px NanumGothicBold';
             nameText.textContent = object.name;
             this.svgObjectTitle.name = nameText;
         }
