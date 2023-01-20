@@ -201,6 +201,12 @@ Entry.CodeMap = {};
                 {}
             ),
         ],
+        get_block_count: [
+            {
+                자신: 'self',
+                self: 'self',
+            },
+        ],
     };
 
     cc.Arduino = {

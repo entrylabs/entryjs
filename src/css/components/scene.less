@@ -4,19 +4,43 @@ body {
     }
 }
 
-.entrySceneWorkspace {
+.entryTopFloatingView {
+    display: flex;
     position: absolute;
-    left: 0;
-    top: 0;
     width: 100%;
-    height: 38px;
-    padding-top: 1px;
-    background-color: @baseblue;
-    overflow: hidden;
-    z-index: 10;
+    flex-flow: row nowrap;
 
-    .practical_course_mode & {
-        background-color: @basePurple;
+    .entrySceneWorkspace {
+        flex: 1;
+        height: 38px;
+        padding-top: 1px;
+        background-color: @baseblue;
+        overflow: hidden;
+        z-index: 10;
+
+        .practical_course_mode & {
+            background-color: @basePurple;
+        }
+    }
+
+    .entryBlockCountView {
+        width: 155px;
+        background-color: @baseblue;
+        z-index: 10;
+        display: flex;
+        flex-direction: row-reverse;
+        align-items: center;
+
+        .blockCountView {
+            height: 24px;
+            line-height: 24px;
+            border-radius: 14px;
+            margin-right: 12px;
+            padding: 0 8px;
+            background-color: #3064ec;
+            font-size: 12px;
+            color: #ffffff;
+        }
     }
 }
 
@@ -25,7 +49,7 @@ body {
     float: left;
     margin: 0;
     padding: 0 0 0 26px;
-    max-width: calc(100% - 43px);
+    max-width: calc(100% - 72px);
 
     .rcs-custom-scroll .rcs-outer-container {
         overflow: visible;
@@ -52,14 +76,14 @@ body {
     margin-top: 0;
     z-index: 888;
 }
-.entrySceneAddButtonWorkspace{
+.entrySceneAddButtonWorkspace {
     float: left;
     position: relative;
     margin: 3px 0px 0px -2px;
     width: 44px;
     height: 34px;
     cursor: pointer;
-    .backgroundImage("btn_scene_add.png");
+    .backgroundImage('btn_scene_add.png');
     background-size: 44px 34px;
 }
 
@@ -76,7 +100,7 @@ body {
         width: 25px;
         height: 37px;
         content: '';
-        .backgroundImage("btn_scene_left.png");
+        .backgroundImage('btn_scene_left.png');
         background-position: 50%;
         background-repeat: no-repeat;
         background-color: transparent;
@@ -86,21 +110,22 @@ body {
 }
 
 .entrySceneNextButtonWorkspace {
-    position: absolute;
+    position: relative;
+    display: inline-block;
     background-color: #4f80ff;
     width: 72px;
     height: 37px;
     right: 0px;
-    opacity: .8;
+    opacity: 0.8;
     z-index: 299;
     margin: 0px;
-    
+
     .nextBtn {
         position: absolute;
         width: 28px;
         height: 37px;
         content: '';
-        .backgroundImage("btn_scene_right.png");
+        .backgroundImage('btn_scene_right.png');
         background-position: 50%;
         background-repeat: no-repeat;
         background-color: transparent;
@@ -115,7 +140,7 @@ body {
         width: 44px;
         height: 34px;
         cursor: pointer;
-        .backgroundImage("btn_scene_add.png");
+        .backgroundImage('btn_scene_add.png');
         background-size: 44px 34px;
     }
 }
@@ -180,7 +205,7 @@ body {
     padding: 0;
     border: 0;
     display: none;
-    .backgroundImage("scene_delete_unselect.png");
+    .backgroundImage('scene_delete_unselect.png');
     background-size: 10px auto;
     background-repeat: no-repeat;
     background-position: center;
@@ -195,7 +220,7 @@ body {
     display: block;
     top: 3px;
     background-color: transparent;
-    .backgroundImage("scene_delete.png");
+    .backgroundImage('scene_delete.png');
 }
 
 // .entrySceneRemoveButtonWorkspace:hover {
@@ -220,15 +245,14 @@ body {
         width: 14px;
         height: 14px;
         right: 48px;
-        .backgroundImage("scene_delete_unselect_big.png");
+        .backgroundImage('scene_delete_unselect_big.png');
     }
 
     .selectedScene .entrySceneRemoveButtonWorkspace {
-        .backgroundImage("scene_delete_big.png");
+        .backgroundImage('scene_delete_big.png');
     }
 
     .entrySceneRemoveButtonWorkspace:hover {
-        .backgroundImage("scene_delete_hover_big.png");
+        .backgroundImage('scene_delete_hover_big.png');
     }
 }
-
