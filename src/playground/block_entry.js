@@ -1855,7 +1855,6 @@ function getBlocks() {
                     },
                 },
             ],
-            isPrimitive: true,
             events: {},
             def: {
                 params: [null],
