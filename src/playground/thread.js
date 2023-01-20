@@ -40,6 +40,7 @@ Entry.Thread = class Thread {
         if (codeView) {
             this.createView(codeView.board, mode);
         }
+        this.resetEvent();
         return this;
     }
 
@@ -78,11 +79,13 @@ Entry.Thread = class Thread {
         }
 
         this._code.createThread(this._data.splice(this._data.indexOf(block), count), index);
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
     cut(block) {
         const splicedData = this._data.splice(this._data.indexOf(block));
+        this.resetEvent();
         this.changeEvent.notify();
         return splicedData;
     }
@@ -93,12 +96,14 @@ Entry.Thread = class Thread {
             newBlocks[i].setThread(this);
         }
         this._data.splice(...[index + 1, 0].concat(newBlocks));
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
     insertToTop(newBlock) {
         newBlock.setThread(this);
         this._data.unshift.apply(this._data, [newBlock]);
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
@@ -181,6 +186,7 @@ Entry.Thread = class Thread {
 
     spliceBlock(block) {
         this._data.remove(block);
+        this.resetEvent();
         this.changeEvent.notify();
     }
 
@@ -329,5 +335,12 @@ Entry.Thread = class Thread {
 
     hasData() {
         return Boolean(this._data.length);
+    }
+
+    resetEvent() {
+        const block = this.getFirstBlock();
+        if (block && this._event !== block?._schema?.event) {
+            this._event = block?._schema?.event;
+        }
     }
 };
