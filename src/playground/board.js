@@ -1472,7 +1472,7 @@ Entry.Board = class Board {
     }
 
     async updateObjectBlockCount(object) {
-        if (!object) {
+        if (this.suffix !== 'board' || !object) {
             this.clearObjectBlockCount();
             return;
         }
