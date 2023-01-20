@@ -1499,15 +1499,18 @@ Entry.Board = class Board {
             this.svgObjectBlockCount.countText = countText;
         }
 
-        const nameWidth = Math.round(this.svgObjectTitle?.name?.getBoundingClientRect().width || 0);
+        const nameWidth =
+            Math.round(this.svgObjectTitle?.name?.getBoundingClientRect().width || 0) / this.scale;
         const x = nameWidth + 8;
         this.svgObjectBlockCount.countText.attr({
             x: 44 + x + 8,
             y: 26,
         });
         requestAnimationFrame(() => {
+            const rectWidth =
+                this.svgObjectBlockCount.countText.getBoundingClientRect().width / this.scale;
             this.svgObjectBlockCount.rect.attr({
-                width: this.svgObjectBlockCount.countText.getBoundingClientRect().width + 16,
+                width: rectWidth + 16,
                 x: 44 + x,
                 y: 12,
             });
