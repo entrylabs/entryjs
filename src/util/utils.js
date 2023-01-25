@@ -3041,7 +3041,6 @@ Entry.Utils.shortenNumber = (num = 0) => {
 
 Entry.Utils.doCodeChange = () => {
     if (Entry.codeChangedEvent) {
-        console.log('notify');
         Entry.Utils.clearObjectsBlocksForEventThread();
         Entry.codeChangedEvent.notify();
     }
