@@ -36,6 +36,8 @@ Entry.Playground = class Playground {
         });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
 
+        Entry.addEventListener('workspaceChangeMode', this.updateSelectedObjectTitle.bind(this));
+
         Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
     }
 
@@ -2357,6 +2359,17 @@ Entry.Playground = class Playground {
     updateObjectTitle(object) {
         if (this.board) {
             this.board.updateObjectTitle(object);
+        }
+    }
+
+    updateSelectedObjectTitle() {
+        if (
+            this.board &&
+            Entry.container.selectedObject &&
+            this.board.workspace.getMode() === Entry.Workspace.MODE_BOARD
+        ) {
+            this.board.updateObjectTitle(Entry.container.selectedObject);
+            Entry.Utils.doCodeChange();
         }
     }
 
