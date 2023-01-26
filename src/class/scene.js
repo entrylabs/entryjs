@@ -146,6 +146,10 @@ Entry.Scene = class {
     createListView() {
         const listView = Entry.createElement('div');
         listView.addClass('entrySceneListWorkspace');
+        const observer = new ResizeObserver(() => {
+            this.updateView();
+        });
+        observer.observe(listView);
 
         this.sceneSortableListWidget = new Sortable({
             data: {
@@ -328,10 +332,8 @@ Entry.Scene = class {
 
     updateView() {
         if (!Entry.type || Entry.type === 'workspace') {
-            // var parent = this.listView_;
-            // this.getScenes().forEach(({ view }) => parent.appendChild(view));
-            const addBtnWidth = 44;
-            const sceneListWidth = this.sceneListWidth + addBtnWidth;
+            const addBtnWidth = 72;
+            const sceneListWidth = this.sceneListWidth + addBtnWidth + 170;
             const browserWidth = Entry.view_.offsetWidth;
             const maxSceneCount = Entry.scene.scenes_.length || STATIC_SCENES_COUNT;
             if (this.addButton_) {
@@ -426,7 +428,10 @@ Entry.Scene = class {
         Entry.stage.removeObjectContainer(scene);
         $(scene.view).remove();
         this.selectScene();
-        this.updateView();
+
+        if (Entry.codeChangedEvent) {
+            Entry.codeChangedEvent.notify();
+        }
     }
 
     selectScene(scene) {

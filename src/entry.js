@@ -41,6 +41,7 @@ require('./class/project');
 require('./class/property_panel');
 require('./class/reporter');
 require('./class/scene');
+require('./class/blockCountViewer');
 require('./class/stage');
 require('./class/stamp_entity');
 require('./class/toast');

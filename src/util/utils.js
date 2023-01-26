@@ -4,10 +4,12 @@ import { GEHelper } from '../graphicEngine/GEHelper';
 import _uniq from 'lodash/uniq';
 import _intersection from 'lodash/intersection';
 import _clamp from 'lodash/clamp';
+import _round from 'lodash/round';
 import FontFaceOnload from 'fontfaceonload';
 import DataTable from '../class/DataTable';
 import entryModuleLoader from '../class/entryModuleLoader';
 import { bignumber, chain } from 'mathjs';
+import { Scheduler } from './scheduler';
 
 Entry.Utils = {};
 
@@ -2376,7 +2378,6 @@ Entry.Utils.getUniqObjectsBlocks = function(objects) {
 
 Entry.Utils.getObjectsBlocks = function(objects) {
     const _typePicker = _.partial(_.result, _, 'type');
-
     return _.chain(objects || Entry.container.objects_)
         .map(({ script }) => {
             if (!(script instanceof Entry.Code)) {
@@ -2386,6 +2387,64 @@ Entry.Utils.getObjectsBlocks = function(objects) {
         })
         .flatten()
         .value();
+};
+
+const scheduler = new Scheduler();
+
+Entry.Utils.getObjectsBlocksBySceneId = _.memoize((sceneId) => {
+    if (!sceneId) {
+        return [];
+    }
+    const _typePicker = _.partial(_.result, _, 'type');
+    const job = new Promise((resolve) => {
+        scheduler.run(function*() {
+            const result = [];
+            const codes = Entry.container.objects_;
+            for (const code of codes) {
+                if (code?.scene?.id !== sceneId) {
+                    continue;
+                }
+                let script = code.script;
+                if (!(script instanceof Entry.Code)) {
+                    script = new Entry.Code(script);
+                }
+                result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                yield;
+            }
+            resolve(_.flatten(result));
+        });
+    });
+    return job;
+});
+
+Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
+    const _typePicker = _.partial(_.result, _, 'type');
+    const job = new Promise((resolve) => {
+        scheduler.run(function*() {
+            const result = [];
+            let codes;
+            if (object) {
+                codes = [object];
+            } else {
+                codes = Entry.container.objects_;
+            }
+            for (const code of codes) {
+                let script = code.script;
+                if (!(script instanceof Entry.Code)) {
+                    script = new Entry.Code(script);
+                }
+                result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                yield;
+            }
+            resolve(_.flatten(result));
+        });
+    });
+    return job;
+});
+
+Entry.Utils.clearObjectsBlocksForEventThread = () => {
+    Entry.Utils.getObjectsBlocksForEventThread.cache = new _.memoize.Cache();
+    Entry.Utils.getObjectsBlocksBySceneId.cache = new _.memoize.Cache();
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
@@ -2965,4 +3024,24 @@ Entry.Utils.stringFormat = (text, ...args) => {
         result = result.replace(regexp, args[i]);
     }
     return result;
+};
+
+Entry.Utils.shortenNumber = (num = 0) => {
+    if (num >= 1000000000) {
+        return `${_round(num / 1000000000, 1)}B`;
+    }
+    if (num >= 1000000) {
+        return `${_round(num / 1000000, 1)}M`;
+    }
+    if (num >= 100000) {
+        return `${_round(num / 1000, 1)}K`;
+    }
+    return num;
+};
+
+Entry.Utils.doCodeChange = () => {
+    if (Entry.codeChangedEvent) {
+        Entry.Utils.clearObjectsBlocksForEventThread();
+        Entry.codeChangedEvent.notify();
+    }
 };

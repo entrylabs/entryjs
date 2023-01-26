@@ -358,6 +358,9 @@ Entry.Code = class Code {
         const event = Entry.creationChangedEvent;
         if (board && event && board.constructor !== Entry.BlockMenu) {
             event.notify();
+            if (Entry.codeChangedEvent) {
+                Entry.codeChangedEvent.notify();
+            }
         }
     }
 
@@ -458,6 +461,18 @@ Entry.Code = class Code {
     getBlockList(excludePrimitive, type) {
         return _.chain(this.getThreads())
             .map((t) => t.getBlockList(excludePrimitive, type))
+            .flatten(true)
+            .value();
+    }
+
+    getBlockListForEventThread(excludePrimitive, type) {
+        return _.chain(this.getThreads())
+            .map((t) => {
+                if (t._event) {
+                    return t.getBlockList(excludePrimitive, type);
+                }
+                return [];
+            })
             .flatten(true)
             .value();
     }

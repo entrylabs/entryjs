@@ -144,11 +144,15 @@ export default class HardwareLite {
 
     isHwLiteSupportAgent() {
         const userAgentString = navigator.userAgent.toLowerCase();
-        return (
-            userAgentString.indexOf('chrome') >= 0 &&
-            userAgentString.indexOf('window') < 0 &&
-            userAgentString.indexOf('electron') < 0
-        );
+
+        // INFO: 디바이스가 모바일이거나 일렉트론이면 1차적으로 제외
+        if (userAgentString.includes('mobile') || userAgentString.includes('electron')) {
+            return false;
+        } else if (userAgentString.includes('whale') || userAgentString.includes('edge') || userAgentString.includes('chrome')) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     refreshHardwareLiteBlockMenu() {
