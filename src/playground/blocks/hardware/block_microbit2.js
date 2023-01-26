@@ -1,10 +1,9 @@
 'use strict';
 
-const _set = require('lodash/set');
-const _get = require('lodash/get');
-const _merge = require('lodash/merge');
 const _clamp = require('lodash/clamp');
-const { version } = require('@babel/core');
+const _throttle = require('lodash/throttle');
+
+const EVENT_INTERVAL = 150;
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
@@ -253,12 +252,16 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_set_servo',
             'microbit2_set_pwm',
             'microbit2_v2_title',
+            'microbit2_btn_event',
             'microbit2_get_logo',
             'microbit2_speaker_toggle',
             'microbit2_play_sound_effect',
             'microbit2_get_sound_level',
         ];
         this.version = '2';
+        this.firePressedBtnEventWithThrottle = _throttle((pressedBtn) => {
+            Entry.engine.fireEventWithValue('microbit_btn_pressed', pressedBtn);
+        }, EVENT_INTERVAL, { leading: true, trailing: false });
     }
 
     setZero() {
@@ -331,6 +334,13 @@ Entry.Microbit2 = new (class Microbit2 {
                 if (this.version !== major) {
                     this.version = major;
                 }
+
+                // INFO: A,B 버튼이벤트 관련 로직
+                const pressedBtn = value.split(':btn:')[1];
+                if (pressedBtn) {
+                    // INFO: 이벤트 중복발생 방지를 위한 쓰로틀링
+                    this.firePressedBtnEventWithThrottle(pressedBtn);
+                }
             } else if (codeId) {
                 if (codeId.indexOf('reset') > -1) {
                     this.commandStatus = {};
@@ -372,6 +382,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_tone: '%1 음을 %2 박만큼 연주하기 %3',
                     microbit2_play_preset_music: '%1 음악을 연주하기 %2',
                     microbit2_play_sound_effect: '%1 효과음을 연주하기 %2',
+                    microbit2_btn_event: '%1 %2 버튼을 눌렀을 때',
                     microbit2_get_btn: '%1 버튼이 눌렸는가?',
                     microbit2_get_logo: '로고를 터치했는가?',
                     microbit2_get_gesture: '움직임이 %1 인가?',
@@ -525,6 +536,7 @@ Entry.Microbit2 = new (class Microbit2 {
                         '선택한 음을 선택한 박만큼 연주합니다. 1~5옥타브 사이의 음계를 선택할 수 있습니다.',
                     microbit2_play_preset_music: '미리 설정되어 있는 음악을 연주합니다.',
                     microbit2_play_sound_effect: '미리 설정되어 있는 효과음을 연주합니다.',
+                    microbit2_btn_event: '선택한 버튼이 눌리면 아래에 연결된 블록들을 실행합니다.',
                     microbit2_get_btn: "선택한 버튼이 눌렸다면 '참'으로 판단합니다.",
                     microbit2_get_logo: "로고를 터치했다면 '참'으로 판단합니다.",
                     microbit2_get_gesture: "선택한 움직임이 감지되면 '참'으로 판단합니다.",
@@ -564,6 +576,7 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_tone: 'play melody %1 for %2 beat %3',
                     microbit2_play_preset_music: 'play music %1 %2',
                     microbit2_play_sound_effect: 'play sound %1 %2',
+                    microbit2_btn_event: '%1 When %2 button pressed',
                     microbit2_get_btn: '%1 button pressed?',
                     microbit2_get_logo: 'logo touched?',
                     microbit2_get_gesture: 'Is the movement %1?',
@@ -722,6 +735,7 @@ Entry.Microbit2 = new (class Microbit2 {
                         'Plays the entered melody for the entered beat. You can choose a scale between 1 and 5 octaves.',
                     microbit2_play_preset_music: 'Plays preset music.',
                     microbit2_play_sound_effect: 'Plays preset sound.',
+                    microbit2_btn_event: 'When the selected button is pressed, the connected blocks below will run',
                     microbit2_get_btn: "If the selected button is pressed, it is judged as 'True'.",
                     microbit2_get_logo: "If the logo is touched, it is judged as 'True'.",
                     microbit2_get_gesture:
@@ -947,7 +961,7 @@ Entry.Microbit2 = new (class Microbit2 {
         return parsedResponse;
     }
 
-    getBlocks = function() {
+    getBlocks = function () {
         return {
             microbit2_common_title: {
                 skeleton: 'basic_text',
@@ -1928,6 +1942,45 @@ Entry.Microbit2 = new (class Microbit2 {
                     } else if (parsedResponse[1] == '3' && value == 'ab') {
                         return 1;
                     } else return 0;
+                },
+            },
+            microbit2_btn_event: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#fff',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_hardware.svg',
+                        size: 14,
+                        position: { x: 0, y: -2 },
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['A', '1'],
+                            ['B', '2'],
+                            ['A+B', '3'],
+                        ],
+                        value: '1',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                def: {
+                    type: 'microbit2_btn_event'
+                },
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'microbit2v2',
+                isNotFor: ['microbit2'],
+                event: 'microbit_btn_pressed',
+                func: (sprite, script) => {
+                    return script.callReturn();
                 },
             },
             microbit2_get_acc: {

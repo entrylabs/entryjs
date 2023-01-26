@@ -213,6 +213,14 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_motor_135_degrees: "135°",
                 icobot_motor_150_degrees: "150°",
                 icobot_motor_180_degrees: "180°",
+                icobot_motor_210_degrees: "210°",
+                icobot_motor_225_degrees: "225°",
+                icobot_motor_240_degrees: "240°",
+                icobot_motor_270_degrees: "270°",
+                icobot_motor_300_degrees: "300°",
+                icobot_motor_315_degrees: "315°",
+                icobot_motor_330_degrees: "330°",
+                icobot_motor_360_degrees: "360°",
             }
         },
         en: {
@@ -314,6 +322,14 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_motor_135_degrees: "135°",
                 icobot_motor_150_degrees: "150°",
                 icobot_motor_180_degrees: "180°",
+                icobot_motor_210_degrees: "210°",
+                icobot_motor_225_degrees: "225°",
+                icobot_motor_240_degrees: "240°",
+                icobot_motor_270_degrees: "270°",
+                icobot_motor_300_degrees: "300°",
+                icobot_motor_315_degrees: "315°",
+                icobot_motor_330_degrees: "330°",
+                icobot_motor_360_degrees: "360°",
             }
         }
     }
@@ -529,8 +545,8 @@ Entry.iCOBOT.getBlocks = function() {
             func: function(sprite, script)
 			{
                 var temp = Entry.hw.portData.SENSOR;
-                var Temperature = temp[9];
-                var Humidity = (temp[8])/100;
+                var Temperature = temp[8];
+                var Humidity = (temp[9])/100;
                 var Discomfort_index = (((9/5)*Temperature) - (0.55*(1-Humidity)*(((9/5)*Temperature)-26)) + 32);
                 return Discomfort_index;
             },
@@ -942,6 +958,41 @@ Entry.iCOBOT.getBlocks = function() {
             isNotFor: ['iCOBOT'],
             events: {},
         },
+        
+        icobot_rgb_list: {
+             color: EntryStatic.colorSet.block.default.HARDWARE,
+             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,		
+             fontColor: '#fff',			
+             skeleton: 'basic_string_field',
+             statements: [],
+             template: '%1',
+             params: [
+                 {
+                     type: 'Dropdown',
+                     options: [
+                         [Lang.Blocks.icobot_led_total, '0'],
+                         [Lang.Blocks.icobot_led_left_up, '1'],
+                         [Lang.Blocks.icobot_led_right_up, '2'],
+                         [Lang.Blocks.icobot_led_left_down, '3'],
+                         [Lang.Blocks.icobot_led_right_down, '4'],				
+                     ],
+                     value: '0',
+                     fontSize: 11,
+                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                 },
+             ],
+             events: {},
+             def: {
+                 params: [null],
+             },
+             paramsKeyMap: {
+                 PORT: 0,
+             },
+             func: function(sprite, script) {
+                 return script.getField('PORT');
+             },
+         },
 		
 		// RGBLED - 종류 선택 및 On/Off
 		icobot_digital_rgbled_onoff: 
@@ -953,18 +1004,20 @@ Entry.iCOBOT.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.icobot_led_total, '0'],
-                        [Lang.Blocks.icobot_led_left_up, '1'],
-                        [Lang.Blocks.icobot_led_right_up, '2'],
-                        [Lang.Blocks.icobot_led_left_down, '3'],
-                        [Lang.Blocks.icobot_led_right_down, '4'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    // type: 'Dropdown',
+                    // options: [
+                    //     [Lang.Blocks.icobot_led_total, '0'],
+                    //     [Lang.Blocks.icobot_led_left_up, '1'],
+                    //     [Lang.Blocks.icobot_led_right_up, '2'],
+                    //     [Lang.Blocks.icobot_led_left_down, '3'],
+                    //     [Lang.Blocks.icobot_led_right_down, '4'],
+                    // ],
+                    // value: '0',
+                    // fontSize: 11,
+                    // bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    // arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -991,7 +1044,12 @@ Entry.iCOBOT.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    {
+                        type: 'icobot_rgb_list',
+                    },
+                    null
+                ],
                 type: 'icobot_digital_rgbled_onoff',
             },
             paramsKeyMap: {
@@ -1081,18 +1139,20 @@ Entry.iCOBOT.getBlocks = function() {
             statements: [],
             params: [    
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.icobot_led_total, '0'],
-                        [Lang.Blocks.icobot_led_left_up, '1'],
-                        [Lang.Blocks.icobot_led_right_up, '2'],
-                        [Lang.Blocks.icobot_led_left_down, '3'],
-                        [Lang.Blocks.icobot_led_right_down, '4'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    // type: 'Dropdown',
+                    // options: [
+                    //     [Lang.Blocks.icobot_led_total, '0'],
+                    //     [Lang.Blocks.icobot_led_left_up, '1'],
+                    //     [Lang.Blocks.icobot_led_right_up, '2'],
+                    //     [Lang.Blocks.icobot_led_left_down, '3'],
+                    //     [Lang.Blocks.icobot_led_right_down, '4'],
+                    // ],
+                    // value: '0',
+                    // fontSize: 11,
+                    // bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    // arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1102,7 +1162,12 @@ Entry.iCOBOT.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null],
+                params: [
+                    {
+                        type: 'icobot_rgb_list',
+                    },
+                    null
+                ],
                 type: 'icobot_digital_rgbled_off',
             },
             paramsKeyMap: {
@@ -1167,18 +1232,20 @@ Entry.iCOBOT.getBlocks = function() {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.icobot_led_total, '0'],
-                        [Lang.Blocks.icobot_led_left_up, '1'],
-                        [Lang.Blocks.icobot_led_right_up, '2'],
-                        [Lang.Blocks.icobot_led_left_down, '3'],
-                        [Lang.Blocks.icobot_led_right_down, '4'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    // type: 'Dropdown',
+                    // options: [
+                    //     [Lang.Blocks.icobot_led_total, '0'],
+                    //     [Lang.Blocks.icobot_led_left_up, '1'],
+                    //     [Lang.Blocks.icobot_led_right_up, '2'],
+                    //     [Lang.Blocks.icobot_led_left_down, '3'],
+                    //     [Lang.Blocks.icobot_led_right_down, '4'],
+                    // ],
+                    // value: '0',
+                    // fontSize: 11,
+                    // bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    // arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1201,7 +1268,9 @@ Entry.iCOBOT.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,	
+                    {
+                        type: 'icobot_rgb_list',
+                    },		
                     {
                         type: 'number',
 						params: ["0"],
@@ -1422,13 +1491,21 @@ Entry.iCOBOT.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.icobot_motor_30_degrees, '0'],
-                        [Lang.Blocks.icobot_motor_45_degrees, '1'],	
+                        [Lang.Blocks.icobot_motor_45_degrees, '1'],
                         [Lang.Blocks.icobot_motor_60_degrees, '2'],
-                        [Lang.Blocks.icobot_motor_90_degrees, '3'],	
-                        [Lang.Blocks.icobot_motor_120_degrees, '4'],	
-                        [Lang.Blocks.icobot_motor_135_degrees, '5'],	
-                        [Lang.Blocks.icobot_motor_150_degrees, '6'],	
-                        [Lang.Blocks.icobot_motor_180_degrees, '7'],	
+                        [Lang.Blocks.icobot_motor_90_degrees, '3'],
+                        [Lang.Blocks.icobot_motor_120_degrees, '4'],
+                        [Lang.Blocks.icobot_motor_135_degrees, '5'],
+                        [Lang.Blocks.icobot_motor_150_degrees, '6'],
+                        [Lang.Blocks.icobot_motor_180_degrees, '7'],
+                        [Lang.Blocks.icobot_motor_210_degrees, '8'],
+                        [Lang.Blocks.icobot_motor_225_degrees, '9'],
+                        [Lang.Blocks.icobot_motor_240_degrees, '10'],
+                        [Lang.Blocks.icobot_motor_270_degrees, '11'],
+                        [Lang.Blocks.icobot_motor_300_degrees, '12'],
+                        [Lang.Blocks.icobot_motor_315_degrees, '13'],
+                        [Lang.Blocks.icobot_motor_330_degrees, '14'],
+                        [Lang.Blocks.icobot_motor_360_degrees, '15'],
                     ],
                     value: '0',
                     fontSize: 11,
