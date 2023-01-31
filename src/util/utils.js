@@ -2418,25 +2418,31 @@ Entry.Utils.getObjectsBlocksBySceneId = _.memoize((sceneId) => {
 });
 
 Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
+    const nowScheduler = new Scheduler();
     const _typePicker = _.partial(_.result, _, 'type');
     const job = new Promise((resolve) => {
-        scheduler.run(function*() {
+        nowScheduler.run(function*() {
             const result = [];
-            let codes;
-            if (object) {
-                codes = [object];
-            } else {
-                codes = Entry.container.objects_;
-            }
-            for (const code of codes) {
-                let script = code.script;
-                if (!(script instanceof Entry.Code)) {
-                    script = new Entry.Code(script);
+            try {
+                let codes;
+                if (object) {
+                    codes = [object];
+                } else {
+                    codes = Entry.container.objects_;
                 }
-                result.push(script.getBlockListForEventThread(true).map(_typePicker));
-                yield;
+                for (const code of codes) {
+                    let script = code.script;
+                    if (!(script instanceof Entry.Code)) {
+                        script = new Entry.Code(script);
+                    }
+                    result.push(script.getBlockListForEventThread(true).map(_typePicker));
+                    yield;
+                }
+                resolve(_.flatten(result));
+            } catch (e) {
+                console.warn(e);
+                resolve(_.flatten(result));
             }
-            resolve(_.flatten(result));
         });
     });
     return job;
