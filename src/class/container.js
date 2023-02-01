@@ -776,7 +776,7 @@ Entry.Container = class Container {
             case 'fonts':
                 result = EntryStatic.fonts.map((font) => [font.name, font.family]);
                 break;
-            case 'connectedCameras':
+            case 'connectedCameras': {
                 const inputList = await getInputList();
                 result = [].concat(
                     inputList
@@ -786,6 +786,8 @@ Entry.Container = class Container {
                             index,
                         ])
                 );
+                break;
+            }
             case 'blockCount':
                 result = [
                     [Lang.Blocks.this_project, 'all'],
