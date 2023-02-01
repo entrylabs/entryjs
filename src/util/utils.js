@@ -2440,7 +2440,7 @@ Entry.Utils.getObjectsBlocksForEventThread = _.memoize((object) => {
                 }
                 resolve(_.flatten(result));
             } catch (e) {
-                console.warn(e);
+                console.warn('blockCount : ', e);
                 resolve(_.flatten(result));
             }
         });
