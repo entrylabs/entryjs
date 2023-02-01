@@ -16,6 +16,7 @@ import clamp from 'lodash/clamp';
 type FlipStatus = {
     horizontal: boolean;
     vertical: boolean;
+    isChanged: boolean;
 };
 
 type ModelStatus = {
@@ -79,6 +80,7 @@ class VideoUtils implements MediaUtilsInterface {
     public flipStatus: FlipStatus = {
         horizontal: false,
         vertical: false,
+        isChanged: false,
     };
 
     public indicatorStatus: ModelStatus = {
@@ -414,7 +416,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     videoOnLoadHandler() {
-        if (!this.flipStatus.horizontal) {
+        if (!this.flipStatus.horizontal && !this.flipStatus.isChanged) {
             this.setOptions('hflip', null);
         }
     }
@@ -745,6 +747,7 @@ class VideoUtils implements MediaUtilsInterface {
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
             case 'hflip':
+                this.flipStatus.isChanged = true;
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
                 if (this.isChrome) {
                     this.worker.postMessage({
@@ -755,6 +758,7 @@ class VideoUtils implements MediaUtilsInterface {
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':
+                this.flipStatus.isChanged = true;
                 this.flipStatus.vertical = !this.flipStatus.vertical;
                 GEHelper.vFlipVideoElement(this.canvasVideo);
                 break;
@@ -821,6 +825,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.disableAllModels();
         GEHelper.resetHandlers();
         this.turnOffWebcam();
+        this.flipStatus.isChanged = false;
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -864,6 +869,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.flipStatus = {
             horizontal: false,
             vertical: false,
+            isChanged: false,
         };
         this.objects = [];
         this.poses = { predictions: [], adjacents: [] };
