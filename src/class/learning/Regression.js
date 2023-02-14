@@ -86,8 +86,11 @@ class Regression extends LearningBase {
             const accuracy = _max(acc) || 0;
             const graphPoints = (graphData.originalPoints || []).slice(0, 1000);
             if (inputs.length == 1) {
-                graphData.predictedPoints.map(({ x, y }) => {
-                    const index = graphPoints.sort((a, b) => a.x - b.x).findIndex((p) => p.x > x);
+                graphData.predictedPoints.map(({ x, y }, i) => {
+                    let index = graphPoints.sort((a, b) => a.x - b.x).findIndex((p) => p.x >= x);
+                    if (index < 0 && i > 0) {
+                        index = graphPoints.length - 1;
+                    }
                     if (graphPoints[index]) {
                         graphPoints[index].equation = y;
                     }
