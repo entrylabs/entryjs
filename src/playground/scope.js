@@ -149,7 +149,10 @@ class Scope {
     }
 
     getStatement(key, scope) {
-        return this.executor.stepInto(this.block.statements[this._getStatementIndex(key, scope)]);
+        return this.executor.stepInto(
+            this.block.statements[this._getStatementIndex(key, scope)],
+            this.executor.isFuncExecutor
+        );
     }
 
     _getParamIndex(key) {

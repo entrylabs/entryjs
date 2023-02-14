@@ -188,13 +188,16 @@ class Executor {
         }
     }
 
-    stepInto(thread) {
+    stepInto(thread, isFuncExecutor) {
         if (!(thread instanceof Entry.Thread)) {
             console.error('Must step in to thread');
         }
 
         const block = thread.getFirstBlock();
         if (!block) {
+            if (isFuncExecutor) {
+                return Entry.STATIC.CONTINUE;
+            }
             return Entry.STATIC.BREAK;
         }
 
