@@ -195,9 +195,6 @@ class Executor {
 
         const block = thread.getFirstBlock();
         if (!block) {
-            if (isFuncExecutor) {
-                return Entry.STATIC.CONTINUE;
-            }
             return Entry.STATIC.BREAK;
         }
 
