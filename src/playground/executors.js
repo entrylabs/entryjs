@@ -188,7 +188,7 @@ class Executor {
         }
     }
 
-    stepInto(thread, isFuncExecutor) {
+    stepInto(thread) {
         if (!(thread instanceof Entry.Thread)) {
             console.error('Must step in to thread');
         }
