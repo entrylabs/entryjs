@@ -27,21 +27,21 @@ Entry.iCOBOT = {
             keySet.forEach(function(key) 
             {             
                 if(Entry.hw.sendQueue.SET[key].type === 2)
-                {             
-                    Entry.hw.sendQueue.SET[key].data = {
-                        n: 0,
-                        r: 0,
-                        g: 0,
-                        b: 0,
-                    };                                          
-                }
-                else if(Entry.hw.sendQueue.SET[key].type === 4)
                 {
                     Entry.hw.sendQueue.SET[key].data = 
                     {
                         mode: 0,
                         value: 0,
                     };  
+                }
+                else if(Entry.hw.sendQueue.SET[key].type === 4)
+                {
+                    Entry.hw.sendQueue.SET[key].data = {
+                        n: 0,
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    };
 
                 }
                 else Entry.hw.sendQueue.SET[key].data = 0;                                                                  
@@ -110,6 +110,7 @@ Entry.iCOBOT.blockMenuBlocks = [
     'icobot_digital_set_motor_speed',
     'icobot_digital_set_motor_direction',
     'icobot_digital_set_motor_angle',
+    'icobot_digital_wait_motor_angle',
 ];
 
 Entry.iCOBOT.setLanguage = function() {
@@ -135,6 +136,7 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_set_motor_angle: "%1 방향으로 %2 도 회전하기 %3",
 				icobot_digital_set_motor_speed: "%1 모터의 속도를 %2 로 정하기 %3",
 				icobot_digital_motor_stop: "%1 모터 정지하기 %2",
+                icobot_digital_wait_motor_angle: "회전이 끝날때까지 기다리기"
             },
             Helper: {
 				icobot_get_cds_value: "현재 조도(밝기) 값을 읽어 옵니다.",
@@ -152,6 +154,7 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_set_motor_angle: "원하는 각도만큼 i-COBOT이 움직입니다.",
 				icobot_digital_set_motor_speed: "선택한 모터의 속도를 정하고, 그 속도로 구동됩니다.",
 				icobot_digital_motor_stop: "선택한 모터가 정지합니다.",
+                icobot_digital_wait_motor_angle: "회전이 끝날때까지 실행을 멈추고 기다립니다."
             },
             Blocks: {
                 icobot_Sound: "소리감지",
@@ -244,6 +247,7 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_set_motor_angle: "Rotate %1 by %2 degrees %3",
 				icobot_digital_set_motor_speed: "Set %1 Motor Speed to %2 %3",
 				icobot_digital_motor_stop: "Stop %1 Motor %2",
+                icobot_digital_wait_motor_angle: "Wait until the finish Rotation"
             },
             Helper: {
 				icobot_get_cds_value: "i-COBOT reads the current value of CDS photocell.\n\n A CDS photocell(or Light Dependant Resistor / LDR) is a resistor that changes the resistance based on the amount of light.",
@@ -261,6 +265,7 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_set_motor_angle: "Let i-COBOT rotate as much as you want.",
 				icobot_digital_set_motor_speed: "Determine the speed of the motor.",
 				icobot_digital_motor_stop: "The selected motor stops.",
+                icobot_digital_wait_motor_angle: "Stop running and wait until the finish Rotation"
             },
             Blocks: {
                 icobot_Sound: "Noise",
@@ -1451,8 +1456,9 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag <= 1) 
                 {
+                    script.timeFlag += 1;
                     return script;
                 }
                 else
@@ -1560,7 +1566,7 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag == 1) 
                 {
                     return script;
                 }
@@ -1659,8 +1665,9 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag <= 1) 
                 {
+                    script.timeFlag += 1;
                     return script;
                 }
                 else
@@ -1742,7 +1749,7 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag == 1) 
                 {
                     return script;
                 }
@@ -1752,6 +1759,42 @@ Entry.iCOBOT.getBlocks = function() {
                     delete script.isStart;
                     Entry.engine.isContinue = false;
                     return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+
+        
+        icobot_digital_wait_motor_angle: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_dc.svg',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'icobot_digital_wait_motor_angle',
+            },
+            paramsKeyMap: {
+                // BOOL: 0,
+            },
+            class: 'iCOBOT_DC',
+            isNotFor: [],
+            func(sprite, script) {
+                var port = 10;
+                var Bool_Motor = Entry.hw.portData.SENSOR;
+                var Result = Bool_Motor[port];
+                if (Result) {
+                    return script.callReturn();
+                } else {
+                    return script;
                 }
             },
             syntax: { js: [], py: [] },
