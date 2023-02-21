@@ -16,6 +16,23 @@
             };
             this.duration = 100;
             this.LOCAL_MAP = ['IN1', 'IN2', 'IN3', 'IR', 'BAT'];
+            this.localBuffer = {
+                IN1: 0,
+                IN2: 0,
+                IN3: 0,
+                IR: 0,
+                BAT: 0,
+            };
+            this.remoteBuffer = {
+                OUT1: 0,
+                OUT2: 0,
+                OUT3: 0,
+                DCR: 0,
+                DCL: 0,
+                SND: 0,
+                FND: 0,
+                OPT: 0,
+            };
             this.log_to_console = false;
 
             this.blockMenuBlocks = [
@@ -126,13 +143,6 @@
         }
 
         setZero() {
-            this.localBuffer = {
-                IN1: 0,
-                IN2: 0,
-                IN3: 0,
-                IR: 0,
-                BAT: 0,
-            };
             this.remoteBuffer = {
                 OUT1: 0,
                 OUT2: 0,
@@ -143,6 +153,9 @@
                 FND: 0,
                 OPT: 0,
             };
+            if (Entry.hwLite) {
+                Entry.hwLite.update();
+            }
         }
 
         handleLocalData(data) {
