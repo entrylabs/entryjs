@@ -747,7 +747,6 @@ class VideoUtils implements MediaUtilsInterface {
             case 'hflip':
                 this.flipStatus.isChanged = true;
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
-                console.log('this.flipStatus.horizontal', this.flipStatus.horizontal);
                 if (this.isChrome) {
                     this.worker.postMessage({
                         type: 'option',
