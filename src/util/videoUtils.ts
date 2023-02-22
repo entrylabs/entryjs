@@ -734,15 +734,8 @@ class VideoUtils implements MediaUtilsInterface {
 
     turnOnWebcam() {
         GEHelper.drawVideoElement(this.canvasVideo);
-        if (!this.flipStatus.isChanged) {
-            if (!this.flipStatus.horizontal) {
-                this.setOptions('hflip', null);
-            }
-            if (!this.flipStatus.vertical) {
-                this.setOptions('vflip', null);
-            }
-        }
     }
+
     setOptions(target: String, value: number) {
         if (!this.canvasVideo) {
             return;
@@ -754,6 +747,7 @@ class VideoUtils implements MediaUtilsInterface {
             case 'hflip':
                 this.flipStatus.isChanged = true;
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
+                console.log('this.flipStatus.horizontal', this.flipStatus.horizontal);
                 if (this.isChrome) {
                     this.worker.postMessage({
                         type: 'option',
