@@ -27,21 +27,21 @@ Entry.iCOBOT = {
             keySet.forEach(function(key) 
             {             
                 if(Entry.hw.sendQueue.SET[key].type === 2)
-                {             
-                    Entry.hw.sendQueue.SET[key].data = {
-                        n: 0,
-                        r: 0,
-                        g: 0,
-                        b: 0,
-                    };                                          
-                }
-                else if(Entry.hw.sendQueue.SET[key].type === 4)
                 {
                     Entry.hw.sendQueue.SET[key].data = 
                     {
                         mode: 0,
                         value: 0,
                     };  
+                }
+                else if(Entry.hw.sendQueue.SET[key].type === 4)
+                {
+                    Entry.hw.sendQueue.SET[key].data = {
+                        n: 0,
+                        r: 0,
+                        g: 0,
+                        b: 0,
+                    };
 
                 }
                 else Entry.hw.sendQueue.SET[key].data = 0;                                                                  
@@ -89,6 +89,7 @@ Entry.iCOBOT = {
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
 };
+var motor_type = 0;
 
 Entry.iCOBOT.blockMenuBlocks = [
     'icobot_sensor_input_title',
@@ -110,6 +111,8 @@ Entry.iCOBOT.blockMenuBlocks = [
     'icobot_digital_set_motor_speed',
     'icobot_digital_set_motor_direction',
     'icobot_digital_set_motor_angle',
+    'icobot_digital_set_motor_straight',
+    'icobot_digital_wait_motor_movement',
 ];
 
 Entry.iCOBOT.setLanguage = function() {
@@ -131,10 +134,13 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_rgbled_off: "%1 RGB LED 끄기 %2",
                 icobot_digital_set_rgbled_value: "%1 RGB LED 빨강 %2 초록 %3 파랑 %4 으로 켜기 %5",
 				icobot_motor_title: "▶ 아이코봇 모터 출력",
-				icobot_digital_set_motor_direction: "%1 모터 방향을 %2 방향으로 정하기 %3",
-				icobot_digital_set_motor_angle: "%1 방향으로 %2 도 회전하기 %3",
-				icobot_digital_set_motor_speed: "%1 모터의 속도를 %2 로 정하기 %3",
 				icobot_digital_motor_stop: "%1 모터 정지하기 %2",
+				icobot_digital_set_motor_speed: "%1 모터의 속도를 %2 로 정하기 %3",
+				icobot_digital_set_motor_direction: "%1 모터 방향을 %2 방향으로 정하기 %3",
+				icobot_digital_set_motor_angle: "%1 방향으로 %2° 회전하기 %3",
+				icobot_digital_set_motor_straight: "%1mm %2 하기 %3",
+                // icobot_digital_wait_motor_movement: "%1이 끝날때까지 기다리기 %2"
+                icobot_digital_wait_motor_movement: "모터 구동이 끝날때까지 기다리기 %1"
             },
             Helper: {
 				icobot_get_cds_value: "현재 조도(밝기) 값을 읽어 옵니다.",
@@ -150,8 +156,10 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_digital_set_rgbled_value: "LED의 R, G, B 값을 입력한 값으로 각각 설정하여 켭니다.",
 				icobot_digital_set_motor_direction: "선택한 모터의 구동 방향을 정하고, 그 방향으로 이동합니다.",
 				icobot_digital_set_motor_angle: "원하는 각도만큼 i-COBOT이 움직입니다.",
+				icobot_digital_set_motor_straight: "원하는 거리만큼 i-COBOT이 움직입니다.",
 				icobot_digital_set_motor_speed: "선택한 모터의 속도를 정하고, 그 속도로 구동됩니다.",
 				icobot_digital_motor_stop: "선택한 모터가 정지합니다.",
+                icobot_digital_wait_motor_movement: "모터 구동이 끝날때까지 실행을 멈추고 기다립니다."
             },
             Blocks: {
                 icobot_Sound: "소리감지",
@@ -205,6 +213,8 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_motor_back_move: "후진",
                 icobot_motor_left_turn: "왼쪽",
                 icobot_motor_right_turn: "오른쪽",
+                icobot_motor_straight: "모터구동",
+                icobot_motor_rotation: "회전",
                 icobot_motor_30_degrees: "30°",
                 icobot_motor_45_degrees: "45°",
                 icobot_motor_60_degrees: "60°",
@@ -240,10 +250,13 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_rgbled_off: "Turn Off %1 RGB LED %2",
                 icobot_digital_set_rgbled_value: "Set the %1 RGB LED value to RED %2 GREEN %3 BLUE %4 %5",
 				icobot_motor_title: "▶ i-COBOT Motor Output",
-				icobot_digital_set_motor_direction: "Set %1 Motor Direction to %2 %3",
-				icobot_digital_set_motor_angle: "Rotate %1 by %2 degrees %3",
-				icobot_digital_set_motor_speed: "Set %1 Motor Speed to %2 %3",
 				icobot_digital_motor_stop: "Stop %1 Motor %2",
+				icobot_digital_set_motor_speed: "Set %1 Motor Speed to %2 %3",
+				icobot_digital_set_motor_direction: "Set %1 Motor Direction to %2 %3",
+				icobot_digital_set_motor_angle: "Rotate %1 by %2 ° degrees %3",
+				icobot_digital_set_motor_straight: "Move %1 mm %2 %3",
+                // icobot_digital_wait_motor_movement: "Wait until the motor %1 stops %2"
+                icobot_digital_wait_motor_movement: "Wait until the motor stops operating %1"
             },
             Helper: {
 				icobot_get_cds_value: "i-COBOT reads the current value of CDS photocell.\n\n A CDS photocell(or Light Dependant Resistor / LDR) is a resistor that changes the resistance based on the amount of light.",
@@ -259,8 +272,10 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_digital_set_rgbled_value: "Set the R, G, and B values of the LED to the entered values and turn them on.",
 				icobot_digital_set_motor_direction: "Determine the driving path of the motor.",
 				icobot_digital_set_motor_angle: "Let i-COBOT rotate as much as you want.",
+				icobot_digital_set_motor_straight: "Let i-COBOT move as much as you want.",
 				icobot_digital_set_motor_speed: "Determine the speed of the motor.",
 				icobot_digital_motor_stop: "The selected motor stops.",
+                icobot_digital_wait_motor_movement: "Stop all command delibery until motor operation is complete"
             },
             Blocks: {
                 icobot_Sound: "Noise",
@@ -314,6 +329,8 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_motor_back_move: "Back",
                 icobot_motor_left_turn: "Left",
                 icobot_motor_right_turn: "Right",
+                icobot_motor_straight: "Straight Operation",
+                icobot_motor_rotation: "Rotation",
                 icobot_motor_30_degrees: "30°",
                 icobot_motor_45_degrees: "45°",
                 icobot_motor_60_degrees: "60°",
@@ -1451,8 +1468,9 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag <= 1) 
                 {
+                    script.timeFlag += 1;
                     return script;
                 }
                 else
@@ -1488,31 +1506,35 @@ Entry.iCOBOT.getBlocks = function() {
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.icobot_motor_30_degrees, '0'],
-                        [Lang.Blocks.icobot_motor_45_degrees, '1'],
-                        [Lang.Blocks.icobot_motor_60_degrees, '2'],
-                        [Lang.Blocks.icobot_motor_90_degrees, '3'],
-                        [Lang.Blocks.icobot_motor_120_degrees, '4'],
-                        [Lang.Blocks.icobot_motor_135_degrees, '5'],
-                        [Lang.Blocks.icobot_motor_150_degrees, '6'],
-                        [Lang.Blocks.icobot_motor_180_degrees, '7'],
-                        [Lang.Blocks.icobot_motor_210_degrees, '8'],
-                        [Lang.Blocks.icobot_motor_225_degrees, '9'],
-                        [Lang.Blocks.icobot_motor_240_degrees, '10'],
-                        [Lang.Blocks.icobot_motor_270_degrees, '11'],
-                        [Lang.Blocks.icobot_motor_300_degrees, '12'],
-                        [Lang.Blocks.icobot_motor_315_degrees, '13'],
-                        [Lang.Blocks.icobot_motor_330_degrees, '14'],
-                        [Lang.Blocks.icobot_motor_360_degrees, '15'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
-                },		
+                    type: 'Block',
+                    accept: 'string',
+                },	
+                // {
+                //     type: 'Dropdown',
+                //     options: [
+                //         [Lang.Blocks.icobot_motor_30_degrees, '0'],
+                //         [Lang.Blocks.icobot_motor_45_degrees, '1'],
+                //         [Lang.Blocks.icobot_motor_60_degrees, '2'],
+                //         [Lang.Blocks.icobot_motor_90_degrees, '3'],
+                //         [Lang.Blocks.icobot_motor_120_degrees, '4'],
+                //         [Lang.Blocks.icobot_motor_135_degrees, '5'],
+                //         [Lang.Blocks.icobot_motor_150_degrees, '6'],
+                //         [Lang.Blocks.icobot_motor_180_degrees, '7'],
+                //         [Lang.Blocks.icobot_motor_210_degrees, '8'],
+                //         [Lang.Blocks.icobot_motor_225_degrees, '9'],
+                //         [Lang.Blocks.icobot_motor_240_degrees, '10'],
+                //         [Lang.Blocks.icobot_motor_270_degrees, '11'],
+                //         [Lang.Blocks.icobot_motor_300_degrees, '12'],
+                //         [Lang.Blocks.icobot_motor_315_degrees, '13'],
+                //         [Lang.Blocks.icobot_motor_330_degrees, '14'],
+                //         [Lang.Blocks.icobot_motor_360_degrees, '15'],
+                //     ],
+                //     value: '0',
+                //     fontSize: 11,
+                //     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                //     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                //     arrowColor: EntryStatic.ARROW_COLOR_HW,
+                // },		
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_dc.svg',
@@ -1521,7 +1543,13 @@ Entry.iCOBOT.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null],
+                params: [null,
+                    {
+                        type: 'number',
+						params: ["90"],
+                    },
+                    null,
+                ],
                 type: 'icobot_digital_set_motor_angle',
             },
             paramsKeyMap: {
@@ -1537,7 +1565,7 @@ Entry.iCOBOT.getBlocks = function() {
 				var mode = 4;
                 var delay_time = 0;
 
-                if (!script.isStart)
+                if (!script.isStart && dir != 0)
                 {
 									
                     if (!Entry.hw.sendQueue['SET']) 
@@ -1560,7 +1588,7 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag == 1) 
                 {
                     return script;
                 }
@@ -1569,6 +1597,102 @@ Entry.iCOBOT.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
+                    motor_type = 1;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+
+		// 모터 - 거리 움직이기		
+		icobot_digital_set_motor_straight: 
+		{
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+			fontColor: '#fff',			
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },	
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.icobot_motor_front_move, '1'],
+                        [Lang.Blocks.icobot_motor_back_move, '3'],					
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },	
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_dc.svg',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+						params: ["10"],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'icobot_digital_set_motor_straight',
+            },
+            paramsKeyMap: {
+				DIR: 0,
+                PORT: 1,
+			},
+            class: 'iCOBOT_DC',
+            isNotFor: ['iCOBOT'],
+            func: function(sprite, script) 
+			{
+                var port = script.getNumberValue('PORT', script);
+                var dir = script.getNumberValue('DIR', script);
+				var mode = 5;
+                var delay_time = 0;
+
+                if (!script.isStart && dir >= 1)
+                {
+									
+                    if (!Entry.hw.sendQueue['SET']) 
+                    {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }                    
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.iCOBOT.sensorTypes.MOTOR,
+                        data: {
+                            mode: mode,
+                            value: dir,
+                        },
+                        time: new Date().getTime(),
+                    };
+                    setTimeout (function ()
+                    {
+                        script.timeFlag = 0;
+                    }, delay_time);
+                    return script;
+                }
+                else if (script.timeFlag == 1) 
+                {
+                    return script;
+                }
+                else
+                {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    motor_type = 2;
                     return script.callReturn();
                 }
             },
@@ -1659,8 +1783,9 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag <= 1) 
                 {
+                    script.timeFlag += 1;
                     return script;
                 }
                 else
@@ -1742,7 +1867,7 @@ Entry.iCOBOT.getBlocks = function() {
                     }, delay_time);
                     return script;
                 }
-                else if (script .timeFlag == 1) 
+                else if (script.timeFlag == 1) 
                 {
                     return script;
                 }
@@ -1752,6 +1877,54 @@ Entry.iCOBOT.getBlocks = function() {
                     delete script.isStart;
                     Entry.engine.isContinue = false;
                     return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+
+        icobot_digital_wait_motor_movement: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,	
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                // {
+                //     type: 'Dropdown',
+                //     options: [
+                //         [Lang.Blocks.icobot_motor_rotation, '1'],	
+                //         [Lang.Blocks.icobot_motor_straight, '2'],	
+                //     ],
+                //     value: '1',
+                //     fontSize: 11,
+                //     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                //     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                //     arrowColor: EntryStatic.ARROW_COLOR_HW,
+                // },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_dc.svg',
+                    size: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'icobot_digital_wait_motor_movement',
+            },
+            paramsKeyMap: {
+                // BOOL: 0,
+            },
+            class: 'iCOBOT_DC',
+            isNotFor: ['iCOBOT'],
+            func(sprite, script) {
+                var port = 10;
+                //var motor_type = script.getNumberValue('BOOL', script);
+                var Bool_Motor = Entry.hw.portData.SENSOR;
+                var Result = Bool_Motor[port];
+                if (motor_type == Result) {
+                    return script.callReturn();
+                } else {
+                    return script;
                 }
             },
             syntax: { js: [], py: [] },
