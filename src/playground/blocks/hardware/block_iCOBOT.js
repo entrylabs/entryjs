@@ -89,6 +89,7 @@ Entry.iCOBOT = {
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
 };
+var motor_type = 0;
 
 Entry.iCOBOT.blockMenuBlocks = [
     'icobot_sensor_input_title',
@@ -138,7 +139,8 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_set_motor_direction: "%1 모터 방향을 %2 방향으로 정하기 %3",
 				icobot_digital_set_motor_angle: "%1 방향으로 %2° 회전하기 %3",
 				icobot_digital_set_motor_straight: "%1mm %2 하기 %3",
-                icobot_digital_wait_motor_movement: "%1이 끝날때까지 기다리기 %2"
+                // icobot_digital_wait_motor_movement: "%1이 끝날때까지 기다리기 %2"
+                icobot_digital_wait_motor_movement: "모터 구동이 끝날때까지 기다리기 %1"
             },
             Helper: {
 				icobot_get_cds_value: "현재 조도(밝기) 값을 읽어 옵니다.",
@@ -253,7 +255,8 @@ Entry.iCOBOT.setLanguage = function() {
 				icobot_digital_set_motor_direction: "Set %1 Motor Direction to %2 %3",
 				icobot_digital_set_motor_angle: "Rotate %1 by %2 ° degrees %3",
 				icobot_digital_set_motor_straight: "Move %1 mm %2 %3",
-                icobot_digital_wait_motor_movement: "Wait until the %1 stops operating %2"
+                // icobot_digital_wait_motor_movement: "Wait until the motor %1 stops %2"
+                icobot_digital_wait_motor_movement: "Wait until the motor stops operating %1"
             },
             Helper: {
 				icobot_get_cds_value: "i-COBOT reads the current value of CDS photocell.\n\n A CDS photocell(or Light Dependant Resistor / LDR) is a resistor that changes the resistance based on the amount of light.",
@@ -326,7 +329,7 @@ Entry.iCOBOT.setLanguage = function() {
                 icobot_motor_back_move: "Back",
                 icobot_motor_left_turn: "Left",
                 icobot_motor_right_turn: "Right",
-                icobot_motor_straight: "Movement",
+                icobot_motor_straight: "Straight Operation",
                 icobot_motor_rotation: "Rotation",
                 icobot_motor_30_degrees: "30°",
                 icobot_motor_45_degrees: "45°",
@@ -1594,6 +1597,7 @@ Entry.iCOBOT.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
+                    motor_type = 1;
                     return script.callReturn();
                 }
             },
@@ -1688,6 +1692,7 @@ Entry.iCOBOT.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
+                    motor_type = 2;
                     return script.callReturn();
                 }
             },
@@ -1883,18 +1888,18 @@ Entry.iCOBOT.getBlocks = function() {
             skeleton: 'basic',
             statements: [],
             params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.icobot_motor_rotation, '1'],	
-                        [Lang.Blocks.icobot_motor_straight, '2'],	
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
-                },
+                // {
+                //     type: 'Dropdown',
+                //     options: [
+                //         [Lang.Blocks.icobot_motor_rotation, '1'],	
+                //         [Lang.Blocks.icobot_motor_straight, '2'],	
+                //     ],
+                //     value: '1',
+                //     fontSize: 11,
+                //     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                //     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                //     arrowColor: EntryStatic.ARROW_COLOR_HW,
+                // },
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_dc.svg',
@@ -1907,13 +1912,13 @@ Entry.iCOBOT.getBlocks = function() {
                 type: 'icobot_digital_wait_motor_movement',
             },
             paramsKeyMap: {
-                BOOL: 0,
+                // BOOL: 0,
             },
             class: 'iCOBOT_DC',
             isNotFor: ['iCOBOT'],
             func(sprite, script) {
                 var port = 10;
-                var motor_type = script.getNumberValue('BOOL', script);
+                //var motor_type = script.getNumberValue('BOOL', script);
                 var Bool_Motor = Entry.hw.portData.SENSOR;
                 var Result = Bool_Motor[port];
                 if (motor_type == Result) {
