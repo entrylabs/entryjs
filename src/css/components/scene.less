@@ -31,15 +31,23 @@ body {
         flex-direction: row-reverse;
         align-items: center;
 
+        .practical_course_mode & {
+            background-color: @basePurple;
+        }
+
         .blockCountView {
             height: 24px;
             line-height: 24px;
             border-radius: 14px;
             margin-right: 12px;
             padding: 0 8px;
-            background-color: #3064ec;
+            background-color: @baseblue;
             font-size: 12px;
             color: #ffffff;
+
+            .practical_course_mode & {
+                background-color: @basePurplePoint;
+            }
         }
     }
 }
