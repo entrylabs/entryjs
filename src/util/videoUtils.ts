@@ -734,10 +734,8 @@ class VideoUtils implements MediaUtilsInterface {
 
     turnOnWebcam() {
         GEHelper.drawVideoElement(this.canvasVideo);
-        if (!this.flipStatus.horizontal) {
-            this.setOptions('hflip', null);
-        }
     }
+
     setOptions(target: String, value: number) {
         if (!this.canvasVideo) {
             return;
