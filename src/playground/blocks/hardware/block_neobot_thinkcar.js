@@ -39,7 +39,7 @@ Entry.NeobotThinkCar = {
         },
         mode: 'both',
     },
-    log_to_console: true,
+    log_to_console: false,
 };
 
 Entry.NeobotThinkCar.setLanguage = function() {
@@ -539,7 +539,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                                 'speak');
                         }
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -622,7 +622,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         }
 
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
 
                     return script;
                 } else if (script.timeFlag == 1) {
@@ -725,7 +725,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         }
 
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
 
                     return script;
                 } else if (script.timeFlag == 1) {
@@ -794,7 +794,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                                 'speak');
                         }
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
 
                     return script;
                 } else if (script.timeFlag == 1) {
