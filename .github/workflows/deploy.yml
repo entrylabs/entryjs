@@ -32,22 +32,22 @@ jobs:
               id: target_branch
               shell: bash
               run: echo "##[set-output name=branch;]$(echo ${GITHUB_REF##*/})"
-#             - uses: haya14busa/action-cond@v1
-#               id: deploy_branch
-#               with:
-#                   cond: ${{ steps.target_branch.outputs.branch == 'master' }}
-#                   if_true: 'build'
-#                   if_false: dist/${{ steps.target_branch.outputs.branch }}
+            - uses: haya14busa/action-cond@v1
+              id: deploy_branch
+              with:
+                  cond: ${{ steps.target_branch.outputs.branch == 'master' }}
+                  if_true: 'build'
+                  if_false: dist/${{ steps.target_branch.outputs.branch }}
             - name: Execute build.sh
               run: |
                   sh ./scripts/build.sh
             - name: Execute deploy.sh
               run: |
                   sh ./scripts/deploy.sh
-#             - name: Push Changes into build branch
-#               uses: ad-m/github-push-action@master
-#               with:
-#                   github_token: ${{ secrets.GITHUB_TOKEN }}
-#                   force: true
-#                   directory: ./build
-#                   branch: ${{ steps.deploy_branch.outputs.value }}
+            - name: Push Changes into build branch
+              uses: ad-m/github-push-action@master
+              with:
+                  github_token: ${{ secrets.GITHUB_TOKEN }}
+                  force: true
+                  directory: ./build
+                  branch: ${{ steps.deploy_branch.outputs.value }}
