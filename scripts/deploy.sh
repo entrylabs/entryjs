@@ -4,10 +4,6 @@ set -e # 에러 발생 시 스크립트 중단
 git config --local user.email "entrydev@nts-corp.com"
 git config --local user.name "Entry Dev"
 
-pwd
-ls
-ls ..
-
 rm .gitignore
 branchName=${GITHUB_REF##*/}
 deployName="dist/$branchName"
@@ -29,6 +25,8 @@ then
 #    git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     echo "deploy branch's name is $deployName"
+    ls -al
+    git status
     git checkout -b "$deployName"
 #    git push --delete "https://${GH_TOKEN}@${GH_REF}" "$deployName"
     git add .
