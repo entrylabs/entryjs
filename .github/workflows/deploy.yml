@@ -38,9 +38,9 @@ jobs:
                   cond: ${{ steps.target_branch.outputs.branch == 'master' }}
                   if_true: 'build'
                   if_false: dist/${{ steps.target_branch.outputs.branch }}
-            - name: Execute build.sh
-              run: |
-                  sh ./scripts/build.sh
+#             - name: Execute build.sh
+#               run: |
+#                   sh ./scripts/build.sh
             - name: Execute deploy.sh
               run: |
                   sh ./scripts/deploy.sh
