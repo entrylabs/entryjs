@@ -22,12 +22,12 @@ jobs:
               with:
                   node-version: 14
             - uses: bahmutov/npm-install@v1
-#             - name: entry build
-#               env:
-#                   NODE_OPTIONS: '--max-old-space-size=4096'
-#                   TOOL_NODE_FLAGS: '--max-old-space-size=4096'
-#               run: |
-#                   npm run prod
+            - name: entry build
+              env:
+                  NODE_OPTIONS: '--max-old-space-size=4096'
+                  TOOL_NODE_FLAGS: '--max-old-space-size=4096'
+              run: |
+                  npm run prod
             - name: Define branch name
               id: target_branch
               shell: bash
