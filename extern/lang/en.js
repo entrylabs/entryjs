@@ -1109,6 +1109,7 @@ Lang.Blocks = {
     "arduino_lite_connect": "Web Connection",
     "arduino_lite_disconnect": "Cancel",
     "arduino_lite_guide": "• connection guide",
+    "JUDGEMENT_is_object_clicked": "Object clicked?",
 };
 Lang.video_body_coord_params = {
     "left_eye": "Left Eye",
@@ -5458,6 +5459,7 @@ Lang.template = {
     "turtle_turn_unit_with_radius_in_direction": "turn %1 %2 %3 with radius %4 cm in %5 direction %6",
     "turtle_value": "%1",
     "is_clicked": "%1",
+    "is_object_clicked": "%1",
     "is_press_some_key": "%1 %2",
     "reach_something": "%1 %2 %3",
     "boolean_comparison": "%1 %2 %3",
