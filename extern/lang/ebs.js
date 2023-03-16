@@ -743,6 +743,7 @@ Lang.Blocks = {
     "CALC_get_date_minute": "시각(분)",
     "CALC_get_date_month": "월",
     "CALC_get_date_second": "시각(초)",
+    "CALC_get_date_day_of_week": "요일",
     "CALC_get_date_year": "연도",
     "CALC_get_sound_duration_1": "",
     "CALC_get_sound_duration_2": "소리의 길이",

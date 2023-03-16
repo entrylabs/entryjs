@@ -1399,6 +1399,7 @@ module.exports = {
                             [Lang.Blocks.CALC_get_date_hour, 'HOUR'],
                             [Lang.Blocks.CALC_get_date_minute, 'MINUTE'],
                             [Lang.Blocks.CALC_get_date_second, 'SECOND'],
+                            [Lang.Blocks.CALC_get_date_day_of_week, 'DAY_OF_WEEK'],
                         ],
                         value: 'YEAR',
                         fontSize: 10,
@@ -1438,6 +1439,10 @@ module.exports = {
                         return dateTime.getHours();
                     } else if (operator === 'MINUTE') {
                         return dateTime.getMinutes();
+                    } else if (operator === 'DAY_OF_WEEK') {
+                        const daysLang = ['일', '월', '화', '수', '목', '금', '토'];
+                        const dayNum = dateTime.getDay();
+                        return daysLang[dayNum];
                     } else {
                         return dateTime.getSeconds();
                     }
@@ -1459,6 +1464,7 @@ module.exports = {
                                         [Lang.Blocks.CALC_get_date_hour, 'HOUR'],
                                         [Lang.Blocks.CALC_get_date_minute, 'MINUTE'],
                                         [Lang.Blocks.CALC_get_date_second, 'SECOND'],
+                                        [Lang.Blocks.CALC_get_date_day_of_week, 'DAY_OF_WEEK'],
                                     ],
                                     value: 'YEAR',
                                     fontSize: 11,

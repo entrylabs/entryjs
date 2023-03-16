@@ -756,6 +756,7 @@ Lang.Blocks = {
     CALC_get_date_day: '일',
     CALC_get_date_hour: '시각(시)',
     CALC_get_date_minute: '시각(분)',
+    CALC_get_date_day_of_week: '요일',
     CALC_get_date_month: '월',
     CALC_get_date_second: '시각(초)',
     CALC_get_date_year: '연도',
