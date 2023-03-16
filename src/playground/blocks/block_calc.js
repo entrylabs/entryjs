@@ -1741,6 +1741,54 @@ module.exports = {
                     ],
                 },
             },
+            reverse_of_string: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_reverse_of_string_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_reverse_of_string_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: [Lang.Blocks.entry],
+                        },
+                        null,
+                    ],
+                    type: 'reverse_of_string',
+                },
+                paramsKeyMap: {
+                    STRING: 1,
+                },
+                class: 'calc_string',
+                isNotFor: [],
+                func(sprite, script) {
+                    const originStr = script.getStringValue('STRING', script);
+                    const reversedStr = originStr.split('').reverse().join('');
+                    return reversedStr;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             combine_something: {
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,

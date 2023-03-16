@@ -1541,6 +1541,8 @@ Lang.Blocks = {
     CALC_char_at_3: '번째 글자',
     CALC_length_of_string_1: '',
     CALC_length_of_string_2: '의 글자 수',
+    CALC_reverse_of_string_1: '',
+    CALC_reverse_of_string_2: '을(를) 뒤집기',
     CALC_substring_1: '',
     CALC_substring_2: '의',
     CALC_substring_3: '번째 글자부터',

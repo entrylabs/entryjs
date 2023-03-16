@@ -346,6 +346,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_user_name',
                 'get_nickname',
                 'length_of_string',
+                'reverse_of_string',
                 'combine_something',
                 'char_at',
                 'substring',
