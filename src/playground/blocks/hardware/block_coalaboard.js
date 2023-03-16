@@ -8,6 +8,7 @@ Entry.Coalaboard = {
         4: 'potentiometer',
         5: 'MIC',
         6: 'ultrasonicSensor',
+        7: 'temperature',
         10: 'vibrationSensor',
         21: 'UserSensor',
         11: 'UserInput',
@@ -110,64 +111,42 @@ Entry.Coalaboard = {
         width: 400,
         height: 400,
         listPorts: {
-            '1': {
-                name: Lang.Hw.port_en + ' 1 ' + Lang.Hw.port_ko,
+            'UserInput': {
+                name: Lang.Blocks.COALABOARD_UserInput,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '2': {
-                name: Lang.Hw.port_en + ' 2 ' + Lang.Hw.port_ko,
+            'potentiometer': {
+                name: Lang.Blocks.COALABOARD_potentiometer,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '3': {
-                name: Lang.Hw.port_en + ' 3 ' + Lang.Hw.port_ko,
+            'MIC': {
+                name: Lang.Blocks.COALABOARD_MIC,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            '4': {
-                name: Lang.Hw.port_en + ' 4 ' + Lang.Hw.port_ko,
+            'IR': {
+                name: Lang.Blocks.COALABOARD_IR,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A: {
-                name: Lang.Hw.port_en + ' A ' + Lang.Hw.port_ko,
+            'temperature': {
+                name: Lang.Blocks.COALABOARD_temperature,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            B: {
-                name: Lang.Hw.port_en + ' B ' + Lang.Hw.port_ko,
+            'light': {
+                name: Lang.Blocks.COALABOARD_light,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            C: {
-                name: Lang.Hw.port_en + ' C ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            D: {
-                name: Lang.Hw.port_en + ' D ' + Lang.Hw.port_ko,
+            'touch': {
+                name: Lang.Blocks.COALABOARD_touch,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
         },
-        // },
-        // ports : {
-        //     "1":{name: "light", type: "input", pos: {x: 0, y: 0}},
-        //     "2":{name: "IR", type: "input", pos: {x : 0, y: 0}},
-        //     "3":{name: "touch", type: "input", pos: {x: 0, y: 0}},
-        //     "4":{name: "potentiometer", type: "input", pos: {x: 0, y: 0}},
-        //     "5":{name: "MIC", type: "input", pos: {x: 0, y: 0}},
-        //     "21":{name: "UserSensor", type: "input", pos: {x: 0, y: 0}},
-        //     "11":{name: "USER INPUT", type: "input", pos: {x: 0, y: 0}},
-        //     "20":{name: "LED", type: "input", pos: {x: 0, y: 0}},
-        //     "19":{name: "SERVO", type: "input", pos: {x: 0, y: 0}},
-        //     "18":{name: "DC", type: "input", pos: {x: 0, y: 0}},
-        //     "buzzer":{name: "부저", type: "input", pos: {x: 0, y: 0}},
-        //     "LEDR":{name: "LEDR", type: "output", pos: {x: 0, y: 0}},
-        //     "LEDG":{name: "LEDG", type: "output", pos: {x: 0, y: 0}},
-        //     "LEDB":{name: "LEDG", type: "output", pos: {x: 0, y: 0}}
-        // },
         mode: 'both',
     },
     /**
@@ -236,15 +215,6 @@ Entry.Coalaboard.getBlocks = function() {
             skeleton: 'basic_event',
             statements: [],
             params: [
-                // {
-                //     type: 'Indicator',
-                //     img: 'block_icon/start_icon_play.svg',
-                //     size: 14,
-                //     position: {
-                //         x: 0,
-                //         y: -2,
-                //     },
-                // },
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
@@ -262,43 +232,27 @@ Entry.Coalaboard.getBlocks = function() {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     menuName: Entry.Coalaboard.touchList,
                 },
-                {
-                    type: 'Dropdown',
-                    options: options_COALABOARD_button2,
-                    value: 'pressed',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
             ],
             events: {},
             def: {
-                params: [null, null, null],
+                params: [null, null],
                 type: 'coalaboard_when_button_pressed',
             },
             paramsKeyMap: {
                 DUMMY: 0,
-                PORT: 1,
-                PRESSED: 2,                
+                PORT: 1
             },
             class: 'event',
             isNotFor: ['coalaboard'],
             event: 'coalaboardButtonEventReceive',
             func: function(sprite, script) {
-                if( script.values.length > 0 ) {
-                    let selectedSensor  = script.values[ 1 ];
-                    let port = script.getStringField('PORT');
-                    let type = Entry.hw.portData[port].type;
-                    let val  = Entry.hw.portData[port].value;       // 0이면 누름, 1023이면 누르지 않음
-                    let pressed = script.getStringField('PRESSED');
-                    if( selectedSensor == port ) {
-                        if ((pressed == 'pressed') && (val == 0)) {
-                            return script.callReturn();
-                        } else if ((pressed == 'released') && (val == 1023)) {
-                            return script.callReturn();
-                        } else {
-                            return this.die();
-                        }                        
+                let selectedSensor  = script.values[ 1 ];
+                let port = script.getStringField('PORT');
+                let type = Entry.hw.portData[port].type;
+                let val  = Entry.hw.portData[port].value;       // 0이면 누름, 1023이면 누르지 않음
+                if( selectedSensor == port ) {
+                    if (val == 0) {
+                        return script.callReturn();
                     } else {
                         return this.die();
                     }
@@ -548,9 +502,9 @@ Entry.Coalaboard.getBlocks = function() {
                 let val  = Entry.hw.portData[port].value;
                 let pressed = script.getStringField('PRESSED');
                 if ((pressed == 'pressed') && (val == 0)) {
-                    return treu;
+                    return true;
                 } else if ((pressed == 'released') && (val == 1023)) {
-                    return treu;
+                    return true;
                 } else {
                     return false;
                 }     
@@ -1067,9 +1021,9 @@ Entry.Coalaboard.setLanguage = function() {
         ko: {
             // ko.js에 작성하던 내용
             template: {
-                coalaboard_when_button_pressed: '%1 버튼 %2 이(가) %3 일 때',
+                coalaboard_when_button_pressed: '%1 버튼 %2 눌러졌을 때',
                 coalaboard_when_sensor_get_value: '%1 %2 값 %3 %4 일 때',
-                coalaboard_is_touch_pressed: '버튼 %1 이(가) %2 눌렸는가?',
+                coalaboard_is_touch_pressed: '버튼 %1 이(가) %2 인가?',
                 coalaboard_is_sensor_value_compare: '%1 값 %2 %3 인가?',
                 coalaboard_sensor_value: '%1 값',
                 coalaboard_convert_scale: '변환 %1 값 %2 ~ %3 에서 %4 ~ %5',
@@ -1086,15 +1040,16 @@ Entry.Coalaboard.setLanguage = function() {
             Blocks: {
                 COALABOARD_button_pressed: '누름',
                 COALABOARD_button_released: '누르지 않음',                
-                COALABOARD_light: '밝기센서',
-                COALABOARD_IR: '거리센서',
+                COALABOARD_light: '밝기 센서',
+                COALABOARD_IR: '적외선 센서',
                 COALABOARD_touch: '버튼',
-                COALABOARD_ultrasonicSensor: '초음파센서',
-                COALABOARD_vibrationSensor: '진동센서',
+                COALABOARD_temperature: '온도 센서',
+                COALABOARD_ultrasonicSensor: '초음파 센서',
+                COALABOARD_vibrationSensor: '진동 센서',
                 COALABOARD_potentiometer: '가변저항',
-                COALABOARD_MIC: '소리센서',
-                COALABOARD_UserSensor: '사용자입력',
-                COALABOARD_UserInput: '사용자입력',
+                COALABOARD_MIC: '소리 센서',
+                COALABOARD_UserSensor: '사용자 입력',
+                COALABOARD_UserInput: '사용자 입력',
                 COALABOARD_dc_direction_ccw: '반시계',
                 COALABOARD_dc_direction_cw: '시계',
             },
@@ -1108,7 +1063,7 @@ Entry.Coalaboard.setLanguage = function() {
         en: {
             // en.js에 작성하던 내용
             template: {
-                coalaboard_when_button_pressed: '%1 when button %2 %3',
+                coalaboard_when_button_pressed: '%1 when button %2',
                 coalaboard_when_sensor_get_value: '%1 when %2 value %3 %4',
                 coalaboard_is_touch_pressed: 'button %1 %2?',
                 coalaboard_is_sensor_value_compare: '%1 %2 %3? ',
@@ -1130,6 +1085,7 @@ Entry.Coalaboard.setLanguage = function() {
                 COALABOARD_light: 'light',
                 COALABOARD_IR: 'IR',
                 COALABOARD_touch: 'touch',
+                COALABOARD_temperature: 'temperature',
                 COALABOARD_ultrasonicSensor: 'ultrasonicSenso',
                 COALABOARD_vibrationSensor: 'vibrationSensor',
                 COALABOARD_potentiometer: 'potentiometer',

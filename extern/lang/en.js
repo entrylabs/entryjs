@@ -5205,7 +5205,7 @@ Lang.template = {
     "bitbrick_dc_direction_speed": "dc motor %1 direction %2 speed %3 %4",
     "bitbrick_dc_speed": "dc motor %1 velocity %2 %3",
     "bitbrick_turn_off_all_motors": "stop all motors %1",
-    "coalaboard_when_button_pressed": "%1 when button %2 %3",
+    "coalaboard_when_button_pressed": "%1 when button %2",
     "coalaboard_when_sensor_get_value": "%1 when %2 value %3 %4",
     "coalaboard_is_touch_pressed": "button %1 %2?",
     "coalaboard_is_sensor_value_compare": "%1 %2 %3?",
