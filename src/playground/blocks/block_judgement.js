@@ -36,6 +36,34 @@ module.exports = {
                     ],
                 },
             },
+            is_object_clicked: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_object_clicked,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_object_clicked',
+                },
+                class: 'boolean_input',
+                isNotFor: [],
+                func(sprite, script) {
+                    const objId = sprite.id;
+                    if (Entry.stage.clickedObjectId == objId) {
+                        return true;
+                    }
+                    return false;
+                },
+                syntax: { js: [], py: [] },
+            },
             is_press_some_key: {
                 color: EntryStatic.colorSet.block.default.JUDGE,
                 outerLine: EntryStatic.colorSet.block.darken.JUDGE,

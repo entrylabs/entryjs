@@ -318,6 +318,7 @@ EntryStatic.getAllBlocks = function() {
             category: 'judgement',
             blocks: [
                 'is_clicked',
+                'is_object_clicked',
                 'is_press_some_key',
                 'reach_something',
                 'boolean_basic_operator',

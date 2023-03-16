@@ -22,12 +22,15 @@ Entry.Engine = class Engine {
 
         _addEventListener('canvasClick', () => this.fireEvent('mouse_clicked'));
         _addEventListener('canvasClickCanceled', () => this.fireEvent('mouse_click_cancled'));
-        _addEventListener('entityClick', (entity) =>
+        _addEventListener('entityClick', (entity) => {
+            const objId = entity.id;
+            Entry.stage.clickedObjectId = objId;
             this.fireEventOnEntity('when_object_click', entity)
-        );
-        _addEventListener('entityClickCanceled', (entity) =>
+        });
+        _addEventListener('entityClickCanceled', (entity) => {
+            delete Entry.stage.clickedObjectId;
             this.fireEventOnEntity('when_object_click_canceled', entity)
-        );
+        });
 
         if (Entry.type !== 'phone' && Entry.type !== 'playground') {
             _addEventListener(
@@ -79,7 +82,7 @@ Entry.Engine = class Engine {
                     'entryEngineButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     Entry.engine.toggleSpeedPanel();
                     this.blur();
                 });
@@ -91,7 +94,7 @@ Entry.Engine = class Engine {
                     'entryMaximizeButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     Entry.engine.toggleFullScreen();
                     this.blur();
                 });
@@ -103,7 +106,7 @@ Entry.Engine = class Engine {
                     'entryCoordinateButtonWorkspace_w'
                 )
                 .appendTo(this.view_)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     if (this.hasClass('toggleOn')) {
                         this.removeClass('toggleOn');
                     } else {
@@ -133,7 +136,7 @@ Entry.Engine = class Engine {
             this.addButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryAddButtonWorkspace_w')
-                .bindOnClick(function() {
+                .bindOnClick(function () {
                     Entry.do('addObjectButtonClick');
                     this.blur();
                 })
@@ -161,7 +164,7 @@ Entry.Engine = class Engine {
                 .addClass('entryPauseButtonWorkspace_w')
                 .addClass('entryRemove')
                 .appendTo(this.buttonWrapper)
-                .bindOnClick(function(e) {
+                .bindOnClick(function (e) {
                     this.blur();
                     Entry.engine.togglePause();
                 });
@@ -171,7 +174,7 @@ Entry.Engine = class Engine {
                 .addClass('entryPauseButtonWorkspace_full')
                 .addClass('entryRemove')
                 .appendTo(this.buttonWrapper)
-                .bindOnClick(function() {
+                .bindOnClick(function () {
                     this.blur();
                     Entry.engine.togglePause();
                 });
@@ -188,7 +191,7 @@ Entry.Engine = class Engine {
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryStopButtonWorkspace_w2')
                 .addClass('entryRemove')
-                .bindOnClick(function() {
+                .bindOnClick(function () {
                     this.blur();
                     Entry.engine.toggleStop();
                 })
@@ -212,7 +215,7 @@ Entry.Engine = class Engine {
             this.coordinateButton.addClass('entryEngineButtonMinimize');
             this.coordinateButton.addClass('entryCoordinateButtonMinimize');
             this.view_.appendChild(this.coordinateButton);
-            this.coordinateButton.bindOnClick(function(e) {
+            this.coordinateButton.bindOnClick(function (e) {
                 if (this.hasClass('toggleOn')) {
                     this.removeClass('toggleOn');
                 } else {
@@ -227,7 +230,7 @@ Entry.Engine = class Engine {
             this.stopButton.addClass('entryRemove');
             this.stopButton.innerHTML = Lang.Workspace.stop;
             this.view_.appendChild(this.stopButton);
-            this.stopButton.bindOnClick(function(e) {
+            this.stopButton.bindOnClick(function (e) {
                 this.blur();
                 Entry.engine.toggleStop();
             });
@@ -238,7 +241,7 @@ Entry.Engine = class Engine {
             this.pauseButton.addClass('entryPauseButtonMinimize');
             this.pauseButton.addClass('entryRemove');
             this.view_.appendChild(this.pauseButton);
-            this.pauseButton.bindOnClick(function(e) {
+            this.pauseButton.bindOnClick(function (e) {
                 this.blur();
                 Entry.engine.togglePause();
             });
@@ -472,7 +475,7 @@ Entry.Engine = class Engine {
                 .parent()
                 .remove();
             delete this.speedLabel_;
-            $(this.speedProgress_).fadeOut(null, function(e) {
+            $(this.speedProgress_).fadeOut(null, function (e) {
                 $(this).remove();
                 delete this.speedProgress_;
             });
@@ -689,7 +692,7 @@ Entry.Engine = class Engine {
         Entry.dispatchEvent('beforeStop');
         try {
             await Promise.all(this.execPromises);
-        } catch (e) {}
+        } catch (e) { }
         const container = Entry.container;
         const variableContainer = Entry.variableContainer;
 
@@ -768,7 +771,7 @@ Entry.Engine = class Engine {
         this.setEnableInputField(false);
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
-        (function(w) {
+        (function (w) {
             w && w.getMode() === Entry.Workspace.MODE_VIMBOARD && w.codeToText();
         })(Entry.getMainWS());
         Entry.dispatchEvent('dispatchEventDidToggleStop');
@@ -1257,7 +1260,7 @@ Entry.Engine = class Engine {
         this.execPromises = this.trimPromiseExecutor();
         const index = this.execPromises.length;
         promises.forEach((promise, i) => {
-            const execPromise = (async function() {
+            const execPromise = (async function () {
                 const result = await promise;
                 const j = Entry.engine.execPromises.indexOf(execPromise);
                 Entry.engine.execPromises[j] = result;
