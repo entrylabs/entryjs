@@ -350,6 +350,7 @@ EntryStatic.getAllBlocks = function() {
                 'combine_something',
                 'char_at',
                 'substring',
+                'count_match_string',
                 'index_of_string',
                 'replace_string',
                 'change_string_case',
