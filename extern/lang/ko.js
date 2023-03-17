@@ -5917,8 +5917,10 @@ Lang.Helper = {
     sound_volume_set: '작품에서 재생되는 모든 소리의 크기를 입력한 값으로 정합니다.',
     sound_silent_all: '재생 중인 모든 소리를 멈춥니다.',
     is_clicked: '마우스를 클릭한 경우 ‘참’으로 판단합니다.',
+    is_object_clicked: '오브젝트를 클릭한 경우 ‘참’으로 판단합니다.',
     is_press_some_key: '선택한 키가 눌려져 있는 경우 ‘참’으로 판단합니다.',
     reach_something: '해당 오브젝트가 선택한 항목과 닿은 경우 ‘참’으로 판단합니다.',
+    is_type: '입력한 값이 숫자라면 ‘참’으로 판단합니다.',
     is_included_in_list:
         "선택한 리스트가 입력한 값을 가진 항목을 포함하는 경우 '참'으로 판단합니다.",
     boolean_basic_operator:
@@ -5951,7 +5953,7 @@ Lang.Helper = {
     calc_mod: '앞 수에서 뒤 수를 나누어 생긴 나머지를 의미합니다.',
     calc_operation:
         '입력한 수에 대한 다양한 수학식의 계산값입니다. (제곱, 루트, 사인값, 코사인값, 탄젠트값, 아크사인값, 아크코사인값, 아크탄젠트값, 로그값, 자연로그값, 소수점 부분, 소수점 버림값, 소수점 올림값, 소수점 반올림값, 펙토리얼값, 절대값)',
-    get_date: '현재 연도, 월, 일, 시각과 같이 시간에 대한 값입니다.',
+    get_date: '현재 연도, 월, 일, 요일, 시각과 같이 시간에 대한 값입니다.',
     distance_something: '해당 오브젝트와 선택한 오브젝트 또는 마우스 포인터 간의 거릿값입니다.',
     get_sound_duration: '선택한 소리의 길이(초) 값입니다.',
     get_user_name: '작품을 실행하고 있는 사용자의 아이디 값입니다.',
@@ -5966,6 +5968,7 @@ Lang.Helper = {
     get_canvas_input_value: "사용자가 '대답 창'에 입력한 값입니다.",
     set_visible_answer: "대답 창'을 실행화면에서 숨기거나 보이게 합니다.",
     combine_something: '입력한 두 값을 결합한 값입니다.',
+    reverse_of_string: '입력한 값을 뒤집은 값입니다.',
     get_variable: '선택한 변수에 저장된 값입니다.',
     change_variable: '선택한 변수에 입력한 값을 더합니다.',
     set_variable: '선택한 변수의 값을 입력한 값으로 정합니다.',
@@ -6027,6 +6030,7 @@ Lang.Helper = {
     char_at: '입력한 값에서 입력한 숫자 번째의 글자 값입니다. (공백을 포함합니다.)',
     length_of_string: '입력한 값의 공백을 포함한 글자 수입니다.',
     substring: '입력한 값에서 입력한 범위 내의 글자 값입니다. (공백을 포함합니다.)',
+    count_match_string: '입력한 값에서 지정한 값의 글자 개수입니다.',
     replace_string:
         '입력한 값에서 지정한 값을 찾아 추가로 입력한 값으로 모두 바꾼 값입니다. (영문 입력 시 대소문자를 구분합니다.)',
     index_of_string:
