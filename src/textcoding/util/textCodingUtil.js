@@ -504,10 +504,15 @@ class TextCodingUtil {
         const activatedExpansionBlocks = Entry.expansionBlocks;
         const activatedUtilizeBlock = Entry.aiUtilizeBlocks;
         const tables = Entry.playground.dataTable ? Entry.playground.dataTable.tables : [];
+        const functions = Entry.variableContainer.functions_;
+        const isNotPythonSupportFunciton = Object.keys(functions).some(
+            (key) => functions[key].useLocalVariables || functions[key].type === 'value'
+        );
         if (
             activatedExpansionBlocks.length > 0 ||
             activatedUtilizeBlock.length > 0 ||
             Entry.aiLearning.isLoaded ||
+            isNotPythonSupportFunciton ||
             tables.length > 0
         ) {
             return {
