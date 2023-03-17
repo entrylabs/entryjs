@@ -198,13 +198,17 @@ Entry.Workspace = class Workspace {
                     if (alertMessage.type === 'warning') {
                         Entry.modal.confirm(alertMessage.message).then((result) => {
                             if (result) {
+                                Entry.variableContainer.removeNotPythonSupportedFunction();
                                 Entry.expansion.banExpansionBlocks(Entry.expansionBlocks);
                                 Entry.aiUtilize.banAIUtilizeBlocks(Entry.aiUtilizeBlocks);
                                 Entry.hwLite.banClassAllHardwareLite();
                                 Entry.playground.dataTable.removeAllBlocks();
                                 Entry.aiLearning.removeAllBlocks();
-                                changeToPythonMode();
-                                dispatchChangeBoardEvent();
+                                // 블럭 삭제되고 처리
+                                requestAnimationFrame(() => {
+                                    changeToPythonMode();
+                                    dispatchChangeBoardEvent();
+                                });
                             } else {
                                 const mode = {};
                                 mode.boardType = WORKSPACE.MODE_BOARD;
