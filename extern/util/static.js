@@ -321,6 +321,7 @@ EntryStatic.getAllBlocks = function() {
                 'is_object_clicked',
                 'is_press_some_key',
                 'reach_something',
+                'is_type',
                 'boolean_basic_operator',
                 'boolean_and_or',
                 'boolean_not',

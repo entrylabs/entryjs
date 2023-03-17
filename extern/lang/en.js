@@ -1115,6 +1115,9 @@ Lang.Blocks = {
     "arduino_lite_disconnect": "Cancel",
     "arduino_lite_guide": "• connection guide",
     "JUDGEMENT_is_object_clicked": "Object clicked?",
+    "JUDGEMENT_is_type_1": "is",
+    "JUDGEMENT_is_type_2": "",
+    "is_type_number": "number",
 };
 Lang.video_body_coord_params = {
     "left_eye": "Left Eye",
@@ -5469,6 +5472,7 @@ Lang.template = {
     "is_object_clicked": "%1",
     "is_press_some_key": "%1 %2",
     "reach_something": "%1 %2 %3",
+    "is_type": '%1 %2 %3 %4',
     "boolean_comparison": "%1 %2 %3",
     "boolean_equal": "%1 %2 %3",
     "boolean_bigger": "%1 %2 %3",

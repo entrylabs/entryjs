@@ -257,6 +257,64 @@ module.exports = {
                     ],
                 },
             },
+            is_type: {
+                color: EntryStatic.colorSet.block.default.JUDGE,
+                outerLine: EntryStatic.colorSet.block.darken.JUDGE,
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_type_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.is_type_number, 'number'],
+                        ],
+                        value: 'number',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.JUDGEMENT_is_type_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: ['10', null, 'number', null],
+                    type: 'is_type',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                    TYPE: 2,
+                },
+                class: 'boolean_type',
+                isNotFor: [],
+                func(sprite, script) {
+                    const value = script.getStringValue('VALUE', script);
+                    const type = script.getField('TYPE', script);
+
+                    if (type === 'number') {
+                        const numCheckRegex = /^-?\d+$/;
+                        if (numCheckRegex.test(value)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             boolean_basic_operator: {
                 color: EntryStatic.colorSet.block.default.JUDGE,
                 outerLine: EntryStatic.colorSet.block.darken.JUDGE,
