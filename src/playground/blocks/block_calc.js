@@ -1169,7 +1169,7 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function () {
+                        function() {
                             if (Entry.engine) {
                                 Entry.engine.showProjectTimer();
                             }
