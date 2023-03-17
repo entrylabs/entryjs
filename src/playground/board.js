@@ -1507,6 +1507,9 @@ Entry.Board = class Board {
             y: 26,
         });
         requestAnimationFrame(() => {
+            if (!this.svgObjectBlockCount.countText) {
+                return;
+            }
             const rectWidth =
                 this.svgObjectBlockCount.countText.getBoundingClientRect().width / this.scale;
             this.svgObjectBlockCount.rect.attr({
@@ -1522,10 +1525,12 @@ Entry.Board = class Board {
         if (count === 1) {
             langText = Lang.Workspace.use_block_project;
         }
-        this.svgObjectBlockCount.countText.textContent = Entry.Utils.stringFormat(
-            langText,
-            Entry.Utils.shortenNumber(count)
-        );
+        if (this.svgObjectBlockCount.countText) {
+            this.svgObjectBlockCount.countText.textContent = Entry.Utils.stringFormat(
+                langText,
+                Entry.Utils.shortenNumber(count)
+            );
+        }
     }
 
     clearObjectTitle() {
