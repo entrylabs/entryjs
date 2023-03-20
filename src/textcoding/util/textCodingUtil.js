@@ -527,9 +527,13 @@ class TextCodingUtil {
     }
 
     getNotSupportedBlocks() {
-        return Object.keys(Entry.block).filter(
+        if (EntryStatic.pythonDisabled) {
+            return EntryStatic.pythonDisabled;
+        }
+        EntryStatic.pythonDisabled = Object.keys(Entry.block).filter(
             (key) => Entry.block[key]?.isNotFor.indexOf('python_disable') >= 0
         );
+        return EntryStatic.pythonDisabled;
     }
 
     removeNotSupportedBlock(names = []) {
