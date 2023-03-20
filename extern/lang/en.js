@@ -5190,7 +5190,7 @@ Lang.template = {
     "iboard_rgb_led": " %1 LED %2 %3",
     "iboard_set_tone": "Play tone pin %1 on note %2 octave %3 beat %4 %5",
     "iboard_toggle_led": "Digital %1 Pin %2 %3",
-    "bitbrick_when_button_pressed": "%1 when button %2 %3",
+    "bitbrick_when_button_pressed": "%1 when button %2",
     "bitbrick_when_sensor_get_value": "%1 when %2 value %3 %4",
     "bitbrick_is_touch_pressed": "button %1 %2?",
     "bitbrick_is_sensor_value_compare": "%1 %2 %3?",
