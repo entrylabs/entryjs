@@ -508,18 +508,38 @@ class TextCodingUtil {
         const isNotPythonSupportFunciton = Object.keys(functions).some(
             (key) => functions[key].useLocalVariables || functions[key].type === 'value'
         );
+        const isNotSupportedUsed = this.getNotSupportedBlocks().some((name) =>
+            Entry.Utils.isUsedBlockType(name)
+        );
         if (
             activatedExpansionBlocks.length > 0 ||
             activatedUtilizeBlock.length > 0 ||
             Entry.aiLearning.isLoaded ||
             isNotPythonSupportFunciton ||
-            tables.length > 0
+            tables.length > 0 ||
+            isNotSupportedUsed
         ) {
             return {
                 message: Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
                 type: 'warning',
             };
         }
+    }
+
+    getNotSupportedBlocks() {
+        if (EntryStatic.pythonDisabled) {
+            return EntryStatic.pythonDisabled;
+        }
+        EntryStatic.pythonDisabled = Object.keys(Entry.block).filter(
+            (key) => Entry.block[key]?.isNotFor.indexOf('python_disable') >= 0
+        );
+        return EntryStatic.pythonDisabled;
+    }
+
+    removeNotSupportedBlock(names = []) {
+        this.getNotSupportedBlocks().forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
     }
 
     /**

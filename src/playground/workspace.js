@@ -204,6 +204,8 @@ Entry.Workspace = class Workspace {
                                 Entry.hwLite.banClassAllHardwareLite();
                                 Entry.playground.dataTable.removeAllBlocks();
                                 Entry.aiLearning.removeAllBlocks();
+                                Util.removeNotSupportedBlock();
+                                Entry.playground.blockMenu.banClass('python_disable');
                                 // 블럭 삭제되고 처리
                                 requestAnimationFrame(() => {
                                     changeToPythonMode();
@@ -237,6 +239,7 @@ Entry.Workspace = class Workspace {
                 try {
                     this.board.show();
                     blockMenu.unbanClass('functionInit', true);
+                    Entry.playground.blockMenu.unbanClass('python_disable');
                     this.set({ selectedBoard: this.board });
                     this.textToCode(this.oldMode, this.oldTextType);
                     if (this.overlayBoard) {
