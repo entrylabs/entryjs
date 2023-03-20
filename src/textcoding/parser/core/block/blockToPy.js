@@ -64,10 +64,17 @@ Entry.BlockToPyParser = class {
             let contentResult = '';
 
             blocks.forEach((block, index) => {
-                if (index === 0 && Entry.TextCodingUtil.isEventBlock(block)) {
-                    rootResult = `${this.Block(block)}\n`;
-                } else {
-                    contentResult += `${this.Block(block)}\n`;
+                try {
+                    if (index === 0 && Entry.TextCodingUtil.isEventBlock(block)) {
+                        rootResult = `${this.Block(block)}\n`;
+                    } else {
+                        contentResult += `${this.Block(block)}\n`;
+                    }
+                } catch (e) {
+                    Entry.toast.alert(
+                        Lang.TextCoding.title_converting,
+                        Lang.TextCoding.alert_legacy_no_support
+                    );
                 }
             });
 
@@ -350,7 +357,7 @@ Entry.BlockToPyParser = class {
             schema = datum;
         }
 
-        if (schema && schema.syntax) {
+        if (schema && schema.syntax && schema.syntax.py && schema.syntax.py.length > 0) {
             const syntaxes = schema.syntax.py.concat();
             while (syntaxes.length) {
                 let isFail = false;
