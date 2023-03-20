@@ -1059,6 +1059,30 @@ Entry.Coalaboard.setLanguage = function() {
             Device: {
                 coalaboard: '코알라보드',
             },
+            Helper: {
+                coalaboard_when_button_pressed: '비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.',
+                coalaboard_when_sensor_get_value:
+                    '비트브릭 센서의 값과 오른쪽에 입력한 값을 비교합니다.\n< : 센서 값이 오른쪽에 위치한 값보다 작은 경우 ‘참’으로 판단합니다.\n> : 센서 값이 오른쪽에 위치한 값보다 큰 경우 ‘참으로 판단합니다.\n= :  센서 값이 오른쪽에 위치한 값과 같은 경우 ‘참으로 판단합니다.',
+                coalaboard_sensor_value:
+                    '비트브릭 센서를 사용할 수 있는 블록입니다. 센서값의 범위는 0 ~1023입니다. 메인보드에 연결된 센서의 종류와 포트번호를 자동으로 인식합니다. 블록 안의 화살표를 눌러 사용하려고 하는 센서를 선택하세요.',
+                coalaboard_convert_scale: '비트브릭 센서의 값의 범위를 바꿀 수 있습니다.',
+                coalaboard_is_touch_pressed: '비트브릭 센서 중 버튼을 눌렀을 경우 ‘참’으로 판단합니다.',
+                coalaboard_turn_off_color_led: '비트브릭 엘이디를 끕니다.',
+                coalaboard_turn_on_color_led_by_rgb:
+                    '비트브릭 엘이디를 빛의 삼원색인 빨강,초록,파랑을 혼합하여 켭니다. 값의 범위는 0 ~ 255입니다.',
+                coalaboard_turn_on_color_led_by_picker: '비트브릭 엘이디를 색상 창을 사용해 켭니다.',
+                coalaboard_turn_on_color_led_by_value:
+                    '비트브릭 엘이디를 색상 값으로 켭니다. 값의 범위는 0 ~ 199입니다.',
+                coalaboard_buzzer:
+                    '비트브릭 버저를 사용하여 소리를 냅니다. 값의 범위는 0 ~ 96입니다. 값이 0일 때는 버저 소리를 끕니다.',
+                coalaboard_turn_off_all_motors: '비트브릭 모터를 모두 끕니다.',
+                coalaboard_dc_speed:
+                    '비트브릭 디씨모터의 속도를 제어합니다. 속도 값의 범위는 –100 ~ 100입니다. 음수(-)일 때는 반시계방향으로 회전합니다. 양수(+)일 때는 시계방향으로 회전합니다. 속도가 0일 때는 회전을 멈춥니다.',
+                coalaboard_dc_direction_speed:
+                    '비트브릭 디씨모터의 방향과 속력을 제어합니다. 방향은 시계방향과 반시계방향을 선택할 수 있습니다. 속력 값의 범위는 0 ~ 100입니다. 속력이 0일 때는 회전을 멈춥니다.',
+                coalaboard_servomotor_angle:
+                    '비트브릭 서보모터의 각도를 제어합니다. 각도 값의 범위는 0 ~ 180입니다.'
+            }
         },
         en: {
             // en.js에 작성하던 내용
