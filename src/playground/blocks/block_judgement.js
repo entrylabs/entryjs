@@ -632,7 +632,7 @@ module.exports = {
                     type: 'is_boost_mode',
                 },
                 class: 'boolean_input',
-                isNotFor: ['python_disable'],
+                isNotFor: [],
                 func() {
                     return !!Entry.options.useWebGL;
                 },
