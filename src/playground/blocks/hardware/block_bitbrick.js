@@ -502,12 +502,13 @@ Entry.Bitbrick.getBlocks = function() {
             class: 'button',
             isNotFor: ['bitbrick'],
             func: function(sprite, script) {
+                console.info("bitbrick_is_touch_pressed");
                 let port = script.getStringField('PORT');
                 let val  = Entry.hw.portData[port].value;
                 let pressed = script.getStringField('PRESSED');
-                if ((pressed == Lang.Blocks.BITBRICK_button_pressed) && (val == 0)) {
+                if ((pressed == 'pressed') && (val == 0)) {
                     return true;
-                } else if ((pressed == Lang.Blocks.BITBRICK_button_released) && (val == 1023)) {
+                } else if ((pressed == 'released') && (val == 1023)) {
                     return true;
                 } else {
                     return false;
