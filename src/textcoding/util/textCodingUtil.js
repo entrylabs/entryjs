@@ -508,13 +508,9 @@ class TextCodingUtil {
         const isNotPythonSupportFunciton = Object.keys(functions).some(
             (key) => functions[key].useLocalVariables || functions[key].type === 'value'
         );
-        const isNotSupported = [
-            'is_object_clicked',
-            'is_type',
-            'count_match_string',
-            'reverse_of_string',
-        ];
-        const isNotSupportedUsed = isNotSupported.some((name) => Entry.Utils.isUsedBlockType(name));
+        const isNotSupportedUsed = this.getNotSupportedBlocks().some((name) =>
+            Entry.Utils.isUsedBlockType(name)
+        );
         if (
             activatedExpansionBlocks.length > 0 ||
             activatedUtilizeBlock.length > 0 ||
@@ -528,6 +524,18 @@ class TextCodingUtil {
                 type: 'warning',
             };
         }
+    }
+
+    getNotSupportedBlocks() {
+        return Object.keys(Entry.block).filter(
+            (key) => Entry.block[key]?.isNotFor.indexOf('python_disable') >= 0
+        );
+    }
+
+    removeNotSupportedBlock(names = []) {
+        this.getNotSupportedBlocks().forEach((blockType) => {
+            Entry.Utils.removeBlockByType(blockType);
+        });
     }
 
     /**
