@@ -130,26 +130,6 @@ Entry.Bitbrick = {
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A: {
-                name: Lang.Hw.port_en + ' A ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            B: {
-                name: Lang.Hw.port_en + ' B ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            C: {
-                name: Lang.Hw.port_en + ' C ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            D: {
-                name: Lang.Hw.port_en + ' D ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
         },
         // },
         // ports : {
@@ -236,15 +216,6 @@ Entry.Bitbrick.getBlocks = function() {
             skeleton: 'basic_event',
             statements: [],
             params: [
-                // {
-                //     type: 'Indicator',
-                //     img: 'block_icon/start_icon_play.svg',
-                //     size: 14,
-                //     position: {
-                //         x: 0,
-                //         y: -2,
-                //     },
-                // },
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
@@ -262,24 +233,15 @@ Entry.Bitbrick.getBlocks = function() {
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     menuName: Entry.Bitbrick.touchList,
                 },
-                {
-                    type: 'Dropdown',
-                    options: options_BITBRICK_button2,
-                    value: 'pressed',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
             ],
             events: {},
             def: {
-                params: [null, null, null],
+                params: [null, null],
                 type: 'bitbrick_when_button_pressed',
             },
             paramsKeyMap: {
                 DUMMY: 0,
                 PORT: 1,
-                PRESSED: 2,
             },
             class: 'event',
             isNotFor: ['bitbrick'],
@@ -288,13 +250,9 @@ Entry.Bitbrick.getBlocks = function() {
                 if( script.values.length > 0 ) {
                     let selectedSensor  = script.values[ 1 ];
                     let port = script.getStringField('PORT');
-                    let type = Entry.hw.portData[port].type;
                     let val  = Entry.hw.portData[port].value;       // 0이면 누름, 1023이면 누르지 않음
-                    let pressed = script.getStringField('PRESSED');
                     if( selectedSensor == port ) {
-                        if ((pressed == 'pressed') && (val == 0)) {
-                            return script.callReturn();
-                        } else if ((pressed == 'released') && (val == 1023)) {
+                        if (val == 0) {
                             return script.callReturn();
                         } else {
                             return this.die();
@@ -306,7 +264,7 @@ Entry.Bitbrick.getBlocks = function() {
                     return this.die();
                 }
             },
-            syntax: { js: [], py: ['Bitbrick.when_button_pressed(%2, %3)'] },
+            syntax: { js: [], py: ['Bitbrick.when_button_pressed(%2)'] },
         },        
         bitbrick_when_sensor_get_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -544,13 +502,14 @@ Entry.Bitbrick.getBlocks = function() {
             class: 'button',
             isNotFor: ['bitbrick'],
             func: function(sprite, script) {
+                console.info("bitbrick_is_touch_pressed");
                 let port = script.getStringField('PORT');
                 let val  = Entry.hw.portData[port].value;
                 let pressed = script.getStringField('PRESSED');
-                if ((pressed == Lang.Blocks.BITBRICK_button_pressed) && (val == 0)) {
-                    return treu;
-                } else if ((pressed == Lang.Blocks.BITBRICK_button_released) && (val == 1023)) {
-                    return treu;
+                if ((pressed == 'pressed') && (val == 0)) {
+                    return true;
+                } else if ((pressed == 'released') && (val == 1023)) {
+                    return true;
                 } else {
                     return false;
                 }                        
@@ -1067,7 +1026,7 @@ Entry.Bitbrick.setLanguage = function() {
         ko: {
             // ko.js에 작성하던 내용
             template: {
-                bitbrick_when_button_pressed: '%1 버튼 %2 이(가) %3 일 때',
+                bitbrick_when_button_pressed: '%1 버튼 %2 눌러졌을 때',
                 bitbrick_when_sensor_get_value: '%1 %2 값 %3 %4 일 때',
                 bitbrick_is_touch_pressed: '버튼 %1 이(가) %2 인가?',
                 bitbrick_is_sensor_value_compare: '%1 값 %2 %3 인가?',
@@ -1108,7 +1067,7 @@ Entry.Bitbrick.setLanguage = function() {
         en: {
             // en.js에 작성하던 내용
             template: {
-                bitbrick_when_button_pressed: '%1 when button %2 %3',
+                bitbrick_when_button_pressed: '%1 when button %2',
                 bitbrick_when_sensor_get_value: '%1 when %2 value %3 %4',
                 bitbrick_is_touch_pressed: 'button %1 %2?',
                 bitbrick_is_sensor_value_compare: '%1 %2 %3? ',

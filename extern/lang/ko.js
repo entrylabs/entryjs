@@ -6890,7 +6890,7 @@ Lang.template = {
     iboard_rgb_led: 'RGB LED의 %1 LED %2 %3',
     iboard_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
     iboard_toggle_led: '디지털 %1 번 핀 %2 %3',
-    bitbrick_when_button_pressed: '%1 버튼 %2 이(가) %3 일 때',
+    bitbrick_when_button_pressed: '%1 버튼 %2 눌러졌을 때',
     bitbrick_when_sensor_get_value: '%1 %2 값 %3 %4 일 때',
     bitbrick_is_touch_pressed: '버튼 %1 이(가) %2 인가?',
     bitbrick_is_sensor_value_compare: '%1 값 %2 %3 인가?',
