@@ -1,5 +1,9 @@
 'use strict';
 
+const _throttle = require('lodash/throttle');
+
+const EVENT_INTERVAL = 150;
+
 (function () {
     Entry.Microbit2lite = new (class Microbit2Lite {
         constructor() {
@@ -14,7 +18,7 @@
                 bufferSize: 512,
                 connectionType: 'ascii',
             };
-            this.duration = 200;
+            this.duration = 64;
             this.functionKeys = {
                 LOCALDATA: 'localdata',
                 GET_ANALOG: 'get-analog',
@@ -265,6 +269,13 @@
                 'microbit2lite_get_sound_level',
             ];
             this.version = '2';
+            this.firePressedBtnEventWithThrottle = _throttle(
+                (pressedBtn) => {
+                    Entry.engine.fireEventWithValue('microbit2lite_btn_pressed', pressedBtn);
+                },
+                EVENT_INTERVAL,
+                { leading: true, trailing: false }
+            );
         }
         _clamp(value, min, max) {
             if (value < min) {
@@ -319,7 +330,7 @@
             // INFO: A,B 버튼이벤트 관련 로직
             const pressedBtn = response.split(':btn:')[1];
             if (pressedBtn) {
-                Entry.engine.fireEventWithValue('microbit2lite_btn_pressed', pressedBtn);
+                this.firePressedBtnEventWithThrottle(pressedBtn);
             }
         }
 
