@@ -317,8 +317,6 @@ const EVENT_INTERVAL = 150;
         }
 
         async listenBtnPressedEvent() {
-            console.log(this.commandStatus);
-
             if (Object.keys(this.commandStatus).length > 0) {
                 return;
             }
@@ -373,9 +371,7 @@ const EVENT_INTERVAL = 150;
             if (!Entry.engine.isState('run')) {
                 return;
             }
-            console.log("cmd : ", command);
             const result = await Entry.hwLite.sendAsyncWithThrottle(command);
-            console.log('getResponseWithSync : ', result);
 
             if (!result ||
                 this.getCommandType(command) !== this.getCommandType(result) ||
@@ -395,7 +391,6 @@ const EVENT_INTERVAL = 150;
                     console.error('UnExpected Microbit command');
                 }
             } else {
-                console.log("delete : ", command);
                 delete this.commandStatus[command];
             }
 

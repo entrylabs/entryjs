@@ -434,13 +434,11 @@ export default class HardwareLite {
                 throw new Error('HARDWARE LITE NOT CONNECTED');
             }
             await this.writer.write(encodedData);
-            console.log("sendAsync writer: ", encodedData);
             if (isResetReq) {
                 this.isSendAsyncRun = false;
                 return;
             }
             const { value, done } = await this.reader.read();
-            console.log("sendAsync reader: ", value);
             if (callback) {
                 return callback(value);
             }
