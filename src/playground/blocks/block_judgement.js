@@ -54,7 +54,7 @@ module.exports = {
                     type: 'is_object_clicked',
                 },
                 class: 'boolean_input',
-                isNotFor: [],
+                isNotFor: ['python_disable'],
                 func(sprite, script) {
                     const objId = sprite.id;
                     if (Entry.stage.clickedObjectId == objId) {
@@ -297,7 +297,7 @@ module.exports = {
                     TYPE: 2,
                 },
                 class: 'boolean_type',
-                isNotFor: [],
+                isNotFor: ['python_disable'],
                 func(sprite, script) {
                     const value = script.getStringValue('VALUE', script);
                     const type = script.getField('TYPE', script);

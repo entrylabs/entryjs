@@ -1778,7 +1778,7 @@ module.exports = {
                     STRING: 1,
                 },
                 class: 'calc_string',
-                isNotFor: [],
+                isNotFor: ['python_disable'],
                 func(sprite, script) {
                     const originStr = script.getStringValue('STRING', script);
                     const reversedStr = originStr.split('').reverse().join('');
@@ -2170,7 +2170,7 @@ module.exports = {
                     TARGET: 2,
                 },
                 class: 'calc_string',
-                isNotFor: [],
+                isNotFor: ['python_disable'],
                 func(sprite, script) {
                     const originStr = script.getStringValue('STRING', script);
                     const targetStr = script.getStringValue('TARGET', script);
