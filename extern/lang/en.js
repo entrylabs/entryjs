@@ -1116,7 +1116,7 @@ Lang.Blocks = {
     "arduino_lite_guide": "• connection guide",
     "JUDGEMENT_is_object_clicked": "Object clicked?",
     "JUDGEMENT_is_type_1": "is",
-    "JUDGEMENT_is_type_2": "",
+    "JUDGEMENT_is_type_2": "?",
     "is_type_number": "number",
 };
 Lang.video_body_coord_params = {
