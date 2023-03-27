@@ -2154,7 +2154,7 @@ module.exports = {
                     params: [
                         {
                             type: 'text',
-                            params: [Lang.Blocks.hello_entry],
+                            params: [Lang.Blocks.hi_entry_en],
                         },
                         null,
                         {

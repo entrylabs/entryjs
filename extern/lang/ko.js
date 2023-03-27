@@ -1561,7 +1561,7 @@ Lang.Blocks = {
     CALC_change_string_case_sub_1: '대문자',
     CALC_change_string_case_sub_2: '소문자',
     CALC_count_match_string_1: '에서',
-    CALC_count_match_string_2: '의 글자 개수',
+    CALC_count_match_string_2: '의 글자 수',
     CALC_index_of_string_1: '',
     CALC_index_of_string_2: '에서',
     CALC_index_of_string_3: '의 시작 위치',
@@ -1606,7 +1606,6 @@ Lang.Blocks = {
     entry_bot_name: '엔트리봇',
     hi_entry: '안녕 엔트리!',
     hi_entry_en: 'Hello Entry!',
-    hello_entry: 'hello entry',
     bark_dog: '강아지 짖는 소리',
     walking_entryBot: '엔트리봇_걷기',
     doggi_bark: '강아지 짖는 소리',
@@ -6030,7 +6029,7 @@ Lang.Helper = {
     char_at: '입력한 값에서 입력한 숫자 번째의 글자 값입니다. (공백을 포함합니다.)',
     length_of_string: '입력한 값의 공백을 포함한 글자 수입니다.',
     substring: '입력한 값에서 입력한 범위 내의 글자 값입니다. (공백을 포함합니다.)',
-    count_match_string: '입력한 값에서 지정한 값의 글자 개수입니다.',
+    count_match_string: '입력한 값에서 지정한 값의 글자 수이며, 영문의 경우 대문자와 소문자를 구분하여 수를 셉니다.',
     replace_string:
         '입력한 값에서 지정한 값을 찾아 추가로 입력한 값으로 모두 바꾼 값입니다. (영문 입력 시 대소문자를 구분합니다.)',
     index_of_string:
