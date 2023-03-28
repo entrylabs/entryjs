@@ -6020,7 +6020,7 @@ Lang.TextCoding = {
     "alert_list_contains_exceed_length_value": "You can't convert into the text mode if more than 15 digits are entered in the list item.",
     "alert_function_name_empty_text_add_change": "The empty text can't be included in function name.",
     "alert_no_save_on_error": "The code with an error can't save.",
-    "alert_api_no_support": "You can not convert into the text mode when extension blocks are used in your project.",
+    "alert_api_no_support": "The project contains blocks \nthat are not supported by Entry-Python. \nDelete all those blocks and \nchange to Entry-Python mode?",
     "warn_unnecessary_arguments": "&(calleeName)(); command doesn't require value within parentheses. (line:&(lineNumber))",
     "python_code": "'s python code",
     "eof": "line change",

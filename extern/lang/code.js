@@ -6794,7 +6794,8 @@ Lang.TextCoding = {
     "alert_list_contains_exceed_length_value": "리스트 항목에 15자리 이상의 수가 입력되어 있으면 모드 변환을 할 수 없습니다.",
     "alert_function_name_empty_text_add_change": "함수명에 공백(띄어쓰기)이 포함될 수 없습니다.",
     "alert_no_save_on_error": "문법 오류가 존재하여 작품을 저장할 수 없습니다.",
-    "alert_api_no_support": "작품에 확장 블록이 사용된 경우에는 엔트리파이선 모드로 변경할 수 없습니다.",
+    "alert_api_no_support":
+        '작품에 엔트리파이썬에서 지원하지 않는 \n블록이 조립되어 있습니다. \n해당 블록을 삭제하고 만들기 모드를 변경할까요?',
     "warn_unnecessary_arguments": "&(calleeName)(); 는 괄호 사이에 값이 입력될 필요가 없는 명령어 입니다. (line:&(lineNumber))",
     "python_code": " 오브젝트의 파이선 코드",
     "eof": "줄바꿈",
