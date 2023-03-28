@@ -274,9 +274,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.is_type_number, 'number'],
-                        ],
+                        options: [[Lang.Blocks.is_type_number, 'number']],
                         value: 'number',
                         fontSize: 10,
                         bgColor: EntryStatic.colorSet.block.darken.JUDGE,
