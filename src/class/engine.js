@@ -22,12 +22,15 @@ Entry.Engine = class Engine {
 
         _addEventListener('canvasClick', () => this.fireEvent('mouse_clicked'));
         _addEventListener('canvasClickCanceled', () => this.fireEvent('mouse_click_cancled'));
-        _addEventListener('entityClick', (entity) =>
-            this.fireEventOnEntity('when_object_click', entity)
-        );
-        _addEventListener('entityClickCanceled', (entity) =>
-            this.fireEventOnEntity('when_object_click_canceled', entity)
-        );
+        _addEventListener('entityClick', (entity) => {
+            const objId = entity.id;
+            Entry.stage.clickedObjectId = objId;
+            this.fireEventOnEntity('when_object_click', entity);
+        });
+        _addEventListener('entityClickCanceled', (entity) => {
+            delete Entry.stage.clickedObjectId;
+            this.fireEventOnEntity('when_object_click_canceled', entity);
+        });
 
         if (Entry.type !== 'phone' && Entry.type !== 'playground') {
             _addEventListener(
@@ -689,7 +692,7 @@ Entry.Engine = class Engine {
         Entry.dispatchEvent('beforeStop');
         try {
             await Promise.all(this.execPromises);
-        } catch (e) {}
+        } catch (e) { }
         const container = Entry.container;
         const variableContainer = Entry.variableContainer;
 

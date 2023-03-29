@@ -71,6 +71,7 @@ declare interface IEntry extends EntryOptions {
     hwLite: typeof import('../src/class/hw_lite').default;
     hw: import('../src/class/hw').default; // HW instance
     interfaceState: { [key: string]: any };
+    modal: any; // @entrylabs/modal
 
     // 엔트리 전역에 할당된 이벤트 객체
     disposeEvent: any;
