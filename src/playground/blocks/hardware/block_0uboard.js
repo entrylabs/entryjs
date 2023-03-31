@@ -37,7 +37,7 @@ Entry.pyocoding = {
       OLED: 241,
       COM: 242,
     	NEOPIXELCOLOR: 243,
-
+      DOTMATRIX: 245,
     },
     duration: {
           TIME_1ms: 1,
@@ -103,6 +103,10 @@ Entry.pyocoding.setLanguage = function() {
                 pyocoding_neopixel_all_led: '네오픽셀 %1 번에 LED R: %2 , G: %3 , B: %4 색을 밝기 %5 으로 켜기',
                 pyocoding_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
                 pyocoding_set_tone: '디지털 %1 번 핀을 %2 음으로 %3 옥타브로 %4 만큼 연주하기 %5',
+                pyocoding_change_4095to255_value: '%1 값 %2을 %3로 변환하기',
+                pyocoding_change_analog_to_temperature_tc_value: '아날로그 온도 변환 %1',
+                pyocoding_get_touch_value : '터치 %1 센서값',
+                pyocoding_dotmatrix : '도트매트릭스 %1 번 배열에 %2 을 그리기',
             },
         },
         en: {
@@ -137,6 +141,10 @@ Entry.pyocoding.setLanguage = function() {
               pyocoding_neopixel_all_led: '디지털 %1 번 핀에 연결된 %2  번째 네오픽셀 LED R: %3 , G: %4 , B: %5 색으로 켜기',
               pyocoding_digital_pwm: 'Digital %1 Pin %2 %3',
               pyocoding_set_tone: 'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+              pyocoding_change_4095to255_value: 'Analog 4095to255 %1',
+              pyocoding_change_analog_to_temperature_tc_value: 'Analog to Tc %1',
+              pyocoding_get_touch_value : 'touch %1 value',
+              pyocoding_dotmatrix : '도트매트릭스 %1 번 배열에 %2 을 그리기',
             },
         },
     };
@@ -158,6 +166,10 @@ Entry.pyocoding.blockMenuBlocks = [
     'pyocoding_neopixel_set',
     'pyocoding_neopixel_led',
     'pyocoding_neopixel_all_led',
+    'pyocoding_change_4095to255_value',
+    'pyocoding_change_analog_to_temperature_tc_value',
+    'pyocoding_get_touch_value',
+    'pyocoding_dotmatrix',
 
 ];
 
@@ -194,7 +206,7 @@ Entry.pyocoding.getBlocks = function() {
               params: [null],
               type: 'pyocoding_serial_set',
           },
-          isNotFor: [ 'pyocoding' ],
+          isNotFor: [ '0uboard' ],
           syntax: undefined,
           paramsKeyMap: {
               NOTE: 0,
@@ -240,7 +252,7 @@ Entry.pyocoding.getBlocks = function() {
                   ],
                   "type": "pyocoding_ble_set"
               },
-              isNotFor: [ "pyocoding" ],
+              isNotFor: [ '0uboard' ],
               paramsKeyMap: {
                   "VALUE1": 0,
               },
@@ -287,7 +299,7 @@ Entry.pyocoding.getBlocks = function() {
                 params: [ null ],
                 "type": "pyocoding_get_analog_value"
               },
-              isNotFor: [ "pyocoding" ],
+              isNotFor: [ '0uboard' ],
               class: "SENSOR",
               paramsKeyMap: {
                   "PORT": 0,
@@ -295,9 +307,149 @@ Entry.pyocoding.getBlocks = function() {
               func: function (sprite, script) {
                 var port = script.getValue("PORT", script);
                 var ANALOG = Entry.hw.portData.ANALOG;
+                //console.log(port,ANALOG)
                 if (port[0] === "A")
                     port = port.substring(1)
                 return ANALOG ? ANALOG[port] || 0 : 0;
+              },
+          },
+          pyocoding_get_touch_value: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic_string_field',
+              statements: [],
+              events: {},
+              params: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "A3", "3" ],
+                            //[ "A5", "5" ],
+                        ],
+                        "value": "3",
+                        "fontSize": 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+              def: {
+                params: [ null ],
+                "type": "pyocoding_get_touch_value"
+              },
+              isNotFor: [ '0uboard' ],
+              class: "SENSOR",
+              paramsKeyMap: {
+                  "PORT": 0,
+              },
+              func: function (sprite, script) {
+                var port = script.getValue("PORT", script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+                console.log(port,ANALOG)
+                if (port[0] === "A")
+                    port = port.substring(1)
+                return ANALOG ? ANALOG[5] || 0 : 0;
+              },
+          },
+          pyocoding_change_4095to255_value: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic_string_field',
+              statements: [],
+              events: {},
+              params: [
+                  {
+                      "type": "Block",
+                      "accept": "string"
+                  },
+                  {
+                      "type": "Block",
+                      "accept": "string"
+                  },
+                  {
+                      "type": "Block",
+                      "accept": "string"
+                  },
+                ],
+              def: {
+                params: [
+                    {
+                        "type": "text",
+                        "params": [ "0" ]
+                    },
+                    {
+                        "type": "text",
+                        "params": [ "4095" ]
+                    },
+                    {
+                        "type": "text",
+                        "params": [ "255" ]
+                    },
+                ],
+                "type": "pyocoding_change_4095to255_value"
+              },
+              isNotFor: [ '0uboard' ],
+              class: "ext",
+              paramsKeyMap: {
+                  "VALUE": 0,
+                  "VALUE2": 1,
+                  "VALUE3": 2,
+              },
+              func: function (sprite, script) {
+                var value = script.getNumberValue("VALUE");
+                var value2 = script.getNumberValue("VALUE2");
+                var value3 = script.getNumberValue("VALUE3");
+                console.log(value,value2,value3);
+                var dividedValue = Math.floor(value / (value2 / value3));
+                
+                return dividedValue;
+              },
+          },
+          pyocoding_change_analog_to_temperature_tc_value: {
+              color: EntryStatic.colorSet.block.default.HARDWARE,
+              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+              skeleton: 'basic_string_field',
+              statements: [],
+              events: {},
+              params: [
+                  {
+                      "type": "Block",
+                      "accept": "string"
+                  },
+                ],
+              def: {
+                params: [
+                    {
+                        "type": "text",
+                        "params": [ "0" ]
+                    },
+                    null
+                ],
+                "type": "pyocoding_change_analog_to_temperature_tc_value"
+              },
+              isNotFor: [ '0uboard' ],
+              class: "ext",
+              paramsKeyMap: {
+                  "VALUE": 0,
+              },
+              func: function (sprite, script) {
+                
+                var R1 = 10000;
+                var logR2, R2, T, Tc, Tf;
+                var c1 = 1.106836861e-03, c2 = 2.384641754e-04, c3 = 0.6507394466e-07;
+
+                var Vo = script.getNumberValue("VALUE");
+
+                R2 = R1 * ((4095.0 / Vo) - 1.0);
+                logR2 = Math.log(R2);
+                T = (1.0 / (c1 + c2*logR2 + c3*logR2*logR2*logR2));
+                Tc = T - 273.15; //섭씨
+                //Tf = (Tc * 9.0)/ 5.0 + 32.0; //화씨
+
+                // Print the result to the console
+                //console.log("vo:",Vo,"Tc:",Tc);
+
+                // You can return the value in Fahrenheit as well
+                return Tc;
               },
           },
           pyocoding_get_port_number: {
@@ -430,7 +582,7 @@ Entry.pyocoding.getBlocks = function() {
                   "PORT": 0,
                   "VALUE": 1,
               },
-              isNotFor: [ "pyocoding" ],
+              isNotFor: [ '0uboard' ],
               class: "run",
               func: function (sprite, script) {
                   var port = script.getNumberValue("PORT");
@@ -504,7 +656,7 @@ Entry.pyocoding.getBlocks = function() {
                 };
                 return Entry.hw.portData.ULTRASONIC || 0;
             },
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             class: "SENSOR",
         },
         pyocoding_get_digital_button: {
@@ -528,7 +680,7 @@ Entry.pyocoding.getBlocks = function() {
                 "PORT": 0
             },
             class: "digital",
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             func: function (sprite, script) {
                 var port = script.getNumberValue("PORT", script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -561,7 +713,7 @@ Entry.pyocoding.getBlocks = function() {
             paramsKeyMap: {
                  "PORT": 0
              },
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             class: "digital",
             func: function (sprite, script) {
                 var port = script.getNumberValue("PORT", script);
@@ -638,7 +790,7 @@ Entry.pyocoding.getBlocks = function() {
                 "PORT": 0,
                 "VALUE": 1
             },
-            "isNotFor": [ "pyocoding" ],
+            "isNotFor": [ '0uboard' ],
             "class": "run",
             "func": function (sprite, script) {
                 var port = script.getNumberValue("PORT");
@@ -739,7 +891,7 @@ Entry.pyocoding.getBlocks = function() {
                 VALUE: 1,
             },
             class: 'pwm',
-            isNotFor: ['pyocoding'],
+            isNotFor: ['0uboard'],
             func: function(sprite, script) {
                 //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
@@ -843,7 +995,7 @@ Entry.pyocoding.getBlocks = function() {
                 DURATION: 3,
             },
             class: 'pwm',
-            isNotFor: ['pyocoding'],
+            isNotFor: ['0uboard'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 //var port = script.getNumberValue("PORT", script);
@@ -939,7 +1091,7 @@ Entry.pyocoding.getBlocks = function() {
                 "VALUE": 1
             },
             class: "ext",
-            isNotFor: [ "pyocoding" ],
+            isNotFor: [ '0uboard' ],
             func: function (sprite, script) {
                 var port = script.getNumberValue("PORT");
                 var value = script.getNumberValue("VALUE");
@@ -992,7 +1144,7 @@ Entry.pyocoding.getBlocks = function() {
               ],
               "type": "pyocoding_oled_set"
           },
-          isNotFor: [ "pyocoding" ],
+          isNotFor: [ '0uboard' ],
           paramsKeyMap: {
               "VALUE1": 0,
               "VALUE2": 1
@@ -1070,7 +1222,7 @@ Entry.pyocoding.getBlocks = function() {
                       VALUE: 2,
                   },
                   class: 'neopixel',
-                  isNotFor: ['pyocoding'],
+                  isNotFor: ['0uboard'],
                   func(sprite, script) {
                     var port = script.getNumberValue("PORT");
                     var mode = 1;
@@ -1204,7 +1356,7 @@ Entry.pyocoding.getBlocks = function() {
                       BRIG: 5,
                   },
                   class: 'neopixel',
-                  isNotFor: ['pyocoding'],
+                  isNotFor: ['0uboard'],
                   func(sprite, script) {
                     var port = script.getNumberValue("INDEX");
                     var pos = script.getNumberValue("POS");
@@ -1335,7 +1487,7 @@ Entry.pyocoding.getBlocks = function() {
                           BRIG: 4,
                       },
                       class: 'neopixel',
-                      isNotFor: ['pyocoding'],
+                      isNotFor: ['0uboard'],
                       func(sprite, script) {
                         var port = script.getNumberValue("INDEX");
                         var red = script.getNumberValue("RED");
@@ -1356,6 +1508,147 @@ Entry.pyocoding.getBlocks = function() {
 
                         Entry.hw.sendQueue['SET'][port] = {
                             type: Entry.pyocoding.sensorTypes.NEOPIXELCOLOR,
+                            data:
+                            {
+                              index : port,
+                              mode: mode,
+                              red: red,
+                              green: green,
+                              blue: blue,
+                              brig: brig,
+                            },
+                            time: new Date().getTime()
+                        };
+                        setTimeout(function() {
+                                      script.timeFlag = 0;
+                                  }, duration );
+                                  return script;
+                      }
+                      else if (script.timeFlag == 1)
+                              {
+                                  return script;
+                              }
+                              else
+                              {
+                                  delete script.timeFlag;
+                                  delete script.isStart;
+
+                                  Entry.engine.isContinue = false;
+                                  return script.callReturn();
+                              }
+                      },
+                      syntax: {
+                      },
+                  },
+                  pyocoding_dotmatrix: {
+                      color: EntryStatic.colorSet.block.default.HARDWARE,
+                      outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                      skeleton: 'basic',
+                      statements: [],
+                      params: [
+                          {
+                                  "type": "Dropdown",
+                                  "options": [
+                                   ["0","0"],
+                                   ["1","1"],
+                                   ["2","2"],
+                                   ["3","3"],
+                                   ["4","4"],
+                                   ["5","5"],
+                                   ["6","6"],
+                                   ["7","7"],
+                                  ],
+                                  "value":"0",
+                                  "fontSize":11,
+                                  bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                  arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                          },
+                          {
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+                  {
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+                  {
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+                          {
+                              type: 'Block',
+                              accept: 'string',
+                              defaultType: 'number',
+                          },
+                          {
+                              type: 'Indicator',
+                              img: 'block_icon/hardware_icon.svg',
+                              size: 12,
+                          },
+                      ],
+                      events: {},
+                def: {
+                          params: [
+                              null,
+                              {
+                                  type: 'number',
+                                  params: ['00001111'],
+                              },
+                    {
+                                  type: 'number',
+                                  params: ['255'],
+                              },
+                    {
+                                  type: 'number',
+                                  params: ['255'],
+                              },
+                              {
+                                  type: 'number',
+                                  params: ['100'],
+                              },
+                              null,
+                          ],
+                          type: 'pyocoding_dotmatrix',
+                      },
+                      paramsKeyMap: {
+                          INDEX : 0,
+                          RED: 1,
+                          GREEN: 2,
+                          BLUE: 3,
+                          BRIG: 4,
+                      },
+                      class: 'neopixel',
+                      isNotFor: ['0uboard'],
+                      func(sprite, script) {
+                        var port = script.getNumberValue("INDEX");
+                        var red = script.getNumberValue("RED");
+                        var green = script.getNumberValue("GREEN");
+                        var blue = script.getNumberValue("BLUE");
+                        var brig = script.getNumberValue("BRIG");
+                        var mode = 3;
+
+                        let str = parseInt(String(red), 2);
+                        red = str;
+
+                        if(red > 255) red=255;
+                        console.log(red);
+
+
+                        if (!script.isStart)
+                        {
+
+                        if(!Entry.hw.sendQueue['SET']) {
+                            Entry.hw.sendQueue['SET'] = {};
+                        }
+                        var duration = Entry.Orange.duration.TIME_10ms;
+                          script.isStart = true;
+                          script.timeFlag = 1;
+
+                        Entry.hw.sendQueue['SET'][port] = {
+                            type: Entry.pyocoding.sensorTypes.DOTMATRIX,
                             data:
                             {
                               index : port,
