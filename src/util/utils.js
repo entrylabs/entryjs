@@ -1381,7 +1381,7 @@ Entry.computeInputWidth = (function() {
                 document.body.appendChild(elem);
             }
 
-            elem.innerHTML = value;
+            elem.textContent = value;
             const ret = `${Number(elem.offsetWidth + 10)}px`;
 
             if (window.fontLoaded) {
@@ -3050,4 +3050,10 @@ Entry.Utils.doCodeChange = () => {
         Entry.Utils.clearObjectsBlocksForEventThread();
         Entry.codeChangedEvent.notify();
     }
+};
+
+Entry.Utils.extractTextFromHTML = (htmlString) => {
+    const parser = new DOMParser();
+    const dom = parser.parseFromString(htmlString, 'text/html');
+    return dom.body.textContent || '';
 };
