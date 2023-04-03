@@ -326,9 +326,7 @@ Entry.EXPANSION_BLOCK.festival = {
         overview: 'overview',
     },
     strip(html) {
-        const tmp = document.createElement('DIV');
-        tmp.innerHTML = html;
-        return tmp.textContent || tmp.innerText || '';
+        return Entry.Utils.extractTextFromHTML(html);
     },
     monthMap: {
         January: 1,
@@ -437,7 +435,10 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
         return new PromiseManager().Promise((resolve) => {
             callApi(key, { url: `${Entry.EXPANSION_BLOCK.festival.api}/${contentid}` })
                 .then((response) => {
-                    const item = response.data.response.body.items.item;
+                    let item = response.data.response.body.items.item;
+                    if (Array.isArray(item)) {
+                        item = item[0];
+                    }
                     if (item && item[infoType]) {
                         return resolve(Entry.EXPANSION_BLOCK.festival.strip(item[infoType]));
                     }
