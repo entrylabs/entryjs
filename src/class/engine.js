@@ -141,7 +141,7 @@ Entry.Engine = class Engine {
                     this.blur();
                 })
                 .appendTo(this.buttonWrapper);
-            this.addButton.innerHTML = Lang.Workspace.add_object;
+            this.addButton.textContent = Lang.Workspace.add_object;
             if (!Entry.objectAddable) {
                 this.addButton.addClass('entryRemove');
             }
@@ -151,7 +151,7 @@ Entry.Engine = class Engine {
                 .addClass('entryRunButtonWorkspace_w')
                 .bindOnClick(() => Entry.do('toggleRun', 'runButton'))
                 .appendTo(this.buttonWrapper);
-            this.runButton.innerHTML = Lang.Workspace.run;
+            this.runButton.textContent = Lang.Workspace.run;
 
             this.runButton2 = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
@@ -185,7 +185,7 @@ Entry.Engine = class Engine {
                 .addClass('entryRemove')
                 .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
                 .appendTo(this.buttonWrapper);
-            this.stopButton.innerHTML = Lang.Workspace.stop;
+            this.stopButton.textContent = Lang.Workspace.stop;
 
             this.stopButton2 = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
@@ -196,7 +196,7 @@ Entry.Engine = class Engine {
                     Entry.engine.toggleStop();
                 })
                 .appendTo(this.buttonWrapper);
-            this.stopButton2.innerHTML = Lang.Workspace.stop;
+            this.stopButton2.textContent = Lang.Workspace.stop;
         } else if (option == 'minimize') {
             /** @type {!Element} */
             this.view_ = controlView;
@@ -228,7 +228,7 @@ Entry.Engine = class Engine {
             this.stopButton.addClass('entryEngineButtonMinimize');
             this.stopButton.addClass('entryStopButtonMinimize');
             this.stopButton.addClass('entryRemove');
-            this.stopButton.innerHTML = Lang.Workspace.stop;
+            this.stopButton.textContent = Lang.Workspace.stop;
             this.view_.appendChild(this.stopButton);
             this.stopButton.bindOnClick(function(e) {
                 this.blur();
@@ -236,7 +236,7 @@ Entry.Engine = class Engine {
             });
 
             this.pauseButton = Entry.createElement('button');
-            this.pauseButton.innerHTML = Lang.Workspace.pause;
+            this.pauseButton.textContent = Lang.Workspace.pause;
             this.pauseButton.addClass('entryEngineButtonMinimize');
             this.pauseButton.addClass('entryPauseButtonMinimize');
             this.pauseButton.addClass('entryRemove');
@@ -314,7 +314,7 @@ Entry.Engine = class Engine {
             if (Entry.objectAddable) {
                 this.runButton.addClass('small');
             }
-            this.runButton.innerHTML = Lang.Workspace.run;
+            this.runButton.textContent = Lang.Workspace.run;
 
             this.footerView_.appendChild(this.runButton);
             this.runButton.bindOnClick((e) => {
@@ -330,7 +330,7 @@ Entry.Engine = class Engine {
             if (Entry.objectAddable) {
                 this.stopButton.addClass('small');
             }
-            this.stopButton.innerHTML = Lang.Workspace.stop;
+            this.stopButton.textContent = Lang.Workspace.stop;
 
             this.footerView_.appendChild(this.stopButton);
             this.stopButton.bindOnClick((e) => {
@@ -368,7 +368,7 @@ Entry.Engine = class Engine {
             const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
                 'audioShadeText'
             );
-            audioShadeText.innerHTML = Lang.Msgs.ai_utilize_audio_listening;
+            audioShadeText.textContent = Lang.Msgs.ai_utilize_audio_listening;
             this.audioShadePanel_.appendChild(audioShadeText);
             this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
             if (this.view_.classList[0] === 'entryEngine') {
@@ -490,7 +490,7 @@ Entry.Engine = class Engine {
             this.view_.insertBefore(speedBox, Entry.stage.canvas.canvas);
 
             this.speedLabel_ = Entry.createElement('div', 'entrySpeedLabelWorkspace');
-            this.speedLabel_.innerHTML = Lang.Workspace.speed;
+            this.speedLabel_.textContent = Lang.Workspace.speed;
             speedBox.appendChild(this.speedLabel_);
 
             this.speedProgress_ = Entry.createElement('table', 'entrySpeedProgressWorkspace');
@@ -855,14 +855,14 @@ Entry.Engine = class Engine {
     setPauseButton() {
         if (this.state === EntryEngineState.pause) {
             if (this.pauseButton) {
-                this.pauseButton.innerHTML = Lang.Workspace.restart;
+                this.pauseButton.textContent = Lang.Workspace.restart;
                 if (this.option !== 'minimize') {
                     this.pauseButton.removeClass('entryPauseButtonWorkspace_w');
                     this.pauseButton.addClass('entryRestartButtonWorkspace_w');
                 }
             }
             if (this.pauseButtonFull) {
-                this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
+                this.pauseButtonFull.textContent = Lang.Workspace.restart;
                 if (this.option !== 'minimize') {
                     // workspace && buttonWrapper check
                     if (this.buttonWrapper) {
@@ -875,14 +875,14 @@ Entry.Engine = class Engine {
             }
         } else {
             if (this.pauseButton) {
-                this.pauseButton.innerHTML = Lang.Workspace.pause;
+                this.pauseButton.textContent = Lang.Workspace.pause;
                 if (this.option !== 'minimize') {
                     this.pauseButton.addClass('entryPauseButtonWorkspace_w');
                     this.pauseButton.removeClass('entryRestartButtonWorkspace_w');
                 }
             }
             if (this.pauseButtonFull) {
-                this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
+                this.pauseButtonFull.textContent = Lang.Workspace.pause;
                 if (this.option !== 'minimize') {
                     this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
                     this.pauseButtonFull.removeClass('entryRestartButtonWorkspace_full');
