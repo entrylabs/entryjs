@@ -202,15 +202,8 @@
         z-index: 400;
         background-color: rgba(248, 241, 204, 0.9);
         border: 2px dashed #ffc800;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
         justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
         align-items: center;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
         flex-direction: column;
 
         .blockBackPackIcon {
@@ -415,6 +408,7 @@
     opacity: 0.5;
     z-index: 255;
     cursor: pointer;
+    white-space: pre-line;
 }
 
 .entryPlaygroundCurtainPhone {
@@ -452,15 +446,10 @@
     font-weight: bold;
     line-height: 1.33;
     letter-spacing: -0.6px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
     justify-content: center; /* align horizontal */
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center; /* align vertical */
+    white-space: pre-line;
 }
 
 .entryPlaygroundTableCurtainWorkspace {
@@ -484,14 +473,8 @@
     font-weight: bold;
     line-height: 1.33;
     letter-spacing: -0.6px;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
     justify-content: center; /* align horizontal */
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center; /* align vertical */
 }
 
@@ -638,6 +621,11 @@
     cursor: pointer;
 }
 
+.entryPlaygroundPictureElement::-moz-selection {
+    cursor: move;
+    background-color: #fff;
+}
+
 .entryPlaygroundPictureElement::selection {
     cursor: move;
     background-color: #fff;
@@ -692,7 +680,6 @@
     cursor: text;
     border: 1px solid #e2e2e2;
     border-radius: 4px;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
 }
 .entryPlaygroundPictureName:focus,
@@ -764,7 +751,6 @@
     }
 }
 .pop_selectbox * {
-    -webkit-box-sizing: content-box;
     box-sizing: content-box;
 }
 .pop_selectbox .tooltip_box {
@@ -1103,14 +1089,8 @@
     overflow: hidden;
     border-left: 1px solid #e2e2e2;
     background-color: #f2f2f2;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
     justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
 
     .entryPlaygroundSoundEditWrapper {
@@ -1141,6 +1121,7 @@
         -moz-user-select: none;
         -ms-user-select: none;
         user-select: none;
+        white-space: pre-line;
     }
 }
 
@@ -1255,7 +1236,6 @@
 .entryPlaygroundSoundName {
     width: 100%;
     height: 24px;
-    -webkit-box-sizing: border-box;
     box-sizing: border-box;
     margin-top: 10px;
     padding: 0 4px;
@@ -1332,7 +1312,6 @@
     width: 136px;
     height: 8px;
     border-radius: 3px;
-    -webkit-box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
     box-shadow: inset 1px 1px 1px 0 rgba(0, 0, 0, 0.03);
     background-color: #d8d8d8;
 }
@@ -1479,14 +1458,8 @@
     overflow: hidden;
     border-left: 1px solid #e2e2e2;
     background-color: #f2f2f2;
-    display: -webkit-box;
-    display: -ms-flexbox;
     display: flex;
-    -webkit-box-pack: center;
-    -ms-flex-pack: center;
     justify-content: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
     align-items: center;
 
     .entryPlaygroundTableEditWrapper {
@@ -1633,7 +1606,6 @@
     .entryPlaygroundTableName {
         width: 100%;
         height: 24px;
-        -webkit-box-sizing: border-box;
         box-sizing: border-box;
         margin-top: 12px;
         padding: 0 4px;

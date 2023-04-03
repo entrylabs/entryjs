@@ -64,6 +64,7 @@ declare interface EntryDomOptions {
 
 declare interface EntryDom extends JQuery {
     innerHTML?: string;
+    textContent?: string;
     bindOnClick?: (e: any) => this;
 }
 

@@ -76,7 +76,7 @@ Entry.Container = class Container {
             .bindOnClick(() => {
                 Entry.dispatchEvent('openSpriteManager');
             });
-        addButton.innerHTML = Lang.Workspace.add_object;
+        addButton.textContent = Lang.Workspace.add_object;
 
         const ulWrapper = Entry.createElement('div');
         this._view.appendChild(ulWrapper);

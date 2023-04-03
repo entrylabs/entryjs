@@ -1358,7 +1358,7 @@ Entry.computeInputWidth = (function() {
                 document.body.appendChild(elem);
             }
 
-            elem.innerHTML = value;
+            elem.textContent = value;
             const ret = `${Number(elem.offsetWidth + 10)}px`;
 
             if (window.fontLoaded) {
@@ -2932,4 +2932,42 @@ Entry.Utils.asyncAnimationFrame = (func) => {
 
     captureTimeout = requestAnimationFrame(asyncFunc);
     return captureTimeout;
+};
+
+Entry.Utils.stringFormat = (text, ...args) => {
+    if (!text) {
+        return text;
+    }
+    let result = text;
+    for (let i = 0; i < args.length; i++) {
+        const regexp = new RegExp(`\\{${i}\\}`, 'gi');
+        result = result.replace(regexp, args[i]);
+    }
+    return result;
+};
+
+Entry.Utils.shortenNumber = (num = 0) => {
+    if (num >= 1000000000) {
+        return `${_round(num / 1000000000, 1)}B`;
+    }
+    if (num >= 1000000) {
+        return `${_round(num / 1000000, 1)}M`;
+    }
+    if (num >= 100000) {
+        return `${_round(num / 1000, 1)}K`;
+    }
+    return num;
+};
+
+Entry.Utils.doCodeChange = () => {
+    if (Entry.codeChangedEvent) {
+        Entry.Utils.clearObjectsBlocksForEventThread();
+        Entry.codeChangedEvent.notify();
+    }
+};
+
+Entry.Utils.extractTextFromHTML = (htmlString) => {
+    const parser = new DOMParser();
+    const dom = parser.parseFromString(htmlString, 'text/html');
+    return dom.body.textContent || '';
 };

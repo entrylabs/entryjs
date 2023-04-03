@@ -1322,7 +1322,7 @@ class BlockMenu extends ModelClass<Schema> {
                 class: 'entryCategoryListWorkspace',
             });
         } else {
-            this.categoryWrapper.innerHTML = '';
+            this.categoryWrapper.textContent = '';
         }
 
         this._categoryCol = Entry.Dom('ul', {

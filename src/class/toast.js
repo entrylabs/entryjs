@@ -105,8 +105,8 @@ Entry.Toast = class Toast {
         toastMessage.addClass('entryToastMessage');
 
         if (Array.isArray(message)) {
-            toastMessage.innerHTML = message.reduce(
-                (total, current) => `${total}<br/>${current}`,
+            toastMessage.textContent = message.reduce(
+                (total, current) => `${total}\n${current}`,
                 ''
             );
         } else {
