@@ -14,7 +14,7 @@
 
     p.text = function(str) {
         if (str) {
-            this.innerHTML = str;
+            this.textContent = str;
         }
         return this;
     };
