@@ -13,9 +13,9 @@ Entry.Robotry_Parodule = {
    setZero() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
+                SET: {},
                 CMD: {},
                 GET: {},
-                SET: {},
             };
         } else {
             const keySet = Object.keys(Entry.hw.sendQueue.SET);
@@ -40,7 +40,8 @@ Entry.Robotry_Parodule.setLanguage = function() {
         ko: {
             template: {
                 Parodule_Update: '파로듈 업데이트 %1',
-                Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전'
+                Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전 %4',
+                Parodule_LED: '%1 번 LED를 %2 으로 설정 %4',
             },
             Helper:{ // 블록 선택시 나타나는 한글 설명
                 Parodule_Update : "파로듈을 업데이트하는 블록",
@@ -52,7 +53,8 @@ Entry.Robotry_Parodule.setLanguage = function() {
         en: {
             template: {
                 Parodule_Update: 'Parodule Update %1',
-                Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전'
+                Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전 %4',
+                Parodule_LED: '%1 번 LED를 %2 으로 설정 %4',
             },
             Helper:{
                 Parodule_Update : "파로듈을 업데이트하는 블록",
@@ -68,6 +70,7 @@ Entry.Robotry_Parodule.setLanguage = function() {
 Entry.Robotry_Parodule.blockMenuBlocks = [
     'Parodule_Update',
     'Parodule_Motor',
+    'Parodule_LED',
 ];
 
 /* 
@@ -95,18 +98,19 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 type: 'Parodule_Update',
             },
             paramsKeyMap: {},
-            class: 'Set',
+            class: 'CMD',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const update = "update\r\n";
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
+                if (!Entry.hw.sendQueue.CMD) {
+                    Entry.hw.sendQueue.CMD = {};
                 }
-                Entry.hw.sendQueue['CMD'] = {
+                Entry.hw.sendQueue.CMD = {
                     type: Entry.Robotry_Parodule.controlTypes.STRING,
                     data: update,
                     time: new Date().getTime(),
                 } 
+                return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -124,37 +128,37 @@ Entry.Robotry_Parodule.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    option: [
-                        ['1', '1'],
-                        ['2', '2'],
-                        ['3', '3'],
-                        ['4', '4'],
+                    options: [
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4],
                     ],
-                    value: '1',
+                    value: [1],
                     fontSize: 12,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    option: [
-                        ['정회전', '0'],
-                        ['역회전', '34'],
+                    options: [
+                        ['정회전', 0],
+                        ['역회전', 34],
                     ],
-                    value: '0',
+                    value: [0],
                     fontSize: 12,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
-                    option: [
-                        ['25%', '36'],
-                        ['50%', '37'],
-                        ['75%', '38'],
-                        ['100%', '39'],
+                    options: [
+                        ['100%', 39],
+                        [ '75%', 38],
+                        [ '50%', 37],
+                        [ '25%', 36],
                     ],
-                    value: '0',
+                    value: [39],
                     fontSize: 12,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -175,7 +179,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 STATE: 1,
                 VALUE: 2 
             },
-            class: 'Set',
+            class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
@@ -184,17 +188,100 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 if(!Entry.hw.sendQueue.SET){
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue[port] = {
+                Entry.hw.sendQueue.SET[port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                     data: state + value,
                     time: new Date().getTime(),
                 } 
+                return script.callReturn();
             },
             syntax: {
                 js: [],
                 py: [],
             }
-        }
+        },
+        /* Parodule Motor End */
+
+
+        /* Paroduel Motor Start */
+        Parodule_LED: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4],
+                    ],
+                    value: [1],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['없음',    238],
+                        ['빨강색',   19],
+                        ['다홍색',   20],
+                        ['주황색',   21],
+                        ['귤색',     22],
+                        ['노랑색',   23],
+                        ['연두색',   24],
+                        ['녹색',     25],
+                        ['청록색',   26],
+                        ['파랑색',   27],
+                        ['감청색',   28],
+                        ['남색',     29],
+                        ['남보라색', 30],
+                        ['보라색',   31],
+                        ['자주색',   32],
+                    ],
+                    value: [19],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'Parodule_LED',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1 
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                const value = script.getNumberValue('VALUE');
+                if(!Entry.hw.sendQueue.SET){
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                } 
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [],
+            }
+        },
         /* Parodule Motor End */
     };
 };
