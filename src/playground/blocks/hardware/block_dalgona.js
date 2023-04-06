@@ -3,7 +3,7 @@
 Entry.Dalgona = {
     id: 'FF.FF',
     name: 'Dalgona',
-    url: 'https://www.kocoafab.cc/',
+    url: 'https://dalgonaedu.co.kr/',
     imageName: 'dalgona.png',
     title: {
         ko: '달고나 에듀',
@@ -34,23 +34,24 @@ Entry.Dalgona = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-	NEOPIXELINIT: 9,
-	NEOPIXELCOLOR: 10,
-	DHTINIT: 21,
-	DHTTEMP: 22,
-	DHTHUMI: 23,
-	NOTONE: 24,
-	PMINIT: 31,
-	PMVALUE: 32,
-	LCDINIT: 41,
-	LCD: 42,
-	LCDCLEAR: 43,
-	LCDEMOTICON: 44,
-		
+        NEOPIXELINIT: 9,
+        NEOPIXELCOLOR: 10,
+        DHTINIT: 21,
+        DHTTEMP: 22,
+        DHTHUMI: 23,
+        NOTONE: 24,
+        PMINIT: 31,
+        PMVALUE: 32,
+        LCDINIT: 41,
+        LCD: 42,
+        LCDCLEAR: 43,
+        LCDEMOTICON: 44,
     },
+
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
-	duration: {
+	
+    duration: {
         TIME_1ms: 1,
         TIME_5ms: 5,
         TIME_10ms: 10,
@@ -443,32 +444,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    ['A0', '0'],
-                                    ['A1', '1'],
-                                    ['A2', '2'],
-                                    ['A3', '3'],
-                                    ['A4', '4'],
-                                    ['A5', '5'],
-                                ],
-                                value: '0',
-                                fontSize: 11,
-                                converter: Entry.block.converters.returnStringKey,
-                                codeMap: 'Entry.CodeMap.Arduino.orange_analog_list[0]',
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'orange_analog_list',
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -498,7 +474,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'OrangeGet',
+            class: 'analog',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 let port = script.getValue('PORT', script);
@@ -510,18 +486,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -596,7 +561,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'OrangeGet',
+            class: 'analog',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 let result = script.getValue('PORT', script);
@@ -642,34 +607,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.map(%1, %2, %3, %4, %5)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -710,7 +648,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'OrangeGet',
+            class: 'ultrasonic',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 const port1 = script.getNumberValue('PORT1', script);
@@ -733,22 +671,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -778,12 +701,12 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'OrangeGet',
+            class: 'digital',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if (name === 'Orange' || name === 'ArduinoNano') {
+                if (name === 'Dalgona') {
                     const port = script.getNumberValue('PORT', script);
                     const DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue.GET) {
@@ -800,18 +723,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalRead(%1)',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
         arduino_get_digital_toggle: {
@@ -841,29 +753,12 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    [Lang.Blocks.ARDUINO_on, 'on'],
-                                    [Lang.Blocks.ARDUINO_off, 'off'],
-                                ],
-                                value: 'on',
-                                fontSize: 11,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValueUpperCase,
-                                codeMap: 'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            },
-                        ],
-                        keyOption: 'arduino_get_digital_toggle',
-                    },
-                ],
+                py: [],
             },
         },
+
+
+/*--------------우선적으로 동작 테스트 진행----------------------------------------------------------------------------------*/
 
         // 디지털 %1 번 핀 %2 %3
         dalgona_toggle_led: {
@@ -906,7 +801,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'Orange',
+            class: 'digital',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
@@ -934,21 +829,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.digitalWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -993,7 +874,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'Orange',
+            class: 'digital',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
@@ -1005,7 +886,7 @@ Entry.Dalgona.getBlocks = function() {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.Orange.sensorTypes.PWM,
+                    type: Entry.Dalgona.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -1013,23 +894,12 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.analogWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
+
+/*------------------------------------------------------------------------------------------------------------------------*/
+
 
         // 디지털 %1 번 핀에 연결된 %2 개의 네오픽셀 LED 사용하기 %3
 		dalgona_set_neopixelinit: {
@@ -1115,11 +985,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-						
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -1246,21 +1112,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.servomotorWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -1337,11 +1189,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-						
-                    },
-                ],
+                py: [],
             },
         },
 
@@ -1441,11 +1289,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                       
-                    },
-                ],
+                py: [],
             },
         },
     };
