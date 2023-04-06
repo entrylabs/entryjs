@@ -3,7 +3,7 @@ class Testino {
         this.id = 'FF.FF';
         this.url = 'http://www.my-company.org/';
         this.name = 'Testino';
-        this.imageName = 'testino.png'; //thumbnail
+        this.imageName = 'dalgona.png'; //thumbnail
         this.title = {
             ko: '테스트이노',
             en: 'testino',
