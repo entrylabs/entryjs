@@ -41,7 +41,7 @@ Entry.Robotry_Parodule.setLanguage = function() {
             template: {
                 Parodule_Update: '파로듈 업데이트 %1',
                 Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전 %4',
-                Parodule_LED: '%1 번 픽셀을 %2 으로 설정 %4',
+                Parodule_LED: '%1 번 픽셀을 %2 으로 설정 %3',
                 Parodule_BUZZER: '%1 번 부저를 %2 옥타브 %3 (으)로 재생 %4',
             },
             Helper:{ // 블록 선택시 나타나는 한글 설명
