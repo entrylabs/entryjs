@@ -41,7 +41,8 @@ Entry.Robotry_Parodule.setLanguage = function() {
             template: {
                 Parodule_Update: '파로듈 업데이트 %1',
                 Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전 %4',
-                Parodule_LED: '%1 번 LED를 %2 으로 설정 %4',
+                Parodule_LED: '%1 번 픽셀을 %2 으로 설정 %4',
+                Parodule_BUZZER: '%1 번 부저를 %2 옥타브 %3 (으)로 재생 %4',
             },
             Helper:{ // 블록 선택시 나타나는 한글 설명
                 Parodule_Update : "파로듈을 업데이트하는 블록",
@@ -54,7 +55,8 @@ Entry.Robotry_Parodule.setLanguage = function() {
             template: {
                 Parodule_Update: 'Parodule Update %1',
                 Parodule_Motor: '%1 번 모터를 %2 방항으로 %3 의 파워로 회전 %4',
-                Parodule_LED: '%1 번 LED를 %2 으로 설정 %4',
+                Parodule_LED: '%1 번 픽셀을 %2 으로 설정 %4',
+                Parodule_BUZZER: '%1 번 부저를 %2 옥타브 %3 (으)로 재생 %4',
             },
             Helper:{
                 Parodule_Update : "파로듈을 업데이트하는 블록",
@@ -71,6 +73,7 @@ Entry.Robotry_Parodule.blockMenuBlocks = [
     'Parodule_Update',
     'Parodule_Motor',
     'Parodule_LED',
+    'Parodule_BUZZER',
 ];
 
 /* 
@@ -203,7 +206,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
         /* Parodule Motor End */
 
 
-        /* Paroduel Motor Start */
+        /* Paroduel LED Start */
         Parodule_LED: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -282,7 +285,100 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 py: [],
             }
         },
-        /* Parodule Motor End */
+        /* Parodule LED End */
+
+        /* Paroduel Buzzer Start */
+        Parodule_BUZZER: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['1', 1],
+                        ['2', 2],
+                        ['3', 3],
+                        ['4', 4],
+                    ],
+                    value: [1],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', 0],
+                        ['1', 12],
+                        ['2', 24],
+                        ['3', 36],
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['도',  47],
+                        ['도#', 48],
+                        ['레',  49],
+                        ['레#', 50],
+                        ['미',  51],
+                        ['파',  52],
+                        ['파#', 53],
+                        ['솔',  54],
+                        ['솔#', 55],
+                        ['라',  56],
+                        ['라#', 57],
+                        ['시',  58],
+                    ],
+                    value: [47],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'Parodule_BUZZER',
+            },
+            paramsKeyMap: {
+                PORT:   0,
+                OCTAVE: 1,
+                TONE:   2 
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                const octave = script.getNumberValue('OCTAVE');
+                const tone = script.getNumberValue('TONE');
+                if(!Entry.hw.sendQueue.SET){
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: octave + tone,
+                    time: new Date().getTime(),
+                } 
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [],
+            }
+        },
+        /* Parodule Buzzer End */
     };
 };
 
