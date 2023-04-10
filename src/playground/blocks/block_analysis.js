@@ -1,6 +1,7 @@
 // import _chain from 'lodash/chain';
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
+import { toNumber } from '../../util/common';
 
 module.exports = {
     getBlocks() {
@@ -699,9 +700,10 @@ module.exports = {
                     const calc = script.getField('CALC', script);
                     const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
-                    const array = table.array.map(({ value = [] }) =>
-                        _isNumber(value[col - 1]) ? value[col - 1] : 0
-                    );
+                    const array = table.array.map(({ value = [] }) => {
+                        const parsed = toNumber(value[col - 1]);
+                        return _isNumber(parsed) ? parsed : 0;
+                    });
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;
