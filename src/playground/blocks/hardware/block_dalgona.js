@@ -361,6 +361,8 @@ Entry.Dalgona.setLanguage = function() {
         ko: {
             template: {
                 dalgona_toggle_led: '달고나 디지털 %1 번 핀 %2 %3',
+                dalgona_toggle_led_analog: '달고나 아나로그 %1 번 핀 %2 %3',
+                dalgona_out_analog: '달고나 아날로그 "%1 번 핀을 %2 (으)로 정하기 %3',
                 dalgona_get_number_sensor_value: '달고나 아날로그 %1 번 센서값',
                 dalgona_convert_scale: '달고나 %1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값',
                 dalgona_toggle_pwm: '달고나 디지털 %1 번 핀을 %2 (으)로 정하기 %3',
@@ -375,6 +377,8 @@ Entry.Dalgona.setLanguage = function() {
         en: {
             template: {
                 dalgona_toggle_led: 'Digital %1 Pin %2 %3',
+                dalgona_toggle_led_analog: '달고나 아나로그 %1 번 핀 %2 %3',
+                dalgona_out_analog: '달고나 아날로그 "%1 번 핀을 %2 (으)로 정하기 %3',
                 dalgona_get_number_sensor_value: 'Analog %1 Sensor value',
                 dalgona_convert_scale: 'Map Value %1 %2 ~ %3 to %4 ~ %5',
                 dalgona_toggle_pwm: 'Digital %1 Pin %2 %3',
@@ -391,6 +395,8 @@ Entry.Dalgona.setLanguage = function() {
 
 Entry.Dalgona.blockMenuBlocks = [
     'dalgona_toggle_led',
+    'dalgona_toggle_led_analog',
+    'dalgona_out_analog',
     'dalgona_get_number_sensor_value',
     'dalgona_convert_scale',
     'dalgona_toggle_pwm',
@@ -495,7 +501,10 @@ Entry.Dalgona.getBlocks = function() {
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },{type: "Indicator", img: "block_icon/hardware_03.png", size: 12},
+                },
+                {
+                    type: "Indicator", img: "block_icon/hardware_03.png", size: 12
+                },
             ],
             events: {},
             def: {
@@ -898,56 +907,10 @@ Entry.Dalgona.getBlocks = function() {
                 py: [],
             },
         },
-/*구현 완*/
+        /*구현 완*/
 
 /*구현 중*/
-        dalgona_get_number_sensor_value:{
-        color: EntryStatic.colorSet.block.default.HARDWARE,
-        outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-        fontColor: '#ffffff',
-        skeleton: 'basic_string_field',
-        statements: [],
-        params: [
-            {
-                type: 'Block',
-                accept: 'string',
-                defaultType: 'number',
-            },
-        ],
-        def: {
-            params: [
-                {
-                    type: 'dalgona_get_sensor_number',
-                },
-            ],
-            type: 'dalgona_get_number_sensor_value',
-        },
-        paramsKeyMap: {
-            VALUE: 0,
-        },
-        events: {},
-        class: 'TestinoBlock',
-        isNotFor: ['Testino'],
-        func(sprite, script){
-            const signal = script.getValue('VALUE', script);
-            return Entry.hw.getAnalogPortValue(signal[1]);
-        },
-        syntax: {
-            js: [],
-            py: [
-                {
-                    syntax: 'Tesetino.sensor_value(%1)',
-                    blockType: 'param',
-                    textParams: [
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                },
-            ],
-        },
-        },
+        // 울트라소닉 Trig %1 Echo %2 센서값
         dalgona_get_ultrasonic_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -971,11 +934,11 @@ Entry.Dalgona.getBlocks = function() {
                 params: [
                     {
                         type: 'dalgona_get_port_number',
-                        params: ['9'],
+                        params: [9],
                     },
                     {
                         type: 'dalgona_get_port_number',
-                        params: ['10'],
+                        params: [10],
                     },
                 ],
                 type: 'dalgona_get_ultrasonic_value',
@@ -1010,7 +973,8 @@ Entry.Dalgona.getBlocks = function() {
                 py: [],
             },
         },
-        dalgona_set_neopixelinit: {
+        // 달고나 디지털 %1 번 핀에 연결된 %2 개의 네오픽셀 LED 사용하기 %3
+		dalgona_set_neopixelinit: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1022,6 +986,7 @@ Entry.Dalgona.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
+                    value: '2',
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -1029,21 +994,21 @@ Entry.Dalgona.getBlocks = function() {
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    size: 11,
                 },
             ],
             events: {},
-        	def: {
+            def: {
                 params: [
                     {
                         type: 'dalgona_get_port_number',
-                        params: ['4'],
+                        params: [2],
                     },
-        			{
+                    {
                         type: 'number',
-                        params: ['4'],
+                        params: ['2'],
                     },
-                    null,
+                    null
                 ],
                 type: 'dalgona_set_neopixelinit',
             },
@@ -1053,37 +1018,32 @@ Entry.Dalgona.getBlocks = function() {
             },
             class: 'neopixel',
             isNotFor: ['Dalgona'],
-            func(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('NUM', script);
-
-        		if (!script.isStart)
-                {
-        			if (!sq.SET) {
-        				sq.SET = {};
-        			}
-                    
-        			var duration = Entry.Dalgona.duration.TIME_200ms;
+            func: function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let value = script.getNumberValue('NUM', script);
+                value = Math.max(value, 0);
+                value = Math.min(value, 255);
+				if (!script.isStart) {
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+					let duration = Entry.Dalgona.duration.TIME_50ms;
                     script.isStart = true;
                     script.timeFlag = 1; 
-                    
-        			sq.SET[port] = {
-        					type: Entry.Dalgona.sensorTypes.NEOPIXELINIT,
-        					data: value,
-        					time: new Date().getTime(),
-        			};
-        			setTimeout(function() {
+					sq.SET[port] = {
+							type: Entry.Dalgona.sensorTypes.NEOPIXELINIT,
+							data: value,
+							time: new Date().getTime(),
+					};
+					setTimeout(function() {
                         script.timeFlag = 0;
                     }, duration );
                     return script;
-        		}
-        		else if (script.timeFlag == 1) 
-                {
+				}
+				else if (script.timeFlag == 1) {
                     return script;
-                } 
-                else 
-                {
+                } else {
                     delete script.timeFlag;
                     delete script.isStart;
 
@@ -1096,7 +1056,8 @@ Entry.Dalgona.getBlocks = function() {
                 py: [],
             },
         },
-        dalgona_set_neopixel: {
+        // 달고나 디지털 %1 번 핀에 연결된 %2 번째 네오픽셀 LED를 R: %3 , G: %4 , B: %5 색으로 켜기 %6
+		dalgona_set_neopixel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1108,21 +1069,25 @@ Entry.Dalgona.getBlocks = function() {
                     defaultType: 'number',
                 },
                 {
+                    value: '0',
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-        		{
+                {
+                    value: '255',
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-        		{
+                {
+                    value: '255',
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
                 },
-        		{
+                {
+                    value: '255',
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -1130,111 +1095,88 @@ Entry.Dalgona.getBlocks = function() {
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
-                    size: 12,
+                    size: 11,
                 },
             ],
             events: {},
-        	def: {
+            def: {
                 params: [
                     {
                         type: 'dalgona_get_port_number',
-                        params: ['4'],
+                        params: [2],
                     },
-        			{
+                    {
                         type: 'number',
                         params: ['1'],
                     },
-        			{
-                        type: 'number',
-                        params: ['255'],
-                    },
-        			{
-                        type: 'number',
-                        params: ['255'],
-                    },
-        			{
-                        type: 'number',
-                        params: ['255'],
-                    },
-                    null,
+                    null, 
+                    null, 
+                    null, 
+                    null
                 ],
                 type: 'dalgona_set_neopixel',
             },
             paramsKeyMap: {
                 PORT: 0,
                 NUM: 1,
-        		RED: 2,
-        		GREEN: 3,
-        		BLUE: 4,
+				RED: 2,
+				GREEN: 3,
+				BLUE: 4,
             },
             class: 'neopixel',
             isNotFor: ['Dalgona'],
-            func(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var num = script.getNumberValue('NUM', script);
-        		var r = script.getNumberValue('RED', script);
-        		var g = script.getNumberValue('GREEN', script);
-        		var b = script.getNumberValue('BLUE', script);
-
-        		if (!script.isStart) 
-                {
-        			if (!sq.SET) {
-        				sq.SET = {};
-        			}
-                    
-        			var duration = Entry.Dalgona.duration.TIME_10ms;
-        				script.isStart = true;
-        				script.timeFlag = 1;
-                    
-        			sq.SET[num] = {
-        				type: Entry.Dalgona.sensorTypes.NEOPIXELCOLOR,
-        				data: {
-        						port: port,
-        						num: num,
-        						r: r,
-        						g: g,
-        						b: b,
-        					  },
-        				time: new Date().getTime(),
-        			};
-        			setTimeout(function() {
+            func: function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = script.getNumberValue('PORT', script);
+                let num = script.getNumberValue('NUM', script);
+				let r = script.getNumberValue('RED', script);
+				let g = script.getNumberValue('GREEN', script);
+				let b = script.getNumberValue('BLUE', script);
+                num = Math.max(num, 1);
+                num = Math.min(num, 255);
+                r = Math.max(r, 0);
+                r = Math.min(r, 255);
+                g = Math.max(g, 0);
+                g = Math.min(g, 255);
+                b = Math.max(b, 0);
+                b = Math.min(b, 255);
+				if (!script.isStart) {
+					if (!sq.SET) {
+						sq.SET = {};
+					}
+					let duration = Entry.Dalgona.duration.TIME_50ms;
+						script.isStart = true;
+						script.timeFlag = 1;
+					sq.SET[port] = {
+						type: Entry.Dalgona.sensorTypes.NEOPIXELDIS,
+						data: {
+								num: num,
+								r: r,
+								g: g,
+								b: b,
+							  },
+						time: new Date().getTime(),
+					};
+					setTimeout(function() {
                         script.timeFlag = 0;
                     }, duration );
                     return script; 
-        		}
-        		else if (script.timeFlag == 1) 
-                {
+				}
+				else if (script.timeFlag == 1) {
                     return script;
-                } 
-                else 
-                {
+                } else {
                     delete script.timeFlag;
                     delete script.isStart;
-
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        syntax: 'Arduino.servomotorWrite(%1, %2)',
-                        textParams: [
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
+                py: [],
             },
         },
+        // 달고나 디지털 %1 번 핀에 연결된 온습도센서 사용하기 %2
         dalgona_set_dht_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1257,7 +1199,7 @@ Entry.Dalgona.getBlocks = function() {
                 params: [
                     {
                         type: 'dalgona_get_port_number',
-                        params: ['2'],
+                        params: [2],
                     },
                     null,
                 ],
@@ -1314,6 +1256,7 @@ Entry.Dalgona.getBlocks = function() {
                 ],
             },
         },
+        // 달고나 온습도센서의 온도값
         dalgona_get_dht_temp_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1329,9 +1272,7 @@ Entry.Dalgona.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-        			'0',
-                ],
+                params: ['0'],
                 type: 'dalgona_get_dht_temp_value',
             },
             paramsKeyMap: {
@@ -1359,13 +1300,10 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: [
-                    {
-                        
-                    },
-                ],
+                py: [],
             },
         },
+        // 달고나 온습도센서의 습도값
         dalgona_get_dht_humi_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1381,9 +1319,7 @@ Entry.Dalgona.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-        			'1',
-                ],
+                params: ['1'],
                 type: 'dalgona_get_dht_humi_value',
             },
             paramsKeyMap: {
