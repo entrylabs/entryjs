@@ -310,10 +310,10 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['0', 0],
-                        ['1', 12],
-                        ['2', 24],
-                        ['3', 36],
+                        ['3',  0],
+                        ['4', 12],
+                        ['5', 24],
+                        ['6', 36],
                     ],
                     value: [0],
                     fontSize: 12,
@@ -323,18 +323,19 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['도',  47],
-                        ['도#', 48],
-                        ['레',  49],
-                        ['레#', 50],
-                        ['미',  51],
-                        ['파',  52],
-                        ['파#', 53],
-                        ['솔',  54],
-                        ['솔#', 55],
-                        ['라',  56],
-                        ['라#', 57],
-                        ['시',  58],
+                        ['무음', 200],
+                        ['도',   47],
+                        ['도#',  48],
+                        ['레',   49],
+                        ['레#',  50],
+                        ['미',   51],
+                        ['파',   52],
+                        ['파#',  53],
+                        ['솔',   54],
+                        ['솔#',  55],
+                        ['라',   56],
+                        ['라#',  57],
+                        ['시',   58],
                     ],
                     value: [47],
                     fontSize: 12,
@@ -361,8 +362,13 @@ Entry.Robotry_Parodule.getBlocks = function() {
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
-                const octave = script.getNumberValue('OCTAVE');
+                var octave = script.getNumberValue('OCTAVE');
                 const tone = script.getNumberValue('TONE');
+
+                if (tone === 200) {
+                    octave = 0;
+                }
+
                 if(!Entry.hw.sendQueue.SET){
                     Entry.hw.sendQueue.SET = {};
                 }
