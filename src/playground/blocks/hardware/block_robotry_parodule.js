@@ -160,6 +160,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                         [ '75%', 38],
                         [ '50%', 37],
                         [ '25%', 36],
+                        [ '0%',  200],
                     ],
                     value: [39],
                     fontSize: 12,
@@ -229,7 +230,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['없음',    238],
+                        ['무색',     200],
                         ['빨강색',   19],
                         ['다홍색',   20],
                         ['주황색',   21],
