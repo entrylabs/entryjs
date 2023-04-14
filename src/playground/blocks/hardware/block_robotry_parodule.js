@@ -146,7 +146,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         ['정회전', 0],
-                        ['역회전', 34],
+                        ['역회전', 4],
                     ],
                     value: [0],
                     fontSize: 12,
