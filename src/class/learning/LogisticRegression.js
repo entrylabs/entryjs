@@ -3,6 +3,7 @@ import _floor from 'lodash/floor';
 import _max from 'lodash/max';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import _toNumber from 'lodash/toNumber';
 import LearningBase from './LearningBase';
 import Utils from './Utils';
 
@@ -182,8 +183,10 @@ function getData(validationRate, testRate, data, trainParam) {
     const tempMapCount = {};
     const { select = [[0], [1]], data: table, fields } = data;
     const [attr, predict] = select;
-
-    const dataArray = table
+    const filtered = table.filter(
+        (row) => !select.flat().some((selected) => !_toNumber(row[selected]))
+    );
+    const dataArray = filtered
         .map((row) => ({
             x: attr.map((i) => Utils.stringToNumber(i, row[i], tempMap, tempMapCount)),
             y: Utils.stringToNumber(predict[0], row[predict[0]], tempMap, tempMapCount),
