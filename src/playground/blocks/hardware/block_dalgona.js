@@ -6,8 +6,8 @@ Entry.Dalgona = {
     url: 'https://dalgonaedu.co.kr/',
     imageName: 'dalgona.png',
     title: {
-        ko: '달고나 에듀',
-        en: 'Dalgona edu',
+        ko: '달고나 제어보드',
+        en: 'Dalgona control board',
     },
     setZero() {
         if (!Entry.hw.sendQueue.SET) {
