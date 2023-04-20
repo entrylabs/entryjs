@@ -105,7 +105,41 @@ Entry.Coalaboard = {
     servoMinValue: 1,
     dcMaxValue: 100,
     dcMinValue: -100,
-    monitorTemplate: {
+    /**
+     * 콜백 함수. 계속해서 센서 데이터를 받는다.
+     * @param {*} pd 
+     */
+    afterReceive(pd) {
+        for( let i = 1; i < 5; i++ ) {      // 오직 센서만 받기
+            let obj = pd[ i ];              // ex) null or { type: "touch", value: 1023 }
+            if( obj != null ) {
+                if( obj.type == 'touch' && obj.value == 0 ) {
+                    Entry.engine.fireEvent('coalaboardButtonEventReceive');
+                }
+                Entry.engine.fireEvent('coalaboardSensorGetValueEventReceive');
+            }
+        }
+    },
+    calculateDCMotorValue: function( value ) {
+        let val = 0;
+        if ( value > 0 ) { 
+            val  = Math.floor( ( value * 0.8 ) + 16 );
+        } else if ( value < 0 ) {
+            val  = Math.ceil( ( value * 0.8 ) - 19 );
+        } else { 
+            val  = 0; 
+        }
+        // DC_MOTOR_ADJUSTMENT  128
+        val = 128 + val;
+        if ( val == 128 ) {
+            val = 129;
+        }
+        return val;
+    }
+};
+
+Entry.Coalaboard.monitorTemplate = function() {
+    return {
         keys: ['value'],
         imgPath: 'hw/coalaboard.png',
         width: 400,
@@ -148,39 +182,8 @@ Entry.Coalaboard = {
             },
         },
         mode: 'both',
-    },
-    /**
-     * 콜백 함수. 계속해서 센서 데이터를 받는다.
-     * @param {*} pd 
-     */
-    afterReceive(pd) {
-        for( let i = 1; i < 5; i++ ) {      // 오직 센서만 받기
-            let obj = pd[ i ];              // ex) null or { type: "touch", value: 1023 }
-            if( obj != null ) {
-                if( obj.type == 'touch' && obj.value == 0 ) {
-                    Entry.engine.fireEvent('coalaboardButtonEventReceive');
-                }
-                Entry.engine.fireEvent('coalaboardSensorGetValueEventReceive');
-            }
-        }
-    },
-    calculateDCMotorValue: function( value ) {
-        let val = 0;
-        if ( value > 0 ) { 
-            val  = Math.floor( ( value * 0.8 ) + 16 );
-        } else if ( value < 0 ) {
-            val  = Math.ceil( ( value * 0.8 ) - 19 );
-        } else { 
-            val  = 0; 
-        }
-        // DC_MOTOR_ADJUSTMENT  128
-        val = 128 + val;
-        if ( val == 128 ) {
-            val = 129;
-        }
-        return val;
     }
-};
+}
 
 Entry.Coalaboard.blockMenuBlocks = [
     'coalaboard_when_button_pressed',
