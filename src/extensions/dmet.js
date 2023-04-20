@@ -96,7 +96,6 @@ class dmetTable {
                 }
             });
         }
-        console.log(this.#array);
         this._id = _id;
         this.#id = id;
         this.#fields = fields;

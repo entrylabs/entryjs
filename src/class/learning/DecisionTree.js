@@ -158,7 +158,7 @@ function getData(testRate = 0.2, data) {
     const tempMapCount = {};
     const { select = [[0], [1]], data: table, fields } = data;
     const [attr, predict] = select;
-    const filtered = data.filter(
+    const filtered = table.filter(
         (row) => !select.flat().some((selected) => !_toNumber(row[selected]))
     );
     const dataArray = filtered
@@ -179,7 +179,7 @@ function getData(testRate = 0.2, data) {
         select,
         fields,
         valueMap: { ...tempMap[predict[0]] },
-        numClass: tempMapCount[predict[0]],
+        numClass: tempMapCount[predict[0]] || 1,
     };
 }
 
