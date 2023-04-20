@@ -824,7 +824,7 @@ Entry.iCOBOT.getBlocks = function() {
                     setTimeout(function() 
 					{
                         script.timeFlag = 0;
-                    }, duration + 32);
+                    }, duration + 50);  // 통신중 딜레이를 고려하여 0.05초 더 기다림..
                     return script;
                 } 
 				else if (script.timeFlag == 1) 
@@ -835,12 +835,12 @@ Entry.iCOBOT.getBlocks = function() {
 				{
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.hw.sendQueue['SET'][port] = 
-					{
-                        type: Entry.iCOBOT.sensorTypes.TONE,
-                        data: 0,
-                        time: new Date().getTime(),
-                    };
+                    // Entry.hw.sendQueue['SET'][port] = 
+					// {
+                    //     type: Entry.iCOBOT.sensorTypes.TONE,
+                    //     data: 0,
+                    //     time: new Date().getTime(),
+                    // };
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
