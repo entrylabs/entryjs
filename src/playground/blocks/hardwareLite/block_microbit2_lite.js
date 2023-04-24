@@ -2368,7 +2368,7 @@ const EVENT_INTERVAL = 150;
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2418,7 +2418,7 @@ const EVENT_INTERVAL = 150;
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
