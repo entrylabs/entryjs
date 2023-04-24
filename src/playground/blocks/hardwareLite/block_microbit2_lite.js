@@ -9,7 +9,7 @@ const EVENT_INTERVAL = 150;
         constructor() {
             this.commandStatus = {};
             this.btnEventIntervalId = -1;
-            this.retryLimitCnt = 3;
+            this.retryLimitCnt = 4;
             this.portData = {
                 baudRate: 115200,
                 dataBits: 8,
