@@ -47,11 +47,7 @@ const Common = {
         if (typeof str === 'string' && str.trim() === '') {
             return str;
         }
-        const result = _toNumber(str);
-        if (_isNaN(result)) {
-            return str;
-        }
-        return result;
+        return _toNumber(str) || '';
     },
     generateId() {
         return _uid(8) + _cuid();
