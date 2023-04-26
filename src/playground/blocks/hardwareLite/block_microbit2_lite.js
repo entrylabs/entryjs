@@ -1940,7 +1940,7 @@ const EVENT_INTERVAL = 150;
                     params: [
                         {
                             type: 'Indicator',
-                            img: 'block_icon/start_icon_hardware.svg',
+                            img: 'block_icon/start_icon_hardwarelite.svg',
                             size: 14,
                             position: { x: 0, y: -2 },
                         },
