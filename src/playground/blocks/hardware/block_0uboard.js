@@ -313,43 +313,6 @@ Entry.pyocoding.getBlocks = function() {
                 return ANALOG ? ANALOG[port] || 0 : 0;
               },
           },
-          pyocoding_get_touch_value: {
-              color: EntryStatic.colorSet.block.default.HARDWARE,
-              outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-              skeleton: 'basic_string_field',
-              statements: [],
-              events: {},
-              params: [
-                    {
-                        "type": "Dropdown",
-                        "options": [
-                            [ "A3", "3" ],
-                            //[ "A5", "5" ],
-                        ],
-                        "value": "3",
-                        "fontSize": 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-              def: {
-                params: [ null ],
-                "type": "pyocoding_get_touch_value"
-              },
-              isNotFor: [ '0uboard' ],
-              class: "SENSOR",
-              paramsKeyMap: {
-                  "PORT": 0,
-              },
-              func: function (sprite, script) {
-                var port = script.getValue("PORT", script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                console.log(port,ANALOG)
-                if (port[0] === "A")
-                    port = port.substring(1)
-                return ANALOG ? ANALOG[5] || 0 : 0;
-              },
-          },
           pyocoding_change_4095to255_value: {
               color: EntryStatic.colorSet.block.default.HARDWARE,
               outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
