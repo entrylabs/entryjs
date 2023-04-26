@@ -44,11 +44,10 @@ const Common = {
         if (Array.isArray(str)) {
             return str.map((x) => Common.toNumber(x));
         }
-        const result = _toNumber(str);
-        if (_isNaN(result)) {
+        if (typeof str === 'string' && str.trim() === '') {
             return str;
         }
-        return result;
+        return _toNumber(str) || '';
     },
     generateId() {
         return _uid(8) + _cuid();

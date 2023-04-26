@@ -13,19 +13,20 @@ export const CommonUtil = {
         }
     },
     stringToNumber: (
-        i: number, 
-        value: string, 
+        i: number,
+        value: string,
         tempMap: {
             [key: number]: {
                 [key: string]: number;
             };
-        }, 
+        },
         tempMapCount: {
             [key: string]: number;
-        }) => {
-        if (!isNaN(parseFloat(value))) {
-            return parseFloat(value);
         }
+    ) => {
+        // if (!isNaN(parseFloat(value))) {
+        //     return parseFloat(value);
+        // }
         if (!tempMap[i]) {
             tempMap[i] = {};
         }
@@ -35,7 +36,7 @@ export const CommonUtil = {
             }
             tempMapCount[i] = tempMapCount[i] + 1;
             tempMap[i][value] = tempMapCount[i];
-        } 
+        }
         return tempMap[i][value];
     },
     shuffle: (arr: Array<any>) => {

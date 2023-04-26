@@ -5,6 +5,7 @@ import _uniq from 'lodash/uniq';
 import _floor from 'lodash/floor';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import _toNumber from 'lodash/toNumber';
 import DataTable from '../DataTable';
 
 export const classes = [
@@ -46,17 +47,13 @@ class NumberClassification {
         this.#trainParam = trainParam;
         this.#table = table;
         this.#trainCallback = (value) => {
-            this.#view.setValue(value)
-        };;
+            this.#view.setValue(value);
+        };
         this.#isTrained = true;
 
         this.#attrLength = table?.select?.[0]?.length || 0;
-        this.#fields = table?.select?.[0]?.map((index) => {
-            return table?.fields[index];
-        });
-        this.#predictField = table?.select?.[1]?.map((index) => {
-            return table?.fields[index];
-        })
+        this.#fields = table?.select?.[0]?.map((index) => table?.fields[index]);
+        this.#predictField = table?.select?.[1]?.map((index) => table?.fields[index]);
         if (this.#attrLength === 2) {
             this.#chartEnable = true;
         }
@@ -74,19 +71,20 @@ class NumberClassification {
 
     destroy() {
         this.#view.destroy();
-        if(this.#chart) {
+        if (this.#chart) {
             this.#chart.destroy();
             this.#chart = null;
         }
     }
 
     createColor() {
-        return this.#trainParam.labels.reduce((acc, cur, idx, arr) => {
-            return {
+        return this.#trainParam.labels.reduce(
+            (acc, cur, idx, arr) => ({
                 ...acc,
                 [cur]: Entry.Utils.randomColor(),
-            }
-        }, {}); 
+            }),
+            {}
+        );
     }
 
     setVisible(visible) {
@@ -108,12 +106,16 @@ class NumberClassification {
 
     openChart() {
         if (!this.#chartEnable) {
-            return ;
+            return;
         }
         if (!this.#chart) {
             this.#chart = new Chart({
                 title: Lang.AiLearning.chart_title,
-                description: `<em>${Lang.AiLearning.class}</em>   ${this.#predictField[0]}<em>${Lang.AiLearning.model_attr_str} 1</em>${this.#fields[0]}<em>${Lang.AiLearning.model_attr_str} 2</em>${this.#fields[1]}`,
+                description: `<em>${Lang.AiLearning.class}</em>   ${this.#predictField[0]}<em>${
+                    Lang.AiLearning.model_attr_str
+                } 1</em>${this.#fields[0]}<em>${Lang.AiLearning.model_attr_str} 2</em>${
+                    this.#fields[1]
+                }`,
                 source: this.chartData,
             });
         } else {
@@ -151,14 +153,14 @@ class NumberClassification {
         const uniqLabels = _uniq(labels[0]).sort((a, b) => String(a).localeCompare(String(b)));
         const numLabels = uniqLabels.length;
         const maxVector = new Array(trainData[0].length).fill(-Infinity);
-        trainData.forEach(e => {
+        trainData.forEach((e) => {
             for (let i = 0; i < maxVector.length; i++) {
                 maxVector[i] = maxVector[i] > e[i] ? maxVector[i] : e[i];
             }
         });
 
         const minVector = new Array(trainData[0].length).fill(Infinity);
-        trainData.forEach(e => {
+        trainData.forEach((e) => {
             for (let i = 0; i < minVector.length; i++) {
                 minVector[i] = minVector[i] < e[i] ? minVector[i] : e[i];
             }
@@ -184,7 +186,9 @@ class NumberClassification {
         const { data: savedData } = await callApi(url, { url });
         this.#trainParam.trainData = savedData.data;
         this.#trainParam.trainLabels = savedData.labels;
-        this.#trainParam.labels = _uniq(savedData.labels).sort((a, b) => String(a).localeCompare(String(b)));
+        this.#trainParam.labels = _uniq(savedData.labels).sort((a, b) =>
+            String(a).localeCompare(String(b))
+        );
         this.#trainParam.maxVector = savedData.maxVector;
         this.#trainParam.minVector = savedData.minVector;
         this.#trainParam.numLabels = savedData.numLabels;
@@ -203,48 +207,53 @@ class NumberClassification {
     }
 
     predict(data) {
-        let distData = [];
+        const distData = [];
         const { trainData, trainLabels, neighbors } = this.#trainParam;
 
         for (let i = 0; i < trainData.length; i++) {
-            let dist = eudist(this.normalize(data), this.normalize(trainData[i]));
+            const dist = eudist(this.normalize(data), this.normalize(trainData[i]));
             distData.push({
-                "index": i,
-                "dist": dist,
-                "label": trainLabels[i]
+                index: i,
+                dist,
+                label: trainLabels[i],
             });
         }
 
         distData.sort((a, b) => a.dist - b.dist);
-       
-        let counts = {};
+
+        const counts = {};
         for (let i = 0; i < neighbors; i++) {
             const { label, dist } = distData[i];
             if (!counts[label]) {
-                counts[label] = []
+                counts[label] = [];
             }
             counts[label].push(dist);
         }
 
         const totalDistance = _sum(Object.values(counts).flat());
-        this.#predictResult = Object.keys(counts).map(className => {
-            const dist = _mean(counts[className]);
-            const count = counts[className].length;
-            const distProbability = totalDistance === 0 ? 1 : (totalDistance - dist) / totalDistance;
-            const probability = (count / neighbors) * 99 + distProbability;
-            return {
-                className,
-                count,
-                probability
-            }
-        }).sort((a, b) => b.probability - a.probability);
+        this.#predictResult = Object.keys(counts)
+            .map((className) => {
+                const dist = _mean(counts[className]);
+                const count = counts[className].length;
+                const distProbability =
+                    totalDistance === 0 ? 1 : (totalDistance - dist) / totalDistance;
+                const probability = (count / neighbors) * 99 + distProbability;
+                return {
+                    className,
+                    count,
+                    probability,
+                };
+            })
+            .sort((a, b) => b.probability - a.probability);
         return this.#predictResult;
     }
-    
+
     findLabel(x, y) {
         const strX = String(x);
         const strY = String(y);
-        const index = this.#trainParam.trainData.findIndex((row) => String(row[0]) === strX && String(row[1]) === strY);
+        const index = this.#trainParam.trainData.findIndex(
+            (row) => String(row[0]) === strX && String(row[1]) === strY
+        );
         return this.#trainParam.trainLabels[index];
     }
 
@@ -257,7 +266,7 @@ class NumberClassification {
 
     get chartData() {
         const json = this.#trainParam.trainData.map((row, idx) => ({
-            x: row[0], 
+            x: row[0],
             y: row[1],
             index: this.#trainParam.trainLabels[idx],
         }));
@@ -265,56 +274,56 @@ class NumberClassification {
             data: {
                 type: 'scatter',
                 json,
-                keys: { value: ['y'], x: 'x', },
+                keys: { value: ['y'], x: 'x' },
                 color: (color, d) => this.findColor(d.id, d.x, d.value) || color,
                 labels: false,
             },
             options: {
                 point: {
-                    pattern: [
-                        "circle"
-                    ]
+                    pattern: ['circle'],
                 },
                 legend: {
-                    show: false
+                    show: false,
                 },
                 tooltip: {
-                    contents: (data) =>{
+                    contents: (data) => {
                         const [{ x, value }] = data;
                         const label = this.findLabel(x, value);
                         return `
                         <div class="chart_handle_wrapper">
-                            ${Lang.AiLearning.class}: ${label}, ${this.#fields[0]}: ${x}, ${this.#fields[1]}: ${value}
+                            ${Lang.AiLearning.class}: ${label}, ${this.#fields[0]}: ${x}, ${
+                            this.#fields[1]
+                        }: ${value}
                         <div>`;
-                    }
+                    },
                 },
                 axis: {
                     x: {
                         tick: {
                             fit: false,
-                            count: 10
+                            count: 10,
                         },
-                    }
+                    },
                 },
                 grid: {
                     x: {
-                        show: true
+                        show: true,
                     },
                     y: {
-                        show: true
-                    }
-                }
-            }
-        }
+                        show: true,
+                    },
+                },
+            },
+        };
     }
-};
+}
 
 export default NumberClassification;
 
 function eudist(a, b) {
     let sum = 0;
     for (let i = 0; i < a.length; i++) {
-        let d = (a[i] || 0) - (b[i] || 0);
+        const d = (a[i] || 0) - (b[i] || 0);
         sum += d * d;
     }
 
@@ -324,17 +333,20 @@ function eudist(a, b) {
 function convertTableToKnnData(tableData = {}) {
     const { select = [[0], [1]], data: table = [] } = tableData;
     const [attr, predict] = select;
-    return table.reduce((accumulator, row) => {
-        const { data = [], labels = [] } = accumulator;
-        return {
-            data: [
-                ...data,
-                row.filter((data, index) => attr.includes(index))
-            ],
-            labels: predict.map((i, idx) => {
-                const arr = labels[idx] || [];
-                return [...arr, row[i]];
-            }),
-        };
-    }, { data: [], labels: [] });
+    const filtered = table.filter(
+        (row) => !select.flat().some((selected) => !_toNumber(row[selected]))
+    );
+    return filtered.reduce(
+        (accumulator, row) => {
+            const { data = [], labels = [] } = accumulator;
+            return {
+                data: [...data, row.filter((data, index) => attr.includes(index))],
+                labels: predict.map((i, idx) => {
+                    const arr = labels[idx] || [];
+                    return [...arr, row[i]];
+                }),
+            };
+        },
+        { data: [], labels: [] }
+    );
 }

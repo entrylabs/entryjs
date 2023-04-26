@@ -103,6 +103,7 @@ class RobokitRS extends ArduinoBase {
                     robokit_rs_menu_pin: '%1',
                     robokit_rs_menu_digital_value: '%1',
                     robokit_rs_menu_motor_number: '%1',
+                    robokit_rs_menu_dotmatrix_row: '%1',
 
                     robokit_rs_set_digital: '%1 번 핀 디지털 값을 %2 (으)로 정하기 %3',
                     robokit_rs_set_motor: '%1 번 모터를 속도 %2 (으)로 %3 %4',
@@ -163,6 +164,7 @@ class RobokitRS extends ArduinoBase {
                     robokit_rs_mecanumwheels_state_ccw: '시계 반대 방향 회전',
                     robokit_rs_mecanumwheels_state_stop: '정지',
 
+                    robokit_rs_dotmatrix_example_all: '모두',
                     robokit_rs_dotmatrix_example_eighth_note: '8분 음표',
                     robokit_rs_dotmatrix_example_sixteenth_note: '16분 음표',
                     robokit_rs_dotmatrix_example_square: '네모',
@@ -250,6 +252,7 @@ class RobokitRS extends ArduinoBase {
                     robokit_rs_menu_pin: '%1',
                     robokit_rs_menu_digital_value: '%1',
                     robokit_rs_menu_motor_number: '%1',
+                    robokit_rs_menu_dotmatrix_row: '%1',
 
                     robokit_rs_set_digital: 'set pin %1 digital value to %2 %3',
                     robokit_rs_set_motor: 'set motor %1 speed to %2 %3 %4',
@@ -310,6 +313,7 @@ class RobokitRS extends ArduinoBase {
                     robokit_rs_mecanumwheels_state_ccw: 'rotate counterclockwise',
                     robokit_rs_mecanumwheels_state_stop: 'stop',
 
+                    robokit_rs_dotmatrix_example_all: 'all',
                     robokit_rs_dotmatrix_example_eighth_note: 'eighth note',
                     robokit_rs_dotmatrix_example_sixteenth_note: 'sixteenth note',
                     robokit_rs_dotmatrix_example_square: 'square',
@@ -572,6 +576,40 @@ class RobokitRS extends ArduinoBase {
                     return script.getStringField('NUM');
                 },
             },
+            robokit_rs_menu_dotmatrix_row: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['0', '0'],
+                            ['1', '1'],
+                            ['2', '2'],
+                            ['3', '3'],
+                            ['4', '4'],
+                            ['5', '5'],
+                            ['6', '6'],
+                        ],
+                        value: '0',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                },
+                paramsKeyMap: {
+                    Y: 0,
+                },
+                func: (sprite, script) => {
+                    return script.getStringField('Y');
+                },
+            },
             robokit_rs_set_digital: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -585,6 +623,7 @@ class RobokitRS extends ArduinoBase {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defualtType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -1036,20 +1075,9 @@ class RobokitRS extends ArduinoBase {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            ['0', '0'],
-                            ['1', '1'],
-                            ['2', '2'],
-                            ['3', '3'],
-                            ['4', '4'],
-                            ['5', '5'],
-                            ['6', '6'],
-                        ],
-                        value: '0',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Block',
+                        accept: 'string',
+                        defualtType: 'number',
                     },
                     {
                         type: 'Block',
@@ -1135,7 +1163,9 @@ class RobokitRS extends ArduinoBase {
                 events: {},
                 def: {
                     params: [
-                        null,
+                        {
+                            type: 'robokit_rs_menu_dotmatrix_row'
+                        },
                         {
                             type: 'number',
                             params: ['0'],
@@ -1218,6 +1248,7 @@ class RobokitRS extends ArduinoBase {
                     {
                         type: 'Dropdown',
                         options: [
+                            [Lang.Blocks.robokit_rs_dotmatrix_example_all, '111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111'],
                             [Lang.Blocks.robokit_rs_dotmatrix_example_eighth_note, '000000000000000000000011000000000000010100000000000010100000000001110100000000011110000000000001100000000'],
                             [Lang.Blocks.robokit_rs_dotmatrix_example_sixteenth_note, '000000001111000000000011001000000000010001000000000010011000000001110111000000011110111000000001100000000'],
                             [Lang.Blocks.robokit_rs_dotmatrix_example_square, '000111111111000000111111111000000110000011000000110000011000000110000011000000111111111000000111111111000'],
@@ -1281,7 +1312,7 @@ class RobokitRS extends ArduinoBase {
                             ['←', '000000000000000000000100000000000001000000000000011111110000000001000000000000000100000000000000000000000'],
                             ['↖', '000011110000000000011000000000000010100000000000010010000000000000001000000000000000100000000000000010000'],
                         ],
-                        value: '000000000000000000000011000000000000010100000000000010100000000001110100000000011110000000000001100000000',
+                        value: '111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111',
                         fontSize: 11,
                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -2068,6 +2099,8 @@ class RobokitRS extends ArduinoBase {
 
     set_dotmatrix_row (sprite, script) {
         const y = script.getNumberValue('Y');
+        if (y < 0 || y > 6) return script.callReturn();
+
         let dots = '';
         for (let i = 0; i < 16; i++) {
             const value = script.getNumberValue('X' + i);
