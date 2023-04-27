@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "type": "hardware",
     "title": "네오쏘코(SoCo)",
-    "description": "네오쏘코(SoCo)",
+    "description": "네오피아",
     "imageName": "neobot_soco_lite",
     "moduleId": "050601"
 }
