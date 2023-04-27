@@ -45,7 +45,7 @@ const Common = {
         if (Array.isArray(str)) {
             return str.map((x) => Common.toNumber(x));
         }
-        if (!_isNaN(parseInt(str, 10))) {
+        if (!_isNaN(parseInt(str, 10)) && !_isNaN(_toNumber(str))) {
             return _toNumber(str);
         }
         return str;
