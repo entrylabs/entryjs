@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.NeoCannon = {
-    id: '0.0',
+    id: '41.2',
     name: 'NeoCannon',
     url: 'https://blog.naver.com/PostView.naver?blogId=neo3ds&logNo=223071491275',
     imageName: 'neo_cannon.png',
@@ -63,11 +63,6 @@ Entry.NeoCannon = {
         height: 400,
         listPorts: {
             vibe: {
-                name: 'LIFE',
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            vibe: {
                 name: '진동센서',
                 type: 'input',
                 pos: { x: 0, y: 0 },
@@ -84,8 +79,6 @@ Entry.NeoCannon.setLanguage = function() {
             template: {
                 neo_cannon_get_vibe_value: '진동 센서 감지됨',
                 neo_cannon_set_tone: '부저를 %1 %2 음으로 %3 초 연주하기 %4',
-                neo_cannon_led_state: 'LED %1 %2',
-                neo_cannon_led_pwm: 'LED %1 세기로 켜기 %2',
                 neo_cannon_motor_state: '%1 이동하기 %2',
                 neo_cannon_motor_state_secs: '%1 %2 초 이동하기 %3',
                 neo_cannon_motor_stop: '정지하기 %1',
@@ -105,9 +98,6 @@ Entry.NeoCannon.setLanguage = function() {
                     '진동 감지 여부를 가져옵니다.<br/><font color="crimson">센서값 0: `감지 못함`, 1: `감지됨`</font>',
                 neo_cannon_set_tone:
                     '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
-                neo_cannon_led_state: '파랑 LED 색상을 ON/OFF 할 수 있습니다.',
-                neo_cannon_led_pwm:
-                    '파랑 LED 빛의 세기를 제어할 수 있습니다.<br/><font color="crimson">세기값: 0~255</font>',
                 neo_cannon_motor_state: '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 이동시킬 수 있습니다.',
                 neo_cannon_motor_state_secs:
                     '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 정해진 시간(초)만큼 이동시킬 수 있습니다.',
@@ -133,8 +123,6 @@ Entry.NeoCannon.setLanguage = function() {
             template: {
                 neo_cannon_get_vibe_value: 'Detected Vibe Sensor',
                 neo_cannon_set_tone: 'Play tone note %1 octave %2 beat %3 %4',
-                neo_cannon_led_state: 'LED %1 %2',
-                neo_cannon_led_pwm: 'LED turn on pwm %1 %2',
                 neo_cannon_motor_state: 'Move %1 %2',
                 neo_cannon_motor_state_secs: 'Move %1 %2 secs %3',
                 neo_cannon_motor_stop: 'Move Stop %1',
@@ -155,8 +143,6 @@ Entry.NeoCannon.setLanguage = function() {
 Entry.NeoCannon.blockMenuBlocks = [
     'neo_cannon_get_vibe_value',
     'neo_cannon_set_tone',
-    'neo_cannon_led_state',
-    'neo_cannon_led_pwm',
     'neo_cannon_motor_state',
     'neo_cannon_motor_state_secs',
     'neo_cannon_motor_stop',
@@ -188,7 +174,7 @@ Entry.NeoCannon.getBlocks = function() {
             class: 'NeoCannonGet',
             isNotFor: ['NeoCannon'],
             func(sprite, script) {
-                let port = script.getValue('PORT', script);
+                let port = 'vibe'
 
                 return Entry.hw.portData[port] || 0;
             },
@@ -500,120 +486,6 @@ Entry.NeoCannon.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
-                            {
-                                type: 'Block',
-                                accept: 'string',
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        neo_cannon_led_state: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['ON', '255'],
-                        ['OFF', '0'],
-                    ],
-                    value: '0',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-                type: 'neo_cannon_led_state',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'NeoCannon',
-            isNotFor: ['NeoCannon'],
-            func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                let value = script.getNumberValue('VALUE', script);
-
-                sq.led = value;
-
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'NeoCannon.setLedState(%1)',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    ['ON', '255'],
-                                    ['OFF', '0'],
-                                ],
-                                value: '0',
-                                fontSize: 11,
-                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                converter: Entry.block.converters.returnStringValueLowerCase,
-                                bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            },
-                        ],
-                    },
-                ],
-            },
-        },
-        neo_cannon_led_pwm: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [0],
-                type: 'neo_cannon_led_pwm',
-            },
-            paramsKeyMap: {
-                VALUE: 0,
-            },
-            class: 'NeoCannon',
-            isNotFor: ['NeoCannon'],
-            func(sprite, script) {
-                const sq = Entry.hw.sendQueue;
-                let value = script.getNumberValue('VALUE', script);
-
-                sq.led = value & 255;
-
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: 'NeoCannon.setLedPwm(%1)',
-                        textParams: [
                             {
                                 type: 'Block',
                                 accept: 'string',
@@ -1173,7 +1045,7 @@ Entry.NeoCannon.getBlocks = function() {
                         ['RED', '1'],
                         ['GREEN', '2'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1253,7 +1125,7 @@ Entry.NeoCannon.getBlocks = function() {
                                     ['RED', '1'],
                                     ['GREEN', '2'],
                                 ],
-                                value: '1',
+                                value: '0',
                                 fontSize: 11,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValueUpperCase,
@@ -1262,10 +1134,10 @@ Entry.NeoCannon.getBlocks = function() {
                             {
                                 type: 'Dropdown',
                                 options: [
-                                    ['ON', '255'],
+                                    ['ON', '1'],
                                     ['OFF', '0'],
                                 ],
-                                value: '0',
+                                value: '1',
                                 fontSize: 11,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValueUpperCase,
@@ -1289,7 +1161,7 @@ Entry.NeoCannon.getBlocks = function() {
                         ['RED', '1'],
                         ['GREEN', '2'],
                     ],
-                    value: '1',
+                    value: '0',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1361,7 +1233,7 @@ Entry.NeoCannon.getBlocks = function() {
                                     ['RED', '1'],
                                     ['GREEN', '2'],
                                 ],
-                                value: '1',
+                                value: '0',
                                 fontSize: 11,
                                 arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter: Entry.block.converters.returnStringValueUpperCase,
@@ -1393,7 +1265,7 @@ Entry.NeoCannon.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [null, null],
+                params: ["#0000FF", null],
                 type: 'neo_cannon_rgb_led_color_picker',
             },
             paramsKeyMap: {
