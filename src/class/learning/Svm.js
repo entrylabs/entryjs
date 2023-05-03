@@ -168,7 +168,7 @@ class Svm extends LearningBase {
         const { select = [[0], [1]], data: table, fields } = data;
         const [attr, predict] = select;
         const filtered = table.filter(
-            (row) => !select.flat().some((selected) => !_toNumber(row[selected]))
+            (row) => !select[0].some((selected) => !_toNumber(row[selected]))
         );
         const dataArray = filtered
             .map((row) => ({
