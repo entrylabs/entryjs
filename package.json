@@ -44,7 +44,6 @@
         "@types/isomorphic-fetch": "^0.0.35",
         "audiobuffer-to-wav": "^1.0.0",
         "autoprefixer": "^9.4.3",
-        "caniuse-lite": "^1.0.30001474",
         "core-js": "^3.6.4",
         "crypto-js": "^4.0.0",
         "cuid": "^2.1.6",
