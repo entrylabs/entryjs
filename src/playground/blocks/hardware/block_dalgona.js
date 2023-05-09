@@ -1,7 +1,7 @@
 'use strict';
 
 Entry.Dalgona = {
-    id: 'FF.FF',
+    id: '54.1',
     name: 'Dalgona',
     url: 'https://dalgonaedu.co.kr/',
     imageName: 'dalgona.png',
@@ -142,14 +142,29 @@ Entry.Dalgona = {
     },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
+    getOffsetX(str) {
+        return this.getByteLength(str) * 1.5 - 5;
+    },
+    getByteLength(s, b, i, c) {
+        for (b = i = 0; (c = s.charCodeAt(i++)); b += c >> 11 ? 3 : c >> 7 ? 2 : 1);
+        return b;
+    },
     BlockState: {},
 };
 Entry.Dalgona.setLanguage = function() {
     return {
         ko: {
             template: {
-                dalgona_toggle_on: '달고나 켜기',
-                dalgona_toggle_off: '달고나 끄기',
+                dalgona_digital_title:'달고나 디지털 블럭',
+                dalgona_analog_title:'달고나 아날로그 블럭',
+                dalgona_pwm_title:'달고나 PWM 블럭',
+                dalgona_library_title:'달고나 라이브러리 블럭',
+                dalgona_neopixel_title:'달고나 네오픽셀 블럭',
+                dalgona_ultrasonic_title: '달고나 초음파센서 블럭',
+                dalgona_buzzer_title: '달고나 피에조 부저 블럭',
+                dalgona_dotmatrix_title:'달고나 8X8 도트매트릭스 블럭',
+                dalgona_toggle_on: '달고나 LED 켜기',
+                dalgona_toggle_off: '달고나 LED 끄기',
                 dalgona_lcd_first_line: '달고나 첫 번째',
                 dalgona_lcd_seconds_line: '달고나 두 번째',
                 dalgona_get_analog_value: '달고나 아날로그 %1 핀 읽기',
@@ -232,6 +247,14 @@ Entry.Dalgona.setLanguage = function() {
         },
         en: {
             template: {
+                dalgona_digital_title:'달고나 디지털 블럭',
+                dalgona_analog_title:'달고나 아날로그 블럭',
+                dalgona_pwm_title:'달고나 PWM 블럭',
+                dalgona_library_title:'달고나 라이브러리 블럭',
+                dalgona_neopixel_title:'달고나 네오픽셀 블럭',
+                dalgona_ultrasonic_title: '달고나 초음파센서 블럭',
+                dalgona_buzzer_title: '달고나 피에조 부저 블럭',
+                dalgona_dotmatrix_title:'달고나 8X8 도트매트릭스 블럭',
                 dalgona_toggle_on: 'on',
                 dalgona_toggle_off: 'off',
                 dalgona_lcd_first_line: 'first',
@@ -250,17 +273,14 @@ Entry.Dalgona.setLanguage = function() {
                 dalgona_set_digital_servo: '서보 모터 %1 핀 %2 각도로 회전 %3',
                 dalgona_set_digital_buzzer_toggle: '피에조부저 %1 핀 %2 %3',
                 dalgona_set_digital_buzzer_volume: '피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
-                dalgona_set_digital_buzzer:
-                    '피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
+                dalgona_set_digital_buzzer:'피에조부저 %1 번 핀의 버저를 %2 %3 음으로 %4 박자 연주 %5',
                 dalgona_set_digital_dcmotor: 'DC Motor %1 pin direction %2 %3 pin speed %4 %5',
-                dalgona_set_neopixel_init:
-                    '네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
+                dalgona_set_neopixel_init:'네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
                 dalgona_set_neopixel_bright: '네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
                 dalgona_set_neopixel: '네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
                 dalgona_set_neopixel_all: '네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
                 dalgona_set_neopixel_clear: '네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
-                dalgona_set_dotmatrix_init:
-                    '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
+                dalgona_set_dotmatrix_init: '8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
                 dalgona_set_dotmatrix_bright: '도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
                 dalgona_set_dotmatrix: '도트매트릭스 LED 그리기 %1 %2',
                 dalgona_set_dotmatrix_emoji: '도트매트릭스 LED %1 그리기 %2',
@@ -305,18 +325,50 @@ Entry.Dalgona.setLanguage = function() {
     };
 };
 Entry.Dalgona.blockMenuBlocks = [
+    'dalgona_digital_title',
     'dalgona_set_digital_toggle',
-    'dalgona_get_analog_value',
     'dalgona_get_digital',
+    'dalgona_set_led_toggle',
+
+    'dalgona_analog_title',
+    'dalgona_get_analog_value',
+
+    'dalgona_pwm_title',
+    'dalgona_set_digital_pwm',
+    'dalgona_set_digital_rgbled',
+
+    'dalgona_library_title',
+
+    'dalgona_neopixel_title',
+    'dalgona_set_neopixel_init',
+    'dalgona_set_neopixel_bright',
+    'dalgona_set_neopixel',
+    'dalgona_set_neopixel_all',
+    'dalgona_set_neopixel_clear',
+
+    'dalgona_ultrasonic_title',
+    'dalgona_get_digital_ultrasonic',
+
+    'dalgona_buzzer_title',
+    'dalgona_set_digital_buzzer_toggle',
+    'dalgona_set_digital_buzzer_volume',
+    'dalgona_set_digital_buzzer',
+
+    'dalgona_dotmatrix_title',
+    'dalgona_set_dotmatrix_init',
+    'dalgona_set_dotmatrix_bright',
+    'dalgona_set_dotmatrix',
+    'dalgona_set_dotmatrix_emoji',
+    'dalgona_set_dotmatrix_clear',
+
+
+
+
+    
     'dalgona_get_analog_mapping',
     'dalgona_mapping1',
     'dalgona_mapping2',
 
-    'dalgona_set_led_toggle',
-    'dalgona_set_digital_pwm',
-    'dalgona_set_digital_rgbled',
-
-    'dalgona_get_digital_ultrasonic',
     'dalgona_get_dust',
     'dalgona_get_digital_toggle',
     'dalgona_get_digital_pir',
@@ -334,19 +386,9 @@ Entry.Dalgona.blockMenuBlocks = [
     'dalgona_set_analog_dcmotor',
     'dalgona_set_digital_servo',
     'dalgona_set_digital_servo2',
-    'dalgona_set_digital_buzzer_toggle',
-    'dalgona_set_digital_buzzer_volume',
-    'dalgona_set_digital_buzzer',
-    'dalgona_set_neopixel_init',
-    'dalgona_set_neopixel_bright',
-    'dalgona_set_neopixel',
-    'dalgona_set_neopixel_all',
-    'dalgona_set_neopixel_clear',
-    'dalgona_set_dotmatrix_init',
-    'dalgona_set_dotmatrix_bright',
-    'dalgona_set_dotmatrix',
-    'dalgona_set_dotmatrix_emoji',
-    'dalgona_set_dotmatrix_clear',
+
+
+
     'dalgona_lcd_init',
     'dalgona_module_digital_lcd',
     'dalgona_get_lcd_row',
@@ -399,6 +441,211 @@ Entry.Dalgona.getBlocks = function() {
     var num = 0;
 
     return {
+        dalgona_digital_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_digital_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_digital_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_digital_title',
+            },
+            class: 'digital',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_analog_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_analog_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_analog_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_analog_title',
+            },
+            class: 'analog',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_pwm_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_pwm_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_pwm_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_pwm_title',
+            },
+            class: 'pwm',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_library_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_library_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_library_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_library_title',
+            },
+            class: 'library',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_neopixel_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_neopixel_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_neopixel_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_neopixel_title',
+            },
+            class: 'neopixel',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_ultrasonic_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_ultrasonic_title),
+                    offsetY: 7,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#000000',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_ultrasonic_title,
+                    color: '#000000',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_ultrasonic_title',
+            },
+            class: 'ultrasonic',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_buzzer_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_buzzer_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_buzzer_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_buzzer_title',
+            },
+            class: 'buzzer',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_dotmatrix_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_dotmatrix_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_dotmatrix_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_dotmatrix_title',
+            },
+            class: 'dotmatrix',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+
+
+
+
+
         dalgona_list_analog_basic: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -687,7 +934,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 NUM: 1,
             },
-            class: 'neo',
+            class: 'neopixel',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -765,7 +1012,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 NUM: 1,
             },
-            class: 'neo',
+            class: 'neopixel',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -854,7 +1101,7 @@ Entry.Dalgona.getBlocks = function() {
                 NUM: 1,
                 COLOR: 2,
             },
-            class: 'neo',
+            class: 'neopixel',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 //var sq = Entry.hw.sendQueue;
@@ -951,7 +1198,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 COLOR: 1,
             },
-            class: 'neo',
+            class: 'neopixel',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
@@ -1008,7 +1255,6 @@ Entry.Dalgona.getBlocks = function() {
                 py: [{}],
             },
         },
-
         dalgona_set_neopixel_clear: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1040,7 +1286,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'neo',
+            class: 'neopixel',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -1157,7 +1403,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT2: 1,
                 PORT3: 2,
             },
-            class: 'dot',
+            class: 'dotmatrix',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
@@ -1236,7 +1482,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'dot',
+            class: 'dotmatrix',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -1295,7 +1541,7 @@ Entry.Dalgona.getBlocks = function() {
                 params: [],
                 type: 'dalgona_set_dotmatrix_clear',
             },
-            class: 'dot',
+            class: 'dotmatrix',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 if (!script.isStart) {
@@ -1361,7 +1607,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 STRING: 0,
             },
-            class: 'dot',
+            class: 'dotmatrix',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var text = script.getValue('STRING');
@@ -1469,7 +1715,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 LIST: 0,
             },
-            class: 'dot',
+            class: 'dotmatrix',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var value = script.getNumberValue('LIST');
@@ -1693,7 +1939,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaPin',
+            class: 'analog',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -1729,7 +1975,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -1767,7 +2013,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -1819,7 +2065,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaSet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -1889,7 +2135,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaSet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -1935,7 +2181,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -1971,7 +2217,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -2007,7 +2253,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2053,7 +2299,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
@@ -2135,7 +2381,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'dalgonaPin',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -2216,7 +2462,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE2: 1,
                 VALUE3: 2,
             },
-            class: 'dalgonaPin',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -2301,7 +2547,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'dalgonaPin',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -2383,7 +2629,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'dalgonaGet',
+            class: 'ultrasonic',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1');
@@ -2446,7 +2692,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1');
@@ -2498,7 +2744,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaPin',
+            class: 'digital',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2545,7 +2791,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2588,7 +2834,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2606,6 +2852,7 @@ Entry.Dalgona.getBlocks = function() {
             },
             syntax: { js: [], py: ['dalgona.get_digital_pir(%1)'] },
         },
+
         dalgona_set_digital_toggle: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2645,7 +2892,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaPin',
+            class: 'digital',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2713,7 +2960,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaLed',
+            class: 'digital',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2783,7 +3030,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaLed',
+            class: 'pwm',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2882,7 +3129,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE2: 4,
                 VALUE3: 5,
             },
-            class: 'dalgonaLed',
+            class: 'pwm',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
@@ -3019,7 +3266,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaSet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -3099,7 +3346,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE2: 2,
                 STIME: 3,
             },
-            class: 'dalgonaSet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             // func: function(sprite, script) {
             //     var port = script.getNumberValue('PORT');
@@ -3211,7 +3458,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaBuzzer',
+            class: 'buzzer',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -3283,7 +3530,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'dalgonaBuzzer',
+            class: 'buzzer',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -3365,7 +3612,7 @@ Entry.Dalgona.getBlocks = function() {
                 OCTAVE: 2,
                 DURATION: 3,
             },
-            class: 'dalgonaBuzzer',
+            class: 'buzzer',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -3490,7 +3737,7 @@ Entry.Dalgona.getBlocks = function() {
                 COL: 1,
                 LINE: 2,
             },
-            class: 'dalgonaModule',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var list = script.getNumberValue('LIST');
@@ -3583,7 +3830,7 @@ Entry.Dalgona.getBlocks = function() {
                 ROW: 1,
                 STRING: 2,
             },
-            class: 'dalgonaModule',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var row = script.getNumberValue('ROW');
@@ -3643,7 +3890,7 @@ Entry.Dalgona.getBlocks = function() {
                 params: [],
                 type: 'dalgona_lcd_clear',
             },
-            class: 'dalgonaModule',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 if (!script.isStart) {
@@ -3719,7 +3966,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 DHT_SELECT: 1,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -3795,7 +4042,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'mp3',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 tx = script.getNumberValue('PORT1');
@@ -3869,7 +4116,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'mp3',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM');
@@ -3940,7 +4187,7 @@ Entry.Dalgona.getBlocks = function() {
                 NUM: 0,
                 TIME: 1,
             },
-            class: 'mp3',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM');
@@ -4022,7 +4269,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 VOL: 0,
             },
-            class: 'mp3',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var vol = script.getNumberValue('VOL');
@@ -4109,7 +4356,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'load',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
@@ -4186,7 +4433,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'load',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -4239,7 +4486,7 @@ Entry.Dalgona.getBlocks = function() {
                 type: 'dalgona_load_value',
             },
             paramsKeyMap: {},
-            class: 'load',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['SET']) {
@@ -4353,7 +4600,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT2: 2,
                 PORT3: 3,
             },
-            class: 'joy',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -4448,7 +4695,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'joy',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -4491,7 +4738,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'joy',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -4534,7 +4781,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'joy',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -4637,7 +4884,7 @@ Entry.Dalgona.getBlocks = function() {
                 NUM: 0,
                 DIR: 1,
             },
-            class: 'joy',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 var direction = script.getNumberValue('DIR');
@@ -4822,7 +5069,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT3: 3,
                 PORT4: 4,
             },
-            class: 'step',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -4964,7 +5211,7 @@ Entry.Dalgona.getBlocks = function() {
                 NUM: 0,
                 SPEED: 1,
             },
-            class: 'step',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -5119,7 +5366,7 @@ Entry.Dalgona.getBlocks = function() {
                 DIR: 1,
                 VALUE: 2,
             },
-            class: 'step',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR', script);
@@ -5258,7 +5505,7 @@ Entry.Dalgona.getBlocks = function() {
                 DIR: 1,
                 VALUE: 2,
             },
-            class: 'step',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var dir = script.getNumberValue('DIR', script);
@@ -5398,7 +5645,7 @@ Entry.Dalgona.getBlocks = function() {
                 DIR: 1,
                 SEC: 2,
             },
-            class: 'step',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 num = script.getNumberValue('NUM');
@@ -5531,7 +5778,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE1: 1,
                 STRING: 2,
             },
-            class: 'dalgonaModule',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = 0;
@@ -5647,7 +5894,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'rfid',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
@@ -5704,7 +5951,7 @@ Entry.Dalgona.getBlocks = function() {
                 type: 'dalgona_is_rfid_tapped',
             },
             paramsKeyMap: {},
-            class: 'rfid',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['GET']) {
@@ -5733,7 +5980,7 @@ Entry.Dalgona.getBlocks = function() {
                 type: 'dalgona_get_rfid_value',
             },
             paramsKeyMap: {},
-            class: 'rfid',
+            class: 'no',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['SET']) {
@@ -5783,7 +6030,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 MLX_SELECT: 0,
             },
-            class: 'dalgonaGet',
+            class: 'no',
             isNotFor: ['Dalgona'],
             
             func: function(sprite, script) {
