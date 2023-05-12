@@ -158,7 +158,7 @@ Entry.kkmoo.getBlocks = function() {
             isNotFor: ['kkmoo'],
             func: async function(sprite,script){
                 const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
-                await wait(100);
+                await wait(300);
                 await Entry.hw.update();
                 if(Entry.hw.portData.data == 'true'){
                     Entry.kkmoo.isMotionRunning = true;
