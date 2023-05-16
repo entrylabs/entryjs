@@ -5,6 +5,7 @@ import Chart from './Chart';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
 import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import LearningBase from './LearningBase';
 import Utils from './Utils';
 
@@ -224,7 +225,7 @@ function convertToTfData(data, trainParam) {
     const [attr, predict] = select;
     const { epochs = 1, batchSize = 1 } = trainParam;
     const filtered = table.filter(
-        (row) => !select.flat().some((selected) => !_toNumber(row[selected]))
+        (row) => !select.flat().some((selected) => _isNaN(_toNumber(row[selected])))
     );
     const totalDataSize = Math.ceil(filtered.length / batchSize) * epochs;
     return filtered.reduce(

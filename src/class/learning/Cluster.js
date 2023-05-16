@@ -2,6 +2,7 @@ import { kmpp } from 'skmeans/kinit';
 // import { kmpp } from 'skmeans/dist/node/kinit';
 import floor from 'lodash/floor';
 import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import LearningView from './LearningView';
 import Chart from './Chart';
 import DataTable from '../DataTable';
@@ -155,7 +156,7 @@ class Cluster {
         this.#isTrained = false;
         const { data, select } = this.#table;
         const filtered = data.filter(
-            (row) => !select.flat().some((selected) => !_toNumber(row[selected]))
+            (row) => !select.flat().some((selected) => _isNaN(_toNumber(row[selected])))
         );
         const [attr] = select;
 
