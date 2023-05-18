@@ -1,5 +1,6 @@
 'use strict';
 (function() {
+    const HEADER = [0xab, 0xcd];
     Entry.NeobotSocoLite = new (class NeobotSocoLite {
         constructor() {
             this.id = '5.6';
@@ -81,7 +82,7 @@
 
         get monitorTemplate() {
             return {
-                imgPath: 'hw_lite/neobot_soco_lite.png',
+                imgPath: 'hw/neobot_soco.png',
                 width: 700,
                 height: 700,
                 listPorts: {
@@ -125,15 +126,93 @@
         }
 
         handleLocalData(data) {
-            for (let i = 0; i < data.length - 1; i++) {
-                if (data[i] === 171 && data[i + 1] === 205) {
-                    const dataSet = data.slice(i + 2, i + 7);
-                    dataSet.forEach((value, idx) => {
-                        this.localBuffer[this.LOCAL_MAP[idx]] = value;
-                    });
+            let validPdu = this.getValidPdu(data);
+            while (validPdu) {
+                this.onReceivePdu(validPdu);
+                if (!this.remainingPdu || this.remainingPdu.length <= 0) {
                     break;
                 }
+                validPdu = this.getValidPdu([]);
             }
+        }
+
+        onReceivePdu(pdu) {
+            if (pdu[0] === HEADER[0] && pdu[1] === HEADER[1]) {
+                this.localBuffer['IN1'] = pdu[2];
+                this.localBuffer['IN2'] = pdu[3];
+                this.localBuffer['IN3'] = pdu[4];
+                this.localBuffer['IR'] = pdu[5];
+                this.localBuffer['BAT'] = pdu[6];
+            }
+        }
+
+        getValidPdu(pdu) {
+            const mergedPdu = [];
+            if (this.remainingPdu) {
+                mergedPdu.push(...this.remainingPdu);
+                this.remainingPdu = null;
+            }
+            mergedPdu.push(...pdu);
+            if (mergedPdu.length < 2) {
+                this.remainingPdu = [...mergedPdu];
+                return null;
+            }
+
+            // 헤더 불일치는 버림
+            if (!this.checkHeader(mergedPdu)) {
+                return null;
+            }
+
+            // 유효 데이터 길이는 header 2 + body 5 + checksum 1 = 8
+            const validDataLength = 8;
+            /*
+            전체 길이가 유효 데이터 길이보다 작을 경우
+            아직 도착하지 않은 부분이 있으므로 병합을 위해 remainingPdu 에 저장
+             */
+            if (mergedPdu.length < validDataLength) {
+                this.remainingPdu = [...mergedPdu];
+                return null;
+            }
+
+            /*
+            전체 길이가 유효 데이터 길이보다 클 경우
+            유효한 부분만 잘라내고 나머지는 remainingPdu 에 저장
+             */
+            if (mergedPdu.length > validDataLength) {
+                this.remainingPdu = mergedPdu.slice(validDataLength, mergedPdu.length);
+            }
+
+            const validPdu = mergedPdu.slice(0, validDataLength);
+
+            /*
+            유효 Pdu 의 checksum 확인
+             */
+            const dataLength = 5;
+            let checkSum = 0;
+            for (let i = 0; i < dataLength; i++) {
+                checkSum += validPdu[i + 2];
+            }
+            checkSum = checkSum & 255;
+            const pduCheckSum = validPdu[7];
+            if (pduCheckSum !== checkSum) {
+                return null;
+            }
+
+            return validPdu;
+        }
+
+        checkHeader(pdu) {
+            if (pdu.length < HEADER.length) {
+                return false;
+            }
+
+            for (let i = 0; i < HEADER.length; i++) {
+                if (HEADER[i] !== pdu[i]) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         requestLocalData() {
