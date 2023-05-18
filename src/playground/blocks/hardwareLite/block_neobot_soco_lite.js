@@ -27,8 +27,8 @@
                 OUT1: 0,
                 OUT2: 0,
                 OUT3: 0,
-                DCR: 0,
                 DCL: 0,
+                DCR: 0,
                 SND: 0,
                 FND: 0,
                 OPT: 0,
@@ -37,41 +37,43 @@
 
             this.blockMenuBlocks = [
                 // sensor
+                'neobot_soco_lite_sensor_title',
                 'neobot_soco_lite_sensor_value',
                 'neobot_soco_lite_sensor_convert_scale',
-
-                // decision
                 'neobot_soco_lite_decision_sensor_is_over',
                 'neobot_soco_lite_decision_equal_with_sensor',
                 'neobot_soco_lite_decision_sensor_angle',
-
-                // remote
                 'neobot_soco_lite_remote_button',
 
                 // led
+                'neobot_soco_lite_led_title',
                 'neobot_soco_lite_led_on',
                 'neobot_soco_lite_led_brightness_with_sensor',
                 'neobot_soco_lite_color_led_on',
                 'neobot_soco_lite_output_led_off',
 
                 // output
+                'neobot_soco_lite_output_title',
                 'neobot_soco_lite_set_output',
 
                 //  motor
+                'neobot_soco_lite_motor_title',
                 'neobot_soco_lite_robot',
                 'neobot_soco_lite_motor_start',
                 'neobot_soco_lite_motor_stop',
 
-                // melody
-                'neobot_soco_lite_play_note_for',
-                'neobot_soco_lite_melody_play_with_sensor',
-                'neobot_soco_lite_melody_stop',
-
                 // servo
+                'neobot_soco_lite_servo_title',
                 'neobot_soco_lite_servo_init',
                 'neobot_soco_lite_servo_rotate',
                 'neobot_soco_lite_servo_stop',
                 'neobot_soco_lite_servo_change_degree',
+
+                // buzzer
+                'neobot_soco_lite_buzzer_title',
+                'neobot_soco_lite_play_note_for',
+                'neobot_soco_lite_melody_play_with_sensor',
+                'neobot_soco_lite_melody_stop',
             ];
 
             this.setZero();
@@ -111,8 +113,8 @@
                 OUT1: 0,
                 OUT2: 0,
                 OUT3: 0,
-                DCR: 0,
                 DCL: 0,
+                DCR: 0,
                 SND: 0,
                 FND: 0,
                 OPT: 0,
@@ -165,18 +167,16 @@
                 ko: {
                     template: {
                         // sensor
+                        neobot_soco_lite_sensor_title: '센서',
                         neobot_soco_lite_sensor_value: '%1',
                         neobot_soco_lite_sensor_convert_scale: '%1 %2 ~ %3 를 %4 ~ %5 으로 변환',
-
-                        // decision
                         neobot_soco_lite_decision_sensor_is_over: '%1 %2 %3',
                         neobot_soco_lite_decision_equal_with_sensor: '%1 컬러가 %2',
                         neobot_soco_lite_decision_sensor_angle: '%1 각도 %2 %3',
-
-                        // remote
                         neobot_soco_lite_remote_button: '리모컨 버튼 %1 을 누름',
 
                         // LED
+                        neobot_soco_lite_led_title: 'LED',
                         neobot_soco_lite_arg_led_duration: '%1',
                         neobot_soco_lite_led_on: 'LED 켜기   %1 %2 %3 %4',
                         neobot_soco_lite_output_led_off: '%1 LED 끄기 %2',
@@ -184,9 +184,11 @@
                         neobot_soco_lite_color_led_on: '%1 컬러LED 켜기   R %2 G %3 B %4 %5',
 
                         // output
+                        neobot_soco_lite_output_title: '출력',
                         neobot_soco_lite_set_output: '%1 에 %2 값 출력하기 %3',
 
                         // motor
+                        neobot_soco_lite_motor_title: '회전모터',
                         neobot_soco_lite_robot: '로봇 %1 %2',
                         neobot_soco_lite_motor_start: '모터 회전하기   %1 %2 %3 %4 %5',
                         neobot_soco_lite_motor_stop: '%1 모터 멈추기 %2',
@@ -194,12 +196,14 @@
                         neobot_soco_lite_arg_motor_duration: '%1',
 
                         // melody
+                        neobot_soco_lite_buzzer_title: '버저',
                         neobot_soco_lite_play_note_for:
                             '버저 울리기   옥타브: %2 음: %1 길이: %3 %4',
                         neobot_soco_lite_melody_play_with_sensor: '%1 센서로 버저 울리기 %2',
                         neobot_soco_lite_melody_stop: '버저 멈추기 %1',
 
                         // servo
+                        neobot_soco_lite_servo_title: '서보모터',
                         get_servo_degree: '%1',
                         neobot_soco_lite_servo_init: '%1 서보모터 리셋 %2',
                         neobot_soco_lite_servo_rotate: '서보모터 회전하기   %1 %2 %3 %4',
@@ -340,19 +344,17 @@
                     // en.js에 작성하던 내용
                     template: {
                         // sensor
+                        neobot_soco_lite_sensor_title: 'Sensor',
                         neobot_soco_lite_sensor_value: '%1',
                         neobot_soco_lite_sensor_convert_scale:
                             "%1 's changed value   range: %2 ~ %3 conversion: %4 ~ %5",
-
-                        // decision
                         neobot_soco_lite_decision_sensor_is_over: '%1 %2 %3',
                         neobot_soco_lite_decision_equal_with_sensor: "%1 's color is %2",
                         neobot_soco_lite_decision_sensor_angle: '%1 angle %2 %3',
-
-                        // remote
                         neobot_soco_lite_remote_button: 'pressing button %1 of remote controller',
 
                         // LED
+                        neobot_soco_lite_led_title: 'LED',
                         neobot_soco_lite_arg_led_duration: '%1',
                         neobot_soco_lite_led_on: 'Turn on the LED    %1 %2 %3 %4',
                         neobot_soco_lite_output_led_off: 'Turn off the %1 LED %2',
@@ -362,9 +364,11 @@
                             'Turn on the %1 color LED   R %2 G %3 B %4 %5',
 
                         // output
+                        neobot_soco_lite_output_title: 'Set output',
                         neobot_soco_lite_set_output: 'Output %2 value to %1 port %3',
 
                         // motor
+                        neobot_soco_lite_motor_title: 'Motor',
                         neobot_soco_lite_robot: 'Robot %1 %2',
                         neobot_soco_lite_motor_start: 'Motor operation   %1 %2 %3 %4 %5',
                         neobot_soco_lite_motor_stop: 'Stop the %1 motor(s) %2',
@@ -372,12 +376,14 @@
                         neobot_soco_lite_arg_motor_duration: '%1',
 
                         // melody
+                        neobot_soco_lite_buzzer_title: 'Buzzer',
                         neobot_soco_lite_play_note_for: 'Buzzer   octave: %1 scale: %2 note: %3 %4',
                         neobot_soco_lite_melody_play_with_sensor:
                             'Buzzer rings by %1 sensor value %2',
                         neobot_soco_lite_melody_stop: 'Stop the buzzer %1',
 
                         // servo
+                        neobot_soco_lite_servo_title: 'Servo motor',
                         neobot_soco_lite_servo_init: 'Reset the %1 servo motor %2',
                         neobot_soco_lite_servo_rotate: 'Rotate the servo motor   %1 %2 %3 %4',
                         neobot_soco_lite_servo_stop: 'Stop the %1 servo motor %2',
@@ -520,6 +526,30 @@
                 /*************************
                  * class neobot_soco_lite_sensor
                  *************************/
+                neobot_soco_lite_sensor_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_soco_lite_sensor_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_soco_lite_sensor_title',
+                    },
+                    class: 'neobot_soco_lite_sensor',
+                    isNotFor: ['NeobotSocoLite'],
+                    events: {},
+                },
                 neobot_soco_lite_sensor_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -655,10 +685,6 @@
                         return Math.round(value);
                     },
                 },
-
-                /*************************
-                 * class neobot_soco_lite_decision
-                 *************************/
                 neobot_soco_lite_decision_sensor_is_over: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -708,7 +734,7 @@
                         SYMBOL: 1,
                         VALUE: 2,
                     },
-                    class: 'neobot_soco_lite_decision',
+                    class: 'neobot_soco_lite_sensor',
                     isNotFor: ['NeobotSocoLite'],
                     func(sprite, script) {
                         const sensorTemp = script.getStringField('SENSOR');
@@ -810,7 +836,7 @@
                         SENSOR: 0,
                         COLOR: 1,
                     },
-                    class: 'neobot_soco_lite_decision',
+                    class: 'neobot_soco_lite_sensor',
                     isNotFor: ['NeobotSocoLite'],
                     func(sprite, script) {
                         const sensorTemp = script.getStringField('SENSOR');
@@ -924,7 +950,7 @@
                         SYMBOL: 1,
                         VALUE: 2,
                     },
-                    class: 'neobot_soco_lite_decision',
+                    class: 'neobot_soco_lite_sensor',
                     isNotFor: ['NeobotSocoLite'],
                     func(sprite, script) {
                         const sensorTemp = script.getStringField('SENSOR');
@@ -967,9 +993,6 @@
                     },
                 },
 
-                /*************************
-                 * class neobot_soco_lite_remote
-                 *************************/
                 neobot_soco_lite_remote_button: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1003,7 +1026,7 @@
                     paramsKeyMap: {
                         KEY: 0,
                     },
-                    class: 'neobot_soco_lite_remote',
+                    class: 'neobot_soco_lite_sensor',
                     isNotFor: ['NeobotSocoLite'],
                     func(sprite, script) {
                         const key = script.getNumberField('KEY');
@@ -1019,6 +1042,30 @@
                 /*************************
                  * class neobot_soco_lite_led
                  *************************/
+                neobot_soco_lite_led_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_soco_lite_led_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_soco_lite_led_title',
+                    },
+                    class: 'neobot_soco_lite_led',
+                    isNotFor: ['NeobotSocoLite'],
+                    events: {},
+                },
                 neobot_soco_lite_led_on: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1543,6 +1590,30 @@
                 /*************************
                  * class neobot_soco_lite_output
                  *************************/
+                neobot_soco_lite_output_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_soco_lite_output_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_soco_lite_output_title',
+                    },
+                    class: 'neobot_soco_lite_output',
+                    isNotFor: ['NeobotSocoLite'],
+                    events: {},
+                },
                 neobot_soco_lite_set_output: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1620,6 +1691,30 @@
                 /*************************
                  * class neobot_soco_lite_motor
                  *************************/
+                neobot_soco_lite_motor_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_soco_lite_motor_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_soco_lite_motor_title',
+                    },
+                    class: 'neobot_soco_lite_motor',
+                    isNotFor: ['NeobotSocoLite'],
+                    events: {},
+                },
                 neobot_soco_lite_robot: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1946,6 +2041,30 @@
                 /*************************
                  * class neobot_soco_lite_melody
                  *************************/
+                neobot_soco_lite_buzzer_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_soco_lite_buzzer_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_soco_lite_buzzer_title',
+                    },
+                    class: 'neobot_soco_lite_melody',
+                    isNotFor: ['NeobotSocoLite'],
+                    events: {},
+                },
                 neobot_soco_lite_play_note_for: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2160,6 +2279,30 @@
                 /*************************
                  * class neobot_soco_lite_servo
                  *************************/
+                neobot_soco_lite_servo_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_soco_lite_servo_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_soco_lite_servo_title',
+                    },
+                    class: 'neobot_soco_lite_servo',
+                    isNotFor: ['NeobotSocoLite'],
+                    events: {},
+                },
                 neobot_soco_lite_servo_init: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
