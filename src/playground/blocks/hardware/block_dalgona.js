@@ -167,82 +167,86 @@ Entry.Dalgona.setLanguage = function() {
                 dalgona_motor_title:'달고나 모터 블럭',
                 dalgona_stepmotor_title:'달고나 스텝모터 블럭',
                 dalgona_joystick_title:'달고나 조이스틱 블럭',
-                dalgona_toggle_on: '달고나 LED 켜기',
-                dalgona_toggle_off: '달고나 LED 끄기',
-                dalgona_lcd_first_line: '달고나 첫 번째',
-                dalgona_lcd_seconds_line: '달고나 두 번째',
-                dalgona_get_analog_value: '달고나 아날로그 %1 핀 읽기',
-                dalgona_get_light_value: '달고나 조도센서(AO %1)값',
-                dalgona_get_moisture_value: '달고나 토양수분센서(AO %1)값',
-                dalgona_get_sound_value: '달고나 사운드센서(AO %1)값',
-                dalgona_get_infrared_value: '달고나 적외선센서(AO %1)값',
-                dalgona_get_pullup: '달고나 풀업 저항 사용 버튼 %1 핀 눌림 상태',
-                dalgona_get_button: '달고나 버튼 %1 핀 눌림 상태',
-                dalgona_get_analog_mapping: '달고나 아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
-                dalgona_mapping1: '달고나 %1 값을 %2 ~ %3 사이로 제한한 값',
-                dalgona_mapping2: '달고나 %1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
-                dalgona_get_digital_ultrasonic: '달고나 초음파 Trig %1 핀 Echo %2 핀 센서 값',
-                dalgona_get_digital: '달고나 디지털 %1 핀 읽기',
-                dalgona_get_digital_toggle: '달고나 디지털 %1 핀 센서 값',
-                dalgona_get_digital_pir: '달고나 PIR %1 핀 센서 값',
-                dalgona_set_digital_toggle: '달고나 디지털 %1 핀 %2 %3',
-                dalgona_set_led_toggle: '달고나 LED %1 핀 %2 %3',
-                dalgona_set_digital_pwm: '달고나 LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
-                dalgona_set_digital_rgbled: '달고나 RGB LED (R %1 핀, G %2 핀, B %3 핀) 색 (R: %4, G: %5, B: %6) 출력 %7',
-                dalgona_set_digital_servo: '달고나 서보 모터 %1 핀 %2 각도로 회전 %3',
-                dalgona_set_digital_servo2: "달고나 서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5",
-                dalgona_set_digital_buzzer_toggle: '달고나 피에조부저 %1 핀 %2 %3',
-                dalgona_set_digital_buzzer_volume: '달고나 피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
-                dalgona_set_digital_buzzer: '달고나 피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
-                dalgona_set_digital_dcmotor: '달고나 DC모터 %1핀 %2 %3',
-                dalgona_set_analog_dcmotor: '달고나 DC모터(PWM %1 핀) 세기 %2 출력 (0 ~ 255) %3',
-                dalgona_set_neopixel_init: '달고나 네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
-                dalgona_set_neopixel_bright: '달고나 네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
-                dalgona_set_neopixel: '달고나 네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
-                dalgona_set_neopixel_all: '달고나 네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
-                dalgona_set_neopixel_clear: '달고나 네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
-                dalgona_set_dotmatrix_init: '달고나 8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
-                dalgona_set_dotmatrix_bright: '달고나 도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
-                dalgona_set_dotmatrix: '달고나 도트매트릭스 LED %1 그리기 %2',
-                dalgona_set_dotmatrix_emoji: '달고나 도트매트릭스 LED %1 그리기 %2',
-                dalgona_set_dotmatrix_clear: '달고나 도트매트릭스 LED 지우기 %1',
-                dalgona_lcd_init: '달고나 I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
-                dalgona_get_lcd_row: '달고나 %1',
-                dalgona_get_lcd_col: '달고나 %1',
-                dalgona_module_digital_lcd: '달고나 LCD화면 %1 열 %2 행 부터 %3 출력 %4',
-                dalgona_lcd_clear: '달고나 LCD 화면 지우기 %1',
-                dalgona_get_dht: '달고나 DHT11 온습도센서(out %1)의 %2값',
+                dalgona_LCD_title:'달고나 LCD 블럭',
+                dalgona_mp3_title:'달고나 mp3 블럭',
+                dalgona_HX711_title:'달고나 HX711 로드셀 블럭',
+                dalgona_sensor_title:'달고나 센서 블럭',
+                dalgona_toggle_on: 'LED 켜기',
+                dalgona_toggle_off: 'LED 끄기',
+                dalgona_lcd_first_line: '달고나 :: 첫 번째',
+                dalgona_lcd_seconds_line: '달고나 :: 두 번째',
+                dalgona_get_analog_value: '달고나 :: 아날로그 %1 핀 읽기',
+                dalgona_get_light_value: '달고나 :: 조도센서(AO %1)값',
+                dalgona_get_moisture_value: '달고나 :: 토양수분센서(AO %1)값',
+                dalgona_get_sound_value: '달고나 :: 사운드센서(AO %1)값',
+                dalgona_get_infrared_value: '달고나 :: 적외선센서(AO %1)값',
+                dalgona_get_pullup: '달고나 :: 풀업 저항 사용 버튼 %1 핀 눌림 상태',
+                dalgona_get_button: '달고나 :: 버튼 %1 핀 눌림 상태',
+                dalgona_get_analog_mapping: '달고나 :: 아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값',
+                dalgona_mapping1: '달고나 :: %1 값을 %2 ~ %3 사이로 제한한 값',
+                dalgona_mapping2: '달고나 :: %1 값을 %2 ~ %3 범위에서 %4 ~ %5 범위로 변환',
+                dalgona_get_digital_ultrasonic: '달고나 :: 초음파 Trig %1 핀 Echo %2 핀 센서 값',
+                dalgona_get_digital: '달고나 :: 디지털 %1 핀 읽기',
+                dalgona_get_digital_toggle: '달고나 :: 디지털 %1 핀 센서 값',
+                dalgona_get_digital_pir: '달고나 :: PIR %1 핀 센서 값',
+                dalgona_set_digital_toggle: '달고나 :: 디지털 %1 핀 %2 %3',
+                dalgona_set_led_toggle: '달고나 :: LED %1 핀 %2 %3',
+                dalgona_set_digital_pwm: '달고나 :: LED (PWM %1 핀)밝기 %2 출력 (0 ~ 255)%3',
+                dalgona_set_digital_rgbled: '달고나 :: RGB LED (R %1 핀, G %2 핀, B %3 핀) 색 (R: %4, G: %5, B: %6) 출력 %7',
+                dalgona_set_digital_servo: '달고나 :: 서보 모터 %1 핀 %2 각도로 회전 %3',
+                dalgona_set_digital_servo2: "달고나 :: 서보 모터 %1 핀 %2 ~ %3 각도로 %4 초 동안 회전 %5",
+                dalgona_set_digital_buzzer_toggle: '달고나 :: 피에조부저 %1 핀 %2 %3',
+                dalgona_set_digital_buzzer_volume: '달고나 :: 피에조부저 (PWM %1 핀) 음량 %2 출력 (0 ~ 255) %3',
+                dalgona_set_digital_buzzer: '달고나 :: 피에조부저 %1 핀 %2 %3 음 %4 박자 연주 %5',
+                dalgona_set_digital_dcmotor: '달고나 :: DC모터 %1핀 %2 %3',
+                dalgona_set_analog_dcmotor: '달고나 :: DC모터(PWM %1 핀) 세기 %2 출력 (0 ~ 255) %3',
+                dalgona_set_neopixel_init: '달고나 :: 네오픽셀 LED 시작하기 설정 ( %1 핀에 %2 개의 LED 연결) %3',
+                dalgona_set_neopixel_bright: '달고나 :: 네오픽셀 LED ( %1 핀) 밝기 %2 으로 설정 (0 ~ 255) %3',
+                dalgona_set_neopixel: '달고나 :: 네오픽셀 LED ( %1 핀) %2 번째 LED 색 %3 출력 %4',
+                dalgona_set_neopixel_all: '달고나 :: 네오픽셀 LED ( %1 핀) 모든 LED 색 %2 출력 %3',
+                dalgona_set_neopixel_clear: '달고나 :: 네오픽셀 LED ( %1 핀) 모든 LED 끄기 %2',
+                dalgona_set_dotmatrix_init: '달고나 :: 8x8 도트매트릭스 시작하기 설정 (DIN %1, CLK %2, CS %3) %4',
+                dalgona_set_dotmatrix_bright: '달고나 :: 도트매트릭스 밝기 %1 으로 설정 (0 ~ 8) %2',
+                dalgona_set_dotmatrix: '달고나 :: 도트매트릭스 LED %1 그리기 %2',
+                dalgona_set_dotmatrix_emoji: '달고나 :: 도트매트릭스 LED %1 그리기 %2',
+                dalgona_set_dotmatrix_clear: '달고나 :: 도트매트릭스 LED 지우기 %1',
+                dalgona_lcd_init: '달고나 :: I2C LCD 시작하기 설정 (주소 %1 ,열 %2, 행 %3) %4',
+                dalgona_get_lcd_row: '달고나 :: %1',
+                dalgona_get_lcd_col: '달고나 :: %1',
+                dalgona_module_digital_lcd: '달고나 :: LCD화면 %1 열 %2 행 부터 %3 출력 %4',
+                dalgona_lcd_clear: '달고나 :: LCD 화면 지우기 %1',
+                dalgona_get_dht: '달고나 :: DHT11 온습도센서(out %1)의 %2값',
                 //dalgona_get_dht_temp_value: 'DHT11 온습도센서(out %1)의 온도(°C)값',
                 //dalgona_get_dht_humi_value: 'DHT11 온습도센서(out %1)의 습도(%)값',
 
-                dalgona_set_mp3_init: '달고나 mp3 초기화 ( tx: %1, rx: %2 ) %3',
-                dalgona_set_mp3_play: '달고나 mp3 %1 번 파일 재생 %2',
-                dalgona_set_mp3_play2: '달고나 mp3 %1 번 파일 %2 초 동안 재생 %3',
-                dalgona_set_mp3_vol: '달고나 mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
-                dalgona_get_analog_temp_value: '달고나 DHT11 포트 %1의 %2 센서 값',
+                dalgona_set_mp3_init: '달고나 :: mp3 초기화 ( tx: %1, rx: %2 ) %3',
+                dalgona_set_mp3_play: '달고나 :: mp3 %1 번 파일 재생 %2',
+                dalgona_set_mp3_play2: '달고나 :: mp3 %1 번 파일 %2 초 동안 재생 %3',
+                dalgona_set_mp3_vol: '달고나 :: mp3 볼륨 %1 으로 설정 (0 ~ 30) %2',
+                dalgona_get_analog_temp_value: '달고나 :: DHT11 포트 %1의 %2 센서 값',
 
-                dalgona_load_init: '달고나 HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
-                dalgona_load_scale: '달고나 HX711 로드셀 보정하기 %1 %2',
-                dalgona_load_value: '달고나 HX711 로드셀 값',
+                dalgona_load_init: '달고나 :: HX711 로드셀 시작하기 설정 (DOUT %1, SCK %2) %3',
+                dalgona_load_scale: '달고나 :: HX711 로드셀 보정하기 %1 %2',
+                dalgona_load_value: '달고나 :: HX711 로드셀 값',
 
-                dalgona_get_dust: '달고나 미세먼지센서 (LED %1, AO %2) 값',
+                dalgona_get_dust: '달고나 :: 미세먼지센서 (LED %1, AO %2) 값',
 
-                dalgona_rfid_init: '달고나 RFID 시작하기 설정 (SS %1, RST %2) %3',
-                dalgona_is_rfid_tapped: '달고나 RFID 카드가 인식되었는가?',
-                dalgona_get_rfid_value: '달고나 RFID 카드 값',
-                dalgona_joy_init: '달고나 %1 조이스틱 시작하기 설정 (X AO %2, Y AO %3, Z %4) %5',
-                dalgona_get_joy_x: '달고나 %1 조이스틱 X값',
-                dalgona_get_joy_y: '달고나 %1 조이스틱 y값',
-                dalgona_get_joy_z: '달고나 %1 조이스틱 버튼 눌림 상태',
-                dalgona_get_joy_move: '달고나 %1 조이스틱이 %2 방향으로 움직였을 때',
+                dalgona_rfid_init: '달고나 :: RFID 시작하기 설정 (SS %1, RST %2) %3',
+                dalgona_is_rfid_tapped: '달고나 :: RFID 카드가 인식되었는가?',
+                dalgona_get_rfid_value: '달고나 :: RFID 카드 값',
+                dalgona_joy_init: '달고나 :: %1 조이스틱 시작하기 설정 (X AO %2, Y AO %3, Z %4) %5',
+                dalgona_get_joy_x: '달고나 :: %1 조이스틱 X값',
+                dalgona_get_joy_y: '달고나 :: %1 조이스틱 y값',
+                dalgona_get_joy_z: '달고나 :: %1 조이스틱 버튼 눌림 상태',
+                dalgona_get_joy_move: '달고나 :: %1 조이스틱이 %2 방향으로 움직였을 때',
 
-                dalgona_get_mlx: '달고나 mlx90614 비접촉 온도센서 %1값',
+                dalgona_get_mlx: '달고나 :: mlx90614 비접촉 온도센서 %1값',
 
-                dalgona_step_init: '달고나 %1 스텝모터 시작하기 설정 (IN1 %2, IN2 %3, IN3 %4, IN4 %5) %6',
-                dalgona_step_speed: '달고나 %1 스텝모터 속도를 %2 로 설정하기 (0 ~ 20) %3',
-                dalgona_step_rotate: '달고나 %1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
-                dalgona_step_rotate2: '달고나 %1 스텝모터 %2 으로 %3 도 회전하기 %4',
-                dalgona_step_rotate3: '달고나 %1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
+                dalgona_step_init: '달고나 :: %1 스텝모터 시작하기 설정 (IN1 %2, IN2 %3, IN3 %4, IN4 %5) %6',
+                dalgona_step_speed: '달고나 :: %1 스텝모터 속도를 %2 로 설정하기 (0 ~ 20) %3',
+                dalgona_step_rotate: '달고나 :: %1 스텝모터 %2 으로 %3 바퀴 회전하기 %4',
+                dalgona_step_rotate2: '달고나 :: %1 스텝모터 %2 으로 %3 도 회전하기 %4',
+                dalgona_step_rotate3: '달고나 :: %1 스텝모터 %2 으로 %3 초 동안 회전하기 %4',
 
                 // dalgona_get_digital_bluetooth: '블루투스 RX 2 핀 데이터 값',
                 // dalgona_module_digital_bluetooth: '블루투스 TX 3 핀에 %1 데이터 보내기 %2',
@@ -263,6 +267,11 @@ Entry.Dalgona.setLanguage = function() {
                 dalgona_motor_title:'달고나 모터 블럭',
                 dalgona_stepmotor_title:'달고나 스텝모터 블럭',
                 dalgona_joystick_title:'달고나 조이스틱 블럭',
+                dalgona_LCD_title:'달고나 LCD 블럭',
+                dalgona_mp3_title:'달고나 mp3 블럭',
+                dalgona_HX711_title:'달고나 HX711 로드셀 블럭',
+                dalgona_sensor_title:'달고나 센서 블럭',
+
                 dalgona_toggle_on: 'on',
                 dalgona_toggle_off: 'off',
                 dalgona_lcd_first_line: 'first',
@@ -340,7 +349,10 @@ Entry.Dalgona.blockMenuBlocks = [
 
     'dalgona_analog_title',
     'dalgona_get_analog_value',
-
+    'dalgona_get_analog_mapping',
+    'dalgona_mapping1',
+    'dalgona_mapping2',
+    
     'dalgona_pwm_title',
     'dalgona_set_digital_pwm',
     'dalgona_set_digital_rgbled',
@@ -394,11 +406,25 @@ Entry.Dalgona.blockMenuBlocks = [
     'dalgona_get_joy_z',
     'dalgona_get_joy_move',
 
+    'dalgona_LCD_title',
+    'dalgona_lcd_init',
+    'dalgona_module_digital_lcd',
+    'dalgona_get_lcd_row',
+    'dalgona_get_lcd_col',
+    'dalgona_lcd_clear',
 
-    
-    'dalgona_get_analog_mapping',
-    'dalgona_mapping1',
-    'dalgona_mapping2',
+    'dalgona_mp3_title',
+    'dalgona_set_mp3_init',
+    'dalgona_set_mp3_vol',
+    'dalgona_set_mp3_play',
+    'dalgona_set_mp3_play2',
+
+    'dalgona_HX711_title',
+    'dalgona_load_init',
+    'dalgona_load_scale',
+    'dalgona_load_value',
+
+    'dalgona_sensor_title',
 
     'dalgona_get_dust',
     'dalgona_get_digital_toggle',
@@ -412,20 +438,6 @@ Entry.Dalgona.blockMenuBlocks = [
     //'dalgona_get_dht_humi_value',
     'dalgona_get_pullup',
     'dalgona_get_button',
-
-    'dalgona_lcd_init',
-    'dalgona_module_digital_lcd',
-    'dalgona_get_lcd_row',
-    'dalgona_get_lcd_col',
-    'dalgona_lcd_clear',
-    'dalgona_set_mp3_init',
-    'dalgona_set_mp3_vol',
-    'dalgona_set_mp3_play',
-    'dalgona_set_mp3_play2',
-    'dalgona_load_init',
-    'dalgona_load_scale',
-    'dalgona_load_value',
-
     'dalgona_get_mlx',
     // 'dalgona_get_digital_bluetooth',
     // 'dalgona_module_digital_bluetooth',
@@ -583,12 +595,12 @@ Entry.Dalgona.getBlocks = function() {
                 },
             },
             color: EntryStatic.colorSet.common.TRANSPARENT,
-            fontColor: '#000000',
+            fontColor: '#d1702a',
             params: [
                 {
                     type: 'Text',
                     text: Lang.template.dalgona_ultrasonic_title,
-                    color: '#000000',
+                    color: '#d1702a',
                     align: 'left',
                 },
             ],
@@ -746,6 +758,106 @@ Entry.Dalgona.getBlocks = function() {
                 type: 'dalgona_joystick_title',
             },
             class: 'joystick',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_LCD_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_LCD_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_LCD_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_LCD_title',
+            },
+            class: 'LCD',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_mp3_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_mp3_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_mp3_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_mp3_title',
+            },
+            class: 'mp3',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_HX711_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_HX711_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_HX711_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_HX711_title',
+            },
+            class: 'HX711',
+            isNotFor: ['Dalgona'],
+            events: {},
+        },
+        dalgona_sensor_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: this.getOffsetX(Lang.template.dalgona_sensor_title),
+                    offsetY: 3,
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#d1702a',
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.dalgona_sensor_title,
+                    color: '#d1702a',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'dalgona_sensor_title',
+            },
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             events: {},
         },
@@ -2082,7 +2194,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -2120,7 +2232,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -2288,7 +2400,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -2324,7 +2436,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
@@ -2360,7 +2472,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2406,7 +2518,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
@@ -2799,7 +2911,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1');
@@ -2898,7 +3010,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -2941,7 +3053,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -3054,7 +3166,7 @@ Entry.Dalgona.getBlocks = function() {
                 params: [
                     {
                         type: 'dalgona_list_digital_basic',
-                        params: ['5'],
+                        params: ['13'],
                     },
                     {
                         type: 'dalgona_list_digital_toggle',
@@ -3844,7 +3956,7 @@ Entry.Dalgona.getBlocks = function() {
                 COL: 1,
                 LINE: 2,
             },
-            class: 'no',
+            class: 'LCD',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var list = script.getNumberValue('LIST');
@@ -3937,7 +4049,7 @@ Entry.Dalgona.getBlocks = function() {
                 ROW: 1,
                 STRING: 2,
             },
-            class: 'no',
+            class: 'LCD',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var row = script.getNumberValue('ROW');
@@ -3997,7 +4109,7 @@ Entry.Dalgona.getBlocks = function() {
                 params: [],
                 type: 'dalgona_lcd_clear',
             },
-            class: 'no',
+            class: 'LCD',
             isNotFor: ['Dalgona'],
             func(sprite, script) {
                 if (!script.isStart) {
@@ -4073,7 +4185,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT: 0,
                 DHT_SELECT: 1,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
@@ -4149,7 +4261,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'no',
+            class: 'mp3',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 tx = script.getNumberValue('PORT1');
@@ -4223,7 +4335,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'no',
+            class: 'mp3',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM');
@@ -4294,7 +4406,7 @@ Entry.Dalgona.getBlocks = function() {
                 NUM: 0,
                 TIME: 1,
             },
-            class: 'no',
+            class: 'mp3',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM');
@@ -4376,7 +4488,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 VOL: 0,
             },
-            class: 'no',
+            class: 'mp3',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var vol = script.getNumberValue('VOL');
@@ -4463,7 +4575,7 @@ Entry.Dalgona.getBlocks = function() {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'no',
+            class: 'HX711',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
@@ -4540,7 +4652,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 NUM: 0,
             },
-            class: 'no',
+            class: 'HX711',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var num = script.getNumberValue('NUM', script);
@@ -4593,7 +4705,7 @@ Entry.Dalgona.getBlocks = function() {
                 type: 'dalgona_load_value',
             },
             paramsKeyMap: {},
-            class: 'no',
+            class: 'HX711',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 if (!Entry.hw.sendQueue['SET']) {
@@ -5885,7 +5997,7 @@ Entry.Dalgona.getBlocks = function() {
                 VALUE1: 1,
                 STRING: 2,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             func: function(sprite, script) {
                 var port = 0;
@@ -6137,7 +6249,7 @@ Entry.Dalgona.getBlocks = function() {
             paramsKeyMap: {
                 MLX_SELECT: 0,
             },
-            class: 'no',
+            class: 'sensor',
             isNotFor: ['Dalgona'],
             
             func: function(sprite, script) {
