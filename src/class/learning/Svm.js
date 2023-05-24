@@ -4,6 +4,7 @@ import _max from 'lodash/max';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
 import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import Utils from './Utils';
 const { callApi } = require('../../util/common');
 const SVM = require('libsvm-js/asm');
@@ -168,7 +169,7 @@ class Svm extends LearningBase {
         const { select = [[0], [1]], data: table, fields } = data;
         const [attr, predict] = select;
         const filtered = table.filter(
-            (row) => !select[0].some((selected) => !_toNumber(row[selected]))
+            (row) => !select[0].some((selected) => _isNaN(_toNumber(row[selected])))
         );
         const dataArray = filtered
             .map((row) => ({

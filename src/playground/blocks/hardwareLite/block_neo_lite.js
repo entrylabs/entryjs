@@ -310,13 +310,14 @@
         }
 
         setZero() {
-            /*if (Entry.Lite) {
-                Entry.hwLite.update();
-            }*/
             if (Entry.hwLite) {
                 const blockId = this.generateBlockId();
-                const pdu = this.makePdu([FrameCode.BASIC, PduCode.CONTROLLER_COMMAND, blockId, 0x04]);
-                // Entry.hwLite.writer.write(Buffer.from(pdu));
+                const pdu = this.makePdu([
+                    FrameCode.BASIC,
+                    PduCode.CONTROLLER_COMMAND,
+                    blockId,
+                    0x04,
+                ]);
                 this.executeList = [
                     {
                         blockId,
@@ -467,7 +468,6 @@
                             this.pendingResponseList[responseData.blockId] = 'pending';
                         }
                         if (responseData.result === 0x01) {
-                            // this.pendingResponseList[responseData.blockId] = 'completed';
                             delete this.pendingResponseList[responseData.blockId];
                         }
                     }
@@ -659,6 +659,20 @@
             });
         }
 
+        requestExt2Command(blockId, type, params) {
+            if (this.pendingResponseList[blockId]) {
+                delete this.pendingResponseList[blockId];
+            }
+            this.pendingResponseList[blockId] = 'executed';
+            const command = this.makeCommandExt2(blockId, type, params);
+            if (!command) return;
+            const pdu = this.makePdu(command);
+            this.executeList.push({
+                blockId,
+                pdu,
+            });
+        }
+
         generateBlockId() {
             this.seqBlockId += 1;
             if (this.seqBlockId > 255) {
@@ -716,7 +730,7 @@
 
                         // led
                         neo_lite_led_title: 'LED',
-                        neo_lite_led_on: 'LED 켜기 %1 %2 %3',
+                        neo_lite_led_on: 'LED 켜기 %1 %2 %3 %4',
                         neo_lite_led_blink: 'LED 깜빡이기 %1 %2 %3 %4',
                         neo_lite_led_off: 'LED 끄기 %1 %2',
 
@@ -1110,21 +1124,19 @@
                         neo_lite_buzzer_quarter_note: '4분 음표',
                         neo_lite_buzzer_8th_note: '8분 음표',
 
-                        neo_lite_lcd_image_1: '1',
-                        neo_lite_lcd_image_2: '2',
-                        neo_lite_lcd_image_3: '3',
-                        neo_lite_lcd_image_4: '4',
-                        neo_lite_lcd_image_5: '5',
-                        neo_lite_lcd_image_6: '6',
-                        neo_lite_lcd_image_7: '7',
-                        neo_lite_lcd_image_8: '8',
-                        neo_lite_lcd_image_9: '9',
-                        neo_lite_lcd_image_10: '10',
-                        neo_lite_lcd_image_11: '11',
-                        neo_lite_lcd_image_12: '12',
-                        neo_lite_lcd_image_13: '13',
-                        neo_lite_lcd_image_14: '14',
-                        neo_lite_lcd_image_15: '15',
+                        neo_lite_lcd_image_1: '화남',
+                        neo_lite_lcd_image_2: '어지러움',
+                        neo_lite_lcd_image_3: '똑똑함',
+                        neo_lite_lcd_image_4: '활기참',
+                        neo_lite_lcd_image_5: '뽀뽀',
+                        neo_lite_lcd_image_6: '사랑해',
+                        neo_lite_lcd_image_7: '윙크',
+                        neo_lite_lcd_image_8: '폭풍눈물',
+                        neo_lite_lcd_image_9: '졸림',
+                        neo_lite_lcd_image_10: '미소',
+                        neo_lite_lcd_image_11: '깜찍함',
+                        neo_lite_lcd_image_12: '의심',
+                        neo_lite_lcd_image_13: '못마땅',
                     },
                 },
                 en: {
@@ -1141,7 +1153,8 @@
 
                         // servo
                         neo_lite_servo_title: 'Servo motor',
-                        neo_lite_servo_reset: 'Reset the current position of %1 servo motor to 0 degree %2',
+                        neo_lite_servo_reset:
+                            'Reset the current position of %1 servo motor to 0 degree %2',
                         neo_lite_servo_angle: 'Change servo angle %1 %2 %3 %4',
                         neo_lite_servo_angle_var: 'Change servo angle %1 %2 %3 %4',
                         neo_lite_servo_angle_wait: 'Wait to change servo angle %1 %2 %3 %4',
@@ -1176,7 +1189,7 @@
 
                         // led
                         neo_lite_led_title: 'LED',
-                        neo_lite_led_on: 'Turn on the LED %1 %2 %3',
+                        neo_lite_led_on: 'Turn on the LED %1 %2 %3 %4',
                         neo_lite_led_blink: 'Blink the LED %1 %2 %3 %4',
                         neo_lite_led_off: 'Turn off the LED %1 %2',
 
@@ -1184,7 +1197,8 @@
                         neo_lite_color_led_title: 'Color LED',
                         neo_lite_color_led_on: 'Turn on the color LED %1 %2 %3 %4',
                         neo_lite_color_led_off: 'Turn off the color LED %1 %2',
-                        neo_lite_color_led_on_with_sensor: 'Turn on the color LED %2 with color sensor %1 %3',
+                        neo_lite_color_led_on_with_sensor:
+                            'Turn on the color LED %2 with color sensor %1 %3',
 
                         // set output
                         neo_lite_set_output_title: 'Set output',
@@ -1265,14 +1279,14 @@
                         neo_lite_duration_c: 'constantly',
                         neo_lite_duration_0: '0 second',
                         neo_lite_duration_1: '1 second',
-                        neo_lite_duration_2: '2 second',
-                        neo_lite_duration_3: '3 second',
-                        neo_lite_duration_4: '4 second',
-                        neo_lite_duration_5: '5 second',
-                        neo_lite_duration_6: '6 second',
-                        neo_lite_duration_7: '7 second',
-                        neo_lite_duration_8: '8 second',
-                        neo_lite_duration_9: '9 second',
+                        neo_lite_duration_2: '2 seconds',
+                        neo_lite_duration_3: '3 seconds',
+                        neo_lite_duration_4: '4 seconds',
+                        neo_lite_duration_5: '5 seconds',
+                        neo_lite_duration_6: '6 seconds',
+                        neo_lite_duration_7: '7 seconds',
+                        neo_lite_duration_8: '8 seconds',
+                        neo_lite_duration_9: '9 seconds',
 
                         neo_lite_compare_gt: '≥',
                         neo_lite_compare_g: '>',
@@ -1467,10 +1481,10 @@
                         neo_lite_led_brightness_100: '100%',
 
                         neo_lite_led_blink_speed_1: '1 step',
-                        neo_lite_led_blink_speed_2: '2 step',
-                        neo_lite_led_blink_speed_3: '3 step',
-                        neo_lite_led_blink_speed_4: '4 step',
-                        neo_lite_led_blink_speed_5: '5 step',
+                        neo_lite_led_blink_speed_2: '2 steps',
+                        neo_lite_led_blink_speed_3: '3 steps',
+                        neo_lite_led_blink_speed_4: '4 steps',
+                        neo_lite_led_blink_speed_5: '5 steps',
 
                         neo_lite_set_output_value_0: '0',
                         neo_lite_set_output_value_5: '5',
@@ -1570,21 +1584,19 @@
                         neo_lite_buzzer_quarter_note: 'a quarter note',
                         neo_lite_buzzer_8th_note: 'a eighth note',
 
-                        neo_lite_lcd_image_1: '1',
-                        neo_lite_lcd_image_2: '2',
-                        neo_lite_lcd_image_3: '3',
-                        neo_lite_lcd_image_4: '4',
-                        neo_lite_lcd_image_5: '5',
-                        neo_lite_lcd_image_6: '6',
-                        neo_lite_lcd_image_7: '7',
-                        neo_lite_lcd_image_8: '8',
-                        neo_lite_lcd_image_9: '9',
-                        neo_lite_lcd_image_10: '10',
-                        neo_lite_lcd_image_11: '11',
-                        neo_lite_lcd_image_12: '12',
-                        neo_lite_lcd_image_13: '13',
-                        neo_lite_lcd_image_14: '14',
-                        neo_lite_lcd_image_15: '15',
+                        neo_lite_lcd_image_1: 'angry',
+                        neo_lite_lcd_image_2: 'dizzy',
+                        neo_lite_lcd_image_3: 'smart',
+                        neo_lite_lcd_image_4: 'lively',
+                        neo_lite_lcd_image_5: 'kiss',
+                        neo_lite_lcd_image_6: 'lovely',
+                        neo_lite_lcd_image_7: 'wink',
+                        neo_lite_lcd_image_8: 'cry',
+                        neo_lite_lcd_image_9: 'sleepy',
+                        neo_lite_lcd_image_10: 'smiley',
+                        neo_lite_lcd_image_11: 'cute',
+                        neo_lite_lcd_image_12: 'doubt',
+                        neo_lite_lcd_image_13: 'bad',
                     },
                 }, //
             };
@@ -1726,8 +1738,11 @@
                             const speed = script.getStringField('SPEED', script);
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
-                            if (speed === 'IN1' || speed === 'IN2' || speed === 'IN3') {
-                                this.requestExtCommand(blockId, NeoBlockType.MOTOR_MOVE, [dc, speed]);
+                            if (speed.indexOf('IN') >= 0) {
+                                this.requestExtCommand(blockId, NeoBlockType.MOTOR_MOVE, [
+                                    dc,
+                                    speed,
+                                ]);
                             } else {
                                 this.requestCommand(blockId, NeoBlockType.MOTOR_MOVE, [dc, speed]);
                             }
@@ -1805,13 +1820,16 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const speedL = script.getNumberValue('SPEED_L', script);
                             const speedR = script.getNumberValue('SPEED_R', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
-                            this.requestCommand(blockId, NeoBlockType.MOTOR_MOVE_BOTH, [speedL, speedR]);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                            this.requestCommand(blockId, NeoBlockType.MOTOR_MOVE_BOTH, [
+                                speedL,
+                                speedR,
+                            ]);
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -1911,10 +1929,16 @@
                             const speed = script.getStringField('SPEED', script);
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
-                            if (speed === 'IN1' || speed === 'IN2' || speed === 'IN3') {
-                                this.requestExtCommand(blockId, NeoBlockType.ROBOT_MOVE, [direction, speed]);
+                            if (speed.indexOf('IN') >= 0) {
+                                this.requestExtCommand(blockId, NeoBlockType.ROBOT_MOVE, [
+                                    direction,
+                                    speed,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [direction, speed]);
+                                this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [
+                                    direction,
+                                    speed,
+                                ]);
                             }
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.block_id = blockId;
@@ -1982,10 +2006,20 @@
                     class: 'neo_lite_motor',
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
-                        const dc = script.getStringValue('DC', script);
-                        const blockId = this.generateBlockId();
-                        this.requestCommand(blockId, NeoBlockType.MOTOR_STOP, [dc]);
-                        return script.callReturn();
+                        if (!script.exec_phase) {
+                            const dc = script.getStringValue('DC', script);
+                            const blockId = this.generateBlockId();
+                            script.block_id = blockId;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                            this.requestCommand(blockId, NeoBlockType.MOTOR_STOP, [dc]);
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                            if (!this.pendingResponseList[script.block_id]) {
+                                delete script.block_id;
+                                delete script.exec_phase;
+                                return script.callReturn();
+                            }
+                        }
+                        return script;
                     },
                 },
                 neo_lite_robot_stop: {
@@ -2011,9 +2045,19 @@
                     class: 'neo_lite_motor',
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
-                        const blockId = this.generateBlockId();
-                        this.requestCommand(blockId, NeoBlockType.ROBOT_STOP, []);
-                        return script.callReturn();
+                        if (!script.exec_phase) {
+                            const blockId = this.generateBlockId();
+                            script.block_id = blockId;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP, []);
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                            if (!this.pendingResponseList[script.block_id]) {
+                                delete script.block_id;
+                                delete script.exec_phase;
+                                return script.callReturn();
+                            }
+                        }
+                        return script;
                     },
                 },
                 /**
@@ -2244,22 +2288,36 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const output = script.getStringField('OUTPUT', script);
                             const angle = script.getStringField('ANGLE', script);
                             const speed = script.getStringField('SPEED', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
-                            if (angle === 'IN1' || angle === 'IN2' || angle === 'IN3') {
-                                if (speed === 'IN1' || angle === 'IN2' || angle === 'IN3') {
-                                    this.requestExtCommand(blockId, NeoBlockType.SERVO_ANGLE, [output, angle, speed]);
-                                } else {
-                                    this.requestExtCommand(blockId, NeoBlockType.SERVO_ANGLE, [output, angle, speed]);
-                                }
+                            const isExt2 = angle.indexOf('IN') >= 0 && speed.indexOf('IN') >= 0;
+                            if (isExt2) {
+                                this.requestExt2Command(blockId, NeoBlockType.SERVO_ANGLE, [
+                                    output,
+                                    angle,
+                                    speed,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE, [output, angle, speed]);
+                                const isExt1 = angle.indexOf('IN') >= 0 || speed.indexOf('IN') >= 0;
+                                if (isExt1) {
+                                    this.requestExtCommand(blockId, NeoBlockType.SERVO_ANGLE, [
+                                        output,
+                                        angle,
+                                        speed,
+                                    ]);
+                                } else {
+                                    this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE, [
+                                        output,
+                                        angle,
+                                        speed,
+                                    ]);
+                                }
                             }
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -2350,8 +2408,12 @@
                             const speed = script.getStringField('SPEED', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
-                            this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE, [output, angle, speed]);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                            this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE, [
+                                output,
+                                angle,
+                                speed,
+                            ]);
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -2512,22 +2574,28 @@
                             const speed = script.getStringField('SPEED', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
-                            if (angle === 'IN1' || angle === 'IN2' || angle === 'IN3') {
-                                if (speed === 'IN1' || angle === 'IN2' || angle === 'IN3') {
+                            const isExt2 = angle.indexOf('IN') >= 0 && speed.indexOf('IN') >= 0;
+                            if (isExt2) {
+                                this.requestExt2Command(blockId, NeoBlockType.SERVO_ANGLE_WAIT, [
+                                    output,
+                                    angle,
+                                    speed,
+                                ]);
+                            } else {
+                                const isExt1 = angle.indexOf('IN') >= 0 || speed.indexOf('IN') >= 0;
+                                if (isExt1) {
                                     this.requestExtCommand(blockId, NeoBlockType.SERVO_ANGLE_WAIT, [
                                         output,
                                         angle,
                                         speed,
                                     ]);
                                 } else {
-                                    this.requestExtCommand(blockId, NeoBlockType.SERVO_ANGLE_WAIT, [
+                                    this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE_WAIT, [
                                         output,
                                         angle,
                                         speed,
                                     ]);
                                 }
-                            } else {
-                                this.requestCommand(blockId, NeoBlockType.SERVO_ANGLE_WAIT, [output, angle, speed]);
                             }
                         } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
@@ -2613,18 +2681,26 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const output = script.getStringField('OUTPUT', script);
                             const direction = script.getStringField('DIRECTION', script);
                             const speed = script.getStringField('SPEED', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
                             if (speed.indexOf('IN') >= 0) {
-                                this.requestExtCommand(blockId, NeoBlockType.SERVO_ROTATE, [output, direction, speed]);
+                                this.requestExtCommand(blockId, NeoBlockType.SERVO_ROTATE, [
+                                    output,
+                                    direction,
+                                    speed,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.SERVO_ROTATE, [output, direction, speed]);
+                                this.requestCommand(blockId, NeoBlockType.SERVO_ROTATE, [
+                                    output,
+                                    direction,
+                                    speed,
+                                ]);
                             }
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -2672,12 +2748,12 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const output = script.getStringValue('OUTPUT', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
                             this.requestCommand(blockId, NeoBlockType.SERVO_STOP, [output]);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -2774,10 +2850,14 @@
                             const speed = script.getStringField('SPEED', script);
                             const blockId = this.generateBlockId();
                             const duration = script.getStringValue('DURATION', script);
-                            if (speed === 'IN1' || speed === 'IN2' || speed === 'IN3') {
-                                this.requestExtCommand(blockId, NeoBlockType.LINE_TRACER_START, [speed]);
+                            if (speed.indexOf('IN') >= 0) {
+                                this.requestExtCommand(blockId, NeoBlockType.LINE_TRACER_START, [
+                                    speed,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.LINE_TRACER_START, [speed]);
+                                this.requestCommand(blockId, NeoBlockType.LINE_TRACER_START, [
+                                    speed,
+                                ]);
                             }
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.block_id = blockId;
@@ -3008,9 +3088,13 @@
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
                             if (speed.indexOf('IN') >= 0) {
-                                this.requestExtCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [speed]);
+                                this.requestExtCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [
+                                    speed,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [speed]);
+                                this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [
+                                    speed,
+                                ]);
                             }
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.block_id = blockId;
@@ -3104,20 +3188,25 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const sensor = script.getNumberField('SENSOR', script);
                             const speed = script.getStringField('SPEED', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
                             if (speed.indexOf('IN') >= 0) {
-                                this.requestExtCommand(blockId, NeoBlockType.AUTO_DRIVING_SENSOR_START, [
-                                    sensor,
-                                    speed,
-                                ]);
+                                this.requestExtCommand(
+                                    blockId,
+                                    NeoBlockType.AUTO_DRIVING_SENSOR_START,
+                                    [sensor, speed]
+                                );
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_SENSOR_START, [sensor, speed]);
+                                this.requestCommand(
+                                    blockId,
+                                    NeoBlockType.AUTO_DRIVING_SENSOR_START,
+                                    [sensor, speed]
+                                );
                             }
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -3151,11 +3240,11 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
                             this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_STOP, []);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -3581,9 +3670,15 @@
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
                             if (brightness.indexOf('IN') >= 0) {
-                                this.requestExtCommand(blockId, NeoBlockType.LED_ON, [output, brightness]);
+                                this.requestExtCommand(blockId, NeoBlockType.LED_ON, [
+                                    output,
+                                    brightness,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.LED_ON, [output, brightness]);
+                                this.requestCommand(blockId, NeoBlockType.LED_ON, [
+                                    output,
+                                    brightness,
+                                ]);
                             }
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.block_id = blockId;
@@ -3686,7 +3781,11 @@
                             const speed = script.getStringValue('SPEED', script);
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
-                            this.requestCommand(blockId, NeoBlockType.LED_BLINK, [output, speed, 100]);
+                            this.requestCommand(blockId, NeoBlockType.LED_BLINK, [
+                                output,
+                                speed,
+                                100,
+                            ]);
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.exec_phase = ExecPhase.PENDING_STOP;
                                 script.block_id = blockId;
@@ -3756,12 +3855,12 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const output = script.getStringValue('OUTPUT', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
                             this.requestCommand(blockId, NeoBlockType.LED_OFF, [output]);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -3857,7 +3956,10 @@
                             const color = script.getStringValue('COLOR', script);
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
-                            this.requestCommand(blockId, NeoBlockType.COLOR_LED_ON, [output, color]);
+                            this.requestCommand(blockId, NeoBlockType.COLOR_LED_ON, [
+                                output,
+                                color,
+                            ]);
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.exec_phase = ExecPhase.PENDING_STOP;
                                 script.block_id = blockId;
@@ -3927,12 +4029,12 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const output = script.getStringValue('OUTPUT', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
                             this.requestCommand(blockId, NeoBlockType.COLOR_LED_OFF, [output]);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -3993,13 +4095,16 @@
                     isNotFor: ['NeoLite'],
                     func: (sprite, script) => {
                         if (!script.exec_phase) {
-                            script.exec_phase = ExecPhase.PENDING_STOP;
+                            script.exec_phase = ExecPhase.PENDING_RESPONSE;
                             const output = script.getStringValue('OUTPUT', script);
                             const input = script.getStringValue('INPUT', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
-                            this.requestExtCommand(blockId, NeoBlockType.COLOR_LED_ON_SENSOR, [output, input]);
-                        } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                            this.requestExtCommand(blockId, NeoBlockType.COLOR_LED_ON_SENSOR, [
+                                output,
+                                input,
+                            ]);
+                        } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
                                 delete script.exec_phase;
@@ -4157,9 +4262,15 @@
                             const duration = script.getStringValue('DURATION', script);
                             const blockId = this.generateBlockId();
                             if (value.indexOf('IN') >= 0) {
-                                this.requestExtCommand(blockId, NeoBlockType.SET_OUTPUT, [output, value]);
+                                this.requestExtCommand(blockId, NeoBlockType.SET_OUTPUT, [
+                                    output,
+                                    value,
+                                ]);
                             } else {
-                                this.requestCommand(blockId, NeoBlockType.SET_OUTPUT, [output, value]);
+                                this.requestCommand(blockId, NeoBlockType.SET_OUTPUT, [
+                                    output,
+                                    value,
+                                ]);
                             }
                             if (duration === 'c' || !Entry.parseNumber(duration)) {
                                 script.exec_phase = ExecPhase.PENDING_STOP;
@@ -4660,27 +4771,33 @@
                             const sensor3 = sensorData['in3Values'][0];
                             let lResult = false;
                             if (lSymbol === '=') {
-                                lResult = lValue === sensor1 && lValue === sensor2 && lValue === sensor3;
+                                lResult =
+                                    lValue === sensor1 && lValue === sensor2 && lValue === sensor3;
                             } else if (lSymbol === '>') {
                                 lResult = lValue > sensor1 && lValue > sensor2 && lValue > sensor3;
                             } else if (lSymbol === '<') {
                                 lResult = lValue < sensor1 && lValue < sensor2 && lValue < sensor3;
                             } else if (lSymbol === '>=') {
-                                lResult = lValue >= sensor1 && lValue >= sensor2 && lValue >= sensor3;
+                                lResult =
+                                    lValue >= sensor1 && lValue >= sensor2 && lValue >= sensor3;
                             } else if (lSymbol === '<=') {
-                                lResult = lValue <= sensor1 && lValue <= sensor2 && lValue <= sensor3;
+                                lResult =
+                                    lValue <= sensor1 && lValue <= sensor2 && lValue <= sensor3;
                             }
                             let rResult = false;
                             if (rSymbol === '=') {
-                                rResult = sensor1 === rValue && sensor2 === rValue && sensor3 === rValue;
+                                rResult =
+                                    sensor1 === rValue && sensor2 === rValue && sensor3 === rValue;
                             } else if (rSymbol === '>') {
                                 rResult = sensor1 > rValue && sensor2 > rValue && sensor3 > rValue;
                             } else if (rSymbol === '<') {
                                 rResult = sensor1 < rValue && sensor2 < rValue && sensor3 < rValue;
                             } else if (rSymbol === '>=') {
-                                rResult = sensor1 >= rValue && sensor2 >= rValue && sensor3 >= rValue;
+                                rResult =
+                                    sensor1 >= rValue && sensor2 >= rValue && sensor3 >= rValue;
                             } else if (rSymbol === '<=') {
-                                rResult = sensor1 <= rValue && sensor2 <= rValue && sensor3 <= rValue;
+                                rResult =
+                                    sensor1 <= rValue && sensor2 <= rValue && sensor3 <= rValue;
                             }
                             return lResult && rResult;
                         } else {
@@ -4776,32 +4893,68 @@
                         const input = script.getStringField('INPUT');
                         const sensorData = this.sensorValues;
                         const color = script.getNumberField('COLOR');
-                        let sensorValue = 0;
-                        switch (input) {
-                            case 'in1':
-                                sensorValue = sensorData['in1Values'][0];
-                                break;
-                            case 'in2':
-                                sensorValue = sensorData['in2Values'][0];
-                                break;
-                            case 'in3':
-                                sensorValue = sensorData['in3Values'][0];
-                                break;
+                        if (input === 'IN12') {
+                            const sensor1 = sensorData['in1Values'][0];
+                            const sensor2 = sensorData['in2Values'][0];
+                            if (color === 1) {
+                                return sensor1 === 0 && sensor2 === 0;
+                            } else if (color === 2) {
+                                return sensor1 === 40 && sensor2 === 40;
+                            } else if (color === 3) {
+                                return sensor1 === 80 && sensor2 === 80;
+                            } else if (color === 4) {
+                                return sensor1 === 120 && sensor2 === 120;
+                            } else if (color === 5) {
+                                return sensor1 === 160 && sensor2 === 160;
+                            } else if (color === 6) {
+                                return sensor1 === 200 && sensor2 === 200;
+                            }
+                        } else if (input === 'IN123') {
+                            const sensor1 = sensorData['in1Values'][0];
+                            const sensor2 = sensorData['in2Values'][0];
+                            const sensor3 = sensorData['in3Values'][0];
+                            if (color === 1) {
+                                return sensor1 === 0 && sensor2 === 0 && sensor3 === 0;
+                            } else if (color === 2) {
+                                return sensor1 === 40 && sensor2 === 40 && sensor3 === 40;
+                            } else if (color === 3) {
+                                return sensor1 === 80 && sensor2 === 80 && sensor3 === 80;
+                            } else if (color === 4) {
+                                return sensor1 === 120 && sensor2 === 120 && sensor3 === 120;
+                            } else if (color === 5) {
+                                return sensor1 === 160 && sensor2 === 160 && sensor3 === 160;
+                            } else if (color === 6) {
+                                return sensor1 === 200 && sensor2 === 200 && sensor3 === 200;
+                            }
+                        } else {
+                            let sensorValue = 0;
+                            switch (input) {
+                                case 'IN1':
+                                    sensorValue = sensorData['in1Values'][0];
+                                    break;
+                                case 'IN2':
+                                    sensorValue = sensorData['in2Values'][0];
+                                    break;
+                                case 'IN3':
+                                    sensorValue = sensorData['in3Values'][0];
+                                    break;
+                            }
+
+                            if (color === 1) {
+                                return sensorValue === 0;
+                            } else if (color === 2) {
+                                return sensorValue === 40;
+                            } else if (color === 3) {
+                                return sensorValue === 80;
+                            } else if (color === 4) {
+                                return sensorValue === 120;
+                            } else if (color === 5) {
+                                return sensorValue === 160;
+                            } else if (color === 6) {
+                                return sensorValue === 200;
+                            }
                         }
 
-                        if (color === 1) {
-                            return sensorValue === 0;
-                        } else if (color === 2) {
-                            return sensorValue === 0;
-                        } else if (color === 3) {
-                            return sensorValue === 0;
-                        } else if (color === 4) {
-                            return sensorValue === 0;
-                        } else if (color === 5) {
-                            return sensorValue === 0;
-                        } else if (color === 6) {
-                            return sensorValue === 0;
-                        }
                         return false;
                     },
                 },
@@ -5039,7 +5192,9 @@
                             const input = script.getStringValue('INPUT', script);
                             const blockId = this.generateBlockId();
                             script.block_id = blockId;
-                            this.requestExtCommand(blockId, NeoBlockType.BUZZER_WITH_SENSOR, [input]);
+                            this.requestExtCommand(blockId, NeoBlockType.BUZZER_WITH_SENSOR, [
+                                input,
+                            ]);
                         } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
                             if (!this.pendingResponseList[script.block_id]) {
                                 delete script.block_id;
@@ -5148,8 +5303,6 @@
                                 [Lang.Blocks.neo_lite_lcd_image_11, '11'],
                                 [Lang.Blocks.neo_lite_lcd_image_12, '12'],
                                 [Lang.Blocks.neo_lite_lcd_image_13, '13'],
-                                [Lang.Blocks.neo_lite_lcd_image_14, '14'],
-                                [Lang.Blocks.neo_lite_lcd_image_15, '15'],
                             ],
                             value: '1',
                             fontSize: 11,
@@ -5252,6 +5405,46 @@
                 /**
                  * ARG Blocks
                  */
+                neo_lite_arg_duration: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic_string_field',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.neo_lite_duration_c, 'c'],
+                                [Lang.Blocks.neo_lite_duration_0, '0'],
+                                [Lang.Blocks.neo_lite_duration_1, '1'],
+                                [Lang.Blocks.neo_lite_duration_2, '2'],
+                                [Lang.Blocks.neo_lite_duration_3, '3'],
+                                [Lang.Blocks.neo_lite_duration_4, '4'],
+                                [Lang.Blocks.neo_lite_duration_5, '5'],
+                                [Lang.Blocks.neo_lite_duration_6, '6'],
+                                [Lang.Blocks.neo_lite_duration_7, '7'],
+                                [Lang.Blocks.neo_lite_duration_8, '8'],
+                                [Lang.Blocks.neo_lite_duration_9, '9'],
+                            ],
+                            value: 'c',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                    },
+                    paramsKeyMap: {
+                        VALUE: 0,
+                    },
+                    class: 'neo_lite_arg',
+                    isNotFor: ['NeoLite'],
+                    func: function(sprite, script) {
+                        return script.getStringField('VALUE');
+                    },
+                },
                 neo_lite_arg_motor_speed: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -5284,46 +5477,6 @@
                                 [Lang.Blocks.neo_lite_motor_speed_n100, '-100'],
                             ],
                             value: '100',
-                            fontSize: 11,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                    ],
-                    events: {},
-                    def: {
-                        params: [null],
-                    },
-                    paramsKeyMap: {
-                        VALUE: 0,
-                    },
-                    class: 'neo_lite_arg',
-                    isNotFor: ['NeoLite'],
-                    func: function(sprite, script) {
-                        return script.getStringField('VALUE');
-                    },
-                },
-                neo_lite_arg_duration: {
-                    color: EntryStatic.colorSet.block.default.HARDWARE,
-                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                    skeleton: 'basic_string_field',
-                    statements: [],
-                    params: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [Lang.Blocks.neo_lite_duration_c, 'c'],
-                                [Lang.Blocks.neo_lite_duration_0, '0'],
-                                [Lang.Blocks.neo_lite_duration_1, '1'],
-                                [Lang.Blocks.neo_lite_duration_2, '2'],
-                                [Lang.Blocks.neo_lite_duration_3, '3'],
-                                [Lang.Blocks.neo_lite_duration_4, '4'],
-                                [Lang.Blocks.neo_lite_duration_5, '5'],
-                                [Lang.Blocks.neo_lite_duration_6, '6'],
-                                [Lang.Blocks.neo_lite_duration_7, '7'],
-                                [Lang.Blocks.neo_lite_duration_8, '8'],
-                                [Lang.Blocks.neo_lite_duration_9, '9'],
-                            ],
-                            value: 'c',
                             fontSize: 11,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -5791,7 +5944,10 @@
                 data.writeInt16LE(speed, 0);
                 data.writeInt16LE(robotCommand, 2);
                 body.push(...data);
-            } else if (type === NeoBlockType.MOTOR_STOP || type === NeoBlockType.AUTO_DRIVING_STOP) {
+            } else if (
+                type === NeoBlockType.MOTOR_STOP ||
+                type === NeoBlockType.AUTO_DRIVING_STOP
+            ) {
                 const which = params[0];
                 const direction = 1;
                 body.push(UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.MOTOR);
@@ -5892,7 +6048,11 @@
                 body.push(...data);
             } else if (type === NeoBlockType.AUTO_DETECT_WALL_TURN) {
                 const direction = params[0];
-                body.push(UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.AUTO_DETECT_WALL);
+                body.push(
+                    UnitId.CONTROLLER,
+                    ActorKind.CONTROLLER,
+                    ControllerCommand.AUTO_DETECT_WALL
+                );
                 const data = Buffer.from([0, 0, 0, 0]);
                 data.writeInt16LE(60, 0);
                 data.writeInt16LE(direction, 2);
@@ -5978,22 +6138,38 @@
             if (type === NeoBlockType.MOTOR_MOVE) {
                 const which = params[0];
                 const unitId = this.getUnitId(params[1]);
-                body.push(PduCode.EXTEND_1, blockId, UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.MOTOR);
+                body.push(
+                    PduCode.EXTEND_1,
+                    blockId,
+                    UnitId.CONTROLLER,
+                    ActorKind.CONTROLLER,
+                    ControllerCommand.MOTOR
+                );
                 const data = Buffer.from([unitId, 0, which, 0, 0, 0]);
                 body.push(...data);
             } else if (type === NeoBlockType.ROBOT_MOVE) {
                 const robotCommand = params[0];
                 const unitId = this.getUnitId(params[1]);
-                body.push(PduCode.EXTEND_1, blockId, UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.ROBOT);
+                body.push(
+                    PduCode.EXTEND_1,
+                    blockId,
+                    UnitId.CONTROLLER,
+                    ActorKind.CONTROLLER,
+                    ControllerCommand.ROBOT
+                );
                 const data = Buffer.from([unitId, 0, 0, 0]);
                 data.writeInt16LE(robotCommand, 2);
                 body.push(...data);
-            } else if (type === NeoBlockType.SERVO_ANGLE || type === NeoBlockType.SERVO_ANGLE_WAIT) {
+            } else if (
+                type === NeoBlockType.SERVO_ANGLE ||
+                type === NeoBlockType.SERVO_ANGLE_WAIT
+            ) {
                 const unitId = this.getUnitId(params[0]);
-                const inUnitId = this.getUnitId(params[1]);
-                const speed = params[2];
+                let angle = params[1];
+                let speed = params[2];
+                if (angle.indexOf('IN') >= 0) angle = this.getUnitId(angle);
                 body.push(PduCode.EXTEND_1, blockId, unitId, ActorKind.SERVO, ServoCommand.ANGLE);
-                const data = Buffer.from([inUnitId, 0, 0, 0, 1, 0]);
+                const data = Buffer.from([angle, 0, 0, 0, 1, 0]);
                 data.writeInt16LE(speed, 2);
                 body.push(...data);
             } else if (type === NeoBlockType.SERVO_ROTATE) {
@@ -6010,13 +6186,25 @@
                 type === NeoBlockType.AUTO_DETECT_WALL_START
             ) {
                 const unitId = this.getUnitId(params[0]);
-                body.push(PduCode.EXTEND_1, blockId, UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.ROBOT);
+                body.push(
+                    PduCode.EXTEND_1,
+                    blockId,
+                    UnitId.CONTROLLER,
+                    ActorKind.CONTROLLER,
+                    ControllerCommand.ROBOT
+                );
                 const data = Buffer.from([unitId, 0, 0x10, 0]);
                 body.push(...data);
             } else if (type === NeoBlockType.AUTO_DRIVING_SENSOR_START) {
                 const sensor = params[0];
                 const unitId = this.getUnitId(params[1]);
-                body.push(PduCode.EXTEND_1, blockId, UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.ROBOT);
+                body.push(
+                    PduCode.EXTEND_1,
+                    blockId,
+                    UnitId.CONTROLLER,
+                    ActorKind.CONTROLLER,
+                    ControllerCommand.ROBOT
+                );
                 const data = Buffer.from([0, 0, 0, 0]);
                 data.writeInt16LE(unitId, 0);
                 data.writeInt16LE(sensor, 2);
@@ -6035,7 +6223,13 @@
                 body.push(...data);
             } else if (type === NeoBlockType.BUZZER_WITH_SENSOR) {
                 const sensorUnitId = this.getUnitId(params[0]);
-                body.push(PduCode.EXTEND_1, blockId, UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.BUZZER);
+                body.push(
+                    PduCode.EXTEND_1,
+                    blockId,
+                    UnitId.CONTROLLER,
+                    ActorKind.CONTROLLER,
+                    ControllerCommand.BUZZER
+                );
                 const data = Buffer.from([0, 0]);
                 data.writeInt16LE(sensorUnitId, 0);
                 body.push(...data);
@@ -6049,6 +6243,18 @@
             return body;
         }
 
+        makeCommandExt2(blockId, type, params) {
+            const body = [FrameCode.BASIC];
+            if (type === NeoBlockType.SERVO_ANGLE || type === NeoBlockType.SERVO_ANGLE_WAIT) {
+                const unitId = this.getUnitId(params[0]);
+                const angleInUnitId = this.getUnitId(params[1]);
+                const speedInUnitId = this.getUnitId(params[2]);
+                body.push(PduCode.EXTEND_2, blockId, unitId, ActorKind.SERVO, ServoCommand.ANGLE);
+                const data = Buffer.from([angleInUnitId, 0, speedInUnitId, 0, 1, 0]);
+                body.push(...data);
+            }
+            return body;
+        }
         /*
           후면주차 실행 (pending response 하지 않고 바로 다음 단계로 넘어감 : phase 가 너무 많아서 간소화)
           주석은 왼쪽 기준으로 오른쪽에서는 좌우만 바꿔준다.
@@ -6078,7 +6284,8 @@
                 this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [which === 1 ? 5 : 6, 20]);
             } else if (script.exec_phase === '5_wait_sensor') {
                 // 5. IN2 40 초과 기다리기
-                const compareValue = which === 1 ? sensorData.in2Values[0] : sensorData.in1Values[0];
+                const compareValue =
+                    which === 1 ? sensorData.in2Values[0] : sensorData.in1Values[0];
                 if (compareValue > 40) {
                     script.exec_phase = '6_stop_robot';
                 }
@@ -6099,7 +6306,8 @@
                 this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [2, 20]);
             } else if (script.exec_phase === '9_wait_sensor') {
                 // 9. IN1 20초과 기다리기
-                const compareValue = which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
+                const compareValue =
+                    which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
                 if (compareValue > 20) {
                     script.exec_phase = '10_stop_robot';
                 }
@@ -6191,13 +6399,15 @@
                 this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [2, 30]);
             } else if (script.exec_phase === '5_wait_sensor') {
                 // 5. IN1 40 초과 기다리기
-                const compareValue = which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
+                const compareValue =
+                    which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
                 if (compareValue > 40) {
                     script.exec_phase = '6_wait_sensor';
                 }
             } else if (script.exec_phase === '6_wait_sensor') {
                 // 6. IN2 40 초과 기다리기
-                const compareValue = which === 1 ? sensorData.in2Values[0] : sensorData.in1Values[0];
+                const compareValue =
+                    which === 1 ? sensorData.in2Values[0] : sensorData.in1Values[0];
                 if (compareValue > 40) {
                     script.exec_phase = '7_robot_stop';
                 }
@@ -6218,7 +6428,8 @@
                 this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [which === 1 ? 5 : 6, 20]);
             } else if (script.exec_phase === '10_wait_sensor') {
                 // 10. IN1 40초과 기다리기
-                const compareValue = which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
+                const compareValue =
+                    which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
                 if (compareValue > 40) {
                     script.exec_phase = '11_stop_robot';
                 }

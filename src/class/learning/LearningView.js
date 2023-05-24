@@ -15,7 +15,7 @@ const STATUS = {
 
 export default class LearningView {
     constructor({ name = 'model name', status = STATUS.NO_MODEL, value = 0} = {}) {
-        this.id = Entry.generateHash(); 
+        this.id = Entry.generateHash();
         this.visible = true;
         this.value = value;
         const fontFamily = EntryStatic.fontFamily || 'NanumGothic';

@@ -6,6 +6,7 @@ import _floor from 'lodash/floor';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
 import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import DataTable from '../DataTable';
 
 export const classes = [
@@ -334,7 +335,7 @@ function convertTableToKnnData(tableData = {}) {
     const { select = [[0], [1]], data: table = [] } = tableData;
     const [attr, predict] = select;
     const filtered = table.filter(
-        (row) => !select[0].some((selected) => !_toNumber(row[selected]))
+        (row) => !select[0].some((selected) => _isNaN(_toNumber(row[selected])))
     );
     return filtered.reduce(
         (accumulator, row) => {
