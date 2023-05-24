@@ -1,5 +1,7 @@
 'use strict';
 (function() {
+    const HEADER = [0xab, 0xcd];
+
     Entry.NeobotThinkCarLite = new (class NeobotThinkCarLite {
         constructor() {
             this.id = '5.7';
@@ -27,8 +29,8 @@
                 OUT1: 0,
                 OUT2: 0,
                 OUT3: 0,
-                DCR: 0,
                 DCL: 0,
+                DCR: 0,
                 SND: 0,
                 FND: 0,
                 OPT: 0,
@@ -37,6 +39,7 @@
 
             this.blockMenuBlocks = [
                 // think car
+                'neobot_think_car_lite_auto_driving_title',
                 'neobot_think_car_lite_line_tracer_start',
                 // 'neobot_think_car_lite_line_tracer_change_speed',
                 'neobot_think_car_lite_reverse_parking_start',
@@ -44,41 +47,43 @@
                 'neobot_think_car_lite_driving_stop',
 
                 // sensor
+                'neobot_think_car_lite_sensor_title',
                 'neobot_think_car_lite_sensor_value',
                 'neobot_think_car_lite_sensor_convert_scale',
-
-                // decision
                 'neobot_think_car_lite_decision_sensor_is_over',
                 'neobot_think_car_lite_decision_equal_with_sensor',
                 'neobot_think_car_lite_decision_sensor_angle',
-
-                // remote
                 'neobot_think_car_lite_remote_button',
 
                 // led
+                'neobot_think_car_lite_led_title',
                 'neobot_think_car_lite_led_on',
                 'neobot_think_car_lite_led_brightness_with_sensor',
                 'neobot_think_car_lite_color_led_on',
                 'neobot_think_car_lite_output_led_off',
 
                 // output
+                'neobot_think_car_lite_output_title',
                 'neobot_think_car_lite_set_output',
 
                 //  motor
+                'neobot_think_car_lite_motor_title',
                 'neobot_think_car_lite_robot',
                 'neobot_think_car_lite_motor_start',
                 'neobot_think_car_lite_motor_stop',
 
-                // melody
-                'neobot_think_car_lite_play_note_for',
-                'neobot_think_car_lite_melody_play_with_sensor',
-                'neobot_think_car_lite_melody_stop',
-
                 // servo
+                'neobot_think_car_lite_servo_title',
                 'neobot_think_car_lite_servo_init',
                 'neobot_think_car_lite_servo_rotate',
                 'neobot_think_car_lite_servo_stop',
                 'neobot_think_car_lite_servo_change_degree',
+
+                // melody
+                'neobot_think_car_lite_buzzer_title',
+                'neobot_think_car_lite_play_note_for',
+                'neobot_think_car_lite_melody_play_with_sensor',
+                'neobot_think_car_lite_melody_stop',
             ];
 
             this.setZero();
@@ -86,7 +91,7 @@
 
         get monitorTemplate() {
             return {
-                imgPath: 'hw_lite/neobot_thinkcar_lite.png',
+                imgPath: 'hw/neobot_thinkcar.png',
                 width: 700,
                 height: 700,
                 listPorts: {
@@ -118,8 +123,8 @@
                 OUT1: 0,
                 OUT2: 0,
                 OUT3: 0,
-                DCR: 0,
                 DCL: 0,
+                DCR: 0,
                 SND: 0,
                 FND: 0,
                 OPT: 0,
@@ -130,15 +135,93 @@
         }
 
         handleLocalData(data) {
-            for (let i = 0; i < data.length - 1; i++) {
-                if (data[i] === 171 && data[i + 1] === 205) {
-                    const dataSet = data.slice(i + 2, i + 7);
-                    dataSet.forEach((value, idx) => {
-                        this.localBuffer[this.LOCAL_MAP[idx]] = value;
-                    });
+            let validPdu = this.getValidPdu(data);
+            while (validPdu) {
+                this.onReceivePdu(validPdu);
+                if (!this.remainingPdu || this.remainingPdu.length <= 0) {
                     break;
                 }
+                validPdu = this.getValidPdu([]);
             }
+        }
+
+        onReceivePdu(pdu) {
+            if (pdu[0] === HEADER[0] && pdu[1] === HEADER[1]) {
+                this.localBuffer['IN1'] = pdu[2];
+                this.localBuffer['IN2'] = pdu[3];
+                this.localBuffer['IN3'] = pdu[4];
+                this.localBuffer['IR'] = pdu[5];
+                this.localBuffer['BAT'] = pdu[6];
+            }
+        }
+
+        getValidPdu(pdu) {
+            const mergedPdu = [];
+            if (this.remainingPdu) {
+                mergedPdu.push(...this.remainingPdu);
+                this.remainingPdu = null;
+            }
+            mergedPdu.push(...pdu);
+            if (mergedPdu.length < 2) {
+                this.remainingPdu = [...mergedPdu];
+                return null;
+            }
+
+            // 헤더 불일치는 버림
+            if (!this.checkHeader(mergedPdu)) {
+                return null;
+            }
+
+            // 유효 데이터 길이는 header 2 + body 5 + checksum 1 = 8
+            const validDataLength = 8;
+            /*
+            전체 길이가 유효 데이터 길이보다 작을 경우
+            아직 도착하지 않은 부분이 있으므로 병합을 위해 remainingPdu 에 저장
+             */
+            if (mergedPdu.length < validDataLength) {
+                this.remainingPdu = [...mergedPdu];
+                return null;
+            }
+
+            /*
+            전체 길이가 유효 데이터 길이보다 클 경우
+            유효한 부분만 잘라내고 나머지는 remainingPdu 에 저장
+             */
+            if (mergedPdu.length > validDataLength) {
+                this.remainingPdu = mergedPdu.slice(validDataLength, mergedPdu.length);
+            }
+
+            const validPdu = mergedPdu.slice(0, validDataLength);
+
+            /*
+            유효 Pdu 의 checksum 확인
+             */
+            const dataLength = 5;
+            let checkSum = 0;
+            for (let i = 0; i < dataLength; i++) {
+                checkSum += validPdu[i + 2];
+            }
+            checkSum = checkSum & 255;
+            const pduCheckSum = validPdu[7];
+            if (pduCheckSum !== checkSum) {
+                return null;
+            }
+
+            return validPdu;
+        }
+
+        checkHeader(pdu) {
+            if (pdu.length < HEADER.length) {
+                return false;
+            }
+
+            for (let i = 0; i < HEADER.length; i++) {
+                if (HEADER[i] !== pdu[i]) {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         requestLocalData() {
@@ -172,6 +255,7 @@
                 ko: {
                     template: {
                         // think car
+                        neobot_think_car_lite_auto_driving_title: '자율주행',
                         neobot_think_car_lite_line_tracer_start:
                             '차로를 유지하며 속도 %1 으로 자율주행 %2',
                         // neobot_think_car_lite_line_tracer_change_speed: '자율주행 속도 변경 %1 %2',
@@ -181,19 +265,17 @@
                         neobot_think_car_lite_driving_stop: '자율주행 중지 %1',
 
                         // sensor
+                        neobot_think_car_lite_sensor_title: '센서',
                         neobot_think_car_lite_sensor_value: '%1',
                         neobot_think_car_lite_sensor_convert_scale:
                             '%1 %2 ~ %3 를 %4 ~ %5 으로 변환',
-
-                        // decision
                         neobot_think_car_lite_decision_sensor_is_over: '%1 %2 %3',
                         neobot_think_car_lite_decision_equal_with_sensor: '%1 컬러가 %2',
                         neobot_think_car_lite_decision_sensor_angle: '%1 각도 %2 %3',
-
-                        // remote
                         neobot_think_car_lite_remote_button: '리모컨 버튼 %1 을 누름',
 
                         // LED
+                        neobot_think_car_lite_led_title: 'LED',
                         neobot_think_car_lite_arg_led_duration: '%1',
                         neobot_think_car_lite_led_on: 'LED 켜기   %1 %2 %3 %4',
                         neobot_think_car_lite_output_led_off: '%1 LED 끄기 %2',
@@ -201,9 +283,11 @@
                         neobot_think_car_lite_color_led_on: '%1 컬러LED 켜기   R %2 G %3 B %4 %5',
 
                         // output
+                        neobot_think_car_lite_output_title: '출력',
                         neobot_think_car_lite_set_output: '%1 에 %2 값 출력하기 %3',
 
                         // motor
+                        neobot_think_car_lite_motor_title: '회전모터',
                         neobot_think_car_lite_robot: '로봇 %1 %2',
                         neobot_think_car_lite_motor_start: '모터 회전하기   %1 %2 %3 %4 %5',
                         neobot_think_car_lite_motor_stop: '%1 모터 멈추기 %2',
@@ -211,12 +295,14 @@
                         neobot_think_car_lite_arg_motor_duration: '%1',
 
                         // melody
+                        neobot_think_car_lite_buzzer_title: '버저',
                         neobot_think_car_lite_play_note_for:
                             '버저 울리기   옥타브: %2 음: %1 길이: %3 %4',
                         neobot_think_car_lite_melody_play_with_sensor: '%1 센서로 버저 울리기 %2',
                         neobot_think_car_lite_melody_stop: '버저 멈추기 %1',
 
                         // servo
+                        neobot_think_car_lite_servo_title: '서보모터',
                         get_servo_degree: '%1',
                         neobot_think_car_lite_servo_init: '%1 서보모터 리셋 %2',
                         neobot_think_car_lite_servo_rotate: '서보모터 회전하기   %1 %2 %3 %4',
@@ -362,6 +448,7 @@
                     // en.js에 작성하던 내용
                     template: {
                         // think car
+                        neobot_think_car_lite_auto_driving_title: 'Self-driving',
                         neobot_think_car_lite_line_tracer_start:
                             'Start self-driving at %1 speed while keeping lanes %2',
                         // neobot_think_car_lite_line_tracer_change_speed: 'Change the speed of self-driving %1 %2',
@@ -372,20 +459,18 @@
                         neobot_think_car_lite_driving_stop: 'Stop self-driving %1',
 
                         // sensor
+                        neobot_think_car_lite_sensor_title: 'Sensor',
                         neobot_think_car_lite_sensor_value: '%1',
                         neobot_think_car_lite_sensor_convert_scale:
                             "%1 's changed value   range: %2 ~ %3 conversion: %4 ~ %5",
-
-                        // decision
                         neobot_think_car_lite_decision_sensor_is_over: '%1 %2 %3',
                         neobot_think_car_lite_decision_equal_with_sensor: "%1 's color is %2",
                         neobot_think_car_lite_decision_sensor_angle: '%1 angle %2 %3',
-
-                        // remote
                         neobot_think_car_lite_remote_button:
                             'pressing button %1 of remote controller',
 
                         // LED
+                        neobot_think_car_lite_led_title: 'LED',
                         neobot_think_car_lite_arg_led_duration: '%1',
                         neobot_think_car_lite_led_on: 'Turn on the LED    %1 %2 %3 %4',
                         neobot_think_car_lite_output_led_off: 'Turn off the %1 LED %2',
@@ -395,16 +480,19 @@
                             'Turn on the %1 color LED   R %2 G %3 B %4 %5',
 
                         // output
+                        neobot_think_car_lite_output_title: 'Set output',
                         neobot_think_car_lite_set_output: 'Output %2 value to %1 port %3',
 
                         // motor
+                        neobot_think_car_lite_motor_title: 'Motor',
                         neobot_think_car_lite_robot: 'Robot %1 %2',
                         neobot_think_car_lite_motor_start: 'Motor operation   %1 %2 %3 %4 %5',
                         neobot_think_car_lite_motor_stop: 'Stop the %1 motor(s) %2',
                         neobot_think_car_lite_arg_motor_speed: '%1',
                         neobot_think_car_lite_arg_motor_duration: '%1',
 
-                        // melody
+                        // buzzer
+                        neobot_think_car_lite_buzzer_title: 'Buzzer',
                         neobot_think_car_lite_play_note_for:
                             'Buzzer   octave: %1 scale: %2 note: %3 %4',
                         neobot_think_car_lite_melody_play_with_sensor:
@@ -412,6 +500,7 @@
                         neobot_think_car_lite_melody_stop: 'Stop the buzzer %1',
 
                         // servo
+                        neobot_think_car_lite_servo_title: 'Servo motor',
                         get_servo_degree: '%1',
                         neobot_think_car_lite_servo_init: 'Reset the %1 servo motor %2',
                         neobot_think_car_lite_servo_rotate: 'Rotate the servo motor   %1 %2 %3 %4',
@@ -558,6 +647,30 @@
 
         getBlocks = function() {
             return {
+                neobot_think_car_lite_auto_driving_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_auto_driving_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_auto_driving_title',
+                    },
+                    class: 'neobot_think_car_lite_operation',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_line_tracer_start: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -937,6 +1050,30 @@
                 /*************************
                  * class neobot_think_car_lite_sensor
                  *************************/
+                neobot_think_car_lite_sensor_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_sensor_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_sensor_title',
+                    },
+                    class: 'neobot_think_car_lite_sensor',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_sensor_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -974,7 +1111,6 @@
                         return Entry.NeobotThinkCarLite.localBuffer[port];
                     },
                 },
-
                 neobot_think_car_lite_sensor_convert_scale: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1072,10 +1208,6 @@
                         return Math.round(value);
                     },
                 },
-
-                /*************************
-                 * class neobot_think_car_lite_decision
-                 *************************/
                 neobot_think_car_lite_decision_sensor_is_over: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1125,7 +1257,7 @@
                         SYMBOL: 1,
                         VALUE: 2,
                     },
-                    class: 'neobot_think_car_lite_decision',
+                    class: 'neobot_think_car_lite_sensor',
                     isNotFor: ['NeobotThinkCarLite'],
                     func(sprite, script) {
                         const sensorTemp = script.getStringField('SENSOR');
@@ -1183,7 +1315,6 @@
                         return false;
                     },
                 },
-
                 neobot_think_car_lite_decision_equal_with_sensor: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1227,7 +1358,7 @@
                         SENSOR: 0,
                         COLOR: 1,
                     },
-                    class: 'neobot_think_car_lite_decision',
+                    class: 'neobot_think_car_lite_sensor',
                     isNotFor: ['NeobotThinkCarLite'],
                     func(sprite, script) {
                         const sensorTemp = script.getStringField('SENSOR');
@@ -1268,7 +1399,6 @@
                         return false;
                     },
                 },
-
                 neobot_think_car_lite_decision_sensor_angle: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1341,7 +1471,7 @@
                         SYMBOL: 1,
                         VALUE: 2,
                     },
-                    class: 'neobot_think_car_lite_decision',
+                    class: 'neobot_think_car_lite_sensor',
                     isNotFor: ['NeobotThinkCarLite'],
                     func(sprite, script) {
                         const sensorTemp = script.getStringField('SENSOR');
@@ -1383,10 +1513,6 @@
                         return false;
                     },
                 },
-
-                /*************************
-                 * class neobot_think_car_lite_remote
-                 *************************/
                 neobot_think_car_lite_remote_button: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1420,7 +1546,7 @@
                     paramsKeyMap: {
                         KEY: 0,
                     },
-                    class: 'neobot_think_car_lite_remote',
+                    class: 'neobot_think_car_lite_sensor',
                     isNotFor: ['NeobotThinkCarLite'],
                     func(sprite, script) {
                         const key = script.getNumberField('KEY');
@@ -1436,6 +1562,30 @@
                 /*************************
                  * class neobot_think_car_lite_led
                  *************************/
+                neobot_think_car_lite_led_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_led_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_led_title',
+                    },
+                    class: 'neobot_think_car_lite_led',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_led_on: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1572,7 +1722,6 @@
                         }
                     },
                 },
-
                 neobot_think_car_lite_output_led_off: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1630,7 +1779,6 @@
                         return script.callReturn();
                     },
                 },
-
                 neobot_think_car_lite_led_brightness_with_sensor: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1714,7 +1862,6 @@
                         return script.callReturn();
                     },
                 },
-
                 neobot_think_car_lite_color_led_on: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1969,6 +2116,30 @@
                 /*************************
                  * class neobot_think_car_lite_output
                  *************************/
+                neobot_think_car_lite_output_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_output_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_output_title',
+                    },
+                    class: 'neobot_think_car_lite_output',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_set_output: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2049,6 +2220,30 @@
                 /*************************
                  * class neobot_think_car_lite_motor
                  *************************/
+                neobot_think_car_lite_motor_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_motor_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_motor_title',
+                    },
+                    class: 'neobot_think_car_lite_motor',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_robot: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2125,7 +2320,6 @@
                         return script.callReturn();
                     },
                 },
-
                 neobot_think_car_lite_motor_start: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2316,7 +2510,6 @@
                         }
                     },
                 },
-
                 neobot_think_car_lite_motor_stop: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2378,6 +2571,30 @@
                 /*************************
                  * class neobot_think_car_lite_melody
                  *************************/
+                neobot_think_car_lite_buzzer_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_buzzer_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_buzzer_title',
+                    },
+                    class: 'neobot_think_car_lite_melody',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_play_note_for: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2498,7 +2715,6 @@
                         }
                     },
                 },
-
                 neobot_think_car_lite_melody_play_with_sensor: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2556,7 +2772,6 @@
                         return script.callReturn();
                     },
                 },
-
                 neobot_think_car_lite_melody_stop: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2595,6 +2810,30 @@
                 /*************************
                  * class neobot_think_car_lite_servo
                  *************************/
+                neobot_think_car_lite_servo_title: {
+                    color: EntryStatic.colorSet.common.TRANSPARENT,
+                    fontColor: '#191970',
+                    skeleton: 'basic_text',
+                    skeletonOptions: {
+                        contentPos: {
+                            x: 5,
+                        },
+                    },
+                    params: [
+                        {
+                            type: 'Text',
+                            text: Lang.template.neobot_think_car_lite_servo_title,
+                            color: '#191970',
+                            align: 'left',
+                        },
+                    ],
+                    def: {
+                        type: 'neobot_think_car_lite_servo_title',
+                    },
+                    class: 'neobot_think_car_lite_servo',
+                    isNotFor: ['NeobotThinkCarLite'],
+                    events: {},
+                },
                 neobot_think_car_lite_servo_init: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2704,7 +2943,6 @@
                         }
                     },
                 },
-
                 neobot_think_car_lite_servo_rotate: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2884,7 +3122,6 @@
                         return script.callReturn();
                     },
                 },
-
                 neobot_think_car_lite_servo_change_degree: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
