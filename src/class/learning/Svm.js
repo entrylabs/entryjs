@@ -3,6 +3,8 @@ import _floor from 'lodash/floor';
 import _max from 'lodash/max';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import Utils from './Utils';
 const { callApi } = require('../../util/common');
 const SVM = require('libsvm-js/asm');
@@ -22,7 +24,7 @@ export const KERNEL_STRING_TYPE = {
     LINEAR: 'linear',
     POLYNOMIAL: 'polynomial',
     RBF: 'rbf',
-}
+};
 
 export const OPTION_DEFAULT_VALUE = {
     epochs: 30,
@@ -34,7 +36,7 @@ export const OPTION_DEFAULT_VALUE = {
     C: 0.00001,
     degree: 3,
     gamma: 1,
-}
+};
 
 class Svm extends LearningBase {
     type = 'svm';
@@ -64,18 +66,27 @@ class Svm extends LearningBase {
         }
         switch (kernel) {
             case KERNEL_STRING_TYPE.LINEAR:
-                if (degree !== OPTION_DEFAULT_VALUE.degree || gamma !== OPTION_DEFAULT_VALUE.gamma) {
-                    throw new Error(`can't train: invalid kernelOption. kernel type ${KERNEL_STRING_TYPE.LINEAR}`);
+                if (
+                    degree !== OPTION_DEFAULT_VALUE.degree ||
+                    gamma !== OPTION_DEFAULT_VALUE.gamma
+                ) {
+                    throw new Error(
+                        `can't train: invalid kernelOption. kernel type ${KERNEL_STRING_TYPE.LINEAR}`
+                    );
                 }
                 break;
             case KERNEL_STRING_TYPE.POLYNOMIAL:
                 if (gamma !== OPTION_DEFAULT_VALUE.gamma) {
-                    throw new Error(`can't train: invalid kernelOption. kernel type ${KERNEL_STRING_TYPE.POLYNOMIAL}`);
+                    throw new Error(
+                        `can't train: invalid kernelOption. kernel type ${KERNEL_STRING_TYPE.POLYNOMIAL}`
+                    );
                 }
                 break;
             case KERNEL_STRING_TYPE.RBF:
                 if (degree !== OPTION_DEFAULT_VALUE.degree) {
-                    throw new Error(`can't train: invalid kernelOption. kernel type ${KERNEL_STRING_TYPE.RBF}`);
+                    throw new Error(
+                        `can't train: invalid kernelOption. kernel type ${KERNEL_STRING_TYPE.RBF}`
+                    );
                 }
                 break;
             default:
@@ -88,7 +99,15 @@ class Svm extends LearningBase {
         this.trainCallback(1);
         this.checkTrainOptionValidation();
         const { testRate = 0.2, C, kernel, degree, gamma } = this.trainParam;
-        const { trainX, trainY, testArr, select, fields, PREDICT_STR2NUM_MAP, numClass } = this.getData(testRate, this.table);
+        const {
+            trainX,
+            trainY,
+            testArr,
+            select,
+            fields,
+            PREDICT_STR2NUM_MAP,
+            numClass,
+        } = this.getData(testRate, this.table);
         const svmTrainOption = {
             kernel,
             C,
@@ -149,11 +168,18 @@ class Svm extends LearningBase {
         const STR2NUM_MAP_COUNT = {};
         const { select = [[0], [1]], data: table, fields } = data;
         const [attr, predict] = select;
-
-        const dataArray = table
+        const filtered = table.filter(
+            (row) => !select[0].some((selected) => _isNaN(_toNumber(row[selected])))
+        );
+        const dataArray = filtered
             .map((row) => ({
                 x: attr.map((i) => Utils.stringToNumber(i, row[i], STR2NUM_MAP, STR2NUM_MAP_COUNT)),
-                y: Utils.stringToNumber(predict[0], row[predict[0]], STR2NUM_MAP, STR2NUM_MAP_COUNT),
+                y: Utils.stringToNumber(
+                    predict[0],
+                    row[predict[0]],
+                    STR2NUM_MAP,
+                    STR2NUM_MAP_COUNT
+                ),
             }))
             .map((row) => ({
                 x: row.x,

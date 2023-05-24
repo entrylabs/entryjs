@@ -1,8 +1,6 @@
 import InputPopup from './InputPopup';
 
-export const classes = [
-    'ai_learning_speech'
-];
+export const classes = ['ai_learning_speech'];
 
 class Classification {
     #type = null;
@@ -20,9 +18,11 @@ class Classification {
 
     getResult(index) {
         const result = this.#popup?.result || [];
-        const defaultResult = {probability: 0, className: ''};
-        if(index !== undefined && index > -1) {
-            return result.find(({className}) => className === this.#labels[index]) || defaultResult;
+        const defaultResult = { probability: 0, className: '' };
+        if (index !== undefined && index > -1) {
+            return (
+                result.find(({ className }) => className === this.#labels[index]) || defaultResult
+            );
         }
         return result[0] || defaultResult;
     }
@@ -36,10 +36,10 @@ class Classification {
 
     openInputPopup() {
         this.#popup = new InputPopup({
-            url: this.#url, 
+            url: this.#url,
             labels: this.#labels,
             type: this.#type,
-            recordTime: this.#recordTime
+            recordTime: this.#recordTime,
         });
         this.#popup.open();
     }

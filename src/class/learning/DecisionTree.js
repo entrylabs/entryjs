@@ -3,6 +3,8 @@ import _floor from 'lodash/floor';
 import _max from 'lodash/max';
 import _sum from 'lodash/sum';
 import _mean from 'lodash/mean';
+import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import LearningBase from './LearningBase';
 import { DecisionTreeClassifier as DTClassifier } from 'ml-cart';
 import Utils from './Utils';
@@ -24,7 +26,7 @@ class DecisionTree extends LearningBase {
     type = 'decisiontree';
 
     init({ name, url, result, table, trainParam }) {
-        this.name = name; 
+        this.name = name;
         this.trainParam = trainParam;
         this.result = result;
         this.table = table;
@@ -157,8 +159,10 @@ function getData(testRate = 0.2, data) {
     const tempMapCount = {};
     const { select = [[0], [1]], data: table, fields } = data;
     const [attr, predict] = select;
-
-    const dataArray = table
+    const filtered = table.filter(
+        (row) => !select[0].some((selected) => _isNaN(_toNumber(row[selected])))
+    );
+    const dataArray = filtered
         .map((row) => ({
             x: attr.map((i) => Utils.stringToNumber(i, row[i], tempMap, tempMapCount)),
             y: Utils.stringToNumber(predict[0], row[predict[0]], tempMap, tempMapCount),
@@ -176,7 +180,7 @@ function getData(testRate = 0.2, data) {
         select,
         fields,
         valueMap: { ...tempMap[predict[0]] },
-        numClass: tempMapCount[predict[0]],
+        numClass: tempMapCount[predict[0]] || 1,
     };
 }
 

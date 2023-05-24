@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch';
 import _isNaN from 'lodash/isNaN';
 import _toNumber from 'lodash/toNumber';
+import _isNumber from 'lodash/isNumber';
 import _cuid from 'cuid';
 import _uid from 'uid';
 
@@ -44,14 +45,10 @@ const Common = {
         if (Array.isArray(str)) {
             return str.map((x) => Common.toNumber(x));
         }
-        if (typeof str === 'string' && str.trim() === '') {
-            return str;
+        if (!_isNaN(parseInt(str, 10)) && !_isNaN(_toNumber(str))) {
+            return _toNumber(str);
         }
-        const result = _toNumber(str);
-        if (_isNaN(result)) {
-            return str;
-        }
-        return result;
+        return str;
     },
     generateId() {
         return _uid(8) + _cuid();
