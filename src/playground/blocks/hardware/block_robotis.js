@@ -421,7 +421,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_buzzer_melody: '제어기 멜로디 %1 번 연주 %2',
                 robotis_openCM70_cm_sound_detected_clear: '최종소리감지횟수 초기화 %1',
                 robotis_openCM70_cm_led: '제어기 %1 LED %2 %3',
-                robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
+                //robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
                 robotis_openCM70_cm_autodrive_motor: '🚗 자율주행 자동차 %1 모터를 %2 에 연결 %3',
                 robotis_openCM70_cm_autodrive_ir: '🚗 자율주행 자동차 %1 적외선센서를 %2 에 연결 %3',
                 robotis_openCM70_cm_autodrive_speed: '🚗 차로를 따라 %1의 속도로 자율주행 %2',
@@ -456,7 +456,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_sound_detected_clear:
                     '최종 소리 감지횟 수를 0 으로 초기화 합니다.',
                 robotis_openCM70_cm_led: '제어기의 빨간색, 녹색, 파란색 LED 를 켜거나 끕니다.',
-                robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
+                //robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
                 robotis_openCM70_cm_autodrive_motor: '자율주행 자동차의 모터 포트를 지정합니다.',
                 robotis_openCM70_cm_autodrive_ir: '자율주행 자동차의 적외선 센서 포트를 지정합니다.',
                 robotis_openCM70_cm_autodrive_speed: '지정한 속도로 자율주행을 수행합니다.',
@@ -558,7 +558,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_sound_detected_clear:
                     'Initialize the final number of sound detection  %1',
                 robotis_openCM70_cm_led: 'Controller %1 LED %2 %3',
-                robotis_openCM70_cm_motion: 'Play the motion %1 times',
+                //robotis_openCM70_cm_motion: 'Play the motion %1 times',
                 robotis_openCM70_cm_autodrive_motor: 'Autonomous driving car %1 motor uses %2 %3',
                 robotis_openCM70_cm_autodrive_ir: 'Autonomous driving car %1 IR sensor uses %2 %3',
                 robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the speed of %1 %2',
@@ -583,7 +583,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                     "Plays melody.<br/>If the following sound doesn't play when repeatedly playing melodies, use the block 'flow > wait for X seconds' and execute it again.",
                 robotis_openCM70_cm_sound_detected_clear: 'Final number of sound detection ',
                 robotis_openCM70_cm_led: 'Turns the red, green, blue LED of the device on or off.',
-                robotis_openCM70_cm_motion: 'Executes the motion downloaded on the device.',
+                //robotis_openCM70_cm_motion: 'Executes the motion downloaded on the device.',
                 robotis_openCM70_cm_autodrive_motor: 'Specifies the motor port of the autonomous driving car.',
                 robotis_openCM70_cm_autodrive_ir: 'Specifies the IR sensor port of the autonomous driving car.',
                 robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the specified speed along the lane.',
@@ -1229,7 +1229,7 @@ Entry.Robotis_openCM70.blockMenuBlocks = [
     'robotis_openCM70_cm_buzzer_melody',
     'robotis_openCM70_cm_sound_detected_clear',
     'robotis_openCM70_cm_led',
-    'robotis_openCM70_cm_motion',
+    //'robotis_openCM70_cm_motion',
     'robotis_openCM70_cm_autodrive_motor',
     'robotis_openCM70_cm_autodrive_ir',
     'robotis_openCM70_cm_autodrive_speed',
@@ -2001,6 +2001,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
         },
+        /*
         robotis_openCM70_cm_motion: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2053,6 +2054,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
         },
+        */
         robotis_openCM70_cm_autodrive_motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
