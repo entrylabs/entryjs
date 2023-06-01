@@ -1,6 +1,4 @@
-'use strict';
-
-const merge = require('webpack-merge');
+const { merge } = require('webpack-merge');
 const common = require('./webpack_config/common');
 
 let conf;
@@ -22,5 +20,5 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
+console.log('conf', merge(common, conf));
 module.exports = merge(common, conf);
- 
