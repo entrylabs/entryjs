@@ -20,5 +20,4 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
-console.log('conf', merge(common, conf));
 module.exports = merge(common, conf);

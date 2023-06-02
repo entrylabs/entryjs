@@ -11,11 +11,11 @@ module.exports = {
             activeModules: true, // display the current module
         }),
     ],
-    stats: {
-        logging: 'verbose',
-    },
-    infrastructureLogging: {
-        level: 'verbose',
-    },
-    parallelism: 1,
+    // stats: {
+    //     logging: 'verbose',
+    // },
+    // infrastructureLogging: {
+    //     level: 'verbose',
+    // },
+    // parallelism: 1,
 };

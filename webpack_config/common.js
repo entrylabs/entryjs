@@ -18,6 +18,10 @@ module.exports = {
     resolve: {
         fallback: {
             fs: false,
+            path: false,
+            crypto: false,
+            buffer: false,
+            perf_hooks: false,
         },
         extensions: ['.ts', '.tsx', '.js', '.json'],
         mainFields: ['jsnext:main', 'browser', 'main'],
@@ -29,7 +33,7 @@ module.exports = {
                 use: {
                     loader: 'worker-loader',
                     options: {
-                        inline: true,
+                        inline: 'no-fallback',
                     },
                 },
             },
