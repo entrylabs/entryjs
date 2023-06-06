@@ -4646,6 +4646,13 @@ Entry.Robotis_openCM70.getPracticalBlocks = function() {
                             }
                         }
                     }
+
+                    if ( value < 1024) {
+                        value = value + (value + 1024) * 0x10000;
+                    }
+                    else {
+                        value = value + (value - 1024) * 0x10000;
+                    }
     
                     data_value = value;
     
@@ -4786,6 +4793,13 @@ Entry.Robotis_openCM70.getPracticalBlocks = function() {
                             value = 1023;
                         }
                     }
+                }
+
+                if ( value < 1024) {
+                    value = value + (value + 1024) * 0x10000;
+                }
+                else {
+                    value = value + (value - 1024) * 0x10000;
                 }
     
                 data_value = value;
