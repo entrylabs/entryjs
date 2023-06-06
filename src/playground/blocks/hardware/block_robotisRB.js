@@ -575,6 +575,7 @@ Entry.Robotis_rb.setLanguage = function() {
     }
 };
 
+let rb100_last_valid_value = [];
 
 Entry.Robotis_rb.getBlocks = function () {
     return {
@@ -770,6 +771,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -881,6 +890,15 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
+
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -978,6 +996,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1106,12 +1132,19 @@ Entry.Robotis_rb.getBlocks = function () {
 
                 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
 
                 if(result == undefined) {
-                    console.log('언디파인')
                     return false;
                 }
 
@@ -1342,6 +1375,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1900,6 +1941,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2000,6 +2049,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2082,6 +2139,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2189,6 +2254,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2282,6 +2355,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2382,6 +2463,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2488,6 +2577,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
