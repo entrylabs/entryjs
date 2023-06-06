@@ -425,6 +425,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_motor: '🚗 자율주행 자동차 %1 모터를 %2 에 연결 %3',
                 robotis_openCM70_cm_autodrive_ir: '🚗 자율주행 자동차 %1 적외선센서를 %2 에 연결 %3',
                 robotis_openCM70_cm_autodrive_speed: '🚗 차로를 따라 %1의 속도로 자율주행 %2',
+                robotis_openCM70_aux_car_move: '로봇을 %1% 의 속도로 %2 %3',
                 robotis_openCM70_aux_motor_speed:
                     '%1 감속모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
                 robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
@@ -460,6 +461,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_motor: '자율주행 자동차의 모터 포트를 지정합니다.',
                 robotis_openCM70_cm_autodrive_ir: '자율주행 자동차의 적외선 센서 포트를 지정합니다.',
                 robotis_openCM70_cm_autodrive_speed: '지정한 속도로 자율주행을 수행합니다.',
+                robotis_openCM70_aux_car_move: '로봇을 지정한 속도와 방향으로 움직이도록 합니다.',
                 robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 100% 의 값으로 정합니다.',
                 robotis_openCM70_aux_servo_mode:
                     '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
@@ -506,6 +508,11 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_common_left: '왼쪽',
                 robotis_common_right: '오른쪽',
                 robotis_common_minute: '분',
+                robotis_common_forward: '직진',
+                robotis_common_backward: '후진',
+                robotis_common_turn_left: '좌회전',
+                robotis_common_turn_right: '우회전',
+                robotis_common_stop: '정지',
                 robotis_cm_custom: '직접입력 주소',
                 robotis_cm_spring_left: '왼쪽 접촉 센서',
                 robotis_cm_spring_right: '오른쪽 접촉 센서',
@@ -562,6 +569,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_motor: 'Autonomous driving car %1 motor uses %2 %3',
                 robotis_openCM70_cm_autodrive_ir: 'Autonomous driving car %1 IR sensor uses %2 %3',
                 robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the speed of %1 %2',
+                robotis_openCM70_aux_car_move: 'Make the robot %2 at a speed of %1% %3',
                 robotis_openCM70_aux_motor_speed:
                     'Set the speed of decelerating motor of %1 to %2 , and the output value to %3%  %4',
                 robotis_openCM70_aux_servo_mode: 'Set the mode of %1 servo motor to %2  %3',
@@ -587,6 +595,7 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_motor: 'Specifies the motor port of the autonomous driving car.',
                 robotis_openCM70_cm_autodrive_ir: 'Specifies the IR sensor port of the autonomous driving car.',
                 robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the specified speed along the lane.',
+                robotis_openCM70_aux_car_move: 'Make the robot move at the specified speed and direction.',
                 robotis_openCM70_aux_motor_speed:
                     'Sets the speed of decelerating motor to the value of 0 - 100%.',
                 robotis_openCM70_aux_servo_mode:
@@ -644,6 +653,11 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_common_left: 'Left',
                 robotis_common_right: 'Right',
                 robotis_common_minute: 'minute(s)',
+                robotis_common_forward: 'Forward',
+                robotis_common_backward: 'Backword',
+                robotis_common_turn_left: 'Turn left',
+                robotis_common_turn_right: 'Turn Right',
+                robotis_common_stop: 'Stop',
                 robotis_cm_custom: 'Custom address',
                 robotis_cm_spring_left: 'Left contact sensor',
                 robotis_cm_spring_right: 'Right contact sensor',
@@ -1233,6 +1247,7 @@ Entry.Robotis_openCM70.blockMenuBlocks = [
     'robotis_openCM70_cm_autodrive_motor',
     'robotis_openCM70_cm_autodrive_ir',
     'robotis_openCM70_cm_autodrive_speed',
+    'robotis_openCM70_aux_car_move',
     'robotis_openCM70_aux_motor_speed',
     'robotis_openCM70_aux_servo_mode',
     'robotis_openCM70_aux_servo_speed',
@@ -2280,37 +2295,29 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_autodrive_speed(%1)'] },
         },
-        robotis_openCM70_aux_motor_speed: {
+        robotis_openCM70_aux_car_move: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_common_port_1, '1'],
-                        [Lang.Blocks.robotis_common_port_2, '2'],
-                    ],
-                    value: '1',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotis_common_clockwhise, 'CW'],
-                        [Lang.Blocks.robotis_common_counter_clockwhise, 'CCW'],
-                    ],
-                    value: 'CW',
-                    fontSize: 11,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-                {
                     type: 'Block',
                     accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_forward, 'F'],
+                        [Lang.Blocks.robotis_common_backward, 'B'],
+                        [Lang.Blocks.robotis_common_turn_left, 'L'],
+                        [Lang.Blocks.robotis_common_turn_right, 'R'],
+                        [Lang.Blocks.robotis_common_stop, 'S'],
+                    ],
+                    value: 'F',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -2321,28 +2328,25 @@ Entry.Robotis_openCM70.getBlocks = function() {
             events: {},
             def: {
                 params: [
-                    null,
-                    null,
                     {
                         type: 'number',
                         params: ['50'],
                     },
                     null,
+                    null,
                 ],
-                type: 'robotis_openCM70_aux_motor_speed',
+                type: 'robotis_openCM70_aux_car_move',
             },
             paramsKeyMap: {
-                PORT: 0,
-                DIRECTION_ANGLE: 1,
-                VALUE: 2,
+                SPEED: 0,
+                MOVE_DIRECTION: 1,
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
             func: function(sprite, script) {
                 // instruction / address / length / value / default length
-                var port = script.getField('PORT', script);
-                var directionAngle = script.getField('DIRECTION_ANGLE', script);
-                var value = script.getNumberValue('VALUE');
+                var speed = script.getNumberValue('SPEED');
+                var direction = script.getField('MOVE_DIRECTION', script);
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address = 0;
@@ -2350,27 +2354,24 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 var data_value = 0;
 
                 data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
-                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1] * 2;
 
-                data_address = data_address + (port - 1) * data_length;
+                if (speed < 0) speed = 0;
+                else if (speed > 100) speed = 100;
 
-                if (value < 0) value = 0;
-                else if (value > 100) value = 100;
+                speed = Math.floor(speed * 1023 /100);
 
-                value = Math.floor(value * 1023 / 100);
-
-                if (directionAngle == 'CW') {
-                    value = value + 1024;
-                    if (value > 2047) {
-                        value = 2047;
-                    }
-                } else {
-                    if (value > 1023) {
-                        value = 1023;
-                    }
+                if (direction == 'F') {
+                    data_value = speed + (speed + 1024) * 65536;
+                } else if (direction == 'B'){
+                    data_value = (speed + 1024) + speed * 65536;
+                } else if (direction == 'L'){
+                    data_value = (speed + 1024) + (speed + 1024) * 65536;
+                } else if (direction == 'R'){
+                    data_value = speed + speed * 65536;
+                } else if (direction == 'S'){
+                    data_value = 0;
                 }
-
-                data_value = value;
 
                 var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -2381,7 +2382,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             syntax: {
                 js: [],
-                py: ['Robotis.opencm70_aux_motor_speed(%1, %2, %3)'],
+                py: ['Robotis.opencm70_aux_car_move(%1, %2)'],
             },
         },
         robotis_openCM70_aux_servo_mode: {

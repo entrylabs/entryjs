@@ -5995,6 +5995,7 @@ Lang.Helper = {
     robotis_openCM70_cm_autodrive_motor: '자율주행 자동차의 모터 포트를 지정합니다.',
     robotis_openCM70_cm_autodrive_ir: '자율주행 자동차의 적외선 센서 포트를 지정합니다.',
     robotis_openCM70_cm_autodrive_speed: '지정한 속도로 자율주행을 수행합니다.',
+    robotis_openCM70_aux_car_move: '로봇을 지정한 속도와 방향으로 움직이도록 합니다.',
     robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 100% 의 값으로 정합니다.',
     robotis_openCM70_aux_servo_mode:
         '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
@@ -7370,6 +7371,7 @@ Lang.template = {
     robotis_openCM70_cm_autodrive_motor: '자율주행 자동차 %1 모터를 %2 에 연결 %3',
     robotis_openCM70_cm_autodrive_ir: '자율주행 자동차 %1 적외선센서를 %2 에 연결 %3',
     robotis_openCM70_cm_autodrive_speed: '차로를 따라 %1의 속도로 자율주행 %2',
+    robotis_openCM70_aux_car_move: '로봇을 %1% 의 속도로 %2 %3',
     robotis_openCM70_aux_motor_speed: '%1 감속모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
     robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
     robotis_openCM70_aux_servo_speed: '%1 서보모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
