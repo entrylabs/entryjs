@@ -426,11 +426,11 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_ir: '🚗 자율주행 자동차 %1 적외선센서를 %2 에 연결 %3',
                 robotis_openCM70_cm_autodrive_speed: '🚗 차로를 따라 %1의 속도로 자율주행 %2',
                 robotis_openCM70_aux_motor_speed:
-                    '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                    '%1 감속모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
                 robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
                 robotis_openCM70_aux_servo_speed:
-                    '%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
-                robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2 (으)로 정하기 %3',
+                    '%1 서보모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
+                robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2도로 정하기 %3',
                 robotis_openCM70_aux_led_module: '%1 LED 모듈을 %2 (으)로 정하기 %3',
                 robotis_openCM70_cm_poweroff_timer: '제어기 자동꺼짐 타이머 %1 %2',
                 robotis_openCM70_aux_custom: '%1 사용자 장치를 %2 (으)로 정하기 %3',
@@ -460,12 +460,12 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_motor: '자율주행 자동차의 모터 포트를 지정합니다.',
                 robotis_openCM70_cm_autodrive_ir: '자율주행 자동차의 적외선 센서 포트를 지정합니다.',
                 robotis_openCM70_cm_autodrive_speed: '지정한 속도로 자율주행을 수행합니다.',
-                robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 100% 의 값으로 정합니다.',
                 robotis_openCM70_aux_servo_mode:
                     '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
-                robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 100% 의 값으로 정합니다.',
                 robotis_openCM70_aux_servo_position:
-                    '서보모터 위치를 0 ~ 1023 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
+                    '서보모터 위치를 -150 ~ 150도 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
                 robotis_openCM70_aux_led_module: 'LED 모듈의 LED 를 켜거나 끕니다.',
                 robotis_openCM70_aux_custom:
                     '사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
@@ -563,11 +563,11 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_ir: 'Autonomous driving car %1 IR sensor uses %2 %3',
                 robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the speed of %1 %2',
                 robotis_openCM70_aux_motor_speed:
-                    'Set the speed of decelerating motor of %1 to %2 , and the output value to %3  %4',
+                    'Set the speed of decelerating motor of %1 to %2 , and the output value to %3%  %4',
                 robotis_openCM70_aux_servo_mode: 'Set the mode of %1 servo motor to %2  %3',
                 robotis_openCM70_aux_servo_speed:
-                    'Set the speed of servo motor of %1 to %2 , and the output value to %3  %4',
-                robotis_openCM70_aux_servo_position: 'Set the position of %1 servo motor to %2  %3',
+                    'Set the speed of servo motor of %1 to %2 , and the output value to %3%  %4',
+                robotis_openCM70_aux_servo_position: 'Set the position of %1 servo motor to %2 degree %3',
                 robotis_openCM70_aux_led_module: 'Set the LED module of %1 as %2  %3',
                 robotis_openCM70_aux_custom: 'Set the user device of %1 as %2  %3',
                 robotis_openCM70_cm_poweroff_timer: 'Set auto-off timer as %1 %2',
@@ -588,13 +588,13 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_autodrive_ir: 'Specifies the IR sensor port of the autonomous driving car.',
                 robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the specified speed along the lane.',
                 robotis_openCM70_aux_motor_speed:
-                    'Sets the speed of decelerating motor to the value of 0 - 1023.',
+                    'Sets the speed of decelerating motor to the value of 0 - 100%.',
                 robotis_openCM70_aux_servo_mode:
                     "Sets the servo motor as wheel mode or joint mode.<br/>The same mode continues to apply once it's set.<br/>Wheel mode designates the servo motor's speed, and spins the servo motor.<br/>Joint mode moves the servo motor's position with the set servo motor speed.",
                 robotis_openCM70_aux_servo_speed:
                     "Sets servo motor's speed to the value of 0 - 1023.",
                 robotis_openCM70_aux_servo_position:
-                    "Sets servo motor's position to the value of 0-1023.<br/>Use as servo motor speed",
+                    "Sets servo motor's position to the value of -150 ~ 150 degree.<br/>Use as servo motor speed",
                 robotis_openCM70_aux_led_module: 'Turns the LED of LED module on or off.',
                 robotis_openCM70_aux_custom:
                     'Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation of user sensor production.',
@@ -1644,6 +1644,17 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 }
                 else
                 {
+                    if (sensor == 'AUX_SERVO_POSITION') {
+                        if (result < 0) result = 0;
+                        else if (result > 1023) result = 1023;
+
+                        result = (512 - result) * 300 / 1023;
+
+                        result = Math.floor(result * 9 / 8);
+
+                        if (result > 150) result = 150;
+                        else if (result < -150) result = -150;
+                    }
                     opencm70_last_valid_value[data_default_address] = result;
                 }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
@@ -2314,7 +2325,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['500'],
+                        params: ['50'],
                     },
                     null,
                 ],
@@ -2342,6 +2353,11 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
 
                 data_address = data_address + (port - 1) * data_length;
+
+                if (value < 0) value = 0;
+                else if (value > 100) value = 100;
+
+                value = Math.floor(value * 1023 / 100);
 
                 if (directionAngle == 'CW') {
                     value = value + 1024;
@@ -2487,7 +2503,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['500'],
+                        params: ['50'],
                     },
                     null,
                 ],
@@ -2515,6 +2531,11 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
 
                 data_address = data_address + (port - 1) * data_length;
+
+                if (value < 0) value = 0;
+                else if (value > 100) value = 100;
+
+                value = Math.floor(value * 1023 / 100);
 
                 if (directionAngle == 'CW') {
                     value = value + 1024;
@@ -2576,7 +2597,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['512'],
+                        params: ['0'],
                     },
                     null,
                 ],
@@ -2603,13 +2624,18 @@ Entry.Robotis_openCM70.getBlocks = function() {
 
                 data_address = data_address + (port - 1) * data_length;
 
-                if (value > 1023) {
-                    value = 1023;
-                } else if (value < 0) {
-                    value = 0;
+                if (value > 150) {
+                    value = 150;
+                } else if (value < -150) {
+                    value = -150;
                 }
 
-                data_value = value;
+                value = value * 8 / 9;
+
+                data_value = 512 - Math.floor(value * 1023 / 300);
+
+                if (data_value < 0) data_value = 0;
+                else if (data_value > 1023) data_value = 1023;
 
                 var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
