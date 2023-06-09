@@ -409,6 +409,7 @@ EntryStatic.getAllBlocks = function() {
                 'open_table_wait',
                 'open_table_chart',
                 'close_table_chart',
+                'get_coefficient',
             ],
         },
         {

@@ -4880,7 +4880,8 @@ Lang.Helper = {
     "get_value_from_table": "Reports the value of selected attribute at the location of the input value from the selected table.",
     "calc_values_from_table": "Reports calculated value of the selected attributes in the selected table. (sum, maximum, minimum, average, standard deviation)",
     "open_table_chart": "Open the chart of the selected table.",
-    "close_table_chart": "Close the table chart."
+    "close_table_chart": "Close the table chart.",
+    "get_coefficient": "Correlation coefficient between two attributes in the selected table. The closer the correlation coefficient is to 1(-1), the stronger the positive (negative) linear correlation."
 };
 Lang.Category = {
     "entrybot_friends": "Entrybot friends",
@@ -5637,6 +5638,7 @@ Lang.template = {
     "calc_values_from_table": "%3 of the %2 in the %1",
     "open_table_chart": "Open the chart of the %1 %2",
     "close_table_chart": "Close the table chart",
+    "get_coefficient": 'Correlation coefficient between %2and %3 in table %1',
     "variableAddButton": "%1",
     "listAddButton": "%1",
     "change_variable": "Plus to %1 by %2 %3",
