@@ -212,6 +212,9 @@ Entry.initialize_ = function() {
     this.playground = new Entry.Playground();
     this._destroyer.add(this.playground);
 
+    this.blockCountViewer = new Entry.BlockCountViewer(this.playground);
+    this._destroyer.add(this.blockCountViewer);
+
     if (this.options.expansionDisable === false || this.options.expansionDisable === undefined) {
         this.expansion = new Expansion(this.playground);
         this._destroyer.add(this.expansion);
@@ -342,10 +345,20 @@ Entry.createDom = function(container, type) {
         default: {
             Entry.documentMousedown.attach(this, this.cancelObjectEdit);
 
+            const topFloatingView = Entry.createElement('div');
+            topFloatingView.addClass('entryTopFloatingView');
+            container.appendChild(topFloatingView);
+
             const sceneView = Entry.createElement('div');
-            container.appendChild(sceneView);
+            topFloatingView.appendChild(sceneView);
             this.sceneView = sceneView;
             this.scene.generateView(this.sceneView, type);
+
+            const blockCountViewerView = Entry.createElement('div');
+            blockCountViewerView.addClass('entryBlockCountView');
+            topFloatingView.appendChild(blockCountViewerView);
+            this.blockCountViewerView = blockCountViewerView;
+            this.blockCountViewer.generateView(this.blockCountViewerView, type);
 
             const stateManagerView = Entry.createElement('div');
             this.sceneView.appendChild(stateManagerView);

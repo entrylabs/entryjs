@@ -39,7 +39,7 @@ Entry.NeobotThinkCar = {
         },
         mode: 'both',
     },
-    log_to_console: true,
+    log_to_console: false,
 };
 
 Entry.NeobotThinkCar.setLanguage = function() {
@@ -47,6 +47,7 @@ Entry.NeobotThinkCar.setLanguage = function() {
         ko: {
             template: {
                 // think car
+                neobot_think_car_auto_driving_title: '자율주행',
                 neobot_think_car_line_tracer_start: '차로를 유지하며 속도 %1 으로 자율주행 %2',
                 // neobot_think_car_line_tracer_change_speed: '자율주행 속도 변경 %1 %2',
                 neobot_think_car_reverse_parking_start: '%1 표지판에서 후면 주차 %2',
@@ -54,18 +55,16 @@ Entry.NeobotThinkCar.setLanguage = function() {
                 neobot_think_car_driving_stop: '자율주행 중지 %1',
 
                 // sensor
+                neobot_think_car_sensor_title: '센서',
                 neobot_think_car_sensor_value: '%1',
                 neobot_think_car_sensor_convert_scale: '%1 %2 ~ %3 를 %4 ~ %5 으로 변환',
-
-                // decision
                 neobot_think_car_decision_sensor_is_over: '%1 %2 %3',
                 neobot_think_car_decision_equal_with_sensor: '%1 컬러가 %2',
                 neobot_think_car_decision_sensor_angle: '%1 각도 %2 %3',
-
-                // remote
                 neobot_think_car_remote_button: '리모컨 버튼 %1 을 누름',
 
                 // LED
+                neobot_think_car_led_title: 'LED',
                 neobot_think_car_arg_led_duration: '%1',
                 neobot_think_car_led_on: 'LED 켜기   %1 %2 %3 %4',
                 neobot_think_car_output_led_off: '%1 LED 끄기 %2',
@@ -73,9 +72,11 @@ Entry.NeobotThinkCar.setLanguage = function() {
                 neobot_think_car_color_led_on: '%1 컬러LED 켜기   R %2 G %3 B %4 %5',
 
                 // output
+                neobot_think_car_output_title: '출력',
                 neobot_think_car_set_output: '%1 에 %2 값 출력하기 %3',
 
                 // motor
+                neobot_think_car_motor_title: '회전모터',
                 neobot_think_car_robot: '로봇 %1 %2',
                 neobot_think_car_motor_start: '모터 회전하기   %1 %2 %3 %4 %5',
                 neobot_think_car_motor_stop: '%1 모터 멈추기 %2',
@@ -83,11 +84,13 @@ Entry.NeobotThinkCar.setLanguage = function() {
                 neobot_think_car_arg_motor_duration: '%1',
 
                 // melody
+                neobot_think_car_buzzer_title: '버저',
                 neobot_think_car_play_note_for: '버저 울리기   옥타브: %2 음: %1 길이: %3 %4',
                 neobot_think_car_melody_play_with_sensor: '%1 센서로 버저 울리기 %2',
                 neobot_think_car_melody_stop: '버저 멈추기 %1',
 
                 // servo
+                neobot_think_car_servo_title: '서보모터',
                 get_servo_degree: '%1',
                 neobot_think_car_servo_init: '%1 서보모터 리셋 %2',
                 neobot_think_car_servo_rotate: '서보모터 회전하기   %1 %2 %3 %4',
@@ -232,35 +235,40 @@ Entry.NeobotThinkCar.setLanguage = function() {
             // en.js에 작성하던 내용
             template: {
                 // think car
-                neobot_think_car_line_tracer_start: 'Start self-driving at %1 speed while keeping lanes %2',
+                neobot_think_car_auto_driving_title: 'Self-driving',
+                neobot_think_car_line_tracer_start:
+                    'Start self-driving at %1 speed while keeping lanes %2',
                 // neobot_think_car_line_tracer_change_speed: 'Change the speed of self-driving %1 %2',
                 neobot_think_car_reverse_parking_start: 'Start reverse parking at %1 sign %2',
-                neobot_think_car_line_change: 'Change the lane from primary %1 sign to secondary %2 sign %3',
+                neobot_think_car_line_change:
+                    'Change the lane from primary %1 sign to secondary %2 sign %3',
                 neobot_think_car_driving_stop: 'Stop self-driving %1',
 
                 // sensor
+                neobot_think_car_sensor_title: 'Sensor',
                 neobot_think_car_sensor_value: '%1',
-                neobot_think_car_sensor_convert_scale: '%1 \'s changed value   range: %2 ~ %3 conversion: %4 ~ %5',
-
-                // decision
+                neobot_think_car_sensor_convert_scale:
+                    "%1 's changed value   range: %2 ~ %3 conversion: %4 ~ %5",
                 neobot_think_car_decision_sensor_is_over: '%1 %2 %3',
-                neobot_think_car_decision_equal_with_sensor: '%1 \'s color is %2',
+                neobot_think_car_decision_equal_with_sensor: "%1 's color is %2",
                 neobot_think_car_decision_sensor_angle: '%1 angle %2 %3',
-
-                // remote
                 neobot_think_car_remote_button: 'pressing button %1 of remote controller',
 
                 // LED
+                neobot_think_car_led_title: 'LED',
                 neobot_think_car_arg_led_duration: '%1',
                 neobot_think_car_led_on: 'Turn on the LED    %1 %2 %3 %4',
                 neobot_think_car_output_led_off: 'Turn off the %1 LED %2',
-                neobot_think_car_led_brightness_with_sensor: 'Control %2 LED\'s brightness with %1 sensor %3',
+                neobot_think_car_led_brightness_with_sensor:
+                    "Control %2 LED's brightness with %1 sensor %3",
                 neobot_think_car_color_led_on: 'Turn on the %1 color LED   R %2 G %3 B %4 %5',
 
                 // output
+                neobot_think_car_output_title: 'Set output',
                 neobot_think_car_set_output: 'Output %2 value to %1 port %3',
 
                 // motor
+                neobot_think_car_motor_title: 'Motor',
                 neobot_think_car_robot: 'Robot %1 %2',
                 neobot_think_car_motor_start: 'Motor operation   %1 %2 %3 %4 %5',
                 neobot_think_car_motor_stop: 'Stop the %1 motor(s) %2',
@@ -268,11 +276,13 @@ Entry.NeobotThinkCar.setLanguage = function() {
                 neobot_think_car_arg_motor_duration: '%1',
 
                 // melody
+                neobot_think_car_buzzer_title: 'Buzzer',
                 neobot_think_car_play_note_for: 'Buzzer   octave: %1 scale: %2 note: %3 %4',
                 neobot_think_car_melody_play_with_sensor: 'Buzzer rings by %1 sensor value %2',
                 neobot_think_car_melody_stop: 'Stop the buzzer %1',
 
                 // servo
+                neobot_think_car_servo_title: 'Servo motor',
                 get_servo_degree: '%1',
                 neobot_think_car_servo_init: 'Reset the %1 servo motor %2',
                 neobot_think_car_servo_rotate: 'Rotate the servo motor   %1 %2 %3 %4',
@@ -418,6 +428,7 @@ Entry.NeobotThinkCar.setLanguage = function() {
 
 Entry.NeobotThinkCar.blockMenuBlocks = [
     // think car
+    'neobot_think_car_auto_driving_title',
     'neobot_think_car_line_tracer_start',
     // 'neobot_think_car_line_tracer_change_speed',
     'neobot_think_car_reverse_parking_start',
@@ -425,45 +436,71 @@ Entry.NeobotThinkCar.blockMenuBlocks = [
     'neobot_think_car_driving_stop',
 
     // sensor
+    'neobot_think_car_sensor_title',
     'neobot_think_car_sensor_value',
     'neobot_think_car_sensor_convert_scale',
-
-    // decision
     'neobot_think_car_decision_sensor_is_over',
     'neobot_think_car_decision_equal_with_sensor',
     'neobot_think_car_decision_sensor_angle',
-
-    // remote
     'neobot_think_car_remote_button',
 
     // led
+    'neobot_think_car_led_title',
     'neobot_think_car_led_on',
     'neobot_think_car_led_brightness_with_sensor',
     'neobot_think_car_color_led_on',
     'neobot_think_car_output_led_off',
 
     // output
+    'neobot_think_car_output_title',
     'neobot_think_car_set_output',
 
     //  motor
+    'neobot_think_car_motor_title',
     'neobot_think_car_robot',
     'neobot_think_car_motor_start',
     'neobot_think_car_motor_stop',
 
-    // melody
-    'neobot_think_car_play_note_for',
-    'neobot_think_car_melody_play_with_sensor',
-    'neobot_think_car_melody_stop',
-
     // servo
+    'neobot_think_car_servo_title',
     'neobot_think_car_servo_init',
     'neobot_think_car_servo_rotate',
     'neobot_think_car_servo_stop',
     'neobot_think_car_servo_change_degree',
+
+    // melody
+    'neobot_think_car_buzzer_title',
+    'neobot_think_car_play_note_for',
+    'neobot_think_car_melody_play_with_sensor',
+    'neobot_think_car_melody_stop',
 ];
 
 Entry.NeobotThinkCar.getBlocks = function() {
     return {
+        neobot_think_car_auto_driving_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_auto_driving_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_auto_driving_title',
+            },
+            class: 'neobot_think_car_operation',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_line_tracer_start: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -497,10 +534,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_line_tracer_start',
             },
             paramsKeyMap: {
@@ -519,9 +553,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     Entry.hw.sendQueue['OUT3'] = out3Value;
                     Entry.hw.sendQueue['SND'] = buzzerValue;
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_line_tracer_start ===',
-                            'speak');
+                        Entry.console.print('=== neobot_think_car_line_tracer_start ===', 'speak');
                         Entry.console.print('out3 : ' + out3Value, 'speak');
                         Entry.console.print('buzzer : ' + buzzerValue, 'speak');
                     }
@@ -531,15 +563,11 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         Entry.hw.sendQueue['SND'] = 0;
                         if (Entry.NeobotThinkCar.log_to_console) {
                             Entry.console.print('out1 : ' + speed, 'speak');
-                            Entry.console.print(
-                                'buzzer : 0',
-                                'speak');
-                            Entry.console.print(
-                                '==========================',
-                                'speak');
+                            Entry.console.print('buzzer : 0', 'speak');
+                            Entry.console.print('==========================', 'speak');
                         }
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -578,10 +606,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_reverse_parking_start',
             },
             paramsKeyMap: {
@@ -603,7 +628,8 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     if (Entry.NeobotThinkCar.log_to_console) {
                         Entry.console.print(
                             '=== neobot_think_car_reverse_parking_start ===',
-                            'speak');
+                            'speak'
+                        );
                         Entry.console.print('out3 : ' + out3Value, 'speak');
                         Entry.console.print('buzzer : ' + buzzerValue, 'speak');
                     }
@@ -612,17 +638,13 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         Entry.hw.sendQueue['OUT1'] = colorValue;
                         Entry.hw.sendQueue['SND'] = 0;
                         if (Entry.NeobotThinkCar.log_to_console) {
-                            Entry.console.print('out1 : ' + colorValue,
-                                'speak');
-                            Entry.console.print(
-                                'buzzer : 0', 'speak');
-                            Entry.console.print(
-                                '==========================',
-                                'speak');
+                            Entry.console.print('out1 : ' + colorValue, 'speak');
+                            Entry.console.print('buzzer : 0', 'speak');
+                            Entry.console.print('==========================', 'speak');
                         }
 
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
 
                     return script;
                 } else if (script.timeFlag == 1) {
@@ -675,11 +697,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                    null,
-                ],
+                params: [null, null, null],
                 type: 'neobot_think_car_line_change',
             },
             paramsKeyMap: {
@@ -701,9 +719,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     Entry.hw.sendQueue['SND'] = buzzerValue;
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_line_change ===',
-                            'speak');
+                        Entry.console.print('=== neobot_think_car_line_change ===', 'speak');
                         Entry.console.print('out3 : ' + out3Value, 'speak');
                         Entry.console.print('buzzer : ' + buzzerValue, 'speak');
                     }
@@ -713,19 +729,14 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         Entry.hw.sendQueue['OUT2'] = toColorValue;
                         Entry.hw.sendQueue['SND'] = 0;
                         if (Entry.NeobotThinkCar.log_to_console) {
-                            Entry.console.print('out1 : ' + fromColorValue,
-                                'speak');
-                            Entry.console.print('out2 : ' + toColorValue,
-                                'speak');
-                            Entry.console.print(
-                                'buzzer : 0', 'speak');
-                            Entry.console.print(
-                                '==========================',
-                                'speak');
+                            Entry.console.print('out1 : ' + fromColorValue, 'speak');
+                            Entry.console.print('out2 : ' + toColorValue, 'speak');
+                            Entry.console.print('buzzer : 0', 'speak');
+                            Entry.console.print('==========================', 'speak');
                         }
 
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
 
                     return script;
                 } else if (script.timeFlag == 1) {
@@ -752,9 +763,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                ],
+                params: [null],
                 type: 'neobot_think_car_driving_stop',
             },
             paramsKeyMap: {},
@@ -771,9 +780,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     Entry.hw.sendQueue['SND'] = buzzerValue;
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_driving_stop ===',
-                            'speak');
+                        Entry.console.print('=== neobot_think_car_driving_stop ===', 'speak');
                         Entry.console.print('out3 : ' + out3Value, 'speak');
                         Entry.console.print('buzzer : ' + buzzerValue, 'speak');
                     }
@@ -786,15 +793,11 @@ Entry.NeobotThinkCar.getBlocks = function() {
                             Entry.console.print('out1 : 0', 'speak');
                             Entry.console.print('out2 : 0', 'speak');
                             Entry.console.print('out3 : 0', 'speak');
-                            Entry.console.print(
-                                'buzzer : 0',
-                                'speak');
-                            Entry.console.print(
-                                '==========================',
-                                'speak');
+                            Entry.console.print('buzzer : 0', 'speak');
+                            Entry.console.print('==========================', 'speak');
                         }
                         script.timeFlag = 0;
-                    }, 1 / 16 * 2000);
+                    }, 300);
 
                     return script;
                 } else if (script.timeFlag == 1) {
@@ -868,6 +871,30 @@ Entry.NeobotThinkCar.getBlocks = function() {
         /*************************
          * class neobot_think_car_sensor
          *************************/
+        neobot_think_car_sensor_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_sensor_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_sensor_title',
+            },
+            class: 'neobot_think_car_sensor',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_sensor_value: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1004,9 +1031,6 @@ Entry.NeobotThinkCar.getBlocks = function() {
             },
         },
 
-        /*************************
-         * class neobot_think_car_decision
-         *************************/
         neobot_think_car_decision_sensor_is_over: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1056,7 +1080,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 SYMBOL: 1,
                 VALUE: 2,
             },
-            class: 'neobot_think_car_decision',
+            class: 'neobot_think_car_sensor',
             isNotFor: ['neobot_think_car'],
             func: function(sprite, script) {
                 const sensorTemp = script.getStringField('SENSOR');
@@ -1143,7 +1167,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 SENSOR: 0,
                 COLOR: 1,
             },
-            class: 'neobot_think_car_decision',
+            class: 'neobot_think_car_sensor',
             isNotFor: ['neobot_think_car'],
             func: function(sprite, script) {
                 var sensorTemp = script.getStringField('SENSOR');
@@ -1242,7 +1266,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 SYMBOL: 1,
                 VALUE: 2,
             },
-            class: 'neobot_think_car_decision',
+            class: 'neobot_think_car_sensor',
             isNotFor: ['neobot_think_car'],
             func: function(sprite, script) {
                 var sensorTemp = script.getStringField('SENSOR');
@@ -1270,9 +1294,6 @@ Entry.NeobotThinkCar.getBlocks = function() {
             },
         },
 
-        /*************************
-         * class neobot_think_car_remote
-         *************************/
         neobot_think_car_remote_button: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1306,7 +1327,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             paramsKeyMap: {
                 KEY: 0,
             },
-            class: 'neobot_think_car_remote',
+            class: 'neobot_think_car_sensor',
             isNotFor: ['neobot_think_car'],
             func: function(sprite, script) {
                 var key = script.getNumberField('KEY');
@@ -1322,6 +1343,30 @@ Entry.NeobotThinkCar.getBlocks = function() {
         /*************************
          * class neobot_think_car_led
          *************************/
+        neobot_think_car_led_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_led_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_led_title',
+            },
+            class: 'neobot_think_car_led',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_led_on: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1398,17 +1443,18 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     const duration = script.getStringValue('DURATION', script);
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print('=== neobot_think_car_led_on ===',
-                            'speak');
+                        Entry.console.print('=== neobot_think_car_led_on ===', 'speak');
                         Entry.console.print('port : ' + port, 'speak');
                         Entry.console.print('brightness : ' + value, 'speak');
                         Entry.console.print('duration : ' + duration, 'speak');
-                        Entry.console.print('==========================',
-                            'speak');
+                        Entry.console.print('==========================', 'speak');
                     }
 
-                    if ((duration != '계속' && duration != 'constantly') &&
-                        Entry.parseNumber(duration) <= 0) {
+                    if (
+                        duration != '계속' &&
+                        duration != 'constantly' &&
+                        Entry.parseNumber(duration) <= 0
+                    ) {
                         return script.callReturn();
                     }
 
@@ -1435,8 +1481,8 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         } else {
                             Entry.hw.sendQueue[port] = 0;
                         }
-                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                            'neobot_think_car_led_on : 0', 'speak');
+                        if (Entry.NeobotThinkCar.log_to_console)
+                            Entry.console.print('neobot_think_car_led_on : 0', 'speak');
                         script.timeFlag = 0;
                     }, durationValue * 1000);
                     return script;
@@ -1490,8 +1536,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 const port = script.getStringField('PORT', script);
 
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print(
-                        '=== neobot_think_car_output_led_off ===', 'speak');
+                    Entry.console.print('=== neobot_think_car_output_led_off ===', 'speak');
                     Entry.console.print('port : ' + port, 'speak');
                     Entry.console.print('==========================', 'speak');
                 }
@@ -1563,16 +1608,16 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 // edited 210421, IN 값 0~100 을 0~255로 변경, 센서 100 이상은 최대값으로 처리함.
                 value = Math.max(value, 0);
                 value = Math.min(value, 100);
-                value = Math.ceil(value / 100 * 255);
+                value = Math.ceil((value / 100) * 255);
 
                 if (Entry.NeobotThinkCar.log_to_console) {
                     Entry.console.print(
                         '=== neobot_think_car_led_brightness_with_sensor ===',
-                        'speak');
+                        'speak'
+                    );
                     Entry.console.print('out port : ' + outPort, 'speak');
                     Entry.console.print('in port : ' + inPort, 'speak');
-                    Entry.console.print(
-                        'sensor value : ' + Entry.hw.portData[inPort], 'speak');
+                    Entry.console.print('sensor value : ' + Entry.hw.portData[inPort], 'speak');
                     Entry.console.print('output value : ' + value, 'speak');
                     Entry.console.print('==========================', 'speak');
                 }
@@ -1681,14 +1726,12 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     blue = Math.min(blue, 251);
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_color_led_on ===', 'speak');
+                        Entry.console.print('=== neobot_think_car_color_led_on ===', 'speak');
                         Entry.console.print('port : ' + port, 'speak');
                         Entry.console.print('red : ' + red, 'speak');
                         Entry.console.print('green : ' + green, 'speak');
                         Entry.console.print('blue : ' + blue, 'speak');
-                        Entry.console.print('==========================',
-                            'speak');
+                        Entry.console.print('==========================', 'speak');
                     }
 
                     const valRed = 252;
@@ -1702,50 +1745,67 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     if (out1) Entry.hw.sendQueue['OUT1'] = valRed;
                     if (out2) Entry.hw.sendQueue['OUT2'] = valRed;
                     if (out3) Entry.hw.sendQueue['OUT3'] = valRed;
-                    if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                        'neobot_think_car_color_led_on : ' + valRed, 'speak');
-                    setTimeout(function() { // set red
+                    if (Entry.NeobotThinkCar.log_to_console)
+                        Entry.console.print('neobot_think_car_color_led_on : ' + valRed, 'speak');
+                    setTimeout(function() {
+                        // set red
                         if (out1) Entry.hw.sendQueue['OUT1'] = red;
                         if (out2) Entry.hw.sendQueue['OUT2'] = red;
                         if (out3) Entry.hw.sendQueue['OUT3'] = red;
-                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                            'neobot_think_car_color_led_on : ' + red, 'speak');
-                        setTimeout(function() { // choose green
+                        if (Entry.NeobotThinkCar.log_to_console)
+                            Entry.console.print('neobot_think_car_color_led_on : ' + red, 'speak');
+                        setTimeout(function() {
+                            // choose green
                             if (out1) Entry.hw.sendQueue['OUT1'] = valGreen;
                             if (out2) Entry.hw.sendQueue['OUT2'] = valGreen;
                             if (out3) Entry.hw.sendQueue['OUT3'] = valGreen;
-                            if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                                'neobot_think_car_color_led_on : ' + valGreen,
-                                'speak');
-                            setTimeout(function() { // set green
+                            if (Entry.NeobotThinkCar.log_to_console)
+                                Entry.console.print(
+                                    'neobot_think_car_color_led_on : ' + valGreen,
+                                    'speak'
+                                );
+                            setTimeout(function() {
+                                // set green
                                 if (out1) Entry.hw.sendQueue['OUT1'] = green;
                                 if (out2) Entry.hw.sendQueue['OUT2'] = green;
                                 if (out3) Entry.hw.sendQueue['OUT3'] = green;
-                                if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                                    'neobot_think_car_color_led_on : ' + green,
-                                    'speak');
-                                setTimeout(function() { // choose blue
+                                if (Entry.NeobotThinkCar.log_to_console)
+                                    Entry.console.print(
+                                        'neobot_think_car_color_led_on : ' + green,
+                                        'speak'
+                                    );
+                                setTimeout(function() {
+                                    // choose blue
                                     if (out1) Entry.hw.sendQueue['OUT1'] = valBlue;
                                     if (out2) Entry.hw.sendQueue['OUT2'] = valBlue;
                                     if (out3) Entry.hw.sendQueue['OUT3'] = valBlue;
-                                    if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                                        'neobot_think_car_color_led_on : ' +
-                                        valBlue, 'speak');
-                                    setTimeout(function() { // set blue
+                                    if (Entry.NeobotThinkCar.log_to_console)
+                                        Entry.console.print(
+                                            'neobot_think_car_color_led_on : ' + valBlue,
+                                            'speak'
+                                        );
+                                    setTimeout(function() {
+                                        // set blue
                                         if (out1) Entry.hw.sendQueue['OUT1'] = blue;
                                         if (out2) Entry.hw.sendQueue['OUT2'] = blue;
                                         if (out3) Entry.hw.sendQueue['OUT3'] = blue;
-                                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                                            'neobot_think_car_color_led_on : ' +
-                                            blue, 'speak');
-                                        setTimeout(function() { // accept
+                                        if (Entry.NeobotThinkCar.log_to_console)
+                                            Entry.console.print(
+                                                'neobot_think_car_color_led_on : ' + blue,
+                                                'speak'
+                                            );
+                                        setTimeout(function() {
+                                            // accept
                                             if (out1) Entry.hw.sendQueue['OUT1'] = valAccept;
                                             if (out2) Entry.hw.sendQueue['OUT2'] = valAccept;
                                             if (out3) Entry.hw.sendQueue['OUT3'] = valAccept;
-                                            if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                                                'neobot_think_car_color_led_on : ' +
-                                                valAccept, 'speak');
-                                            setTimeout(function() { // final delay
+                                            if (Entry.NeobotThinkCar.log_to_console)
+                                                Entry.console.print(
+                                                    'neobot_think_car_color_led_on : ' + valAccept,
+                                                    'speak'
+                                                );
+                                            setTimeout(function() {
+                                                // final delay
                                                 script.timeFlag = 0;
                                             }, 200);
                                         }, 200);
@@ -1769,6 +1829,30 @@ Entry.NeobotThinkCar.getBlocks = function() {
         /*************************
          * class neobot_think_car_output
          *************************/
+        neobot_think_car_output_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_output_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_output_title',
+            },
+            class: 'neobot_think_car_output',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_set_output: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1826,8 +1910,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 }
 
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print('=== neobot_think_car_set_output ===',
-                        'speak');
+                    Entry.console.print('=== neobot_think_car_set_output ===', 'speak');
                     Entry.console.print('port : ' + port, 'speak');
                     Entry.console.print('value : ' + value, 'speak');
                     Entry.console.print('==========================', 'speak');
@@ -1847,6 +1930,30 @@ Entry.NeobotThinkCar.getBlocks = function() {
         /*************************
          * class neobot_think_car_motor
          *************************/
+        neobot_think_car_motor_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_motor_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_motor_title',
+            },
+            class: 'neobot_think_car_motor',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_robot: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1875,10 +1982,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_robot',
             },
             paramsKeyMap: {
@@ -1914,8 +2018,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 }
 
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print('=== neobot_think_car_robot ===',
-                        'speak');
+                    Entry.console.print('=== neobot_think_car_robot ===', 'speak');
                     Entry.console.print('move : ' + move, 'speak');
                     Entry.console.print('left value : ' + leftValue, 'speak');
                     Entry.console.print('right value : ' + rightValue, 'speak');
@@ -2003,13 +2106,15 @@ Entry.NeobotThinkCar.getBlocks = function() {
             func: function(sprite, script) {
                 if (!script.isStart) {
                     const motor = script.getStringField('MOTOR', script);
-                    const direction = script.getStringField('DIRECTION',
-                        script);
+                    const direction = script.getStringField('DIRECTION', script);
                     const speed = script.getStringValue('SPEED', script);
                     const duration = script.getStringValue('DURATION', script);
 
-                    if (duration != '계속' && duration != 'constantly' &&
-                        Entry.parseNumber(duration) <= 0) {
+                    if (
+                        duration != '계속' &&
+                        duration != 'constantly' &&
+                        Entry.parseNumber(duration) <= 0
+                    ) {
                         return script.callReturn();
                     }
 
@@ -2049,33 +2154,29 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     }
                     speedValue = Math.max(speedValue, 0);
                     speedValue = Math.min(speedValue, 100);
-                    speedValue = Math.ceil(speedValue / 100 * 15);
+                    speedValue = Math.ceil((speedValue / 100) * 15);
 
                     const leftOutValue = leftDirectionValue + speedValue;
                     const rightOutValue = rightDirectionValue + speedValue;
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_motor_start ===', 'speak');
+                        Entry.console.print('=== neobot_think_car_motor_start ===', 'speak');
                         Entry.console.print('motor : ' + motor, 'speak');
-                        Entry.console.print('direction : ' + direction,
-                            'speak');
+                        Entry.console.print('direction : ' + direction, 'speak');
                         Entry.console.print('speed : ' + speed, 'speak');
                         Entry.console.print('duration : ' + duration, 'speak');
                         Entry.console.print(
                             'left direction value : ' + leftDirectionValue,
-                            'speak');
+                            'speak'
+                        );
                         Entry.console.print(
                             'right direction value : ' + rightDirectionValue,
-                            'speak');
-                        Entry.console.print('speed value : ' + speedValue,
-                            'speak');
-                        Entry.console.print(
-                            'left output value : ' + leftOutValue, 'speak');
-                        Entry.console.print(
-                            'right output value : ' + rightOutValue, 'speak');
-                        Entry.console.print('==========================',
-                            'speak');
+                            'speak'
+                        );
+                        Entry.console.print('speed value : ' + speedValue, 'speak');
+                        Entry.console.print('left output value : ' + leftOutValue, 'speak');
+                        Entry.console.print('right output value : ' + rightOutValue, 'speak');
+                        Entry.console.print('==========================', 'speak');
                     }
 
                     if (moveLeft) {
@@ -2095,8 +2196,8 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     setTimeout(function() {
                         Entry.hw.sendQueue['DCL'] = 0;
                         Entry.hw.sendQueue['DCR'] = 0;
-                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                            'neobot_think_car_motor_start : 0', 'speak');
+                        if (Entry.NeobotThinkCar.log_to_console)
+                            Entry.console.print('neobot_think_car_motor_start : 0', 'speak');
                         script.timeFlag = 0;
                     }, durationValue * 1000);
                     return script;
@@ -2137,9 +2238,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null, null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_motor_stop',
             },
             paramsKeyMap: {
@@ -2151,8 +2250,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 const motor = script.getNumberField('MOTOR');
 
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print('=== neobot_think_car_motor_stop ===',
-                        'speak');
+                    Entry.console.print('=== neobot_think_car_motor_stop ===', 'speak');
                     Entry.console.print('motor : ' + motor, 'speak');
                     Entry.console.print('==========================', 'speak');
                 }
@@ -2172,6 +2270,30 @@ Entry.NeobotThinkCar.getBlocks = function() {
         /*************************
          * class neobot_think_car_melody
          *************************/
+        neobot_think_car_buzzer_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_buzzer_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_buzzer_title',
+            },
+            class: 'neobot_think_car_melody',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_play_note_for: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2221,9 +2343,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                         [Lang.Blocks.neobot_think_car_sound_half_note, '2'],
                         [Lang.Blocks.neobot_think_car_sound_quarter_note, '4'],
                         [Lang.Blocks.neobot_think_car_sound_eighth_note, '8'],
-                        [
-                            Lang.Blocks.neobot_think_car_sound_sixteenth_note,
-                            '16'],
+                        [Lang.Blocks.neobot_think_car_sound_sixteenth_note, '16'],
                     ],
                     value: '2',
                     fontSize: 11,
@@ -2258,14 +2378,12 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     value = Math.min(value, 72);
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_play_note_for ===', 'speak');
+                        Entry.console.print('=== neobot_think_car_play_note_for ===', 'speak');
                         Entry.console.print('note : ' + note, 'speak');
                         Entry.console.print('octave : ' + octave, 'speak');
                         Entry.console.print('duration : ' + duration, 'speak');
                         Entry.console.print('value : ' + value, 'speak');
-                        Entry.console.print('==========================',
-                            'speak');
+                        Entry.console.print('==========================', 'speak');
                     }
 
                     script.isStart = true;
@@ -2274,10 +2392,10 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     Entry.hw.sendQueue['SND'] = value;
                     setTimeout(function() {
                         Entry.hw.sendQueue['SND'] = 0;
-                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                            'neobot_think_car_play_note_for : 0', 'speak');
+                        if (Entry.NeobotThinkCar.log_to_console)
+                            Entry.console.print('neobot_think_car_play_note_for : 0', 'speak');
                         script.timeFlag = 0;
-                    }, 1 / duration * 2000);
+                    }, (1 / duration) * 2000);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
@@ -2316,9 +2434,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null, null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_melody_play_with_sensor',
             },
             paramsKeyMap: {
@@ -2333,12 +2449,13 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 // edited 210421, 0~100 을 0~65로 변환, 100 이상은 최대값으로 처리함.
                 value = Math.max(value, 0);
                 value = Math.min(value, 100);
-                value = Math.ceil(value / 100 * 65);
+                value = Math.ceil((value / 100) * 65);
 
                 if (Entry.NeobotThinkCar.log_to_console) {
                     Entry.console.print(
                         '=== neobot_think_car_melody_play_with_sensor ===',
-                        'speak');
+                        'speak'
+                    );
                     Entry.console.print('input : ' + input, 'speak');
                     Entry.console.print('value : ' + value, 'speak');
                     Entry.console.print('==========================', 'speak');
@@ -2363,9 +2480,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                ],
+                params: [null],
                 type: 'neobot_think_car_melody_stop',
             },
             paramsKeyMap: {},
@@ -2373,8 +2488,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             isNotFor: ['neobot_think_car'],
             func: function(sprite, script) {
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print('=== neobot_think_car_melody_stop ===',
-                        'speak');
+                    Entry.console.print('=== neobot_think_car_melody_stop ===', 'speak');
                     Entry.console.print('value : 0', 'speak');
                     Entry.console.print('==========================', 'speak');
                 }
@@ -2387,6 +2501,30 @@ Entry.NeobotThinkCar.getBlocks = function() {
         /*************************
          * class neobot_think_car_servo
          *************************/
+        neobot_think_car_servo_title: {
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: '#191970',
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                contentPos: {
+                    x: 5,
+                },
+            },
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.neobot_think_car_servo_title,
+                    color: '#191970',
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'neobot_think_car_servo_title',
+            },
+            class: 'neobot_think_car_servo',
+            isNotFor: ['neobot_think_car'],
+            events: {},
+        },
         neobot_think_car_servo_init: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2414,10 +2552,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_servo_init',
             },
             paramsKeyMap: {
@@ -2432,11 +2567,9 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     const initValue = 1;
 
                     if (Entry.NeobotThinkCar.log_to_console) {
-                        Entry.console.print(
-                            '=== neobot_think_car_servo_init ===', 'speak');
+                        Entry.console.print('=== neobot_think_car_servo_init ===', 'speak');
                         Entry.console.print('port : ' + port, 'speak');
-                        Entry.console.print('==========================',
-                            'speak');
+                        Entry.console.print('==========================', 'speak');
                     }
 
                     let out1 = port == 'OUT1';
@@ -2454,15 +2587,17 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     if (out1) Entry.hw.sendQueue['OUT1'] = resetValue;
                     if (out2) Entry.hw.sendQueue['OUT2'] = resetValue;
                     if (out3) Entry.hw.sendQueue['OUT3'] = resetValue;
-                    if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                        'neobot_think_car_servo_init : ' + resetValue, 'speak');
+                    if (Entry.NeobotThinkCar.log_to_console)
+                        Entry.console.print('neobot_think_car_servo_init : ' + resetValue, 'speak');
                     setTimeout(function() {
                         if (out1) Entry.hw.sendQueue['OUT1'] = initValue;
                         if (out2) Entry.hw.sendQueue['OUT2'] = initValue;
                         if (out3) Entry.hw.sendQueue['OUT3'] = initValue;
-                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                            'neobot_think_car_servo_init : ' + initValue,
-                            'speak');
+                        if (Entry.NeobotThinkCar.log_to_console)
+                            Entry.console.print(
+                                'neobot_think_car_servo_init : ' + initValue,
+                                'speak'
+                            );
                         setTimeout(function() {
                             script.timeFlag = 0;
                         }, 100);
@@ -2541,12 +2676,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                    null,
-                    null,
-                ],
+                params: [null, null, null, null],
                 type: 'neobot_think_car_servo_rotate',
             },
             paramsKeyMap: {
@@ -2585,13 +2715,11 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 }
 
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print(
-                        '=== neobot_think_car_servo_rotate ===');
+                    Entry.console.print('=== neobot_think_car_servo_rotate ===');
                     Entry.console.print('port : ' + port, 'speak');
                     Entry.console.print('direction : ' + direction, 'speak');
                     Entry.console.print('speed : ' + speed, 'speak');
-                    Entry.console.print('direction value : ' + directionValue,
-                        'speak');
+                    Entry.console.print('direction value : ' + directionValue, 'speak');
                     Entry.console.print('speed value : ' + speedValue, 'speak');
                     Entry.console.print('output value : ' + outValue, 'speak');
                     Entry.console.print('==========================', 'speak');
@@ -2634,10 +2762,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
             ],
             events: {},
             def: {
-                params: [
-                    null,
-                    null,
-                ],
+                params: [null, null],
                 type: 'neobot_think_car_servo_stop',
             },
             paramsKeyMap: {
@@ -2650,8 +2775,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                 let outValue = 254;
 
                 if (Entry.NeobotThinkCar.log_to_console) {
-                    Entry.console.print('=== neobot_think_car_servo_stop ===',
-                        'speak');
+                    Entry.console.print('=== neobot_think_car_servo_stop ===', 'speak');
                     Entry.console.print('port : ' + port, 'speak');
                     Entry.console.print('output value: ' + outValue, 'speak');
                     Entry.console.print('==========================', 'speak');
@@ -2790,8 +2914,7 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     if (Entry.Utils.isNumber(degree)) {
                         degreeValue = Entry.parseNumber(degree);
                     } else {
-                        if (degree == 'IN1' || degree == 'IN2' || degree ==
-                            'IN3') {
+                        if (degree == 'IN1' || degree == 'IN2' || degree == 'IN3') {
                             degreeValue = Entry.hw.portData[degree];
                         } else {
                             degreeValue = 0;
@@ -2805,20 +2928,16 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     if (Entry.NeobotThinkCar.log_to_console) {
                         Entry.console.print(
                             '=== neobot_think_car_servo_change_degree ===',
-                            'speak');
+                            'speak'
+                        );
                         Entry.console.print('port : ' + port, 'speak');
-                        Entry.console.print('direction : ' + direction,
-                            'speak');
+                        Entry.console.print('direction : ' + direction, 'speak');
                         Entry.console.print('speed : ' + speed, 'speak');
                         Entry.console.print('degree : ' + degree, 'speak');
-                        Entry.console.print(
-                            'directionValue : ' + directionValue, 'speak');
-                        Entry.console.print('speedValue : ' + speedValue,
-                            'speak');
-                        Entry.console.print('degreeValue : ' + degreeValue,
-                            'speak');
-                        Entry.console.print('==========================',
-                            'speak');
+                        Entry.console.print('directionValue : ' + directionValue, 'speak');
+                        Entry.console.print('speedValue : ' + speedValue, 'speak');
+                        Entry.console.print('degreeValue : ' + degreeValue, 'speak');
+                        Entry.console.print('==========================', 'speak');
                     }
 
                     script.isStart = true;
@@ -2828,24 +2947,33 @@ Entry.NeobotThinkCar.getBlocks = function() {
                     if (out1) Entry.hw.sendQueue['OUT1'] = directionValue;
                     if (out2) Entry.hw.sendQueue['OUT2'] = directionValue;
                     if (out3) Entry.hw.sendQueue['OUT3'] = directionValue;
-                    if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                        'neobot_think_car_servo_change_degree : ' +
-                        directionValue, 'speak');
-                    setTimeout(function() { // speed
+                    if (Entry.NeobotThinkCar.log_to_console)
+                        Entry.console.print(
+                            'neobot_think_car_servo_change_degree : ' + directionValue,
+                            'speak'
+                        );
+                    setTimeout(function() {
+                        // speed
                         if (out1) Entry.hw.sendQueue['OUT1'] = speedValue;
                         if (out2) Entry.hw.sendQueue['OUT2'] = speedValue;
                         if (out3) Entry.hw.sendQueue['OUT3'] = speedValue;
-                        if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                            'neobot_think_car_servo_change_degree : ' +
-                            speedValue, 'speak');
-                        setTimeout(function() { // degree
+                        if (Entry.NeobotThinkCar.log_to_console)
+                            Entry.console.print(
+                                'neobot_think_car_servo_change_degree : ' + speedValue,
+                                'speak'
+                            );
+                        setTimeout(function() {
+                            // degree
                             if (out1) Entry.hw.sendQueue['OUT1'] = degreeValue;
                             if (out2) Entry.hw.sendQueue['OUT2'] = degreeValue;
                             if (out3) Entry.hw.sendQueue['OUT3'] = degreeValue;
-                            if (Entry.NeobotThinkCar.log_to_console) Entry.console.print(
-                                'neobot_think_car_servo_change_degree : ' +
-                                degreeValue, 'speak');
-                            setTimeout(function() { // final delay
+                            if (Entry.NeobotThinkCar.log_to_console)
+                                Entry.console.print(
+                                    'neobot_think_car_servo_change_degree : ' + degreeValue,
+                                    'speak'
+                                );
+                            setTimeout(function() {
+                                // final delay
                                 script.timeFlag = 0;
                             }, 200);
                         }, 200);

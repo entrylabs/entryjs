@@ -3,7 +3,7 @@ import PopupHelper from '../popup_helper';
 export default class InputPopup {
     #popupKey = 'ai_learning';
     result = [];
-    
+
     constructor(source) {
         this.generatePopupView(source);
     }
@@ -16,7 +16,7 @@ export default class InputPopup {
         return this.result;
     }
 
-    generatePopupView({url, labels, type, recordTime}) {
+    generatePopupView({ url, labels, type, recordTime }) {
         if (!this.popupHelper) {
             if (window.popupHelper) {
                 this.popupHelper = window.popupHelper;
@@ -31,17 +31,20 @@ export default class InputPopup {
             onShow: () => {
                 this.popupHelper.addClass('learning_popup');
                 isPauseClicked = false;
-                localStorage.setItem(this.#popupKey, JSON.stringify({url, labels, type, recordTime}));
+                localStorage.setItem(
+                    this.#popupKey,
+                    JSON.stringify({ url, labels, type, recordTime })
+                );
                 this.isLoading = true;
                 this.result = [];
-                if(Entry.engine.state == 'run') {
-                    Entry.engine.togglePause({visible:false});
+                if (Entry.engine.state == 'run') {
+                    Entry.engine.togglePause({ visible: false });
                 }
             },
             closeEvent: () => {
                 this.isLoading = false;
-                if(Entry.engine.state == 'pause' && !isPauseClicked) {
-                    Entry.engine.togglePause({visible:false});
+                if (Entry.engine.state == 'pause' && !isPauseClicked) {
+                    Entry.engine.togglePause({ visible: false });
                 }
             },
             setPopupLayout: (popup) => {
@@ -52,29 +55,36 @@ export default class InputPopup {
                     class: `learningInputPopup ${type}`,
                     src: `/learning/popup/${type}`
                 });
-                $(iframe).on('load', ({target}) => {
-                    target.contentWindow.addEventListener("message", ({data:eventData = {}}) => {
-                        const { key, data } = JSON.parse(eventData);
-                        if(key === 'predict') {
-                            this.result = data;
-                            this.popupHelper.hide();
-                        }
-                        if(key === 'stop') {
-                            this.popupHelper.hide();
-                            Entry.engine.toggleStop()
-                        }
-                        if(key === 'pause') {
-                            if(!isPauseClicked) {
-                                isPauseClicked = true;
-                                Entry.engine.togglePause({visible:false});
+                $(iframe).on('load', ({ target }) => {
+                    target.contentWindow.addEventListener(
+                        'message',
+                        ({ data: eventData = {} }) => {
+                            if (typeof eventData !== 'string') {
+                                return;
                             }
-                            Entry.engine.togglePause();
-                        }
-                        if(key === 'error') {
-                            this.popupHelper.hide();
-                            this.toastError();
-                        }
-                    }, false);
+                            const { key, data } = JSON.parse(eventData);
+                            if (key === 'predict') {
+                                this.result = data;
+                                this.popupHelper.hide();
+                            }
+                            if (key === 'stop') {
+                                this.popupHelper.hide();
+                                Entry.engine.toggleStop();
+                            }
+                            if (key === 'pause') {
+                                if (!isPauseClicked) {
+                                    isPauseClicked = true;
+                                    Entry.engine.togglePause({ visible: false });
+                                }
+                                Entry.engine.togglePause();
+                            }
+                            if (key === 'error') {
+                                this.popupHelper.hide();
+                                this.toastError();
+                            }
+                        },
+                        false
+                    );
                 });
                 content.append(iframe);
                 popup.append(content);

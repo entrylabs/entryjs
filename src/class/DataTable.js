@@ -9,12 +9,12 @@ import _cloneDeep from 'lodash/cloneDeep';
 import _findIndex from 'lodash/findIndex';
 import _isEmpty from 'lodash/isEmpty';
 import DataTableSource from './source/DataTableSource';
-import { DataAnalytics, ModalChart } from '@entrylabs/tool';
+import { DataAnalytics, ModalChart, ModalTable } from '@entrylabs/tool';
 
 class DataTable {
     #tables = [];
     #view;
-    modal;
+    modals = [];
     selected;
 
     get tables() {
@@ -22,13 +22,19 @@ class DataTable {
     }
 
     get dataTables() {
-        return _map(this.#tables, ({ id, fields, chart, name, origin, summary }) => ({
-            id,
-            name,
-            summary,
-            chart: _cloneDeep(chart),
-            table: [[...fields], ..._cloneDeep(origin)],
-        }));
+        return _map(
+            this.#tables,
+            ({ id, fields, chart, name, origin, summary, provider, description, fieldInfos }) => ({
+                id,
+                name,
+                provider,
+                description,
+                fieldInfos,
+                summary,
+                chart: _cloneDeep(chart),
+                table: [[...fields], ..._cloneDeep(origin)],
+            })
+        );
     }
 
     constructor() {
@@ -152,12 +158,12 @@ class DataTable {
     saveTable = ({ selected }) => {
         this.setSource(selected);
         Entry.playground.reloadPlayground();
-        Entry.creationChangedEvent.notify();
+        Entry.creationChangedEvent?.notify();
     };
 
     removeTable = (index) => {
         this.#tables = _filter(this.#tables, (__, tIndex) => index !== tIndex);
-        Entry.creationChangedEvent.notify();
+        Entry.creationChangedEvent?.notify();
     };
 
     show(data) {
@@ -254,24 +260,43 @@ class DataTable {
     }
 
     showChart(tableId, chartIndex = 0) {
-        this.closeChart();
+        this.closeModal();
         const source = this.getSource(tableId);
         if (!source) {
             console.log(`not exist souce, table id: ${tableId}`);
             return;
         }
-        if (!source.modal) {
-            source.modal = this.createChart(source, chartIndex);
+        let chart = source.modals.find((m) => m.name === 'chart');
+        if (!chart) {
+            chart = this.createChart(source, chartIndex);
+            source.modals.push(chart);
+            this.modals.push(chart);
         }
         source.forceApply();
-        source.modal.show(undefined, { chartIndex });
-        this.modal = source.modal;
+        chart.show(undefined, { chartIndex });
     }
 
-    closeChart() {
-        if (this.modal && this.modal.isShow) {
-            this.modal.hide();
+    showTable(tableId) {
+        this.closeModal();
+        const source = this.getSource(tableId);
+        if (!source) {
+            console.log(`not exist souce, table id: ${tableId}`);
+            return;
         }
+        let table = source.modals.find((m) => m.name === 'table');
+        if (!table) {
+            table = this.createTable(source);
+            source.modals.push(table);
+            this.modals.push(table);
+        }
+        source.forceApply();
+        table.show();
+    }
+
+    closeModal() {
+        this.modals.forEach((m) => {
+            m.hide();
+        });
     }
 
     createChart(source, chartIndex = 0) {
@@ -280,7 +305,7 @@ class DataTable {
             class: 'entry-table-chart',
             parent: $(Entry.modalContainer),
         })[0];
-        return new ModalChart({
+        const modal = new ModalChart({
             data: {
                 chartIndex,
                 source: { fields, origin: rows, chart },
@@ -290,12 +315,35 @@ class DataTable {
             },
             container,
         });
+        modal.name = 'chart';
+        return modal;
+    }
+
+    createTable(source) {
+        const container = Entry.Dom('div', {
+            class: 'entry-table-modal',
+            parent: $(Entry.modalContainer),
+        })[0];
+        const modal = new ModalTable({
+            data: {
+                table: source,
+                tables: this.tables,
+                stop: () => Entry.engine.toggleStop(),
+                isIframe: self !== top,
+                togglePause: () => Entry.engine.togglePause(),
+            },
+            container,
+        });
+        modal.name = 'table';
+        return modal;
     }
 
     clear() {
         this.#tables = [];
-        this.modal = null;
+        this.modals = [];
     }
 }
 
-export default new DataTable();
+Entry.DataTable = new DataTable();
+
+export default Entry.DataTable;

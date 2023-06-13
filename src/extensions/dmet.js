@@ -141,7 +141,10 @@ class dmetTable {
             return this.#array[key - 1].value;
         } else if (Array.isArray(key)) {
             const [rowKey, ...keys] = key;
-            const { value: row } = this.#array[rowKey - 1] || {};
+            let { value: row } = this.#array[rowKey - 1] || {};
+            if (rowKey === 0) {
+                row = this.#fields;
+            }
             if (keys.length && row) {
                 return _get(row, `[${keys.map((x) => x - 1).join('][')}]`);
             } else {
@@ -333,10 +336,14 @@ class dmetTable {
             key = index;
         }
         const { value: row, key: objKey, x, y } = this.getRow(key);
-        if (!row) {
-            throw { message: 'not found row' };
+        if (x === -1) {
+            this.#fields[y] = value;
+        } else {
+            if (!row) {
+                throw { message: `not found row ${y}` };
+            }
+            row[y] = value;
         }
-        row[y] = value;
         return this.getOperation({ type: 'replace', key, index, data: value, newKey });
     }
 }

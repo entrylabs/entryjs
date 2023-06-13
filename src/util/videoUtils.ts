@@ -16,6 +16,7 @@ import clamp from 'lodash/clamp';
 type FlipStatus = {
     horizontal: boolean;
     vertical: boolean;
+    isChanged: boolean;
 };
 
 type ModelStatus = {
@@ -79,6 +80,7 @@ class VideoUtils implements MediaUtilsInterface {
     public flipStatus: FlipStatus = {
         horizontal: false,
         vertical: false,
+        isChanged: false,
     };
 
     public indicatorStatus: ModelStatus = {
@@ -221,6 +223,9 @@ class VideoUtils implements MediaUtilsInterface {
         }
 
         try {
+            if (!this.motionWorker) {
+                this.motionWorker = new VideoMotionWorker();
+            }
             /*
                 NT11576  #11683
                 파이어폭스는 기본적으로 4:3비율로만 비디오를 가져오게 되어있어서, 사이즈를 조절해야함. 
@@ -251,7 +256,9 @@ class VideoUtils implements MediaUtilsInterface {
             });
             console.time('test');
             if (this.isChrome) {
-                this.worker = new VideoWorker();
+                if (!this.worker) {
+                    this.worker = new VideoWorker();
+                }
                 this.worker.onmessage = (e: { data: { type: String; message: any } }) => {
                     const { type, message } = e.data;
                     if (Entry.engine.state !== 'run' && type !== 'init') {
@@ -368,6 +375,7 @@ class VideoUtils implements MediaUtilsInterface {
             this.stream = stream;
             this.canvasVideo = GEHelper.getVideoElement(video);
             this.video = video;
+            this.stopVideo();
             this.isInitialized = true;
         } catch (err) {
             console.log(err);
@@ -408,7 +416,7 @@ class VideoUtils implements MediaUtilsInterface {
     }
 
     videoOnLoadHandler() {
-        if (!this.flipStatus.horizontal) {
+        if (!this.flipStatus.horizontal && !this.flipStatus.isChanged) {
             this.setOptions('hflip', null);
         }
     }
@@ -726,10 +734,8 @@ class VideoUtils implements MediaUtilsInterface {
 
     turnOnWebcam() {
         GEHelper.drawVideoElement(this.canvasVideo);
-        if (!this.flipStatus.horizontal) {
-            this.setOptions('hflip', null);
-        }
     }
+
     setOptions(target: String, value: number) {
         if (!this.canvasVideo) {
             return;
@@ -739,6 +745,7 @@ class VideoUtils implements MediaUtilsInterface {
                 GEHelper.setVideoAlpha(this.canvasVideo, value);
                 break;
             case 'hflip':
+                this.flipStatus.isChanged = true;
                 this.flipStatus.horizontal = !this.flipStatus.horizontal;
                 if (this.isChrome) {
                     this.worker.postMessage({
@@ -749,6 +756,7 @@ class VideoUtils implements MediaUtilsInterface {
                 GEHelper.hFlipVideoElement(this.canvasVideo);
                 break;
             case 'vflip':
+                this.flipStatus.isChanged = true;
                 this.flipStatus.vertical = !this.flipStatus.vertical;
                 GEHelper.vFlipVideoElement(this.canvasVideo);
                 break;
@@ -815,6 +823,7 @@ class VideoUtils implements MediaUtilsInterface {
         this.disableAllModels();
         GEHelper.resetHandlers();
         this.turnOffWebcam();
+        this.flipStatus.isChanged = false;
         if (!this.flipStatus.horizontal) {
             this.setOptions('hflip', null);
         }
@@ -849,17 +858,22 @@ class VideoUtils implements MediaUtilsInterface {
     destroy() {
         this.disableAllModels();
         this.turnOffWebcam();
+        this.reset();
         this.stopVideo();
+        GEHelper.destroy();
         this.video = null;
         this.canvasVideo = null;
         this.inMemoryCanvas = null;
         this.flipStatus = {
             horizontal: false,
             vertical: false,
+            isChanged: false,
         };
         this.objects = [];
         this.poses = { predictions: [], adjacents: [] };
         this.faces = [];
+        this.worker = null;
+        this.motionWorker = null;
         this.isInitialized = false;
     }
 

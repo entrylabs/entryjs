@@ -62,11 +62,13 @@ Entry.FieldTrashcan = class FieldTrashcan {
                 if (this.dragBlock instanceof Entry.BlockView) {
                     const prevBlock = this.dragBlock.block.getPrevBlock();
                     if (!prevBlock) {
+                        const script = this.dragBlock.block.getCode();
                         Entry.do('destroyThread', this.dragBlock.block.thread, 'trashcan').isPass(
                             true,
                             true
                         );
                         Entry.Utils.playSound('entryDelete');
+                        script?.changeEvent?.notify();
                     }
                 } else if (this.dragBlock instanceof Entry.Comment) {
                     Entry.do('removeComment', this.dragBlock).isPass(true, true);

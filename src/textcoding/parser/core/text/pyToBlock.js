@@ -967,6 +967,8 @@ Entry.PyToBlockParser = class {
             case 'fonts':
                 return EntryStatic.fonts.find(({ family }) => family === value).family;
             case 'objectSequence':
+            case 'blockCount':
+                return value;
         }
     }
 

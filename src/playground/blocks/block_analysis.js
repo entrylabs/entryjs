@@ -1,6 +1,7 @@
 // import _chain from 'lodash/chain';
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
+import { toNumber } from '../../util/common';
 
 module.exports = {
     getBlocks() {
@@ -404,6 +405,59 @@ module.exports = {
                     py: [],
                 },
             },
+            // 테이블 $1의 현재 상태를 저장하기
+            save_current_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'save_current_table',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['D&value'],
+                        },
+                        null,
+                    ],
+                    type: 'save_current_table',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const table = DataTable.getSource(tableId);
+                    DataTable.saveTable({ selected: table.dataTable });
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             // 테이블 %1 %2 개수
             get_table_count: {
                 color: EntryStatic.colorSet.block.default.ANALYSIS,
@@ -433,6 +487,16 @@ module.exports = {
                     },
                 ],
                 events: {},
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['D&value'],
+                        },
+                        null,
+                    ],
+                    type: 'get_table_count',
+                },
                 def: {
                     params: [null, null],
                     type: 'get_table_count',
@@ -636,9 +700,10 @@ module.exports = {
                     const calc = script.getField('CALC', script);
                     const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
-                    const array = table.array.map(({ value = [] }) =>
-                        _isNumber(value[col - 1]) ? value[col - 1] : 0
-                    );
+                    const array = table.array.map(({ value = [] }) => {
+                        const parsed = toNumber(value[col - 1]);
+                        return _isNumber(parsed) ? parsed : 0;
+                    });
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;
@@ -668,6 +733,133 @@ module.exports = {
                     py: [],
                 },
             },
+            // 테이블 %1 창 열기
+            open_table: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'open_table',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value', 'B&value'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    CHART_INDEX: 1,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    DataTable.showTable(tableId);
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            // 테이블 %1 창을 %2 초 동안 열기
+            open_table_wait: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/block_analysis.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'number',
+                            params: ['4'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table_wait',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value', 'B&value'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['B&value'],
+                        },
+                        null,
+                    ],
+                    type: 'open_table_wait',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    SECOND: 1,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const timeValue = script.getNumberValue('SECOND', script);
+                    DataTable.showTable(tableId);
+                    setTimeout(() => {
+                        DataTable.closeModal();
+                    }, timeValue * 1000);
+                    return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            // 테이블 %1 의 %2 차트 창 열기
             open_table_chart: {
                 color: EntryStatic.colorSet.block.default.ANALYSIS,
                 outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
@@ -766,7 +958,7 @@ module.exports = {
                 class: 'analysis',
                 isNotFor: ['analysis'],
                 func(sprite, script) {
-                    DataTable.closeChart();
+                    DataTable.closeModal();
                     return script.callReturn();
                 },
                 syntax: {

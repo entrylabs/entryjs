@@ -1,5 +1,8 @@
 'use strict';
 
+import _find from 'lodash/find';
+import _includes from 'lodash/includes';
+
 Entry.STATEMENT = 0;
 Entry.PARAM = -1;
 Entry.Code = class Code {
@@ -355,6 +358,9 @@ Entry.Code = class Code {
         const event = Entry.creationChangedEvent;
         if (board && event && board.constructor !== Entry.BlockMenu) {
             event.notify();
+            if (Entry.codeChangedEvent) {
+                Entry.codeChangedEvent.notify();
+            }
         }
     }
 
@@ -372,6 +378,10 @@ Entry.Code = class Code {
             return block.type === type;
         });
         return this._blockMap[id];
+    }
+
+    findByParamId(paramId) {
+        return _find(this._blockMap, (block) => _includes(block?.params || [], paramId));
     }
 
     registerBlock(block) {
@@ -455,6 +465,18 @@ Entry.Code = class Code {
             .value();
     }
 
+    getBlockListForEventThread(excludePrimitive, type) {
+        return _.chain(this.getThreads())
+            .map((t) => {
+                if (t._event) {
+                    return t.getBlockList(excludePrimitive, type);
+                }
+                return [];
+            })
+            .flatten(true)
+            .value();
+    }
+
     removeBlocksByType(type) {
         this.getBlockList(false, type).forEach((b) => b.doDestroy());
     }
@@ -494,7 +516,7 @@ Entry.Code = class Code {
                     } else {
                         funcCode.callStackLength--;
                         funcCode.removeExecutor(funcExecutor);
-                        return resolve(Entry.STATIC.BREAK);
+                        return resolve(Entry.STATIC.CONTINUE);
                     }
                 }
                 return resolve();

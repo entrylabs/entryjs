@@ -15,7 +15,10 @@ class DataTableSource {
     #source;
     #copiedChart;
     summary;
-    modal;
+    provider;
+    description;
+    fieldInfos;
+    modals = [];
     updated = new Date();
     tab = 'summary';
 
@@ -30,6 +33,9 @@ class DataTableSource {
             fields = [],
             summary,
             updatedAt,
+            provider,
+            description,
+            fieldInfos,
         } = source;
         this.#name = name;
         this.#id = id;
@@ -38,11 +44,14 @@ class DataTableSource {
         this.#data = new dmetTable(source);
         this.#chart = chart || [];
         this.summary = summary;
+        this.provider = provider;
+        this.description = description;
+        this.fieldInfos = fieldInfos;
         this.tab = tab;
         this.updated = updatedAt ? new Date(updatedAt) : new Date();
         // 정지시 data 초기화.
         Entry.addEventListener('stop', () => {
-            this.modal = null;
+            this.modals = [];
             this.#data.from({
                 ...source,
                 data: this.#data.origin,
@@ -52,16 +61,18 @@ class DataTableSource {
         });
 
         const apply = (force = false) => {
-            if (this.modal && (force || this.modal.isShow)) {
-                this.modal.setData({
-                    source: {
-                        chart: this.copiedChart,
-                        fields: this.fields,
-                        origin: this.rows,
-                        tab: this.tab,
-                        summary: this.summary,
-                    },
-                });
+            if (this.modals.length > 0 && (force || this.modals.some((modal) => modal.isShow))) {
+                this.modals.forEach((modal) =>
+                    modal.setData({
+                        source: {
+                            chart: this.copiedChart,
+                            fields: this.fields,
+                            origin: this.rows,
+                            tab: this.tab,
+                            summary: this.summary,
+                        },
+                    })
+                );
             }
         };
         this.forceApply = () => apply(true);
@@ -97,6 +108,10 @@ class DataTableSource {
         return this.#chart;
     }
 
+    get table() {
+        return [this.fields, ...this.rows];
+    }
+
     get origin() {
         return this.#data.origin;
     }
@@ -106,6 +121,15 @@ class DataTableSource {
             this.#copiedChart = _cloneDeep(this.#chart);
         }
         return this.#copiedChart;
+    }
+
+    get dataTable() {
+        return {
+            id: this.id,
+            name: this.name,
+            chart: this.#chart,
+            table: this.table,
+        };
     }
 
     setArray({ chart, data, fields, name }) {
@@ -121,7 +145,7 @@ class DataTableSource {
 
     isExist(index) {
         const isExist = this.getValue(index);
-        return !!(isExist === 0 || isExist === null || isExist);
+        return !!(isExist === null || isExist === 0 || isExist);
     }
 
     appendRow(data) {

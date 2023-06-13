@@ -1,0 +1,9 @@
+{
+    "name": "ChocoLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "쪼코",
+    "description": "씨앤알테크",
+    "imageName": "choco",
+    "moduleId": "450101"
+}

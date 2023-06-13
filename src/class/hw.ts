@@ -634,17 +634,15 @@ export default class Hardware {
             if (!dontShowChecked) {
                 const title = Lang.Msgs.hardware_need_update_title;
                 const content = Lang.Msgs.hardware_need_update_content;
-                entrylms
-                    .alert(content, title, { withDontShowAgain: true })
-                    .one(
-                        'click',
-                        (event: any, { dontShowChecked }: { dontShowChecked: boolean }) => {
-                            if (dontShowChecked) {
-                                localStorage.setItem('skipNoticeHWOldVersion', 'true');
-                            }
-                            resolve(null);
-                        }
-                    );
+                Entry.modal.alert(content, title, {
+                    withDontShowAgain: true
+                }).then((data: { dontShowChecked: boolean }) => {
+                    const { dontShowChecked } = data || {};
+                    if (dontShowChecked) {
+                        localStorage.setItem('skipNoticeHWOldVersion', 'true');
+                    }
+                    resolve(null);
+                })
             } else {
                 resolve(null);
             }

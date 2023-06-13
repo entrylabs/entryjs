@@ -197,6 +197,14 @@ class EntryFunc {
         return this?.content?.findById(blockId);
     }
 
+    getFuncBlockByFuncId(funcId) {
+        return this?.content?.findByType(funcId);
+    }
+
+    getBlockByParamId(paramId) {
+        return this?.content?.findByParamId(paramId);
+    }
+
     static changeFunctionName(name) {
         Entry.Mutator.mutate(
             'function_name',
@@ -399,7 +407,7 @@ class EntryFunc {
                 this.targetFunc.localVariables = this._backupOption.localVariables;
                 this.changeType(this.targetFunc, this._backupOption.type);
                 this._generateFunctionSchema(this.targetFunc.id);
-                this.generateWsBlock(this.targetFunc, true);
+                this.generateWsBlock(this.targetFunc);
             }
         }
         Entry.variableContainer.updateList();
@@ -854,6 +862,18 @@ class EntryFunc {
             });
             Entry.variableContainer.functionAddButton_.addClass('disable');
         }
+    }
+
+    takeSnapshot() {
+        this.snapshot_ = {
+            localVariables: _cloneDeep(this.localVariables),
+        };
+    }
+
+    loadSnapshot() {
+        const { localVariables } = this.snapshot_;
+        this.localVariables = localVariables;
+        delete this.snapshot_;
     }
 }
 
