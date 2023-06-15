@@ -1,3 +1,5 @@
+import _cloneDeep from 'lodash/cloneDeep';
+
 module.exports = {
     getBlocks() {
         return {
@@ -160,7 +162,7 @@ module.exports = {
                     const [funcId, idx] = variableId.split('_');
                     const func = Entry.variableContainer.getFunction(funcId, idx);
 
-                    func.setValue(value, variableId);
+                    func.setValue(value, variableId, script.executor.localVariables);
 
                     return script.callReturn();
                 },
@@ -258,7 +260,7 @@ module.exports = {
                     const variableId = script.getField('VARIABLE', script);
                     const [funcId] = variableId.split('_');
                     const func = Entry.variableContainer.getFunction(funcId);
-                    return func.getValue(variableId);
+                    return func.getValue(variableId, script.executor.localVariables);
                 },
                 syntax: {
                     js: [],
@@ -380,6 +382,8 @@ module.exports = {
                         this.funcExecutor.register.paramMap = func.paramMap;
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
+                        this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
+                        func.funcExecutor = this.funcExecutor;
                     }
 
                     const { promises } = this.funcExecutor.execute();
@@ -450,6 +454,8 @@ module.exports = {
                         this.funcExecutor.register.paramMap = func.paramMap;
                         this.funcExecutor.parentExecutor = this.executor;
                         this.funcExecutor.isFuncExecutor = true;
+                        this.funcExecutor.localVariables = _cloneDeep(func.localVariables);
+                        func.funcExecutor = this.funcExecutor;
                     }
 
                     const { promises } = this.funcExecutor.execute();
