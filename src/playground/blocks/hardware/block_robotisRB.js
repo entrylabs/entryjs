@@ -80,8 +80,8 @@ Entry.Robotis_rb.blockMenuBlocks = [
    
     'robotis_RB_cm_buzzer_index',
 
-    'robotis_RB_kkokdu_screen',
-    'robotis_RB_kkokdu_anim_screen',
+    'robotis_RB_cm_screen',
+    'robotis_RB_cm_anim_screen',
     'robotis_RB_rsp_screen',
 
     'robotis_RB_LCDBright',
@@ -96,9 +96,8 @@ Entry.Robotis_rb.blockMenuBlocks = [
 
     'robotis_RB_car_screen',
     'robotis_RB_car_anim_screen',
-
-    'robotis_RB_cm_screen',
-    'robotis_RB_cm_anim_screen',
+    'robotis_RB_kkokdu_screen',
+    'robotis_RB_kkokdu_anim_screen',
     
     'robotis_openCM70_RGee_go',
     'robotis_openCM70_RGee_stop',
