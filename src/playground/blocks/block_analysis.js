@@ -966,6 +966,82 @@ module.exports = {
                     py: [],
                 },
             },
+            get_coefficient: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'get_table_fields',
+                        },
+                        {
+                            type: 'get_table_fields',
+                        },
+                    ],
+                    type: 'get_coefficient',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['B&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['C&value'],
+                        },
+                        null,
+                    ],
+                    type: 'get_coefficient',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    FIELD1: 1,
+                    FIELD2: 2,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const x = DataTable.getColumnIndex(script.getValue('FIELD1', script));
+                    const y = DataTable.getColumnIndex(script.getValue('FIELD2', script));
+                    const table = DataTable.getSource(tableId, sprite);
+                    return table.getCoefficient(x, y);
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
         };
     },
 };
