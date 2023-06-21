@@ -11,7 +11,7 @@ let last_line6_string = '                     ';
 let lcd_clear = 'cleared';
 
 Entry.Kaboino = {
-    id: 'FE.FF',
+    id: '560101',
     name: 'Kaboino',
     url: 'http://www.kabotel.com/',
     imageName: 'kaboino.png',
