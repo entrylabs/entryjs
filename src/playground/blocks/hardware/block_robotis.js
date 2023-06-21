@@ -209,7 +209,8 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],*/
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 12, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
@@ -320,7 +321,8 @@ Entry.Robotis_openCM70EDU = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],*/
             [Entry.Robotis_openCM70EDU.INSTRUCTION.WRITE, 136, 12, 0],
-            [Entry.Robotis_openCM70EDU.INSTRUCTION.WRITE, 79, 3, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
