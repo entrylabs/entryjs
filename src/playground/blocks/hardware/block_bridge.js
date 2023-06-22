@@ -85,7 +85,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -135,7 +135,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -185,7 +185,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -235,7 +235,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -285,7 +285,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -335,7 +335,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -385,7 +385,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -435,7 +435,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -485,7 +485,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -534,7 +534,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -583,7 +583,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -632,7 +632,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
@@ -681,7 +681,7 @@ Entry.Bridge.getBlocks = function() {
                 PORT: 0,
             },
             class: 'BridgeGet',
-            isnotFor: ['Bridge'],
+            isNotFor: ['Bridge'],
             func(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
