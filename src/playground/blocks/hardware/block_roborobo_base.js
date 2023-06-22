@@ -5,7 +5,7 @@ const PinMode = {
     OUTPUT: 0x01,
     ANALOG: 0x02,
     I2C: 0x06,
-}
+};
 
 class ArduinoBase {
     constructor () {
@@ -23,11 +23,11 @@ class ArduinoBase {
     afterReceive = function (data) {
         const keys = data.state ? Object.keys(data.state) : [];
         keys.forEach(key => this.state[key] = data.state[key]);
-    }
+    };
 
     afterSend = function () {
         Entry.hw.sendQueue = {};
-    }
+    };
 
     request (func, subkey, value, updateNow = false) {
         if (!Entry.hw.sendQueue[func]) Entry.hw.sendQueue[func] = {};
@@ -153,7 +153,7 @@ class ArduinoBase {
         const state = script.getStringValue('STATE');
 
         const speed = [speed1, speed2];
-        let motor = []
+        let motor = [];
         if (motors == 12) {
             motor = [1, 2];
         } else if (motors == 34) {
@@ -192,24 +192,10 @@ class ArduinoBase {
 
     set_rgbled_color (sprite, script) {
         const pin = this.pinToNumber(script.getStringValue('PIN'));
-        let colorString = script.getStringValue('COLOR');
-
-        let color;
-        if (typeof colorString === 'string' && colorString.substring(0, 1) === '#') {
-            const shorThandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-            colorString = colorString.replace(shorThandRegex, (m, r, g, b) => r + r + g + g + b + b);
-            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colorString);
-            color = result ? {
-                r: parseInt(result[1], 16),
-                g: parseInt(result[2], 16),
-                b: parseInt(result[3], 16)
-            } : null;
-        }
-        if (!color) color = {r: 0, g: 0, b: 0};
+        const color = Cast.toRgbColorObject(script.getStringValue('COLOR'));
 
         this.request('setRgbLedColor', pin, {pin, color});
         return script.callReturn();
-
     }
 
     change_rgbled_brightness_by (sprite, script) {
@@ -240,9 +226,18 @@ class ArduinoBase {
     }
 
     play_piezobuzzer_until_done (sprite, script) {
-        const duration = script.getNumberValue('DURATION');
-        this.play_piezobuzzer(sprite, script);
-        return new Promise(resolve => setTimeout(() => resolve(), duration * 1000));
+        if (script.executeState) {
+            const duration = (script.getNumberValue('DURATION') * 1000);
+            if (Date.now() - script.executeState.startTime > duration) {
+                return script.callReturn();
+            } else {
+                return script;
+            }
+        } else {
+            script.executeState = {startTime: Date.now()};
+            this.play_piezobuzzer(sprite, script);
+            return script;
+        }
     }
 
     get_digital_value (sprite, script) {
@@ -419,4 +414,60 @@ class ArduinoBase {
     }
 }
 
-module.exports = {ArduinoBase, PinMode};
+class Cast {
+    static toRgbColorObject (value) {
+        let color;
+        if (typeof value === 'string' && value.substring(0, 1) === '#') {
+            color = Color.hexToRgb(value);
+
+            // If the color wasn't *actually* a hex color, cast to black
+            if (!color) color = {r: 0, g: 0, b: 0};
+        } else {
+            color = Color.decimalToRgb(Cast.toNumber(value));
+            if (color.hasOwnProperty('a')) {
+                delete color.a;
+            }
+        }
+        return color;
+    }
+}
+
+class Color {
+    static decimalToHex (decimal) {
+        if (decimal < 0) {
+            decimal += 0xFFFFFF + 1;
+        }
+        let hex = Number(decimal).toString(16);
+        hex = `#${'000000'.substr(0, 6 - hex.length)}${hex}`;
+        return hex;
+    }
+
+    static decimalToRgb (decimal) {
+        const a = (decimal >> 24) & 0xFF;
+        const r = (decimal >> 16) & 0xFF;
+        const g = (decimal >> 8) & 0xFF;
+        const b = decimal & 0xFF;
+        return {r: r, g: g, b: b, a: a > 0 ? a : 255};
+    }
+
+    static hexToRgb (hex) {
+        const shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
+        const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+            r: parseInt(result[1], 16),
+            g: parseInt(result[2], 16),
+            b: parseInt(result[3], 16)
+        } : null;
+    }
+
+    static rgbToHex (rgb) {
+        return Color.decimalToHex(Color.rgbToDecimal(rgb));
+    }
+
+    static rgbToDecimal (rgb) {
+        return (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+    }
+}
+
+module.exports = {ArduinoBase, PinMode, Cast, Color};

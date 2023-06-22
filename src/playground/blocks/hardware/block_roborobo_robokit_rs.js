@@ -1999,6 +1999,10 @@ class RobokitRS extends ArduinoBase {
         super.request(func, subkey, value, updateNow);
     }
 
+     resetState () {
+        super.resetState();
+    }
+
     /**
      * -----------------------------------block execute-----------------------------------
      * 공통 사용 함수를 제외한 나머지 블록 동작을 작성
