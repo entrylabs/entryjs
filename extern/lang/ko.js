@@ -6382,6 +6382,7 @@ Lang.Helper = {
         '선택한 테이블에서 선택한 속성들에 대한 요약통계량입니다. (합, 최댓값, 최솟값, 평균값, 표준편차)',
     open_table_chart: '선택한 테이블의 차트창을 엽니다.',
     close_table_chart: '열려있는 테이블 차트 창을 닫습니다.',
+    get_coefficient: '선택한 테이블에서 두 속성 사이의 상관계수입니다. 상관계수가 1(-1)에 가까울 수록 강한 양(음)의 선형 상관관계를 갖습니다.',
     insert_data_for_test: '데이터를 입력하고 학습한 모델로 인식합니다.',
     insert_text_block_for_test: '데이터를 입력하고 학습한 모델로 인식합니다.',
     test_result:
@@ -7453,6 +7454,7 @@ Lang.template = {
     calc_values_from_table: '테이블 %1 %2의 %3',
     open_table_chart: '테이블 %1의 %2 차트 창 열기 %3',
     close_table_chart: '테이블 차트 창 닫기 %1',
+    get_coefficient: '테이블 %1 %2과(와) %3의 상관계수',
     variableAddButton: '%1',
     listAddButton: '%1',
     change_variable: '%1 에 %2 만큼 더하기 %3',
