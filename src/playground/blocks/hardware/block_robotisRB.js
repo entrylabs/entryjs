@@ -80,10 +80,6 @@ Entry.Robotis_rb.blockMenuBlocks = [
    
     'robotis_RB_cm_buzzer_index',
 
-    'robotis_RB_car_screen',
-    'robotis_RB_car_anim_screen',
-
-
     'robotis_RB_cm_screen',
     'robotis_RB_cm_anim_screen',
     'robotis_RB_rsp_screen',
@@ -93,11 +89,15 @@ Entry.Robotis_rb.blockMenuBlocks = [
     
     'robotis_RB_LEDBright',
     'robotis_RB_cm_led',
-
     'robotis_RB_Hello',
     'robotis_RB_effectSound',
     'robotis_RB_record',
     'robotis_RB_playRecord',
+
+    'robotis_RB_car_screen',
+    'robotis_RB_car_anim_screen',
+    'robotis_RB_kkokdu_screen',
+    'robotis_RB_kkokdu_anim_screen',
     
     'robotis_openCM70_RGee_go',
     'robotis_openCM70_RGee_stop',
@@ -105,7 +105,7 @@ Entry.Robotis_rb.blockMenuBlocks = [
     
     'robotis_dxl_control',
     'robotis_dxl_each_control',
-    
+
     // 'robotis_RB_cm_custom_value',
     // 'robotis_RB_cm_custom',
 ];
@@ -126,8 +126,10 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_detectPose: "로봇이 %1 넘어지면",
 
                 robotis_RB_cm_buzzer_index: "제어기 음계값 %1 을(를) %2 옥타브로 %3 초 동안 %4 %5",
-                robotis_RB_cm_screen: "제어기 화면 배경을 알쥐 %1 로 선택 %2",
-                robotis_RB_cm_anim_screen: "제어기 화면 애니메이션을 알쥐 %1 로 선택 %2",
+
+                robotis_RB_kkokdu_screen: "제어기 화면 배경을 꼭두 %1 로 선택 %2",
+                robotis_RB_kkokdu_anim_screen: "제어기 화면 애니메이션을 꼭두 %1 로 선택 %2",
+
                 robotis_RB_rsp_screen: "제어기 화면에 %1 출력하기 %2",
 
                 robotis_RB_LCDBright: "제어기 화면 밝기를 %1로 정하기 %2",
@@ -144,8 +146,11 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_openCM70_RGee_stop: "알쥐 정지하기 %1",
                 robotis_openCM70_RGee_motion: "알쥐 %1 %2",
 
+                robotis_RB_cm_screen: "제어기 화면 배경을 알쥐 %1 로 선택 %2",
+                robotis_RB_cm_anim_screen: "제어기 화면 애니메이션을 알쥐 %1 로 선택 %2",
+
                 robotis_RB_car_screen: "제어기 화면 배경을 알라 %1 로 선택 %2",
-                robotis_RB_car_anim_screen: "제어기 화면 애니메이션을 알라 %1 로 선택 %2"
+                robotis_RB_car_anim_screen: "제어기 화면 애니메이션을 알라 %1 로 선택 %2",
             },
             Blocks: {
                 robotis_red: "빨강",
@@ -350,8 +355,10 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_RB_detectPose:"If robot falls %1",
                 
                 robotis_RB_cm_buzzer_index:"%1 at %2 octaves for %3 second(s) -> %4 %5",
-                robotis_RB_cm_screen:"Choose %1 as a screen background %2",
-                robotis_RB_cm_anim_screen: "Choose %1 as a screen animation %2",
+
+                robotis_RB_kkokdu_screen: "Choose %1 Tiger as a screen background %2",
+                robotis_RB_kkokdu_anim_screen: "Choose %1 Tiger as a screen animation %2",
+
                 robotis_RB_rsp_screen:"Print %1 on the screen %2",
                 
                 robotis_RB_LCDBright:"Adjust screen brightness to %1 %2",
@@ -368,8 +375,11 @@ Entry.Robotis_rb.setLanguage = function() {
                 robotis_openCM70_RGee_stop:"R-G STOP",
                 robotis_openCM70_RGee_motion:"Do %1",
 
-                robotis_RB_car_screen: "Choose %1 as a screen Rla background %2",
-                robotis_RB_car_anim_screen: "Choose %1 as a screen Rla animation %2"
+                robotis_RB_cm_screen:"Choose %1 R-Gee as a screen background %2",
+                robotis_RB_cm_anim_screen: "Choose %1 R-Gee as a screen animation %2",
+
+                robotis_RB_car_screen: "Choose %1 R-La as a screen background %2",
+                robotis_RB_car_anim_screen: "Choose %1 R-La as a screen animation %2",
             },
             Blocks: {
                 robotis_red: "Red",
@@ -564,6 +574,7 @@ Entry.Robotis_rb.setLanguage = function() {
     }
 };
 
+let rb100_last_valid_value = [];
 
 Entry.Robotis_rb.getBlocks = function () {
     return {
@@ -759,6 +770,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -870,6 +889,15 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
+
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -967,6 +995,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1095,12 +1131,19 @@ Entry.Robotis_rb.getBlocks = function () {
 
                 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
 
                 if(result == undefined) {
-                    console.log('언디파인')
                     return false;
                 }
 
@@ -1331,6 +1374,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1889,6 +1940,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1989,6 +2048,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2071,6 +2138,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2178,6 +2253,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2271,6 +2354,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2371,6 +2462,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2477,6 +2576,14 @@ Entry.Robotis_rb.getBlocks = function () {
                 Entry.Robotis_carCont.update();
 
                 var result = Entry.hw.portData[data_default_address];
+                if (result == undefined)
+                {
+                    result = rb100_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    rb100_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -2636,6 +2743,163 @@ Entry.Robotis_rb.getBlocks = function () {
                 py: ['Robotis.opencm70_cm_buzzer_index(%1, %2)'],
             },
         }, 
+        
+
+        robotis_RB_kkokdu_screen: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_car_anim01, '3585'],
+                        [Lang.Blocks.robotis_car_anim02, '3586'],
+                        [Lang.Blocks.robotis_car_anim03, '3587'],
+                        [Lang.Blocks.robotis_car_anim04, '3588'],
+                        [Lang.Blocks.robotis_car_anim05, '3589'],
+
+                        [Lang.Blocks.robotis_car_anim06, '3590'],
+                        [Lang.Blocks.robotis_car_anim07, '3591'], 
+                        [Lang.Blocks.robotis_car_anim08, '3592'],
+                        [Lang.Blocks.robotis_car_anim09, '3593'],
+                        [Lang.Blocks.robotis_car_anim10, '3594'],
+
+                        [Lang.Blocks.robotis_car_anim11, '3595'],
+                        [Lang.Blocks.robotis_car_anim12, '3596'], 
+                        [Lang.Blocks.robotis_car_anim13, '3597'],
+                        [Lang.Blocks.robotis_car_anim14, '3598'],
+                        [Lang.Blocks.robotis_car_anim15, '3599'],
+
+                        [Lang.Blocks.robotis_car_anim16, '3600'],
+                        [Lang.Blocks.robotis_car_anim17, '3601'], 
+                        [Lang.Blocks.robotis_car_anim18, '3602'],
+                        [Lang.Blocks.robotis_car_anim19, '3603'],
+                    ],
+                    value: '3585',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_RB_kkokdu_screen',
+            },
+            paramsKeyMap: {
+                BACKGROUND: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var screenValue = script.getNumberValue('BACKGROUND', script);
+                
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 163;
+                var data_length = 2;
+                var data_value = screenValue;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                    [3, 162, 1, 1]
+                ];
+              
+
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay + 1000
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
+        },
+
+        robotis_RB_kkokdu_anim_screen: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_car_anim01, '31234'],
+                        [Lang.Blocks.robotis_car_anim02, '31237'],
+                        [Lang.Blocks.robotis_car_anim03, '31238'],
+                        [Lang.Blocks.robotis_car_anim04, '31239'],
+                        [Lang.Blocks.robotis_car_anim05, '31240'],
+
+                        [Lang.Blocks.robotis_car_anim06, '31241'],
+                        [Lang.Blocks.robotis_car_anim07, '31242'], 
+                        [Lang.Blocks.robotis_car_anim08, '31243'],
+                        [Lang.Blocks.robotis_car_anim09, '31244'],
+                        [Lang.Blocks.robotis_car_anim10, '31245'],
+
+                        [Lang.Blocks.robotis_car_anim11, '31246'],
+                        [Lang.Blocks.robotis_car_anim12, '31247'], 
+                        [Lang.Blocks.robotis_car_anim13, '31248'],
+                        [Lang.Blocks.robotis_car_anim14, '31249'],
+                        [Lang.Blocks.robotis_car_anim15, '31250'],
+
+                        [Lang.Blocks.robotis_car_anim16, '31251'],
+                        [Lang.Blocks.robotis_car_anim17, '31252'], 
+                        [Lang.Blocks.robotis_car_anim18, '31253'],
+                        [Lang.Blocks.robotis_car_anim19, '31254'],
+                    ],
+                    value: '31234',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_RB_kkokdu_anim_screen',
+            },
+            paramsKeyMap: {
+                BACKGROUND: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['Robotis_rb', 'Robotis_rb_H', 'Robotis_rb_car'],
+            func: function (sprite, script) {
+                // instruction / address / length / value / default length
+                var screenValue = script.getNumberValue('BACKGROUND', script);
+                
+                var data_instruction = Entry.Robotis_rb.INSTRUCTION.WRITE;
+                var data_address = 163;
+                var data_length = 2;
+                var data_value = screenValue;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                    [3, 162, 1, 1]
+                ];
+              
+
+
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay //+ 1000
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_screen(%1)'] },
+        },
         robotis_RB_cm_screen: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2814,30 +3078,30 @@ Entry.Robotis_rb.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_car_anim01, '2840'],
-                        [Lang.Blocks.robotis_car_anim02, '2841'],
-                        [Lang.Blocks.robotis_car_anim03, '2842'],
-                        [Lang.Blocks.robotis_car_anim04, '2843'],
-                        [Lang.Blocks.robotis_car_anim05, '2844'],
+                        [Lang.Blocks.robotis_car_anim01, '3329'],
+                        [Lang.Blocks.robotis_car_anim02, '3330'],
+                        [Lang.Blocks.robotis_car_anim03, '3331'],
+                        [Lang.Blocks.robotis_car_anim04, '3332'],
+                        [Lang.Blocks.robotis_car_anim05, '3333'],
 
-                        [Lang.Blocks.robotis_car_anim06, '2845'],
-                        [Lang.Blocks.robotis_car_anim07, '2846'], 
-                        [Lang.Blocks.robotis_car_anim08, '2847'],
-                        [Lang.Blocks.robotis_car_anim09, '2848'],
-                        [Lang.Blocks.robotis_car_anim10, '2849'],
+                        [Lang.Blocks.robotis_car_anim06, '3334'],
+                        [Lang.Blocks.robotis_car_anim07, '3335'], 
+                        [Lang.Blocks.robotis_car_anim08, '3336'],
+                        [Lang.Blocks.robotis_car_anim09, '3337'],
+                        [Lang.Blocks.robotis_car_anim10, '3338'],
 
-                        [Lang.Blocks.robotis_car_anim11, '2850'],
-                        [Lang.Blocks.robotis_car_anim12, '2851'], 
-                        [Lang.Blocks.robotis_car_anim13, '2852'],
-                        [Lang.Blocks.robotis_car_anim14, '2853'],
-                        [Lang.Blocks.robotis_car_anim15, '2854'],
+                        [Lang.Blocks.robotis_car_anim11, '3339'],
+                        [Lang.Blocks.robotis_car_anim12, '3340'], 
+                        [Lang.Blocks.robotis_car_anim13, '3341'],
+                        [Lang.Blocks.robotis_car_anim14, '3342'],
+                        [Lang.Blocks.robotis_car_anim15, '3343'],
 
-                        [Lang.Blocks.robotis_car_anim16, '2855'],
-                        [Lang.Blocks.robotis_car_anim17, '2856'], 
-                        [Lang.Blocks.robotis_car_anim18, '2857'],
-                        [Lang.Blocks.robotis_car_anim19, '2858'],
+                        [Lang.Blocks.robotis_car_anim16, '3344'],
+                        [Lang.Blocks.robotis_car_anim17, '3345'], 
+                        [Lang.Blocks.robotis_car_anim18, '3346'],
+                        [Lang.Blocks.robotis_car_anim19, '3347'],
                     ],
-                    value: '2840',
+                    value: '3329',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,

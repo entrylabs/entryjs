@@ -20,6 +20,7 @@ Entry.kkmoo = {
         {num:12,enable:0,angle:0},{num:13,enable:0,angle:0},{num:14,enable:0,angle:0},
         {num:15,enable:0,angle:0},{num:16,enable:0,angle:0},{num:17,enable:0,angle:0}
     ],
+    runningStart: false,
     isMotionRunning: false,
     setZero: function() {
         for(var i of this.motData){
@@ -34,7 +35,7 @@ Entry.kkmoo.setLanguage = function() {
         ko: {
             template: {
                 kkmoo_rotate_motor: '%1번 모터의 각도를 %2도로 회전 %3',
-                kkmoo_isPlaying: '동작이 실행중인가?',
+                //kkmoo_isPlaying: '동작이 실행중인가?',
                 kkmoo_motion_play_basic:'기본 %1번 동작 실행 %2',
                 kkmoo_motion_play_custom:'커스텀 %1번 동작 실행 %2',
                 kkmoo_rotate_motor_time: '%1번 모터의 각도를 %2도로 %3밀리초 동안 회전 %4'
@@ -46,7 +47,7 @@ Entry.kkmoo.setLanguage = function() {
         en: {
             template: {
                 kkmoo_rotate_motor: 'Rotate motor %1 to %2 degrees %3',
-                kkmoo_isPlaying: 'Is motion running?',
+                //kkmoo_isPlaying: 'Is motion running?',
                 kkmoo_motion_play_basic:'Play basic motion number %1 %2',
                 kkmoo_motion_play_custom:'Play custom motion number %1 %2',
                 kkmoo_rotate_motor_time:'Rotate motor %1 to %2 degrees for%3 milliseconds %4'
@@ -60,7 +61,7 @@ Entry.kkmoo.setLanguage = function() {
 
 Entry.kkmoo.blockMenuBlocks = [
     'kkmoo_rotate_motor',
-    'kkmoo_isPlaying',
+    //'kkmoo_isPlaying',
     'kkmoo_motion_play_basic',
     'kkmoo_motion_play_custom',
     'kkmoo_rotate_motor_time',
@@ -123,18 +124,29 @@ Entry.kkmoo.getBlocks = function() {
                 const motnum = script.getField('MOTNUM',script);
                 const angle = script.getValue('ANGLE',script);
                 var msg = null;
-                if(script.isStart != true){
-                    script.isStart = true;
-                    if(angle>=-90 && angle<=90){
-                        msg={'MOT':motnum,'ANG':angle};
+                delete  Entry.hw.sendQueue.msg;
+                Entry.hw.update();
+                if (script.isStart != true) {
+                    if (Entry.hw.portData.data == 'true') {
+                        return script;
                     }
-                    Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};
-                    return script;
+                    else {
+                        script.isStart = true;
+                        if (angle >= -90 && angle <= 90) {
+                            msg = { 'MOT': motnum, 'ANG': angle };
+                        }
+                        Entry.hw.sendQueue.msg = { 'prot': prot, 'data': msg };
+                        return script;
+                    }
                 }
-                else{
-                    delete script.isStart;
-                    delete  Entry.hw.sendQueue.msg
-                    return script.callReturn();
+                else {       
+                    if(Entry.hw.portData.data == 'true'){
+                        delete script.isStart;
+                        return script.callReturn();
+                    }
+                    else{
+                        return script;
+                    } 
                 }
                 
                 
@@ -143,7 +155,7 @@ Entry.kkmoo.getBlocks = function() {
             },
             //syntax: undefined,
         },
-        kkmoo_isPlaying:{
+        /*kkmoo_isPlaying:{
             template: Lang.template.kkmoo_isPlaying,
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -157,9 +169,10 @@ Entry.kkmoo.getBlocks = function() {
             class: 'Basic',
             isNotFor: ['kkmoo'],
             func: async function(sprite,script){
-                const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
-                await wait(300);
-                await Entry.hw.update();
+                //const wait = (timeToDelay) => new Promise((resolve) => setTimeout(resolve, timeToDelay))
+                //await wait(300);
+                //await Entry.hw.update();
+                Entry.hw.update();
                 if(Entry.hw.portData.data == 'true'){
                     Entry.kkmoo.isMotionRunning = true;
                     console.log("true");
@@ -175,54 +188,8 @@ Entry.kkmoo.getBlocks = function() {
                     console.log("else");
                     return Entry.kkmoo.isMotionRunning;
                 }
-                /*console.log(Entry.hw.portData.data);
-                console.log(Entry.kkmoo.isReceive);
-                if(Entry.kkmoo.isReceive == 2)
-                {
-                    if(Entry.hw.portData.data == "true")
-                    {
-                        Entry.kkmoo.isReceive = 1;
-                    }
-                    // else if(Entry.hw.portData.data == "false")
-                    // {
-                    //     Entry.kkmoo.isReceive = 0;
-                    // }
-                }
-                else
-                {
-                    if(Entry.hw.portData.data == "true")
-                    {
-                        Entry.kkmoo.isReceive = 1;
-                    }
-                    else if(Entry.hw.portData.data == "false")
-                    {
-                        Entry.kkmoo.isReceive = 0;
-                    }
-                }
-                
-                if(Entry.kkmoo.isReceive == 0)
-                {
-                    console.log(Entry.kkmoo.isReceive);
-                    return false;
-                }
-                else if(Entry.kkmoo.isReceive == 1)
-                {
-                    console.log(Entry.kkmoo.isReceive);
-                    return true;
-                }
-                else
-                {
-                    console.log(Entry.kkmoo.isReceive);
-                    return true;
-                }*/
-
-                
-                // console.log(Entry.kkmoo.isReceive);
-                // console.log("------------------");
-
-                // return Entry.kkmoo.isReceive;
             }
-        },
+        },*/
         kkmoo_motion_play_basic: {
             template: Lang.template.kkmoo_motion_play_basic,
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -258,20 +225,30 @@ Entry.kkmoo.getBlocks = function() {
             class: 'Basic',
             isNotFor: ['kkmoo'],
             func: function(sprite, script) {
-                console.log("motionPlay");
                 const prot = "PM"
                 const motionnum = script.getValue('MOTIONNUM',script);
                 var msg = motionnum;
-                if(script.isStart != true){
-                    script.isStart = true;                    
-                    Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};
-                    return script;
+                delete  Entry.hw.sendQueue.msg;
+                Entry.hw.update();
+                if (script.isStart != true) {
+                    if (Entry.hw.portData.data == 'true') {
+                        return script;
+                    }
+                    else {
+                        script.isStart = true;                    
+                        Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};
+                        return script;
+                    }
                 }
-                else{
-                    delete script.isStart;
-                    delete Entry.hw.sendQueue.msg;
-                    return script.callReturn();
-                } 
+                else {       
+                    if(Entry.hw.portData.data == 'true'){
+                        delete script.isStart;
+                        return script.callReturn();
+                    }
+                    else{
+                        return script;
+                    } 
+                }
             },
             //syntax: undefined,
         },
@@ -310,21 +287,30 @@ Entry.kkmoo.getBlocks = function() {
             class: 'Basic',
             isNotFor: ['kkmoo'],
             func: function(sprite, script) {
-                console.log("motionPlay");
                 const prot = "CM"
                 const motionnum = script.getValue('MOTIONNUM',script);
                 var msg = motionnum;
-                if(script.isStart != true){
-                    setTimeout(()=>{script.isStart = true;},100)
-                    
-                    Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};
-                    return script;
+                delete  Entry.hw.sendQueue.msg;
+                Entry.hw.update();
+                if (script.isStart != true) {
+                    if (Entry.hw.portData.data == 'true') {
+                        return script;
+                    }
+                    else {
+                        script.isStart = true;                    
+                        Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};
+                        return script;
+                    }
                 }
-                else{
-                    delete script.isStart;
-                    delete Entry.hw.sendQueue.msg;
-                    return script.callReturn();
-                } 
+                else {       
+                    if(Entry.hw.portData.data == 'true'){
+                        delete script.isStart;
+                        return script.callReturn();
+                    }
+                    else{
+                        return script;
+                    } 
+                }
             },
             //syntax: undefined,
         },
@@ -394,22 +380,30 @@ Entry.kkmoo.getBlocks = function() {
                 const angle = script.getValue('ANGLE',script);
                 const time = script.getValue('TIME',script);
                 var msg = null;
-                if(script.isStart != true){
-                    script.isStart = true;
-                    //Entry.kkmoo.isReceive = 2;
-                    if(angle>=-90 && angle<=90){
-                        msg={'MOT':motnum,'ANG':angle,"TME":time};
+                delete  Entry.hw.sendQueue.msg;
+                Entry.hw.update();
+                if (script.isStart != true) {
+                    if (Entry.hw.portData.data == 'true') {
+                        return script;
                     }
-                    Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};   
-                    return script;
+                    else {
+                        script.isStart = true;                    
+                        if(angle>=-90 && angle<=90){
+                            msg={'MOT':motnum,'ANG':angle,"TME":time};
+                        }
+                        Entry.hw.sendQueue.msg = {'prot':prot,'data':msg};
+                        return script;
+                    }
                 }
-                else{
-                    delete script.isStart;
-                    delete  Entry.hw.sendQueue.msg
-                    return script.callReturn();
-                }
-                
-                
+                else {       
+                    if(Entry.hw.portData.data == 'true'){
+                        delete script.isStart;
+                        return script.callReturn();
+                    }
+                    else{
+                        return script;
+                    } 
+                }     
                 //return null;
                 //return script.callReturn();
             },

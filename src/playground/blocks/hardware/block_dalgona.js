@@ -99,6 +99,9 @@ Entry.Dalgona = {
         GYROY: 56,
         GYROZ: 57,
         PULLUP: 58,
+        // FNDINIT: 59,
+        // NEOINIT: 59,
+        // NEOCOLOR: 60,
     },
     toneTable: {
         '0': 0,
@@ -155,6 +158,20 @@ Entry.Dalgona.setLanguage = function() {
     return {
         ko: {
             template: {
+                // set_neopixelinit: '디지털 %1 번 핀에 연결된 %2 개의 네오픽셀 LED 사용하기 %3',
+				// set_neopixel: '디지털 %1 번 핀에 연결된 %2 번째 네오픽셀 LED를 R: %3 , G: %4 , B: %5 색으로 켜기 %6',
+
+                // FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
+                // FND_Control_init: 'FND %1 번 : 디지털 CLK %2, DIO %3 번 핀으로 설정',
+                // FND_Control_diplay_brightness: 'FND %1 번 : 밝기 %2 단계로 설정',
+                // FND_Control_display_onoff: 'FND %1 번 : 전원 %2',
+                // FND_Control_diplay_char:
+                //     'FND %1 번 : %2 출력하기:나머지0채우기 %3  %4 초 대기',
+				
+
+
+
+
                 dalgona_digital_title:'달고나 디지털 블럭',
                 dalgona_analog_title:'달고나 아날로그 블럭',
                 dalgona_pwm_title:'달고나 PWM 블럭',
@@ -255,6 +272,18 @@ Entry.Dalgona.setLanguage = function() {
         },
         en: {
             template: {
+                // FND_event: 'FND 4digit (TM1637)- CLK:D5, DIO:D4',
+                // FND_Control_init: 'FND %1 번 : 디지털 CLK %2, DIO %3 번 핀으로 설정',
+                // FND_Control_diplay_brightness: 'FND %1 번 : 밝기 %2 단계로 설정',
+                // FND_Control_display_onoff: 'FND %1 번 : 전원 %2',
+                // FND_Control_diplay_char:
+                //     'FND %1 번 : %2 출력하기:나머지0채우기 %3  %4 초 대기',
+
+
+
+                set_neopixelinit: '디지털 %1 번 핀에 연결된 %2 개의 네오픽셀 LED 사용하기 %3',
+				set_neopixel: '디지털 %1 번 핀에 연결된 %2 번째 네오픽셀 LED를 R: %3 , G: %4 , B: %5 색으로 켜기 %6',
+				
                 dalgona_digital_title:'달고나 디지털 블럭',
                 dalgona_analog_title:'달고나 아날로그 블럭',
                 dalgona_pwm_title:'달고나 PWM 블럭',
@@ -342,6 +371,12 @@ Entry.Dalgona.setLanguage = function() {
     };
 };
 Entry.Dalgona.blockMenuBlocks = [
+
+    // 'FND_event',
+    // 'FND_Control_diplay_brightness',
+    // 'FND_Control_display_onoff',
+    // 'FND_Control_diplay_char',
+
     'dalgona_digital_title',
     'dalgona_set_digital_toggle',
     'dalgona_get_digital',
@@ -446,7 +481,7 @@ Entry.Dalgona.getBlocks = function() {
     var tx;
     var din;
     // var clk;
-    // var cs;
+    // var cs; 
     var dout;
     var sck;
     var joyx, joyy, joyz;
@@ -461,6 +496,328 @@ Entry.Dalgona.getBlocks = function() {
     var num = 0;
 
     return {
+
+        // FND_Control_init: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     fontColor: '#fff',
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['1', 1]],
+        //             value: 1,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['5', 5]],
+        //             value: 5,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['4', 4]],
+        //             value: 4,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //     ],
+        //     def: { params: [], type: 'FND_Control_init' },
+        //     paramsKeyMap: { fnd_device: 0, CLK: 1, DIO: 2 },
+        //     class: 'other',
+        //     isNotFor: ['Dalgona'],
+        //     func(sprite, script) {
+        //         const device = script.getNumberValue('fnd_device', script);
+        //         const clk_val = script.getNumberValue('CLK', script);
+        //         const dio_val = script.getNumberValue('DIO', script);
+
+        //         // index number patched by Remoted 2020-11-20
+        //         if (!Entry.hw.sendQueue.SET) {
+        //             Entry.hw.sendQueue.SET = {};
+        //         }
+        //         // FND_Init type data protocol defined
+        //         Entry.hw.sendQueue.SET[device] = {
+        //             type: Entry.Dalgona.sensorTypes.FNDINIT,
+        //             data: {
+        //                 clk_pin: clk_val,
+        //                 dio_pin: dio_val,
+        //             },
+        //             time: new Date().getTime(),
+        //         };
+
+        //         return script.callReturn();
+        //     },
+        //     syntax: { js: [], py: ['RichShield_FND_init(%1, %2)'] },
+        // },
+        // FND_Control_diplay_brightness: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     fontColor: '#fff',
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['1', 1]],
+        //             value: 1,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Dropdown',
+        //             options: [
+        //                 ['1', 1],
+        //                 ['2', 2],
+        //                 ['3', 3],
+        //                 ['4', 4],
+        //                 ['5', 5],
+        //                 ['6', 6],
+        //                 ['7', 7],
+        //             ],
+        //             value: 3,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //     ],
+        //     def: { params: [], type: 'FND_Control_diplay_brightness' },
+        //     paramsKeyMap: { fnd_device: 0, level: 1 },
+        //     class: 'other',
+        //     isNotFor: ['Dalgona'],
+        //     func(sprite, script) {
+        //         const device = script.getNumberValue('fnd_device', script);
+        //         const level_val = script.getNumberValue('level', script);
+
+        //         if (!script.isStart) {
+        //             // index number patched by Remoted 2020-11-20
+        //             if (!Entry.hw.sendQueue.SET) {
+        //                 Entry.hw.sendQueue.SET = {};
+        //             }
+
+
+        //             script.isStart = true;
+        //             script.timeFlag = 1;
+        //             const fps = Entry.FPS || 60;
+        //             const timeValue = (60 / fps) * 50;
+
+        //             // FND_Init type data protocol defined
+        //             Entry.hw.sendQueue.SET[device] = {
+        //                 type: Entry.Dalgona.sensorTypes.FNDINIT,
+        //                 data: {
+        //                     level_val,
+        //                     block_index: 1,
+        //                 },
+        //                 time: new Date().getTime(),
+        //             };
+        //             setTimeout(() => {
+        //                 script.timeFlag = 0;
+        //             }, timeValue);
+        //             return script;
+        //         } else if (script.timeFlag == 1) {
+        //             return script;
+        //         } else {
+        //             delete script.timeFlag;
+        //             delete script.isStart;
+        //             Entry.engine.isContinue = false;
+        //             return script.callReturn();
+        //         }
+        //     },
+        //     syntax: { js: [], py: ['RichShield_FND_Control_diplay_brightness(%1, %2)'] },
+        // },
+        // FND_Control_display_onoff: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     fontColor: '#fff',
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['1', 1]],
+        //             value: 1,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Dropdown',
+        //             options: [
+        //                 [Lang.Blocks.RichShield_toggle_off, 0],
+        //                 [Lang.Blocks.RichShield_toggle_on, 1],
+        //             ],
+        //             value: 1,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //     ],
+        //     def: { params: [], type: 'FND_Control_display_onoff' },
+        //     paramsKeyMap: { fnd_device: 0, onoff: 1 },
+        //     class: 'other',
+        //     isNotFor: ['Dalgona'],
+        //     func(sprite, script) {
+        //         const device = script.getNumberValue('fnd_device', script);
+        //         const onoff = script.getNumberValue('onoff', script);
+
+        //         if (!script.isStart) {
+        //             // index number patched by Remoted 2020-11-20
+        //             if (!Entry.hw.sendQueue.SET) {
+        //                 Entry.hw.sendQueue.SET = {};
+        //             }
+
+        //             script.isStart = true;
+        //             script.timeFlag = 1;
+        //             const fps = Entry.FPS || 60;
+        //             const timeValue = (60 / fps) * 50;
+
+        //             // FND_Init type data protocol defined
+        //             Entry.hw.sendQueue.SET[device] = {
+        //                 type: Entry.Dalgona.sensorTypes.FNDINIT,
+        //                 data: {
+        //                     onoff,
+        //                     block_index: 2,
+        //                 },
+        //                 time: new Date().getTime(),
+        //             };
+                    
+        //             setTimeout(() => {
+        //                 script.timeFlag = 0;
+        //             }, timeValue);
+        //             return script;
+        //         } else if (script.timeFlag == 1) {
+        //             return script;
+        //         } else {
+        //             delete script.timeFlag;
+        //             delete script.isStart;
+        //             Entry.engine.isContinue = false;
+        //             return script.callReturn();
+        //         }
+
+        //     },
+        //     syntax: { js: [], py: ['RichShield_FND_Control_display_onoff(%1, %2)'] },
+        // },
+        // FND_Control_diplay_char: {
+        //     color: EntryStatic.colorSet.block.default.HARDWARE,
+        //     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+        //     fontColor: '#fff',
+        //     skeleton: 'basic',
+        //     statements: [],
+        //     params: [
+        //         {
+        //             type: 'Dropdown',
+        //             options: [['1', 1]],
+        //             value: 1,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Block',
+        //             accept: 'string',
+        //         },
+        //         {
+        //             type: 'Dropdown',
+        //             options: [
+        //                 [Lang.Blocks.RichShield_toggle_off, 0],
+        //                 [Lang.Blocks.RichShield_toggle_on, 1],
+        //             ],
+        //             value: 0,
+        //             fontSize: 11,
+        //             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+        //             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+        //         },
+        //         {
+        //             type: 'Block',
+        //             accept: 'string',
+        //         },
+        //     ],
+        //     events: {},
+        //     def: {
+        //         params: [
+        //             '1',
+        //             {
+        //                 type: 'number',
+        //                 params: ['1234'],
+        //             },
+        //             '0',
+        //             {
+        //                 type: 'number',
+        //                 params: ['0.1'],
+        //             },
+        //         ],
+        //         type: 'FND_Control_diplay_char',
+        //     },
+        //     events: {},
+        //     paramsKeyMap: { fnd_device: 0, display_value: 1, onoff: 2, delay_ms: 3 },
+        //     class: 'other',
+        //     isNotFor: ['Dalgona'],
+        //     func(sprite, script) {
+        //         const device = script.getNumberValue('fnd_device', script);
+        //         const display_str = script.getNumberValue('display_value', script);
+        //         const onoff = script.getNumberValue('onoff', script);
+        //         const delay_ms_sec = script.getNumberValue('delay_ms', script);
+        //         const splited_array = [];
+        //         let display_str_converted = 0;
+
+        //         if (!script.isStart) {
+        //             if (!Entry.hw.sendQueue.SET) {
+        //                 Entry.hw.sendQueue.SET = {};
+        //             }
+
+        //             display_str_converted = display_str.toString();
+
+        //             script.isStart = true;
+        //             script.timeFlag = 1;
+        //             const fps = Entry.FPS || 60;
+        //             const timeValue = (60 / fps) * 100;
+
+        //             for (let i = 0; i < display_str_converted.length; i++) {
+        //                 splited_array.push(parseInt(display_str_converted.charAt(i)));
+        //             }
+
+        //             console.log(`splited_array :${splited_array}`);
+
+        //             // FND_Init type data protocol defined
+        //             Entry.hw.sendQueue.SET[device] = {
+        //                 type: Entry.Dalgona.sensorTypes.FNDINIT,
+        //                 data: {
+        //                     display_str,
+        //                     onoff,
+        //                     block_index: 3,
+        //                     str_length: display_str_converted.length,
+        //                     data_0: splited_array[0],
+        //                     data_1: splited_array[1],
+        //                     data_2: splited_array[2],
+        //                     data_3: splited_array[3],
+        //                     delay_ms: delay_ms_sec,
+        //                 },
+        //                 time: new Date().getTime(),
+        //             };
+
+                        
+        //             setTimeout(() => {
+        //                 script.timeFlag = 0;
+        //             }, timeValue);
+        //             return script;
+        //         } else if (script.timeFlag == 1) {
+        //             return script;
+        //         } else {
+        //             delete script.timeFlag;
+        //             delete script.isStart;
+        //             Entry.engine.isContinue = false;
+        //             return script.callReturn();
+        //         }
+        //     },
+        //     syntax: { js: [], py: ['RichShield_FND_Control_diplay_char(%1, %2, %3, %4)'] },
+        // },
         dalgona_digital_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
