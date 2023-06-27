@@ -317,7 +317,11 @@ class DataTableSource {
     }
 
     getCoefficient(colX, colY) {
-        return corr(...getColumns(this.rows, [colY, colX]));
+        const result = corr(...getColumns(this.rows, [colY, colX]));
+        if (isNaN(result)) {
+            return 0;
+        }
+        return result;
     }
 
     clone() {

@@ -1035,7 +1035,7 @@ module.exports = {
                     const x = DataTable.getColumnIndex(script.getValue('FIELD1', script));
                     const y = DataTable.getColumnIndex(script.getValue('FIELD2', script));
                     const table = DataTable.getSource(tableId, sprite);
-                    return table.getCoefficient(x, y);
+                    return table.getCoefficient(x - 1, y - 1);
                 },
                 syntax: {
                     js: [],
