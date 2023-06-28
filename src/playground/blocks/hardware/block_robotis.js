@@ -157,6 +157,12 @@ Entry.Robotis_openCM70 = {
         CM_SOUND_DETECTING: [87, 1],
         CM_USER_BUTTON: [26, 1],
         CM_MOTION: [66, 1],
+        CM_AUTODRIVE: [40, 1],
+        CM_AUTODRIVE_LEFT_MOTOR_PORT: [42, 1],
+        CM_AUTODRIVE_RIGHT_MOTOR_PORT: [43, 1],
+        CM_AUTODRIVE_LEFT_IR_PORT: [44, 1],
+        CM_AUTODRIVE_RIGHT_IR_PORT: [45, 1],
+        CM_POWEROFF_TIMER: [76, 1],
 
         AUX_SERVO_POSITION: [152, 2],
         AUX_IR: [168, 2],
@@ -203,7 +209,8 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],*/
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 12, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
@@ -262,6 +269,12 @@ Entry.Robotis_openCM70EDU = {
         CM_SOUND_DETECTING: [87, 1],
         CM_USER_BUTTON: [26, 1],
         CM_MOTION: [66, 1],
+        CM_AUTODRIVE: [40, 1],
+        CM_AUTODRIVE_LEFT_MOTOR_PORT: [42, 1],
+        CM_AUTODRIVE_RIGHT_MOTOR_PORT: [43, 1],
+        CM_AUTODRIVE_LEFT_IR_PORT: [44, 1],
+        CM_AUTODRIVE_RIGHT_IR_PORT: [45, 1],
+        CM_POWEROFF_TIMER: [76, 1],
 
         AUX_SERVO_POSITION: [152, 2],
         AUX_IR: [168, 2],
@@ -308,7 +321,8 @@ Entry.Robotis_openCM70EDU = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],*/
             [Entry.Robotis_openCM70EDU.INSTRUCTION.WRITE, 136, 12, 0],
-            [Entry.Robotis_openCM70EDU.INSTRUCTION.WRITE, 79, 3, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 2, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],
             /*[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],*/
@@ -409,14 +423,19 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_buzzer_melody: '제어기 멜로디 %1 번 연주 %2',
                 robotis_openCM70_cm_sound_detected_clear: '최종소리감지횟수 초기화 %1',
                 robotis_openCM70_cm_led: '제어기 %1 LED %2 %3',
-                robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
+                //robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
+                robotis_openCM70_cm_autodrive_motor: '🚗 자율주행 자동차 %1 모터를 %2 에 연결 %3',
+                robotis_openCM70_cm_autodrive_ir: '🚗 자율주행 자동차 %1 적외선센서를 %2 에 연결 %3',
+                robotis_openCM70_cm_autodrive_speed: '🚗 차로를 따라 %1의 속도로 자율주행 %2',
+                robotis_openCM70_aux_car_move: '로봇을 %1% 의 속도로 %2 %3',
                 robotis_openCM70_aux_motor_speed:
-                    '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+                    '%1 감속모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
                 robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
                 robotis_openCM70_aux_servo_speed:
-                    '%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
-                robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2 (으)로 정하기 %3',
+                    '%1 서보모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
+                robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2도로 정하기 %3',
                 robotis_openCM70_aux_led_module: '%1 LED 모듈을 %2 (으)로 정하기 %3',
+                robotis_openCM70_cm_poweroff_timer: '제어기 자동꺼짐 타이머 %1 %2',
                 robotis_openCM70_aux_custom: '%1 사용자 장치를 %2 (으)로 정하기 %3',
                 robotis_openCM70_cm_custom: '직접입력 주소 ( %1 ) (을)를 %2 (으)로 정하기 %3',
             },
@@ -440,16 +459,22 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_sound_detected_clear:
                     '최종 소리 감지횟 수를 0 으로 초기화 합니다.',
                 robotis_openCM70_cm_led: '제어기의 빨간색, 녹색, 파란색 LED 를 켜거나 끕니다.',
-                robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
-                robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                //robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
+                robotis_openCM70_cm_autodrive_motor: '자율주행 자동차의 모터 포트를 지정합니다.',
+                robotis_openCM70_cm_autodrive_ir: '자율주행 자동차의 적외선 센서 포트를 지정합니다.',
+                robotis_openCM70_cm_autodrive_speed: '지정한 속도로 자율주행을 수행합니다.',
+                robotis_openCM70_aux_car_move: '로봇을 지정한 속도와 방향으로 움직이도록 합니다.',
+                robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 100% 의 값으로 정합니다.',
                 robotis_openCM70_aux_servo_mode:
                     '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
-                robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
+                robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 100% 의 값으로 정합니다.',
                 robotis_openCM70_aux_servo_position:
-                    '서보모터 위치를 0 ~ 1023 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
+                    '서보모터 위치를 -150 ~ 150도 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
                 robotis_openCM70_aux_led_module: 'LED 모듈의 LED 를 켜거나 끕니다.',
                 robotis_openCM70_aux_custom:
                     '사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
+                robotis_openCM70_cm_poweroff_timer: 
+                    '제어기의 자동꺼짐 타이머를 설정합니다.<br/>설정된 만큼의 시간동안 통신이 진행되지 않으면 제어기는 자동으로 꺼집니다.',
                 robotis_openCM70_cm_custom_value:
                     '컨트롤 테이블 주소를 직접 입력하여 값을 확인 합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
                 robotis_openCM70_cm_custom:
@@ -482,6 +507,14 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_common_play_motion: '실행',
                 robotis_common_motion: '모션',
                 robotis_common_index_number: '번',
+                robotis_common_left: '왼쪽',
+                robotis_common_right: '오른쪽',
+                robotis_common_minute: '분',
+                robotis_common_forward: '직진',
+                robotis_common_backward: '후진',
+                robotis_common_turn_left: '좌회전',
+                robotis_common_turn_right: '우회전',
+                robotis_common_stop: '정지',
                 robotis_cm_custom: '직접입력 주소',
                 robotis_cm_spring_left: '왼쪽 접촉 센서',
                 robotis_cm_spring_right: '오른쪽 접촉 센서',
@@ -534,15 +567,20 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_openCM70_cm_sound_detected_clear:
                     'Initialize the final number of sound detection  %1',
                 robotis_openCM70_cm_led: 'Controller %1 LED %2 %3',
-                robotis_openCM70_cm_motion: 'Play the motion %1 times',
+                //robotis_openCM70_cm_motion: 'Play the motion %1 times',
+                robotis_openCM70_cm_autodrive_motor: 'Autonomous driving car %1 motor uses %2 %3',
+                robotis_openCM70_cm_autodrive_ir: 'Autonomous driving car %1 IR sensor uses %2 %3',
+                robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the speed of %1 %2',
+                robotis_openCM70_aux_car_move: 'Make the robot %2 at a speed of %1% %3',
                 robotis_openCM70_aux_motor_speed:
-                    'Set the speed of decelerating motor of %1 to %2 , and the output value to %3  %4',
+                    'Set the speed of decelerating motor of %1 to %2 , and the output value to %3%  %4',
                 robotis_openCM70_aux_servo_mode: 'Set the mode of %1 servo motor to %2  %3',
                 robotis_openCM70_aux_servo_speed:
-                    'Set the speed of servo motor of %1 to %2 , and the output value to %3  %4',
-                robotis_openCM70_aux_servo_position: 'Set the position of %1 servo motor to %2  %3',
+                    'Set the speed of servo motor of %1 to %2 , and the output value to %3%  %4',
+                robotis_openCM70_aux_servo_position: 'Set the position of %1 servo motor to %2 degree %3',
                 robotis_openCM70_aux_led_module: 'Set the LED module of %1 as %2  %3',
                 robotis_openCM70_aux_custom: 'Set the user device of %1 as %2  %3',
+                robotis_openCM70_cm_poweroff_timer: 'Set auto-off timer as %1 %2',
                 robotis_openCM70_cm_custom: 'Set the custom address ( %1 ) as %2  %3',
             },
             Helper: {
@@ -555,18 +593,23 @@ Entry.Robotis_carCont.setLanguage = function() {
                     "Plays melody.<br/>If the following sound doesn't play when repeatedly playing melodies, use the block 'flow > wait for X seconds' and execute it again.",
                 robotis_openCM70_cm_sound_detected_clear: 'Final number of sound detection ',
                 robotis_openCM70_cm_led: 'Turns the red, green, blue LED of the device on or off.',
-                robotis_openCM70_cm_motion: 'Executes the motion downloaded on the device.',
+                //robotis_openCM70_cm_motion: 'Executes the motion downloaded on the device.',
+                robotis_openCM70_cm_autodrive_motor: 'Specifies the motor port of the autonomous driving car.',
+                robotis_openCM70_cm_autodrive_ir: 'Specifies the IR sensor port of the autonomous driving car.',
+                robotis_openCM70_cm_autodrive_speed: 'Perform autonomous driving at the specified speed along the lane.',
+                robotis_openCM70_aux_car_move: 'Make the robot move at the specified speed and direction.',
                 robotis_openCM70_aux_motor_speed:
-                    'Sets the speed of decelerating motor to the value of 0 - 1023.',
+                    'Sets the speed of decelerating motor to the value of 0 - 100%.',
                 robotis_openCM70_aux_servo_mode:
                     "Sets the servo motor as wheel mode or joint mode.<br/>The same mode continues to apply once it's set.<br/>Wheel mode designates the servo motor's speed, and spins the servo motor.<br/>Joint mode moves the servo motor's position with the set servo motor speed.",
                 robotis_openCM70_aux_servo_speed:
                     "Sets servo motor's speed to the value of 0 - 1023.",
                 robotis_openCM70_aux_servo_position:
-                    "Sets servo motor's position to the value of 0-1023.<br/>Use as servo motor speed",
+                    "Sets servo motor's position to the value of -150 ~ 150 degree.<br/>Use as servo motor speed",
                 robotis_openCM70_aux_led_module: 'Turns the LED of LED module on or off.',
                 robotis_openCM70_aux_custom:
                     'Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation of user sensor production.',
+                robotis_openCM70_cm_poweroff_timer: "Set the controllers auto-off timer.<br/>If there is no communication for the set amount of time, the controller will automatically turn off.",
                 robotis_openCM70_cm_custom_value:
                     'Checks the value by directly inputting the control table address.<br/>Please refer to the ROBOTIS e-manual (http://support.robotis.com/ko/) for the explanation about control table.',
                 robotis_openCM70_cm_custom:
@@ -609,6 +652,14 @@ Entry.Robotis_carCont.setLanguage = function() {
                 robotis_common_play_motion: 'Play',
                 robotis_common_motion: 'Motion',
                 robotis_common_index_number: 'Number',
+                robotis_common_left: 'Left',
+                robotis_common_right: 'Right',
+                robotis_common_minute: 'minute(s)',
+                robotis_common_forward: 'Forward',
+                robotis_common_backward: 'Backword',
+                robotis_common_turn_left: 'Turn left',
+                robotis_common_turn_right: 'Turn Right',
+                robotis_common_stop: 'Stop',
                 robotis_cm_custom: 'Custom address',
                 robotis_cm_spring_left: 'Left contact sensor',
                 robotis_cm_spring_right: 'Right contact sensor',
@@ -1188,22 +1239,33 @@ Entry.Robotis_carCont.getBlocks = function() {
 
 Entry.Robotis_openCM70.blockMenuBlocks = [
     //robotis_openCM70
+    'robotis_irs_value',
+    'robotis_irs_value_boolean',
+    'robotis_color_value',
+    'robotis_color_value_boolean',
     'robotis_openCM70_sensor_value',
     'robotis_openCM70_aux_sensor_value',
     'robotis_openCM70_cm_buzzer_index',
     'robotis_openCM70_cm_buzzer_melody',
     'robotis_openCM70_cm_sound_detected_clear',
     'robotis_openCM70_cm_led',
-    'robotis_openCM70_cm_motion',
+    //'robotis_openCM70_cm_motion',
+    'robotis_openCM70_cm_autodrive_motor',
+    'robotis_openCM70_cm_autodrive_ir',
+    'robotis_openCM70_cm_autodrive_speed',
+    'robotis_openCM70_aux_car_move',
     'robotis_openCM70_aux_motor_speed',
     'robotis_openCM70_aux_servo_mode',
     'robotis_openCM70_aux_servo_speed',
     'robotis_openCM70_aux_servo_position',
     'robotis_openCM70_aux_led_module',
     'robotis_openCM70_aux_custom',
+    'robotis_openCM70_cm_poweroff_timer',
     'robotis_openCM70_cm_custom_value',
     'robotis_openCM70_cm_custom',
 ];
+
+let opencm70_last_valid_value = [];
 
 Entry.Robotis_openCM70.getBlocks = function() {
     return {
@@ -1353,6 +1415,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 var sensor = script.getStringField('SENSOR');
 
                 var increase = 0;
+                var sensor_name = '';
 
                 if (sensor == 'CM_SOUND_DETECTED') {
                     data_default_address =
@@ -1360,6 +1423,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTED[1];
+                    sensor_name = 'DETECTEDSOUNDE'; 
                 } else if (sensor == 'CM_SOUND_DETECTING') {
                     data_default_address =
                         Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
@@ -1367,11 +1431,13 @@ Entry.Robotis_openCM70.getBlocks = function() {
                         Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_SOUND_DETECTING[1];
+                    sensor_name = 'DETECTINGSOUNDE1'; 
                 } else if (sensor == 'CM_USER_BUTTON') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_USER_BUTTON[1];
+                    sensor_name = 'USERBUTTONSTATE'; 
                 }
 
                 data_default_address = data_default_address + increase * data_default_length;
@@ -1395,7 +1461,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
 
-                var result = Entry.hw.portData[data_default_address];
+                var result = Entry.hw.portData[sensor_name];
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1414,12 +1480,12 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['3', 'PORT_3'],
-                        ['4', 'PORT_4'],
-                        ['5', 'PORT_5'],
-                        ['6', 'PORT_6'],
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
                     ],
-                    value: 'PORT_3',
+                    value: '3',
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1472,14 +1538,16 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 var port = script.getStringField('PORT');
                 var sensor = script.getStringField('SENSOR');
 
+                var aux_name = '';
+
                 var increase = 0;
-                if (port == 'PORT_3') {
+                if (port == '3') {
                     increase = 2;
-                } else if (port == 'PORT_4') {
+                } else if (port == '4') {
                     increase = 3;
-                } else if (port == 'PORT_5') {
+                } else if (port == '5') {
                     increase = 4;
-                } else if (port == 'PORT_6') {
+                } else if (port == '6') {
                     increase = 5;
                 }
 
@@ -1490,26 +1558,31 @@ Entry.Robotis_openCM70.getBlocks = function() {
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
+                    aux_name = 'LIGHT' + (increase-2);
                 } else if (sensor == 'AUX_IR') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_IR[1];
+                    aux_name = 'IR' + (increase-2);
                 } else if (sensor == 'AUX_TOUCH') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TOUCH[1];
+                    aux_name = 'TOUCH' + (increase-2);
                 } else if (sensor == 'AUX_TEMPERATURE') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_TEMPERATURE[1];
+                    aux_name = 'TEMPERATURE' + (increase-2);
                 } else if (sensor == 'AUX_BRIGHTNESS') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_BRIGHTNESS[1];
+                    aux_name = 'LIGHT' + (increase-2);
                 } else if (sensor == 'AUX_HYDRO_THEMO_HUMIDITY') {
                     data_default_address =
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
@@ -1517,6 +1590,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_HUMIDITY[1];
+                    aux_name = 'HUMIDTY' + (increase-2);
                 } else if (sensor == 'AUX_HYDRO_THEMO_TEMPER') {
                     data_default_address =
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
@@ -1524,16 +1598,19 @@ Entry.Robotis_openCM70.getBlocks = function() {
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_HYDRO_THEMO_TEMPER[1];
+                    aux_name = 'HT_TEMPERATURE' + (increase-2);
                 } else if (sensor == 'AUX_ULTRASONIC') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_ULTRASONIC[1];
+                    aux_name = 'ULTRASONIC' + (increase-2);
                 } else if (sensor == 'AUX_MAGNETIC') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MAGNETIC[1];
+                    aux_name = 'MAGNETIC' + (increase-2);
                 } else if (sensor == 'AUX_MOTION_DETECTION') {
                     data_default_address =
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
@@ -1541,16 +1618,19 @@ Entry.Robotis_openCM70.getBlocks = function() {
                         Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTION_DETECTION[1];
+                    aux_name = 'MOTION' + (increase-2);
                 } else if (sensor == 'AUX_COLOR') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_COLOR[1];
+                    aux_name = 'COLOR' + (increase-2);
                 } else if (sensor == 'AUX_CUSTOM') {
                     data_default_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
                     data_default_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
                     data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
                     data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[1];
+                    aux_name = 'LIGHT' + (increase-2);
                 }
 
                 data_default_address = data_default_address + increase * data_default_length;
@@ -1578,7 +1658,26 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
 
-                var result = Entry.hw.portData[data_default_address];
+                var result = Entry.hw.portData[aux_name];
+                if (result == undefined)
+                {
+                    result = opencm70_last_valid_value[data_default_address];
+                }
+                else
+                {
+                    if (sensor == 'AUX_SERVO_POSITION') {
+                        if (result < 0) result = 0;
+                        else if (result > 1023) result = 1023;
+
+                        result = (512 - result) * 300 / 1023;
+
+                        result = Math.floor(result * 9 / 8);
+
+                        if (result > 150) result = 150;
+                        else if (result < -150) result = -150;
+                    }
+                    opencm70_last_valid_value[data_default_address] = result;
+                }
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1934,6 +2033,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_led(%1, %2)'] },
         },
+        /*
         robotis_openCM70_cm_motion: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1986,6 +2086,731 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             syntax: { js: [], py: ['Robotis.opencm70_cm_motion(%1)'] },
         },
+        */
+        robotis_openCM70_cm_autodrive_motor: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_left, 'CM_LEFT'],
+                        [Lang.Blocks.robotis_common_right, 'CM_RIGHT'],
+                    ],
+                    value: 'CM_LEFT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['PORT 1', '1'],
+                        ['PORT 2', '2'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'robotis_openCM70_cm_autodrive_motor',
+            },
+            paramsKeyMap: {
+                CM_MOTOR_POSITION: 0,
+                PORT_NUM: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function(sprite, script) {
+                // instruction / address / length / value / default length
+                var motor_position = script.getField('CM_MOTOR_POSITION', script);
+                var port_num = script.getField('PORT_NUM', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                if (motor_position == 'CM_LEFT') {
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_LEFT_MOTOR_PORT[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_LEFT_MOTOR_PORT[1];
+                } else if (motor_position == 'CM_RIGHT') {
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_RIGHT_MOTOR_PORT[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_RIGHT_MOTOR_PORT[1];
+                }
+
+                data_value = port_num;
+
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_autodrive_motor_port(%1, %2)'] },
+        },
+        robotis_openCM70_cm_autodrive_ir: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_left, 'CM_LEFT'],
+                        [Lang.Blocks.robotis_common_right, 'CM_RIGHT'],
+                    ],
+                    value: 'CM_LEFT',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'robotis_openCM70_cm_autodrive_ir',
+            },
+            paramsKeyMap: {
+                CM_IR_POSITION: 0,
+                PORT_NUM: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function(sprite, script) {
+                // instruction / address / length / value / default length
+                var ir_position = script.getField('CM_IR_POSITION', script);
+                var port_num = script.getField('PORT_NUM', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                if (ir_position == 'CM_LEFT') {
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_LEFT_IR_PORT[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_LEFT_IR_PORT[1];
+                } else if (ir_position == 'CM_RIGHT') {
+                    data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_RIGHT_IR_PORT[0];
+                    data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE_RIGHT_IR_PORT[1];
+                }
+
+                data_value = port_num;
+
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_autodrive_ir_port(%1, %2)'] },
+        },
+        robotis_openCM70_cm_autodrive_speed: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['100%', '100'],
+                        ['90%', '90'],
+                        ['80%', '80'],
+                        ['70%', '70'],
+                        ['60%', '60'],
+                        ['50%', '50'],
+                        ['40%', '40'],
+                        ['30%', '30'],
+                        ['20%', '20'],
+                        ['10%', '10'],
+                        ['0%', '0'],
+                    ],
+                    value: '80',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_openCM70_cm_autodrive_speed',
+            },
+            paramsKeyMap: {
+                CM_AUTODRIVE_SPEED: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function(sprite, script) {
+                // instruction / address / length / value / default length
+                var autodrive_speed = script.getField('CM_AUTODRIVE_SPEED', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_AUTODRIVE[1];
+                data_value = autodrive_speed;
+
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_autodrive_speed(%1)'] },
+        },
+        robotis_openCM70_aux_car_move: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_forward, 'F'],
+                        [Lang.Blocks.robotis_common_backward, 'B'],
+                        [Lang.Blocks.robotis_common_turn_left, 'L'],
+                        [Lang.Blocks.robotis_common_turn_right, 'R'],
+                        [Lang.Blocks.robotis_common_stop, 'S'],
+                    ],
+                    value: 'F',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['50'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'robotis_openCM70_aux_car_move',
+            },
+            paramsKeyMap: {
+                SPEED: 0,
+                MOVE_DIRECTION: 1,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function(sprite, script) {
+                // instruction / address / length / value / default length
+                var speed = script.getNumberValue('SPEED');
+                var direction = script.getField('MOVE_DIRECTION', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1] * 2;
+
+                if (speed < 0) speed = 0;
+                else if (speed > 100) speed = 100;
+
+                speed = Math.floor(speed * 1023 /100);
+
+                if (direction == 'F') {
+                    data_value = speed + (speed + 1024) * 65536;
+                } else if (direction == 'B'){
+                    data_value = (speed + 1024) + speed * 65536;
+                } else if (direction == 'L'){
+                    data_value = (speed + 1024) + (speed + 1024) * 65536;
+                } else if (direction == 'R'){
+                    data_value = speed + speed * 65536;
+                } else if (direction == 'S'){
+                    data_value = 0;
+                }
+
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: {
+                js: [],
+                py: ['Robotis.opencm70_aux_car_move(%1, %2)'],
+            },
+        },
+        robotis_irs_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '%1 적외선 센서 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_irs_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'robotis_irs',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                Entry.hw.sendQueue.IS_EDU = true;
+                const port = script.getStringField('PORT');
+                let value = 0;
+                let data_address = 0;
+                switch (port) {
+                    case '3':
+                        value = Entry.hw.portData.IR0;
+                        data_address = 108;
+                        break;
+                    case '4':
+                        value = Entry.hw.portData.IR1;
+                        data_address = 109;
+                        break;
+                    case '5':
+                        value = Entry.hw.portData.IR2;
+                        data_address = 110;
+                        break;
+                    case '6':
+                        value = Entry.hw.portData.IR3;
+                        data_address = 111;
+                        break;
+                }
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                const data_length = 1;
+                const data_value = 2;
+    
+                const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                //Entry.Robotis_carCont.update();
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 && port == '3') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = true;
+                }
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 && port == '4') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = true;
+                }
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 && port == '5') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = true;
+                }
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 && port == '6') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 = true;
+                }
+                //var value = (Entry.hw.portData['IN' + port] > 125) ? 1 : 0;
+                return value;
+            },
+        },
+        robotis_irs_value_boolean: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '%1 적외선 센서 값 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['=', 'EQUAL'],
+                        ['>', 'GREATER'],
+                        ['<', 'LESS'],
+                        ['≥', 'GREATER_OR_EQUAL'],
+                        ['≤', 'LESS_OR_EQUAL'],
+                    ],
+                    value: 'GREATER',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    noaRrow: true,
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'robotis_irs_value_boolean',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                OPERATOR: 1,
+                RIGHTVALUE: 2,
+            },
+            class: 'robotis_irs',
+            //'isNotFor': ['mini'],
+            func(sprite, script) {
+                Entry.hw.sendQueue.IS_EDU = true;
+                const port = script.getStringField('PORT', script);
+                const operator = script.getField('OPERATOR', script);
+                const rightValue = script.getNumberValue('RIGHTVALUE', script);
+                let leftValue = 0;
+                let isCheck = false;
+                let data_address = 0;
+    
+                switch (port) {
+                    case '3':
+                        leftValue = Entry.hw.portData.IR0;
+                        data_address = 108;
+                        break;
+                    case '4':
+                        leftValue = Entry.hw.portData.IR1;
+                        data_address = 109;
+                        break;
+                    case '5':
+                        leftValue = Entry.hw.portData.IR2;
+                        data_address = 110;
+                        break;
+                    case '6':
+                        leftValue = Entry.hw.portData.IR3;
+                        data_address = 111;
+                        break;
+                }
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                const data_length = 1;
+                const data_value = 2;
+    
+                const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                //Entry.Robotis_carCont.update();
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 && port == '3') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = true;
+                }
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 && port == '4') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = true;
+                }
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 && port == '5') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = true;
+                }
+                if (!Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 && port == '6') {
+                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    Entry.Robotis_carCont.update();
+                    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 = true;
+                }
+    
+                switch (operator) {
+                    case 'EQUAL':
+                        isCheck = leftValue == rightValue;
+                        break;
+                    case 'GREATER':
+                        isCheck = Number(leftValue) > Number(rightValue);
+                        break;
+                    case 'LESS':
+                        isCheck = Number(leftValue) < Number(rightValue);
+                        break;
+                    case 'GREATER_OR_EQUAL':
+                        isCheck = Number(leftValue) >= Number(rightValue);
+                        break;
+                    case 'LESS_OR_EQUAL':
+                        isCheck = Number(leftValue) <= Number(rightValue);
+                        break;
+                }
+    
+                return isCheck;
+            },
+        },
+        robotis_color_value: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '%1 컬러 센서 값',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_color_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'robotis_color',
+            func(sprite, script) {
+                Entry.hw.sendQueue.IS_EDU = true;
+                const port = script.getStringField('PORT');
+                let value = 0;
+                let data_address = 0;
+                switch (port) {
+                    case '3':
+                        value = Entry.hw.portData.COLOR0;
+                        data_address = 108;
+                        break;
+                    case '4':
+                        value = Entry.hw.portData.COLOR1;
+                        data_address = 109;
+                        break;
+                    case '5':
+                        value = Entry.hw.portData.COLOR2;
+                        data_address = 110;
+                        break;
+                    case '6':
+                        value = Entry.hw.portData.COLOR3;
+                        data_address = 111;
+                        break;
+                }
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                const data_length = 1;
+                const data_value = 4;
+    
+                const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                Entry.Robotis_carCont.update();
+    
+                switch (value) {
+                    case 0:
+                        value = '알 수 없음';
+                        break;
+                    case 1:
+                        value = '흰색';
+                        break;
+                    case 2:
+                        value = '검은색';
+                        break;
+                    case 3:
+                        value = '빨강색';
+                        break;
+                    case 4:
+                        value = '초록색';
+                        break;
+                    case 5:
+                        value = '파랑색';
+                        break;
+                    case 6:
+                        value = '노랑색';
+                        break;
+                }
+    
+                return value;
+            },
+        },
+        robotis_color_value_boolean: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_boolean_field',
+            fontColor: '#fff',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            template: '%1 컬러 센서 값 %2 %3',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['=', 'EQUAL'],
+                        ['!=', 'NOT_EQUAL'],
+                    ],
+                    value: 'EQUAL',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                    noaRrow: true,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['알 수 없음 : 0', '0'],
+                        ['흰색 : 1', '1'],
+                        ['검은색 : 2', '2'],
+                        ['빨강색 : 3', '3'],
+                        ['초록색 : 4', '4'],
+                        ['파랑색 : 5', '5'],
+                        ['노랑색 : 6', '6'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.common.WHITE,
+                },
+            ],
+            def: {
+                params: [null, null, null],
+                type: 'robotis_color_value_boolean',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                OPERATOR: 1,
+                RIGHTVALUE: 2,
+            },
+            class: 'robotis_color',
+            func(sprite, script) {
+                Entry.hw.sendQueue.IS_EDU = true;
+                const port = script.getField('PORT', script);
+                const operator = script.getField('OPERATOR', script);
+                const rightValue = script.getNumberField('RIGHTVALUE', script);
+                let leftValue = 0;
+                let data_address = 0;
+                let isCheck = false;
+    
+                switch (port) {
+                    case '3':
+                        leftValue = Entry.hw.portData.COLOR0;
+                        data_address = 108;
+                        break;
+                    case '4':
+                        leftValue = Entry.hw.portData.COLOR1;
+                        data_address = 109;
+                        break;
+                    case '5':
+                        leftValue = Entry.hw.portData.COLOR2;
+                        data_address = 110;
+                        break;
+                    case '6':
+                        leftValue = Entry.hw.portData.COLOR3;
+                        data_address = 111;
+                        break;
+                }
+    
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                const data_length = 1;
+                const data_value = 4;
+    
+                const data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                Entry.Robotis_carCont.update();
+    
+                switch (operator) {
+                    case 'EQUAL':
+                        isCheck = leftValue == rightValue;
+                        break;
+                    case 'NOT_EQUAL':
+                        isCheck = Number(leftValue) != Number(rightValue);
+                        break;
+                }
+    
+                return isCheck;
+            },
+        },
         robotis_openCM70_aux_motor_speed: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1995,8 +2820,8 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_common_port_1, '1'],
-                        [Lang.Blocks.robotis_common_port_2, '2'],
+                        ['PORT 1', '1'],
+                        ['PORT 2', '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2031,7 +2856,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['500'],
+                        params: ['50'],
                     },
                     null,
                 ],
@@ -2059,6 +2884,11 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1];
 
                 data_address = data_address + (port - 1) * data_length;
+
+                if (value < 0) value = 0;
+                else if (value > 100) value = 100;
+
+                value = Math.floor(value * 1023 / 100);
 
                 if (directionAngle == 'CW') {
                     value = value + 1024;
@@ -2094,10 +2924,10 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_common_port_3, '3'],
-                        [Lang.Blocks.robotis_common_port_4, '4'],
-                        [Lang.Blocks.robotis_common_port_5, '5'],
-                        [Lang.Blocks.robotis_common_port_6, '6'],
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
                     ],
                     value: '3',
                     fontSize: 11,
@@ -2166,10 +2996,10 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_common_port_3, '3'],
-                        [Lang.Blocks.robotis_common_port_4, '4'],
-                        [Lang.Blocks.robotis_common_port_5, '5'],
-                        [Lang.Blocks.robotis_common_port_6, '6'],
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
                     ],
                     value: '3',
                     fontSize: 11,
@@ -2204,7 +3034,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['500'],
+                        params: ['50'],
                     },
                     null,
                 ],
@@ -2232,6 +3062,11 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
 
                 data_address = data_address + (port - 1) * data_length;
+
+                if (value < 0) value = 0;
+                else if (value > 100) value = 100;
+
+                value = Math.floor(value * 1023 / 100);
 
                 if (directionAngle == 'CW') {
                     value = value + 1024;
@@ -2267,10 +3102,10 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_common_port_3, '3'],
-                        [Lang.Blocks.robotis_common_port_4, '4'],
-                        [Lang.Blocks.robotis_common_port_5, '5'],
-                        [Lang.Blocks.robotis_common_port_6, '6'],
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
                     ],
                     value: '3',
                     fontSize: 11,
@@ -2293,7 +3128,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['512'],
+                        params: ['0'],
                     },
                     null,
                 ],
@@ -2320,13 +3155,18 @@ Entry.Robotis_openCM70.getBlocks = function() {
 
                 data_address = data_address + (port - 1) * data_length;
 
-                if (value > 1023) {
-                    value = 1023;
-                } else if (value < 0) {
-                    value = 0;
+                if (value > 150) {
+                    value = 150;
+                } else if (value < -150) {
+                    value = -150;
                 }
 
-                data_value = value;
+                value = value * 8 / 9;
+
+                data_value = 512 - Math.floor(value * 1023 / 300);
+
+                if (data_value < 0) data_value = 0;
+                else if (data_value > 1023) data_value = 1023;
 
                 var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -2349,10 +3189,10 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_common_port_3, '3'],
-                        [Lang.Blocks.robotis_common_port_4, '4'],
-                        [Lang.Blocks.robotis_common_port_5, '5'],
-                        [Lang.Blocks.robotis_common_port_6, '6'],
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
                     ],
                     value: '3',
                     fontSize: 11,
@@ -2423,10 +3263,10 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.robotis_common_port_3, '3'],
-                        [Lang.Blocks.robotis_common_port_4, '4'],
-                        [Lang.Blocks.robotis_common_port_5, '5'],
-                        [Lang.Blocks.robotis_common_port_6, '6'],
+                        ['PORT 3', '3'],
+                        ['PORT 4', '4'],
+                        ['PORT 5', '5'],
+                        ['PORT 6', '6'],
                     ],
                     value: '3',
                     fontSize: 11,
@@ -2485,6 +3325,82 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 );
             },
             syntax: { js: [], py: ['Robotis.opencm70_aux_custom(%1, %2)'] },
+        },
+        robotis_openCM70_cm_poweroff_timer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.robotis_common_off, '0'],
+                        ['1' + Lang.Blocks.robotis_common_minute, '1'],
+                        ['2' + Lang.Blocks.robotis_common_minute, '2'],
+                        ['3' + Lang.Blocks.robotis_common_minute, '3'],
+                        ['4' + Lang.Blocks.robotis_common_minute, '4'],
+                        ['5' + Lang.Blocks.robotis_common_minute, '5'],
+                        ['6' + Lang.Blocks.robotis_common_minute, '6'],
+                        ['7' + Lang.Blocks.robotis_common_minute, '7'],
+                        ['8' + Lang.Blocks.robotis_common_minute, '8'],
+                        ['9' + Lang.Blocks.robotis_common_minute, '9'],
+                        ['10' + Lang.Blocks.robotis_common_minute, '10'],
+                        ['11' + Lang.Blocks.robotis_common_minute, '11'],
+                        ['12' + Lang.Blocks.robotis_common_minute, '12'],
+                        ['13' + Lang.Blocks.robotis_common_minute, '13'],
+                        ['14' + Lang.Blocks.robotis_common_minute, '14'],
+                        ['15' + Lang.Blocks.robotis_common_minute, '15'],
+                        ['16' + Lang.Blocks.robotis_common_minute, '16'],
+                        ['17' + Lang.Blocks.robotis_common_minute, '17'],
+                        ['18' + Lang.Blocks.robotis_common_minute, '18'],
+                        ['19' + Lang.Blocks.robotis_common_minute, '19'],
+                        ['20' + Lang.Blocks.robotis_common_minute, '20'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'robotis_openCM70_cm_poweroff_timer',
+            },
+            paramsKeyMap: {
+                CM_POWEROFF_TIMER: 0,
+            },
+            class: 'robotis_openCM70_cm',
+            isNotFor: ['robotis_openCM70', 'robotis_openCM70EDU'],
+            func: function(sprite, script) {
+                // instruction / address / length / value / default length
+                var cm_poweroff_timer = script.getField('CM_POWEROFF_TIMER', script);
+
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = 0;
+                var data_value = 0;
+
+                data_address = Entry.Robotis_openCM70.CONTROL_TABLE.CM_POWEROFF_TIMER[0];
+                data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_POWEROFF_TIMER[1];
+                data_value = cm_poweroff_timer;
+
+                var data_sendqueue = [
+                    [data_instruction, data_address, data_length, data_value],
+                ];
+                return Entry.Robotis_carCont.postCallReturn(
+                    script,
+                    data_sendqueue,
+                    Entry.Robotis_openCM70.delay
+                );
+            },
+            syntax: { js: [], py: ['Robotis.opencm70_cm_poweroff_timer(%1)'] },
         },
         robotis_openCM70_cm_custom: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -4261,6 +5177,13 @@ Entry.Robotis_openCM70.getPracticalBlocks = function() {
                             }
                         }
                     }
+
+                    if ( value < 1024) {
+                        value = value + (value + 1024) * 0x10000;
+                    }
+                    else {
+                        value = value + (value - 1024) * 0x10000;
+                    }
     
                     data_value = value;
     
@@ -4401,6 +5324,13 @@ Entry.Robotis_openCM70.getPracticalBlocks = function() {
                             value = 1023;
                         }
                     }
+                }
+
+                if ( value < 1024) {
+                    value = value + (value + 1024) * 0x10000;
+                }
+                else {
+                    value = value + (value - 1024) * 0x10000;
                 }
     
                 data_value = value;

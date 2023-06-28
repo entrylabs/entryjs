@@ -85,6 +85,7 @@ Entry.Robotis_rb_H.blockMenuBlocks = [
     'robotis_RB_detectPose',
 
     'robotis_RB_cm_buzzer_index',
+
     'robotis_RB_cm_screen',
     'robotis_RB_cm_anim_screen',
     'robotis_RB_rsp_screen',
@@ -99,6 +100,11 @@ Entry.Robotis_rb_H.blockMenuBlocks = [
     'robotis_RB_effectSound',
     'robotis_RB_record',
     'robotis_RB_playRecord',
+
+    'robotis_RB_car_screen',
+    'robotis_RB_car_anim_screen',
+    'robotis_RB_kkokdu_screen',
+    'robotis_RB_kkokdu_anim_screen',
 
     'robotis_RB_cm_motion',
     'robotis_RB_cm_motion2',

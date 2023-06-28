@@ -177,17 +177,17 @@ class EntryFunc {
         }
     }
 
-    getValue(variableId) {
+    getValue(variableId, localVariables) {
         const localVariable = _find(
-            this.localVariables,
+            localVariables || this.localVariables,
             (localVariable) => localVariable.id === variableId
         );
         return localVariable?.value || 0;
     }
 
-    setValue(value, variableId) {
+    setValue(value, variableId, localVariables) {
         const localVariable = _find(
-            this.localVariables,
+            localVariables || this.localVariables,
             (localVariable) => localVariable.id === variableId
         );
         localVariable.value = value;
