@@ -2178,13 +2178,14 @@ module.exports = {
                     const originStr = script.getStringValue('STRING', script);
                     const targetStr = script.getStringValue('TARGET', script);
 
-                    if (originStr.length > 0 && targetStr.length > 0) {
-                        const result = originStr.match(new RegExp(targetStr, 'g'));
-                        if (result) {
-                            return result.length;
+                    let count = 0;
+                    const substrLength = targetStr.length;
+                    for (let i = 0; i <= originStr.length - substrLength; i++) {
+                        if (originStr.substring(i, i + substrLength) === targetStr) {
+                            count++;
                         }
                     }
-                    return 0;
+                    return count;
                 },
                 syntax: {
                     js: [],
