@@ -20,21 +20,6 @@ class RoE extends ArduinoBase {
      * 언어 번역 사용을 위해 함수 형태로 유지
      */
     monitorTemplate () {
-        this.request('language', null, {
-            roe_sensor_color_red: Lang.Blocks.roe_sensor_color_red,
-            roe_sensor_color_orange: Lang.Blocks.roe_sensor_color_orange,
-            roe_sensor_color_yellow: Lang.Blocks.roe_sensor_color_yellow,
-            roe_sensor_color_yellow_green: Lang.Blocks.roe_sensor_color_yellow_green,
-            roe_sensor_color_green: Lang.Blocks.roe_sensor_color_green,
-            roe_sensor_color_sky_blue: Lang.Blocks.roe_sensor_color_sky_blue,
-            roe_sensor_color_blue: Lang.Blocks.roe_sensor_color_blue,
-            roe_sensor_color_purple: Lang.Blocks.roe_sensor_color_purple,
-            roe_sensor_color_pink: Lang.Blocks.roe_sensor_color_pink,
-            roe_sensor_color_black: Lang.Blocks.roe_sensor_color_black,
-            roe_sensor_color_white: Lang.Blocks.roe_sensor_color_white,
-            roe_sensor_color_unknown: Lang.Blocks.roe_sensor_color_unknown,
-        }, true);
-
         return {
             //imgPath: 'hw/~~.png',
             //width: 256,
@@ -1203,18 +1188,18 @@ class RoE extends ArduinoBase {
 
     _toRoEColorString (protocol) {
         switch (protocol) {
-            case 1: return Lang.Blocks.roe_sensor_color_red;
-            case 2: return Lang.Blocks.roe_sensor_color_orange;
-            case 3: return Lang.Blocks.roe_sensor_color_yellow;
-            case 7: return Lang.Blocks.roe_sensor_color_yellow_green;
-            case 4: return Lang.Blocks.roe_sensor_color_green;
-            case 8: return Lang.Blocks.roe_sensor_color_sky_blue;
-            case 5: return Lang.Blocks.roe_sensor_color_blue;
-            case 6: return Lang.Blocks.roe_sensor_color_purple;
-            case 9: return Lang.Blocks.roe_sensor_color_pink;
-            case 10: return Lang.Blocks.roe_sensor_color_black;
-            case 11: return Lang.Blocks.roe_sensor_color_white;
-            default: return Lang.Blocks.roe_sensor_color_unknown;
+            case 1: return 'RED';
+            case 2: return 'ORANGE';
+            case 3: return 'YELLOW';
+            case 7: return 'YELLOW GREEN';
+            case 4: return 'GREEN';
+            case 8: return 'SKY BLUE';
+            case 5: return 'BLUE';
+            case 6: return 'PURPLE';
+            case 9: return 'PINK';
+            case 10: return 'BLACK';
+            case 11: return 'WHITE';
+            default: return 'UNKNOWN';
         }
     }
 
