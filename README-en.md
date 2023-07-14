@@ -342,7 +342,7 @@ var ProjectSchema = new Schema({
 
 ### Sprite, Picture, Sound schema
 
-### 스프라이트
+### Sprites
 ```javascript
             var SpriteSchema = new Schema({
                 name: String, // sprite name
@@ -362,7 +362,7 @@ var ProjectSchema = new Schema({
             })
 ```
 
-#### 모양
+#### Pictures
 ```javascript
 	var PictureSchema = new Schema({
                     name: String, // shape name
@@ -374,7 +374,7 @@ var ProjectSchema = new Schema({
 	})
 ```
 
-#### 소리
+#### Sounds
 ```javascript
 	var SoundSchema = new Schema({
                     name: String, // name
