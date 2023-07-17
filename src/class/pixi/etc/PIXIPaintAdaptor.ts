@@ -10,7 +10,7 @@ interface IRBG {
 /**
  * createjs.Graphics 스타일의 lagacy 메서드 호출을 pixi.Graphics 로 변경해주는 adaptor 클라스.
  */
-export class PIXIBrushAdaptor {
+export class PIXIPaintAdaptor {
     //아래 값들은 다른 클래스에서 값을 할당해줌.
     public rgb: IRBG;
     public thickness: number;
@@ -27,54 +27,25 @@ export class PIXIBrushAdaptor {
     private _color: number;
 
     private _shape: PIXIGraphics;
-    private position: any = { x: 0, y: 0 };
 
-    endStroke() {
-        //#10141 때문에 closePath 사용안함.
-        // if(!this._shape || this._shape.destroyied) return;
-        // this._shape.closePath();
-    }
-
-    /**
-     * createjs 스타일. 문자열 파싱을 하기 때문에 느림. 블럭 몇몇곳에서 이 스타일을 사용하기 떄문에 남겨둠.
-     * @param color - "#FF0000", "rgba(255,0,0,0.5)"
-     */
-    beginStroke(color: string) {
-        this._parseRGBCssStyleColor(color);
-        this._setStyle();
-    }
-
-    /**
-     * pixi 엔진에 최적화된 함수. beginStroke() 보다 빠름.
-     * @param color
-     * @param alpha
-     */
-    beginStrokeFast(color: number, alpha: number): void {
-        this._color = color;
-        this._alpha = alpha;
-        this._setStyle();
-    }
+    private currentPath: PIXI.Polygon;
 
     endFill() {
         // #10141 때문에 closePath 사용안함.
         if (!this._shape || this._shape.destroyed) return;
+        this.currentPath = null;
         this._shape.closePath();
     }
 
     beginFill(color: string) {
         this._parseRGBCssStyleColor(color);
-        this._setStyle();
+        this._shape.beginFill(this._color, this._alpha);
     }
 
     beginFillFast(color: number, alpha: number) {
         this._color = color;
         this._alpha = alpha;
-        this._setStyle();
-    }
-
-    setStrokeStyle(thickness: number) {
-        this._thickness = thickness;
-        this._setStyle();
+        this._shape.beginFill(color, alpha);
     }
 
     moveTo(x: number, y: number) {
@@ -82,17 +53,25 @@ export class PIXIBrushAdaptor {
             return;
         }
         this._shape.moveTo(Number(x), Number(y));
-        this.position = { x: Number(x), y: Number(y) };
+        this.currentPath = this._shape.currentPath;
     }
 
     lineTo(x: number, y: number) {
         if (!this._shape || this._shape.destroyed) {
             return;
         }
-        //this._setStyle(); // pixi webgl 오류 때문에 이것을 함.
-        this._shape.moveTo(this.position.x, this.position.y);
+        if (!this.currentPath) {
+            this._shape.moveTo(0, 0);
+            this.currentPath = this._shape.currentPath;
+        }
+        const points = this.currentPath.points;
+        const fromX = points[points.length - 2];
+        const fromY = points[points.length - 1];
+        if (fromX !== x || fromY !== y) {
+            points.push(Number(x), Number(y));
+        }
+        this._shape.currentPath = this.currentPath;
         this._shape.lineTo(Number(x), Number(y)); // 박봉배: #9374 x,y 좌표가 문자로 넘어와서 생긴 이슈
-        this.position = { x: Number(x), y: Number(y) };
         this._shape.geometry.invalidate();
     }
 
