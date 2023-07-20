@@ -32,7 +32,7 @@ export class PIXIPaintAdaptor {
 
     endFill() {
         // #10141 때문에 closePath 사용안함.
-        if (!this._shape || this._shape.destroyed) return;
+        if (!this._shape || this._shape.destroyed) {return;}
         this.currentPath = null;
         this._shape.closePath();
     }
