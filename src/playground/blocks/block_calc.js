@@ -2593,6 +2593,105 @@ module.exports = {
                     ],
                 },
             },
+            change_rgb_to_hex: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['255'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['0'],
+                        },
+                        {
+                            type: 'number',
+                            params: ['0'],
+                        },
+                    ],
+                    type: 'change_rgb_to_hex',
+                },
+                paramsKeyMap: {
+                    RED: 0,
+                    GREEN: 1,
+                    BLUE: 2,
+                },
+                class: 'color',
+                isNotFor: [],
+                async func(sprite, script) {
+                    const red = script.getNumberValue('RED', script);
+                    const greeb = script.getNumberValue('GREEN', script);
+                    const blue = script.getNumberValue('BLUE', script);
+                    return Entry.rgb2hex(red, greeb, blue);
+                },
+            },
+            change_hex_to_rgb: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['R', 'r'],
+                            ['G', 'g'],
+                            ['B', 'b'],
+                        ],
+                        value: 'RED',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['#ff0000'],
+                        },
+                        'r',
+                    ],
+                    type: 'change_hex_to_rgb',
+                },
+                paramsKeyMap: {
+                    HEX: 0,
+                    COLOR: 1,
+                },
+                class: 'color',
+                isNotFor: [],
+                async func(sprite, script) {
+                    const color = script.getField('COLOR', script);
+                    const value = script.getValue('HEX', script);
+                    return Entry.hex2rgb(value)[color];
+                },
+            },
         };
     },
 };

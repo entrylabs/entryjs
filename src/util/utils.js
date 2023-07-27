@@ -1585,6 +1585,24 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     sprite.shapes.push(shape);
 };
 
+Entry.setBasicPaint = function(sprite) {
+    const isWebGL = GEHelper.isWebGL;
+    const paint = GEHelper.brushHelper.newPaint();
+    const shape = GEHelper.brushHelper.newShape(paint);
+    paint.entity = sprite;
+    paint.opacity = 0;
+    if (isWebGL) {
+        paint.beginFillFast(0xff0000, 1);
+    } else {
+        paint.beginFill('rgba(255,0,0,1)');
+    }
+    shape.entity = sprite;
+    const selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
+    sprite.paint = paint;
+    sprite.paintShapes.push(shape);
+};
+
 Entry.isFloat = function(num) {
     return /\d+\.{1}\d+$/.test(num);
 };
