@@ -189,7 +189,7 @@ function getData(validationRate, testRate, data, trainParam) {
     );
     const dataArray = filtered
         .map((row) => ({
-            x: attr.map((i) => Utils.stringToNumber(i, row[i], tempMap, tempMapCount)),
+            x: attr.map((i) => parseFloat(row[i]) || 0),
             y: Utils.stringToNumber(predict[0], row[predict[0]], tempMap, tempMapCount),
         }))
         .map((row) => {
