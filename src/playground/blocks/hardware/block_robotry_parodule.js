@@ -14,7 +14,7 @@ Entry.Robotry_Parodule = {
         width: 700,
         height: 700,
     },
-   setZero() {
+    setZero() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
                 SET: {},
@@ -39,17 +39,17 @@ Entry.Robotry_Parodule = {
     setTerminal(port1, port2, port3, port4) {
         this.Terminal = [port1, port2, port3, port4];
     },
-    Terminal : ['', '', '', ''],
+    Terminal: ['', '', '', ''],
     controlTypes: {
         DIGITAL: 0,
         ANALOG: 1,
         STRING: 2,
     },
     BlockState: {},
-    
+
 };
 
-Entry.Robotry_Parodule.setLanguage = function() {
+Entry.Robotry_Parodule.setLanguage = function () {
     return {
         ko: {
             template: {
@@ -58,24 +58,24 @@ Entry.Robotry_Parodule.setLanguage = function() {
                 Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
                 Parodule_BUZZER: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
 
-                Parodule_Custom_title:'커스텀 제어 블럭\0',
+                Parodule_Custom_title: '커스텀 제어 블럭\0',
                 Parodule_Custom_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
-                Parodule_Custom_LED:'%1 (으)로 픽셀 설정 %2',
-                Parodule_Custom_Motor:'%1 의 파워로 %2 %3',
+                Parodule_Custom_LED: '%1 (으)로 픽셀 설정 %2',
+                Parodule_Custom_Motor: '%1 의 파워로 %2 %3',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
-            Helper:{ // 블록 선택시 나타나는 한글 설명
+            Helper: { // 블록 선택시 나타나는 한글 설명
                 Parodule_LED: '다양한 색상을 표현할수 있는 LED 블럭입니다',
                 Parodule_Motor: '모터를 제어할 수 있는 블록입니다',
                 Parodule_BUZZER: '부저를 이용해 음을 재생할 수 있는 블록입니다',
 
                 Parodule_Custom_Set: '메인모듈에 연결된 모듈들을 정의합니다.',
-                Parodule_Custom_Motor:'모터 모듈을 움직입니다.',
+                Parodule_Custom_Motor: '모터 모듈을 움직입니다.',
 
                 Parodule_Update: '파로듈 업데이트',
-            },  
-            Blocks : {
+            },
+            Blocks: {
             }
         },
         en: {
@@ -85,17 +85,17 @@ Entry.Robotry_Parodule.setLanguage = function() {
                 Parodule_Motor: '%1 번 모터를 %2 의 파워로 %2 %4',
                 Parodule_BUZZER: '%1 번 부저를 %2 옥타브 %3 (으)로 재생 %4',
 
-                Parodule_Custom_title:'커스텀 제어 블럭',
+                Parodule_Custom_title: '커스텀 제어 블럭',
                 Parodule_Custom_Set: '1 번 %1 2 번%2 3 번 %3 4번 %4 으로 설정 %5',
-                Parodule_Custom_Motor:'트럭의 %1 번 모터를 이용해 %2 의 파워로 %3 %4',
+                Parodule_Custom_Motor: '트럭의 %1 번 모터를 이용해 %2 의 파워로 %3 %4',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
-            Helper:{
-                Parodule_Update : "파로듈을 업데이트하는 블록입니다. \n이 블록을 사용하면 메인모듈과 연결이 끊어집니다.",
+            Helper: {
+                Parodule_Update: "파로듈을 업데이트하는 블록입니다. \n이 블록을 사용하면 메인모듈과 연결이 끊어집니다.",
                 Parodule_Motor: '모터를 제어하는 블록'
-            }, 
-            Blocks : {
+            },
+            Blocks: {
             },
         },
     };
@@ -112,7 +112,7 @@ Entry.Robotry_Parodule.blockMenuBlocks = [
     'Parodule_Custom_Set',
     'Parodule_Custom_LED',
     'Parodule_Custom_Motor',
-    
+
     'Parodule_Update',
 ];
 
@@ -120,7 +120,7 @@ Entry.Robotry_Parodule.blockMenuBlocks = [
  *  로보트리의 아두이노 제어 블록 리스트
  *  주석에 블록이라고 표시된것만 제어 블록임 나머진 포트 리스트
  */
-Entry.Robotry_Parodule.getBlocks = function() {
+Entry.Robotry_Parodule.getBlocks = function () {
     return {
         Parodule_Output_title: {
             skeleton: 'basic_text',
@@ -170,22 +170,22 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['무색',     200],
-                        ['아우라',   18],
-                        ['빨강색',   19],
-                        ['다홍색',   20],
-                        ['주황색',   21],
-                        ['귤색',     22],
-                        ['노랑색',   23],
-                        ['연두색',   24],
-                        ['녹색',     25],
-                        ['청록색',   26],
-                        ['파랑색',   27],
-                        ['감청색',   28],
-                        ['남색',     29],
+                        ['무색', 200],
+                        ['아우라', 18],
+                        ['빨강색', 19],
+                        ['다홍색', 20],
+                        ['주황색', 21],
+                        ['귤색', 22],
+                        ['노랑색', 23],
+                        ['연두색', 24],
+                        ['녹색', 25],
+                        ['청록색', 26],
+                        ['파랑색', 27],
+                        ['감청색', 28],
+                        ['남색', 29],
                         ['남보라색', 30],
-                        ['보라색',   31],
-                        ['자주색',   32],
+                        ['보라색', 31],
+                        ['자주색', 32],
                     ],
                     value: [19],
                     fontSize: 12,
@@ -205,21 +205,21 @@ Entry.Robotry_Parodule.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                VALUE: 1 
+                VALUE: 1
             },
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 const value = script.getNumberValue('VALUE');
-                if(!Entry.hw.sendQueue.SET){
+                if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
-                } 
+                }
                 return script.callReturn();
             },
             syntax: {
@@ -249,15 +249,15 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
-                
+
                 {
                     type: 'Dropdown',
                     options: [
                         ['100%', 39],
-                        [ '75%', 38],
-                        [ '50%', 37],
-                        [ '25%', 36],
-                        [ '0%',  200],
+                        ['75%', 38],
+                        ['50%', 37],
+                        ['25%', 36],
+                        ['0%', 200],
                     ],
                     value: [39],
                     fontSize: 12,
@@ -288,9 +288,9 @@ Entry.Robotry_Parodule.getBlocks = function() {
             },
             paramsKeyMap: {
                 PORT: 0,
-                VALUE: 1, 
+                VALUE: 1,
                 STATE: 2,
-                
+
             },
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
@@ -303,14 +303,14 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     state = 0;
                 }
 
-                if(!Entry.hw.sendQueue.SET){
+                if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                     data: state + value,
                     time: new Date().getTime(),
-                } 
+                }
                 return script.callReturn();
             },
             syntax: {
@@ -343,7 +343,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['3',  0],
+                        ['3', 0],
                         ['4', 12],
                         ['5', 24],
                         ['6', 36],
@@ -357,18 +357,18 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         ['무음', 200],
-                        ['도',   47],
-                        ['도#',  48],
-                        ['레',   49],
-                        ['레#',  50],
-                        ['미',   51],
-                        ['파',   52],
-                        ['파#',  53],
-                        ['솔',   54],
-                        ['솔#',  55],
-                        ['라',   56],
-                        ['라#',  57],
-                        ['시',   58],
+                        ['도', 47],
+                        ['도#', 48],
+                        ['레', 49],
+                        ['레#', 50],
+                        ['미', 51],
+                        ['파', 52],
+                        ['파#', 53],
+                        ['솔', 54],
+                        ['솔#', 55],
+                        ['라', 56],
+                        ['라#', 57],
+                        ['시', 58],
                     ],
                     value: [47],
                     fontSize: 12,
@@ -387,9 +387,9 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 type: 'Parodule_BUZZER',
             },
             paramsKeyMap: {
-                PORT:   0,
+                PORT: 0,
                 OCTAVE: 1,
-                TONE:   2 
+                TONE: 2
             },
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
@@ -402,14 +402,14 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     octave = 0;
                 }
 
-                if(!Entry.hw.sendQueue.SET){
+                if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 Entry.hw.sendQueue.SET[port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                     data: octave + tone,
                     time: new Date().getTime(),
-                } 
+                }
                 return script.callReturn();
             },
             syntax: {
@@ -455,7 +455,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['LED' , 'LED'],
+                        ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
                     ],
@@ -467,7 +467,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['LED' , 'LED'],
+                        ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
                     ],
@@ -479,7 +479,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['LED' , 'LED'],
+                        ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
                     ],
@@ -491,7 +491,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['LED' , 'LED'],
+                        ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
                     ],
@@ -544,22 +544,22 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['무색',     200],
-                        ['아우라',   18],
-                        ['빨강색',   19],
-                        ['다홍색',   20],
-                        ['주황색',   21],
-                        ['귤색',     22],
-                        ['노랑색',   23],
-                        ['연두색',   24],
-                        ['녹색',     25],
-                        ['청록색',   26],
-                        ['파랑색',   27],
-                        ['감청색',   28],
-                        ['남색',     29],
+                        ['무색', 200],
+                        ['아우라', 18],
+                        ['빨강색', 19],
+                        ['다홍색', 20],
+                        ['주황색', 21],
+                        ['귤색', 22],
+                        ['노랑색', 23],
+                        ['연두색', 24],
+                        ['녹색', 25],
+                        ['청록색', 26],
+                        ['파랑색', 27],
+                        ['감청색', 28],
+                        ['남색', 29],
                         ['남보라색', 30],
-                        ['보라색',   31],
-                        ['자주색',   32],
+                        ['보라색', 31],
+                        ['자주색', 32],
                     ],
                     value: [19],
                     fontSize: 12,
@@ -584,7 +584,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const value = script.getNumberValue('VALUE');
-                if(!Entry.hw.sendQueue.SET){
+                if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 for (var i = 0; i < 4; i++) {
@@ -594,9 +594,9 @@ Entry.Robotry_Parodule.getBlocks = function() {
                             type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                             data: value,
                             time: new Date().getTime(),
-                        } 
+                        }
                     }
-                } 
+                }
                 return script.callReturn();
             },
             syntax: {
@@ -617,10 +617,10 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         ['100%', 39],
-                        [ '75%', 38],
-                        [ '50%', 37],
-                        [ '25%', 36],
-                        [ '0%',  200],
+                        ['75%', 38],
+                        ['50%', 37],
+                        ['25%', 36],
+                        ['0%', 200],
                     ],
                     value: [39],
                     fontSize: 12,
@@ -652,7 +652,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                 type: 'Parodule_Custom_Motor',
             },
             paramsKeyMap: {
-                VALUE: 0, 
+                VALUE: 0,
                 STATE: 1,
             },
             class: 'SET',
@@ -678,12 +678,12 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     motor1 = 4;
                     motor2 = 0;
                 }
-                else {}
+                else { }
 
-                if(!Entry.hw.sendQueue.SET){
+                if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                
+
                 if (value === 200) {
                     motor1 = 0;
                     motor2 = 0;
@@ -697,19 +697,19 @@ Entry.Robotry_Parodule.getBlocks = function() {
                                 type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                                 data: motor1 + value,
                                 time: new Date().getTime(),
-                            } 
+                            }
                         }
                         else if (i === 2 || i === 3) {
                             Entry.hw.sendQueue.SET[i + 1] = {
                                 type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                                 data: motor2 + value,
                                 time: new Date().getTime(),
-                            } 
+                            }
                         }
-                        else {}
-                        
+                        else { }
+
                     }
-                }                
+                }
                 return script.callReturn();
             },
             syntax: {
@@ -718,6 +718,90 @@ Entry.Robotry_Parodule.getBlocks = function() {
             }
         },
         /* Parodule Custom Motor End */
+
+        /* Paroduel Buzzer Start */
+        Parodule_BUZZER: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['3', 0],
+                        ['4', 12],
+                        ['5', 24],
+                        ['6', 36],
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['무음', 200],
+                        ['도', 47],
+                        ['도#', 48],
+                        ['레', 49],
+                        ['레#', 50],
+                        ['미', 51],
+                        ['파', 52],
+                        ['파#', 53],
+                        ['솔', 54],
+                        ['솔#', 55],
+                        ['라', 56],
+                        ['라#', 57],
+                        ['시', 58],
+                    ],
+                    value: [47],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_bzr2.png',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [],
+                type: 'Parodule_BUZZER',
+            },
+            paramsKeyMap: {
+                OCTAVE: 0,
+                TONE: 1
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                var octave = script.getNumberValue('OCTAVE');
+                const tone = script.getNumberValue('TONE');
+
+                if (tone === 200) {
+                    octave = 0;
+                }
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: octave + tone,
+                    time: new Date().getTime(),
+                }
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [],
+            }
+        },
+        /* Parodule Buzzer End */
 
         /* Parodule Upadate Start */
         Parodule_Update: {
@@ -749,7 +833,7 @@ Entry.Robotry_Parodule.getBlocks = function() {
                     type: Entry.Robotry_Parodule.controlTypes.STRING,
                     data: update,
                     time: new Date().getTime(),
-                } 
+                }
                 return script.callReturn();
             },
             syntax: {
