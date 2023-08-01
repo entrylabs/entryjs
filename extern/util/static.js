@@ -526,6 +526,8 @@ EntryStatic.getAllBlocks = function() {
                 'video_body_part_coord',
                 'video_face_part_coord',
                 'video_detected_face_info',
+                'media_pipe_draw_webcam',
+                'start_hand_detection',
             ],
         },
         {
