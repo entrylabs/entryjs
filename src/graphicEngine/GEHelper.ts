@@ -5,7 +5,6 @@ import { GEDragHelper } from './GEDragHelper';
 import { IGEResManager } from './IGEResManager';
 import { EaselResManager } from './EaselResManager';
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
-import { PIXIPaintAdaptor } from '../class/pixi/etc/PIXIPaintAdaptor';
 import { PIXIScaleAdaptor } from '../class/pixi/atlas/PIXIScaleAdaptor';
 
 const INITIAL_VIDEO_PARAMS = {
@@ -803,22 +802,13 @@ class _BrushHelper extends GEHelperBase {
         }
     }
 
-    newPaint() {
-        if (this._isWebGL) {
-            return new PIXIPaintAdaptor();
-        } else {
-            return new createjs.Graphics();
-        }
-    }
-
     newShape(brush: PIXIBrushAdaptor | any) {
         if (this._isWebGL) {
             const shape = PIXIHelper.newPIXIGraphics();
             brush.internalSetShape(shape);
             return shape;
         } else {
-            const shape = new createjs.Shape(brush);
-            return shape;
+            return new createjs.Shape(brush);
         }
     }
 }

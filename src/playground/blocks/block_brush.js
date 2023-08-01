@@ -87,64 +87,6 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.stop_drawing()'] },
             },
-            start_fill: {
-                color: EntryStatic.colorSet.block.default.BRUSH,
-                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/brush_icon.svg',
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'start_fill',
-                },
-                class: 'brush_control',
-                isNotFor: ['textBox'],
-                func(sprite, script) {
-                    if (sprite.paint) {
-                        sprite.paint.stop = false;
-                    } else {
-                        Entry.setBasicPaint(sprite);
-                    }
-
-                    sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
-                    return script.callReturn();
-                },
-            },
-            stop_fill: {
-                color: EntryStatic.colorSet.block.default.BRUSH,
-                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/brush_icon.svg',
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'stop_fill',
-                },
-                class: 'brush_control',
-                isNotFor: ['textBox'],
-                func(sprite, script) {
-                    if (sprite.paint) {
-                        sprite.paint.endFill();
-                        sprite.paint.stop = true;
-                    }
-
-                    return script.callReturn();
-                },
-            },
             set_color: {
                 color: EntryStatic.colorSet.block.default.BRUSH,
                 outerLine: EntryStatic.colorSet.block.darken.BRUSH,
@@ -255,58 +197,6 @@ module.exports = {
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_brush_color_to_random()'] },
-            },
-            set_fill_color: {
-                color: EntryStatic.colorSet.block.default.BRUSH,
-                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/brush_icon.svg',
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [
-                        {
-                            type: 'color',
-                        },
-                        null,
-                    ],
-                    type: 'set_fill_color',
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'shape_color',
-                isNotFor: ['textBox'],
-                func(sprite, script) {
-                    const colour = script.getStringValue('VALUE', script);
-
-                    if (!sprite.paint || !sprite.shapes.length) {
-                        Entry.setBasicPaint(sprite);
-                        sprite.paint.stop = true;
-                    }
-
-                    if (sprite.paint) {
-                        const rgb = Entry.hex2rgb(colour);
-                        sprite.paint.rgb = rgb;
-                        sprite.paint.endFill();
-                        sprite.paint.beginFill(
-                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
-                        );
-                        sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
-                    }
-
-                    return script.callReturn();
-                },
             },
             change_thickness: {
                 color: EntryStatic.colorSet.block.default.BRUSH,

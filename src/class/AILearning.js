@@ -76,7 +76,6 @@ export default class AILearning {
         if (!this.isLoaded) {
             return;
         }
-        this.#modelId = undefined;
         const { blocks } = EntryStatic.getAllBlocks().find(
             ({ category }) => category === 'ai_utilize'
         );

@@ -543,10 +543,7 @@ Entry.EntryObject = class {
 
         this.clonedEntities.push(clonedEntity);
         let targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
-
-        const offsetCount =
-            1 + (entity.shapes.length ? 1 : 0) + (entity.paintShapes.length ? 1 : 0);
-        targetIndex -= offsetCount + entity.stamps.length;
+        targetIndex -= (entity.shapes.length ? 1 : 0) + entity.stamps.length;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
 
         if (entity.brush) {

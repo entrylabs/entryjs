@@ -5895,12 +5895,8 @@ Lang.Helper = {
     start_drawing:
         '오브젝트가 이동하는 경로를 따라 선이 그리기 시작합니다. (오브젝트의 중심점이 기준이 됩니다.)',
     stop_drawing: '오브젝트가 선 그리는 것을 멈춥니다.',
-    start_fill:
-        '오브젝트가 이동하는 경로를 따라 선을 그리고 내부를 채우기 시작합니다. (오브젝트의 중심점이 기준이 됩니다.)',
-    stop_fill: '오브젝트가 채우는 것을 멈춥니다.',
     set_color: '오브젝트가 그리는 선의 색을 선택한 색으로 정합니다.',
-    set_random_color: '오브젝트가 그리는 선의 색을 무작위로 정합니다.',
-    set_fill_color: '오브젝트가 채우는 색을 선택한 색으로 정합니다.',
+    set_random_color: '오브젝트가 그리는 선의 색을 무작위로 정합니다. ',
     change_thickness: '오브젝트가 그리는 선의 굵기를 입력한 값만큼 바꿉니다.',
     set_thickness:
         '오브젝트가 그리는 선의 굵기를 입력한 값으로 정합니다. 1~무한의 범위로 설정할 수 있습니다. (1 이하는 1로 처리합니다.)',
@@ -6594,8 +6590,6 @@ Lang.Helper = {
     diaboard_buzzer_speed_bpm_change: '입력한 BPM만큼 연주 속도를 바꿉니다.',
     diaboard_buzzer_sleep_rhythm: '선택한 박자만큼 쉽니다.',
     diaboard_buzzer_stop: '버저음을 멈춥니다.',
-    change_rgb_to_hex: '입력한 빨강(R), 초록(G), 파랑(B) 값을 HEX 값으로 변환한 값입니다.',
-    change_hex_to_rgb: '입력한 HEX 값을 빨강(R), 초록(G), 파랑(B) 중 하나로 변환한 값입니다.',
 };
 Lang.Category = {
     entrybot_friends: '엔트리봇 친구들',
@@ -6935,12 +6929,9 @@ Lang.template = {
     bitbrick_dc_speed: '디씨모터 %1 속도 %2 %3',
     bitbrick_turn_off_all_motors: "모든 모터 멈추기 %1",
     start_drawing: '그리기 시작하기 %1',
-    stop_drawing: '그리기 멈추기 %1',    
-    start_fill: '채우기 시작하기 %1',
-    stop_fill: '채우기 멈추기 %1',
+    stop_drawing: '그리기 멈추기 %1',
     set_color: '붓의 색을 %1 (으)로 정하기 %2',
     set_random_color: '붓의 색을 무작위로 정하기 %1',
-    set_fill_color: '채우기 색을 %1 (으)로 정하기 %2',
     change_thickness: '붓의 굵기를 %1 만큼 바꾸기 %2',
     set_thickness: '붓의 굵기를 %1 (으)로 정하기 %2',
     change_opacity: '붓의 불투명도를 %1 % 만큼 바꾸기 %2',
@@ -7006,10 +6997,7 @@ Lang.template = {
     functionAddButton: '%1',
     function_field_label: '%1%2',
     function_field_string: '%1%2',
-    function_field_boolean: '%1%2',    
-    get_block_count: '%1 의 블록 수',
-    change_rgb_to_hex: 'R:%1G:%2B:%3의 HEX 값',
-    change_hex_to_rgb: 'HEX%1의 %2값',
+    function_field_boolean: '%1%2',
     function_param_string: '문자/숫자값',
     function_param_boolean: '판단값',
     function_create: '함수 정의하기 %1 %2',

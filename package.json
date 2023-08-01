@@ -23,7 +23,7 @@
     "scripts": {
         "lint": "cross-env NODE_ENV=lint webpack -w",
         "serve:webgl": "cross-env NODE_ENV=serve webpack-dev-server --open  --hot --inline --host 127.0.0.1 --webgl=true",
-        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open --hot --inline --host 127.0.0.1",
+        "serve": "cross-env NODE_ENV=serve webpack-dev-server --open --hot --inline --host 0.0.0.0",
         "serve:mini": "cross-env NODE_ENV=serve-mini webpack-dev-server --open --hot --inline --host 127.0.0.1",
         "prod": "cross-env NODE_ENV=production webpack",
         "dev": "webpack -w",

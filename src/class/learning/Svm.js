@@ -173,7 +173,7 @@ class Svm extends LearningBase {
         );
         const dataArray = filtered
             .map((row) => ({
-                x: attr.map((i) => parseFloat(row[i]) || 0),
+                x: attr.map((i) => Utils.stringToNumber(i, row[i], STR2NUM_MAP, STR2NUM_MAP_COUNT)),
                 y: Utils.stringToNumber(
                     predict[0],
                     row[predict[0]],

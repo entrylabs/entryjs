@@ -29,7 +29,6 @@ Entry.EntityObject = class EntityObject {
         this.removed = false;
         this.stamps = [];
         this.shapes = [];
-        this.paintShapes = [];
         this._rndPosX = 0;
         this._rndPosY = 0;
         this.voice = { speed: 0, pitch: 0, speaker: 'kyuri', volume: 1 };
@@ -1454,11 +1453,6 @@ Entry.EntityObject = class EntityObject {
         this.brush = null;
     }
 
-    removePaint() {
-        this._removePaintShapes();
-        this.paint = null;
-    }
-
     eraseBrush() {
         const brush = this.brush;
         if (brush) {
@@ -1495,19 +1489,6 @@ Entry.EntityObject = class EntityObject {
             s.destroy && s.destroy(true); //pixi 일때만 호출
         }
         this.shapes = [];
-    }
-
-    _removePaintShapes() {
-        const container = Entry.stage.selectedObjectContainer;
-        const shapes = this.paintShapes;
-        const LEN = shapes.length;
-        let s;
-        for (let i = 0; i < LEN; i++) {
-            s = shapes[i];
-            container.removeChild(s);
-            s.destroy && s.destroy(true); //pixi 일때만 호출
-        }
-        this.paintShapes = [];
     }
 
     updateBG() {
@@ -1648,7 +1629,6 @@ Entry.EntityObject = class EntityObject {
 
         _.result(this.dialog, 'remove');
         this.brush && this.removeBrush();
-        this.paint && this.removePaint();
         Entry.stage.unloadEntity(this);
 
         //pixi 전용 코드
@@ -1672,7 +1652,6 @@ Entry.EntityObject = class EntityObject {
 
         _.result(this.dialog, 'remove');
         this.shapes.length && this.removeBrush();
-        this.paintShapes.length && this.removePaint();
     }
 
     _syncFontStyle() {

@@ -55,25 +55,6 @@ export class PIXIBrushAdaptor {
         this._setStyle();
     }
 
-    endFill() {
-        // #10141 때문에 closePath 사용안함.
-        if (!this._shape || this._shape.destroyed) {
-            return;
-        }
-        this._shape.closePath();
-    }
-
-    beginFill(color: string) {
-        this._parseRGBCssStyleColor(color);
-        this._setStyle();
-    }
-
-    beginFillFast(color: number, alpha: number) {
-        this._color = color;
-        this._alpha = alpha;
-        this._setStyle();
-    }
-
     setStrokeStyle(thickness: number) {
         this._thickness = thickness;
         this._setStyle();

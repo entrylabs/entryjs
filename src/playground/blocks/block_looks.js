@@ -879,27 +879,20 @@ module.exports = {
 
                             const frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1)
                                 .entity;
-
-                            const offsetCount =
-                                1 +
-                                (sprite.shapes.length ? 1 : 0) +
-                                (sprite.paintShapes.length ? 1 : 0);
-                            targetIndex += offsetCount + frontEntity.stamps.length;
+                            targetIndex +=
+                                (frontEntity.shapes.length ? 2 : 1) + frontEntity.stamps.length;
                             break;
                         }
                         case 'BACKWARD': {
-                            const offsetCount =
-                                1 +
-                                (sprite.shapes.length ? 1 : 0) +
-                                (sprite.paintShapes.length ? 1 : 0);
-                            targetIndex -= offsetCount + sprite.stamps.length;
+                            targetIndex -= (sprite.shapes.length ? 2 : 1) + sprite.stamps.length;
                             let backEntity = selectedObjectContainer.getChildAt(targetIndex);
                             if (!backEntity) {
                                 targetIndex = 0;
                                 break;
                             }
                             backEntity = backEntity.entity;
-                            targetIndex -= offsetCount + backEntity.stamps.length;
+                            targetIndex -=
+                                (backEntity.shapes.length ? 1 : 0) + backEntity.stamps.length;
                             break;
                         }
                         case 'BACK':

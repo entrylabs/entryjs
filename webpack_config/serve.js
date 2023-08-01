@@ -14,7 +14,7 @@ const templateName = (() => {
     }
 })();
 const template = path.resolve('example', templateName);
-const devServerPort = 8080;
+const devServerPort = 8000;
 
 module.exports = {
     mode: 'development',
@@ -32,6 +32,7 @@ module.exports = {
     ],
     devServer: {
         contentBase: './',
+        host: '0.0.0.0',
         port: devServerPort,
         historyApiFallback: true,
         publicPath: '/',

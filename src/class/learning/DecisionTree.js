@@ -82,10 +82,6 @@ class DecisionTree extends LearningBase {
     async train() {
         this.setTable();
         this.trained = false;
-        if (this.tree) {
-            this.tree.destroy();
-            this.tree = null;
-        }
         this.trainCallback(1);
         const {
             testRate = 0.2,
@@ -96,8 +92,11 @@ class DecisionTree extends LearningBase {
         } = this.trainParam;
         const { trainX, trainY, testArr, select, fields, valueMap, numClass } = getData(
             testRate,
-            this.table
+            this.table,
+            epochs,
+            batchSize
         );
+
         this.valueMap = Object.fromEntries(
             Object.entries(valueMap).map(([key, value]) => [value, key])
         );
@@ -165,7 +164,7 @@ function getData(testRate = 0.2, data) {
     );
     const dataArray = filtered
         .map((row) => ({
-            x: attr.map((i) => parseFloat(row[i]) || 0),
+            x: attr.map((i) => Utils.stringToNumber(i, row[i], tempMap, tempMapCount)),
             y: Utils.stringToNumber(predict[0], row[predict[0]], tempMap, tempMapCount),
         }))
         .map((row) => ({
