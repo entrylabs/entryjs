@@ -1,10 +1,15 @@
 'use strict';
 
+const _throttle = require('lodash/throttle');
+
+const EVENT_INTERVAL = 150;
+
 (function() {
     Entry.Microbit2lite = new (class Microbit2Lite {
         constructor() {
             this.commandStatus = {};
-            this.retryLimitCnt = 5;
+            this.btnEventIntervalId = -1;
+            this.retryLimitCnt = 8;
             this.portData = {
                 baudRate: 115200,
                 dataBits: 8,
@@ -13,7 +18,7 @@
                 bufferSize: 512,
                 connectionType: 'ascii',
             };
-            this.duration = 32;
+            this.duration = 64;
             this.functionKeys = {
                 LOCALDATA: 'localdata',
                 GET_ANALOG: 'get-analog',
@@ -258,11 +263,19 @@
                 'microbit2lite_set_pwm',
                 'microbit2lite_v2_title',
                 'microbit2lite_get_logo',
+                'microbit2lite_btn_event',
                 'microbit2lite_speaker_toggle',
                 'microbit2lite_play_sound_effect',
                 'microbit2lite_get_sound_level',
             ];
             this.version = '2';
+            this.firePressedBtnEventWithThrottle = _throttle(
+                (pressedBtn) => {
+                    Entry.engine.fireEventWithValue('microbit2lite_btn_pressed', pressedBtn);
+                },
+                EVENT_INTERVAL,
+                { leading: true, trailing: false }
+            );
         }
         _clamp(value, min, max) {
             if (value < min) {
@@ -275,6 +288,53 @@
         setZero() {
             this.commandStatus = {};
             return Entry.hwLite.sendAsyncWithThrottle(this.functionKeys.RESET);
+        }
+
+        async initialHandshake() {
+            const defaultCMD = `${this.functionKeys.LOCALDATA}`;
+            const response = await Entry.hwLite.sendAsyncWithThrottle(defaultCMD);
+            if (response && response.indexOf('localdata') > -1) {
+                const version = response.split(';')[1];
+                if (!version) {
+                    return;
+                }
+                const major = version[0];
+                if (this.version !== major) {
+                    this.version = major;
+                }
+            }
+
+            if (this.version === '2') {
+                Entry.addEventListener('run', this.handleBtnEventInterval.bind(this));
+                Entry.addEventListener('beforeStop', () => {
+                    clearInterval(this.btnEventIntervalId);
+                });
+            }
+
+            return response;
+        }
+
+        handleBtnEventInterval() {
+            this.btnEventIntervalId = setInterval(
+                this.listenBtnPressedEvent.bind(this),
+                this.duration
+            );
+        }
+
+        async listenBtnPressedEvent() {
+            if (Object.keys(this.commandStatus).length > 0) {
+                return;
+            }
+
+            const defaultCMD = `${this.functionKeys.LOCALDATA};`;
+            const response = await Entry.hwLite.sendAsyncWithThrottle(defaultCMD);
+            // const response = await this.getResponseWithSync(defaultCMD);
+
+            // INFO: A,B 버튼이벤트 관련 로직
+            const pressedBtn = response.split(':btn:')[1];
+            if (pressedBtn) {
+                this.firePressedBtnEventWithThrottle(pressedBtn);
+            }
         }
 
         waitMilliSec(milli) {
@@ -317,8 +377,11 @@
                 return;
             }
             const result = await Entry.hwLite.sendAsyncWithThrottle(command);
-
-            if (!result || this.getCommandType(command) !== this.getCommandType(result)) {
+            if (
+                (!result || this.getCommandType(command) !== this.getCommandType(result)) &&
+                // INFO : localdata 명령어는 우선순위가 낮으므로 반복하지 않음
+                command !== `${this.functionKeys.LOCALDATA};`
+            ) {
                 if (!this.commandStatus[command]) {
                     this.commandStatus[command] = 1;
                     throw new Entry.Utils.AsyncError();
@@ -367,6 +430,7 @@
                         microbit2lite_get_logo: '로고를 터치했는가?',
                         microbit2lite_get_gesture: '움직임이 %1 인가?',
                         microbit2lite_get_acc: '%1 의 가속도 값',
+                        microbit2lite_btn_event: '%1 %2 버튼을 눌렀을 때',
                         microbit2lite_get_direction: '나침반 방향',
                         microbit2lite_get_field_strength_axis: '%1 의 자기장 세기 값',
                         microbit2lite_get_light_level: '빛 센서 값',
@@ -522,7 +586,9 @@
                         microbit2lite_get_btn: "선택한 버튼이 눌렸다면 '참'으로 판단합니다.",
                         microbit2lite_get_logo: "로고를 터치했다면 '참'으로 판단합니다.",
                         microbit2lite_get_gesture: "선택한 움직임이 감지되면 '참'으로 판단합니다.",
-                        microbit2lite_get_acc: '선택한 축의 가속도 값입니다.',
+                        microbit2lite_get_acc:
+                            '선택한 버튼이 눌리면 아래에 연결된 블록들을 실행합니다.',
+                        microbit2lite_btn_event: '%1 %2 버튼을 눌렀을 때',
                         microbit2lite_get_direction: '나침반 방향 값입니다. (0~360) ',
                         microbit2lite_get_field_strength_axis: '선택한 축의 자기장 세기 값입니다.',
                         microbit2lite_get_light_level: '빛 센서의 값입니다.',
@@ -565,6 +631,7 @@
                         microbit2lite_get_logo: 'logo touched?',
                         microbit2lite_get_gesture: 'Is the movement %1?',
                         microbit2lite_get_acc: 'acceleration value of %1',
+                        microbit2lite_btn_event: '%1 When %2 button pressed',
                         microbit2lite_get_direction: 'compass direction',
                         microbit2lite_get_field_strength_axis:
                             'magnetic field strength value of %1 ',
@@ -731,6 +798,8 @@
                         microbit2lite_get_gesture:
                             "When the selected movement is detected, it is judged as 'True'.",
                         microbit2lite_get_acc: 'The acceleration value of the selected axis.',
+                        microbit2lite_btn_event:
+                            'When the selected button is pressed, the connected blocks below will run',
                         microbit2lite_get_direction: 'The compass direction value. (0~360)',
                         microbit2lite_get_field_strength_axis:
                             'The magnetic field strength value of the selected axis.',
@@ -1862,6 +1931,45 @@
                         }
                     },
                 },
+                microbit2lite_btn_event: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    fontColor: '#fff',
+                    skeleton: 'basic_event',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/start_icon_hardwarelite.svg',
+                            size: 14,
+                            position: { x: 0, y: -2 },
+                        },
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['A', '1'],
+                                ['B', '2'],
+                                ['A+B', '3'],
+                            ],
+                            value: '1',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    def: {
+                        type: 'microbit2lite_btn_event',
+                    },
+                    paramsKeyMap: {
+                        VALUE: 1,
+                    },
+                    class: 'microbit2litev2',
+                    isNotFor: ['Microbit2lite'],
+                    event: 'microbit2lite_btn_pressed',
+                    func: (sprite, script) => {
+                        return script.callReturn();
+                    },
+                },
                 microbit2lite_get_acc: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -2260,7 +2368,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],
@@ -2310,7 +2418,7 @@
                         },
                         {
                             type: 'Indicator',
-                            img: 'block_icon/hardware_icon.svg',
+                            img: 'block_icon/hardwarelite_icon.svg',
                             size: 12,
                         },
                     ],

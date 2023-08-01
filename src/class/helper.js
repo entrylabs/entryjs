@@ -33,7 +33,7 @@ class EntryBlockHelper {
 
         const commandTitle = Entry.createElement('div');
         commandTitle.addClass('entryBlockHelperTitle textModeElem');
-        commandTitle.innerHTML = 'Command';
+        commandTitle.textContent = 'Command';
         blockHelperContent.appendChild(commandTitle);
 
         blockHelperContent.addClass('entryBlockHelperIntro');
@@ -49,7 +49,7 @@ class EntryBlockHelper {
 
         const descTitle = Entry.createElement('div');
         descTitle.addClass('entryBlockHelperTitle textModeElem');
-        descTitle.innerHTML = 'Explanation';
+        descTitle.textContent = 'Explanation';
         blockHelperContent.appendChild(descTitle);
 
         const blockHelperDescription = Entry.createElement(
@@ -58,12 +58,12 @@ class EntryBlockHelper {
         );
         blockHelperDescription.addClass('entryBlockHelperContent selectAble');
         helper.blockHelperContent_.appendChild(blockHelperDescription);
-        blockHelperDescription.innerHTML = Lang.Helper.Block_click_msg;
+        blockHelperDescription.textContent = Lang.Helper.Block_click_msg;
         this.blockHelperDescription_ = blockHelperDescription;
 
         const elementsTitle = Entry.createElement('div');
         elementsTitle.addClass('entryBlockHelperTitle textModeElem');
-        elementsTitle.innerHTML = 'Element';
+        elementsTitle.textContent = 'Element';
         blockHelperContent.appendChild(elementsTitle);
         this._elementsTitle = elementsTitle;
 
@@ -75,7 +75,7 @@ class EntryBlockHelper {
         if (typeof CodeMirror !== 'undefined') {
             const codeMirrorTitle = Entry.createElement('div');
             codeMirrorTitle.addClass('entryBlockHelperTitle textModeElem');
-            codeMirrorTitle.innerHTML = 'Example Code';
+            codeMirrorTitle.textContent = 'Example Code';
             blockHelperContent.appendChild(codeMirrorTitle);
 
             const codeMirrorView = Entry.createElement(
@@ -101,7 +101,7 @@ class EntryBlockHelper {
 
             const codeMirrorDescTitle = Entry.createElement('div');
             codeMirrorDescTitle.addClass('entryBlockHelperTitle textModeElem');
-            codeMirrorDescTitle.innerHTML = 'Example Explanation';
+            codeMirrorDescTitle.textContent = 'Example Explanation';
             blockHelperContent.appendChild(codeMirrorDescTitle);
 
             this._codeMirrorDesc = Entry.createElement('div');
@@ -152,10 +152,10 @@ class EntryBlockHelper {
 
         if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
             this._contentView.addClass('textMode');
-            this.blockHelperDescription_.innerHTML = Lang.PythonHelper[`${type}_desc`];
+            this.blockHelperDescription_.textContent = Lang.PythonHelper[`${type}_desc`];
 
             let elements = Lang.PythonHelper[`${type}_elements`];
-            this._elementsContainer.innerHTML = '';
+            this._elementsContainer.textContent = '';
             if (elements) {
                 this._elementsTitle.removeClass('entryRemove');
                 elements = elements.split('%next');
@@ -166,12 +166,12 @@ class EntryBlockHelper {
                         box.addClass('entryBlockHelperElementsContainer');
                         const left = Entry.createElement('div');
 
-                        left.innerHTML = contents[0];
+                        left.textContent = contents[0];
                         left.addClass('elementLeft');
 
                         const right = Entry.createElement('div');
                         right.addClass('elementRight');
-                        right.innerHTML = contents[1];
+                        right.textContent = contents[1];
                         box.appendChild(left);
                         box.appendChild(right);
                         this._elementsContainer.appendChild(box);
@@ -180,7 +180,7 @@ class EntryBlockHelper {
             } else {
                 this._elementsTitle.addClass('entryRemove');
             }
-            this._codeMirrorDesc.innerHTML = Lang.PythonHelper[`${type}_exampleDesc`];
+            this._codeMirrorDesc.textContent = Lang.PythonHelper[`${type}_exampleDesc`];
 
             const exampleCode = Lang.PythonHelper[`${type}_exampleCode`];
             this._codeMirror.setValue(exampleCode);
@@ -188,7 +188,7 @@ class EntryBlockHelper {
             def = Entry.block[type].pyHelpDef || def;
         } else {
             this._contentView.removeClass('textMode');
-            this.blockHelperDescription_.innerHTML = description;
+            this.blockHelperDescription_.textContent = description;
         }
 
         code.createThread([def]);

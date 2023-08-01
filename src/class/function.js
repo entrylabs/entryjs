@@ -177,17 +177,17 @@ class EntryFunc {
         }
     }
 
-    getValue(variableId) {
+    getValue(variableId, localVariables) {
         const localVariable = _find(
-            this.localVariables,
+            localVariables || this.localVariables,
             (localVariable) => localVariable.id === variableId
         );
         return localVariable?.value || 0;
     }
 
-    setValue(value, variableId) {
+    setValue(value, variableId, localVariables) {
         const localVariable = _find(
-            this.localVariables,
+            localVariables || this.localVariables,
             (localVariable) => localVariable.id === variableId
         );
         localVariable.value = value;
@@ -407,7 +407,7 @@ class EntryFunc {
                 this.targetFunc.localVariables = this._backupOption.localVariables;
                 this.changeType(this.targetFunc, this._backupOption.type);
                 this._generateFunctionSchema(this.targetFunc.id);
-                this.generateWsBlock(this.targetFunc, true);
+                this.generateWsBlock(this.targetFunc);
             }
         }
         Entry.variableContainer.updateList();
@@ -862,6 +862,18 @@ class EntryFunc {
             });
             Entry.variableContainer.functionAddButton_.addClass('disable');
         }
+    }
+
+    takeSnapshot() {
+        this.snapshot_ = {
+            localVariables: _cloneDeep(this.localVariables),
+        };
+    }
+
+    loadSnapshot() {
+        const { localVariables } = this.snapshot_;
+        this.localVariables = localVariables;
+        delete this.snapshot_;
     }
 }
 

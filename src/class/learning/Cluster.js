@@ -1,6 +1,8 @@
 import { kmpp } from 'skmeans/kinit';
 // import { kmpp } from 'skmeans/dist/node/kinit';
 import floor from 'lodash/floor';
+import _toNumber from 'lodash/toNumber';
+import _isNaN from 'lodash/isNaN';
 import LearningView from './LearningView';
 import Chart from './Chart';
 import DataTable from '../DataTable';
@@ -153,14 +155,17 @@ class Cluster {
         this.#trainCallback(1);
         this.#isTrained = false;
         const { data, select } = this.#table;
+        const filtered = data.filter(
+            (row) => !select.flat().some((selected) => _isNaN(_toNumber(row[selected])))
+        );
         const [attr] = select;
 
         const { centroids, indexes } = kmeans(
-            data.map((row) => attr.map((i) => parseFloat(row[i]) || 0)),
+            filtered.map((row) => attr.map((i) => parseFloat(row[i]) || 0)),
             this.#trainParam
         );
         this.#result = {
-            graphData: convertGraphData(data, centroids, indexes, attr),
+            graphData: convertGraphData(filtered, centroids, indexes, attr),
             centroids,
         };
         this.#isTrained = true;

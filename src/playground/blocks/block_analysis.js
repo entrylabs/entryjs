@@ -1,6 +1,7 @@
 // import _chain from 'lodash/chain';
 import _isNumber from 'lodash/isNumber';
 import DataTable from '../../class/DataTable';
+import { toNumber } from '../../util/common';
 
 module.exports = {
     getBlocks() {
@@ -699,9 +700,10 @@ module.exports = {
                     const calc = script.getField('CALC', script);
                     const col = DataTable.getColumnIndex(script.getValue('COL', script));
                     const table = DataTable.getSource(tableId, sprite);
-                    const array = table.array.map(({ value = [] }) =>
-                        _isNumber(value[col - 1]) ? value[col - 1] : 0
-                    );
+                    const array = table.array.map(({ value = [] }) => {
+                        const parsed = toNumber(value[col - 1]);
+                        return _isNumber(parsed) ? parsed : 0;
+                    });
                     const total = array.length;
                     const sum = (x, y) => x + y;
                     const square = (x) => x * x;
@@ -958,6 +960,82 @@ module.exports = {
                 func(sprite, script) {
                     DataTable.closeModal();
                     return script.callReturn();
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
+            get_coefficient: {
+                color: EntryStatic.colorSet.block.default.ANALYSIS,
+                outerLine: EntryStatic.colorSet.block.darken.ANALYSIS,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'tables',
+                        dropdownSync: 'dataTables',
+                        fontSize: 10,
+                        bgColor: EntryStatic.colorSet.block.darken.ANALYSIS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'get_table_fields',
+                        },
+                        {
+                            type: 'get_table_fields',
+                        },
+                    ],
+                    type: 'get_coefficient',
+                },
+                pyHelpDef: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: ['A&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['B&value'],
+                        },
+                        {
+                            type: 'text',
+                            params: ['C&value'],
+                        },
+                        null,
+                    ],
+                    type: 'get_coefficient',
+                },
+                paramsKeyMap: {
+                    MATRIX: 0,
+                    FIELD1: 1,
+                    FIELD2: 2,
+                },
+                class: 'analysis',
+                isNotFor: ['analysis'],
+                func(sprite, script) {
+                    const tableId = script.getField('MATRIX', script);
+                    const x = DataTable.getColumnIndex(script.getValue('FIELD1', script));
+                    const y = DataTable.getColumnIndex(script.getValue('FIELD2', script));
+                    const table = DataTable.getSource(tableId, sprite);
+                    return table.getCoefficient(x, y);
                 },
                 syntax: {
                     js: [],

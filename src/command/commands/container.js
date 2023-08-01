@@ -48,6 +48,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             Entry.Utils.forceStopSounds();
             const { name } = Entry.container.getObject(objectId);
             Entry.container.removeObject(objectId);
+            Entry.Utils.doCodeChange();
 
             Entry.toast.success(
                 Lang.Workspace.remove_object,
@@ -71,6 +72,7 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             objectModel.id = getExpectedData('objectModel', {}).id || objectModel.id;
             Entry.container.addObjectFunc(objectModel, index);
             Entry.dispatchEvent('dismissModal');
+            Entry.Utils.doCodeChange();
         },
         state(objectModel, index) {
             objectModel.id = getExpectedData('objectModel', {}).id || objectModel.id;
@@ -87,7 +89,11 @@ const { createTooltip, returnEmptyArr, getExpectedData } = require('../command_u
             if (_.isObject(font)) {
                 objectModel.options.font = _omitFunc(font);
             }
-            return [['objectModel', objectModel], ['objectIndex', index], ['spriteId', sprite._id]];
+            return [
+                ['objectModel', objectModel],
+                ['objectIndex', index],
+                ['spriteId', sprite._id],
+            ];
         },
         dom: ['.btn_confirm_modal'],
         restrict(data, domQuery, callback) {

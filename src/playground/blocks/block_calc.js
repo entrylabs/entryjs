@@ -1,3 +1,5 @@
+import _get from 'lodash/get';
+
 module.exports = {
     getBlocks() {
         return {
@@ -1394,6 +1396,7 @@ module.exports = {
                             [Lang.Blocks.CALC_get_date_year, 'YEAR'],
                             [Lang.Blocks.CALC_get_date_month, 'MONTH'],
                             [Lang.Blocks.CALC_get_date_day, 'DAY'],
+                            [Lang.Blocks.CALC_get_date_day_of_week, 'DAY_OF_WEEK'],
                             [Lang.Blocks.CALC_get_date_hour, 'HOUR'],
                             [Lang.Blocks.CALC_get_date_minute, 'MINUTE'],
                             [Lang.Blocks.CALC_get_date_second, 'SECOND'],
@@ -1436,6 +1439,10 @@ module.exports = {
                         return dateTime.getHours();
                     } else if (operator === 'MINUTE') {
                         return dateTime.getMinutes();
+                    } else if (operator === 'DAY_OF_WEEK') {
+                        const daysLang = ['일', '월', '화', '수', '목', '금', '토'];
+                        const dayNum = dateTime.getDay();
+                        return daysLang[dayNum];
                     } else {
                         return dateTime.getSeconds();
                     }
@@ -1457,6 +1464,7 @@ module.exports = {
                                         [Lang.Blocks.CALC_get_date_hour, 'HOUR'],
                                         [Lang.Blocks.CALC_get_date_minute, 'MINUTE'],
                                         [Lang.Blocks.CALC_get_date_second, 'SECOND'],
+                                        [Lang.Blocks.CALC_get_date_day_of_week, 'DAY_OF_WEEK'],
                                     ],
                                     value: 'YEAR',
                                     fontSize: 11,
@@ -1731,6 +1739,57 @@ module.exports = {
                             keyOption: 'length_of_string',
                         },
                     ],
+                },
+            },
+            reverse_of_string: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_reverse_of_string_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_reverse_of_string_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'text',
+                            params: [Lang.Blocks.entry],
+                        },
+                        null,
+                    ],
+                    type: 'reverse_of_string',
+                },
+                paramsKeyMap: {
+                    STRING: 1,
+                },
+                class: 'calc_string',
+                isNotFor: ['python_disable'],
+                func(sprite, script) {
+                    const originStr = script.getStringValue('STRING', script);
+                    const reversedStr = originStr
+                        .split('')
+                        .reverse()
+                        .join('');
+                    return reversedStr;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
                 },
             },
             combine_something: {
@@ -2068,6 +2127,70 @@ module.exports = {
                     ],
                 },
             },
+            count_match_string: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_count_match_string_1,
+                        color: '#FFF',
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.CALC_count_match_string_2,
+                        color: '#FFF',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'text',
+                            params: [Lang.Blocks.hi_entry_en],
+                        },
+                        null,
+                        {
+                            type: 'text',
+                            params: ['e'],
+                        },
+                        null,
+                    ],
+                    type: 'count_match_string',
+                },
+                paramsKeyMap: {
+                    STRING: 0,
+                    TARGET: 2,
+                },
+                class: 'calc_string',
+                isNotFor: ['python_disable'],
+                func(sprite, script) {
+                    const originStr = script.getStringValue('STRING', script);
+                    const targetStr = script.getStringValue('TARGET', script);
+
+                    if (originStr.length > 0 && targetStr.length > 0) {
+                        const result = originStr.match(new RegExp(targetStr, 'g'));
+                        if (result) {
+                            return result.length;
+                        }
+                    }
+                    return 0;
+                },
+                syntax: {
+                    js: [],
+                    py: [],
+                },
+            },
             index_of_string: {
                 color: EntryStatic.colorSet.block.default.CALC,
                 outerLine: EntryStatic.colorSet.block.darken.CALC,
@@ -2387,6 +2510,83 @@ module.exports = {
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter: Entry.block.converters.returnStringValue,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            get_block_count: {
+                color: EntryStatic.colorSet.block.default.CALC,
+                outerLine: EntryStatic.colorSet.block.darken.CALC,
+                skeleton: 'basic_string_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'blockCount',
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'get_block_count',
+                },
+                pyHelpDef: {
+                    params: ['A&value'],
+                    type: 'get_block_count',
+                },
+                paramsKeyMap: {
+                    OBJECT: 0,
+                },
+                class: 'block',
+                isNotFor: [],
+                async func(sprite, script) {
+                    const objectKey = script.getField('OBJECT', script);
+                    if (!objectKey) {
+                        return 0;
+                    }
+                    let object;
+                    if (objectKey.indexOf('scene-') === 0) {
+                        const blocks = await Entry.Utils.getObjectsBlocksBySceneId(
+                            objectKey.substr(6)
+                        );
+                        return _get(blocks, 'length', 0);
+                    } else if (objectKey === 'all') {
+                        object = undefined;
+                    } else if (objectKey === 'self') {
+                        object = sprite.parent;
+                    } else if (objectKey.indexOf('object-') === 0) {
+                        object = Entry.container.getObject(objectKey.substr(7));
+                    } else {
+                        return 0;
+                    }
+
+                    const blocks = await Entry.Utils.getObjectsBlocksForEventThread(object);
+                    const count = _get(blocks, 'length', 0);
+                    return count;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.get_block_count(%1)',
+                            blockType: 'param',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'blockCount',
+                                    fontSize: 11,
+                                    textColor: '#fff',
+                                    arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.get_block_count[0]',
                                 },
                             ],
                         },

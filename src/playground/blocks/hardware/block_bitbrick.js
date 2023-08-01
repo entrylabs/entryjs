@@ -130,26 +130,6 @@ Entry.Bitbrick = {
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
-            A: {
-                name: Lang.Hw.port_en + ' A ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            B: {
-                name: Lang.Hw.port_en + ' B ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            C: {
-                name: Lang.Hw.port_en + ' C ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
-            D: {
-                name: Lang.Hw.port_en + ' D ' + Lang.Hw.port_ko,
-                type: 'input',
-                pos: { x: 0, y: 0 },
-            },
         },
         // },
         // ports : {
@@ -206,21 +186,27 @@ Entry.Bitbrick = {
 Entry.Bitbrick.blockMenuBlocks = [
     'bitbrick_when_button_pressed',
     'bitbrick_when_sensor_get_value',
+    'bitbrick_is_touch_pressed',
+    'bitbrick_is_sensor_value_compare',
     'bitbrick_sensor_value',
     'bitbrick_convert_scale',
-    'bitbrick_is_touch_pressed',
-    'bitbrick_turn_off_color_led',
     'bitbrick_turn_on_color_led_by_rgb',
     'bitbrick_turn_on_color_led_by_picker',
     'bitbrick_turn_on_color_led_by_value',
-    'bitbrick_buzzer',
-    'bitbrick_turn_off_all_motors',
-    'bitbrick_dc_speed',
-    'bitbrick_dc_direction_speed',
+    'bitbrick_turn_off_color_led',
+    'bitbrick_buzzer',    
     'bitbrick_servomotor_angle',
+    'bitbrick_dc_direction_speed',
+    'bitbrick_dc_speed',
+    'bitbrick_turn_off_all_motors',
 ];
 
 Entry.Bitbrick.getBlocks = function() {
+    let options_BITBRICK_button2    = 
+    [
+        [Lang.Blocks.BITBRICK_button_pressed,  'pressed'],
+        [Lang.Blocks.BITBRICK_button_released, 'released'],
+    ];
     return {
         //region bitbrick 비트브릭
         bitbrick_when_button_pressed: {
@@ -230,15 +216,6 @@ Entry.Bitbrick.getBlocks = function() {
             skeleton: 'basic_event',
             statements: [],
             params: [
-                // {
-                //     type: 'Indicator',
-                //     img: 'block_icon/start_icon_play.svg',
-                //     size: 14,
-                //     position: {
-                //         x: 0,
-                //         y: -2,
-                //     },
-                // },
                 {
                     type: 'Indicator',
                     img: 'block_icon/hardware_icon.svg',
@@ -273,10 +250,13 @@ Entry.Bitbrick.getBlocks = function() {
                 if( script.values.length > 0 ) {
                     let selectedSensor  = script.values[ 1 ];
                     let port = script.getStringField('PORT');
-                    let type = Entry.hw.portData[port].type;
-                    let val  = Entry.hw.portData[port].value;
-                    if( selectedSensor == port && val == 0 ) {
-                        return script.callReturn();
+                    let val  = Entry.hw.portData[port].value;       // 0이면 누름, 1023이면 누르지 않음
+                    if( selectedSensor == port ) {
+                        if (val == 0) {
+                            return script.callReturn();
+                        } else {
+                            return this.die();
+                        }                        
                     } else {
                         return this.die();
                     }
@@ -316,7 +296,7 @@ Entry.Bitbrick.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     options: Entry.Bitbrick.INEQ_SIGN,
-                    value: '<',
+                    value: '>',
                 },
                 {
                     type: 'Block',
@@ -331,7 +311,7 @@ Entry.Bitbrick.getBlocks = function() {
                     null,
                     {
                         type: 'text',
-                        params: ['50'],
+                        params: ['100'],
                     }
                 ],
                 type: 'bitbrick_when_sensor_get_value',
@@ -441,7 +421,7 @@ Entry.Bitbrick.getBlocks = function() {
                     },
                     {
                         type: 'number',
-                        params: ['-100'],
+                        params: ['0'],
                     },
                     {
                         type: 'number',
@@ -501,21 +481,105 @@ Entry.Bitbrick.getBlocks = function() {
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
+                {
+                    type: 'Dropdown',
+                    options: options_BITBRICK_button2,
+                    value: 'pressed',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
             ],
             events: {},
             def: {
-                params: [null],
+                params: [null, null],
                 type: 'bitbrick_is_touch_pressed',
             },
             paramsKeyMap: {
                 PORT: 0,
+                PRESSED: 1
             },
             class: 'button',
             isNotFor: ['bitbrick'],
             func: function(sprite, script) {
-                return Entry.hw.portData[script.getStringField('PORT')].value === 0;
+                console.info("bitbrick_is_touch_pressed");
+                let port = script.getStringField('PORT');
+                let val  = Entry.hw.portData[port].value;
+                let pressed = script.getStringField('PRESSED');
+                if ((pressed == 'pressed') && (val == 0)) {
+                    return true;
+                } else if ((pressed == 'released') && (val == 1023)) {
+                    return true;
+                } else {
+                    return false;
+                }                        
             },
-            syntax: { js: [], py: ['Bitbrick.is_touch_pressed(%1)'] },
+            syntax: { js: [], py: ['Bitbrick.is_touch_pressed(%1, %2)'] },
+        },
+        bitbrick_is_sensor_value_compare: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'DropdownDynamic',
+                    value: null,
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    menuName: Entry.Bitbrick.sensorList,
+                },
+                {
+                    type: 'Dropdown',
+                    fontSize: 11,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    options: Entry.Bitbrick.INEQ_SIGN,
+                    value: '>',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    }
+                ],
+                type: 'bitbrick_is_sensor_value_compare',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                INEQ_SIGN: 1,
+                VALUE: 2
+            },
+            class: 'button',
+            isNotFor: ['bitbrick'],
+            func: function(sprite, script) {
+                let selectedPort    = script.values[ 0 ];
+                let ineqSign        = script.values[ 1 ];
+                let value           = script.values[ 2 ];
+                let port    = script.getStringField('PORT');
+                let val     = Entry.hw.portData[port].value;
+                if( selectedPort == port && ineqSign == '<' && val < value ) {
+                    return true;
+                } else if( selectedPort == port && ineqSign == '>' && val > value ) {
+                    return true;
+                } else if( selectedPort == port && ineqSign == '=' && val == value ) {
+                    return true;
+                } else {
+                    return false;
+                }
+            },
+            syntax: { js: [], py: ['Bitbrick.is_sensor_value_compare(%1,%2,%3)'] },
         },
         bitbrick_turn_off_color_led: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -964,29 +1028,32 @@ Entry.Bitbrick.setLanguage = function() {
             template: {
                 bitbrick_when_button_pressed: '%1 버튼 %2 눌러졌을 때',
                 bitbrick_when_sensor_get_value: '%1 %2 값 %3 %4 일 때',
-                bitbrick_sensor_value: '%1  값',
-                bitbrick_is_touch_pressed: '버튼 %1 이(가) 눌렸는가?',
-                bitbrick_turn_off_color_led: '엘이디 끄기 %1',
-                bitbrick_turn_on_color_led_by_rgb: '엘이디 빨강 %1 초록 %2 파랑 %3 %4',
-                bitbrick_turn_on_color_led_by_picker: '엘이디 색  %1 로 정하기 %2',
-                bitbrick_turn_on_color_led_by_value: '엘이디 색 %1 로 정하기 %2',
-                bitbrick_buzzer: '버저음  %1 내기 %2',
-                bitbrick_turn_off_all_motors: '모든 모터 끄기 %1',
-                bitbrick_dc_speed: '디씨모터 %1  속도 %2 %3',
-                bitbrick_dc_direction_speed: '디씨모터 %1   %2  방향  속력 %3 %4',
-                bitbrick_servomotor_angle: '서보모터 %1  각도 %2 %3',
+                bitbrick_is_touch_pressed: '버튼 %1 이(가) %2 인가?',
+                bitbrick_is_sensor_value_compare: '%1 값 %2 %3 인가?',
+                bitbrick_sensor_value: '%1 값',
                 bitbrick_convert_scale: '변환 %1 값 %2 ~ %3 에서 %4 ~ %5',
+                bitbrick_turn_on_color_led_by_rgb: '엘이디를 빨강 %1 초록 %2 파랑 %3 %4 (으)로 켜기',
+                bitbrick_turn_on_color_led_by_picker: '엘이디를 %1 (으)로 켜기 %2',
+                bitbrick_turn_on_color_led_by_value: '엘이디를 %1 (으)로 켜기 %2',
+                bitbrick_turn_off_color_led: '엘이디 끄기 %1',
+                bitbrick_buzzer: '버저음 %1 내기 %2',
+                bitbrick_servomotor_angle: '서보모터 %1 각도 %2 %3',
+                bitbrick_dc_direction_speed: '디씨모터 %1 방향 %2 속력 %3 %4',
+                bitbrick_dc_speed: '디씨모터 %1 속도 %2 %3',
+                bitbrick_turn_off_all_motors: '모든 모터 멈추기 %1',
             },
             Blocks: {
-                BITBRICK_light: '밝기센서',
-                BITBRICK_IR: '거리센서',
+                BITBRICK_button_pressed: '누름',
+                BITBRICK_button_released: '누르지 않음',
+                BITBRICK_light: '밝기 센서',
+                BITBRICK_IR: '적외선 센서',
                 BITBRICK_touch: '버튼',
                 BITBRICK_ultrasonicSensor: '초음파센서',
-                BITBRICK_vibrationSensor: '진동센서',
+                BITBRICK_vibrationSensor: '진동 센서',
                 BITBRICK_potentiometer: '가변저항',
-                BITBRICK_MIC: '소리센서',
-                BITBRICK_UserSensor: '사용자입력',
-                BITBRICK_UserInput: '사용자입력',
+                BITBRICK_MIC: '소리 센서',
+                BITBRICK_UserSensor: '사용자 입력',
+                BITBRICK_UserInput: '사용자 입력',
                 BITBRICK_dc_direction_ccw: '반시계',
                 BITBRICK_dc_direction_cw: '시계',
             },
@@ -1000,22 +1067,25 @@ Entry.Bitbrick.setLanguage = function() {
         en: {
             // en.js에 작성하던 내용
             template: {
-                bitbrick_when_button_pressed: '%1 When button %2 pressed',
-                bitbrick_when_sensor_get_value: '%1 When %2 value %3 %4',
-                bitbrick_sensor_value: 'Value %1',
-                bitbrick_is_touch_pressed: 'Pressed %1 button? ',
-                bitbrick_turn_off_color_led: 'Turn off color LED %1',
-                bitbrick_turn_on_color_led_by_rgb: 'Color LED R %1 G %2 B %3 %4',
-                bitbrick_turn_on_color_led_by_picker: 'Select %1 for color LED %2',
-                bitbrick_turn_on_color_led_by_value: 'Color LED, select %1 %2',
-                bitbrick_buzzer: 'Buzz for %1 secs %2',
-                bitbrick_turn_off_all_motors: 'Turn off all motors %1',
-                bitbrick_dc_speed: 'DC motor %1 speed %2 %3',
-                bitbrick_dc_direction_speed: 'DC motor %1 %2 direction speed %3 %4',
-                bitbrick_servomotor_angle: 'Servo motor %1 angle %2 %3',
-                bitbrick_convert_scale: 'Convert %1 value from %2~%3 to %4~%4',
+                bitbrick_when_button_pressed: '%1 when button %2',
+                bitbrick_when_sensor_get_value: '%1 when %2 value %3 %4',
+                bitbrick_is_touch_pressed: 'button %1 %2?',
+                bitbrick_is_sensor_value_compare: '%1 %2 %3? ',
+                bitbrick_sensor_value: '%1 value',
+                bitbrick_convert_scale: 'map %1 value from %2 ~ %3 to %4 ~ %5',
+                bitbrick_turn_on_color_led_by_rgb: 'set LED color to Red %1 Green %2 Blue %3 %4',
+                bitbrick_turn_on_color_led_by_picker: 'set LED color to %1 %2',
+                bitbrick_turn_on_color_led_by_value: 'set LED color %1 %2',
+                bitbrick_turn_off_color_led: 'turn off LED %1',
+                bitbrick_buzzer: 'buzz note %1 %2',
+                bitbrick_servomotor_angle: 'servo motor %1 degree %2 %3',
+                bitbrick_dc_direction_speed: 'dc motor %1 direction %2 speed %3 %4',
+                bitbrick_dc_speed: 'dc motor %1 velocity %2 %3',
+                bitbrick_turn_off_all_motors: 'stop all motors %1',
             },
             Blocks: {
+                BITBRICK_button_pressed: 'pressed',
+                BITBRICK_button_released: 'released',                
                 BITBRICK_light: 'light',
                 BITBRICK_IR: 'IR',
                 BITBRICK_touch: 'touch',

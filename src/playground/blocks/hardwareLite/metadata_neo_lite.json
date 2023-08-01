@@ -1,0 +1,9 @@
+{
+    "name": "NeoLite",
+    "version": "1.0.0",
+    "type": "hardware",
+    "title": "네오(NEO)",
+    "description": "네오피아",
+    "imageName": "neo",
+    "moduleId": "050801"
+}

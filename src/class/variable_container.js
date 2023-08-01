@@ -1507,6 +1507,24 @@ Entry.VariableContainer = class VariableContainer {
         this.updateList();
     }
 
+    removeNotPythonSupportedFunction() {
+        const functions = this.functions_;
+        Object.values(functions).forEach((func) => {
+            const isNotPythonSupport = func.useLocalVariables || func.type === 'value';
+            if (isNotPythonSupport) {
+                const functionId = func.id;
+                func.destroy();
+                delete functions[functionId];
+                const functionType = `func_${functionId}`;
+                Entry.container.removeFuncBlocks(functionType);
+                for (const id in functions) {
+                    functions[id].content.removeBlocksByType(functionType);
+                }
+            }
+        });
+        this.updateList();
+    }
+
     checkListPosition(list, mouse) {
         const pos = {
             start_w: list.x_,
@@ -2247,6 +2265,10 @@ Entry.VariableContainer = class VariableContainer {
      */
     mapList(mapFunction, param) {
         this.lists_.forEach(_.partial(mapFunction, _, param));
+    }
+
+    mapFunc(mapFunction, param) {
+        Object.values(this.functions_).forEach(_.partial(mapFunction, _, param));
     }
 
     /**

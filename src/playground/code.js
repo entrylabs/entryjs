@@ -358,6 +358,9 @@ Entry.Code = class Code {
         const event = Entry.creationChangedEvent;
         if (board && event && board.constructor !== Entry.BlockMenu) {
             event.notify();
+            if (Entry.codeChangedEvent) {
+                Entry.codeChangedEvent.notify();
+            }
         }
     }
 
@@ -462,6 +465,18 @@ Entry.Code = class Code {
             .value();
     }
 
+    getBlockListForEventThread(excludePrimitive, type) {
+        return _.chain(this.getThreads())
+            .map((t) => {
+                if (t._event) {
+                    return t.getBlockList(excludePrimitive, type);
+                }
+                return [];
+            })
+            .flatten(true)
+            .value();
+    }
+
     removeBlocksByType(type) {
         this.getBlockList(false, type).forEach((b) => b.doDestroy());
     }
@@ -501,7 +516,7 @@ Entry.Code = class Code {
                     } else {
                         funcCode.callStackLength--;
                         funcCode.removeExecutor(funcExecutor);
-                        return resolve(Entry.STATIC.BREAK);
+                        return resolve(Entry.STATIC.CONTINUE);
                     }
                 }
                 return resolve();

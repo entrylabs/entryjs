@@ -36,6 +36,8 @@ Entry.Playground = class Playground {
         });
         Entry.addEventListener('commentVisibleChanged', this.toggleCommentButtonVisible.bind(this));
 
+        Entry.addEventListener('workspaceChangeMode', this.updateSelectedObjectTitle.bind(this));
+
         Entry.windowResized.attach(this, this.clearClientRectMemo.bind(this));
     }
 
@@ -70,7 +72,7 @@ Entry.Playground = class Playground {
             const curtainView = Entry.createElement('div', 'entryCurtain')
                 .addClass('entryPlaygroundCurtainWorkspace entryRemove')
                 .appendTo(this.view_);
-            curtainView.innerHTML = Lang.Workspace.cannot_edit_click_to_stop;
+            curtainView.textContent = Lang.Workspace.cannot_edit_click_to_stop;
             curtainView.addEventListener('click', () => {
                 Entry.engine.toggleStop();
             });
@@ -90,7 +92,7 @@ Entry.Playground = class Playground {
             const pictureCurtainText = Entry.createElement('span', 'entryPictureCurtainText')
                 .addClass('entryPlaygroundPictureCurtainWorkspaceText')
                 .appendTo(pictureCurtainView);
-            pictureCurtainText.innerHTML = Lang.Workspace.add_object_before_edit;
+            pictureCurtainText.textContent = Lang.Workspace.add_object_before_edit;
 
             const textView = Entry.createElement('div', 'entryText')
                 .addClass('entryPlaygroundTextWorkspace entryRemove')
@@ -170,7 +172,7 @@ Entry.Playground = class Playground {
                 Entry.do('playgroundChangeViewMode', 'code', that.selectedViewMode);
             })
             .appendTo(tabList);
-        codeTab.innerHTML = Lang.Workspace.tab_code;
+        codeTab.textContent = Lang.Workspace.tab_code;
         this.tabViewElements.code = codeTab;
         this._codeTab = codeTab;
 
@@ -180,7 +182,7 @@ Entry.Playground = class Playground {
                 Entry.do('playgroundChangeViewMode', 'picture', that.selectedViewMode);
             })
             .appendTo(tabList);
-        pictureTab.innerHTML = Lang.Workspace.tab_picture;
+        pictureTab.textContent = Lang.Workspace.tab_picture;
         this.tabViewElements.picture = pictureTab;
         this.pictureTab = pictureTab;
 
@@ -190,7 +192,7 @@ Entry.Playground = class Playground {
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'text', that.selectedViewMode);
             });
-        textboxTab.innerHTML = Lang.Workspace.tab_text;
+        textboxTab.textContent = Lang.Workspace.tab_text;
         this.tabViewElements.text = textboxTab;
         this.textboxTab = textboxTab;
 
@@ -200,7 +202,7 @@ Entry.Playground = class Playground {
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'sound', that.selectedViewMode);
             });
-        soundTab.innerHTML = Lang.Workspace.tab_sound;
+        soundTab.textContent = Lang.Workspace.tab_sound;
         this.tabViewElements.sound = soundTab;
         this.soundTab = soundTab;
 
@@ -210,7 +212,7 @@ Entry.Playground = class Playground {
             .bindOnClick(() => {
                 Entry.do('playgroundChangeViewMode', 'variable', that.selectedViewMode);
             });
-        variableTab.innerHTML = Lang.Workspace.tab_attribute;
+        variableTab.textContent = Lang.Workspace.tab_attribute;
         this.tabViewElements.variable = variableTab;
         this.variableTab = variableTab;
     }
@@ -641,7 +643,7 @@ Entry.Playground = class Playground {
                     }
                 })
                 .appendTo(pictureAdd);
-            innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
+            innerPictureAdd.textContent = Lang.Workspace.picture_add;
             this._pictureAddButton = innerPictureAdd;
 
             const innerDrawNewPicture = Entry.createElement('div', 'entryNewPictureInner')
@@ -650,7 +652,7 @@ Entry.Playground = class Playground {
                     this.painter.newPicture();
                 })
                 .appendTo(pictureAdd);
-            innerDrawNewPicture.innerHTML = Lang.Workspace.draw_new;
+            innerDrawNewPicture.textContent = Lang.Workspace.draw_new;
             this._drawNewPictureButton = innerDrawNewPicture;
 
             this.pictureListView_ = Entry.createElement('ul', 'entryPictureList')
@@ -901,7 +903,7 @@ Entry.Playground = class Playground {
         this.fontSizeWrapper = fontSizeWrapper;
 
         const fontSizeLabel = Entry.createElement('div').addClass('entryPlaygroundFontSizeLabel');
-        fontSizeLabel.innerHTML = Lang.General.font_size;
+        fontSizeLabel.textContent = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
         const fontSizeSlider = Entry.createElement('div').addClass('entryPlaygroundFontSizeSlider');
@@ -1037,7 +1039,7 @@ Entry.Playground = class Playground {
         const tempNotification = Entry.createElement('span').addClass(
             'entryPlaygroundSoundEditText'
         );
-        tempNotification.innerHTML = Lang.Menus.sound_edit_warn;
+        tempNotification.textContent = Lang.Menus.sound_edit_warn;
 
         tempNotificationWrapper.appendChild(tempImage);
         tempNotificationWrapper.appendChild(tempNotification);
@@ -1070,7 +1072,7 @@ Entry.Playground = class Playground {
                     );
                 }
             });
-            innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
+            innerSoundAdd.textContent = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             soundView.appendChild(soundAdd);
             const soundList = Entry.createElement('ul', 'entrySoundList').addClass(
@@ -1232,7 +1234,7 @@ Entry.Playground = class Playground {
             (this.object.pictures || []).forEach((picture, i) => {
                 !picture.view && Entry.playground.generatePictureElement(picture);
                 const element = picture.view;
-                element.orderHolder.innerHTML = i + 1;
+                element.orderHolder.textContent = i + 1;
             });
 
             isSelect && this.selectPicture(this.object.selectedPicture);
@@ -1290,7 +1292,7 @@ Entry.Playground = class Playground {
                 )}/thumb/${fileName}.png")`;
             }
             const sizeView = $element.find(`#s_${picture.id}`)[0];
-            sizeView.innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
+            sizeView.textContent = `${picture.dimension.width} X ${picture.dimension.height}`;
         }
 
         Entry.container.setPicture(picture);
@@ -1432,7 +1434,7 @@ Entry.Playground = class Playground {
             (this.object.sounds || []).forEach((sound, i) => {
                 !sound.view && Entry.playground.generateSoundElement(sound);
                 const element = sound.view;
-                element.orderHolder.innerHTML = i + 1;
+                element.orderHolder.textContent = i + 1;
             });
         }
 
@@ -1896,7 +1898,7 @@ Entry.Playground = class Playground {
             .addClass('entryPlaygroundPictureSize')
             .appendTo(
                 element
-            ).innerHTML = `${picture.dimension.width} X ${picture.dimension.height}`;
+            ).textContent = `${picture.dimension.width} X ${picture.dimension.height}`;
 
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
@@ -2061,7 +2063,7 @@ Entry.Playground = class Playground {
         nameView.onkeypress = Entry.Utils.blurWhenEnter;
         Entry.createElement('div')
             .addClass('entryPlaygroundSoundLength')
-            .appendTo(element).innerHTML = `${sound.duration} ${Lang.General.second}`;
+            .appendTo(element).textContent = `${sound.duration} ${Lang.General.second}`;
         const removeButton = Entry.createElement('div').addClass('entryPlayground_del');
         const { Buttons = {} } = Lang || {};
         const { delete: delText = '삭제' } = Buttons;
@@ -2357,6 +2359,17 @@ Entry.Playground = class Playground {
     updateObjectTitle(object) {
         if (this.board) {
             this.board.updateObjectTitle(object);
+        }
+    }
+
+    updateSelectedObjectTitle() {
+        if (
+            this.board &&
+            Entry.container.selectedObject &&
+            this.board.workspace.getMode() === Entry.Workspace.MODE_BOARD
+        ) {
+            this.board.updateObjectTitle(Entry.container.selectedObject);
+            Entry.Utils.doCodeChange();
         }
     }
 
