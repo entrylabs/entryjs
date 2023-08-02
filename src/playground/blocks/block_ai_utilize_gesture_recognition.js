@@ -68,7 +68,11 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 if (!MediaPipeUtils.isInitialized) {
                     await MediaPipeUtils.initialize();
                 }
-                await MediaPipeUtils.startHandGestureRecognition(value);
+                if (value === 'start') {
+                    await MediaPipeUtils.startHandGestureRecognition(value);
+                } else {
+                    await MediaPipeUtils.stopHandGestureRecognition(value);
+                }
                 return script.callReturn();
             },
         },

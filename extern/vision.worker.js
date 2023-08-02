@@ -1,10 +1,10 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
 self.onmessage = async ({ data }) => {
-    if (data.action === 'init') {
-        initialize(data.canvas);
+    if (data.action === 'gesture_recognizer_init') {
+        initializeGesture(data.canvas);
     } else if (data.action === 'gesture_recognizer') {
-        predictGesture(data.imageData);
+        predictGesture(data.imageBitmap);
     } else if (data.action === 'clear_gesture_recognizer') {
         clearPredictGesture();
     }
@@ -14,7 +14,7 @@ let workerContext;
 let drawingUtils;
 let gestureRecognizer;
 
-const initialize = async (canvas) => {
+const initializeGesture = async (canvas) => {
     workerContext = canvas.getContext('2d');
     drawingUtils = new DrawingUtils(workerContext);
     const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
@@ -23,28 +23,31 @@ const initialize = async (canvas) => {
             modelAssetPath: '/lib/entry-js/extern/model/gesture_recognizer.task',
             delegate: 'GPU',
         },
-        runningMode: 'IMAGE',
+        runningMode: 'VIDEO',
         numHands: 2,
     });
+    self.postMessage({ action: 'next_gesture_recognizer' });
 };
 
 const YX = (a) => {
     return Math.max(1, Math.min(10, 10 * (1 - (a - -0.15) / 0.25) + (1 - (0.1 - a) / 0.25)));
 };
 
-const predictGesture = () => {
+const predictGesture = (imageBitmap) => {
     if (!workerContext || !gestureRecognizer) {
         return;
     }
-    const results = gestureRecognizer.recognize(imageData);
+    // const results = gestureRecognizer.recognize(imageBitmap);
+    const results = gestureRecognizer.recognizeForVideo(imageBitmap, Date.now());
     workerContext.save();
-    workerContext.clearRect(0, 0, 640, 480);
+    workerContext.clearRect(0, 0, 640, 360);
     const { landmarks, handednesses } = results;
     if (landmarks) {
         landmarks.forEach((landmark, i) => {
             let connectColor;
             let landmarkColor;
             const [handedness] = handednesses[i];
+            // console.log('handedness', handedness);
             if (handedness.categoryName === 'Left') {
                 connectColor = '#FF0000';
                 landmarkColor = '#00FF00';
@@ -67,10 +70,12 @@ const predictGesture = () => {
         });
     }
     workerContext.restore();
-    self.postMessage({ action: 'next_gesture_recognizer' });
+    requestAnimationFrame(() => {
+        self.postMessage({ action: 'next_gesture_recognizer' });
+    });
 };
 
 const clearPredictGesture = () => {
     console.log('clearPredictGesture');
-    workerContext.clearRect(0, 0, 640, 480);
+    workerContext.clearRect(0, 0, 640, 360);
 };
