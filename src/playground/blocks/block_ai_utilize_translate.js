@@ -182,7 +182,7 @@ Entry.AI_UTILIZE_BLOCK.translate = {
         dictionary: 'nsmt',
         artificial_intelligence: 'n2mt',
     },
-    apiType: 'n2mt',
+    apiType: 'nsmt',
 };
 
 Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
@@ -263,8 +263,8 @@ Entry.AI_UTILIZE_BLOCK.translate.getBlocks = function() {
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
                 defaultValue: (value, options) => {
-                    if (options.length) {
-                        return options[0][1];
+                    if(options.length) {
+                        return options[0][1]
                     }
                     return null;
                 },

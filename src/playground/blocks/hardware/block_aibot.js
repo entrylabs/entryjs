@@ -177,10 +177,8 @@ Entry.aibot.setLanguage = function() {
                 aibot_set_port_out: '디지털출력 %1번 %2 %3',
                 aibot_buzzer_play: '%1 효과음 재생하기 %2',
                 aibot_set_servo_speed: '제어속도를 %1로 정하기 %2',
-                aibot_set_servo_angle_single_numtype: '모듈 %1을 %2각도로 제어%3',
                 aibot_set_servo_angle_single: '모듈 %1을 %2각도로 제어%3',                
                 aibot_set_servo_angle_123: '모듈 1%1, 2%2, 3%3 각도로 제어%4',
-                aibot_set_servo_angle_1234: '모듈 1%1, 2%2, 3%3, 4%4 각도로 제어%5',
                 aibot_set_servo_angle_56: '모듈 5%1, 6%2 각도로 제어%3',                
                 aibot_set_servo_angle_123456: '모듈 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 각도로 제어%7',
                 aibot_set_servo_go_home: '모든 모듈을 기본위치로 제어하기(원점복귀) %1',
@@ -188,10 +186,8 @@ Entry.aibot.setLanguage = function() {
                 //aibot_set_servo_home_pos_angle: '%1번 모듈의 기본위치 각도를 %2도로 설정하기%3',
                 aibot_set_servo_home_pos_current: '%1번 모듈의 90도 위치를 현재의 위치로 정하기%2',
                 aibot_set_remote_servo_speed: '원격의 제어속도를 %1로 정하기 %2',
-                aibot_set_remote_servo_angle_single: '원격모듈 %1을 %2각도로 제어%3',    
-                aibot_set_remote_servo_angle_single_numtype: '원격모듈 %1을 %2각도로 제어%3',              
+                aibot_set_remote_servo_angle_single: '원격모듈 %1을 %2각도로 제어%3',                
                 aibot_set_remote_servo_angle_123: '원격모듈 1%1, 2%2, 3%3 각도로 제어%4',
-                aibot_set_remote_servo_angle_1234: '원격모듈 1%1, 2%2, 3%3, 4%4 각도로 제어%5',
                 aibot_set_remote_servo_angle_56: '원격모듈 5%1, 6%2 각도로 제어%3',
                 aibot_set_remote_servo_angle_123456: '원격모듈 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 각도로 제어%7',
                 aibot_set_remote_servo_go_home: '원격의 모든 모듈을 기본위치로 제어하기(원점복귀) %1',
@@ -220,10 +216,8 @@ Entry.aibot.setLanguage = function() {
                 aibot_set_port_out: 'PORT %1 OUT %2 %3',
                 aibot_buzzer_play: '%1 play melody %2',
                 aibot_set_servo_speed: 'Control Speed %1 %2',
-                aibot_set_servo_angle_single_numtype: '%1 SERVO %2 DEGREE %3',
                 aibot_set_servo_angle_single: '%1 SERVO %2 DEGREE %3',
-                aibot_set_servo_angle_123: 'Module control degree 1%1, 2%2 3%3 %4', 
-                aibot_set_servo_angle_1234: 'Module control degree 1%1, 2%2, 3%3, 4%4 %5',    
+                aibot_set_servo_angle_123: 'Module control degree 1%1, 2%2 3%3 %4',     
                 aibot_set_servo_angle_56: 'Module control degree 5%1, 6%2 %3',      
                 aibot_set_servo_angle_123456: 'Module control degree 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 %7',        
                 aibot_set_servo_go_home: 'Module Home Position %1',
@@ -231,10 +225,8 @@ Entry.aibot.setLanguage = function() {
                 //aibot_set_servo_home_pos_angle: 'Servo %1 Set Home Position to %2degree %3',
                 aibot_set_servo_home_pos_current: 'Servo %1 Set Home Position to current %2',
                 aibot_set_remote_servo_speed: 'Remote Control Speed %1 %2',
-                aibot_set_remote_servo_angle_single_numtype: 'Remote %1 Module %2 DEGREE %3',
                 aibot_set_remote_servo_angle_single: 'Remote %1 Module %2 DEGREE %3',
-                aibot_set_remote_servo_angle_123: 'Remote Module control degree 1%1, 2%2 3%3 %4',
-                aibot_set_remote_servo_angle_1234: 'Remote Module control degree 1%1, 2%2, 3%3, 4%4 %5',      
+                aibot_set_remote_servo_angle_123: 'Remote Module control degree 1%1, 2%2 3%3 %4',     
                 aibot_set_remote_servo_angle_56: 'Remote Module control degree 5%1, 6%2 %3', 
                 aibot_set_remote_servo_angle_123456: 'Remote Module control degree 1%1, 2%2, 3%3, 4%4, 5%5, 6%6 %7', 
                 aibot_set_remote_servo_go_home: 'Remote Module Home Position %1',
@@ -265,10 +257,8 @@ Entry.aibot.blockMenuBlocks = [
     'aibot_set_port_out',
     'aibot_buzzer_play',
     'aibot_set_servo_speed',
-    'aibot_set_servo_angle_single_numtype',
     'aibot_set_servo_angle_single',    
     'aibot_set_servo_angle_123',
-    'aibot_set_servo_angle_1234',
     'aibot_set_servo_angle_56',
     'aibot_set_servo_angle_123456',
     'aibot_set_servo_go_home',
@@ -276,10 +266,8 @@ Entry.aibot.blockMenuBlocks = [
     'aibot_set_servo_home_pos_current',    
     'aibot_set_set_offset_zero',
     'aibot_set_remote_servo_speed',
-    'aibot_set_remote_servo_angle_single_numtype',
     'aibot_set_remote_servo_angle_single',
     'aibot_set_remote_servo_angle_123',
-    'aibot_set_remote_servo_angle_1234',
     'aibot_set_remote_servo_angle_56',
     'aibot_set_remote_servo_angle_123456',
     'aibot_set_remote_servo_go_home',
@@ -686,88 +674,6 @@ Entry.aibot.getBlocks = function() {
                 }
             },
         },
-        aibot_set_servo_angle_single_numtype: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },   
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [1,90],
-                type: 'aibot_set_servo_angle_single_numtype',    
-            },
-            paramsKeyMap: {                    
-                SERVO: 0,
-                ANGLE: 1,
-            },
-            class: 'aibot',
-            isNotFor: ['aibot'],
-            func: function(sprite, script) {
-                if(!script.isStart)
-                {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var timer = setTimeout(function() {
-                        script.timeFlag = 0;
-                        Entry.aibot.removeTimeout(timer);
-                    }, Entry.aibot.delayTime);
-                    Entry.aibot.timeouts.push(timer);
-                    return script;
-                }
-                else if(script.timeFlag == 1)
-                {
-                    return script;  
-                }
-                else
-                {
-                    var sq = Entry.hw.sendQueue;
-                    var Servo1=0;var Servo2=0;var Servo3=0;
-                    var Servo4=0;var Servo5=0;var Servo6=0;
-                    var Servo = script.getNumberValue('SERVO', script);
-                    var Angle = script.getNumberValue('ANGLE', script);
-                                        
-                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;                    
-
-                    if(Servo==1)Servo1 = Angle;
-                    else if(Servo==2)Servo2 = Angle;
-                    else if(Servo==3)Servo3 = Angle;
-                    else if(Servo==4)Servo4 = Angle;
-                    else if(Servo==5)Servo5 = Angle;
-                    else if(Servo==6)Servo6 = Angle;                   
-
-                    var Remote = 1;
-                    sq['SEND'] = {};
-                    sq['SEND'][Entry.aibot.array.SERVO_CONTROL] = {
-                        remote: Remote,
-                        servo1: Servo1,
-                        servo2: Servo2,
-                        servo3: Servo3,
-                        servo4: Servo4,
-                        servo5: Servo5,
-                        servo6: Servo6,                        
-                        Time: new Date().getTime(),
-                    };
-                    return script.callReturn(); 
-                }
-            },
-        },
         aibot_set_servo_angle_single: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -833,7 +739,7 @@ Entry.aibot.getBlocks = function() {
                     var Servo = script.getNumberValue('SERVO', script);
                     var Angle = script.getNumberValue('ANGLE', script);
                                         
-                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;                    
+                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 600;                    
 
                     if(Servo==1)Servo1 = Angle;
                     else if(Servo==2)Servo2 = Angle;
@@ -852,95 +758,6 @@ Entry.aibot.getBlocks = function() {
                         servo4: Servo4,
                         servo5: Servo5,
                         servo6: Servo6,                        
-                        Time: new Date().getTime(),
-                    };
-                    return script.callReturn(); 
-                }
-            },
-        },
-        aibot_set_remote_servo_angle_1234: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [                
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },                
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: ['90','90','90','90'],
-                type: 'aibot_set_remote_servo_angle_1234',    
-            },
-            paramsKeyMap: {                    
-                SERVO1: 0,
-                SERVO2: 1,
-                SERVO3: 2,
-                SERVO4: 3,
-            },
-            class: 'aibot_remote',
-            isNotFor: ['aibot'],
-            func: function(sprite, script) {
-                if(!script.isStart)
-                {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var timer = setTimeout(function() {
-                        script.timeFlag = 0;
-                        Entry.aibot.removeTimeout(timer);
-                    }, Entry.aibot.delayTime);
-                    Entry.aibot.timeouts.push(timer);
-                    return script;
-                }
-                else if(script.timeFlag == 1)
-                {
-                    return script;
-                }
-                else
-                {
-                    var sq = Entry.hw.sendQueue;
-                    var Servo1=script.getNumberValue('SERVO1', script);
-                    var Servo2=script.getNumberValue('SERVO2', script);
-                    var Servo3=script.getNumberValue('SERVO3', script);
-                    var Servo4=script.getNumberValue('SERVO4', script);
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
-                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 700;  
-
-                    var Remote = 2;
-                    sq['SEND'] = {};
-                    sq['SEND'][Entry.aibot.array.SERVO_CONTROL] = {
-                        remote: Remote,
-                        servo1: Servo1,
-                        servo2: Servo2,
-                        servo3: Servo3,
-                        servo4: Servo4,
-                        servo5: 0,
-                        servo6: 0,                        
                         Time: new Date().getTime(),
                     };
                     return script.callReturn(); 
@@ -1029,12 +846,12 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=script.getNumberValue('SERVO4', script);
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
-                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 700;  
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
+                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 600;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
 
                     var Remote = 2;
                     sq['SEND'] = {};
@@ -1134,12 +951,12 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=script.getNumberValue('SERVO4', script);
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
-                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 700;  
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
+                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 600;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
 
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1151,95 +968,6 @@ Entry.aibot.getBlocks = function() {
                         servo4: Servo4,
                         servo5: Servo5,
                         servo6: Servo6,                        
-                        Time: new Date().getTime(),
-                    };
-                    return script.callReturn(); 
-                }
-            },
-        },
-        aibot_set_servo_angle_1234: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [                
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },                
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: ['90','90','90','90'],
-                type: 'aibot_set_servo_angle_1234',    
-            },
-            paramsKeyMap: {                    
-                SERVO1: 0,
-                SERVO2: 1,
-                SERVO3: 2,
-                SERVO4: 3,
-            },
-            class: 'aibot',
-            isNotFor: ['aibot'],
-            func: function(sprite, script) {
-                if(!script.isStart)
-                {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var timer = setTimeout(function() {
-                        script.timeFlag = 0;
-                        Entry.aibot.removeTimeout(timer);
-                    }, Entry.aibot.delayTime);
-                    Entry.aibot.timeouts.push(timer);
-                    return script;
-                }
-                else if(script.timeFlag == 1)
-                {
-                    return script;
-                }
-                else
-                {
-                    var sq = Entry.hw.sendQueue;
-                    var Servo1=script.getNumberValue('SERVO1', script);
-                    var Servo2=script.getNumberValue('SERVO2', script);
-                    var Servo3=script.getNumberValue('SERVO3', script);
-                    var Servo4=script.getNumberValue('SERVO4', script);
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
-                    if(Servo4<0)Servo4 = 0;if(Servo4>180)Servo4 = 180;Servo4 = Servo4*10 + 700;                     
-
-                    var Remote = 1;
-                    sq['SEND'] = {};
-                    sq['SEND'][Entry.aibot.array.SERVO_CONTROL] = {
-                        remote: Remote,
-                        servo1: Servo1,
-                        servo2: Servo2,
-                        servo3: Servo3,
-                        servo4: Servo4,
-                        servo5: 0,
-                        servo6: 0,                        
                         Time: new Date().getTime(),
                     };
                     return script.callReturn(); 
@@ -1308,9 +1036,9 @@ Entry.aibot.getBlocks = function() {
                     var Servo2=script.getNumberValue('SERVO2', script);
                     var Servo3=script.getNumberValue('SERVO3', script);
                     var Servo4=0;var Servo5=0;var Servo6=0;
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
 
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1384,8 +1112,8 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=0;
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
                     
                     var Remote = 1;
                     sq['SEND'] = {};
@@ -1468,88 +1196,6 @@ Entry.aibot.getBlocks = function() {
                 }
             },
         },
-        aibot_set_remote_servo_angle_single_numtype: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [1,90],
-                type: 'aibot_set_remote_servo_angle_single_numtype',    
-            },
-            paramsKeyMap: {                    
-                SERVO: 0,
-                ANGLE: 1,
-            },
-            class: 'aibot_remote',
-            isNotFor: ['aibot'],
-            func: function(sprite, script) {
-                if(!script.isStart)
-                {
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    var timer = setTimeout(function() {
-                        script.timeFlag = 0;
-                        Entry.aibot.removeTimeout(timer);
-                    }, Entry.aibot.delayTime);
-                    Entry.aibot.timeouts.push(timer);
-                    return script;
-                }
-                else if(script.timeFlag == 1)
-                {
-                    return script;
-                }
-                else
-                {
-                    var sq = Entry.hw.sendQueue;
-                    var Servo1=0,Servo2=0,Servo3=0;
-                    var Servo4=0,Servo5=0,Servo6=0;
-                    var Servo = script.getNumberValue('SERVO', script);
-                    var Angle = script.getNumberValue('ANGLE', script);
-                                        
-                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;                    
-
-                    if(Servo==1)Servo1 = Angle;
-                    else if(Servo==2)Servo2 = Angle;
-                    else if(Servo==3)Servo3 = Angle;
-                    else if(Servo==4)Servo4 = Angle;
-                    else if(Servo==5)Servo5 = Angle;
-                    else if(Servo==6)Servo6 = Angle;                   
-
-                    var Remote = 2;
-                    sq['SEND'] = {};
-                    sq['SEND'][Entry.aibot.array.SERVO_CONTROL] = {
-                        remote: Remote,
-                        servo1: Servo1,
-                        servo2: Servo2,
-                        servo3: Servo3,
-                        servo4: Servo4,
-                        servo5: Servo5,
-                        servo6: Servo6,                        
-                        Time: new Date().getTime(),
-                    };
-                    return script.callReturn(); 
-                }
-            },
-        },
         aibot_set_remote_servo_angle_single: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
@@ -1615,7 +1261,7 @@ Entry.aibot.getBlocks = function() {
                     var Servo = script.getNumberValue('SERVO', script);
                     var Angle = script.getNumberValue('ANGLE', script);
                                         
-                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 700;                    
+                    if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;Angle = Angle*10 + 600;                    
 
                     if(Servo==1)Servo1 = Angle;
                     else if(Servo==2)Servo2 = Angle;
@@ -1702,9 +1348,9 @@ Entry.aibot.getBlocks = function() {
                     var Servo2=script.getNumberValue('SERVO2', script);
                     var Servo3=script.getNumberValue('SERVO3', script);
                     var Servo4=0;var Servo5=0;var Servo6=0;
-                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 700;  
-                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 700;  
-                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 700;  
+                    if(Servo1<0)Servo1 = 0;if(Servo1>180)Servo1 = 180;Servo1 = Servo1*10 + 600;  
+                    if(Servo2<0)Servo2 = 0;if(Servo2>180)Servo2 = 180;Servo2 = Servo2*10 + 600;  
+                    if(Servo3<0)Servo3 = 0;if(Servo3>180)Servo3 = 180;Servo3 = Servo3*10 + 600;  
 
                     var Remote = 2;
                     sq['SEND'] = {};
@@ -1778,8 +1424,8 @@ Entry.aibot.getBlocks = function() {
                     var Servo4=0;
                     var Servo5=script.getNumberValue('SERVO5', script);
                     var Servo6=script.getNumberValue('SERVO6', script);
-                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 700;  
-                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 700;  
+                    if(Servo5<0)Servo5 = 0;if(Servo5>180)Servo5 = 180;Servo5 = Servo5*10 + 600;  
+                    if(Servo6<0)Servo6 = 0;if(Servo6>180)Servo6 = 180;Servo6 = Servo6*10 + 600;  
                     
                     var Remote = 2;
                     sq['SEND'] = {};
@@ -1965,7 +1611,7 @@ Entry.aibot.getBlocks = function() {
                     if(Angle<0)Angle = 0;if(Angle>180)Angle = 180;
                     if(Servo==1 || Servo==5 )Angle = 90+Angle;
                     
-                    Angle = Angle*10 + 700;                    
+                    Angle = Angle*10 + 600;                    
 
                     if(Servo==1)Servo1 = Angle;
                     else if(Servo==2)Servo2 = Angle;

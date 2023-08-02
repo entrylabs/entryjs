@@ -1,9 +1,10 @@
 'use strict';
 
+const _set = require('lodash/set');
+const _get = require('lodash/get');
+const _merge = require('lodash/merge');
 const _clamp = require('lodash/clamp');
-const _throttle = require('lodash/throttle');
-
-const EVENT_INTERVAL = 150;
+const { version } = require('@babel/core');
 
 Entry.Microbit2 = new (class Microbit2 {
     constructor() {
@@ -252,16 +253,12 @@ Entry.Microbit2 = new (class Microbit2 {
             'microbit2_set_servo',
             'microbit2_set_pwm',
             'microbit2_v2_title',
-            'microbit2_btn_event',
             'microbit2_get_logo',
             'microbit2_speaker_toggle',
             'microbit2_play_sound_effect',
             'microbit2_get_sound_level',
         ];
         this.version = '2';
-        this.firePressedBtnEventWithThrottle = _throttle((pressedBtn) => {
-            Entry.engine.fireEventWithValue('microbit_btn_pressed', pressedBtn);
-        }, EVENT_INTERVAL, { leading: true, trailing: false });
     }
 
     setZero() {
@@ -334,13 +331,6 @@ Entry.Microbit2 = new (class Microbit2 {
                 if (this.version !== major) {
                     this.version = major;
                 }
-
-                // INFO: A,B 버튼이벤트 관련 로직
-                const pressedBtn = value.split(':btn:')[1];
-                if (pressedBtn) {
-                    // INFO: 이벤트 중복발생 방지를 위한 쓰로틀링
-                    this.firePressedBtnEventWithThrottle(pressedBtn);
-                }
             } else if (codeId) {
                 if (codeId.indexOf('reset') > -1) {
                     this.commandStatus = {};
@@ -382,7 +372,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_tone: '%1 음을 %2 박만큼 연주하기 %3',
                     microbit2_play_preset_music: '%1 음악을 연주하기 %2',
                     microbit2_play_sound_effect: '%1 효과음을 연주하기 %2',
-                    microbit2_btn_event: '%1 %2 버튼을 눌렀을 때',
                     microbit2_get_btn: '%1 버튼이 눌렸는가?',
                     microbit2_get_logo: '로고를 터치했는가?',
                     microbit2_get_gesture: '움직임이 %1 인가?',
@@ -536,7 +525,6 @@ Entry.Microbit2 = new (class Microbit2 {
                         '선택한 음을 선택한 박만큼 연주합니다. 1~5옥타브 사이의 음계를 선택할 수 있습니다.',
                     microbit2_play_preset_music: '미리 설정되어 있는 음악을 연주합니다.',
                     microbit2_play_sound_effect: '미리 설정되어 있는 효과음을 연주합니다.',
-                    microbit2_btn_event: '선택한 버튼이 눌리면 아래에 연결된 블록들을 실행합니다.',
                     microbit2_get_btn: "선택한 버튼이 눌렸다면 '참'으로 판단합니다.",
                     microbit2_get_logo: "로고를 터치했다면 '참'으로 판단합니다.",
                     microbit2_get_gesture: "선택한 움직임이 감지되면 '참'으로 판단합니다.",
@@ -576,7 +564,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit2_set_tone: 'play melody %1 for %2 beat %3',
                     microbit2_play_preset_music: 'play music %1 %2',
                     microbit2_play_sound_effect: 'play sound %1 %2',
-                    microbit2_btn_event: '%1 When %2 button pressed',
                     microbit2_get_btn: '%1 button pressed?',
                     microbit2_get_logo: 'logo touched?',
                     microbit2_get_gesture: 'Is the movement %1?',
@@ -735,7 +722,6 @@ Entry.Microbit2 = new (class Microbit2 {
                         'Plays the entered melody for the entered beat. You can choose a scale between 1 and 5 octaves.',
                     microbit2_play_preset_music: 'Plays preset music.',
                     microbit2_play_sound_effect: 'Plays preset sound.',
-                    microbit2_btn_event: 'When the selected button is pressed, the connected blocks below will run',
                     microbit2_get_btn: "If the selected button is pressed, it is judged as 'True'.",
                     microbit2_get_logo: "If the logo is touched, it is judged as 'True'.",
                     microbit2_get_gesture:
@@ -760,37 +746,37 @@ Entry.Microbit2 = new (class Microbit2 {
             },
             jp: {
                 template: {
-                    microbit2_get_analog: 'たんし %1 のアナログ値',
-                    microbit2_set_analog: 'たんし %1 のアナログ値 %2 を出力する %3',
-                    microbit2_get_digital: 'たんし %1 のデジタル値',
-                    microbit2_set_digital: 'たんし %1 にデジタル値 %2 を出力する %3',
+                    microbit2_get_analog: 'ピン %1 のアナログ値',
+                    microbit2_set_analog: 'ピン %1 にアナログ値 %2 を出力する %3',
+                    microbit2_get_digital: 'ピン %1 のデジタル値',
+                    microbit2_set_digital: 'ピン %1 に デジタル値 %2 を出力する %3',
                     microbit2_screen_toggle: 'LED機能を %1 %2',
                     microbit2_set_led: 'LEDの X: %1 Y: %2 を明るさ %3 にする %4',
                     microbit2_get_led: 'LEDの X: %1 Y: %2 の明るさ',
                     microbit2_show_preset_image: 'LEDに %1 アイコンを表示する %2',
-                    microbit2_show_custom_image: 'LEDに %1 を表示する %2',
+                    microbit2_show_custom_image: 'LED %1 を表示する %2',
                     microbit2_show_string: 'LEDに %1 を表示する %2',
                     microbit2_reset_screen: 'LEDを全部消す %1',
-                    microbit2_radio_toggle: 'むせん機能を %1 %2',
-                    microbit2_radio_setting: 'むせんのチャンネルを %1 に変える %2',
-                    microbit2_radio_send: 'むせんで %1 を送信する %2',
-                    microbit2_radio_received: '受信した値',
-                    microbit2_speaker_toggle: 'スピーカー機能を %1 %2',
-                    microbit2_change_tempo: '長さ %1 拍、テンポ %2 (bpm)にする %3',
-                    microbit2_set_tone: '%1 音を長さ %2 拍鳴らす %3',
-                    microbit2_play_preset_music: 'メロディ %1 を鳴らす %2',
-                    microbit2_play_sound_effect: '効果音 %1 を鳴らす %2',
-                    microbit2_get_btn: '%1 ボタンを押しているか？',
-                    microbit2_get_logo: 'ロゴをタッチしているか？',
-                    microbit2_get_gesture: '%1 か？',
+                    microbit2_radio_toggle: 'ラジオ機能を %1 %2',
+                    microbit2_radio_setting: 'ラジオチャンネルを %1 に変更する %2',
+                    microbit2_radio_send: 'ラジオに %1 送信する %2',
+                    microbit2_radio_received: 'ラジオ受信値',
+                    microbit2_speaker_toggle: 'スピーカー機能 %1 %2',
+                    microbit2_change_tempo: 'テンポを %1 拍に %2 BPMにする %3',
+                    microbit2_set_tone: '%1 音を %2 拍演奏する %3',
+                    microbit2_play_preset_music: '%1 音楽を演奏する %2',
+                    microbit2_play_sound_effect: '%1 効果音を演奏する %2',
+                    microbit2_get_btn: '%1 ボタンが押したkか?',
+                    microbit2_get_logo: 'ロゴをタッチしたじか?',
+                    microbit2_get_gesture: '動きが %1 なのか?',
                     microbit2_get_acc: '%1 の加速度',
-                    microbit2_get_direction: '方角(°)',
-                    microbit2_get_field_strength_axis: '%1 の磁力',
-                    microbit2_get_light_level: '明るさ',
-                    microbit2_get_temperature: '温度(℃)',
-                    microbit2_get_sound_level: 'まわりの音の大きさ',
-                    microbit2_set_servo: 'たんし %1 にサーボモーターの角度 %2 を出力する %3',
-                    microbit2_set_pwm: 'たんし %1 にサーボパルス幅 %2 %3 を出力する %4',
+                    microbit2_get_direction: 'コンパス方向',
+                    microbit2_get_field_strength_axis: '%1 の磁場強度',
+                    microbit2_get_light_level: '光センサー値',
+                    microbit2_get_temperature: '温度値',
+                    microbit2_get_sound_level: 'マイク音の大きさ',
+                    microbit2_set_servo: 'ピン %1 に サーボモーターの角度を %2 に設定する %3',
+                    microbit2_set_pwm: 'ピン %1 にサーボパルス幅を2にする %4',
                     microbit2_common_title: 'Common Blocks',
                     microbit2_v2_title: 'v2 Only',
                 },
@@ -800,17 +786,17 @@ Entry.Microbit2 = new (class Microbit2 {
                     xAxis: 'X軸',
                     yAxis: 'Y軸',
                     zAxis: 'Z軸',
-                    up: '上をむいている',
-                    down: '下をむいている',
-                    left: '右をむいている',
-                    right: '左をむいている',
-                    face_up: '表をむいている',
-                    face_down: '裏をむいている',
-                    freefall: '落ちている',
-                    '3g': 'しょうとつ（3G）',
-                    '6g': 'しょうとつ（6G）',
-                    '8g': 'しょうとつ（8G）',
-                    shake: '振った',
+                    up: '上',
+                    down: '下',
+                    left: '右',
+                    right: '左',
+                    face_up: '全面',
+                    face_down: '後面',
+                    freefall: '自由落下',
+                    '3g': '3G',
+                    '6g': '6G',
+                    '8g': '8G',
+                    shake: '振れ',
                     DADADADUM: '運命交響曲',
                     ENTERTAINER: 'エンターネーター',
                     PRELUDE: 'バッハ·プレリュード第1番',
@@ -911,11 +897,11 @@ Entry.Microbit2 = new (class Microbit2 {
                     microbit_2_ARROW_NW: '北西',
                 },
                 Helper: {
-                    microbit2_get_analog: '選択したたんしのアナログ値です。(0 ~ 1023)',
+                    microbit2_get_analog: '選択したピンのアナログ値です。(0 ~ 1023)',
                     microbit2_set_analog:
-                        '選択したたんしに入力したアナログ値を出力します。(0 ~ 1023)',
-                    microbit2_get_digital: '選択したたんしのデジタル値です。(0, 1)',
-                    microbit2_set_digital: '選択したたんしに入力したデジタル値を出力します。(0, 1)',
+                        '選択したピンに入力したアナログ値を出力します。(0 ~ 1023)',
+                    microbit2_get_digital: '選択したピンのデジタル値です。(0, 1)',
+                    microbit2_set_digital: '選択したピンに入力したデジタル値を出力します。(0, 1)',
                     microbit2_screen_toggle: 'LED機能をオンまたはオフにします。',
                     microbit2_set_led: 'X、Y座標で選択したLEDを選択した明るさで点けます。',
                     microbit2_get_led: 'X、Y座標で選択したLEDの明るさです。',
@@ -924,28 +910,28 @@ Entry.Microbit2 = new (class Microbit2 {
                         'ブロックで選択したLEDを選択した明るさで点けます。 一度にすべてのLEDを操作できます。',
                     microbit2_show_string: '入力した文字列をLEDに順番に表示します。',
                     microbit2_reset_screen: 'LEDに表示したものをすべて消します。',
-                    microbit2_radio_toggle: 'むせん機能をオンまたはオフにします。',
-                    microbit2_radio_setting: 'むせんチャンネルを入力した数字に変えます。',
-                    microbit2_radio_send: 'むせんで入力した英数字を送信します。',
-                    microbit2_radio_received: 'むせんで受信した値です。',
+                    microbit2_radio_toggle: 'ラジオ機能をオンまたはオフにします。',
+                    microbit2_radio_setting: 'ラジオチャンネルを入力した数字に変えます。',
+                    microbit2_radio_send: 'ラジオで入力した英数字を送信します。',
+                    microbit2_radio_received: 'ラジオで受信した値です。',
                     microbit2_speaker_toggle: 'スピーカー機能をオンまたはオフにします。',
-                    microbit2_change_tempo: '長さを選択した拍子とBPMで設定します。',
+                    microbit2_change_tempo: 'テンポを選択した拍子とBPMで設定します。',
                     microbit2_set_tone:
                         '選択した音を選択した拍子で演奏します。 1~5オクターブ間の音階を選べます。',
-                    microbit2_play_preset_music: '先に設定されていたメロディを演奏します。',
+                    microbit2_play_preset_music: '先に設定されていた音楽を演奏します。',
                     microbit2_play_sound_effect: '先に設定されていた効果音を演奏します。',
                     microbit2_get_btn: '選択したボタンが押されたら、「True」と判断します。',
                     microbit2_get_logo: 'ロゴをタッチすると、「True」と判断します。',
                     microbit2_get_gesture: '選択した動きを感知したら、「True」と判断します。',
                     microbit2_get_acc: '選択した軸の加速度値です。',
-                    microbit2_get_direction: '方角(°)の値です。 (0~360)',
-                    microbit2_get_field_strength_axis: '選択した軸の磁力の値です。',
-                    microbit2_get_light_level: '明るさの値です。',
+                    microbit2_get_direction: 'コンパス方向の値です。 (0~360)',
+                    microbit2_get_field_strength_axis: '選択した軸の磁場強度の値です。',
+                    microbit2_get_light_level: '光センサーの値です。',
                     microbit2_get_temperature: '現在の温度です。 (℃)',
-                    microbit2_get_sound_level: 'まわりの音の大きさの値です。',
+                    microbit2_get_sound_level: 'マイクボリュームの値です。',
                     microbit2_set_servo:
-                        '選択したたんしにサーボモーターの角度を入力した値で設定します。',
-                    microbit2_set_pwm: '選択したたんしのサーボパルス幅を選択した値にします。',
+                        '選択したピンにサーボモーターの角度を入力した値で設定します。',
+                    microbit2_set_pwm: '選択したピンのサーボパルス幅を選択した値にします。',
                 },
                 Msgs: {
                     microbit2_compatible_error: '対応するブロックはMicrobitV1と互換性がありません',
@@ -961,7 +947,7 @@ Entry.Microbit2 = new (class Microbit2 {
         return parsedResponse;
     }
 
-    getBlocks = function () {
+    getBlocks = function() {
         return {
             microbit2_common_title: {
                 skeleton: 'basic_text',
@@ -1942,45 +1928,6 @@ Entry.Microbit2 = new (class Microbit2 {
                     } else if (parsedResponse[1] == '3' && value == 'ab') {
                         return 1;
                     } else return 0;
-                },
-            },
-            microbit2_btn_event: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                fontColor: '#fff',
-                skeleton: 'basic_event',
-                statements: [],
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/start_icon_hardware.svg',
-                        size: 14,
-                        position: { x: 0, y: -2 },
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            ['A', '1'],
-                            ['B', '2'],
-                            ['A+B', '3'],
-                        ],
-                        value: '1',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                def: {
-                    type: 'microbit2_btn_event'
-                },
-                paramsKeyMap: {
-                    VALUE: 1,
-                },
-                class: 'microbit2v2',
-                isNotFor: ['microbit2'],
-                event: 'microbit_btn_pressed',
-                func: (sprite, script) => {
-                    return script.callReturn();
                 },
             },
             microbit2_get_acc: {

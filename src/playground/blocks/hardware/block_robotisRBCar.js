@@ -82,6 +82,9 @@ Entry.Robotis_rb_car.blockMenuBlocks = [
     
     //알라표정 
     //화면 애니메이션 
+    'robotis_RB_car_screen',
+    'robotis_RB_car_anim_screen',
+
     'robotis_RB_cm_screen',
     'robotis_RB_cm_anim_screen',
     'robotis_RB_rsp_screen',
@@ -96,11 +99,6 @@ Entry.Robotis_rb_car.blockMenuBlocks = [
     'robotis_RB_effectSound',
     'robotis_RB_record',
     'robotis_RB_playRecord',
-
-    'robotis_RB_car_screen',
-    'robotis_RB_car_anim_screen',
-    'robotis_RB_kkokdu_screen',
-    'robotis_RB_kkokdu_anim_screen',
  
     'robotis_openCM70_RLa_go',
     'robotis_openCM70_RLa_stop',

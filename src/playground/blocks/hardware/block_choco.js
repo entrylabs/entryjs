@@ -3,14 +3,14 @@
 Entry.Choco = {
     id: '45.1',
     name: 'choco',
-    url: 'http://jjomulrak.com',
+    url: "http://jjomulrak.com",
     imageName: 'choco.png',
     title: {
         ko: '쪼코',
         en: 'Choco',
     },
 
-    getHashKey: function() {
+    getHashKey: function () {
         let key = new Date().getSeconds().toString(16);
         if (key.length === 1) {
             key += ((Math.random() * 16) | 0).toString(16);
@@ -18,29 +18,29 @@ Entry.Choco = {
         return Entry.generateHash() + key;
     },
 
-    setZero: function() {
+    setZero: function () {
         Entry.hw.update(); // 해당 데이터를 하드웨어에 전달한다.
     },
 };
 
-Entry.Choco.setLanguage = function() {
+Entry.Choco.setLanguage = function () {
     return {
         ko: {
             template: {
-                choco_move_forward: '앞으로 %1 %2 이동 %3',
-                choco_move_backward: '뒤로 %1 %2 이동 %3',
-                choco_turn_left: '왼쪽으로 %1 %2 돌기 %3',
-                choco_turn_right: '오른쪽으로 %1 %2 돌기 %3',
-                choco_move_right_left: '오른쪽으로 %1 왼쪽으로 %2 %3 이동 %4',
-                choco_onoff_led_rear: '뒤쪽 LED %1 %2',
-                choco_set_led_color: '%1 LED %2 %3',
-                choco_play_sound: '%1 소리내기 %2',
-                choco_is_front_sensor: '전방센서',
-                choco_is_bottom_sensor: '바닥센서',
-                choco_is_light_sensor: '빛센서',
-                choco_get_front_sensor: '전방센서',
-                choco_get_bottom_sensor: '바닥센서',
-                choco_get_light_sensor: '빛센서',
+                choco_move_forward: "앞으로 %1 %2 이동 %3",
+                choco_move_backward: "뒤로 %1 %2 이동 %3",
+                choco_turn_left: "왼쪽으로 %1 %2 돌기 %3",
+                choco_turn_right: "오른쪽으로 %1 %2 돌기 %3",
+                choco_move_right_left: "오른쪽으로 %1 왼쪽으로 %2 %3 이동 %4",
+                choco_onoff_led_rear: "뒤쪽 LED %1 %2",
+                choco_set_led_color: "%1 LED %2 %3",
+                choco_play_sound: "%1 소리내기 %2",
+                choco_is_front_sensor : "전방센서",
+                choco_is_bottom_sensor : "바닥센서",
+                choco_is_light_sensor : "빛센서",
+                choco_get_front_sensor : "전방센서",
+                choco_get_bottom_sensor : "바닥센서",
+                choco_get_light_sensor : "빛센서",
             },
             Blocks: {
                 choco_move_step: '칸',
@@ -52,7 +52,7 @@ Entry.Choco.setLanguage = function() {
                 choco_direction_right: '오른쪽',
                 choco_direction_left: '왼쪽',
                 choco_direction_dual: '양쪽(오른쪽,왼쪽)',
-
+                
                 choco_color_off: '끄기',
                 choco_color_blue: '파란색',
                 choco_color_red: '빨간색',
@@ -61,7 +61,7 @@ Entry.Choco.setLanguage = function() {
                 choco_color_pink: '분홍색',
                 choco_color_bluegreen: '청록색',
                 choco_color_white: '흰색',
-
+                
                 choco_sound_car: '자동차',
                 choco_sound_robot: '로봇',
                 choco_sound_dog: '강아지',
@@ -108,24 +108,25 @@ Entry.Choco.setLanguage = function() {
                 choco_sound_no: '노우~',
                 choco_sound_wow: '오우~',
                 choco_sound_yahoo: '야호~',
-            },
+                
+            }
         },
         en: {
             template: {
-                choco_move_forward: 'move forward %1 %2 block %3',
-                choco_move_backward: 'move backward %1 %2 block %3',
-                choco_turn_left: '%1 %2 to the left %3',
-                choco_turn_right: '%1 %2 to the right %3',
-                choco_move_right_left: 'move right %1 left %2 %3 %4',
-                choco_onoff_led_rear: 'Rear LED %1 %2',
-                choco_set_led_color: '%1 LED %2 %3',
-                choco_play_sound: 'play %1 %2',
-                choco_is_front_sensor: 'front sensor',
-                choco_is_bottom_sensor: 'bottom sensor',
-                choco_is_light_sensor: 'light sensor',
-                choco_get_front_sensor: 'front sensor',
-                choco_get_bottom_sensor: 'bottom sensor',
-                choco_get_light_sensor: 'light sensor',
+                choco_move_forward: "move forward %1 %2 block %3",
+                choco_move_backward: "move backward %1 %2 block %3",
+                choco_turn_left: "%1 %2 to the left %3",
+                choco_turn_right: "%1 %2 to the right %3",
+                choco_move_right_left: "move right %1 left %2 %3 %4",
+                choco_onoff_led_rear: "Rear LED %1 %2",
+                choco_set_led_color: "%1 LED %2 %3",
+                choco_play_sound: "play %1 %2",
+                choco_is_front_sensor : "front sensor",
+                choco_is_bottom_sensor : "bottom sensor",
+                choco_is_light_sensor : "light sensor",
+                choco_get_front_sensor : "front sensor",
+                choco_get_bottom_sensor : "bottom sensor",
+                choco_get_light_sensor : "light sensor",
             },
             Blocks: {
                 choco_move_step: 'step',
@@ -137,7 +138,7 @@ Entry.Choco.setLanguage = function() {
                 choco_direction_right: 'right',
                 choco_direction_left: 'left',
                 choco_direction_dual: 'all(right,left)',
-
+                
                 choco_color_off: 'off',
                 choco_color_blue: 'blue',
                 choco_color_red: 'red',
@@ -146,7 +147,7 @@ Entry.Choco.setLanguage = function() {
                 choco_color_pink: 'pink',
                 choco_color_bluegreen: 'bluegreen',
                 choco_color_white: 'white',
-
+                
                 choco_sound_car: 'car',
                 choco_sound_robot: 'robot',
                 choco_sound_dog: 'dog',
@@ -193,7 +194,7 @@ Entry.Choco.setLanguage = function() {
                 choco_sound_no: 'no',
                 choco_sound_wow: 'wow',
                 choco_sound_yahoo: 'yahoo',
-            },
+            }
         },
     };
 };
@@ -217,15 +218,14 @@ Entry.Choco.blockMenuBlocks = [
     'choco_get_light_sensor',
 ];
 
-Entry.Choco.getBlocks = function() {
+Entry.Choco.getBlocks = function () {
     return {
         choco_move_forward: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -258,13 +258,13 @@ Entry.Choco.getBlocks = function() {
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
-
+                
                 const move_cnt = script.getValue('MOVE_CNT');
                 let move_unit = script.getValue('MOVE_UNIT');
-                if (move_cnt === 0) return script.callReturn();
+                if(move_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -273,22 +273,22 @@ Entry.Choco.getBlocks = function() {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: 'move_forward',
+                        type: "move_forward",
                         data: {
                             param1: move_cnt,
                             param2: move_unit,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
-
+                    
                     return script.callReturn();
                 }
                 return script;
@@ -299,8 +299,7 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -333,13 +332,13 @@ Entry.Choco.getBlocks = function() {
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
                 const move_cnt = script.getValue('MOVE_CNT');
                 let move_unit = script.getValue('MOVE_UNIT');
-                if (move_cnt === 0) return script.callReturn();
+                if(move_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -348,18 +347,18 @@ Entry.Choco.getBlocks = function() {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: 'move_backward',
+                        type: "move_backward",
                         data: {
                             param1: move_cnt,
                             param2: move_unit,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -373,8 +372,7 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -407,14 +405,14 @@ Entry.Choco.getBlocks = function() {
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
                 const turn_cnt = script.getValue('TURN_CNT');
                 let turn_unit = script.getValue('TURN_UNIT');
-                if (turn_cnt < 0) turn_cnt = 0;
-                if (turn_cnt === 0) return script.callReturn();
+                if (turn_cnt < 0) turn_cnt = 0;                    
+                if(turn_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -423,18 +421,18 @@ Entry.Choco.getBlocks = function() {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: 'turn_left',
+                        type: "turn_left",
                         data: {
                             param1: turn_cnt,
                             param2: turn_unit,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -448,8 +446,7 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
@@ -482,14 +479,14 @@ Entry.Choco.getBlocks = function() {
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
                 const turn_cnt = script.getValue('TURN_CNT');
                 let turn_unit = script.getValue('TURN_UNIT');
-                if (turn_cnt < 0) turn_cnt = 0;
-                if (turn_cnt === 0) return script.callReturn();
+                if (turn_cnt < 0) turn_cnt = 0;                                
+                if(turn_cnt===0) return script.callReturn();
 
                 if (!script.is_started) {
                     script.is_started = true;
@@ -498,18 +495,18 @@ Entry.Choco.getBlocks = function() {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: 'turn_right',
+                        type: "turn_right",
                         data: {
                             param1: turn_cnt,
                             param2: turn_unit,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -523,12 +520,11 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Block',
                     accept: 'string',
                     defaultType: 'number',
-                },
+                },            
                 {
                     type: 'Block',
                     accept: 'string',
@@ -557,18 +553,18 @@ Entry.Choco.getBlocks = function() {
                 type: 'choco_move_right_left',
             },
             paramsKeyMap: {
-                MOVE_RIGHT_CNT: 0,
+                MOVE_RIGHT_CNT: 0,                
                 MOVE_LEFT_CNT: 1,
                 MOVE_UNIT: 2,
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
 
                 const move_right_cnt = script.getValue('MOVE_RIGHT_CNT');
-                const move_left_cnt = script.getValue('MOVE_LEFT_CNT');
+                const move_left_cnt = script.getValue('MOVE_LEFT_CNT');                
                 let move_unit = script.getValue('MOVE_UNIT');
 
                 if (!script.is_started) {
@@ -578,19 +574,19 @@ Entry.Choco.getBlocks = function() {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: 'move_right_left',
+                        type: "move_right_left",
                         data: {
                             param1: move_right_cnt,
                             param2: move_left_cnt,
                             param3: move_unit,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -604,8 +600,7 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.choco_toggle_on, 'On'],
@@ -632,7 +627,7 @@ Entry.Choco.getBlocks = function() {
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 const led_onoff = script.getValue('VALUE');
@@ -644,17 +639,17 @@ Entry.Choco.getBlocks = function() {
                     sq.msg_id = script.msg_id;
                     const msg = {
                         id: msgId,
-                        type: 'onoff_led_rear',
+                        type: "onoff_led_rear",
                         data: {
                             param1: led_onoff,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -668,8 +663,7 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.choco_direction_right, 'right'],
@@ -711,11 +705,11 @@ Entry.Choco.getBlocks = function() {
             },
             paramsKeyMap: {
                 DIRECTION: 0,
-                COLOR: 1,
+                COLOR:1,
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 const led_dir = script.getValue('DIRECTION');
@@ -733,13 +727,13 @@ Entry.Choco.getBlocks = function() {
                             param1: led_dir,
                             param2: led_color,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -753,8 +747,7 @@ Entry.Choco.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
             statements: [],
-            params: [
-                {
+            params: [{
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.choco_sound_car, 1],
@@ -825,7 +818,7 @@ Entry.Choco.getBlocks = function() {
             },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 const sound = script.getValue('SOUND');
@@ -841,13 +834,13 @@ Entry.Choco.getBlocks = function() {
                         data: {
                             param1: sound,
                         },
-                        time: Date.now(),
+                        time: Date.now()
                     };
                     sq.msg = msg;
                     return script;
                 }
 
-                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                if ((pd.msg_id) && (pd.msg_id.indexOf(script.msg_id) >= 0)) {
                     delete script.is_started;
                     delete script.msg_id;
                     delete pd.msgId;
@@ -862,9 +855,8 @@ Entry.Choco.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [
-                {
-                    type: 'Text',
+            params: [{
+                    type: "Text",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -875,10 +867,11 @@ Entry.Choco.getBlocks = function() {
                 params: [null],
                 type: 'choco_is_front_sensor',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+            },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 let retVal = false;
@@ -887,16 +880,15 @@ Entry.Choco.getBlocks = function() {
                 }
                 return retVal;
             },
-        },
+        },        
         choco_is_bottom_sensor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [
-                {
-                    type: 'Text',
+            params: [{
+                    type: "Text",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -907,13 +899,14 @@ Entry.Choco.getBlocks = function() {
                 params: [null],
                 type: 'choco_is_bottom_sensor',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+            },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
-                let retVal = false;
+                let retVal = false
                 if (pd.sensorData) {
                     retVal = pd.sensorData.is_bottom_sensor;
                 }
@@ -926,9 +919,8 @@ Entry.Choco.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [
-                {
-                    type: 'Text',
+            params: [{
+                    type: "Text",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -939,10 +931,11 @@ Entry.Choco.getBlocks = function() {
                 params: [null],
                 type: 'choco_is_light_sensor',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+            },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 let retVal = false;
@@ -959,9 +952,8 @@ Entry.Choco.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                {
-                    type: 'Text',
+            params: [{
+                    type: "Text",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -972,10 +964,11 @@ Entry.Choco.getBlocks = function() {
                 params: [null],
                 type: 'choco_get_front_sensor',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+            },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 let retVal = 0;
@@ -991,9 +984,8 @@ Entry.Choco.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                {
-                    type: 'Text',
+            params: [{
+                    type: "Text",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1004,10 +996,11 @@ Entry.Choco.getBlocks = function() {
                 params: [null],
                 type: 'choco_get_bottom_sensor',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+            },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 let retVal = 0;
@@ -1023,9 +1016,8 @@ Entry.Choco.getBlocks = function() {
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            params: [
-                {
-                    type: 'Text',
+            params: [{
+                    type: "Text",
                     fontSize: 11,
                     bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                     arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1036,10 +1028,11 @@ Entry.Choco.getBlocks = function() {
                 params: [null],
                 type: 'choco_get_light_sensor',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+            },
             class: 'choco_command',
             isNotFor: ['choco'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 const sq = Entry.hw.sendQueue;
                 const pd = Entry.hw.portData;
                 let retVal = 0;
@@ -1051,4 +1044,5 @@ Entry.Choco.getBlocks = function() {
         },
     };
 };
+
 module.exports = Entry.Choco;

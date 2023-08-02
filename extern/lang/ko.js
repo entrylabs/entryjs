@@ -561,18 +561,7 @@ Lang.Blocks = {
     ARDUINO_open_connector: '연결 프로그램 열기',
     ARDUINO_download_source: '• 엔트리 아두이노 소스',
     ARDUINO_reconnect: '하드웨어 연결하기',
-    arduino_noti_text:
-        '하드웨어 연결은 PC에서만 지원됩니다.\n브라우저로 연결할 때는\n연결 프로그램이 필요하지 않습니다.',
-    arduino_lite_alert:
-        '하드웨어를 찾을 수 없습니다.\n하드웨어에 펌웨어가 설치되었는지,\nPC와 하드웨어가 연결되어 있는지 \n다시 확인해 주세요.',
-    arduino_lite_reconnect: '하드웨어 다시 연결',
-    arduino_lite_download_firmware: '펌웨어 다운로드',
-    arduino_lite_download_driver: '드라이버 다운로드',
-    arduino_lite_connect: '브라우저로 연결하기',
-    arduino_lite_disconnect: '하드웨어 선택 취소',
-    arduino_lite_guide: '• 아두이노 연결 가이드',
-    arduino_lite_connected_noti: '하드웨어를 선택한 상태에서\n작품을 저장해 주세요.',
-    ARDUINO_LITE: '하드웨어 라이트',
+    arduino_noti_text: '모바일 기기는 추후 지원 합니다.',
     ROBOT_reconnect: '로봇 연결하기',
     ARDUINO_program: '프로그램 실행하기',
     ARDUINO_cloud_pc_connector: '클라우드 PC 연결하기',
@@ -590,13 +579,13 @@ Lang.Blocks = {
     blacksmith_toggle_off: '끄기',
     blacksmith_lcd_first_line: '첫 번째',
     blacksmith_lcd_seconds_line: '두 번째',
-    BITBRICK_light: '밝기 센서',
-    BITBRICK_IR: '적외선 센서',
+    BITBRICK_light: '밝기센서',
+    BITBRICK_IR: '거리센서',
     BITBRICK_touch: '버튼',
     BITBRICK_potentiometer: '가변저항',
-    BITBRICK_MIC: '소리 센서',
-    BITBRICK_UserSensor: '사용자 입력',
-    BITBRICK_UserInput: '사용자 입력',
+    BITBRICK_MIC: '소리감지센서',
+    BITBRICK_UserSensor: '사용자입력',
+    BITBRICK_UserInput: '사용자입력',
     BITBRICK_dc_direction_ccw: '반시계',
     BITBRICK_dc_direction_cw: '시계',
     chocopi_control_event_pressed: '누를 때',
@@ -756,7 +745,6 @@ Lang.Blocks = {
     CALC_get_date_day: '일',
     CALC_get_date_hour: '시각(시)',
     CALC_get_date_minute: '시각(분)',
-    CALC_get_date_day_of_week: '요일',
     CALC_get_date_month: '월',
     CALC_get_date_second: '시각(초)',
     CALC_get_date_year: '연도',
@@ -810,16 +798,11 @@ Lang.Blocks = {
     JUDGEMENT_boolean_or: '또는',
     JUDGEMENT_false: ' 거짓 ',
     JUDGEMENT_is_clicked: '마우스를 클릭했는가?',
-    JUDGEMENT_is_object_clicked: '오브젝트를 클릭했는가?',
     JUDGEMENT_is_press_some_key_1: '',
     JUDGEMENT_is_press_some_key_2: '키가 눌러져 있는가?',
     JUDGEMENT_reach_something_1: '',
     JUDGEMENT_reach_something_2: '에 닿았는가?',
-    JUDGEMENT_is_type_1: '(이)가',
-    JUDGEMENT_is_type_2: '인가?',
     JUDGEMENT_true: ' 참 ',
-    JUDGEMENT_is_boost_mode: '부스트모드가 켜져 있는가?',
-    is_type_number: '숫자',
     LOOKS: '생김새',
     LOOKS_change_scale_percent_1: '크기를',
     LOOKS_change_scale_percent_2: '만큼 바꾸기',
@@ -934,7 +917,6 @@ Lang.Blocks = {
     SOUND_sound_volume_set_1: '소리 크기를',
     SOUND_sound_volume_set_2: '% 로 정하기',
     speak: '말하기',
-    think: '생각하기',
     START: '시작',
     START_add_message: '신호 추가하기',
     START_delete_message: '신호 삭제하기',
@@ -1320,9 +1302,6 @@ Lang.Blocks = {
     robotis_common_play_motion: '실행',
     robotis_common_motion: '모션',
     robotis_common_index_number: '번',
-    robotis_common_left: '왼쪽',
-    robotis_common_right: '오른쪽',
-    robotis_common_minute: '분',
     robotis_cm_custom: '직접입력 주소',
     robotis_cm_spring_left: '왼쪽 접촉 센서',
     robotis_cm_spring_right: '오른쪽 접촉 센서',
@@ -1547,8 +1526,6 @@ Lang.Blocks = {
     CALC_char_at_3: '번째 글자',
     CALC_length_of_string_1: '',
     CALC_length_of_string_2: '의 글자 수',
-    CALC_reverse_of_string_1: '',
-    CALC_reverse_of_string_2: '을(를) 뒤집기',
     CALC_substring_1: '',
     CALC_substring_2: '의',
     CALC_substring_3: '번째 글자부터',
@@ -1563,8 +1540,6 @@ Lang.Blocks = {
     CALC_change_string_case_3: ' ',
     CALC_change_string_case_sub_1: '대문자',
     CALC_change_string_case_sub_2: '소문자',
-    CALC_count_match_string_1: '에서',
-    CALC_count_match_string_2: '의 글자 수',
     CALC_index_of_string_1: '',
     CALC_index_of_string_2: '에서',
     CALC_index_of_string_3: '의 시작 위치',
@@ -5149,13 +5124,7 @@ Lang.Msgs = {
     quiz_correct: '정답이야!',
     hw_connection_success: '하드웨어 연결 성공',
     hw_connection_success_desc: '하드웨어 아이콘을 더블클릭하면, 센서값만 확인할 수 있습니다.',
-    hw_connection_success_desc2: '작품에서 하드웨어를 사용할 수 있습니다.',
-    hw_connection_termination_title: '하드웨어 연결 해제',
-    hw_connection_termination_desc: '하드웨어와 연결이 해제되었습니다.',
-    hw_connection_failed_title: '하드웨어 연결 실패',
-    hw_connection_failed_desc: '작품에서 사용된 하드웨어가\n연결되어 있는지 확인해 주세요.',
-    hw_module_load_fail_title: '모듈 로드 실패',
-    hw_module_load_fail_desc: '로드에 실패했습니다. 관리자에게 문의하세요.',
+    hw_connection_success_desc2: '하드웨어와 정상적으로 연결되었습니다.',
     ie_page_title: '이 브라우저는<br/>지원하지 않습니다.',
     ie_page_desc:
         '엔트리는 인터넷 익스플로러 11 버전 이상 또는 크롬 브라우저에서 이용하실 수 있습니다.<br/>윈도우 업데이트를 진행하시거나, 크롬 브라우저를 설치해주세요.<br/>엔트리 오프라인 버전은 인터넷이 연결되어 있지 않아도 사용할 수 있습니다. 지금 다운받아서 시작해보세요!',
@@ -5402,20 +5371,10 @@ Lang.Workspace = {
     shape_remove_ok_msg: '이(가) 삭제 되었습니다.',
     load_expansion_block: '확장 블록 불러오기',
     load_ai_utilize_block: '인공지능 블록 불러오기',
-    load_hardware_lite_block: '연결할 하드웨어 선택하기',
     load_ai_utilize_train_block: '인공지능 모델 학습하기',
     select_expansion_block: '확장블록 선택',
     deselect_expansion_block_warning: '확장블록이 사용중이므로 삭제할 수 없습니다.',
     deselect_ai_utilize_block_warning: 'AI블록이 사용중이므로 삭제할 수 없습니다.',
-    confirm_firmware_hwlite_block_msg:
-        '%1를 엔트리에 연결하려면 먼저 하드웨어 펌웨어를 설치해야 합니다.',
-    confirm_firmware_hwlite_block_title: '펌웨어 설치 필요',
-    confirm_firmware_hwlite_block_download: '펌웨어 다운로드',
-    confirm_firmware_hwlite_block_pass: '이미 설치함',
-    select_hwlite_block_duplicated: '1개의 하드웨어만 선택해 주세요.',
-    select_hwlite_block_none: '연결할 하드웨어를 선택해 주세요.',
-    select_firmware_hwlite_title: '펌웨어 다운로드',
-    select_firmware_hwlite_content: '버전에 맞는 펌웨어를 다운로드 받아\n하드웨어에 설치해 주세요.',
     sound_add: '소리 추가하기',
     sound_remove_fail: '소리 삭제 실패',
     sound_remove_ok: '소리 삭제 완료',
@@ -5919,10 +5878,8 @@ Lang.Helper = {
     sound_volume_set: '작품에서 재생되는 모든 소리의 크기를 입력한 값으로 정합니다.',
     sound_silent_all: '재생 중인 모든 소리를 멈춥니다.',
     is_clicked: '마우스를 클릭한 경우 ‘참’으로 판단합니다.',
-    is_object_clicked: '오브젝트를 클릭한 경우 ‘참’으로 판단합니다.',
     is_press_some_key: '선택한 키가 눌려져 있는 경우 ‘참’으로 판단합니다.',
     reach_something: '해당 오브젝트가 선택한 항목과 닿은 경우 ‘참’으로 판단합니다.',
-    is_type: '입력한 값이 숫자라면 ‘참’으로 판단합니다.',
     is_included_in_list:
         "선택한 리스트가 입력한 값을 가진 항목을 포함하는 경우 '참'으로 판단합니다.",
     boolean_basic_operator:
@@ -5938,7 +5895,6 @@ Lang.Helper = {
     boolean_and: '두 판단이 모두 참인 경우 ‘참’으로 판단합니다.',
     boolean_or: '두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다.',
     boolean_not: '해당 판단이 참이면 거짓, 거짓이면 참으로 만듭니다.',
-    is_boost_mode: '부스트모드가 켜져 있으면 ‘참’으로 판단합니다.',
     calc_basic:
         '입력한 두 수의 사칙연산 값입니다.\n+ : 입력한 두 수를 더한 값입니다.\n- : 입력한 두 수를 뺀 값입니다.\n* : 입력한 두 수를 곱한 값입니다.\n/ : 입력한 두 수를 나눈 값입니다.',
     calc_rand:
@@ -5955,7 +5911,7 @@ Lang.Helper = {
     calc_mod: '앞 수에서 뒤 수를 나누어 생긴 나머지를 의미합니다.',
     calc_operation:
         '입력한 수에 대한 다양한 수학식의 계산값입니다. (제곱, 루트, 사인값, 코사인값, 탄젠트값, 아크사인값, 아크코사인값, 아크탄젠트값, 로그값, 자연로그값, 소수점 부분, 소수점 버림값, 소수점 올림값, 소수점 반올림값, 펙토리얼값, 절대값)',
-    get_date: '현재 연도, 월, 일, 요일, 시각과 같이 시간에 대한 값입니다.',
+    get_date: '현재 연도, 월, 일, 시각과 같이 시간에 대한 값입니다.',
     distance_something: '해당 오브젝트와 선택한 오브젝트 또는 마우스 포인터 간의 거릿값입니다.',
     get_sound_duration: '선택한 소리의 길이(초) 값입니다.',
     get_user_name: '작품을 실행하고 있는 사용자의 아이디 값입니다.',
@@ -5970,7 +5926,6 @@ Lang.Helper = {
     get_canvas_input_value: "사용자가 '대답 창'에 입력한 값입니다.",
     set_visible_answer: "대답 창'을 실행화면에서 숨기거나 보이게 합니다.",
     combine_something: '입력한 두 값을 결합한 값입니다.',
-    reverse_of_string: '입력한 값을 뒤집은 값입니다.',
     get_variable: '선택한 변수에 저장된 값입니다.',
     change_variable: '선택한 변수에 입력한 값을 더합니다.',
     set_variable: '선택한 변수의 값을 입력한 값으로 정합니다.',
@@ -5992,21 +5947,15 @@ Lang.Helper = {
     robotis_openCM70_cm_sound_detected_clear: '최종 소리 감지횟 수를 0 으로 초기화 합니다.',
     robotis_openCM70_cm_led: '제어기의 빨간색, 녹색, 파란색 LED 를 켜거나 끕니다.',
     robotis_openCM70_cm_motion: '제어기에 다운로드 되어있는 모션을 실행합니다.',
-    robotis_openCM70_cm_autodrive_motor: '자율주행 자동차의 모터 포트를 지정합니다.',
-    robotis_openCM70_cm_autodrive_ir: '자율주행 자동차의 적외선 센서 포트를 지정합니다.',
-    robotis_openCM70_cm_autodrive_speed: '지정한 속도로 자율주행을 수행합니다.',
-    robotis_openCM70_aux_car_move: '로봇을 지정한 속도와 방향으로 움직이도록 합니다.',
-    robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 100% 의 값으로 정합니다.',
+    robotis_openCM70_aux_motor_speed: '감속모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
     robotis_openCM70_aux_servo_mode:
         '서보모터를 회전모드 또는 관절모드로 정합니다.<br/>한번 설정된 모드는 계속 적용됩니다.<br/>회전모드는 서보모터 속도를 지정하여 서보모터를 회전 시킵니다.<br/>관절모드는 지정한 서보모터 속도로 서보모터 위치를 이동 시킵니다.',
-    robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 100% 의 값으로 정합니다.',
+    robotis_openCM70_aux_servo_speed: '서보모터 속도를 0 ~ 1023 의 값(으)로 정합니다.',
     robotis_openCM70_aux_servo_position:
-        '서보모터 위치를 -150도 ~ 150도 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
+        '서보모터 위치를 0 ~ 1023 의 값(으)로 정합니다.<br/>서보모터 속도와 같이 사용해야 합니다.',
     robotis_openCM70_aux_led_module: 'LED 모듈의 LED 를 켜거나 끕니다.',
     robotis_openCM70_aux_custom:
         '사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
-    robotis_openCM70_cm_poweroff_timer: 
-        '제어기의 자동꺼짐 타이머를 설정합니다.<br/>설정된 만큼의 시간동안 통신이 진행되지 않으면 제어기는 자동으로 꺼집니다.',
     robotis_openCM70_cm_custom_value:
         '컨트롤 테이블 주소를 직접 입력하여 값을 확인 합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
     robotis_openCM70_cm_custom:
@@ -6038,7 +5987,6 @@ Lang.Helper = {
     char_at: '입력한 값에서 입력한 숫자 번째의 글자 값입니다. (공백을 포함합니다.)',
     length_of_string: '입력한 값의 공백을 포함한 글자 수입니다.',
     substring: '입력한 값에서 입력한 범위 내의 글자 값입니다. (공백을 포함합니다.)',
-    count_match_string: '입력한 값에서 지정한 값의 글자 수이며, 영문의 경우 대문자와 소문자를 구분하여 수를 셉니다.',
     replace_string:
         '입력한 값에서 지정한 값을 찾아 추가로 입력한 값으로 모두 바꾼 값입니다. (영문 입력 시 대소문자를 구분합니다.)',
     index_of_string:
@@ -6382,7 +6330,6 @@ Lang.Helper = {
         '선택한 테이블에서 선택한 속성들에 대한 요약통계량입니다. (합, 최댓값, 최솟값, 평균값, 표준편차)',
     open_table_chart: '선택한 테이블의 차트창을 엽니다.',
     close_table_chart: '열려있는 테이블 차트 창을 닫습니다.',
-    get_coefficient: '선택한 테이블에서 두 속성 사이의 상관계수입니다. 상관계수가 1(-1)에 가까울 수록 강한 양(음)의 선형 상관관계를 갖습니다.',
     insert_data_for_test: '데이터를 입력하고 학습한 모델로 인식합니다.',
     insert_text_block_for_test: '데이터를 입력하고 학습한 모델로 인식합니다.',
     test_result:
@@ -6402,53 +6349,7 @@ Lang.Helper = {
     get_regression_predict_1: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_2: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_predict_3: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
-    get_regression_predict_4: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
-    get_regression_predict_5: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
-    get_regression_predict_6: '입력한 특성값으로 모델이 예측한 값을 반환합니다.',
     get_regression_accuracy: '모델의 결정계수를 값으로 반환합니다.',
-    set_logistic_regression_option:
-        "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    set_logistic_regression_optimizer:
-        "모델의 최적화 알고리즘을 변경합니다. 변경한 최적화 알고리즘은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    get_logistic_regression_probability_1:
-        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    get_logistic_regression_probability_2:
-        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    get_logistic_regression_probability_3:
-        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    get_logistic_regression_probability_4:
-        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    get_logistic_regression_probability_5:
-        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    get_logistic_regression_probability_6:
-        '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
-    set_decisiontree_option:
-        "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    set_decisiontree_tree: "학습한 결정 트리를 나타낸 창을 열거나 닫습니다.",
-    set_svm_option: "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    set_kernel_linear:
-        "학습 조건 중 커널을 선형으로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    set_kernel_option:
-        "학습 조건 중 커널을 다항식 또는 RBF로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    is_result_1: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_result_2: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_result_3: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_result_4: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_result_5: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_result_6: "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    get_predict_1:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_predict_2:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_predict_3:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_predict_4:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_predict_5:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_predict_6:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 클래스 이름(텍스트)으로 표현됩니다.',
-    get_result_info: '모델의 성능 평가 지표를 값으로 반환합니다.',
     set_cluster_option_k:
         "군집의 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 군집 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_cluster_option_centroids:
@@ -6462,12 +6363,6 @@ Lang.Helper = {
         '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
     get_cluster_centriod_index_3:
         '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
-    get_cluster_centriod_index_4:
-        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
-    get_cluster_centriod_index_5:
-        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
-    get_cluster_centriod_index_6:
-        '입력한 특성값이 모델이 묶은 군집 중에서 어느 군집에 속하는지를 반환합니다. 값은 텍스트(군집 이름)로 표현됩니다.',
     set_number_learning_option_k:
         "이웃 개수를 입력한 값으로 바꾸어 설정합니다. 변경한 이웃 개수는 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     get_number_learning_predict_1:
@@ -6476,23 +6371,11 @@ Lang.Helper = {
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
     get_number_learning_predict_3:
         '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
-    get_number_learning_predict_4:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
-    get_number_learning_predict_5:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
-    get_number_learning_predict_6:
-        '입력한 데이터를 모델에서 분류한 값입니다. 값은 모델의 클래스 이름(텍스트)으로 표현됩니다.',
     get_number_learning_predict_param_1:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     get_number_learning_predict_param_2:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     get_number_learning_predict_param_3:
-        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
-    get_number_learning_predict_param_4:
-        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
-    get_number_learning_predict_param_5:
-        '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
-    get_number_learning_predict_param_6:
         '입력한 데이터의 선택한 클래스에 대한 분류 정확도 값입니다. 값은 숫자로 표현됩니다.',
     is_number_learning_group_1:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
@@ -6500,96 +6383,112 @@ Lang.Helper = {
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
     is_number_learning_group_3:
         "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_number_learning_group_4:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_number_learning_group_5:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    is_number_learning_group_6:
-        "입력한 데이터의 분류 결과가 선택한 클래스인 경우 '참'으로 판단합니다.",
-    bitbrick_when_button_pressed: '비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.',
+    bitbrick_when_button_pressed:
+        "비트브릭 버튼을 누르면 아래에 연결된 블록들을 실행합니다.",
     bitbrick_when_sensor_get_value:
-        '비트브릭 센서의 값과 오른쪽에 입력한 값을 비교합니다.\n< : 센서 값이 오른쪽에 위치한 값보다 작은 경우 ‘참’으로 판단합니다.\n> : 센서 값이 오른쪽에 위치한 값보다 큰 경우 ‘참으로 판단합니다.\n= :  센서 값이 오른쪽에 위치한 값과 같은 경우 ‘참으로 판단합니다.',
+        "비트브릭 센서의 값과 오른쪽에 입력한 값을 비교합니다.\n< : 센서 값이 오른쪽에 위치한 값보다 작은 경우 ‘참’으로 판단합니다.\n> : 센서 값이 오른쪽에 위치한 값보다 큰 경우 ‘참으로 판단합니다.\n= :  센서 값이 오른쪽에 위치한 값과 같은 경우 ‘참으로 판단합니다.",
     bitbrick_sensor_value:
-        '비트브릭 센서를 사용할 수 있는 블록입니다. 센서값의 범위는 0 ~1023입니다. 메인보드에 연결된 센서의 종류와 포트번호를 자동으로 인식합니다. 블록 안의 화살표를 눌러 사용하려고 하는 센서를 선택하세요.',
-    bitbrick_convert_scale: '비트브릭 센서의 값의 범위를 바꿀 수 있습니다.',
-    bitbrick_is_touch_pressed: '비트브릭 센서 중 버튼을 눌렀을 경우 ‘참’으로 판단합니다.',
-    bitbrick_is_sensor_value_compare: '비트브릭 센서 중 버튼을 눌렀을 경우 ‘참’으로 판단합니다.',
-    bitbrick_turn_off_color_led: '비트브릭 엘이디를 끕니다.',
+        "비트브릭 센서를 사용할 수 있는 블록입니다. 센서값의 범위는 0 ~1023입니다. 메인보드에 연결된 센서의 종류와 포트번호를 자동으로 인식합니다. 블록 안의 화살표를 눌러 사용하려고 하는 센서를 선택하세요.",
+    bitbrick_convert_scale:
+        "비트브릭 센서의 값의 범위를 바꿀 수 있습니다.",
+    bitbrick_is_touch_pressed:
+        "비트브릭 센서 중 버튼을 눌렀을 경우 ‘참’으로 판단합니다.",
+    bitbrick_turn_off_color_led:
+        "비트브릭 엘이디를 끕니다.",
     bitbrick_turn_on_color_led_by_rgb:
-        '비트브릭 엘이디를 빛의 삼원색인 빨강,초록,파랑을 혼합하여 켭니다. 값의 범위는 0 ~ 255입니다.',
-    bitbrick_turn_on_color_led_by_picker: '비트브릭 엘이디를 색상 창을 사용해 켭니다.',
+        "비트브릭 엘이디를 빛의 삼원색인 빨강,초록,파랑을 혼합하여 켭니다. 값의 범위는 0 ~ 255입니다.",
+    bitbrick_turn_on_color_led_by_picker:
+        "비트브릭 엘이디를 색상 창을 사용해 켭니다.",
     bitbrick_turn_on_color_led_by_value:
-        '비트브릭 엘이디를 색상 값으로 켭니다. 값의 범위는 0 ~ 199입니다.',
+        "비트브릭 엘이디를 색상 값으로 켭니다. 값의 범위는 0 ~ 199입니다.",
     bitbrick_buzzer:
-        '비트브릭 버저를 사용하여 소리를 냅니다. 값의 범위는 0 ~ 96입니다. 값이 0일 때는 버저 소리를 끕니다.',
-    bitbrick_turn_off_all_motors: '비트브릭 모터를 모두 끕니다.',
+        "비트브릭 버저를 사용하여 소리를 냅니다. 값의 범위는 0 ~ 96입니다. 값이 0일 때는 버저 소리를 끕니다.",
+    bitbrick_turn_off_all_motors:
+        "비트브릭 모터를 모두 끕니다.",
     bitbrick_dc_speed:
-        '비트브릭 디씨모터의 속도를 제어합니다. 속도 값의 범위는 –100 ~ 100입니다. 음수(-)일 때는 반시계방향으로 회전합니다. 양수(+)일 때는 시계방향으로 회전합니다. 속도가 0일 때는 회전을 멈춥니다.',
+        "비트브릭 디씨모터의 속도를 제어합니다. 속도 값의 범위는 –100 ~ 100입니다. 음수(-)일 때는 반시계방향으로 회전합니다. 양수(+)일 때는 시계방향으로 회전합니다. 속도가 0일 때는 회전을 멈춥니다.",
     bitbrick_dc_direction_speed:
-        '비트브릭 디씨모터의 방향과 속력을 제어합니다. 방향은 시계방향과 반시계방향을 선택할 수 있습니다. 속력 값의 범위는 0 ~ 100입니다. 속력이 0일 때는 회전을 멈춥니다.',
+        "비트브릭 디씨모터의 방향과 속력을 제어합니다. 방향은 시계방향과 반시계방향을 선택할 수 있습니다. 속력 값의 범위는 0 ~ 100입니다. 속력이 0일 때는 회전을 멈춥니다.",
     bitbrick_servomotor_angle:
-        '비트브릭 서보모터의 각도를 제어합니다. 각도 값의 범위는 0 ~ 180입니다.',
-    diaboard_when_button_pressed:
-        '선택한 버튼을 누르거나 누르지 않으면 아래에 연결된 블록들을 실행합니다.',
-    diaboard_when_color_is: '선택한 색상을 컬러센서가 감지하면 아래에 연결된 블록들을 실행합니다.',
-    diaboard_when_sensor_is:
+        "비트브릭 서보모터의 각도를 제어합니다. 각도 값의 범위는 0 ~ 180입니다.",
+    diaboard_when_button_pressed:			
+        "선택한 버튼을 누르거나 누르지 않으면 아래에 연결된 블록들을 실행합니다.",
+    diaboard_when_color_is:					
+        "선택한 색상을 컬러센서가 감지하면 아래에 연결된 블록들을 실행합니다.",
+    diaboard_when_sensor_is:				
         "선택한 센서의 값과 오른쪽의 값을 비교하여 아래에 연결된 블록들을 실행합니다.\n< : 센서값이 오른쪽 값보다 작은 경우 '참'으로 판단합니다.\n> : 센서값이 오른쪽 값보다 큰 경우 '참'으로 판단합니다.\n= : 센서값이 오른쪽 값과 같은 경우 '참'으로 판단합니다.",
-    diaboard_button_pressed: "선택한 버튼을 누르거나 누르지 않은 경우 '참'으로 판단합니다.",
-    diaboard_color_sensor_is: "선택한 색상을 컬러센서가 감지한 경우 '참'으로 판단합니다.",
-    diaboard_sensor_condition:
+    diaboard_button_pressed:				
+        "선택한 버튼을 누르거나 누르지 않은 경우 '참'으로 판단합니다.",
+    diaboard_color_sensor_is:				
+        "선택한 색상을 컬러센서가 감지한 경우 '참'으로 판단합니다.",
+    diaboard_sensor_condition:				
         "선택한 센서의 값과 오른쪽의 값을 비교합니다.\n< : 센서값이 오른쪽 값보다 작은 경우 '참'으로 판단합니다.\n> : 센서값이 오른쪽 값보다 큰 경우 '참'으로 판단합니다.\n= : 센서값이 오른쪽 값과 같은 경우 '참'으로 판단합니다.",
-    diaboard_color_sensor_seven_hue:
-        '컬러센서가 감지하는 색상을 7가지로 분류한 값입니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양',
-    diaboard_color_sensor_one_hue:
-        '컬러센서가 감지한 색상값입니다.\n색상(hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)',
-    diaboard_sensor_value:
-        '선택한 센서가 감지한 값입니다. 값의 범위는 0 ~ 1023입니다. \n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.',
-    diaboard_convert_scale:
-        '선택한 센서가 감지한 값의 범위를 사용자가 임의로 바꿔서 사용합니다.\n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.',
-    diaboard_led_rainbow: '엘이디를 무지개 효과로 켭니다.',
-    diaboard_led_rainbow_time:
-        '엘이디를 입력한 시간만큼 무지개 효과로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
-    diaboard_led_effect: '엘이디를 선택한 효과와 선택한 색상으로 켭니다.',
-    diaboard_led_effect_time:
-        '엘이디를 입력한 시간만큼 선택한 효과와 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
-    diaboard_led_six: '엘이디 1번 ~ 6번을 선택한 색상으로 각자 켭니다.',
-    diaboard_led_one: '선택한 번호의 엘이디를 선택한 색상으로 켭니다.',
-    diaboard_led_one_time:
-        '선택한 번호의 엘이디를 입력한 시간만큼 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
-    diaboard_led_hue:
-        '선택한 번호의 엘이디를 색상(hue)값으로 켭니다.\n색상( hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)',
+    diaboard_color_sensor_seven_hue:		
+        "컬러센서가 감지하는 색상을 7가지로 분류한 값입니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
+    diaboard_color_sensor_one_hue:			
+        "컬러센서가 감지한 색상값입니다.\n색상(hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)",
+    diaboard_sensor_value:					
+        "선택한 센서가 감지한 값입니다. 값의 범위는 0 ~ 1023입니다. \n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.",
+    diaboard_convert_scale:					
+        "선택한 센서가 감지한 값의 범위를 사용자가 임의로 바꿔서 사용합니다.\n적외선 센서 : 물체에 반사된 적외선을 양을 측정하여 물체와의 거리를 감지합니다.\n밝기 센서 : 주변 환경이 얼마나 밝고 어두운지를 감지합니다.",
+    diaboard_led_rainbow:					
+        "엘이디를 무지개 효과로 켭니다.",
+    diaboard_led_rainbow_time:				
+        "엘이디를 입력한 시간만큼 무지개 효과로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
+    diaboard_led_effect:					
+        "엘이디를 선택한 효과와 선택한 색상으로 켭니다.",
+    diaboard_led_effect_time:				
+        "엘이디를 입력한 시간만큼 선택한 효과와 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
+    diaboard_led_six:						
+        "엘이디 1번 ~ 6번을 선택한 색상으로 각자 켭니다.",
+    diaboard_led_one:						
+        "선택한 번호의 엘이디를 선택한 색상으로 켭니다.",
+    diaboard_led_one_time:					
+        "선택한 번호의 엘이디를 입력한 시간만큼 선택한 색상으로 켭니다.\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
+    diaboard_led_hue:						
+        "선택한 번호의 엘이디를 색상(hue)값으로 켭니다.\n색상( hue) : 0 ~ 359 사이 범위로 설정할 수 있습니다.\n(총 360가지의 색상을 감지하며 360과 0은 같은 색으로 표현됩니다.)",
     diaboard_led_color:
         "선택한 번호의 엘이디를 현재 컬러센서가 감지한 색상(7가지)으로 켭니다. 컬러센서 색상이 '없음'일 때는 코드를 실행해도 엘이디를 켜지 않습니다.\n7가지 색상 : 빨강, 노랑, 녹색, 청록, 파랑, 보라, 하양",
-    diaboard_led_rgb:
-        '선택한 번호의 엘이디를 빨강, 녹색, 파랑값으로 켭니다.\n빨강, 녹색, 파랑 : 0 ~ 255의 범위로 설정할 수 있습니다.\n(0이하는 0으로, 255이상은 255로 처리됩니다. )',
-    diaboard_led_turn_off_all: '선택한 번호의 엘이디를 끕니다.',
-    diaboard_servomotor_angle:
-        '선택한 포트의 서보모터의 각도를 입력한 값으로 정합니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)',
-    diaboard_servomotor_angle_time:
-        '선택한 포트의 서보모터의 초기각도와 목표각도를 설정해 입력한 시간만큼 각도를 바꿉니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
-    diaboard_dc_direction_speed:
-        '선택한 포트의 디씨모터의 방향과 속력을 정합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)',
-    diaboard_dc_direction_speed_time:
-        '선택한 포트의 디씨모터의 방향과 속력을 정하고, 입력한 시간만큼 동작합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
-    diaboard_dc_speed:
-        '선택한 포트의 디씨모터의 속도를 정합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)',
-    diaboard_dc_speed_time:
-        '선택한 포트의 디씨모터의 속도를 정하고, 입력한 시간만큼 동작합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.',
-    diaboard_turn_off_all_motors: '선택한 포트의 모터를 멈춥니다.',
-    diaboard_buzzer_melody_type: '선택한 멜로디를 연주합니다.',
-    diaboard_buzzer_effect_type: '선택한 효과음을 냅니다.',
-    diaboard_buzzer_eight_melody_bpm:
-        '선택한 음들을 입력한 BPM으로 연주합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)',
-    diaboard_buzzer_octave: '선택한 옥타브와 음으로 연주합니다.',
-    diaboard_buzzer_octave_rhythm: '선택한 옥타브와 음을 입력한 박자로 연주합니다.',
-    diaboard_buzzer_hz:
-        '입력한 주파수로 연주합니다.\n주파수 : 33 ~ 7,900 사이의 범위로 설정할 수 있습니다.\n(33이하는 33으로 7,900이상은 7,900으로 처리됩니다.)',
-    diaboard_buzzer_hz_change: '입력한 주파수만큼 바꿔서 연주합니다.',
-    diaboard_buzzer_speed_bpm:
-        '입력한 BPM으로 연주 속도를 정합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)',
-    diaboard_buzzer_speed_bpm_change: '입력한 BPM만큼 연주 속도를 바꿉니다.',
-    diaboard_buzzer_sleep_rhythm: '선택한 박자만큼 쉽니다.',
-    diaboard_buzzer_stop: '버저음을 멈춥니다.',
+    diaboard_led_rgb:						
+        "선택한 번호의 엘이디를 빨강, 녹색, 파랑값으로 켭니다.\n빨강, 녹색, 파랑 : 0 ~ 255의 범위로 설정할 수 있습니다.\n(0이하는 0으로, 255이상은 255로 처리됩니다. )",
+    diaboard_led_turn_off_all:				
+        "선택한 번호의 엘이디를 끕니다.",
+    diaboard_servomotor_angle:				
+        "선택한 포트의 서보모터의 각도를 입력한 값으로 정합니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)",
+    diaboard_servomotor_angle_time:			
+        "선택한 포트의 서보모터의 초기각도와 목표각도를 설정해 입력한 시간만큼 각도를 바꿉니다.\n각도 : 0 ~ 180 사이 범위로 설정할 수 있습니다.\n(0이하는 0으로, 180이상은 180으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
+    diaboard_dc_direction_speed:			
+        "선택한 포트의 디씨모터의 방향과 속력을 정합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)",
+    diaboard_dc_direction_speed_time:		
+        "선택한 포트의 디씨모터의 방향과 속력을 정하고, 입력한 시간만큼 동작합니다.\n방향 : 시계방향과 반시계 방향을 설정할 수 있습니다.\n속력 : 0 ~ 100까지 범위로 설정할 수 있습니다.\n(0이하는 0으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
+    diaboard_dc_speed:						
+        "선택한 포트의 디씨모터의 속도를 정합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)",
+    diaboard_dc_speed_time:					
+        "선택한 포트의 디씨모터의 속도를 정하고, 입력한 시간만큼 동작합니다.\n속도 : -100 ~ 100 사이의 범위로 설정할 수 있습니다.\n(-100이하는 -100으로, 100이상은 100으로 처리됩니다.)\n시간 : 0 ~ 100 범위에서 0.1초 단위로 설정할 수 있습니다.",
+    diaboard_turn_off_all_motors:			
+        "선택한 포트의 모터를 멈춥니다.",
+    diaboard_buzzer_melody_type:          	
+        "선택한 멜로디를 연주합니다.",
+    diaboard_buzzer_effect_type:          	
+        "선택한 효과음을 냅니다.",
+    diaboard_buzzer_eight_melody_bpm:		
+        "선택한 음들을 입력한 BPM으로 연주합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)",
+    diaboard_buzzer_octave:               	
+        "선택한 옥타브와 음으로 연주합니다.",
+    diaboard_buzzer_octave_rhythm:        	
+        "선택한 옥타브와 음을 입력한 박자로 연주합니다.",
+    diaboard_buzzer_hz:                   	
+        "입력한 주파수로 연주합니다.\n주파수 : 33 ~ 7,900 사이의 범위로 설정할 수 있습니다.\n(33이하는 33으로 7,900이상은 7,900으로 처리됩니다.)",
+    diaboard_buzzer_hz_change:            	
+        "입력한 주파수만큼 바꿔서 연주합니다.",
+    diaboard_buzzer_speed_bpm:            	
+        "입력한 BPM으로 연주 속도를 정합니다.\n연주속도(BPM) : 30 ~ 300 사이의 범위로 설정할 수 있습니다.\n(30이하는 30으로, 300이상은 300으로 처리됩니다.)",
+    diaboard_buzzer_speed_bpm_change:     	
+        "입력한 BPM만큼 연주 속도를 바꿉니다.",
+    diaboard_buzzer_sleep_rhythm:         	
+        "선택한 박자만큼 쉽니다.",
+    diaboard_buzzer_stop:					
+        "버저음을 멈춥니다."
 };
 Lang.Category = {
     entrybot_friends: '엔트리봇 친구들',
@@ -6889,7 +6788,6 @@ Lang.template = {
     sensorBoard_led: '%1  LED %2   %3',
     arduino_download_connector: '%1',
     download_guide: '%1',
-    arduino_lite_guide: '%1',
     arduino_download_source: '%1',
     arduino_connected: '%1',
     arduino_connect: '%1',
@@ -6913,21 +6811,18 @@ Lang.template = {
     iboard_rgb_led: 'RGB LED의 %1 LED %2 %3',
     iboard_set_tone: '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
     iboard_toggle_led: '디지털 %1 번 핀 %2 %3',
-    bitbrick_when_button_pressed: '%1 버튼 %2 눌러졌을 때',
-    bitbrick_when_sensor_get_value: '%1 %2 값 %3 %4 일 때',
-    bitbrick_is_touch_pressed: '버튼 %1 이(가) %2 인가?',
-    bitbrick_is_sensor_value_compare: '%1 값 %2 %3 인가?',
-    bitbrick_sensor_value: '%1 값',
+    bitbrick_sensor_value: '%1  값',
+    bitbrick_is_touch_pressed: '버튼 %1 이(가) 눌렸는가?',
+    bitbrick_turn_off_color_led: '컬러 LED 끄기 %1',
+    bitbrick_turn_on_color_led_by_rgb: '컬러 LED 켜기 R %1 G %2 B %3 %4',
+    bitbrick_turn_on_color_led_by_picker: '컬러 LED 색  %1 로 정하기 %2',
+    bitbrick_turn_on_color_led_by_value: '컬러 LED 켜기 색 %1 로 정하기 %2',
+    bitbrick_buzzer: '버저음  %1 내기 %2',
+    bitbrick_turn_off_all_motors: '모든 모터 끄기 %1',
+    bitbrick_dc_speed: 'DC 모터 %1  속도 %2 %3',
+    bitbrick_dc_direction_speed: 'DC 모터 %1   %2  방향  속력 %3 %4',
+    bitbrick_servomotor_angle: '서보 모터 %1  각도 %2 %3',
     bitbrick_convert_scale: '변환 %1 값 %2 ~ %3 에서 %4 ~ %5',
-    bitbrick_turn_on_color_led_by_rgb: '엘이디를 빨강 %1 초록 %2 파랑 %3 %4 (으)로 켜기',
-    bitbrick_turn_on_color_led_by_picker: '엘이디를 %1 (으)로 켜기 %2',
-    bitbrick_turn_on_color_led_by_value: '엘이디를 %1 (으)로 켜기 %2',
-    bitbrick_turn_off_color_led: '엘이디 끄기 %1',
-    bitbrick_buzzer: '버저음 %1 내기 %2',
-    bitbrick_servomotor_angle: '서보모터 %1 각도 %2 %3',
-    bitbrick_dc_direction_speed: '디씨모터 %1 방향 %2 속력 %3 %4',
-    bitbrick_dc_speed: '디씨모터 %1 속도 %2 %3',
-    bitbrick_turn_off_all_motors: "모든 모터 멈추기 %1",
     start_drawing: '그리기 시작하기 %1',
     stop_drawing: '그리기 멈추기 %1',
     set_color: '붓의 색을 %1 (으)로 정하기 %2',
@@ -6942,7 +6837,6 @@ Lang.template = {
     set_brush_tranparency: '붓의 투명도를 %1 % 로 정하기 %2',
     number: '%1',
     angle: '%1',
-    color: '%1',
     get_x_coordinate: '%1',
     get_y_coordinate: '%1',
     get_angle: '%1',
@@ -6972,7 +6866,6 @@ Lang.template = {
     substring: '%1 %2 %3 %4 %5 %6 %7',
     replace_string: '%1 %2 %3 %4 %5 %6 %7',
     change_string_case: '%1 %2 %3 %4 %5',
-    count_match_string: '%1 %2 %3 %4',
     index_of_string: '%1 %2 %3 %4 %5',
     combine_something: '%1 %2 %3 %4 %5',
     get_sound_volume: '%1 %2',
@@ -7002,7 +6895,6 @@ Lang.template = {
     function_param_boolean: '판단값',
     function_create: '함수 정의하기 %1 %2',
     function_general: '함수 %1',
-    function_value: '함수',
     expansionBlockAddButton: '%1',
     aiUtilizeBlockAddButton: '%1',
     aiUtilizeModelTrainButton: '%1',
@@ -7040,8 +6932,6 @@ Lang.template = {
     load_ai_utilize_train_block: '인공지능 모델 학습하기',
     expansion_block_descriptions: '확장 블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
     aiUtilize_block_descriptions: 'AI 활용블록은 인터넷이 연결되어 있어야 정상적으로 동작합니다.',
-    hardware_lite_descriptions:
-        '하드웨어 연결/작동 시 예기치 못한 문제가 발생할 수 있습니다. \r\n하드웨어 웹 연결 중 문제 발생 시 엔트리 고객센터 또는 해당 하드웨어 업체의 고객센터에 연락해 주세요.',
     weather_title_text: '날씨',
     translate_title_text: '번역',
     festival_title_text: '행사',
@@ -7050,10 +6940,7 @@ Lang.template = {
     learning_title_text: '%1',
     learning_title_number: '%1',
     learning_title_regression: '%1',
-    learning_title_logistic_regression: '%1',
     learning_title_cluster: '%1',
-    learning_title_decisiontree: '%1',
-    learning_title_svm: '%1',
     insert_data_for_test: '학습한 모델로 인식하기 %1',
     insert_text_block_for_test: '%1 을(를) 학습한 모델로 인식하기 %2',
     test_result: '인식 결과',
@@ -7067,40 +6954,7 @@ Lang.template = {
     get_regression_predict_1: '%1 %2 의 예측값',
     get_regression_predict_2: '%1 %2 %3 %4 의 예측값',
     get_regression_predict_3: '%1 %2 %3 %4 %5 %6 의 예측값',
-    get_regression_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 예측값',
-    get_regression_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 예측값',
-    get_regression_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 예측값',
     get_regression_accuracy: '결정계수',
-    set_logistic_regression_option: '학습 조건 %1 을(를) %2 (으)로 바꾸기 %3',
-    set_logistic_regression_optimizer: '최적화 알고리즘을 %1 (으)로 바꾸기 %2',
-    get_logistic_regression_probability_1: '%1 %2 의 %3 에 대한 확률',
-    get_logistic_regression_probability_2: '%1 %2 %3 %4 의 %5 에 대한 확률',
-    get_logistic_regression_probability_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 확률',
-    get_logistic_regression_probability_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 확률',
-    get_logistic_regression_probability_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 확률',
-    get_logistic_regression_probability_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 확률',
-    set_decisiontree_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
-    set_decisiontree_tree: '학습한 트리 %1 %2',
-    set_svm_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
-    set_kernel_linear: '커널을 선형으로 바꾸기 %1',
-    set_kernel_option: '커널을 %1 (으)로 바꾸고 %2 를 %3 (으)로 정하기 %4',
-    train_param_kernel_polynomial: '다항식',
-    train_param_kernel_rbf: 'RBF',
-    train_param_degree: '차수',
-    train_param_gamma: '감마',
-    is_result_1: '%1 %2 의 분류 결과가 %3 인가?',
-    is_result_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
-    is_result_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
-    is_result_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
-    is_result_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
-    is_result_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
-    get_predict_1: '%1 %2 의 분류 결과',
-    get_predict_2: '%1 %2 %3 %4 의 분류 결과',
-    get_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
-    get_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
-    get_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
-    get_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
-    get_result_info: '모델의 %1',
     set_cluster_option_k: '군집을 %1 개로 바꾸기 %2',
     set_cluster_option_centroids: '중심점 기준을 %1 로 바꾸기 %2',
     get_cluster_centriod_count: '군집 개수',
@@ -7108,28 +6962,16 @@ Lang.template = {
     get_cluster_centriod_index_1: '%1 %2의 군집',
     get_cluster_centriod_index_2: '%1 %2 %3 %4의 군집',
     get_cluster_centriod_index_3: '%1 %2 %3 %4 %5 %6의 군집',
-    get_cluster_centriod_index_4: '%1 %2 %3 %4 %5 %6 %7 %8의 군집',
-    get_cluster_centriod_index_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10의 군집',
-    get_cluster_centriod_index_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12의 군집',
     set_number_learning_option_k: '이웃을 %1 개로 바꾸기 %2',
     get_number_learning_predict_1: '%1 %2 의 분류 결과',
     get_number_learning_predict_2: '%1 %2 %3 %4의 분류 결과',
     get_number_learning_predict_3: '%1 %2 %3 %4 %5 %6 의 분류 결과',
-    get_number_learning_predict_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과',
-    get_number_learning_predict_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과',
-    get_number_learning_predict_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과',
     get_number_learning_predict_param_1: '%1 %2 의 %3 에 대한 %4',
     get_number_learning_predict_param_2: '%1 %2 %3 %4 의 %5 에 대한 %6',
     get_number_learning_predict_param_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 %8',
-    get_number_learning_predict_param_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 %10',
-    get_number_learning_predict_param_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 %12',
-    get_number_learning_predict_param_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 %14',
     is_number_learning_group_1: '%1 %2 의 분류 결과가 %3 인가?',
     is_number_learning_group_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
     is_number_learning_group_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
-    is_number_learning_group_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 분류 결과가 %9 인가?',
-    is_number_learning_group_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 분류 결과가 %11 인가?',
-    is_number_learning_group_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 분류 결과가 %13 인가?',
     audio_title_text: '오디오 감지',
     check_microphone: '마이크가 연결되었는가?',
     get_microphone_volume: '마이크 소리크기',
@@ -7282,10 +7124,8 @@ Lang.template = {
     turtle_turn_unit_with_radius_in_direction: '%1 으로 %2 %3 반지름 %4 cm를 %5 방향으로 돌기 %6',
     turtle_value: '%1',
     is_clicked: '%1',
-    is_object_clicked: '%1',
     is_press_some_key: '%1 %2',
     reach_something: '%1 %2 %3',
-    is_type: '%1 %2 %3 %4',
     boolean_comparison: '%1 %2 %3',
     boolean_equal: '%1 %2 %3',
     boolean_bigger: '%1 %2 %3',
@@ -7294,7 +7134,6 @@ Lang.template = {
     boolean_and: '%1 %2 %3',
     boolean_or: '%1 %2 %3',
     boolean_not: '%1 %2 %3',
-    is_boost_mode: '%1',
     true_or_false: '%1',
     True: '%1  ',
     False: '%1  ',
@@ -7369,16 +7208,11 @@ Lang.template = {
     robotis_openCM70_cm_sound_detected_clear: '최종소리감지횟수 초기화 %1',
     robotis_openCM70_cm_led: '제어기 %1 LED %2 %3',
     robotis_openCM70_cm_motion: '모션 %1 번 실행 %2',
-    robotis_openCM70_cm_autodrive_motor: '자율주행 자동차 %1 모터를 %2 에 연결 %3',
-    robotis_openCM70_cm_autodrive_ir: '자율주행 자동차 %1 적외선센서를 %2 에 연결 %3',
-    robotis_openCM70_cm_autodrive_speed: '차로를 따라 %1의 속도로 자율주행 %2',
-    robotis_openCM70_aux_car_move: '로봇을 %1% 의 속도로 %2 %3',
-    robotis_openCM70_aux_motor_speed: '%1 감속모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
+    robotis_openCM70_aux_motor_speed: '%1 감속모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
     robotis_openCM70_aux_servo_mode: '%1 서보모터 모드를 %2 (으)로 정하기 %3',
-    robotis_openCM70_aux_servo_speed: '%1 서보모터 속도를 %2 , 출력값을 %3%로 정하기 %4',
-    robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2도로 정하기 %3',
+    robotis_openCM70_aux_servo_speed: '%1 서보모터 속도를 %2 , 출력값을 %3 (으)로 정하기 %4',
+    robotis_openCM70_aux_servo_position: '%1 서보모터 위치를 %2 (으)로 정하기 %3',
     robotis_openCM70_aux_led_module: '%1 LED 모듈을 %2 (으)로 정하기 %3',
-    robotis_openCM70_cm_poweroff_timer: '제어기 자동꺼짐 타이머 %1 %2',
     robotis_openCM70_aux_custom: '%1 사용자 장치를 %2 (으)로 정하기 %3',
     robotis_openCM70_cm_custom: '직접입력 주소 ( %1 ) (을)를 %2 (으)로 정하기 %3',
     robotis_carCont_sensor_value: '%1   값',
@@ -7454,7 +7288,6 @@ Lang.template = {
     calc_values_from_table: '테이블 %1 %2의 %3',
     open_table_chart: '테이블 %1의 %2 차트 창 열기 %3',
     close_table_chart: '테이블 차트 창 닫기 %1',
-    get_coefficient: '테이블 %1 %2과(와) %3의 상관계수',
     variableAddButton: '%1',
     listAddButton: '%1',
     change_variable: '%1 에 %2 만큼 더하기 %3',
@@ -7795,9 +7628,6 @@ Lang.template = {
     learning_title_number_str: '분류: 숫자 모델',
     learning_title_regression_str: '예측: 숫자 모델',
     learning_title_cluster_str: '군집: 숫자 모델',
-    learning_title_logistic_regression_str: '분류: 숫자 (로지스틱 회귀) 모델',
-    learning_title_decisiontree_str: '분류: 숫자 (결정 트리) 모델',
-    learning_title_svm_str: '분류: 숫자 (SVM) 모델',
 };
 Lang.TextCoding = {
     block_name: '블록명',
@@ -7857,7 +7687,7 @@ Lang.TextCoding = {
     alert_function_name_empty_text_add_change: '함수명에 공백(띄어쓰기)이 포함될 수 없습니다.',
     alert_no_save_on_error: '문법 오류가 존재하여 작품을 저장할 수 없습니다.',
     alert_api_no_support:
-        '작품에 엔트리파이썬에서 지원하지 않는 \n블록이 조립되어 있습니다. \n해당 블록을 삭제하고 만들기 모드를 변경할까요?',
+        '확장, 데이터분석, 인공지능 블록이 조립된 경우에는\n엔트리파이선 모드로 변경할 수 없습니다.\n해당 블록을 모두 삭제하고 엔트리파이선 모드로 변경할까요?',
     warn_unnecessary_arguments:
         '&(calleeName)(); 는 괄호 사이에 값이 입력될 필요가 없는 명령어 입니다. (line:&(lineNumber))',
     python_code: ' 오브젝트의 파이선 코드',
@@ -8940,13 +8770,7 @@ Lang.AiLearning = {
     hide: '숨기기',
     open: '열기',
     close: '닫기',
-    probability: '신뢰도',
-    accuracy: '정확도',
-    f1: 'F1',
-    precision: '정밀도',
-    recall: '재현율',
-    train_param_optimizer_adam: 'Adam',
-    train_param_optimizer_sgd: 'SGD',
+    probability: '정확도',
     neighbor_count: '이웃 개수',
     cluster_option_centroids_kmpp: '가장 먼 거리',
     cluster_option_centroids_random: '무작위',
@@ -8956,13 +8780,8 @@ Lang.AiLearning = {
     model_status_2: '상태: 학습완료',
     model_status_3: '상태: 모델없음',
     train_param_learningRate: '학습률',
-    train_param_epochs: '에포크',
-    train_param_validationRate: '검증 데이터 비율',
-    train_param_C: 'C',
-    train_param_kernel_polynomial: '다항식',
-    train_param_kernel_rbf: 'RBF',
-    train_param_degree: '차수',
-    train_param_gamma: '감마',
+    train_param_epochs: '세대',
+    train_param_validationRate: '테스트 데이터 비율',
 };
 Lang.SharePolicy = {
     title: '엔트리 작품/게시물 공유 가이드',

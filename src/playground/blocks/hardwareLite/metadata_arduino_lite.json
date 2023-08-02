@@ -1,9 +1,0 @@
-{
-    "name": "ArduinoLite",
-    "version": "1.0.0",
-    "type": "hardware",
-    "title": "아두이노 우노",
-    "description": "Arduino",
-    "imageName": "arduinolite",
-    "moduleId": "010101"
-}

@@ -18,10 +18,6 @@ Entry.AI_UTILIZE_BLOCK.video = {
         await VideoUtils.initialize();
         Entry.AI_UTILIZE_BLOCK.video.isInitialized = true;
     },
-    destroy() {
-        VideoUtils.destroy();
-        Entry.AI_UTILIZE_BLOCK.video.isInitialized = false;
-    },
 };
 
 Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
@@ -269,7 +265,7 @@ Entry.AI_UTILIZE_BLOCK.video.getBlocks = function() {
                     [Lang.video_object_params['hair drier'], 'hair drier'],
                     [Lang.video_object_params.toothbrush, 'toothbrush'],
                 ],
-                value: 'bicycle',
+                value: 'person',
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,

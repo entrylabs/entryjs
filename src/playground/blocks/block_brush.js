@@ -94,8 +94,7 @@ module.exports = {
                 statements: [],
                 params: [
                     {
-                        type: 'Block',
-                        accept: 'string',
+                        type: 'Color',
                     },
                     {
                         type: 'Indicator',
@@ -105,12 +104,7 @@ module.exports = {
                 ],
                 events: {},
                 def: {
-                    params: [
-                        {
-                            type: 'color',
-                        },
-                        null,
-                    ],
+                    params: [null],
                     type: 'set_color',
                 },
                 pyHelpDef: {
@@ -123,7 +117,7 @@ module.exports = {
                 class: 'brush_color',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
-                    const colour = script.getStringValue('VALUE', script);
+                    const colour = script.getField('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);

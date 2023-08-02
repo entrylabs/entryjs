@@ -68,6 +68,8 @@ EntryStatic.subjectList = [
 
 EntryStatic.lectureLevels = [1, 2, 3];
 
+// EntryStatic.lectureLevels = ['level_high', 'level_mid','level_row'];
+
 EntryStatic.lectureGrades = [
     'e_1',
     'e_2',
@@ -318,14 +320,11 @@ EntryStatic.getAllBlocks = function() {
             category: 'judgement',
             blocks: [
                 'is_clicked',
-                'is_object_clicked',
                 'is_press_some_key',
                 'reach_something',
-                'is_type',
                 'boolean_basic_operator',
                 'boolean_and_or',
                 'boolean_not',
-                'is_boost_mode',
             ],
         },
         {
@@ -347,15 +346,12 @@ EntryStatic.getAllBlocks = function() {
                 'get_user_name',
                 'get_nickname',
                 'length_of_string',
-                'count_match_string',
                 'combine_something',
                 'char_at',
                 'substring',
                 'index_of_string',
                 'replace_string',
-                'reverse_of_string',
                 'change_string_case',
-                'get_block_count',
             ],
         },
         {
@@ -384,13 +380,7 @@ EntryStatic.getAllBlocks = function() {
         },
         {
             category: 'func',
-            blocks: [
-                'functionAddButton',
-                'function_name',
-                'showFunctionPropsButton',
-                'set_func_variable',
-                'get_func_variable',
-            ],
+            blocks: ['functionAddButton'],
         },
         {
             category: 'analysis',
@@ -400,16 +390,12 @@ EntryStatic.getAllBlocks = function() {
                 'insert_row_to_table',
                 'delete_row_from_table',
                 'set_value_from_table',
-                'save_current_table',
                 'get_table_count',
                 'get_value_from_table',
                 'get_value_from_last_row',
                 'calc_values_from_table',
-                'open_table',
-                'open_table_wait',
                 'open_table_chart',
                 'close_table_chart',
-                'get_coefficient',
             ],
         },
         {
@@ -423,9 +409,6 @@ EntryStatic.getAllBlocks = function() {
                 'learning_title_number',
                 'learning_title_regression',
                 'learning_title_cluster',
-                'learning_title_logistic_regression',
-                'learning_title_decisiontree',
-                'learning_title_svm',
                 'retrain_model',
                 'model_is_trained',
                 'set_train_visible',
@@ -434,36 +417,7 @@ EntryStatic.getAllBlocks = function() {
                 'get_regression_predict_1',
                 'get_regression_predict_2',
                 'get_regression_predict_3',
-                'get_regression_predict_4',
-                'get_regression_predict_5',
-                'get_regression_predict_6',
                 'get_regression_accuracy',
-                'set_logistic_regression_option',
-                'set_logistic_regression_optimizer',
-                'get_logistic_regression_probability_1',
-                'get_logistic_regression_probability_2',
-                'get_logistic_regression_probability_3',
-                'get_logistic_regression_probability_4',
-                'get_logistic_regression_probability_5',
-                'get_logistic_regression_probability_6',
-                'set_decisiontree_option',
-                'set_decisiontree_tree',
-                'set_svm_option',
-                'set_kernel_linear',
-                'set_kernel_option',
-                'is_result_1',
-                'is_result_2',
-                'is_result_3',
-                'is_result_4',
-                'is_result_5',
-                'is_result_6',
-                'get_predict_1',
-                'get_predict_2',
-                'get_predict_3',
-                'get_predict_4',
-                'get_predict_5',
-                'get_predict_6',
-                'get_result_info',
                 'set_cluster_option_k',
                 'set_cluster_option_centroids',
                 'get_cluster_centriod_count',
@@ -471,28 +425,16 @@ EntryStatic.getAllBlocks = function() {
                 'get_cluster_centriod_index_1',
                 'get_cluster_centriod_index_2',
                 'get_cluster_centriod_index_3',
-                'get_cluster_centriod_index_4',
-                'get_cluster_centriod_index_5',
-                'get_cluster_centriod_index_6',
                 'set_number_learning_option_k',
                 'get_number_learning_predict_1',
                 'get_number_learning_predict_2',
                 'get_number_learning_predict_3',
-                'get_number_learning_predict_4',
-                'get_number_learning_predict_5',
-                'get_number_learning_predict_6',
                 'get_number_learning_predict_param_1',
                 'get_number_learning_predict_param_2',
                 'get_number_learning_predict_param_3',
-                'get_number_learning_predict_param_4',
-                'get_number_learning_predict_param_5',
-                'get_number_learning_predict_param_6',
                 'is_number_learning_group_1',
                 'is_number_learning_group_2',
                 'is_number_learning_group_3',
-                'is_number_learning_group_4',
-                'is_number_learning_group_5',
-                'is_number_learning_group_6',
                 'insert_data_for_test',
                 'video_capture_for_image_test',
                 'insert_text_block_for_test',
@@ -561,24 +503,15 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_open',
                 'arduino_cloud_pc_open',
                 'arduino_connect',
-                'arduino_lite_disconnect',
-                'arduino_lite_device_name',
-                'arduino_lite_connected_noti',
-                'arduino_lite_reconnect',
-                'arduino_lite_download_firmware',
                 'arduino_download_connector',
                 // 'download_guide',
                 'arduino_download_source',
-                'arduino_lite_connect',
-                'arduino_lite_guide',
                 'arduino_noti',
-                'arduino_lite_alert',
             ].concat(EntryStatic.DynamicHardwareBlocks),
         },
     ];
 };
 EntryStatic.DynamicHardwareBlocks = [];
-EntryStatic.DynamicHardwareLiteBlocks = [];
 EntryStatic.discussCategories = [
     // 'notice',
     'qna',
@@ -1027,7 +960,6 @@ EntryStatic.colorSet = {
         TEXT: '#333',
         BUTTON_BACKGROUND_DISABLED: '#f9f9f9',
         BUTTON_DISABLED: '#cbcbcb',
-        ALERT: '#FB2729',
     },
 };
 
@@ -1072,7 +1004,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "EntryNG, NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 

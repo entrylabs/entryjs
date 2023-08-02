@@ -148,8 +148,17 @@
         self._hiddenInput.style.position = 'absolute';
         self._hiddenInput.style.opacity = 0;
         self._hiddenInput.style.pointerEvents = 'none';
+
+        var _canvas = $(self._canvas);
+
         self._hiddenInput.style.left = '-500px';
-        self._hiddenInput.style.top = '0px';
+
+        if (self._topPosition) {
+            self._hiddenInput.style.top = ''.concat(_canvas.offset().top + _canvas.height(), 'px');
+        } else {
+            self._hiddenInput.style.top = '-200px';
+        }
+
         self._hiddenInput.style.width = ''.concat(self._width, 'px');
         self._hiddenInput.style.height = ''.concat(self._height, 'px');
         self._hiddenInput.style.zIndex = -999;
@@ -727,7 +736,7 @@
                 clearInterval(self._cursorInterval);
             }
 
-            requestAnimationFrame(function() {
+            requestAnimationFrame(() => {
                 self._cursorInterval = setInterval(function() {
                     self._cursor = !self._cursor;
                     self.render();
