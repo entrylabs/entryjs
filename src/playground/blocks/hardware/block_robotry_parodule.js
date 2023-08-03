@@ -56,19 +56,20 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 Parodule_Output_title: '제어 블럭\0',
                 Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
-                Parodule_BUZZER: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
+                Parodule_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
 
                 Parodule_Custom_title: '커스텀 제어 블럭\0',
                 Parodule_Custom_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
                 Parodule_Custom_LED: '%1 (으)로 픽셀 설정 %2',
                 Parodule_Custom_Motor: '%1 의 파워로 %2 %3',
+                Parodule_Custom_Buzzer: '%1 옥타브 %2 (으)로 재생 %3',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
             Helper: { // 블록 선택시 나타나는 한글 설명
                 Parodule_LED: '다양한 색상을 표현할수 있는 LED 블럭입니다',
                 Parodule_Motor: '모터를 제어할 수 있는 블록입니다',
-                Parodule_BUZZER: '부저를 이용해 음을 재생할 수 있는 블록입니다',
+                Parodule_Buzzer: '부저를 이용해 음을 재생할 수 있는 블록입니다',
 
                 Parodule_Custom_Set: '메인모듈에 연결된 모듈들을 정의합니다.',
                 Parodule_Custom_Motor: '모터 모듈을 움직입니다.',
@@ -80,20 +81,28 @@ Entry.Robotry_Parodule.setLanguage = function () {
         },
         en: {
             template: {
-                Parodule_Output_title: '제어 블럭',
-                Parodule_LED: '%1 번 픽셀을 %2 으로 설정 %3',
-                Parodule_Motor: '%1 번 모터를 %2 의 파워로 %2 %4',
-                Parodule_BUZZER: '%1 번 부저를 %2 옥타브 %3 (으)로 재생 %4',
+                Parodule_Output_title: '제어 블럭\0',
+                Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
+                Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
+                Parodule_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
 
-                Parodule_Custom_title: '커스텀 제어 블럭',
-                Parodule_Custom_Set: '1 번 %1 2 번%2 3 번 %3 4번 %4 으로 설정 %5',
-                Parodule_Custom_Motor: '트럭의 %1 번 모터를 이용해 %2 의 파워로 %3 %4',
+                Parodule_Custom_title: '커스텀 제어 블럭\0',
+                Parodule_Custom_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
+                Parodule_Custom_LED: '%1 (으)로 픽셀 설정 %2',
+                Parodule_Custom_Motor: '%1 의 파워로 %2 %3',
+                Parodule_Custom_Buzzer: '%2 옥타브 %3 (으)로 재생 %4',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
             Helper: {
-                Parodule_Update: "파로듈을 업데이트하는 블록입니다. \n이 블록을 사용하면 메인모듈과 연결이 끊어집니다.",
-                Parodule_Motor: '모터를 제어하는 블록'
+                Parodule_LED: '다양한 색상을 표현할수 있는 LED 블럭입니다',
+                Parodule_Motor: '모터를 제어할 수 있는 블록입니다',
+                Parodule_Buzzer: '부저를 이용해 음을 재생할 수 있는 블록입니다',
+
+                Parodule_Custom_Set: '메인모듈에 연결된 모듈들을 정의합니다.',
+                Parodule_Custom_Motor: '모터 모듈을 움직입니다.',
+
+                Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
             },
@@ -106,12 +115,13 @@ Entry.Robotry_Parodule.blockMenuBlocks = [
     'Parodule_Output_title',
     'Parodule_LED',
     'Parodule_Motor',
-    'Parodule_BUZZER',
+    'Parodule_Buzzer',
 
     'Parodule_Custom_title',
     'Parodule_Custom_Set',
     'Parodule_Custom_LED',
     'Parodule_Custom_Motor',
+    'Parodule_Custom_Buzzer',
 
     'Parodule_Update',
 ];
@@ -158,9 +168,9 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         ['세모', 1],
+                        ['원', 4],
                         ['네모', 2],
                         ['십자', 3],
-                        ['원', 4],
                     ],
                     value: [1],
                     fontSize: 12,
@@ -194,7 +204,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_led.png',
+                    img: 'block_icon/hardware_led.svg',
                     size: 12,
                 }
             ],
@@ -240,9 +250,9 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         ['세모', 1],
+                        ['원', 4],
                         ['네모', 2],
                         ['십자', 3],
-                        ['원', 4],
                     ],
                     value: [1],
                     fontSize: 12,
@@ -277,7 +287,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_dc.png',
+                    img: 'block_icon/hardware_dc.svg',
                     size: 12,
                 }
             ],
@@ -321,7 +331,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
         /* Parodule Motor End */
 
         /* Paroduel Buzzer Start */
-        Parodule_BUZZER: {
+        Parodule_Buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -331,9 +341,9 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         ['세모', 1],
+                        ['원', 4],
                         ['네모', 2],
                         ['십자', 3],
-                        ['원', 4],
                     ],
                     value: [1],
                     fontSize: 12,
@@ -377,14 +387,14 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_bzr2.png',
+                    img: 'block_icon/hardware_bzr2.svg',
                     size: 12,
                 }
             ],
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_BUZZER',
+                type: 'Parodule_Buzzer',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -455,6 +465,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        ['없음', 'NONE'],
                         ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
@@ -467,6 +478,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        ['없음', 'NONE'],
                         ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
@@ -479,6 +491,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        ['없음', 'NONE'],
                         ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
@@ -491,6 +504,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
+                        ['없음', 'NONE'],
                         ['LED', 'LED'],
                         ['모터', 'MOTOR'],
                         ['부저', 'BUZZER'],
@@ -568,7 +582,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_led.png',
+                    img: 'block_icon/hardware_led.svg',
                     size: 12,
                 }
             ],
@@ -642,7 +656,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
+                    img: 'block_icon/hardware_dc.svg',
                     size: 12,
                 }
             ],
@@ -720,7 +734,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
         /* Parodule Custom Motor End */
 
         /* Paroduel Buzzer Start */
-        Parodule_BUZZER: {
+        Parodule_Custom_Buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -763,14 +777,14 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_bzr2.png',
+                    img: 'block_icon/hardware_bzr2.svg',
                     size: 12,
                 }
             ],
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_BUZZER',
+                type: 'Parodule_Custom_Buzzer',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -781,18 +795,21 @@ Entry.Robotry_Parodule.getBlocks = function () {
             func(sprite, script) {
                 var octave = script.getNumberValue('OCTAVE');
                 const tone = script.getNumberValue('TONE');
-
                 if (tone === 200) {
                     octave = 0;
                 }
-
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
-                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
-                    data: octave + tone,
-                    time: new Date().getTime(),
+                for (var i = 0; i < 4; i++) {
+                    console.log(Entry.Robotry_Parodule.getTerminal(i));
+                    if (Entry.Robotry_Parodule.getTerminal(i) === 'BUZZER') {
+                        Entry.hw.sendQueue.SET[i + 1] = {
+                            type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                            data: octave + tone,
+                            time: new Date().getTime(),
+                        }
+                    }
                 }
                 return script.callReturn();
             },
