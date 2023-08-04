@@ -9,7 +9,7 @@ self.onmessage = async ({ data }) => {
         predictGesture(data.imageBitmap);
     } else if (data.action === 'clear_gesture_recognizer') {
         clearPredictGesture();
-    } else if (data.action === 'get_landmarks') {
+    } else if (data.action === 'get_gestureRecognizerResult') {
         getLandmarks();
     }
 };

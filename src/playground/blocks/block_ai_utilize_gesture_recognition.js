@@ -289,5 +289,87 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 return script.callReturn();
             },
         },
+        locate_time_to_hand: {
+            template: '%1 초 동안 %2 번째의 손의 %3 %4 (으)로 이동하기 %5',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                params.getHandNumber(),
+                params.getHandPoint(),
+                params.getHandDetailPoint(),
+                params.getCommonIndicator(),
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['2'],
+                    },
+                    null,
+                    null,
+                    null,
+                ],
+                type: 'locate_time_to_hand',
+            },
+            paramsKeyMap: {
+                TIME: 0,
+                HAND: 1,
+                HAND_POINT: 2,
+                HAND_DETAIL_POINT: 3,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            async func(sprite, script) {
+                if (!script.isStart) {
+                    const time = script.getNumberValue('TIME', script);
+                    const frameCount = Math.floor(time * Entry.FPS);
+                    const hand = script.getField('HAND', script);
+                    const point = script.getField('HAND_POINT', script);
+                    const detail = script.getField('HAND_DETAIL_POINT', script);
+                    const handPoint = point + detail;
+
+                    if (frameCount != 0) {
+                        const axis = await mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                        if (axis) {
+                            script.isStart = true;
+                            script.frameCount = frameCount;
+                            script.dX = (axis.x - sprite.getX()) / script.frameCount;
+                            script.dY = (axis.y - sprite.getY()) / script.frameCount;
+                        }
+                    } else {
+                        const axis = await mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                        if (axis) {
+                            sprite.setX(axis.x);
+                            sprite.setY(axis.y);
+                            if (sprite.brush && !sprite.brush.stop) {
+                                sprite.brush.lineTo(axis.x, axis.y * -1);
+                            }
+                        }
+                        return script.callReturn();
+                    }
+                }
+                if (script.frameCount != 0) {
+                    sprite.setX(sprite.getX() + script.dX);
+                    sprite.setY(sprite.getY() + script.dY);
+                    script.frameCount--;
+                    if (sprite.brush && !sprite.brush.stop) {
+                        sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.frameCount;
+                    return script.callReturn();
+                }
+            },
+        },
     };
 };
