@@ -56,6 +56,19 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
+        getShowHide() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['보이기', 'show'],
+                    ['숨기기', 'hide'],
+                ],
+                value: 'show',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
     };
     return {
         when_hand_detection: {
@@ -73,6 +86,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
+            event: 'when_hand_detection',
             class: 'hand',
             isNotFor: ['gestureRecognition'],
             async func(sprite, script) {
@@ -88,7 +102,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             params: [params.getStartStop(), params.getCommonIndicator()],
             events: {},
             def: {
-                type: 'start_hand_detection',
+                type: 'hand_detection',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -104,6 +118,35 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                     await MediaPipeUtils.startHandGestureRecognition(value);
                 } else {
                     await MediaPipeUtils.stopHandGestureRecognition(value);
+                }
+                return script.callReturn();
+            },
+        },
+        draw_detected_hand: {
+            template: '인식한 손 %1 %2',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [params.getShowHide(), params.getCommonIndicator()],
+            events: {},
+            def: {
+                type: 'draw_detected_hand',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            async func(sprite, script) {
+                const value = script.getField('VALUE');
+                if (!MediaPipeUtils.isInitialized) {
+                    await MediaPipeUtils.initialize();
+                }
+                if (value === 'show') {
+                    MediaPipeUtils.changeDrawDetectedHand(true);
+                } else {
+                    MediaPipeUtils.changeDrawDetectedHand(false);
                 }
                 return script.callReturn();
             },

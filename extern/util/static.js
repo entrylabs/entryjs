@@ -533,6 +533,7 @@ EntryStatic.getAllBlocks = function() {
                 'media_pipe_set_opacity_camera',
                 'when_hand_detection',
                 'hand_detection',
+                'draw_detected_hand',
             ],
         },
         {

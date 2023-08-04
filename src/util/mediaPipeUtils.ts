@@ -29,6 +29,10 @@ type FLIP_VERTICAL = 2;
 type FLIP_BOTH = 3;
 type TFlipState = FLIP_NORMAL | FLIP_HORIZONTAL | FLIP_VERTICAL | FLIP_BOTH;
 
+type TGestureRecognitionOption = {
+    isDrawDetectedHand?: boolean;
+};
+
 const flipActions = {
     [flipState.NORMAL]: {
         [flipState.HORIZONTAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
@@ -91,6 +95,7 @@ class MediaPipeUtils {
     public isRunningHandGesture: boolean;
     public canWorker: boolean = true;
     public flipState: TFlipState = 0;
+    public isDrawDetectedHand: boolean = false;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
     private stream: MediaStream;
@@ -102,6 +107,7 @@ class MediaPipeUtils {
     private inOffscreenCanvas: OffscreenCanvas;
     private alreadyInitOffscreenCanvas: boolean;
     private sourceTarget: number;
+    private isPrevHandDetected: boolean = false;
 
     constructor() {
         const uaResult = parser.getResult();
@@ -135,6 +141,9 @@ class MediaPipeUtils {
         video.height = this.VIDEO_HEIGHT;
         this.canvasVideo = GEHelper.getVideoElement(video);
         this.canvasOverlay = GEHelper.getOverlayElement(this.inMemoryCanvas);
+        GEHelper.hFlipVideoElement([this.canvasVideo, this.canvasOverlay] as
+            | PIXI.Sprite[]
+            | createjs.Bitmap[]);
         this.video = video;
 
         if (this.canWorker) {
@@ -143,6 +152,7 @@ class MediaPipeUtils {
             this.initWorkerEvent();
         } else {
             this.inMemoryCanvasCtx = this.inMemoryCanvas.getContext('2d');
+            this.inMemoryCanvasCtx.font = '20px Arial';
             this.drawingUtils = new DrawingUtils(this.inMemoryCanvasCtx);
         }
 
@@ -164,6 +174,8 @@ class MediaPipeUtils {
         this.worker.onmessage = ({ data }) => {
             if (['next_gesture_recognizer'].includes(data.action)) {
                 this.sendImageBitmapForGesture();
+            } else if (data.action === 'start_gesture_recognizer') {
+                Entry.engine.fireEvent('when_hand_detection');
             }
         };
     }
@@ -212,6 +224,7 @@ class MediaPipeUtils {
             this.video.srcObject = this.stream;
             this.video.width = this.VIDEO_WIDTH;
             this.video.height = this.VIDEO_HEIGHT;
+            this.video.style.transform = 'scaleX(-1)';
         } catch (err) {
             console.log(err);
         }
@@ -291,6 +304,9 @@ class MediaPipeUtils {
                         {
                             action: 'gesture_recognizer_init',
                             canvas: this.inOffscreenCanvas,
+                            option: {
+                                isDrawDetectedHand: this.isDrawDetectedHand,
+                            },
                         },
                         [this.inOffscreenCanvas]
                     );
@@ -307,6 +323,22 @@ class MediaPipeUtils {
         }
     }
 
+    changeDrawDetectedHand(isDrawDetectedHand: boolean) {
+        this.isDrawDetectedHand = isDrawDetectedHand;
+        this.updateHandGestureRecognition();
+    }
+
+    updateHandGestureRecognition() {
+        if (this.canWorker) {
+            this.worker.postMessage({
+                action: 'gesture_recognizer_change_option',
+                option: {
+                    isDrawDetectedHand: this.isDrawDetectedHand,
+                },
+            });
+        }
+    }
+
     async stopHandGestureRecognition() {
         this.isRunningHandGesture = false;
         if (this.canWorker) {
@@ -314,6 +346,7 @@ class MediaPipeUtils {
                 action: 'clear_gesture_recognizer',
             });
         } else {
+            this.isPrevHandDetected = false;
             this.inMemoryCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
         }
     }
@@ -359,70 +392,87 @@ class MediaPipeUtils {
     }
 
     async predictHandGesture() {
-        const nowInMs = Date.now();
-        let results;
+        try {
+            const nowInMs = Date.now();
+            let results;
 
-        if (!this.inMemoryCanvasCtx || this.isRunningHandGesture === false) {
-            return;
-        }
-        if (this.video.readyState < 2) {
-            await this.sleep();
-            this.predictHandGesture();
-            return;
-        }
-        if (this.video.currentTime !== this.lastVideoTime) {
-            this.lastVideoTime = this.video.currentTime;
-            results = this.gestureRecognizer.recognizeForVideo(this.video, nowInMs);
-        }
+            if (!this.inMemoryCanvasCtx || this.isRunningHandGesture === false) {
+                return;
+            }
+            if (this.video.readyState < 2) {
+                await this.sleep();
+                this.predictHandGesture();
+                return;
+            }
+            if (this.video.currentTime !== this.lastVideoTime) {
+                this.lastVideoTime = this.video.currentTime;
+                results = this.gestureRecognizer.recognizeForVideo(this.video, nowInMs);
+            } else {
+                return;
+            }
+            this.inMemoryCanvasCtx.save();
+            this.inMemoryCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
 
-        this.inMemoryCanvasCtx.save();
-        this.inMemoryCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
-
-        const { landmarks, handednesses } = results;
-        if (landmarks) {
-            landmarks.forEach((landmark, i) => {
-                let connectColor;
-                let landmarkColor;
-                const [handedness] = handednesses[i];
-                const mark12 = landmark[12];
-                if (handedness.categoryName === 'Left') {
-                    this.inMemoryCanvasCtx.fillStyle = '#FF0000';
-                    this.inMemoryCanvasCtx.fillText(
-                        `${i + 1}-왼손`,
-                        mark12.x * 640,
-                        mark12.y * 360 - 20
-                    );
-                    connectColor = '#FF0000';
-                    landmarkColor = '#00FF00';
-                } else {
-                    this.inMemoryCanvasCtx.fillStyle = '#00FF00';
-                    this.inMemoryCanvasCtx.fillText(
-                        `${i + 1}-오른손`,
-                        mark12.x * 640,
-                        mark12.y * 360 - 20
-                    );
-                    connectColor = '#00FF00';
-                    landmarkColor = '#FF0000';
+            const { landmarks, handednesses } = results;
+            if (landmarks.length) {
+                if (!this.isPrevHandDetected) {
+                    this.isPrevHandDetected = true;
+                    Entry.engine.fireEvent('when_hand_detection');
                 }
-                this.drawingUtils.drawConnectors(landmark, GestureRecognizer.HAND_CONNECTIONS, {
-                    color: connectColor,
-                    lineWidth: 4,
+                if (!this.isDrawDetectedHand) {
+                    return;
+                }
+
+                landmarks.forEach((landmark, i) => {
+                    let connectColor;
+                    let landmarkColor;
+                    const [handedness] = handednesses[i];
+                    const mark12 = landmark[12];
+                    this.inMemoryCanvasCtx.scale(-1, 1);
+                    if (handedness.categoryName === 'Left') {
+                        this.inMemoryCanvasCtx.fillStyle = '#FF0000';
+                        this.inMemoryCanvasCtx.fillText(
+                            `${i + 1}-오른손`,
+                            -mark12.x * 640,
+                            mark12.y * 360 - 20
+                        );
+                        connectColor = '#FF0000';
+                        landmarkColor = '#00FF00';
+                    } else {
+                        this.inMemoryCanvasCtx.fillStyle = '#00FF00';
+                        this.inMemoryCanvasCtx.fillText(
+                            `${i + 1}-왼손`,
+                            -mark12.x * 640,
+                            mark12.y * 360 - 20
+                        );
+                        connectColor = '#00FF00';
+                        landmarkColor = '#FF0000';
+                    }
+                    this.inMemoryCanvasCtx.scale(-1, 1);
+                    this.drawingUtils.drawConnectors(landmark, GestureRecognizer.HAND_CONNECTIONS, {
+                        color: connectColor,
+                        lineWidth: 4,
+                    });
+                    this.drawingUtils.drawLandmarks(landmark, {
+                        color: connectColor,
+                        lineWidth: 4,
+                        fillColor: landmarkColor,
+                        radius: (e) => this.getYX(e.from?.z || 0),
+                    });
                 });
-                this.drawingUtils.drawLandmarks(landmark, {
-                    color: connectColor,
-                    lineWidth: 4,
-                    fillColor: landmarkColor,
-                    radius: (e) => this.getYX(e.from?.z || 0),
-                });
-            });
-        }
-        this.inMemoryCanvasCtx.restore();
-        if (this.isRunningHandGesture === true) {
-            window.requestAnimationFrame(this.predictHandGesture.bind(this));
+            } else {
+                this.isPrevHandDetected = false;
+            }
+        } finally {
+            this.inMemoryCanvasCtx.restore();
+            if (this.isRunningHandGesture === true) {
+                window.requestAnimationFrame(this.predictHandGesture.bind(this));
+            }
         }
     }
 
     reset() {
+        this.changeDrawDetectedHand(false);
         this.stopHandGestureRecognition();
         this.turnOffWebcam();
     }
