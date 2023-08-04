@@ -534,6 +534,7 @@ EntryStatic.getAllBlocks = function() {
                 'when_hand_detection',
                 'hand_detection',
                 'draw_detected_hand',
+                'check_detected_hand',
             ],
         },
         {

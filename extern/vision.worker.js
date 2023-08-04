@@ -91,8 +91,9 @@ const predictGesture = (imageBitmap) => {
                     },
                 });
             });
-        } else {
+        } else if (isPrevHandDetected) {
             isPrevHandDetected = false;
+            self.postMessage({ action: 'stop_gesture_recognizer' });
         }
     } catch (e) {
         console.error(e);

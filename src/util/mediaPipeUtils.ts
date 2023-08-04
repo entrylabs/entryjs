@@ -93,9 +93,10 @@ class MediaPipeUtils {
     public inMemoryCanvas: HTMLCanvasElement;
     public inMemoryCanvasCtx: CanvasRenderingContext2D;
     public isRunningHandGesture: boolean;
-    public canWorker: boolean = true;
+    public canWorker: boolean = false;
     public flipState: TFlipState = 0;
     public isDrawDetectedHand: boolean = false;
+    public isPrevHandDetected: boolean = false;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
     private stream: MediaStream;
@@ -107,7 +108,6 @@ class MediaPipeUtils {
     private inOffscreenCanvas: OffscreenCanvas;
     private alreadyInitOffscreenCanvas: boolean;
     private sourceTarget: number;
-    private isPrevHandDetected: boolean = false;
 
     constructor() {
         const uaResult = parser.getResult();
@@ -175,7 +175,10 @@ class MediaPipeUtils {
             if (['next_gesture_recognizer'].includes(data.action)) {
                 this.sendImageBitmapForGesture();
             } else if (data.action === 'start_gesture_recognizer') {
+                this.isPrevHandDetected = true;
                 Entry.engine.fireEvent('when_hand_detection');
+            } else if (data.action === 'stop_gesture_recognizer') {
+                this.isPrevHandDetected = false;
             }
         };
     }
@@ -341,12 +344,12 @@ class MediaPipeUtils {
 
     async stopHandGestureRecognition() {
         this.isRunningHandGesture = false;
+        this.isPrevHandDetected = false;
         if (this.canWorker) {
             this.worker.postMessage({
                 action: 'clear_gesture_recognizer',
             });
         } else {
-            this.isPrevHandDetected = false;
             this.inMemoryCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
         }
     }

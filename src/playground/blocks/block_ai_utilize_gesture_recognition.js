@@ -1,6 +1,6 @@
-import mediaPipeUtils from '../../util/mediaPipeUtils';
+import MediaPipeUtils from '../../util/mediaPipeUtils';
 
-const MediaPipeUtils = mediaPipeUtils.getInstance();
+const mediaPipeUtils = MediaPipeUtils.getInstance();
 Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
     name: 'gestureRecognition',
     imageName: 'gestureRecognition.svg',
@@ -14,11 +14,11 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
     descriptionKey: 'Msgs.ai_utilize_gesture_recognition_description',
     isInitialized: false,
     async init() {
-        await MediaPipeUtils.initialize();
+        await mediaPipeUtils.initialize();
         Entry.AI_UTILIZE_BLOCK.gestureRecognition.isInitialized = true;
     },
     destroy() {
-        MediaPipeUtils.destroy();
+        mediaPipeUtils.destroy();
         Entry.AI_UTILIZE_BLOCK.gestureRecognition.isInitialized = false;
     },
 };
@@ -111,13 +111,13 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             isNotFor: ['gestureRecognition'],
             async func(sprite, script) {
                 const value = script.getField('VALUE');
-                if (!MediaPipeUtils.isInitialized) {
-                    await MediaPipeUtils.initialize();
+                if (!mediaPipeUtils.isInitialized) {
+                    await mediaPipeUtils.initialize();
                 }
                 if (value === 'start') {
-                    await MediaPipeUtils.startHandGestureRecognition(value);
+                    await mediaPipeUtils.startHandGestureRecognition(value);
                 } else {
-                    await MediaPipeUtils.stopHandGestureRecognition(value);
+                    await mediaPipeUtils.stopHandGestureRecognition(value);
                 }
                 return script.callReturn();
             },
@@ -140,15 +140,35 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             isNotFor: ['gestureRecognition'],
             async func(sprite, script) {
                 const value = script.getField('VALUE');
-                if (!MediaPipeUtils.isInitialized) {
-                    await MediaPipeUtils.initialize();
+                if (!mediaPipeUtils.isInitialized) {
+                    await mediaPipeUtils.initialize();
                 }
                 if (value === 'show') {
-                    MediaPipeUtils.changeDrawDetectedHand(true);
+                    mediaPipeUtils.changeDrawDetectedHand(true);
                 } else {
-                    MediaPipeUtils.changeDrawDetectedHand(false);
+                    mediaPipeUtils.changeDrawDetectedHand(false);
                 }
                 return script.callReturn();
+            },
+        },
+        check_detected_hand: {
+            template: '손을 인식했는가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'check_detected_hand',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            async func(sprite, script) {
+                return mediaPipeUtils.isPrevHandDetected;
             },
         },
     };
