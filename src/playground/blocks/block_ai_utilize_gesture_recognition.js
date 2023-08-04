@@ -43,6 +43,65 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 size: 11,
             };
         },
+        getHandNumber() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['1', 0],
+                    ['2', 1],
+                ],
+                value: 0,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getHandPoint() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['엄지', 1],
+                    ['검지', 5],
+                    ['중지', 9],
+                    ['약지', 13],
+                    ['소지', 17],
+                    ['손목', 0],
+                ],
+                value: 1,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+                dropdownSync: 'handPoint',
+            };
+        },
+        getHandDetailPoint() {
+            return {
+                type: 'DropdownDynamic',
+                menuName() {
+                    const handPoint = this.getTargetValue('handPoint');
+                    if (handPoint === 1) {
+                        this.setValue(3);
+                        return [
+                            ['끝', 3],
+                            ['첫째 마디', 2],
+                        ];
+                    } else if (handPoint !== 0) {
+                        this.setValue(3);
+                        return [
+                            ['끝', 3],
+                            ['첫째 마디', 2],
+                            ['둘째 마디', 1],
+                        ];
+                    } else {
+                        this.setValue(0);
+                        return [['없음', 0]];
+                    }
+                },
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
         getStartStop() {
             return {
                 type: 'Dropdown',
@@ -189,6 +248,45 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             isNotFor: ['gestureRecognition'],
             async func(sprite, script) {
                 return mediaPipeUtils.countDetectedHand;
+            },
+        },
+        locate_to_hand: {
+            template: '%1 번째의 손의 %2 %3 (으)로 이동하기 %4',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                params.getHandNumber(),
+                params.getHandPoint(),
+                params.getHandDetailPoint(),
+                params.getCommonIndicator(),
+            ],
+            events: {},
+            def: {
+                type: 'locate_to_hand',
+            },
+            paramsKeyMap: {
+                HAND: 0,
+                HAND_POINT: 1,
+                HAND_DETAIL_POINT: 2,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            async func(sprite, script) {
+                const hand = script.getField('HAND');
+                const point = script.getField('HAND_POINT');
+                const detail = script.getField('HAND_DETAIL_POINT');
+                const handPoint = point + detail;
+                const axis = await mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                if (axis) {
+                    sprite.setX(axis.x);
+                    sprite.setY(axis.y);
+                    if (sprite.brush && !sprite.brush.stop) {
+                        sprite.brush.lineTo(axis.x, axis.y * -1);
+                    }
+                }
+                return script.callReturn();
             },
         },
     };

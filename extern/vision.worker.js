@@ -9,6 +9,8 @@ self.onmessage = async ({ data }) => {
         predictGesture(data.imageBitmap);
     } else if (data.action === 'clear_gesture_recognizer') {
         clearPredictGesture();
+    } else if (data.action === 'get_landmarks') {
+        getLandmarks();
     }
 };
 
@@ -16,6 +18,7 @@ let workerContext;
 let drawingUtils;
 let gestureRecognizer;
 let isPrevHandDetected = false;
+let prevGestureRecognizerResult;
 let countDetectedHand = 0;
 let isDrawDetectedHand = false;
 
@@ -40,6 +43,13 @@ const changeGestureOption = (option) => {
     isDrawDetectedHand = option.isDrawDetectedHand;
 };
 
+const getLandmarks = () => {
+    self.postMessage({
+        action: 'get_gestureRecognizerResult',
+        gestureRecognizerResult: prevGestureRecognizerResult,
+    });
+};
+
 const YX = (a) => {
     return Math.max(1, Math.min(10, 10 * (1 - (a - -0.15) / 0.25) + (1 - (0.1 - a) / 0.25)));
 };
@@ -53,6 +63,7 @@ const predictGesture = (imageBitmap) => {
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
         const { landmarks, handednesses } = results;
+        prevGestureRecognizerResult = results;
         if (landmarks.length) {
             if (!isPrevHandDetected) {
                 isPrevHandDetected = true;
@@ -116,5 +127,6 @@ const predictGesture = (imageBitmap) => {
 
 const clearPredictGesture = () => {
     console.log('clearPredictGesture');
+    prevGestureRecognizerResult = undefined;
     workerContext.clearRect(0, 0, 640, 360);
 };

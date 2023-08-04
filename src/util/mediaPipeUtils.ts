@@ -100,9 +100,11 @@ class MediaPipeUtils {
     public countDetectedHand: number;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
+    private STAGE_WIDTH: number = 480;
+    private STAGE_HEIGHT: number = 260;
     private stream: MediaStream;
     private lastVideoTime: number = -1;
-    private grResult: GestureRecognizerResult;
+    private prevGestureRecognizerResult: GestureRecognizerResult;
     private gestureRecognizer: GestureRecognizer;
     private drawingUtils: DrawingUtils;
     private worker: Worker;
@@ -421,6 +423,7 @@ class MediaPipeUtils {
             this.inMemoryCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
 
             const { landmarks, handednesses } = results;
+            this.prevGestureRecognizerResult = results;
             if (landmarks.length) {
                 if (!this.isPrevHandDetected) {
                     this.isPrevHandDetected = true;
@@ -482,9 +485,47 @@ class MediaPipeUtils {
         }
     }
 
+    getGestureRecognizerResult(): Promise<GestureRecognizerResult> | GestureRecognizerResult {
+        if (this.canWorker) {
+            return new Promise((resolve) => {
+                const listener = (event: MessageEvent) => {
+                    if (event.data.action === 'get_gestureRecognizerResult') {
+                        this.worker.removeEventListener('message', listener);
+                        resolve(event.data.gestureRecognizerResult);
+                    }
+                };
+                this.worker.addEventListener('message', listener);
+                requestAnimationFrame(() => {
+                    this.worker.postMessage({ action: 'get_gestureRecognizerResult' });
+                });
+            });
+        } else {
+            return this.prevGestureRecognizerResult;
+        }
+    }
+
+    async getHandPointAxis(hand: number, handPoint: number) {
+        const result = await this.getGestureRecognizerResult();
+        if (!result) {
+            return;
+        }
+        const { landmarks } = result;
+        if (!landmarks.length) {
+            return;
+        }
+        const landmark = landmarks[hand];
+        const pointAxis = landmark[handPoint];
+        return {
+            x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
+            y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,
+            z: pointAxis.z,
+        };
+    }
+
     reset() {
         this.changeDrawDetectedHand(false);
         this.stopHandGestureRecognition();
+        this.prevGestureRecognizerResult = undefined;
         this.turnOffWebcam();
     }
 
