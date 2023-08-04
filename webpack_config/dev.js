@@ -7,9 +7,9 @@ module.exports = {
     },
     devtool: 'cheap-source-map',
     plugins: [
-        new webpack.ProgressPlugin({
-            activeModules: true, // display the current module
-        }),
+        // new webpack.ProgressPlugin({
+        //     activeModules: true, // display the current module
+        // }),
     ],
     // stats: {
     //     logging: 'verbose',

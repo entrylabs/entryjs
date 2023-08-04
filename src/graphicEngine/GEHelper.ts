@@ -353,14 +353,32 @@ class _GEHelper extends GEHelperBase {
         this.objectIndicatorGraphic = null;
     }
 
-    hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
-        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
-        canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+    hFlipVideoElement(
+        canvasVideo: PIXI.Sprite | createjs.Bitmap | PIXI.Sprite[] | createjs.Bitmap[]
+    ): any {
+        if (Array.isArray(canvasVideo)) {
+            canvasVideo.forEach((video: PIXI.Sprite | createjs.Bitmap) => {
+                const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = video;
+                video.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+            });
+        } else {
+            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+            canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+        }
     }
 
-    vFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
-        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
-        canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+    vFlipVideoElement(
+        canvasVideo: PIXI.Sprite | createjs.Bitmap | PIXI.Sprite[] | createjs.Bitmap[]
+    ): any {
+        if (Array.isArray(canvasVideo)) {
+            canvasVideo.forEach((video: PIXI.Sprite | createjs.Bitmap) => {
+                const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = video;
+                video.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+            });
+        } else {
+            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+            canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+        }
     }
 
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {

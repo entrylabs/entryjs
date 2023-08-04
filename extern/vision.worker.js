@@ -16,6 +16,7 @@ let gestureRecognizer;
 
 const initializeGesture = async (canvas) => {
     workerContext = canvas.getContext('2d');
+    workerContext.font = '20px Arial';
     drawingUtils = new DrawingUtils(workerContext);
     const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
     gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
@@ -37,7 +38,6 @@ const predictGesture = (imageBitmap) => {
     if (!workerContext || !gestureRecognizer) {
         return;
     }
-    // const results = gestureRecognizer.recognize(imageBitmap);
     const results = gestureRecognizer.recognizeForVideo(imageBitmap, Date.now());
     workerContext.save();
     workerContext.clearRect(0, 0, 640, 360);
@@ -47,11 +47,15 @@ const predictGesture = (imageBitmap) => {
             let connectColor;
             let landmarkColor;
             const [handedness] = handednesses[i];
-            // console.log('handedness', handedness);
+            const mark12 = landmark[12];
             if (handedness.categoryName === 'Left') {
+                workerContext.fillStyle = '#FF0000';
+                workerContext.fillText(`${i + 1}-왼손`, mark12.x * 640, mark12.y * 360 - 20);
                 connectColor = '#FF0000';
                 landmarkColor = '#00FF00';
             } else {
+                workerContext.fillStyle = '#00FF00';
+                workerContext.fillText(`${i + 1}-오른손`, mark12.x * 640, mark12.y * 360 - 20);
                 connectColor = '#00FF00';
                 landmarkColor = '#FF0000';
             }

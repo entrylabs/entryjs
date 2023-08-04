@@ -25,6 +25,17 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
 
 Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
     const params = {
+        getEventIndicator() {
+            return {
+                type: 'Indicator',
+                img: 'block_icon/start_icon_play.svg',
+                size: 14,
+                position: {
+                    x: 0,
+                    y: -2,
+                },
+            };
+        },
         getCommonIndicator() {
             return {
                 type: 'Indicator',
@@ -47,7 +58,28 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
         },
     };
     return {
-        start_hand_detection: {
+        when_hand_detection: {
+            template: '%1 손을 인식했을 때',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_event',
+            statements: [],
+            params: [params.getEventIndicator()],
+            events: {},
+            def: {
+                params: [null],
+                type: 'when_hand_detection',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            async func(sprite, script) {
+                return script.callReturn();
+            },
+        },
+        hand_detection: {
             template: '손 인식 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,

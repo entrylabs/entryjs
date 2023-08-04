@@ -6,6 +6,7 @@ import {
     GestureRecognizerResult,
     DrawingUtils,
 } from '@mediapipe/tasks-vision';
+import { UAParser } from 'ua-parser-js';
 
 export const getInputList = async () => {
     if (navigator.mediaDevices) {
@@ -14,9 +15,70 @@ export const getInputList = async () => {
     return [];
 };
 
-import { UAParser } from 'ua-parser-js';
-
 const parser = new UAParser();
+
+export const flipState = {
+    NORMAL: 0,
+    HORIZONTAL: 1,
+    VERTICAL: 2,
+    BOTH: 3,
+};
+type FLIP_NORMAL = 0;
+type FLIP_HORIZONTAL = 1;
+type FLIP_VERTICAL = 2;
+type FLIP_BOTH = 3;
+type TFlipState = FLIP_NORMAL | FLIP_HORIZONTAL | FLIP_VERTICAL | FLIP_BOTH;
+
+const flipActions = {
+    [flipState.NORMAL]: {
+        [flipState.HORIZONTAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+        },
+        [flipState.VERTICAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.vFlipVideoElement(videos);
+        },
+        [flipState.BOTH]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+            GEHelper.vFlipVideoElement(videos);
+        },
+    },
+    [flipState.HORIZONTAL]: {
+        [flipState.NORMAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+        },
+        [flipState.VERTICAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+            GEHelper.vFlipVideoElement(videos);
+        },
+        [flipState.BOTH]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.vFlipVideoElement(videos);
+        },
+    },
+    [flipState.VERTICAL]: {
+        [flipState.NORMAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.vFlipVideoElement(videos);
+        },
+        [flipState.HORIZONTAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+            GEHelper.vFlipVideoElement(videos);
+        },
+        [flipState.BOTH]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+        },
+    },
+    [flipState.BOTH]: {
+        [flipState.NORMAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+            GEHelper.vFlipVideoElement(videos);
+        },
+        [flipState.HORIZONTAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.vFlipVideoElement(videos);
+        },
+        [flipState.VERTICAL]: (videos: PIXI.Sprite[] | createjs.Bitmap[]) => {
+            GEHelper.hFlipVideoElement(videos);
+        },
+    },
+};
 
 class MediaPipeUtils {
     public isInitialized: boolean = false;
@@ -28,6 +90,7 @@ class MediaPipeUtils {
     public inMemoryCanvasCtx: CanvasRenderingContext2D;
     public isRunningHandGesture: boolean;
     public canWorker: boolean = true;
+    public flipState: TFlipState = 0;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
     private stream: MediaStream;
@@ -36,15 +99,19 @@ class MediaPipeUtils {
     private gestureRecognizer: GestureRecognizer;
     private drawingUtils: DrawingUtils;
     private worker: Worker;
-    inOffscreenCanvas: OffscreenCanvas;
-    once: boolean;
+    private inOffscreenCanvas: OffscreenCanvas;
+    private alreadyInitOffscreenCanvas: boolean;
+    private sourceTarget: number;
 
     constructor() {
         const uaResult = parser.getResult();
-        console.log('uaResult', uaResult, uaResult.browser.name, uaResult.os.name);
         if (uaResult.browser.name === 'Safari' || uaResult.os.name === 'iOS') {
             this.canWorker = false;
         }
+    }
+
+    changeCanWorker(canWorker: boolean) {
+        this.canWorker = canWorker;
     }
 
     async initialize() {
@@ -102,7 +169,6 @@ class MediaPipeUtils {
     }
 
     async sendImageBitmapForGesture() {
-        console.log('run sendImageBitmapForGesture');
         if (!this.isRunningHandGesture) {
             return;
         }
@@ -117,12 +183,60 @@ class MediaPipeUtils {
         });
     }
 
-    cameraSwitch(mode: String) {
+    cameraOnOff(mode: String) {
         if (mode === 'on') {
             this.turnOnWebcam();
         } else {
             this.turnOffWebcam();
         }
+    }
+
+    async changeSource(target: number) {
+        const inputSource = this.videoInputList[target];
+        if (!inputSource) {
+            return;
+        }
+        this.sourceTarget = target;
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: {
+                    deviceId: {
+                        exact: inputSource[1],
+                    },
+                    width: this.VIDEO_WIDTH,
+                    height: this.VIDEO_HEIGHT,
+                },
+            });
+            this.stream = stream;
+            this.video.srcObject = this.stream;
+            this.video.width = this.VIDEO_WIDTH;
+            this.video.height = this.VIDEO_HEIGHT;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    setFlipState(state: TFlipState) {
+        if (!this.canvasVideo) {
+            return;
+        }
+        this.setForceFlipState(this.flipState, state);
+    }
+
+    setForceFlipState(prevState: TFlipState, nextState: TFlipState) {
+        const canvasVideos = [this.canvasVideo, this.canvasOverlay] as
+            | PIXI.Sprite[]
+            | createjs.Bitmap[];
+        const action = flipActions[prevState][nextState];
+        if (action) {
+            action(canvasVideos);
+        }
+        this.flipState = nextState;
+    }
+
+    setOpacityCamera(opacity: number) {
+        GEHelper.setVideoAlpha(this.canvasVideo, opacity);
     }
 
     turnOffWebcam() {
@@ -138,14 +252,16 @@ class MediaPipeUtils {
         }
 
         GEHelper.turnOffWebcam(this.canvasVideo);
+        this.setForceFlipState(this.flipState, 0);
     }
 
     async turnOnWebcam() {
         let stream;
         try {
+            const target = this.sourceTarget || 0;
             stream = await navigator.mediaDevices.getUserMedia({
                 video: {
-                    deviceId: { exact: this.videoInputList[0][1] },
+                    deviceId: { exact: this.videoInputList[target][1] },
                     width: this.VIDEO_WIDTH,
                     height: this.VIDEO_HEIGHT,
                 },
@@ -170,7 +286,7 @@ class MediaPipeUtils {
             this.isRunningHandGesture = true;
 
             if (this.canWorker) {
-                if (!this.once) {
+                if (!this.alreadyInitOffscreenCanvas) {
                     this.worker.postMessage(
                         {
                             action: 'gesture_recognizer_init',
@@ -178,7 +294,7 @@ class MediaPipeUtils {
                         },
                         [this.inOffscreenCanvas]
                     );
-                    this.once = true;
+                    this.alreadyInitOffscreenCanvas = true;
                 } else {
                     this.sendImageBitmapForGesture();
                 }
@@ -268,10 +384,23 @@ class MediaPipeUtils {
                 let connectColor;
                 let landmarkColor;
                 const [handedness] = handednesses[i];
+                const mark12 = landmark[12];
                 if (handedness.categoryName === 'Left') {
+                    this.inMemoryCanvasCtx.fillStyle = '#FF0000';
+                    this.inMemoryCanvasCtx.fillText(
+                        `${i + 1}-왼손`,
+                        mark12.x * 640,
+                        mark12.y * 360 - 20
+                    );
                     connectColor = '#FF0000';
                     landmarkColor = '#00FF00';
                 } else {
+                    this.inMemoryCanvasCtx.fillStyle = '#00FF00';
+                    this.inMemoryCanvasCtx.fillText(
+                        `${i + 1}-오른손`,
+                        mark12.x * 640,
+                        mark12.y * 360 - 20
+                    );
                     connectColor = '#00FF00';
                     landmarkColor = '#FF0000';
                 }
