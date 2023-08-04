@@ -171,5 +171,25 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 return mediaPipeUtils.isPrevHandDetected;
             },
         },
+        count_detected_hand: {
+            template: '인식한 손의 수',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'count_detected_hand',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            async func(sprite, script) {
+                return mediaPipeUtils.countDetectedHand;
+            },
+        },
     };
 };

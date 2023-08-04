@@ -16,6 +16,7 @@ let workerContext;
 let drawingUtils;
 let gestureRecognizer;
 let isPrevHandDetected = false;
+let countDetectedHand = 0;
 let isDrawDetectedHand = false;
 
 const initializeGesture = async (data) => {
@@ -57,6 +58,13 @@ const predictGesture = (imageBitmap) => {
                 isPrevHandDetected = true;
                 self.postMessage({ action: 'start_gesture_recognizer' });
             }
+            if (landmarks.length !== countDetectedHand) {
+                countDetectedHand = landmarks.length;
+                self.postMessage({
+                    action: 'count_detected_hand_gesture_recognizer',
+                    count: countDetectedHand,
+                });
+            }
             if (!isDrawDetectedHand) {
                 return;
             }
@@ -93,6 +101,7 @@ const predictGesture = (imageBitmap) => {
             });
         } else if (isPrevHandDetected) {
             isPrevHandDetected = false;
+            countDetectedHand = 0;
             self.postMessage({ action: 'stop_gesture_recognizer' });
         }
     } catch (e) {
