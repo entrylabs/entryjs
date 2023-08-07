@@ -2050,7 +2050,7 @@ Entry.VariableContainer = class VariableContainer {
                 Lang.Workspace.message_rename_failed,
                 Lang.Workspace.message_dup
             );
-        } else if (name.length > 10) {
+        } else if (name.length > EntryStatic.messageMaxLength || 10) {
             return failFunc(
                 message.name,
                 Lang.Workspace.message_rename_failed,
@@ -2676,6 +2676,12 @@ Entry.VariableContainer = class VariableContainer {
                 this.blur();
             } else {
                 const value = msgNameInput.value;
+                if (value.length > EntryStatic.messageMaxLength || 10) {
+                    return Entry.toast.alert(
+                        Lang.Workspace.message_rename_failed,
+                        Lang.Workspace.message_too_long
+                    );
+                }
                 that.messageAddPanel.isOpen = false;
                 msgAddSpace.addClass('off');
                 msgNameInput.value = '';
@@ -2712,6 +2718,12 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryVariableAddSpaceButtonWorkspace')
             .bindOnClick(() => {
                 const value = msgNameInput.value;
+                if (value.length > EntryStatic.messageMaxLength || 10) {
+                    return Entry.toast.alert(
+                        Lang.Workspace.message_rename_failed,
+                        Lang.Workspace.message_too_long
+                    );
+                }
                 this.messageAddPanel.isOpen = false;
                 msgAddSpace.addClass('off');
                 msgNameInput.value = '';

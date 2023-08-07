@@ -8,6 +8,7 @@ var EntryStatic = {
     fontOffsetY: -2.5,
     heightLetter: 'M',
     objectTypes: ['sprite', 'textBox'],
+    messageMaxLength: 10,
 };
 
 EntryStatic.usageList = [
