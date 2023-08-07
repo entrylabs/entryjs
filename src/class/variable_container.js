@@ -2678,7 +2678,7 @@ Entry.VariableContainer = class VariableContainer {
                 const value = msgNameInput.value;
                 if (value.length > EntryStatic.messageMaxLength || 10) {
                     return Entry.toast.alert(
-                        Lang.Workspace.message_rename_failed,
+                        Lang.Workspace.message_add_fail,
                         Lang.Workspace.message_too_long
                     );
                 }
@@ -2720,7 +2720,7 @@ Entry.VariableContainer = class VariableContainer {
                 const value = msgNameInput.value;
                 if (value.length > EntryStatic.messageMaxLength || 10) {
                     return Entry.toast.alert(
-                        Lang.Workspace.message_rename_failed,
+                        Lang.Workspace.message_add_fail,
                         Lang.Workspace.message_too_long
                     );
                 }
