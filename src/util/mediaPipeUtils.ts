@@ -9,6 +9,8 @@ import {
     PoseLandmarkerResult,
     FaceLandmarkerResult,
     FaceLandmarker,
+    ObjectDetector,
+    ObjectDetectorResult,
 } from '@mediapipe/tasks-vision';
 import { UAParser } from 'ua-parser-js';
 import _clamp from 'lodash/clamp';
@@ -173,6 +175,21 @@ class MediaPipeUtils {
     private prevFaceLandmarkerResult: FaceLandmarkerResult;
     private faceLandmarker: FaceLandmarker;
 
+    public countDetectedObject: number;
+    public isPrevObjectDetector: boolean = false;
+    public isRunningObjectDetector: boolean = false;
+    public isDrawDetectedObjectDetector: boolean = false;
+    private isInitObjectDetector: boolean = false;
+    private objectDetectorVideoCanvas: HTMLCanvasElement;
+    private objectDetectorVideoCanvasCtx: CanvasRenderingContext2D;
+    private objectDetectorCanvasOverlay: PIXI.Sprite | createjs.Bitmap;
+    private objectDetectorOffscreenCanvas: OffscreenCanvas;
+    private objectDetectorWorker: Worker;
+    private alreadyInitObjectDetectorOffscreenCanvas: boolean = false;
+    private objectDetectorDrawingUtils: DrawingUtils;
+    private prevObjectDetectorResult: ObjectDetectorResult;
+    private objectDetector: ObjectDetector;
+
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
     public motions: Pixel[][] = [
         ...Array(Math.ceil(this.STAGE_HEIGHT / this.SAMPLE_SIZE)),
@@ -197,6 +214,7 @@ class MediaPipeUtils {
             this.gestureRecognizerCanvasOverlay,
             this.poseLandmarkerCanvasOverlay,
             this.faceLandmarkerCanvasOverlay,
+            this.objectDetectorCanvasOverlay,
         ] as PIXI.Sprite[] | createjs.Bitmap[];
     }
 
@@ -206,6 +224,7 @@ class MediaPipeUtils {
             this.gestureRecognizerCanvasOverlay,
             this.poseLandmarkerCanvasOverlay,
             this.faceLandmarkerCanvasOverlay,
+            this.objectDetectorCanvasOverlay,
         ] as PIXI.Sprite[] | createjs.Bitmap[];
     }
 
@@ -502,6 +521,21 @@ class MediaPipeUtils {
         });
     }
 
+    async sendImageBitmapForObjectDetector() {
+        if (!this.isRunningObjectDetector) {
+            return;
+        }
+        if (this.video.readyState < 2) {
+            await this.sleep();
+            this.sendImageBitmapForObjectDetector();
+            return;
+        }
+        this.objectDetectorWorker.postMessage({
+            action: 'object_detector',
+            imageBitmap: await createImageBitmap(this.video),
+        });
+    }
+
     initGestureRecognitionWorkerEvent() {
         this.gestureRecognizerWorker.addEventListener('message', ({ data }) => {
             if (['next_gesture_recognizer'].includes(data.action)) {
@@ -549,6 +583,23 @@ class MediaPipeUtils {
                 this.countDetectedFace = data.count;
             } else if (data.action === 'face_landmarker_data') {
                 this.prevFaceLandmarkerResult = data.faceLandmarkerResult;
+            }
+        });
+    }
+
+    initObjectDetectorWorkerEvent() {
+        this.objectDetectorWorker.addEventListener('message', ({ data }) => {
+            if (['next_object_detector'].includes(data.action)) {
+                this.sendImageBitmapForObjectDetector();
+            } else if (data.action === 'start_object_detector') {
+                this.isPrevObjectDetector = true;
+                Entry.engine.fireEvent('when_object_detector');
+            } else if (data.action === 'stop_object_detector') {
+                this.isPrevObjectDetector = false;
+            } else if (data.action === 'count_detected_object_detector') {
+                this.countDetectedObject = data.count;
+            } else if (data.action === 'object_detector_data') {
+                this.prevObjectDetectorResult = data.objectDetectorResult;
             }
         });
     }
@@ -626,6 +677,30 @@ class MediaPipeUtils {
             this.faceLandmarkerVideoCanvasCtx = this.faceLandmarkerVideoCanvas.getContext('2d');
             this.faceLandmarkerVideoCanvasCtx.font = '20px Arial';
             this.faceLandmarkerDrawingUtils = new DrawingUtils(this.faceLandmarkerVideoCanvasCtx);
+        }
+    }
+
+    initObjectDetector() {
+        this.isInitObjectDetector = true;
+        this.objectDetectorVideoCanvas = document.createElement('canvas');
+        this.objectDetectorVideoCanvas.width = this.VIDEO_WIDTH;
+        this.objectDetectorVideoCanvas.height = this.VIDEO_HEIGHT;
+        this.objectDetectorCanvasOverlay = GEHelper.getOverlayElement(
+            this.objectDetectorVideoCanvas
+        );
+        GEHelper.drawOverlayElement(this.objectDetectorCanvasOverlay);
+        GEHelper.hFlipVideoElement(this.objectDetectorCanvasOverlay);
+        if (this.canWorker) {
+            // eslint-disable-next-line max-len
+            this.objectDetectorOffscreenCanvas = this.objectDetectorVideoCanvas.transferControlToOffscreen();
+            this.objectDetectorWorker = new Worker(
+                '/lib/entry-js/extern/object-detector.worker.js'
+            );
+            this.initObjectDetectorWorkerEvent();
+        } else {
+            this.objectDetectorVideoCanvasCtx = this.objectDetectorVideoCanvas.getContext('2d');
+            this.objectDetectorVideoCanvasCtx.font = '20px Arial';
+            this.objectDetectorDrawingUtils = new DrawingUtils(this.objectDetectorVideoCanvasCtx);
         }
     }
 
@@ -734,6 +809,41 @@ class MediaPipeUtils {
         }
     }
 
+    async startObjectDetector() {
+        try {
+            if (!this.stream) {
+                await this.turnOnWebcam();
+            }
+            if (!this.isInitObjectDetector) {
+                this.initObjectDetector();
+            }
+            this.isRunningObjectDetector = true;
+
+            if (this.canWorker) {
+                if (!this.alreadyInitObjectDetectorOffscreenCanvas) {
+                    this.objectDetectorWorker.postMessage(
+                        {
+                            action: 'object_detector_init',
+                            canvas: this.objectDetectorOffscreenCanvas,
+                            option: {
+                                isDrawDetectedObjectDetector: this.isDrawDetectedObjectDetector,
+                            },
+                        },
+                        [this.objectDetectorOffscreenCanvas]
+                    );
+                    this.alreadyInitObjectDetectorOffscreenCanvas = true;
+                } else {
+                    this.sendImageBitmapForObjectDetector();
+                }
+            } else {
+                await this.initPredictObjectDetector();
+                this.predictObjectDetector();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     changeDrawDetectedHand(isDrawDetectedHand: boolean) {
         this.isDrawDetectedHand = isDrawDetectedHand;
         this.updateHandGestureRecognition();
@@ -747,6 +857,11 @@ class MediaPipeUtils {
     changeDrawDetectedFaceLandmarker(isDrawDetectedFaceLandmarker: boolean) {
         this.isDrawDetectedFaceLandmarker = isDrawDetectedFaceLandmarker;
         this.updateFaceLandmarker();
+    }
+
+    changeDrawDetectedObjectDetector(isDrawDetectedObjectDetector: boolean) {
+        this.isDrawDetectedObjectDetector = isDrawDetectedObjectDetector;
+        this.updateObjectDetector();
     }
 
     updateHandGestureRecognition() {
@@ -777,6 +892,17 @@ class MediaPipeUtils {
                 action: 'face_landmarker_change_option',
                 option: {
                     isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
+                },
+            });
+        }
+    }
+
+    updateObjectDetector() {
+        if (this.canWorker) {
+            this.objectDetectorWorker.postMessage({
+                action: 'object_detector_change_option',
+                option: {
+                    isDrawDetectedObjectDetector: this.isDrawDetectedObjectDetector,
                 },
             });
         }
@@ -826,6 +952,19 @@ class MediaPipeUtils {
         }
     }
 
+    async stopObjectDetector() {
+        this.isRunningObjectDetector = false;
+        this.isPrevObjectDetector = false;
+        this.countDetectedObject = 0;
+        if (this.canWorker) {
+            this.objectDetectorWorker.postMessage({
+                action: 'clear_object_detector',
+            });
+        } else {
+            this.objectDetectorVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
+        }
+    }
+
     async initPredictHandGesture() {
         const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
         this.gestureRecognizer = await GestureRecognizer.createFromOptions(vision, {
@@ -859,6 +998,19 @@ class MediaPipeUtils {
             },
             runningMode: 'VIDEO',
             numFaces: 4,
+        });
+    }
+
+    async initPredictObjectDetector() {
+        const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+        this.objectDetector = await ObjectDetector.createFromOptions(vision, {
+            baseOptions: {
+                modelAssetPath: '/lib/entry-js/extern/model/face_landmarker.task',
+                delegate: 'GPU',
+            },
+            runningMode: 'VIDEO',
+            scoreThreshold: 0.5,
+            maxResults: 8,
         });
     }
 
@@ -1129,6 +1281,55 @@ class MediaPipeUtils {
         }
     }
 
+    async predictObjectDetector() {
+        try {
+            let results;
+
+            if (!this.objectDetectorVideoCanvasCtx || this.isRunningObjectDetector === false) {
+                return;
+            }
+            if (this.video.readyState < 2) {
+                await this.sleep();
+                this.predictObjectDetector();
+                return;
+            }
+            if (this.video.currentTime !== this.lastVideoTime) {
+                this.lastVideoTime = this.video.currentTime;
+                const startTimeMs = performance.now();
+                results = await this.objectDetector.detectForVideo(this.video, startTimeMs);
+            } else {
+                return;
+            }
+            this.objectDetectorVideoCanvasCtx.save();
+            this.objectDetectorVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
+
+            const { detections } = results;
+            this.prevObjectDetectorResult = results;
+            if (detections.length) {
+                if (!this.isPrevObjectDetector) {
+                    this.isPrevObjectDetector = true;
+                    Entry.engine.fireEvent('when_face_landmarker');
+                }
+                if (detections.length !== this.countDetectedObject) {
+                    this.countDetectedObject = detections.length;
+                }
+                if (!this.isDrawDetectedObjectDetector) {
+                    return;
+                }
+            } else {
+                this.isPrevObjectDetector = false;
+                this.countDetectedObject = 0;
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.objectDetectorVideoCanvasCtx.restore();
+            if (this.isRunningObjectDetector === true) {
+                window.requestAnimationFrame(this.predictObjectDetector.bind(this));
+            }
+        }
+    }
+
     getHandPointAxis(hand: number, handPoint: number) {
         if (!this.prevGestureRecognizerResult) {
             return;
@@ -1180,6 +1381,18 @@ class MediaPipeUtils {
         };
     }
 
+    getObjectPointAxis(face: number, facePoint: number) {
+        if (!this.prevObjectDetectorResult) {
+            return;
+        }
+        const { detections } = this.prevObjectDetectorResult;
+        if (!detections.length) {
+            return;
+        }
+        const detect = detections[face];
+        return detect.boundingBox;
+    }
+
     getHandedness(hand: number) {
         if (!this.prevGestureRecognizerResult) {
             return;
@@ -1217,6 +1430,11 @@ class MediaPipeUtils {
             this.changeDrawDetectedFaceLandmarker(false);
             this.stopFaceLandmarker();
             this.prevFaceLandmarkerResult = undefined;
+        }
+        if (this.isInitObjectDetector) {
+            this.changeDrawDetectedObjectDetector(false);
+            this.stopObjectDetector();
+            this.prevObjectDetectorResult = undefined;
         }
         this.turnOffWebcam();
     }

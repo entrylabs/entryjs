@@ -121,5 +121,6 @@ const predictGesture = (imageBitmap) => {
 
 const clearPredictGesture = () => {
     console.log('clearPredictGesture');
+    isPrevHandDetected = false;
     workerContext.clearRect(0, 0, 640, 360);
 };

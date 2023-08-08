@@ -28,7 +28,7 @@ const initializeFaceLandmarker = async (data) => {
     const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
     faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
         baseOptions: {
-            modelAssetPath: '/lib/entry-js/extern/model/face_landmaker.task',
+            modelAssetPath: '/lib/entry-js/extern/model/face_landmarker.task',
             delegate: 'GPU',
         },
         runningMode: 'VIDEO',
@@ -46,8 +46,7 @@ const predictFaceLandmarker = async (imageBitmap) => {
         if (!workerContext || !faceLandmarker) {
             return;
         }
-        const startTimeMs = performance.now();
-        const results = await faceLandmarker.detectForVideo(imageBitmap, startTimeMs);
+        const results = await faceLandmarker.detectForVideo(imageBitmap, Date.now());
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
         const { faceLandmarks } = results;
@@ -117,5 +116,6 @@ const predictFaceLandmarker = async (imageBitmap) => {
 
 const clearPredictFaceLandmarker = () => {
     console.log('clearPredictFaceLandmarker');
+    isPrevFaceLandmarker = false;
     workerContext.clearRect(0, 0, 640, 360);
 };

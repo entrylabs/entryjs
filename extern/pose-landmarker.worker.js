@@ -98,5 +98,6 @@ const predictPoseLandmarker = async (imageBitmap) => {
 
 const clearPredictPoseLandmarker = () => {
     console.log('clearPredictPoseLandmarker');
+    isPrevPoseLandmarker = false;
     workerContext.clearRect(0, 0, 640, 360);
 };

@@ -79,8 +79,16 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
         getFacePoint() {
             return {
                 type: 'Dropdown',
-                options: [['얼굴', 0]],
-                value: 0,
+                options: [
+                    ['왼쪽 눈', 374],
+                    ['오른쪽 눈', 145],
+                    ['코', 4],
+                    ['왼쪽 입꼬리', 291],
+                    ['오른쪽 입꼬리', 61],
+                    ['윗 입술', 0],
+                    ['아랫 입술', 17],
+                ],
+                value: 374,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -150,241 +158,241 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 return script.callReturn();
             },
         },
-        // face_landmarker: {
-        //     template: '사람 인식 %1 %2',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [params.getStartStop(), params.getCommonIndicator()],
-        //     events: {},
-        //     def: {
-        //         type: 'face_landmarker',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     async func(sprite, script) {
-        //         const value = script.getField('VALUE');
-        //         if (!mediaPipeUtils.isInitialized) {
-        //             await mediaPipeUtils.initialize();
-        //         }
-        //         if (value === 'start') {
-        //             await mediaPipeUtils.startFaceLandmarker(value);
-        //         } else {
-        //             await mediaPipeUtils.stopFaceLandmarker(value);
-        //         }
-        //         return script.callReturn();
-        //     },
-        // },
-        // draw_detected_face: {
-        //     template: '인식한 사람 %1 %2',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [params.getShowHide(), params.getCommonIndicator()],
-        //     events: {},
-        //     def: {
-        //         type: 'draw_detected_face',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     async func(sprite, script) {
-        //         const value = script.getField('VALUE');
-        //         if (!mediaPipeUtils.isInitialized) {
-        //             await mediaPipeUtils.initialize();
-        //         }
-        //         if (value === 'show') {
-        //             mediaPipeUtils.changeDrawDetectedFaceLandmarker(true);
-        //         } else {
-        //             mediaPipeUtils.changeDrawDetectedFaceLandmarker(false);
-        //         }
-        //         return script.callReturn();
-        //     },
-        // },
-        // check_detected_face: {
-        //     template: '사람을 인식했는가?',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_boolean_field',
-        //     statements: [],
-        //     params: [],
-        //     events: {},
-        //     def: {
-        //         type: 'check_detected_face',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     func(sprite, script) {
-        //         return mediaPipeUtils.isPrevFaceLandmarker;
-        //     },
-        // },
-        // count_detected_face: {
-        //     template: '인식한 사람의 수',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_string_field',
-        //     statements: [],
-        //     params: [],
-        //     events: {},
-        //     def: {
-        //         type: 'count_detected_face',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     func(sprite, script) {
-        //         return mediaPipeUtils.countDetectedFace;
-        //     },
-        // },
-        // locate_to_face: {
-        //     template: '%1 번째의 사람의 %2 (으)로 이동하기 %3',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [params.getFaceNumber(), params.getFacePoint(), params.getCommonIndicator()],
-        //     events: {},
-        //     def: {
-        //         type: 'locate_to_face',
-        //     },
-        //     paramsKeyMap: {
-        //         POSE: 0,
-        //         POSE_POINT: 1,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     func(sprite, script) {
-        //         const face = script.getField('POSE');
-        //         const point = script.getField('POSE_POINT');
-        //         const axis = mediaPipeUtils.getFacePointAxis(face, point);
-        //         if (axis) {
-        //             sprite.setX(axis.x);
-        //             sprite.setY(axis.y);
-        //             if (sprite.brush && !sprite.brush.stop) {
-        //                 sprite.brush.lineTo(axis.x, axis.y * -1);
-        //             }
-        //         }
-        //         return script.callReturn();
-        //     },
-        // },
-        // locate_time_to_face: {
-        //     template: '%1 초 동안 %2 번째의 사람의 %3 (으)로 이동하기 %4',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [
-        //         {
-        //             type: 'Block',
-        //             accept: 'string',
-        //             defaultType: 'number',
-        //         },
-        //         params.getFaceNumber(),
-        //         params.getFacePoint(),
-        //         params.getCommonIndicator(),
-        //     ],
-        //     events: {},
-        //     def: {
-        //         params: [
-        //             {
-        //                 type: 'number',
-        //                 params: ['2'],
-        //             },
-        //             null,
-        //             null,
-        //         ],
-        //         type: 'locate_time_to_face',
-        //     },
-        //     paramsKeyMap: {
-        //         TIME: 0,
-        //         POSE: 1,
-        //         POSE_POINT: 2,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     func(sprite, script) {
-        //         if (!script.isStart) {
-        //             const time = script.getNumberValue('TIME', script);
-        //             const frameCount = Math.floor(time * Entry.FPS);
-        //             const face = script.getField('POSE', script);
-        //             const point = script.getField('POSE_POINT', script);
+        face_landmarker: {
+            template: '얼굴 인식 %1 %2',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [params.getStartStop(), params.getCommonIndicator()],
+            events: {},
+            def: {
+                type: 'face_landmarker',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            async func(sprite, script) {
+                const value = script.getField('VALUE');
+                if (!mediaPipeUtils.isInitialized) {
+                    await mediaPipeUtils.initialize();
+                }
+                if (value === 'start') {
+                    await mediaPipeUtils.startFaceLandmarker(value);
+                } else {
+                    await mediaPipeUtils.stopFaceLandmarker(value);
+                }
+                return script.callReturn();
+            },
+        },
+        draw_detected_face: {
+            template: '인식한 얼굴 %1 %2',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [params.getShowHide(), params.getCommonIndicator()],
+            events: {},
+            def: {
+                type: 'draw_detected_face',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            async func(sprite, script) {
+                const value = script.getField('VALUE');
+                if (!mediaPipeUtils.isInitialized) {
+                    await mediaPipeUtils.initialize();
+                }
+                if (value === 'show') {
+                    mediaPipeUtils.changeDrawDetectedFaceLandmarker(true);
+                } else {
+                    mediaPipeUtils.changeDrawDetectedFaceLandmarker(false);
+                }
+                return script.callReturn();
+            },
+        },
+        check_detected_face: {
+            template: '얼굴을 인식했는가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'check_detected_face',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                return mediaPipeUtils.isPrevFaceLandmarker;
+            },
+        },
+        count_detected_face: {
+            template: '인식한 얼굴의 수',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'count_detected_face',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                return mediaPipeUtils.countDetectedFace;
+            },
+        },
+        locate_to_face: {
+            template: '%1 번째의 얼굴의 %2 (으)로 이동하기 %3',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [params.getFaceNumber(), params.getFacePoint(), params.getCommonIndicator()],
+            events: {},
+            def: {
+                type: 'locate_to_face',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+                FACE_POINT: 1,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                const face = script.getField('FACE');
+                const point = script.getField('FACE_POINT');
+                const axis = mediaPipeUtils.getFacePointAxis(face, point);
+                if (axis) {
+                    sprite.setX(axis.x);
+                    sprite.setY(axis.y);
+                    if (sprite.brush && !sprite.brush.stop) {
+                        sprite.brush.lineTo(axis.x, axis.y * -1);
+                    }
+                }
+                return script.callReturn();
+            },
+        },
+        locate_time_to_face: {
+            template: '%1 초 동안 %2 번째의 얼굴의 %3 (으)로 이동하기 %4',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                params.getFaceNumber(),
+                params.getFacePoint(),
+                params.getCommonIndicator(),
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'number',
+                        params: ['2'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'locate_time_to_face',
+            },
+            paramsKeyMap: {
+                TIME: 0,
+                FACE: 1,
+                FACE_POINT: 2,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                if (!script.isStart) {
+                    const time = script.getNumberValue('TIME', script);
+                    const frameCount = Math.floor(time * Entry.FPS);
+                    const face = script.getField('FACE', script);
+                    const point = script.getField('FACE_POINT', script);
 
-        //             if (frameCount != 0) {
-        //                 const axis = mediaPipeUtils.getFacePointAxis(face, point);
-        //                 if (axis) {
-        //                     script.isStart = true;
-        //                     script.frameCount = frameCount;
-        //                     script.dX = (axis.x - sprite.getX()) / script.frameCount;
-        //                     script.dY = (axis.y - sprite.getY()) / script.frameCount;
-        //                 }
-        //             } else {
-        //                 const axis = mediaPipeUtils.getFacePointAxis(face, point);
-        //                 if (axis) {
-        //                     sprite.setX(axis.x);
-        //                     sprite.setY(axis.y);
-        //                     if (sprite.brush && !sprite.brush.stop) {
-        //                         sprite.brush.lineTo(axis.x, axis.y * -1);
-        //                     }
-        //                 }
-        //                 return script.callReturn();
-        //             }
-        //         }
-        //         if (script.frameCount != 0) {
-        //             sprite.setX(sprite.getX() + script.dX);
-        //             sprite.setY(sprite.getY() + script.dY);
-        //             script.frameCount--;
-        //             if (sprite.brush && !sprite.brush.stop) {
-        //                 sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
-        //             }
-        //             return script;
-        //         } else {
-        //             delete script.isStart;
-        //             delete script.frameCount;
-        //             return script.callReturn();
-        //         }
-        //     },
-        // },
-        // axis_detected_face: {
-        //     template: '%1 번째 사람의 %2 의 %3 좌표',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_string_field',
-        //     statements: [],
-        //     params: [params.getFaceNumber(), params.getFacePoint(), params.getAxis()],
-        //     events: {},
-        //     def: {
-        //         params: [null, null, null],
-        //         type: 'axis_detected_face',
-        //     },
-        //     paramsKeyMap: {
-        //         POSE: 0,
-        //         POSE_POINT: 1,
-        //         AXIS: 2,
-        //     },
-        //     class: 'face',
-        //     isNotFor: ['faceLandmarker'],
-        //     func(sprite, script) {
-        //         const face = script.getField('POSE', script);
-        //         const point = script.getField('POSE_POINT', script);
-        //         const axisName = script.getField('AXIS', script);
-        //         const axis = mediaPipeUtils.getFacePointAxis(face, point);
-        //         if (axis) {
-        //             return axis[axisName];
-        //         }
-        //         return 0;
-        //     },
-        // },
+                    if (frameCount != 0) {
+                        const axis = mediaPipeUtils.getFacePointAxis(face, point);
+                        if (axis) {
+                            script.isStart = true;
+                            script.frameCount = frameCount;
+                            script.dX = (axis.x - sprite.getX()) / script.frameCount;
+                            script.dY = (axis.y - sprite.getY()) / script.frameCount;
+                        }
+                    } else {
+                        const axis = mediaPipeUtils.getFacePointAxis(face, point);
+                        if (axis) {
+                            sprite.setX(axis.x);
+                            sprite.setY(axis.y);
+                            if (sprite.brush && !sprite.brush.stop) {
+                                sprite.brush.lineTo(axis.x, axis.y * -1);
+                            }
+                        }
+                        return script.callReturn();
+                    }
+                }
+                if (script.frameCount != 0) {
+                    sprite.setX(sprite.getX() + script.dX);
+                    sprite.setY(sprite.getY() + script.dY);
+                    script.frameCount--;
+                    if (sprite.brush && !sprite.brush.stop) {
+                        sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.frameCount;
+                    return script.callReturn();
+                }
+            },
+        },
+        axis_detected_face: {
+            template: '%1 번째 얼굴의 %2 의 %3 좌표',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [params.getFaceNumber(), params.getFacePoint(), params.getAxis()],
+            events: {},
+            def: {
+                params: [null, null, null],
+                type: 'axis_detected_face',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+                FACE_POINT: 1,
+                AXIS: 2,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                const face = script.getField('FACE', script);
+                const point = script.getField('FACE_POINT', script);
+                const axisName = script.getField('AXIS', script);
+                const axis = mediaPipeUtils.getFacePointAxis(face, point);
+                if (axis) {
+                    return axis[axisName];
+                }
+                return 0;
+            },
+        },
     };
 };
