@@ -694,6 +694,7 @@ Entry.Playground = class Playground {
 
     updatePictureView() {
         if (this.pictureSortableListWidget) {
+            this.pictureSortableListWidget.setData({ items: [] });
             this.pictureSortableListWidget.setData({
                 items: this._getSortablePictureList(),
             });
