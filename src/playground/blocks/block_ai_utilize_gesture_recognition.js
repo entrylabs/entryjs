@@ -23,6 +23,16 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
     },
 };
 
+const gestureMap = {
+    Closed_Fist: '쥔 손',
+    Open_Palm: '편 손',
+    Pointing_Up: '가리킨 손',
+    Thumb_Down: '엄지 아래로',
+    Thumb_Up: '엄지 위로',
+    Victory: '브이 사인',
+    ILoveYou: '사랑해',
+};
+
 Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
     const params = {
         getEventIndicator() {
@@ -51,6 +61,37 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                     ['2', 1],
                 ],
                 value: 0,
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getHand() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['오른손', 'Left'],
+                    ['왼손', 'Right'],
+                ],
+                value: 'Left',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getGesture() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['쥔 손', 'Closed_Fist'],
+                    ['편 손', 'Open_Palm'],
+                    ['가리킨 손', 'Pointing_Up'],
+                    ['엄지 아래로', 'Thumb_Down'],
+                    ['엄지 위로', 'Thumb_Up'],
+                    ['브이 사인', 'Victory'],
+                    ['사랑해', 'ILoveYou'],
+                ],
+                value: 'Left',
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -102,6 +143,19 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
+        getAxis() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['x', 'x'],
+                    ['y', 'y'],
+                ],
+                value: 'x',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
         getStartStop() {
             return {
                 type: 'Dropdown',
@@ -148,7 +202,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             event: 'when_hand_detection',
             class: 'hand',
             isNotFor: ['gestureRecognition'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 return script.callReturn();
             },
         },
@@ -226,7 +280,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
             class: 'hand',
             isNotFor: ['gestureRecognition'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 return mediaPipeUtils.isPrevHandDetected;
             },
         },
@@ -246,7 +300,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
             class: 'hand',
             isNotFor: ['gestureRecognition'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 return mediaPipeUtils.countDetectedHand;
             },
         },
@@ -273,12 +327,12 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
             class: 'hand',
             isNotFor: ['gestureRecognition'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 const hand = script.getField('HAND');
                 const point = script.getField('HAND_POINT');
                 const detail = script.getField('HAND_DETAIL_POINT');
                 const handPoint = point + detail;
-                const axis = await mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                const axis = mediaPipeUtils.getHandPointAxis(hand, handPoint);
                 if (axis) {
                     sprite.setX(axis.x);
                     sprite.setY(axis.y);
@@ -327,7 +381,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
             class: 'hand',
             isNotFor: ['gestureRecognition'],
-            async func(sprite, script) {
+            func(sprite, script) {
                 if (!script.isStart) {
                     const time = script.getNumberValue('TIME', script);
                     const frameCount = Math.floor(time * Entry.FPS);
@@ -337,7 +391,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                     const handPoint = point + detail;
 
                     if (frameCount != 0) {
-                        const axis = await mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                        const axis = mediaPipeUtils.getHandPointAxis(hand, handPoint);
                         if (axis) {
                             script.isStart = true;
                             script.frameCount = frameCount;
@@ -345,7 +399,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                             script.dY = (axis.y - sprite.getY()) / script.frameCount;
                         }
                     } else {
-                        const axis = await mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                        const axis = mediaPipeUtils.getHandPointAxis(hand, handPoint);
                         if (axis) {
                             sprite.setX(axis.x);
                             sprite.setY(axis.y);
@@ -369,6 +423,143 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                     delete script.frameCount;
                     return script.callReturn();
                 }
+            },
+        },
+        axis_detected_hand: {
+            template: '%1 번째 손의 %2 %3 의 %4 좌표',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                params.getHandNumber(),
+                params.getHandPoint(),
+                params.getHandDetailPoint(),
+                params.getAxis(),
+            ],
+            events: {},
+            def: {
+                params: [null, null, null, null],
+                type: 'axis_detected_hand',
+            },
+            paramsKeyMap: {
+                HAND: 0,
+                HAND_POINT: 1,
+                HAND_DETAIL_POINT: 2,
+                AXIS: 3,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            func(sprite, script) {
+                const hand = script.getField('HAND', script);
+                const point = script.getField('HAND_POINT', script);
+                const detail = script.getField('HAND_DETAIL_POINT', script);
+                const axisName = script.getField('AXIS', script);
+                const handPoint = point + detail;
+                const axis = mediaPipeUtils.getHandPointAxis(hand, handPoint);
+                if (axis) {
+                    return axis[axisName];
+                }
+                return 0;
+            },
+        },
+        is_which_hand: {
+            template: '%1 번째 손이 %2 인가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getHandNumber(), params.getHand()],
+            events: {},
+            def: { params: [null, null], type: 'is_which_hand' },
+            paramsKeyMap: {
+                HAND_NUM: 0,
+                HAND: 1,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            func(sprite, script) {
+                const handNum = script.getField('HAND_NUM', script);
+                const hand = script.getField('HAND', script);
+                const handedness = mediaPipeUtils.getHandedness(handNum);
+                if (!handedness) {
+                    return false;
+                }
+                return handedness.categoryName === hand;
+            },
+        },
+        get_which_hand: {
+            template: '%1 번째 손',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [params.getHandNumber()],
+            events: {},
+            def: { params: [null, null], type: 'get_which_hand' },
+            paramsKeyMap: {
+                HAND_NUM: 0,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            func(sprite, script) {
+                const handNum = script.getField('HAND_NUM', script);
+                const handedness = mediaPipeUtils.getHandedness(handNum);
+                if (!handedness) {
+                    return '';
+                } else if (handedness.categoryName === 'Left') {
+                    return '오른손';
+                } else {
+                    return '왼손';
+                }
+            },
+        },
+        is_which_gesture: {
+            template: '%1 번째 손의 모양이 %2 인가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getHandNumber(), params.getGesture()],
+            events: {},
+            def: { params: [null, null], type: 'is_which_gesture' },
+            paramsKeyMap: {
+                HAND_NUM: 0,
+                GESTURE: 1,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            func(sprite, script) {
+                const handNum = script.getField('HAND_NUM', script);
+                const gestureName = script.getField('GESTURE', script);
+                const gesture = mediaPipeUtils.getGesture(handNum);
+                if (!gesture) {
+                    return false;
+                }
+                return gesture.categoryName === gestureName;
+            },
+        },
+        get_which_gesture: {
+            template: '%1 번째 손의 모양',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [params.getHandNumber()],
+            events: {},
+            def: { params: [null, null], type: 'get_which_gesture' },
+            paramsKeyMap: {
+                HAND_NUM: 0,
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            func(sprite, script) {
+                const handNum = script.getField('HAND_NUM', script);
+                const gesture = mediaPipeUtils.getGesture(handNum);
+                if (!gesture) {
+                    return '';
+                }
+                return gestureMap[gesture.categoryName] || '';
             },
         },
     };

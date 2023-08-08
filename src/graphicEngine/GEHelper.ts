@@ -302,7 +302,14 @@ class _GEHelper extends GEHelperBase {
             this.overlayContainer = Entry.stage.canvas.getChildAt(3);
         }
 
-        this.overlayContainer.addChild(overlayElement);
+        const isAlready = this.overlayContainer.children.some(
+            (child: PIXI.Sprite | createjs.Bitmap) => {
+                child === overlayElement;
+            }
+        );
+        if (!isAlready) {
+            this.overlayContainer.addChild(overlayElement);
+        }
         this.tickByEngine();
     }
 
@@ -358,6 +365,9 @@ class _GEHelper extends GEHelperBase {
     ): any {
         if (Array.isArray(canvasVideo)) {
             canvasVideo.forEach((video: PIXI.Sprite | createjs.Bitmap) => {
+                if (!video) {
+                    return;
+                }
                 const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = video;
                 video.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
             });
@@ -372,6 +382,9 @@ class _GEHelper extends GEHelperBase {
     ): any {
         if (Array.isArray(canvasVideo)) {
             canvasVideo.forEach((video: PIXI.Sprite | createjs.Bitmap) => {
+                if (!video) {
+                    return;
+                }
                 const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = video;
                 video.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
             });

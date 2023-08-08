@@ -35,12 +35,14 @@ require('./block_ai_utilize_tts');
 require('./block_ai_utilize_translate');
 require('./block_ai_utilize_video');
 require('./block_ai_utilize_gesture_recognition');
+require('./block_ai_utilize_pose_landmarker');
 Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
     translate: Entry.AI_UTILIZE_BLOCK.translate,
     video: Entry.AI_UTILIZE_BLOCK.video,
     gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
+    poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
 };
 
 Entry.EXPANSION_BLOCK = {};
