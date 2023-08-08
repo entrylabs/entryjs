@@ -549,6 +549,9 @@ EntryStatic.getAllBlocks = function() {
                 'draw_detected_pose',
                 'check_detected_pose',
                 'count_detected_pose',
+                'locate_to_pose',
+                'locate_time_to_pose',
+                'axis_detected_pose',
             ],
         },
         {

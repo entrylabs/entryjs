@@ -647,7 +647,7 @@ class MediaPipeUtils {
                 delegate: 'GPU',
             },
             runningMode: 'VIDEO',
-            numPoses: 2,
+            numPoses: 4,
         });
     }
 
@@ -814,6 +814,23 @@ class MediaPipeUtils {
         }
         const landmark = landmarks[hand];
         const pointAxis = landmark[handPoint];
+        return {
+            x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
+            y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,
+            z: pointAxis.z,
+        };
+    }
+
+    getPosePointAxis(pose: number, posePoint: number) {
+        if (!this.prevPoseLandmarkerResult) {
+            return;
+        }
+        const { landmarks } = this.prevPoseLandmarkerResult;
+        if (!landmarks.length) {
+            return;
+        }
+        const landmark = landmarks[pose];
+        const pointAxis = landmark[posePoint];
         return {
             x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
             y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,

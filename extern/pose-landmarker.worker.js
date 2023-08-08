@@ -32,7 +32,7 @@ const initializePoseLandmarker = async (data) => {
             delegate: 'GPU',
         },
         runningMode: 'VIDEO',
-        numPoses: 2,
+        numPoses: 4,
     });
     self.postMessage({ action: 'next_pose_landmarker' });
 };
@@ -56,7 +56,7 @@ const predictPoseLandmarker = async (imageBitmap) => {
         workerContext.clearRect(0, 0, 640, 360);
         const { landmarks } = results;
         self.postMessage({
-            action: 'pose_landmaker_data',
+            action: 'pose_landmarker_data',
             poseLandmarkerResult: results,
         });
         if (landmarks.length) {
@@ -75,6 +75,11 @@ const predictPoseLandmarker = async (imageBitmap) => {
                 return;
             }
             landmarks.forEach((landmark, i) => {
+                const mark7 = landmark[7];
+                workerContext.scale(-1, 1);
+                workerContext.fillStyle = '#FF0000';
+                workerContext.fillText(`${i + 1}-사람`, -mark7.x * 640, mark7.y * 360 - 20);
+                workerContext.scale(-1, 1);
                 drawingUtils.drawLandmarks(landmark, {
                     radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1),
                 });
