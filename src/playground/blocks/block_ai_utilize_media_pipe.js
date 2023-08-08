@@ -72,7 +72,7 @@ module.exports = {
                     VALUE: 0,
                 },
                 class: 'media_pipe',
-                isNotFor: ['gestureRecognition', 'poseLandmarker'],
+                isNotFor: ['gestureRecognition', 'poseLandmarker', 'faceLandmarker'],
                 async func(sprite, script) {
                     const value = script.getField('VALUE');
                     if (!mediaPipeUtils.isInitialized) {
@@ -97,7 +97,7 @@ module.exports = {
                     VALUE: 0,
                 },
                 class: 'media_pipe',
-                isNotFor: ['gestureRecognition', 'poseLandmarker'],
+                isNotFor: ['gestureRecognition', 'poseLandmarker', 'faceLandmarker'],
                 async func(sprite, script) {
                     const value = script.getField('VALUE');
                     return await mediaPipeUtils.changeSource(value);
@@ -118,7 +118,7 @@ module.exports = {
                     VALUE: 0,
                 },
                 class: 'media_pipe',
-                isNotFor: ['gestureRecognition', 'poseLandmarker'],
+                isNotFor: ['gestureRecognition', 'poseLandmarker', 'faceLandmarker'],
                 async func(sprite, script) {
                     return mediaPipeUtils.videoInputList.length;
                 },
@@ -138,7 +138,7 @@ module.exports = {
                     TARGET: 0,
                 },
                 class: 'media_pipe',
-                isNotFor: ['gestureRecognition', 'poseLandmarker'],
+                isNotFor: ['gestureRecognition', 'poseLandmarker', 'faceLandmarker'],
                 async func(sprite, script) {
                     const target = script.getField('TARGET');
                     if (!mediaPipeUtils.isInitialized) {
@@ -172,7 +172,7 @@ module.exports = {
                     VALUE: 0,
                 },
                 class: 'media_pipe',
-                isNotFor: ['gestureRecognition', 'poseLandmarker'],
+                isNotFor: ['gestureRecognition', 'poseLandmarker', 'faceLandmarker'],
                 async func(sprite, script) {
                     const value = _clamp(script.getNumberValue('VALUE'), 0, 100);
                     if (!mediaPipeUtils.isInitialized) {
@@ -222,7 +222,7 @@ module.exports = {
                     TYPE: 1,
                 },
                 class: 'media_pipe',
-                isNotFor: ['gestureRecognition', 'poseLandmarker'],
+                isNotFor: ['gestureRecognition', 'poseLandmarker', 'faceLandmarker'],
                 async func(sprite, script) {
                     const target = script.getField('TARGET');
                     const type = script.getField('TYPE');

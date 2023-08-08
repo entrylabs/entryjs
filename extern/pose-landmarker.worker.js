@@ -41,10 +41,6 @@ const changePoseLandmarkerOption = (option) => {
     isDrawDetectedPoseLandmarker = option.isDrawDetectedPoseLandmarker;
 };
 
-const YX = (a) => {
-    return Math.max(1, Math.min(10, 10 * (1 - (a - -0.15) / 0.25) + (1 - (0.1 - a) / 0.25)));
-};
-
 const predictPoseLandmarker = async (imageBitmap) => {
     try {
         if (!workerContext || !poseLandmarker) {

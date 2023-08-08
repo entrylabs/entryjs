@@ -7,6 +7,8 @@ import {
     GestureRecognizerResult,
     PoseLandmarker,
     PoseLandmarkerResult,
+    FaceLandmarkerResult,
+    FaceLandmarker,
 } from '@mediapipe/tasks-vision';
 import { UAParser } from 'ua-parser-js';
 import _clamp from 'lodash/clamp';
@@ -115,16 +117,8 @@ class MediaPipeUtils {
     public videoCanvasCtx: CanvasRenderingContext2D;
     public motionCanvas: HTMLCanvasElement;
     public motionOffscreenCanvas: HTMLCanvasElement;
-    public isRunningHandGesture: boolean;
     public canWorker: boolean = true;
     public flipState: TFlipState = 0;
-    public isDrawDetectedHand: boolean = false;
-    public isDrawDetectedPoseLandmarker: boolean = false;
-    public isPrevHandDetected: boolean = false;
-    public isPrevPoseLandmarker: boolean = false;
-    public isRunningPoseLandmarker: boolean = false;
-    public countDetectedHand: number;
-    public countDetectedPose: number;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
     private STAGE_WIDTH: number = 480;
@@ -132,17 +126,12 @@ class MediaPipeUtils {
     private SAMPLE_SIZE: number = 15;
     private stream: MediaStream;
     private lastVideoTime: number = -1;
-    private prevGestureRecognizerResult: GestureRecognizerResult;
-    private prevPoseLandmarkerResult: PoseLandmarkerResult;
-    private gestureRecognizer: GestureRecognizer;
-    private poseLandmarker: PoseLandmarker;
-    private drawingUtils: DrawingUtils;
-    private worker: Worker;
-    private inOffscreenCanvas: OffscreenCanvas;
-    private alreadyInitOffscreenCanvas: boolean;
     private sourceTarget: number;
-    private BOUNDARY_OFFSET: number = 4;
-    private SAME_COORDINATE_COMPENSATION: number = 10;
+
+    public countDetectedHand: number;
+    public isPrevHandDetected: boolean = false;
+    public isRunningHandGesture: boolean = false;
+    public isDrawDetectedHand: boolean = false;
     private isInitGestureRecognition: boolean = false;
     private gestureRecognizerVideoCanvas: HTMLCanvasElement;
     private gestureRecognizerVideoCanvasCtx: CanvasRenderingContext2D;
@@ -151,7 +140,13 @@ class MediaPipeUtils {
     private gestureRecognizerWorker: Worker;
     private alreadyInitGestureRecognizerOffscreenCanvas: boolean = false;
     private gestureRecognizerDrawingUtils: DrawingUtils;
+    private prevGestureRecognizerResult: GestureRecognizerResult;
+    private gestureRecognizer: GestureRecognizer;
 
+    public countDetectedPose: number;
+    public isPrevPoseLandmarker: boolean = false;
+    public isRunningPoseLandmarker: boolean = false;
+    public isDrawDetectedPoseLandmarker: boolean = false;
     private isInitPoseLandmarker: boolean = false;
     private poseLandmarkerVideoCanvas: HTMLCanvasElement;
     private poseLandmarkerVideoCanvasCtx: CanvasRenderingContext2D;
@@ -160,6 +155,23 @@ class MediaPipeUtils {
     private poseLandmarkerWorker: Worker;
     private alreadyInitPoseLandmarkerOffscreenCanvas: boolean = false;
     private poseLandmarkerDrawingUtils: DrawingUtils;
+    private prevPoseLandmarkerResult: PoseLandmarkerResult;
+    private poseLandmarker: PoseLandmarker;
+
+    public countDetectedFace: number;
+    public isPrevFaceLandmarker: boolean = false;
+    public isRunningFaceLandmarker: boolean = false;
+    public isDrawDetectedFaceLandmarker: boolean = false;
+    private isInitFaceLandmarker: boolean = false;
+    private faceLandmarkerVideoCanvas: HTMLCanvasElement;
+    private faceLandmarkerVideoCanvasCtx: CanvasRenderingContext2D;
+    private faceLandmarkerCanvasOverlay: PIXI.Sprite | createjs.Bitmap;
+    private faceLandmarkerOffscreenCanvas: OffscreenCanvas;
+    private faceLandmarkerWorker: Worker;
+    private alreadyInitFaceLandmarkerOffscreenCanvas: boolean = false;
+    private faceLandmarkerDrawingUtils: DrawingUtils;
+    private prevFaceLandmarkerResult: FaceLandmarkerResult;
+    private faceLandmarker: FaceLandmarker;
 
     public totalMotions: MotionElement = { total: 0, direction: { x: 0, y: 0 } };
     public motions: Pixel[][] = [
@@ -184,6 +196,7 @@ class MediaPipeUtils {
             this.canvasOverlay,
             this.gestureRecognizerCanvasOverlay,
             this.poseLandmarkerCanvasOverlay,
+            this.faceLandmarkerCanvasOverlay,
         ] as PIXI.Sprite[] | createjs.Bitmap[];
     }
 
@@ -192,6 +205,7 @@ class MediaPipeUtils {
             this.canvasOverlay,
             this.gestureRecognizerCanvasOverlay,
             this.poseLandmarkerCanvasOverlay,
+            this.faceLandmarkerCanvasOverlay,
         ] as PIXI.Sprite[] | createjs.Bitmap[];
     }
 
@@ -245,36 +259,6 @@ class MediaPipeUtils {
                 setTimeout(this.motionDetect.bind(this), 100);
             }
         };
-    }
-
-    async sendImageBitmapForGesture() {
-        if (!this.isRunningHandGesture) {
-            return;
-        }
-        if (this.video.readyState < 2) {
-            await this.sleep();
-            this.sendImageBitmapForGesture();
-            return;
-        }
-        this.gestureRecognizerWorker.postMessage({
-            action: 'gesture_recognizer',
-            imageBitmap: await createImageBitmap(this.video),
-        });
-    }
-
-    async sendImageBitmapForPoseLandmarker() {
-        if (!this.isRunningPoseLandmarker) {
-            return;
-        }
-        if (this.video.readyState < 2) {
-            await this.sleep();
-            this.sendImageBitmapForPoseLandmarker();
-            return;
-        }
-        this.poseLandmarkerWorker.postMessage({
-            action: 'pose_landmarker',
-            imageBitmap: await createImageBitmap(this.video),
-        });
     }
 
     cameraOnOff(mode: String) {
@@ -382,6 +366,142 @@ class MediaPipeUtils {
         });
     }
 
+    async checkPermission() {
+        if (navigator.permissions) {
+            const permission = await navigator.permissions.query({ name: 'camera' });
+            if (permission.state !== 'granted') {
+                await navigator.mediaDevices.getUserMedia({ video: true });
+            }
+        } else {
+            await navigator.mediaDevices.getUserMedia({ video: true });
+        }
+    }
+
+    async compatabilityChecker() {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_browser_error_video,
+            ]);
+        }
+        if (!this.stream && this.videoInputList.length == 0) {
+            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
+                Lang.Workspace.check_webcam_error,
+            ]);
+        }
+    }
+
+    isFlipState(type: string) {
+        if (type === 'horizontal') {
+            return this.flipState === flipState.BOTH || this.flipState === flipState.HORIZONTAL;
+        } else if (type === 'vertical') {
+            return this.flipState === flipState.BOTH || this.flipState === flipState.VERTICAL;
+        }
+    }
+
+    motionDetect(sprite?: any): Promise<MotionElement> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                if (!this.motionCanvas || !this.isRunning) {
+                    resolve(undefined);
+                    return;
+                }
+                if (this.video.readyState < 2) {
+                    await this.sleep();
+                    resolve(this.motionDetect(sprite));
+                    return;
+                }
+
+                if (sprite) {
+                    const returnMessage = ({ data }: MessageEvent) => {
+                        if (data.action === 'sprite_return') {
+                            this.motionWorker.removeEventListener('message', returnMessage);
+                            resolve(data.result);
+                        }
+                    };
+                    this.motionWorker.addEventListener('message', returnMessage);
+                }
+                const { STAGE_WIDTH: width, STAGE_HEIGHT: height, SAMPLE_SIZE: sampleSize } = this;
+                const [minX, maxX] = [0, width];
+                const [minY, maxY] = [0, height];
+                const imageBitmap = await createImageBitmap(this.video);
+                this.motionWorker.postMessage({
+                    sprite: sprite && {
+                        x: sprite.x,
+                        y: sprite.y,
+                        width: sprite.width,
+                        height: sprite.height,
+                        scaleX: sprite.scaleX,
+                        scaleY: sprite.scaleY,
+                    },
+                    action: 'motion',
+                    range: {
+                        minX,
+                        maxX,
+                        minY,
+                        maxY,
+                    },
+                    imageBitmap,
+                });
+
+                if (!sprite) {
+                    resolve(undefined);
+                }
+            } catch (e) {
+                console.error(e);
+                reject(e);
+            }
+        });
+    }
+
+    getYX(a: number) {
+        return Math.max(1, Math.min(10, 10 * (1 - (a - -0.15) / 0.25) + (1 - (0.1 - a) / 0.25)));
+    }
+
+    async sendImageBitmapForGesture() {
+        if (!this.isRunningHandGesture) {
+            return;
+        }
+        if (this.video.readyState < 2) {
+            await this.sleep();
+            this.sendImageBitmapForGesture();
+            return;
+        }
+        this.gestureRecognizerWorker.postMessage({
+            action: 'gesture_recognizer',
+            imageBitmap: await createImageBitmap(this.video),
+        });
+    }
+
+    async sendImageBitmapForPoseLandmarker() {
+        if (!this.isRunningPoseLandmarker) {
+            return;
+        }
+        if (this.video.readyState < 2) {
+            await this.sleep();
+            this.sendImageBitmapForPoseLandmarker();
+            return;
+        }
+        this.poseLandmarkerWorker.postMessage({
+            action: 'pose_landmarker',
+            imageBitmap: await createImageBitmap(this.video),
+        });
+    }
+
+    async sendImageBitmapForFaceLandmarker() {
+        if (!this.isRunningFaceLandmarker) {
+            return;
+        }
+        if (this.video.readyState < 2) {
+            await this.sleep();
+            this.sendImageBitmapForFaceLandmarker();
+            return;
+        }
+        this.faceLandmarkerWorker.postMessage({
+            action: 'face_landmarker',
+            imageBitmap: await createImageBitmap(this.video),
+        });
+    }
+
     initGestureRecognitionWorkerEvent() {
         this.gestureRecognizerWorker.addEventListener('message', ({ data }) => {
             if (['next_gesture_recognizer'].includes(data.action)) {
@@ -416,6 +536,23 @@ class MediaPipeUtils {
         });
     }
 
+    initFaceLandmarkerWorkerEvent() {
+        this.faceLandmarkerWorker.addEventListener('message', ({ data }) => {
+            if (['next_face_landmarker'].includes(data.action)) {
+                this.sendImageBitmapForFaceLandmarker();
+            } else if (data.action === 'start_face_landmarker') {
+                this.isPrevFaceLandmarker = true;
+                Entry.engine.fireEvent('when_face_landmarker');
+            } else if (data.action === 'stop_face_landmarker') {
+                this.isPrevFaceLandmarker = false;
+            } else if (data.action === 'count_detected_face_landmarker') {
+                this.countDetectedFace = data.count;
+            } else if (data.action === 'face_landmarker_data') {
+                this.prevFaceLandmarkerResult = data.faceLandmarkerResult;
+            }
+        });
+    }
+
     initHandGestureRecognition() {
         this.isInitGestureRecognition = true;
         this.gestureRecognizerVideoCanvas = document.createElement('canvas');
@@ -427,6 +564,7 @@ class MediaPipeUtils {
         GEHelper.drawOverlayElement(this.gestureRecognizerCanvasOverlay);
         GEHelper.hFlipVideoElement(this.gestureRecognizerCanvasOverlay);
         if (this.canWorker) {
+            // eslint-disable-next-line max-len
             this.gestureRecognizerOffscreenCanvas = this.gestureRecognizerVideoCanvas.transferControlToOffscreen();
             this.gestureRecognizerWorker = new Worker(
                 '/lib/entry-js/extern/gesture-recognition.worker.js'
@@ -454,6 +592,7 @@ class MediaPipeUtils {
         GEHelper.drawOverlayElement(this.poseLandmarkerCanvasOverlay);
         GEHelper.hFlipVideoElement(this.poseLandmarkerCanvasOverlay);
         if (this.canWorker) {
+            // eslint-disable-next-line max-len
             this.poseLandmarkerOffscreenCanvas = this.poseLandmarkerVideoCanvas.transferControlToOffscreen();
             this.poseLandmarkerWorker = new Worker(
                 '/lib/entry-js/extern/pose-landmarker.worker.js'
@@ -463,6 +602,30 @@ class MediaPipeUtils {
             this.poseLandmarkerVideoCanvasCtx = this.poseLandmarkerVideoCanvas.getContext('2d');
             this.poseLandmarkerVideoCanvasCtx.font = '20px Arial';
             this.poseLandmarkerDrawingUtils = new DrawingUtils(this.poseLandmarkerVideoCanvasCtx);
+        }
+    }
+
+    initFaceLandmarker() {
+        this.isInitFaceLandmarker = true;
+        this.faceLandmarkerVideoCanvas = document.createElement('canvas');
+        this.faceLandmarkerVideoCanvas.width = this.VIDEO_WIDTH;
+        this.faceLandmarkerVideoCanvas.height = this.VIDEO_HEIGHT;
+        this.faceLandmarkerCanvasOverlay = GEHelper.getOverlayElement(
+            this.faceLandmarkerVideoCanvas
+        );
+        GEHelper.drawOverlayElement(this.faceLandmarkerCanvasOverlay);
+        GEHelper.hFlipVideoElement(this.faceLandmarkerCanvasOverlay);
+        if (this.canWorker) {
+            // eslint-disable-next-line max-len
+            this.faceLandmarkerOffscreenCanvas = this.faceLandmarkerVideoCanvas.transferControlToOffscreen();
+            this.faceLandmarkerWorker = new Worker(
+                '/lib/entry-js/extern/face-landmarker.worker.js'
+            );
+            this.initFaceLandmarkerWorkerEvent();
+        } else {
+            this.faceLandmarkerVideoCanvasCtx = this.faceLandmarkerVideoCanvas.getContext('2d');
+            this.faceLandmarkerVideoCanvasCtx.font = '20px Arial';
+            this.faceLandmarkerDrawingUtils = new DrawingUtils(this.faceLandmarkerVideoCanvasCtx);
         }
     }
 
@@ -536,6 +699,41 @@ class MediaPipeUtils {
         }
     }
 
+    async startFaceLandmarker() {
+        try {
+            if (!this.stream) {
+                await this.turnOnWebcam();
+            }
+            if (!this.isInitFaceLandmarker) {
+                this.initFaceLandmarker();
+            }
+            this.isRunningFaceLandmarker = true;
+
+            if (this.canWorker) {
+                if (!this.alreadyInitFaceLandmarkerOffscreenCanvas) {
+                    this.faceLandmarkerWorker.postMessage(
+                        {
+                            action: 'face_landmarker_init',
+                            canvas: this.faceLandmarkerOffscreenCanvas,
+                            option: {
+                                isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
+                            },
+                        },
+                        [this.faceLandmarkerOffscreenCanvas]
+                    );
+                    this.alreadyInitFaceLandmarkerOffscreenCanvas = true;
+                } else {
+                    this.sendImageBitmapForFaceLandmarker();
+                }
+            } else {
+                await this.initPredictFaceLandmarker();
+                this.predictFaceLandmarker();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     changeDrawDetectedHand(isDrawDetectedHand: boolean) {
         this.isDrawDetectedHand = isDrawDetectedHand;
         this.updateHandGestureRecognition();
@@ -544,6 +742,11 @@ class MediaPipeUtils {
     changeDrawDetectedPoseLandmarker(isDrawDetectedPoseLandmarker: boolean) {
         this.isDrawDetectedPoseLandmarker = isDrawDetectedPoseLandmarker;
         this.updatePoseLandmarker();
+    }
+
+    changeDrawDetectedFaceLandmarker(isDrawDetectedFaceLandmarker: boolean) {
+        this.isDrawDetectedFaceLandmarker = isDrawDetectedFaceLandmarker;
+        this.updateFaceLandmarker();
     }
 
     updateHandGestureRecognition() {
@@ -563,6 +766,17 @@ class MediaPipeUtils {
                 action: 'pose_landmarker_change_option',
                 option: {
                     isDrawDetectedPoseLandmarker: this.isDrawDetectedPoseLandmarker,
+                },
+            });
+        }
+    }
+
+    updateFaceLandmarker() {
+        if (this.canWorker) {
+            this.faceLandmarkerWorker.postMessage({
+                action: 'face_landmarker_change_option',
+                option: {
+                    isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
                 },
             });
         }
@@ -599,32 +813,17 @@ class MediaPipeUtils {
         }
     }
 
-    async checkPermission() {
-        if (navigator.permissions) {
-            const permission = await navigator.permissions.query({ name: 'camera' });
-            if (permission.state !== 'granted') {
-                await navigator.mediaDevices.getUserMedia({ video: true });
-            }
+    async stopFaceLandmarker() {
+        this.isRunningFaceLandmarker = false;
+        this.isPrevFaceLandmarker = false;
+        this.countDetectedFace = 0;
+        if (this.canWorker) {
+            this.faceLandmarkerWorker.postMessage({
+                action: 'clear_face_landmarker',
+            });
         } else {
-            await navigator.mediaDevices.getUserMedia({ video: true });
+            this.faceLandmarkerVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
         }
-    }
-
-    async compatabilityChecker() {
-        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
-                Lang.Workspace.check_browser_error_video,
-            ]);
-        }
-        if (!this.stream && this.videoInputList.length == 0) {
-            throw new Entry.Utils.IncompatibleError('IncompatibleError', [
-                Lang.Workspace.check_webcam_error,
-            ]);
-        }
-    }
-
-    getYX(a: number) {
-        return Math.max(1, Math.min(10, 10 * (1 - (a - -0.15) / 0.25) + (1 - (0.1 - a) / 0.25)));
     }
 
     async initPredictHandGesture() {
@@ -648,6 +847,18 @@ class MediaPipeUtils {
             },
             runningMode: 'VIDEO',
             numPoses: 4,
+        });
+    }
+
+    async initPredictFaceLandmarker() {
+        const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
+        this.faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
+            baseOptions: {
+                modelAssetPath: '/lib/entry-js/extern/model/face_landmarker.task',
+                delegate: 'GPU',
+            },
+            runningMode: 'VIDEO',
+            numFaces: 4,
         });
     }
 
@@ -754,7 +965,7 @@ class MediaPipeUtils {
             }
             if (this.video.readyState < 2) {
                 await this.sleep();
-                this.predictHandGesture();
+                this.predictPoseLandmarker();
                 return;
             }
             if (this.video.currentTime !== this.lastVideoTime) {
@@ -768,7 +979,7 @@ class MediaPipeUtils {
             this.poseLandmarkerVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
 
             const { landmarks } = results;
-            // this.prevGestureRecognizerResult = results;
+            this.prevPoseLandmarkerResult = results;
             if (landmarks.length) {
                 if (!this.isPrevPoseLandmarker) {
                     this.isPrevPoseLandmarker = true;
@@ -800,6 +1011,120 @@ class MediaPipeUtils {
             this.poseLandmarkerVideoCanvasCtx.restore();
             if (this.isRunningPoseLandmarker === true) {
                 window.requestAnimationFrame(this.predictPoseLandmarker.bind(this));
+            }
+        }
+    }
+
+    async predictFaceLandmarker() {
+        try {
+            let results;
+
+            if (!this.faceLandmarkerVideoCanvasCtx || this.isRunningFaceLandmarker === false) {
+                return;
+            }
+            if (this.video.readyState < 2) {
+                await this.sleep();
+                this.predictFaceLandmarker();
+                return;
+            }
+            if (this.video.currentTime !== this.lastVideoTime) {
+                this.lastVideoTime = this.video.currentTime;
+                const startTimeMs = performance.now();
+                results = await this.faceLandmarker.detectForVideo(this.video, startTimeMs);
+            } else {
+                return;
+            }
+            this.faceLandmarkerVideoCanvasCtx.save();
+            this.faceLandmarkerVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
+
+            const { faceLandmarks } = results;
+            this.prevFaceLandmarkerResult = results;
+            if (faceLandmarks.length) {
+                if (!this.isPrevFaceLandmarker) {
+                    this.isPrevFaceLandmarker = true;
+                    Entry.engine.fireEvent('when_face_landmarker');
+                }
+                if (faceLandmarks.length !== this.countDetectedFace) {
+                    this.countDetectedFace = faceLandmarks.length;
+                }
+                if (!this.isDrawDetectedFaceLandmarker) {
+                    return;
+                }
+
+                faceLandmarks.forEach((landmark, i) => {
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_TESSELATION,
+                        {
+                            color: '#C0C0C070',
+                            lineWidth: 1,
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,
+                        {
+                            color: '#FF3030',
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW,
+                        { color: '#FF3030' }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,
+                        {
+                            color: '#30FF30',
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW,
+                        {
+                            color: '#30FF30',
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,
+                        {
+                            color: '#E0E0E0',
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_LIPS,
+                        {
+                            color: '#E0E0E0',
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_RIGHT_IRIS,
+                        {
+                            color: '#FF3030',
+                        }
+                    );
+                    this.faceLandmarkerDrawingUtils.drawConnectors(
+                        landmark,
+                        FaceLandmarker.FACE_LANDMARKS_LEFT_IRIS,
+                        {
+                            color: '#30FF30',
+                        }
+                    );
+                });
+            } else {
+                this.isPrevFaceLandmarker = false;
+                this.countDetectedFace = 0;
+            }
+        } catch (e) {
+            console.error(e);
+        } finally {
+            this.faceLandmarkerVideoCanvasCtx.restore();
+            if (this.isRunningFaceLandmarker === true) {
+                window.requestAnimationFrame(this.predictFaceLandmarker.bind(this));
             }
         }
     }
@@ -838,6 +1163,23 @@ class MediaPipeUtils {
         };
     }
 
+    getFacePointAxis(face: number, facePoint: number) {
+        if (!this.prevFaceLandmarkerResult) {
+            return;
+        }
+        const { faceLandmarks } = this.prevFaceLandmarkerResult;
+        if (!faceLandmarks.length) {
+            return;
+        }
+        const landmark = faceLandmarks[face];
+        const pointAxis = landmark[facePoint];
+        return {
+            x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
+            y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,
+            z: pointAxis.z,
+        };
+    }
+
     getHandedness(hand: number) {
         if (!this.prevGestureRecognizerResult) {
             return;
@@ -860,69 +1202,6 @@ class MediaPipeUtils {
         return gestures[hand][0];
     }
 
-    isFlipState(type: string) {
-        if (type === 'horizontal') {
-            return this.flipState === flipState.BOTH || this.flipState === flipState.HORIZONTAL;
-        } else if (type === 'vertical') {
-            return this.flipState === flipState.BOTH || this.flipState === flipState.VERTICAL;
-        }
-    }
-
-    motionDetect(sprite?: any): Promise<MotionElement> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (!this.motionCanvas || !this.isRunning) {
-                    resolve(undefined);
-                    return;
-                }
-                if (this.video.readyState < 2) {
-                    await this.sleep();
-                    resolve(this.motionDetect(sprite));
-                    return;
-                }
-
-                if (sprite) {
-                    const returnMessage = ({ data }: MessageEvent) => {
-                        if (data.action === 'sprite_return') {
-                            this.motionWorker.removeEventListener('message', returnMessage);
-                            resolve(data.result);
-                        }
-                    };
-                    this.motionWorker.addEventListener('message', returnMessage);
-                }
-                const { STAGE_WIDTH: width, STAGE_HEIGHT: height, SAMPLE_SIZE: sampleSize } = this;
-                const [minX, maxX] = [0, width];
-                const [minY, maxY] = [0, height];
-                const imageBitmap = await createImageBitmap(this.video);
-                this.motionWorker.postMessage({
-                    sprite: sprite && {
-                        x: sprite.x,
-                        y: sprite.y,
-                        width: sprite.width,
-                        height: sprite.height,
-                        scaleX: sprite.scaleX,
-                        scaleY: sprite.scaleY,
-                    },
-                    action: 'motion',
-                    range: {
-                        minX,
-                        maxX,
-                        minY,
-                        maxY,
-                    },
-                    imageBitmap,
-                });
-
-                if (!sprite) {
-                    resolve(undefined);
-                }
-            } catch (e) {
-                console.error(e);
-                reject(e);
-            }
-        });
-    }
-
     reset() {
         if (this.isInitGestureRecognition) {
             this.changeDrawDetectedHand(false);
@@ -933,6 +1212,11 @@ class MediaPipeUtils {
             this.changeDrawDetectedPoseLandmarker(false);
             this.stopPoseLandmarker();
             this.prevPoseLandmarkerResult = undefined;
+        }
+        if (this.isInitFaceLandmarker) {
+            this.changeDrawDetectedFaceLandmarker(false);
+            this.stopFaceLandmarker();
+            this.prevFaceLandmarkerResult = undefined;
         }
         this.turnOffWebcam();
     }

@@ -36,6 +36,7 @@ require('./block_ai_utilize_translate');
 require('./block_ai_utilize_video');
 require('./block_ai_utilize_gesture_recognition');
 require('./block_ai_utilize_pose_landmarker');
+require('./block_ai_utilize_face_landmarker');
 Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
@@ -43,6 +44,7 @@ Entry.AI_UTILIZE_BLOCK_LIST = {
     video: Entry.AI_UTILIZE_BLOCK.video,
     gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
     poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
+    faceLandmarker: Entry.AI_UTILIZE_BLOCK.faceLandmarker,
 };
 
 Entry.EXPANSION_BLOCK = {};

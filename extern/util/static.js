@@ -552,6 +552,7 @@ EntryStatic.getAllBlocks = function() {
                 'locate_to_pose',
                 'locate_time_to_pose',
                 'axis_detected_pose',
+                'when_face_landmarker',
             ],
         },
         {
