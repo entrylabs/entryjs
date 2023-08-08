@@ -546,6 +546,9 @@ EntryStatic.getAllBlocks = function() {
                 'get_which_gesture',
                 'when_pose_landmarker',
                 'pose_landmarker',
+                'draw_detected_pose',
+                'check_detected_pose',
+                'count_detected_pose',
             ],
         },
         {

@@ -225,75 +225,75 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 return script.callReturn();
             },
         },
-        // draw_detected_hand: {
-        //     template: '인식한 손 %1 %2',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [params.getShowHide(), params.getCommonIndicator()],
-        //     events: {},
-        //     def: {
-        //         type: 'draw_detected_hand',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'pose',
-        //     isNotFor: ['poseLandmarker'],
-        //     async func(sprite, script) {
-        //         const value = script.getField('VALUE');
-        //         if (!mediaPipeUtils.isInitialized) {
-        //             await mediaPipeUtils.initialize();
-        //         }
-        //         if (value === 'show') {
-        //             mediaPipeUtils.changeDrawDetectedHand(true);
-        //         } else {
-        //             mediaPipeUtils.changeDrawDetectedHand(false);
-        //         }
-        //         return script.callReturn();
-        //     },
-        // },
-        // check_detected_hand: {
-        //     template: '손을 인식했는가?',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_boolean_field',
-        //     statements: [],
-        //     params: [],
-        //     events: {},
-        //     def: {
-        //         type: 'check_detected_hand',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'pose',
-        //     isNotFor: ['poseLandmarker'],
-        //     func(sprite, script) {
-        //         return mediaPipeUtils.isPrevHandDetected;
-        //     },
-        // },
-        // count_detected_hand: {
-        //     template: '인식한 손의 수',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_string_field',
-        //     statements: [],
-        //     params: [],
-        //     events: {},
-        //     def: {
-        //         type: 'count_detected_hand',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'pose',
-        //     isNotFor: ['poseLandmarker'],
-        //     func(sprite, script) {
-        //         return mediaPipeUtils.countDetectedHand;
-        //     },
-        // },
+        draw_detected_pose: {
+            template: '인식한 사람 %1 %2',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic',
+            statements: [],
+            params: [params.getShowHide(), params.getCommonIndicator()],
+            events: {},
+            def: {
+                type: 'draw_detected_pose',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'pose',
+            isNotFor: ['poseLandmarker'],
+            async func(sprite, script) {
+                const value = script.getField('VALUE');
+                if (!mediaPipeUtils.isInitialized) {
+                    await mediaPipeUtils.initialize();
+                }
+                if (value === 'show') {
+                    mediaPipeUtils.changeDrawDetectedPoseLandmarker(true);
+                } else {
+                    mediaPipeUtils.changeDrawDetectedPoseLandmarker(false);
+                }
+                return script.callReturn();
+            },
+        },
+        check_detected_pose: {
+            template: '사람을 인식했는가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'check_detected_pose',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'pose',
+            isNotFor: ['poseLandmarker'],
+            func(sprite, script) {
+                return mediaPipeUtils.isPrevPoseLandmarker;
+            },
+        },
+        count_detected_pose: {
+            template: '인식한 사람의 수',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'count_detected_pose',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'pose',
+            isNotFor: ['poseLandmarker'],
+            func(sprite, script) {
+                return mediaPipeUtils.countDetectedPose;
+            },
+        },
         // locate_to_hand: {
         //     template: '%1 번째의 손의 %2 %3 (으)로 이동하기 %4',
         //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,

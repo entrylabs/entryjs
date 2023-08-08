@@ -124,6 +124,7 @@ class MediaPipeUtils {
     public isPrevPoseLandmarker: boolean = false;
     public isRunningPoseLandmarker: boolean = false;
     public countDetectedHand: number;
+    public countDetectedPose: number;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
     private STAGE_WIDTH: number = 480;
@@ -407,8 +408,8 @@ class MediaPipeUtils {
                 Entry.engine.fireEvent('when_pose_landmarker');
             } else if (data.action === 'stop_pose_landmarker') {
                 this.isPrevPoseLandmarker = false;
-            } else if (data.action === 'count_detected_hand_pose_landmarker') {
-                // this.countDetectedHand = data.count;
+            } else if (data.action === 'count_detected_pose_landmarker') {
+                this.countDetectedPose = data.count;
             } else if (data.action === 'pose_landmarker_data') {
                 this.prevPoseLandmarkerResult = data.poseLandmarkerResult;
             }
@@ -588,7 +589,7 @@ class MediaPipeUtils {
     async stopPoseLandmarker() {
         this.isRunningPoseLandmarker = false;
         this.isPrevPoseLandmarker = false;
-        // this.countDetectedHand = 0;
+        this.countDetectedPose = 0;
         if (this.canWorker) {
             this.poseLandmarkerWorker.postMessage({
                 action: 'clear_pose_landmarker',
@@ -646,7 +647,7 @@ class MediaPipeUtils {
                 delegate: 'GPU',
             },
             runningMode: 'VIDEO',
-            numPoses: 1,
+            numPoses: 2,
         });
     }
 
@@ -773,9 +774,9 @@ class MediaPipeUtils {
                     this.isPrevPoseLandmarker = true;
                     Entry.engine.fireEvent('when_pose_landmarker');
                 }
-                // if (landmarks.length !== this.countDetectedHand) {
-                //     this.countDetectedHand = landmarks.length;
-                // }
+                if (landmarks.length !== this.countDetectedPose) {
+                    this.countDetectedPose = landmarks.length;
+                }
                 if (!this.isDrawDetectedPoseLandmarker) {
                     return;
                 }
@@ -791,7 +792,7 @@ class MediaPipeUtils {
                 });
             } else {
                 this.isPrevPoseLandmarker = false;
-                // this.countDetectedHand = 0;
+                this.countDetectedPose = 0;
             }
         } catch (e) {
             console.error(e);

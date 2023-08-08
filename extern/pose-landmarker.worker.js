@@ -3,8 +3,8 @@ self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 self.onmessage = async ({ data }) => {
     if (data.action === 'pose_landmarker_init') {
         initializePoseLandmarker(data);
-    } else if (data.action === 'gesture_recognizer_change_option') {
-        changeGestureOption(data.option);
+    } else if (data.action === 'pose_landmarker_change_option') {
+        changePoseLandmarkerOption(data.option);
     } else if (data.action === 'pose_landmarker') {
         predictPoseLandmarker(data.imageBitmap);
     } else if (data.action === 'clear_pose_landmarker') {
@@ -15,10 +15,8 @@ self.onmessage = async ({ data }) => {
 let workerContext;
 let drawingUtils;
 let poseLandmarker;
-let isPrevHandDetected = false;
 let isPrevPoseLandmarker = false;
-let countDetectedHand = 0;
-let isDrawDetectedHand = false;
+let countDetectedPose = 0;
 let isDrawDetectedPoseLandmarker = false;
 
 const initializePoseLandmarker = async (data) => {
@@ -34,9 +32,13 @@ const initializePoseLandmarker = async (data) => {
             delegate: 'GPU',
         },
         runningMode: 'VIDEO',
-        numPoses: 1,
+        numPoses: 2,
     });
     self.postMessage({ action: 'next_pose_landmarker' });
+};
+
+const changePoseLandmarkerOption = (option) => {
+    isDrawDetectedPoseLandmarker = option.isDrawDetectedPoseLandmarker;
 };
 
 const YX = (a) => {
@@ -62,16 +64,16 @@ const predictPoseLandmarker = async (imageBitmap) => {
                 isPrevPoseLandmarker = true;
                 self.postMessage({ action: 'start_pose_landmarker' });
             }
-            // if (landmarks.length !== countDetectedHand) {
-            //     countDetectedHand = landmarks.length;
-            //     self.postMessage({
-            //         action: 'count_detected_hand_gesture_recognizer',
-            //         count: countDetectedHand,
-            //     });
-            // }
-            // if (!isDrawDetectedPoseLandmarker) {
-            //     return;
-            // }
+            if (landmarks.length !== countDetectedPose) {
+                countDetectedPose = landmarks.length;
+                self.postMessage({
+                    action: 'count_detected_pose_landmarker',
+                    count: countDetectedPose,
+                });
+            }
+            if (!isDrawDetectedPoseLandmarker) {
+                return;
+            }
             landmarks.forEach((landmark, i) => {
                 drawingUtils.drawLandmarks(landmark, {
                     radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1),
@@ -80,7 +82,7 @@ const predictPoseLandmarker = async (imageBitmap) => {
             });
         } else if (isPrevPoseLandmarker) {
             isPrevPoseLandmarker = false;
-            // countDetectedHand = 0;
+            countDetectedPose = 0;
             self.postMessage({ action: 'stop_pose_landmarker' });
         }
     } catch (e) {
