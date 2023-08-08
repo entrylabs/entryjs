@@ -53,6 +53,8 @@ Entry.Robotry_Parodule.setLanguage = function () {
     return {
         ko: {
             template: {
+                Parodule_Input_title: '센서 블럭\0',
+                Parodule_Sensor_Data: '%1 센서',
                 Parodule_Output_title: '제어 블럭\0',
                 Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
@@ -74,13 +76,15 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 Parodule_Custom_Set: '메인모듈에 연결된 모듈들을 정의합니다.',
                 Parodule_Custom_Motor: '모터 모듈을 움직입니다.',
 
-                Parodule_Update: '파로듈 업데이트',
+                //Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
             }
         },
         en: {
             template: {
+                Parodule_Input_title: '센서 블럭\0',
+                Parodule_Sensor_Data: '%1 센서',
                 Parodule_Output_title: '제어 블럭\0',
                 Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
@@ -102,7 +106,7 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 Parodule_Custom_Set: '메인모듈에 연결된 모듈들을 정의합니다.',
                 Parodule_Custom_Motor: '모터 모듈을 움직입니다.',
 
-                Parodule_Update: '파로듈 업데이트',
+                //Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
             },
@@ -112,6 +116,8 @@ Entry.Robotry_Parodule.setLanguage = function () {
 
 // 블록의 배치 순서
 Entry.Robotry_Parodule.blockMenuBlocks = [
+    'Parodule_Input_title',
+    'Parodule_Sensor_Data',
     'Parodule_Output_title',
     'Parodule_LED',
     'Parodule_Motor',
@@ -123,7 +129,7 @@ Entry.Robotry_Parodule.blockMenuBlocks = [
     'Parodule_Custom_Motor',
     'Parodule_Custom_Buzzer',
 
-    'Parodule_Update',
+    //'Parodule_Update',
 ];
 
 /* 
@@ -132,6 +138,81 @@ Entry.Robotry_Parodule.blockMenuBlocks = [
  */
 Entry.Robotry_Parodule.getBlocks = function () {
     return {
+        Parodule_Input_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Input_title),
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: EntryStatic.colorSet.common.TEXT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.Parodule_Input_title,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'Parodule_Input_title',
+            },
+            class: 'TITLE',
+            isNotFor: ['Robotry_Parodule'],
+            events: {},
+        },
+
+        Parodule_Sensor_Data: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['세모', 0],
+                        ['원', 3],
+                        ['네모', 1],
+                        ['십자', 2],
+                    ],
+                    value: [1],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'Parodule_Sensor_Data',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'Get',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                const sensor_data = Entry.hw.portData.SENSOR;
+                let value = false;
+                if (sensor_data[port] === 48) {
+                    value = false;
+                }
+                else if (sensor_data[port] === 49) {
+                    value = true;
+                }
+                return value;
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
         Parodule_Output_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
