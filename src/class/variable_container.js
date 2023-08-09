@@ -2054,7 +2054,7 @@ Entry.VariableContainer = class VariableContainer {
             return failFunc(
                 message.name,
                 Lang.Workspace.message_rename_failed,
-                Lang.Workspace.message_too_long
+                Lang.Workspace.message_too_long_to_change
             );
         }
 
