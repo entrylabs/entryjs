@@ -58,7 +58,6 @@ module.exports = {
 
         return {
             media_pipe_video_screen: {
-                template: '비디오 화면 %1 %2',
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 skeleton: 'basic',
@@ -88,7 +87,6 @@ module.exports = {
                 },
             },
             media_pipe_switch_camera: {
-                template: '%1 카메라로 바꾸기 %2',
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 skeleton: 'basic',
@@ -114,7 +112,6 @@ module.exports = {
                 },
             },
             check_connected_camera: {
-                template: '비디오가 연결되었는가?',
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 skeleton: 'basic_boolean_field',
@@ -139,7 +136,6 @@ module.exports = {
                 },
             },
             media_pipe_flip_camera: {
-                template: '비디오 화면 %1 뒤집기 %2',
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 skeleton: 'basic',
@@ -170,7 +166,6 @@ module.exports = {
                 },
             },
             media_pipe_set_opacity_camera: {
-                template: '비디오 투명도 효과를 %1 으로 정하기 %2',
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 skeleton: 'basic',
@@ -208,7 +203,6 @@ module.exports = {
                 },
             },
             media_pipe_motion_value: {
-                template: '%1 에서 감지한 %2 값',
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 skeleton: 'basic_string_field',
