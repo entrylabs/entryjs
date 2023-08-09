@@ -6,10 +6,9 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker = {
     imageName: 'faceLandmarker.svg',
     title: {
         ko: '얼굴 인식',
-        en: 'Face Landmarker',
-        jp: 'ビデオ検出',
+        en: 'Face Detection',
     },
-    titleKey: 'template.face_landmarker_title_text',
+    titleKey: 'Workspace.face_landmarker_title_text',
     description: Lang.Msgs.ai_utilize_face_landmarker_description,
     descriptionKey: 'Msgs.ai_utilize_face_landmarker_description',
     isInitialized: false,
@@ -58,35 +57,17 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
-        getGesture() {
-            return {
-                type: 'Dropdown',
-                options: [
-                    ['쥔 손', 'Closed_Fist'],
-                    ['편 손', 'Open_Palm'],
-                    ['가리킨 손', 'Pointing_Up'],
-                    ['엄지 아래로', 'Thumb_Down'],
-                    ['엄지 위로', 'Thumb_Up'],
-                    ['브이 사인', 'Victory'],
-                    ['사랑해', 'ILoveYou'],
-                ],
-                value: 'Left',
-                fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            };
-        },
         getFacePoint() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['왼쪽 눈', 374],
-                    ['오른쪽 눈', 145],
-                    ['코', 4],
-                    ['왼쪽 입꼬리', 291],
-                    ['오른쪽 입꼬리', 61],
-                    ['윗 입술', 0],
-                    ['아랫 입술', 17],
+                    [Lang.video_body_coord_params.left_eye, 374],
+                    [Lang.video_body_coord_params.right_eye, 145],
+                    [Lang.video_body_coord_params.nose, 4],
+                    [Lang.video_body_coord_params.left_mouth, 291],
+                    [Lang.video_body_coord_params.right_mouth, 61],
+                    [Lang.video_body_coord_params.upper_lip, 0],
+                    [Lang.video_body_coord_params.lower_lip, 17],
                 ],
                 value: 374,
                 fontSize: 11,
@@ -112,8 +93,8 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['시작하기', 'start'],
-                    ['중지하기', 'stop'],
+                    [Lang.Blocks.video_start, 'start'],
+                    [Lang.Blocks.video_end, 'stop'],
                 ],
                 value: 'start',
                 fontSize: 11,
@@ -125,8 +106,8 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['보이기', 'show'],
-                    ['숨기기', 'hide'],
+                    [Lang.Blocks.video_show_video, 'show'],
+                    [Lang.Blocks.video_hide_video, 'hide'],
                 ],
                 value: 'show',
                 fontSize: 11,
@@ -137,7 +118,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
     };
     return {
         when_face_landmarker: {
-            template: '%1 얼굴을 인식했을 때',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_event',
@@ -159,7 +139,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             },
         },
         face_landmarker: {
-            template: '얼굴 인식 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -188,7 +167,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             },
         },
         draw_detected_face: {
-            template: '인식한 얼굴 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -217,7 +195,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             },
         },
         check_detected_face: {
-            template: '얼굴을 인식했는가?',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
@@ -237,7 +214,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             },
         },
         count_detected_face: {
-            template: '인식한 얼굴의 수',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -257,7 +233,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             },
         },
         locate_to_face: {
-            template: '%1 번째의 얼굴의 %2 (으)로 이동하기 %3',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -288,7 +263,6 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             },
         },
         locate_time_to_face: {
-            template: '%1 초 동안 %2 번째의 얼굴의 %3 (으)로 이동하기 %4',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
