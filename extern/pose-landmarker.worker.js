@@ -12,6 +12,7 @@ self.onmessage = async ({ data }) => {
     }
 };
 
+let person;
 let workerContext;
 let drawingUtils;
 let poseLandmarker;
@@ -20,8 +21,9 @@ let countDetectedPose = 0;
 let isDrawDetectedPoseLandmarker = false;
 
 const initializePoseLandmarker = async (data) => {
-    const { canvas } = data;
-    isDrawDetectedPoseLandmarker = data.isDrawDetectedPoseLandmarker;
+    const { canvas, lang, option } = data;
+    person = lang.person;
+    isDrawDetectedPoseLandmarker = option.isDrawDetectedPoseLandmarker;
     workerContext = canvas.getContext('2d');
     workerContext.font = '20px Arial';
     drawingUtils = new DrawingUtils(workerContext);
@@ -74,7 +76,7 @@ const predictPoseLandmarker = async (imageBitmap) => {
                 const mark7 = landmark[7];
                 workerContext.scale(-1, 1);
                 workerContext.fillStyle = '#FF0000';
-                workerContext.fillText(`${i + 1}-사람`, -mark7.x * 640, mark7.y * 360 - 20);
+                workerContext.fillText(`${i + 1}-${person}`, -mark7.x * 640, mark7.y * 360 - 20);
                 workerContext.scale(-1, 1);
                 drawingUtils.drawLandmarks(landmark, {
                     radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1),

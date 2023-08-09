@@ -12,6 +12,8 @@ self.onmessage = async ({ data }) => {
     }
 };
 
+let leftHand;
+let rightHand;
 let workerContext;
 let drawingUtils;
 let gestureRecognizer;
@@ -20,8 +22,10 @@ let countDetectedHand = 0;
 let isDrawDetectedHand = false;
 
 const initializeGesture = async (data) => {
-    const { canvas } = data;
-    isDrawDetectedHand = data.isDrawDetectedHand;
+    const { canvas, lang, option } = data;
+    leftHand = lang.leftHand;
+    rightHand = lang.rightHand;
+    isDrawDetectedHand = option.isDrawDetectedHand;
     workerContext = canvas.getContext('2d');
     workerContext.font = '20px Arial';
     drawingUtils = new DrawingUtils(workerContext);
@@ -81,12 +85,20 @@ const predictGesture = (imageBitmap) => {
                 workerContext.scale(-1, 1);
                 if (handedness.categoryName === 'Left') {
                     workerContext.fillStyle = '#FF0000';
-                    workerContext.fillText(`${i + 1}-오른손`, -mark12.x * 640, mark12.y * 360 - 20);
+                    workerContext.fillText(
+                        `${i + 1}-${rightHand}`,
+                        -mark12.x * 640,
+                        mark12.y * 360 - 20
+                    );
                     connectColor = '#FF0000';
                     landmarkColor = '#00FF00';
                 } else {
                     workerContext.fillStyle = '#00FF00';
-                    workerContext.fillText(`${i + 1}-왼손`, -mark12.x * 640, mark12.y * 360 - 20);
+                    workerContext.fillText(
+                        `${i + 1}-${leftHand}`,
+                        -mark12.x * 640,
+                        mark12.y * 360 - 20
+                    );
                     connectColor = '#00FF00';
                     landmarkColor = '#FF0000';
                 }

@@ -20,8 +20,8 @@ let countDetectedFace = 0;
 let isDrawDetectedFaceLandmarker = false;
 
 const initializeFaceLandmarker = async (data) => {
-    const { canvas } = data;
-    isDrawDetectedFaceLandmarker = data.isDrawDetectedFaceLandmarker;
+    const { canvas, option } = data;
+    isDrawDetectedFaceLandmarker = option.isDrawDetectedFaceLandmarker;
     workerContext = canvas.getContext('2d');
     workerContext.font = '20px Arial';
     drawingUtils = new DrawingUtils(workerContext);
