@@ -207,7 +207,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 const sensor_data = Entry.hw.portData.SENSOR;
-                const module_data = Entry.hw.portData.MODULE;
+                const module_data = Entry.hw.portData.MODULE; // 연결된 모듈 데이터 가져오기
                 let value = false;
                 if (sensor_data[port] === 48) {
                     value = false;
