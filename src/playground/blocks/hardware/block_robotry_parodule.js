@@ -79,6 +79,10 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 //Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
+                light: '빛',
+                sound: '소리',
+                button: '버튼',
+                isSensor: 'NON',
             }
         },
         en: {
@@ -109,6 +113,10 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 //Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
+                light: '빛',
+                sound: '소리',
+                button: '버튼',
+                isSensor: 'NON',
             },
         },
     };
@@ -199,6 +207,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 const sensor_data = Entry.hw.portData.SENSOR;
+                const module_data = Entry.hw.portData.MODULE;
                 let value = false;
                 if (sensor_data[port] === 48) {
                     value = false;
