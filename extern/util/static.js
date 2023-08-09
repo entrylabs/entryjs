@@ -563,6 +563,9 @@ EntryStatic.getAllBlocks = function() {
                 'when_object_detector',
                 'object_detector',
                 'draw_detected_object',
+                'check_detected_object',
+                'count_detected_object',
+                'is_detected_among_objects',
             ],
         },
         {

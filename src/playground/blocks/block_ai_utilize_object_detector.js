@@ -1,13 +1,13 @@
 import MediaPipeUtils from '../../util/mediaPipeUtils';
+import _get from 'lodash/get';
 
 const mediaPipeUtils = MediaPipeUtils.getInstance();
 Entry.AI_UTILIZE_BLOCK.objectDetector = {
     name: 'objectDetector',
     imageName: 'objectDetector.svg',
     title: {
-        ko: '사람 인식',
+        ko: '사물 인식',
         en: 'Object Detector',
-        jp: 'ビデオ検出',
     },
     titleKey: 'template.object_detector_title_text',
     description: Lang.Msgs.ai_utilize_object_detector_description,
@@ -160,6 +160,97 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
+        getObjectList() {
+            return {
+                type: 'DropdownExtra',
+                options: [
+                    [Lang.video_object_params.person, 'person'],
+                    [Lang.video_object_params.bicycle, 'bicycle'],
+                    [Lang.video_object_params.car, 'car'],
+                    [Lang.video_object_params.motorcycle, 'motorcycle'],
+                    [Lang.video_object_params.airplane, 'airplane'],
+                    [Lang.video_object_params.bus, 'bus'],
+                    [Lang.video_object_params.train, 'train'],
+                    [Lang.video_object_params.truck, 'truck'],
+                    [Lang.video_object_params.boat, 'boat'],
+                    [Lang.video_object_params['traffic light'], 'traffic light'],
+                    [Lang.video_object_params['fire hydrant'], 'fire hydrant'],
+                    [Lang.video_object_params['stop sign'], 'stop sign'],
+                    [Lang.video_object_params['parking meter'], 'parking meter'],
+                    [Lang.video_object_params.bench, 'bench'],
+                    [Lang.video_object_params.bird, 'bird'],
+                    [Lang.video_object_params.cat, 'cat'],
+                    [Lang.video_object_params.dog, 'dog'],
+                    [Lang.video_object_params.horse, 'horse'],
+                    [Lang.video_object_params.sheep, 'sheep'],
+                    [Lang.video_object_params.cow, 'cow'],
+                    [Lang.video_object_params.elephant, 'elephant'],
+                    [Lang.video_object_params.bear, 'bear'],
+                    [Lang.video_object_params.zebra, 'zebra'],
+                    [Lang.video_object_params.giraffe, 'giraffe'],
+                    [Lang.video_object_params.backpack, 'backpack'],
+                    [Lang.video_object_params.umbrella, 'umbrella'],
+                    [Lang.video_object_params.handbag, 'handbag'],
+                    [Lang.video_object_params.tie, 'tie'],
+                    [Lang.video_object_params.suitcase, 'suitcase'],
+                    [Lang.video_object_params.frisbee, 'frisbee'],
+                    [Lang.video_object_params.skis, 'skis'],
+                    [Lang.video_object_params.snowboard, 'snowboard'],
+                    [Lang.video_object_params['sports ball'], 'sports ball'],
+                    [Lang.video_object_params.kite, 'kite'],
+                    [Lang.video_object_params['baseball bat'], 'baseball bat'],
+                    [Lang.video_object_params['baseball glove'], 'baseball glove'],
+                    [Lang.video_object_params.skateboard, 'skateboard'],
+                    [Lang.video_object_params.surfboard, 'surfboard'],
+                    [Lang.video_object_params['tennis racket'], 'tennis racket'],
+                    [Lang.video_object_params.bottle, 'bottle'],
+                    [Lang.video_object_params['wine glass'], 'wine glass'],
+                    [Lang.video_object_params.cup, 'cup'],
+                    [Lang.video_object_params.fork, 'fork'],
+                    [Lang.video_object_params.knife, 'knife'],
+                    [Lang.video_object_params.spoon, 'spoon'],
+                    [Lang.video_object_params.bowl, 'bowl'],
+                    [Lang.video_object_params.banana, 'banana'],
+                    [Lang.video_object_params.apple, 'apple'],
+                    [Lang.video_object_params.sandwich, 'sandwich'],
+                    [Lang.video_object_params.orange, 'orange'],
+                    [Lang.video_object_params.broccoli, 'broccoli'],
+                    [Lang.video_object_params.carrot, 'carrot'],
+                    [Lang.video_object_params['hot dog'], 'hot dog'],
+                    [Lang.video_object_params.pizza, 'pizza'],
+                    [Lang.video_object_params.donut, 'donut'],
+                    [Lang.video_object_params.cake, 'cake'],
+                    [Lang.video_object_params.chair, 'chair'],
+                    [Lang.video_object_params.couch, 'couch'],
+                    [Lang.video_object_params['potted plant'], 'potted plant'],
+                    [Lang.video_object_params.bed, 'bed'],
+                    [Lang.video_object_params['dining table'], 'dining table'],
+                    [Lang.video_object_params.toilet, 'toilet'],
+                    [Lang.video_object_params.tv, 'tv'],
+                    [Lang.video_object_params.laptop, 'laptop'],
+                    [Lang.video_object_params.mouse, 'mouse'],
+                    [Lang.video_object_params.remote, 'remote'],
+                    [Lang.video_object_params.keyboard, 'keyboard'],
+                    [Lang.video_object_params['cell phone'], 'cell phone'],
+                    [Lang.video_object_params.microwave, 'microwave'],
+                    [Lang.video_object_params.oven, 'oven'],
+                    [Lang.video_object_params.toaster, 'toaster'],
+                    [Lang.video_object_params.sink, 'sink'],
+                    [Lang.video_object_params.refrigerator, 'refrigerator'],
+                    [Lang.video_object_params.book, 'book'],
+                    [Lang.video_object_params.clock, 'clock'],
+                    [Lang.video_object_params.vase, 'vase'],
+                    [Lang.video_object_params.scissors, 'scissors'],
+                    [Lang.video_object_params['teddy bear'], 'teddy bear'],
+                    [Lang.video_object_params['hair drier'], 'hair drier'],
+                    [Lang.video_object_params.toothbrush, 'toothbrush'],
+                ],
+                value: 'bicycle',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
     };
     return {
         when_object_detector: {
@@ -242,183 +333,71 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
                 return script.callReturn();
             },
         },
-        // check_detected_object: {
-        //     template: '사람을 인식했는가?',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_boolean_field',
-        //     statements: [],
-        //     params: [],
-        //     events: {},
-        //     def: {
-        //         type: 'check_detected_object',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'object',
-        //     isNotFor: ['objectDetector'],
-        //     func(sprite, script) {
-        //         return mediaPipeUtils.isPrevObjectDetector;
-        //     },
-        // },
-        // count_detected_object: {
-        //     template: '인식한 사람의 수',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_string_field',
-        //     statements: [],
-        //     params: [],
-        //     events: {},
-        //     def: {
-        //         type: 'count_detected_object',
-        //     },
-        //     paramsKeyMap: {
-        //         VALUE: 0,
-        //     },
-        //     class: 'object',
-        //     isNotFor: ['objectDetector'],
-        //     func(sprite, script) {
-        //         return mediaPipeUtils.countDetectedObject;
-        //     },
-        // },
-        // locate_to_object: {
-        //     template: '%1 번째의 사람의 %2 (으)로 이동하기 %3',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [params.getObjectNumber(), params.getObjectPoint(), params.getCommonIndicator()],
-        //     events: {},
-        //     def: {
-        //         type: 'locate_to_object',
-        //     },
-        //     paramsKeyMap: {
-        //         OBJECT: 0,
-        //         OBJECT_POINT: 1,
-        //     },
-        //     class: 'object',
-        //     isNotFor: ['objectDetector'],
-        //     func(sprite, script) {
-        //         const object = script.getField('OBJECT');
-        //         const point = script.getField('OBJECT_POINT');
-        //         const axis = mediaPipeUtils.getObjectPointAxis(object, point);
-        //         if (axis) {
-        //             sprite.setX(axis.x);
-        //             sprite.setY(axis.y);
-        //             if (sprite.brush && !sprite.brush.stop) {
-        //                 sprite.brush.lineTo(axis.x, axis.y * -1);
-        //             }
-        //         }
-        //         return script.callReturn();
-        //     },
-        // },
-        // locate_time_to_object: {
-        //     template: '%1 초 동안 %2 번째의 사람의 %3 (으)로 이동하기 %4',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic',
-        //     statements: [],
-        //     params: [
-        //         {
-        //             type: 'Block',
-        //             accept: 'string',
-        //             defaultType: 'number',
-        //         },
-        //         params.getObjectNumber(),
-        //         params.getObjectPoint(),
-        //         params.getCommonIndicator(),
-        //     ],
-        //     events: {},
-        //     def: {
-        //         params: [
-        //             {
-        //                 type: 'number',
-        //                 params: ['2'],
-        //             },
-        //             null,
-        //             null,
-        //         ],
-        //         type: 'locate_time_to_object',
-        //     },
-        //     paramsKeyMap: {
-        //         TIME: 0,
-        //         OBJECT: 1,
-        //         OBJECT_POINT: 2,
-        //     },
-        //     class: 'object',
-        //     isNotFor: ['objectDetector'],
-        //     func(sprite, script) {
-        //         if (!script.isStart) {
-        //             const time = script.getNumberValue('TIME', script);
-        //             const frameCount = Math.floor(time * Entry.FPS);
-        //             const object = script.getField('OBJECT', script);
-        //             const point = script.getField('OBJECT_POINT', script);
-
-        //             if (frameCount != 0) {
-        //                 const axis = mediaPipeUtils.getObjectPointAxis(object, point);
-        //                 if (axis) {
-        //                     script.isStart = true;
-        //                     script.frameCount = frameCount;
-        //                     script.dX = (axis.x - sprite.getX()) / script.frameCount;
-        //                     script.dY = (axis.y - sprite.getY()) / script.frameCount;
-        //                 }
-        //             } else {
-        //                 const axis = mediaPipeUtils.getObjectPointAxis(object, point);
-        //                 if (axis) {
-        //                     sprite.setX(axis.x);
-        //                     sprite.setY(axis.y);
-        //                     if (sprite.brush && !sprite.brush.stop) {
-        //                         sprite.brush.lineTo(axis.x, axis.y * -1);
-        //                     }
-        //                 }
-        //                 return script.callReturn();
-        //             }
-        //         }
-        //         if (script.frameCount != 0) {
-        //             sprite.setX(sprite.getX() + script.dX);
-        //             sprite.setY(sprite.getY() + script.dY);
-        //             script.frameCount--;
-        //             if (sprite.brush && !sprite.brush.stop) {
-        //                 sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
-        //             }
-        //             return script;
-        //         } else {
-        //             delete script.isStart;
-        //             delete script.frameCount;
-        //             return script.callReturn();
-        //         }
-        //     },
-        // },
-        // axis_detected_object: {
-        //     template: '%1 번째 사람의 %2 의 %3 좌표',
-        //     color: EntryStatic.colorSet.block.default.AI_UTILIZE,
-        //     outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-        //     skeleton: 'basic_string_field',
-        //     statements: [],
-        //     params: [params.getObjectNumber(), params.getObjectPoint(), params.getAxis()],
-        //     events: {},
-        //     def: {
-        //         params: [null, null, null],
-        //         type: 'axis_detected_object',
-        //     },
-        //     paramsKeyMap: {
-        //         OBJECT: 0,
-        //         OBJECT_POINT: 1,
-        //         AXIS: 2,
-        //     },
-        //     class: 'object',
-        //     isNotFor: ['objectDetector'],
-        //     func(sprite, script) {
-        //         const object = script.getField('OBJECT', script);
-        //         const point = script.getField('OBJECT_POINT', script);
-        //         const axisName = script.getField('AXIS', script);
-        //         const axis = mediaPipeUtils.getObjectPointAxis(object, point);
-        //         if (axis) {
-        //             return axis[axisName];
-        //         }
-        //         return 0;
-        //     },
-        // },
+        check_detected_object: {
+            template: '사물을 인식했는가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'check_detected_object',
+            },
+            paramsKeyMap: {},
+            class: 'object',
+            isNotFor: ['objectDetector'],
+            func(sprite, script) {
+                return mediaPipeUtils.isPrevObjectDetector;
+            },
+        },
+        count_detected_object: {
+            template: '인식한 사물의 수',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [],
+            events: {},
+            def: {
+                type: 'count_detected_object',
+            },
+            paramsKeyMap: {},
+            class: 'object',
+            isNotFor: ['objectDetector'],
+            func(sprite, script) {
+                return mediaPipeUtils.countDetectedObject;
+            },
+        },
+        is_detected_among_objects: {
+            template: '사물중 %1 을(를) 인식했는가?',
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getObjectList()],
+            events: {},
+            def: {
+                type: 'is_detected_among_objects',
+            },
+            paramsKeyMap: {
+                TARGET: 0,
+            },
+            class: 'object',
+            isNotFor: ['objectDetector'],
+            func(sprite, script) {
+                const target = script.getField('TARGET');
+                const objectDetectorResult = mediaPipeUtils.prevObjectDetectorResult;
+                const detections = _get(objectDetectorResult, 'detections');
+                if (detections) {
+                    const isFound = detections.some((detect) =>
+                        detect.categories.some((category) => category.categoryName === target)
+                    );
+                    return isFound;
+                }
+                console.log('objectDetectorResult', objectDetectorResult);
+                return false;
+            },
+        },
     };
 };
