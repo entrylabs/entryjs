@@ -15,7 +15,7 @@ module.exports = {
             getCommonIndicator() {
                 return {
                     type: 'Indicator',
-                    img: 'block_icon/ai_utilize_icon.svg',
+                    img: 'block_icon/ai_video_icon.svg',
                     size: 11,
                 };
             },

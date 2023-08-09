@@ -27,7 +27,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
         getEventIndicator() {
             return {
                 type: 'Indicator',
-                img: 'block_icon/start_icon_play.svg',
+                img: 'block_icon/start_icon_hand.svg',
                 size: 14,
                 position: {
                     x: 0,
@@ -38,7 +38,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
         getCommonIndicator() {
             return {
                 type: 'Indicator',
-                img: 'block_icon/ai_utilize_icon.svg',
+                img: 'block_icon/ai_hand_icon.svg',
                 size: 11,
             };
         },
