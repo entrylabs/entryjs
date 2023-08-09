@@ -7,9 +7,8 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
     title: {
         ko: '손 인식',
         en: 'Gesture Recognition',
-        jp: 'ビデオ検出',
     },
-    titleKey: 'template.gesture_recognition_title_text',
+    titleKey: 'Workspace.gesture_recognition_title_text',
     description: Lang.Msgs.ai_utilize_gesture_recognition_description,
     descriptionKey: 'Msgs.ai_utilize_gesture_recognition_description',
     isInitialized: false,
@@ -21,16 +20,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
         mediaPipeUtils.destroy();
         Entry.AI_UTILIZE_BLOCK.gestureRecognition.isInitialized = false;
     },
-};
-
-const gestureMap = {
-    Closed_Fist: '쥔 손',
-    Open_Palm: '편 손',
-    Pointing_Up: '가리킨 손',
-    Thumb_Down: '엄지 아래로',
-    Thumb_Up: '엄지 위로',
-    Victory: '브이 사인',
-    ILoveYou: '사랑해',
 };
 
 Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
@@ -70,8 +59,8 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['오른손', 'Left'],
-                    ['왼손', 'Right'],
+                    [Lang.Blocks.right_hand, 'Left'],
+                    [Lang.Blocks.left_hand, 'Right'],
                 ],
                 value: 'Left',
                 fontSize: 11,
@@ -83,15 +72,15 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['쥔 손', 'Closed_Fist'],
-                    ['편 손', 'Open_Palm'],
-                    ['가리킨 손', 'Pointing_Up'],
-                    ['엄지 아래로', 'Thumb_Down'],
-                    ['엄지 위로', 'Thumb_Up'],
-                    ['브이 사인', 'Victory'],
-                    ['사랑해', 'ILoveYou'],
+                    [Lang.gesture_list.closed_fist, 'Closed_Fist'],
+                    [Lang.gesture_list.open_palm, 'Open_Palm'],
+                    [Lang.gesture_list.pointing_up, 'Pointing_Up'],
+                    [Lang.gesture_list.thumb_down, 'Thumb_Down'],
+                    [Lang.gesture_list.thumb_up, 'Thumb_Up'],
+                    [Lang.gesture_list.victory, 'Victory'],
+                    [Lang.gesture_list.iloveyou, 'ILoveYou'],
                 ],
-                value: 'Left',
+                value: 'Closed_Fist',
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -101,12 +90,12 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['엄지', 1],
-                    ['검지', 5],
-                    ['중지', 9],
-                    ['약지', 13],
-                    ['소지', 17],
-                    ['손목', 0],
+                    [Lang.Blocks.thumb, 1],
+                    [Lang.Blocks.index_finger, 5],
+                    [Lang.Blocks.middle_finger, 9],
+                    [Lang.Blocks.ring_finger, 13],
+                    [Lang.Blocks.little_finger, 17],
+                    [Lang.Blocks.wrist, 0],
                 ],
                 value: 1,
                 fontSize: 11,
@@ -123,19 +112,19 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                     if (handPoint === 1) {
                         this.setValue(3);
                         return [
-                            ['끝', 3],
-                            ['첫째 마디', 2],
+                            [Lang.Blocks.tip, 3],
+                            [Lang.Blocks.dip, 2],
                         ];
                     } else if (handPoint !== 0) {
                         this.setValue(3);
                         return [
-                            ['끝', 3],
-                            ['첫째 마디', 2],
-                            ['둘째 마디', 1],
+                            [Lang.Blocks.tip, 3],
+                            [Lang.Blocks.dip, 2],
+                            [Lang.Blocks.pip, 1],
                         ];
                     } else {
                         this.setValue(0);
-                        return [['없음', 0]];
+                        return [[Lang.Blocks.none, 0]];
                     }
                 },
                 fontSize: 11,
@@ -160,8 +149,8 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['시작하기', 'start'],
-                    ['중지하기', 'stop'],
+                    [Lang.Blocks.video_start, 'start'],
+                    [Lang.Blocks.video_end, 'stop'],
                 ],
                 value: 'start',
                 fontSize: 11,
@@ -173,8 +162,8 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['보이기', 'show'],
-                    ['숨기기', 'hide'],
+                    [Lang.Blocks.video_show_video, 'show'],
+                    [Lang.Blocks.video_hide_video, 'hide'],
                 ],
                 value: 'show',
                 fontSize: 11,
@@ -185,7 +174,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
     };
     return {
         when_hand_detection: {
-            template: '%1 손을 인식했을 때',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_event',
@@ -207,7 +195,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         hand_detection: {
-            template: '손 인식 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -236,7 +223,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         draw_detected_hand: {
-            template: '인식한 손 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -265,7 +251,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         check_detected_hand: {
-            template: '손을 인식했는가?',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
@@ -285,7 +270,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         count_detected_hand: {
-            template: '인식한 손의 수',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -305,7 +289,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         locate_to_hand: {
-            template: '%1 번째의 손의 %2 %3 (으)로 이동하기 %4',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -344,7 +327,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         locate_time_to_hand: {
-            template: '%1 초 동안 %2 번째의 손의 %3 %4 (으)로 이동하기 %5',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -426,7 +408,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         axis_detected_hand: {
-            template: '%1 번째 손의 %2 %3 의 %4 좌표',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -464,7 +445,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         is_which_hand: {
-            template: '%1 번째 손이 %2 인가?',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
@@ -489,7 +469,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         get_which_hand: {
-            template: '%1 번째 손',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -515,7 +494,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         is_which_gesture: {
-            template: '%1 번째 손의 모양이 %2 인가?',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
@@ -540,7 +518,6 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             },
         },
         get_which_gesture: {
-            template: '%1 번째 손의 모양',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -559,7 +536,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 if (!gesture) {
                     return '';
                 }
-                return gestureMap[gesture.categoryName] || '';
+                return Lang.gesture_list[gesture.categoryName.toLowerCase()] || '';
             },
         },
     };
