@@ -7,9 +7,9 @@ Entry.AI_UTILIZE_BLOCK.objectDetector = {
     imageName: 'objectDetector.svg',
     title: {
         ko: '사물 인식',
-        en: 'Object Detector',
+        en: 'Object Detection',
     },
-    titleKey: 'template.object_detector_title_text',
+    titleKey: 'Workspace.object_detector_title_text',
     description: Lang.Msgs.ai_utilize_object_detector_description,
     descriptionKey: 'Msgs.ai_utilize_object_detector_description',
     isInitialized: false,
@@ -58,88 +58,12 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
-        getGesture() {
-            return {
-                type: 'Dropdown',
-                options: [
-                    ['쥔 손', 'Closed_Fist'],
-                    ['편 손', 'Open_Palm'],
-                    ['가리킨 손', 'Pointing_Up'],
-                    ['엄지 아래로', 'Thumb_Down'],
-                    ['엄지 위로', 'Thumb_Up'],
-                    ['브이 사인', 'Victory'],
-                    ['사랑해', 'ILoveYou'],
-                ],
-                value: 'Left',
-                fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            };
-        },
-        getObjectPoint() {
-            return {
-                type: 'Dropdown',
-                options: [
-                    ['코', 0],
-                    ['왼쪽 눈 안쪽', 1],
-                    ['왼쪽 눈', 2],
-                    ['왼쪽 눈 바깥쪽', 3],
-                    ['오른쪽 눈 안쪽', 4],
-                    ['오른쪽 눈', 5],
-                    ['오른쪽 눈 바깥쪽', 6],
-                    ['왼쪽 귀', 7],
-                    ['오른쪽 귀', 8],
-                    ['왼쪽 입꼬리', 9],
-                    ['오른쪽 입꼬리', 10],
-                    ['왼쪽 어깨', 11],
-                    ['오른쪽 어깨', 12],
-                    ['왼쪽 팔꿈치', 13],
-                    ['오른쪽 팔꿈치', 14],
-                    ['왼쪽 손목', 15],
-                    ['오른쪽 손목', 16],
-                    ['왼쪽 소지', 17],
-                    ['오른쪽 소지', 18],
-                    ['왼쪽 검지', 19],
-                    ['오른쪽 검지', 20],
-                    ['왼쪽 엄지', 21],
-                    ['오른쪽 엄지', 22],
-                    ['왼쪽 엉덩이', 23],
-                    ['오른쪽 엉덩이', 24],
-                    ['왼쪽 무릎', 25],
-                    ['오른쪽 무릎', 26],
-                    ['왼쪽 발목', 27],
-                    ['오른쪽 발목', 28],
-                    ['왼쪽 발꿈치', 29],
-                    ['오른쪽 발꿈치', 30],
-                    ['왼쪽 발끝 ', 31],
-                    ['오른쪽 발끝', 32],
-                ],
-                value: 0,
-                fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-                dropdownSync: 'handPoint',
-            };
-        },
-        getAxis() {
-            return {
-                type: 'Dropdown',
-                options: [
-                    ['x', 'x'],
-                    ['y', 'y'],
-                ],
-                value: 'x',
-                fontSize: 11,
-                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
-                arrowColor: EntryStatic.colorSet.common.WHITE,
-            };
-        },
         getStartStop() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['시작하기', 'start'],
-                    ['중지하기', 'stop'],
+                    [Lang.Blocks.video_start, 'start'],
+                    [Lang.Blocks.video_end, 'stop'],
                 ],
                 value: 'start',
                 fontSize: 11,
@@ -151,8 +75,8 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             return {
                 type: 'Dropdown',
                 options: [
-                    ['보이기', 'show'],
-                    ['숨기기', 'hide'],
+                    [Lang.Blocks.video_show_video, 'show'],
+                    [Lang.Blocks.video_hide_video, 'hide'],
                 ],
                 value: 'show',
                 fontSize: 11,
@@ -254,7 +178,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
     };
     return {
         when_object_detector: {
-            template: '%1 사물을 인식했을 때',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_event',
@@ -276,7 +199,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             },
         },
         object_detector: {
-            template: '사물 인식 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -305,7 +227,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             },
         },
         draw_detected_object: {
-            template: '인식한 사물 %1 %2',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic',
@@ -334,7 +255,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             },
         },
         check_detected_object: {
-            template: '사물을 인식했는가?',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
@@ -352,7 +272,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             },
         },
         count_detected_object: {
-            template: '인식한 사물의 수',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -370,7 +289,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             },
         },
         is_detected_among_objects: {
-            template: '사물중 %1 을(를) 인식했는가?',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
@@ -395,7 +313,6 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
                     );
                     return isFound;
                 }
-                console.log('objectDetectorResult', objectDetectorResult);
                 return false;
             },
         },
