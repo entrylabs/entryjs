@@ -28,7 +28,7 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
         getEventIndicator() {
             return {
                 type: 'Indicator',
-                img: 'block_icon/start_icon_play.svg',
+                img: 'block_icon/start_icon_object.svg',
                 size: 14,
                 position: {
                     x: 0,
@@ -39,7 +39,7 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
         getCommonIndicator() {
             return {
                 type: 'Indicator',
-                img: 'block_icon/ai_utilize_icon.svg',
+                img: 'block_icon/ai_object_icon.svg',
                 size: 11,
             };
         },
