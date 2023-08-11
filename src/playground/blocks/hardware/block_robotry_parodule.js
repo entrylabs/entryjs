@@ -9,11 +9,6 @@ Entry.Robotry_Parodule = {
         ko: '파로듈',
         en: 'Parodule',
     },
-    monitorTemplate: {
-        imgPath: 'hw/robotry_parodule.png',
-        width: 700,
-        height: 700,
-    },
     setZero() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -46,7 +41,6 @@ Entry.Robotry_Parodule = {
         STRING: 2,
     },
     BlockState: {},
-
 };
 
 Entry.Robotry_Parodule.setLanguage = function () {
@@ -55,6 +49,7 @@ Entry.Robotry_Parodule.setLanguage = function () {
             template: {
                 Parodule_Input_title: '센서 블럭\0',
                 Parodule_Sensor_Data: '%1 센서',
+                Parodule_Sensor_Kind: '%1 이름이 뭐에요?',
                 Parodule_Output_title: '제어 블럭\0',
                 Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
@@ -79,6 +74,10 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 //Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
+                sensor1: ' 세모 ',
+                sensor2: ' 네모 ',
+                sensor3: ' 십자 ',
+                sensor4: '  원  ',
                 light: '빛',
                 sound: '소리',
                 button: '버튼',
@@ -89,6 +88,7 @@ Entry.Robotry_Parodule.setLanguage = function () {
             template: {
                 Parodule_Input_title: '센서 블럭\0',
                 Parodule_Sensor_Data: '%1 센서',
+                Parodule_Sensor_Kind: '%1 이름이 뭐에요?',
                 Parodule_Output_title: '제어 블럭\0',
                 Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
@@ -113,6 +113,10 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 //Parodule_Update: '파로듈 업데이트',
             },
             Blocks: {
+                sensor1: '세모',
+                sensor2: '네모',
+                sensor3: '십자',
+                sensor4: '원',
                 light: '빛',
                 sound: '소리',
                 button: '버튼',
@@ -122,23 +126,61 @@ Entry.Robotry_Parodule.setLanguage = function () {
     };
 };
 
-// 블록의 배치 순서
-Entry.Robotry_Parodule.blockMenuBlocks = [
-    'Parodule_Input_title',
-    'Parodule_Sensor_Data',
-    'Parodule_Output_title',
-    'Parodule_LED',
-    'Parodule_Motor',
-    'Parodule_Buzzer',
+Entry.Robotry_Parodule.monitorTemplate = function () {
 
-    'Parodule_Custom_title',
-    'Parodule_Custom_Set',
-    'Parodule_Custom_LED',
-    'Parodule_Custom_Motor',
-    'Parodule_Custom_Buzzer',
+    return {
 
-    //'Parodule_Update',
-];
+        imgPath: 'hw/robotry_parodule.png',
+        width: 500,
+        height: 500,
+        listPorts: {
+        },
+        ports: {
+            MODULE1: {
+                name: Lang.Blocks.sensor1,
+                type: 'input',
+                pos: { x: [140], y: [100] },
+            },
+            MODULE2: {
+                name: Lang.Blocks.sensor2,
+                type: 'input',
+                pos: { x: [140], y: [500 - 100] },
+            },
+            MODULE3: {
+                name: Lang.Blocks.sensor3,
+                type: 'input',
+                pos: { x: [500 - 140], y: [500 - 100] },
+            },
+            MODULE4: {
+                name: Lang.Blocks.sensor4,
+                type: 'input',
+                pos: { x: [500 - 140], y: [100] },
+            },
+        },
+        mode: 'both',
+
+    }
+},
+
+    // 블록의 배치 순서
+    Entry.Robotry_Parodule.blockMenuBlocks = [
+        'Parodule_Input_title',
+        'Parodule_Sensor_Data',
+        'Parodule_Sensor_Kind',
+
+        'Parodule_Output_title',
+        'Parodule_LED',
+        'Parodule_Motor',
+        'Parodule_Buzzer',
+
+        'Parodule_Custom_title',
+        'Parodule_Custom_Set',
+        'Parodule_Custom_LED',
+        'Parodule_Custom_Motor',
+        'Parodule_Custom_Buzzer',
+
+        //'Parodule_Update',
+    ];
 
 /* 
  *  로보트리의 아두이노 제어 블록 리스트
@@ -206,8 +248,8 @@ Entry.Robotry_Parodule.getBlocks = function () {
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
-                const sensor_data = Entry.hw.portData.SENSOR;
-                const module_data = Entry.hw.portData.MODULE; // 연결된 모듈 데이터 가져오기
+                const sensor_data = Entry.hw.portData.SENSOR
+                const module_data = Entry.hw.portData.MODULE;
                 let value = false;
                 if (sensor_data[port] === 48) {
                     value = false;
@@ -222,6 +264,68 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             },
         },
+
+        Parodule_Sensor_Kind: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['세모', 0],
+                        ['원', 3],
+                        ['네모', 1],
+                        ['십자', 2],
+                    ],
+                    value: [1],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                ],
+                type: 'Parodule_Sensor_Kind',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'Get',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const NONE = 208;
+                const LED = 209;
+                const MOTOR = 210;
+                const BUZZER = 211;
+                const port = script.getNumberValue('PORT');
+                const module_data = Entry.hw.portData.MODULE;
+                let value = "";
+                if (module_data[port] === LED) {
+                    value = "LED";
+                }
+                else if (module_data[port] === MOTOR) {
+                    value = "모터";
+                }
+                else if (module_data[port] === BUZZER) {
+                    value = "부저";
+                }
+                else {
+                    value = "몰라";
+                }
+                return value;
+            },
+            syntax: {
+                js: [],
+                py: [],
+            },
+        },
+
         Parodule_Output_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
