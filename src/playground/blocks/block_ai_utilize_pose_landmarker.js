@@ -4,6 +4,7 @@ const mediaPipeUtils = MediaPipeUtils.getInstance();
 Entry.AI_UTILIZE_BLOCK.poseLandmarker = {
     name: 'poseLandmarker',
     imageName: 'poseLandmarker.svg',
+    category: 'video',
     title: {
         ko: '사람 인식',
         en: 'Pose Landmarker',

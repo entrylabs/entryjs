@@ -4,6 +4,7 @@ const mediaPipeUtils = MediaPipeUtils.getInstance();
 Entry.AI_UTILIZE_BLOCK.faceLandmarker = {
     name: 'faceLandmarker',
     imageName: 'faceLandmarker.svg',
+    category: 'video',
     title: {
         ko: '얼굴 인식',
         en: 'Face Detection',

@@ -4,6 +4,7 @@ const mediaPipeUtils = MediaPipeUtils.getInstance();
 Entry.AI_UTILIZE_BLOCK.gestureRecognition = {
     name: 'gestureRecognition',
     imageName: 'gestureRecognition.svg',
+    category: 'video',
     title: {
         ko: '손 인식',
         en: 'Gesture Recognition',

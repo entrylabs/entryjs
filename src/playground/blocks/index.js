@@ -42,11 +42,10 @@ Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
     translate: Entry.AI_UTILIZE_BLOCK.translate,
-    video: Entry.AI_UTILIZE_BLOCK.video,
-    gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
     poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
     faceLandmarker: Entry.AI_UTILIZE_BLOCK.faceLandmarker,
     objectDetector: Entry.AI_UTILIZE_BLOCK.objectDetector,
+    gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
 };
 
 Entry.EXPANSION_BLOCK = {};

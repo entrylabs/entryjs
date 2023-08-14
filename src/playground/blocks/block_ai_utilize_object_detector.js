@@ -5,6 +5,7 @@ const mediaPipeUtils = MediaPipeUtils.getInstance();
 Entry.AI_UTILIZE_BLOCK.objectDetector = {
     name: 'objectDetector',
     imageName: 'objectDetector.svg',
+    category: 'video',
     title: {
         ko: '사물 인식',
         en: 'Object Detection',
