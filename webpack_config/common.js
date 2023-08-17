@@ -4,7 +4,7 @@ const path = require('path');
 const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 module.exports = {
     entry: {
@@ -14,14 +14,17 @@ module.exports = {
         path: path.resolve('./dist'),
         publicPath: '/dist/',
         filename: '[name].js',
-        jsonpFunction: 'entryJsonp',
     },
     resolve: {
+        fallback: {
+            fs: false,
+            path: false,
+            crypto: false,
+            buffer: false,
+            perf_hooks: false,
+        },
         extensions: ['.ts', '.tsx', '.js', '.json'],
         mainFields: ['jsnext:main', 'browser', 'main'],
-    },
-    node: {
-        fs: 'empty',
     },
     module: {
         rules: [
@@ -30,7 +33,7 @@ module.exports = {
                 use: {
                     loader: 'worker-loader',
                     options: {
-                        inline: true,
+                        inline: 'no-fallback',
                     },
                 },
             },
@@ -52,13 +55,25 @@ module.exports = {
                     },
                 ],
             },
+            // {
+            //     // eslint-disable-next-line max-len
+            //     test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            //     loader: 'url-loader',
+            //     options: {
+            //         name: '[hash].[ext]',
+            //         limit: 10000,
+            //     },
+            // },
             {
-                // eslint-disable-next-line max-len
                 test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'url-loader',
-                options: {
-                    name: '[hash].[ext]',
-                    limit: 10000,
+                type: 'asset',
+                parser: {
+                    dataUrlCondition: {
+                        maxSize: 10000, // 10kb
+                    },
+                },
+                generator: {
+                    filename: '[hash][ext]',
                 },
             },
             {
@@ -125,7 +140,7 @@ module.exports = {
         new CleanWebpackPlugin(['dist'], {
             root: path.join(__dirname, '..'),
         }),
-        new ManifestPlugin(),
+        new WebpackManifestPlugin(),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional

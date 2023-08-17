@@ -3,7 +3,9 @@ import AudioUtils from '../../util/audioUtils';
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
     imageName: 'audio.svg',
-    sponserText: 'Powered by NAVER Clova',
+    category: 'audio',
+    sponsorText: 'Powered by {image}',
+    sponsorImage: 'naverClova.png',
     title: {
         ko: '오디오 감지',
         en: 'Audio Detection',

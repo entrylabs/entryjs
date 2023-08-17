@@ -95,6 +95,7 @@ class _GEHelper extends GEHelperBase {
      * 비디오 블록용 컨테이너, index = 2 , 기존의 오브젝트 컨테이너 = index3;
      */
     private videoContainer: PIXI.Container | createjs.Container;
+    private overlayContainer: PIXI.Container | createjs.Container;
 
     INIT(isWebGL: boolean) {
         super.INIT(isWebGL);
@@ -244,6 +245,41 @@ class _GEHelper extends GEHelperBase {
         return videoElement;
     }
 
+    getOverlayElement(canvas: HTMLCanvasElement): any {
+        let overlayElement: any = null;
+        const { WIDTH, X, Y, SCALE_X, SCALE_Y, ALPHA } = INITIAL_VIDEO_PARAMS;
+        let HEIGHT = INITIAL_VIDEO_PARAMS.HEIGHT;
+
+        if (this._isWebGL) {
+            const videoTexture = PIXI.Texture.from(canvas);
+            overlayElement = new PIXI.Sprite(videoTexture);
+            if (isFirefox) {
+                HEIGHT *= 1.33;
+            }
+        } else {
+            overlayElement = new createjs.Bitmap(canvas);
+        }
+        overlayElement.width = WIDTH;
+        overlayElement.height = HEIGHT;
+        overlayElement.x = X;
+        overlayElement.y = Y;
+        overlayElement.alpha = ALPHA;
+
+        if (this._isWebGL) {
+            overlayElement.scale.x = SCALE_X;
+            overlayElement.scale.y = SCALE_Y;
+        } else {
+            overlayElement.scaleX = SCALE_X;
+            overlayElement.scaleY = SCALE_Y;
+            overlayElement.on('tick', () => {
+                if (overlayElement.cacheCanvas) {
+                    overlayElement.updateCache();
+                }
+            });
+        }
+        return overlayElement;
+    }
+
     createNewIndicatorGraphic() {
         const graphic = this.newGraphic();
         graphic.width = 640;
@@ -259,6 +295,22 @@ class _GEHelper extends GEHelperBase {
         }
 
         this.videoContainer.addChild(videoElement);
+        this.tickByEngine();
+    }
+
+    drawOverlayElement(overlayElement: PIXI.Sprite | createjs.Bitmap): any {
+        if (!this.overlayContainer) {
+            this.overlayContainer = Entry.stage.canvas.getChildAt(3);
+        }
+
+        const isAlready = this.overlayContainer.children.some(
+            (child: PIXI.Sprite | createjs.Bitmap) => {
+                child === overlayElement;
+            }
+        );
+        if (!isAlready) {
+            this.overlayContainer.addChild(overlayElement);
+        }
         this.tickByEngine();
     }
 
@@ -286,8 +338,20 @@ class _GEHelper extends GEHelperBase {
         targetContainer.removeChild(canvasVideo);
     }
 
+    turnOffOverlay(overlayElement: PIXI.Sprite | createjs.Bitmap) {
+        if (!overlayElement) {
+            return;
+        }
+        const targetContainer = Entry.stage.canvas.getChildAt(3);
+        targetContainer.removeChild(overlayElement);
+    }
+
     destroyWebcam() {
         this.videoContainer = null;
+    }
+
+    destroyOverlay() {
+        this.overlayContainer = null;
     }
 
     destroy() {
@@ -297,14 +361,38 @@ class _GEHelper extends GEHelperBase {
         this.objectIndicatorGraphic = null;
     }
 
-    hFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
-        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
-        canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+    hFlipVideoElement(
+        canvasVideo: PIXI.Sprite | createjs.Bitmap | PIXI.Sprite[] | createjs.Bitmap[]
+    ): any {
+        if (Array.isArray(canvasVideo)) {
+            canvasVideo.forEach((video: PIXI.Sprite | createjs.Bitmap) => {
+                if (!video) {
+                    return;
+                }
+                const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = video;
+                video.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+            });
+        } else {
+            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+            canvasVideo.setTransform(-x, y, -scaleX, scaleY, rotation, skewX, skewY, regX, regY);
+        }
     }
 
-    vFlipVideoElement(canvasVideo: PIXI.Sprite | createjs.Bitmap): any {
-        const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
-        canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+    vFlipVideoElement(
+        canvasVideo: PIXI.Sprite | createjs.Bitmap | PIXI.Sprite[] | createjs.Bitmap[]
+    ): any {
+        if (Array.isArray(canvasVideo)) {
+            canvasVideo.forEach((video: PIXI.Sprite | createjs.Bitmap) => {
+                if (!video) {
+                    return;
+                }
+                const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = video;
+                video.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+            });
+        } else {
+            const { x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY } = canvasVideo;
+            canvasVideo.setTransform(x, -y, scaleX, -scaleY, rotation, skewX, skewY, regX, regY);
+        }
     }
 
     setVideoAlpha(canvasVideo: PIXI.Sprite | createjs.Bitmap, value: number): any {
