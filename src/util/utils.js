@@ -1591,6 +1591,7 @@ Entry.setBasicPaint = function(sprite) {
     const shape = GEHelper.brushHelper.newShape(paint);
     paint.entity = sprite;
     paint.opacity = 0;
+    paint.rgb = Entry.hex2rgb('#ff0000');
     if (isWebGL) {
         paint.beginFillFast(0xff0000, 1);
     } else {
