@@ -21,17 +21,16 @@ module.exports = {
             chunkFilename: '[name][contenthash].css',
         }),
     ],
-    // v8 엔진에서 V8은 구조적 문제로 객체의 크기를 1.9기가로 제한.
-    // optimization: {
-    //     minimize: true,
-    //     minimizer: [
-    //         new TerserPlugin({
-    //             include: /\.min\.js$/,
-    //             parallel: true,
-    //             terserOptions: {
-    //                 ecma: 5,
-    //             },
-    //         }),
-    //     ],
-    // },
+    optimization: {
+        minimize: true,
+        minimizer: [
+            new TerserPlugin({
+                include: /\.min\.js$/,
+                parallel: true,
+                terserOptions: {
+                    ecma: 5,
+                },
+            }),
+        ],
+    },
 };
