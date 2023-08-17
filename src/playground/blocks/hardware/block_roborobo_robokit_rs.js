@@ -262,11 +262,11 @@ class RobokitRS extends ArduinoBase {
                     robokit_rs_set_rgbled_color: 'set %1 pin RGB LED color to the %2 color %3',
                     robokit_rs_change_rgbled_brightness_by: 'change pin %1 RGB LED brightness by %2 %3',
                     robokit_rs_set_rgbled_brightness_to: 'set pin %1 RGB LED brightness to %2 % %3',
-                    robokit_rs_set_dot_state_of_dotmatrix: 'Set dot matrix X: %1  Y: %2  to %3 %4',
-                    robokit_rs_set_dotmatrix_row: 'Draw %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 %16 on dot matrix y:%1 column %17',
+                    robokit_rs_set_dot_state_of_dotmatrix: 'set dot matrix X: %1  Y: %2  to %3 %4',
+                    robokit_rs_set_dotmatrix_row: 'draw %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 %13 %14 %15 %16 on dot matrix y:%1 column %17',
                     robokit_rs_set_dotmatrix: 'draw %1 on dotmatrix %2',
-                    robokit_rs_clear_dotmatrix: 'Clear all dot matrix %1',
-                    robokit_rs_play_piezobuzzer: 'Play pin %1 peizo buzzer with %2 otave %3 note for %4 sec %5',
+                    robokit_rs_clear_dotmatrix: 'clear all dot matrix %1',
+                    robokit_rs_play_piezobuzzer: 'play pin %1 peizo buzzer with %2 otave %3 note for %4 sec %5',
                     robokit_rs_play_piezobuzzer_until_done: 'Play pin %1 peizo buzzer with %2 otave %3 note for %4 sec and wait %5',
                     robokit_rs_get_digital_value: 'pin %1 digital value',
                     robokit_rs_get_analog_value: 'pin %1 analog value',
@@ -1997,6 +1997,10 @@ class RobokitRS extends ArduinoBase {
 
     request (func, subkey, value, updateNow = false) {
         super.request(func, subkey, value, updateNow);
+    }
+
+     resetState () {
+        super.resetState();
     }
 
     /**
