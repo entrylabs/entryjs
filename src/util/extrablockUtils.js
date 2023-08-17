@@ -10,6 +10,10 @@ const banAllBlocks = (playground, type) => {
     }
 
     Object.values(type).forEach((block) => {
+        if (!block) {
+            console.log(type, block);
+            return;
+        }
         blockMenu.banClass(block.name, true);
         blockMenu.banClass(`${block.name}_legacy`, true);
         blockMenu.banClass(`${block.name.toLowerCase()}`, true);

@@ -6,7 +6,7 @@
         "target": "es5",
         "downlevelIteration": true,
         "moduleResolution": "node",
-        "lib": ["es6", "dom"],
+        "lib": ["es6", "dom", "webworker"],
         "allowJs": true,
         "baseUrl": "./",
         "typeRoots": ["./types", "./node_modules/@types"],
