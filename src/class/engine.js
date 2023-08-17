@@ -710,6 +710,9 @@ Entry.Engine = class Engine {
             if (entity.brush) {
                 entity.removeBrush();
             }
+            if (entity.paint) {
+                entity.removePaint();
+            }
         });
 
         variableContainer.mapVariable((variable) => {

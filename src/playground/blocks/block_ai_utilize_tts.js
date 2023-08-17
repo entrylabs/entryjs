@@ -5,8 +5,10 @@ const _trim = require('lodash/trim');
 
 Entry.AI_UTILIZE_BLOCK.tts = {
     name: 'tts',
-    imageName: 'tts.png',
-    sponserText: 'Powered by NAVER Clova',
+    imageName: 'tts.svg',
+    category: 'general',
+    sponsorText: 'Powered by {image}',
+    sponsorImage: 'naverClova.png',
     title: {
         ko: '읽어주기',
         en: 'read',
@@ -20,7 +22,6 @@ Entry.AI_UTILIZE_BLOCK.tts = {
     api: '/api/expansionBlock/tts/read',
     sponsor: 'clovaNaver',
     sponsorLink: 'https://www.ncloud.com/product/aiService/css',
-    sponsorText: 'Powered by NAVER Clova',
     loadQueue: [],
 };
 

@@ -48,21 +48,23 @@ export const CommonUtil = {
             arr[j] = x;
         }
     },
-    getScores:(confusionMatrix: any, numClasses: number) => {
-        let total = 0; let acc = 0;
-        const precisions = []; const recalls = [];
+    getScores: (confusionMatrix: any, numClasses: number) => {
+        let total = 0;
+        let acc = 0;
+        const precisions = [];
+        const recalls = [];
         for (let i = 0; i < numClasses; i++) {
-            let rowSum = 0; let colSum = 0;
+            let rowSum = 0;
+            let colSum = 0;
             for (let j = 0; j < numClasses; j++) {
                 rowSum += confusionMatrix[i][j];
                 colSum += confusionMatrix[j][i];
             }
-        
+            const matrixValue = confusionMatrix?.[i]?.[i] || 0;
             precisions.push(confusionMatrix[i][i] / rowSum || 0);
             recalls.push(confusionMatrix[i][i] / colSum || 0);
-    
             total += rowSum;
-            acc += confusionMatrix[i][i];
+            acc += matrixValue;
         }
         const precision = precisions.reduce((a, b) => a + b, 0) / precisions.length;
         const recall = recalls.reduce((a, b) => a + b, 0) / recalls.length;

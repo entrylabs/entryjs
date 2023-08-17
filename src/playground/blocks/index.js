@@ -26,6 +26,7 @@ const basicBlockList = [
     require('./block_ai_learning_logistic_regression'),
     require('./block_ai_learning_decisiontree'),
     require('./block_ai_learning_svm'),
+    require('./block_ai_utilize_media_pipe'),
 ];
 
 Entry.AI_UTILIZE_BLOCK = {};
@@ -33,11 +34,18 @@ require('./block_ai_utilize_audio');
 require('./block_ai_utilize_tts');
 require('./block_ai_utilize_translate');
 require('./block_ai_utilize_video');
+require('./block_ai_utilize_gesture_recognition');
+require('./block_ai_utilize_pose_landmarker');
+require('./block_ai_utilize_face_landmarker');
+require('./block_ai_utilize_object_detector');
 Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
     translate: Entry.AI_UTILIZE_BLOCK.translate,
-    video: Entry.AI_UTILIZE_BLOCK.video,
+    poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
+    faceLandmarker: Entry.AI_UTILIZE_BLOCK.faceLandmarker,
+    objectDetector: Entry.AI_UTILIZE_BLOCK.objectDetector,
+    gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
 };
 
 Entry.EXPANSION_BLOCK = {};
