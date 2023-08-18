@@ -109,6 +109,10 @@ module.exports = {
                 func(sprite, script) {
                     if (sprite.paint) {
                         sprite.paint.stop = false;
+                        const rgb = sprite.paint.rgb;
+                        sprite.paint.beginFill(
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
+                        );
                     } else {
                         Entry.setBasicPaint(sprite);
                     }
