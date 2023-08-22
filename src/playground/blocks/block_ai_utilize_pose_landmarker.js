@@ -7,7 +7,7 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker = {
     category: 'video',
     title: {
         ko: '사람 인식',
-        en: 'Pose Landmarker',
+        en: 'Human Detection',
     },
     titleKey: 'Workspace.pose_landmarker_title_text',
     description: Lang.Msgs.ai_utilize_pose_landmarker_description,
@@ -144,6 +144,24 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
         },
     };
     return {
+        pose_landmarker_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.pose_landmarker_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'pose_landmarker_title',
+            },
+            class: 'pose',
+            isNotFor: ['poseLandmarker'],
+            events: {},
+        },
         when_pose_landmarker: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,

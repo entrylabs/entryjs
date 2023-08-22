@@ -160,6 +160,7 @@ Entry.AI_UTILIZE_BLOCK.translate = {
     category: 'general',
     sponsorText: 'Powered by {image}',
     sponsorImage: 'naver.png',
+    sponsorOnImage: 'naverOn.png',
     title: {
         ko: '번역',
         en: 'translate',

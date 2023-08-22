@@ -111,13 +111,17 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 menuName() {
                     const handPoint = this.getTargetValue('handPoint');
                     if (handPoint === 1) {
-                        this.setValue(3);
+                        if (![2, 3].includes(this.value)) {
+                            this.setValue(3);
+                        }
                         return [
                             [Lang.Blocks.tip, 3],
                             [Lang.Blocks.dip, 2],
                         ];
                     } else if (handPoint !== 0) {
-                        this.setValue(3);
+                        if (![1, 2, 3].includes(this.value)) {
+                            this.setValue(3);
+                        }
                         return [
                             [Lang.Blocks.tip, 3],
                             [Lang.Blocks.dip, 2],
@@ -174,6 +178,24 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
         },
     };
     return {
+        hand_detection_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hand_detection_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'hand_detection_title',
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            events: {},
+        },
         when_hand_detection: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -486,7 +508,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 const handNum = script.getField('HAND_NUM', script);
                 const handedness = mediaPipeUtils.getHandedness(handNum);
                 if (!handedness) {
-                    return '';
+                    return 'null';
                 } else if (handedness.categoryName === 'Left') {
                     return '오른손';
                 } else {
@@ -534,8 +556,9 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             func(sprite, script) {
                 const handNum = script.getField('HAND_NUM', script);
                 const gesture = mediaPipeUtils.getGesture(handNum);
+
                 if (!gesture) {
-                    return '';
+                    return 'null';
                 }
                 return Lang.gesture_list[gesture.categoryName.toLowerCase()] || '';
             },

@@ -135,7 +135,7 @@ class MediaPipeUtils {
     public videoCanvasCtx: CanvasRenderingContext2D;
     public motionCanvas: HTMLCanvasElement;
     public motionOffscreenCanvas: HTMLCanvasElement;
-    public canWorker: boolean = true;
+    public canWorker: boolean = false;
     public flipState: TFlipState = 0;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
@@ -504,6 +504,7 @@ class MediaPipeUtils {
         this.gestureRecognizerWorker.postMessage({
             action: 'gesture_recognizer',
             imageBitmap: await createImageBitmap(this.video),
+            flipState: this.flipState,
         });
     }
 
@@ -519,6 +520,7 @@ class MediaPipeUtils {
         this.poseLandmarkerWorker.postMessage({
             action: 'pose_landmarker',
             imageBitmap: await createImageBitmap(this.video),
+            flipState: this.flipState,
         });
     }
 
@@ -534,6 +536,7 @@ class MediaPipeUtils {
         this.faceLandmarkerWorker.postMessage({
             action: 'face_landmarker',
             imageBitmap: await createImageBitmap(this.video),
+            flipState: this.flipState,
         });
     }
 
@@ -549,6 +552,7 @@ class MediaPipeUtils {
         this.objectDetectorWorker.postMessage({
             action: 'object_detector',
             imageBitmap: await createImageBitmap(this.video),
+            flipState: this.flipState,
         });
     }
 
@@ -1040,6 +1044,34 @@ class MediaPipeUtils {
         });
     }
 
+    contextFlip = (context, axis) => {
+        if (this.flipState === 0) {
+            context.scale(-1, 1);
+            return {
+                x: -axis.x * 640,
+                y: axis.y * 360 - 20,
+            };
+        } else if (this.flipState === 1) {
+            context.scale(1, 1);
+            return {
+                x: axis.x * 640,
+                y: axis.y * 360 - 20,
+            };
+        } else if (this.flipState === 2) {
+            context.scale(-1, -1);
+            return {
+                x: -axis.x * 640,
+                y: -axis.y * 360 + 20,
+            };
+        } else if (this.flipState === 3) {
+            context.scale(1, -1);
+            return {
+                x: axis.x * 640,
+                y: -axis.y * 360 + 20,
+            };
+        }
+    };
+
     async predictHandGesture() {
         try {
             let results;
@@ -1086,13 +1118,14 @@ class MediaPipeUtils {
                     let landmarkColor;
                     const [handedness] = handednesses[i];
                     const mark12 = landmark[12];
-                    this.gestureRecognizerVideoCanvasCtx.scale(-1, 1);
+                    // this.gestureRecognizerVideoCanvasCtx.scale(-1, 1);
+                    const { x, y } = this.contextFlip(this.gestureRecognizerVideoCanvasCtx, mark12);
                     if (handedness.categoryName === 'Left') {
                         this.gestureRecognizerVideoCanvasCtx.fillStyle = '#FF0000';
                         this.gestureRecognizerVideoCanvasCtx.fillText(
                             `${i + 1}-${Lang.Blocks.right_hand}`,
-                            -mark12.x * 640,
-                            mark12.y * 360 - 20
+                            x,
+                            y
                         );
                         connectColor = '#FF0000';
                         landmarkColor = '#00FF00';
@@ -1100,13 +1133,14 @@ class MediaPipeUtils {
                         this.gestureRecognizerVideoCanvasCtx.fillStyle = '#00FF00';
                         this.gestureRecognizerVideoCanvasCtx.fillText(
                             `${i + 1}-${Lang.Blocks.left_hand}`,
-                            -mark12.x * 640,
-                            mark12.y * 360 - 20
+                            x,
+                            y
                         );
                         connectColor = '#00FF00';
                         landmarkColor = '#FF0000';
                     }
-                    this.gestureRecognizerVideoCanvasCtx.scale(-1, 1);
+                    // this.gestureRecognizerVideoCanvasCtx.scale(-1, 1);
+                    this.contextFlip(this.gestureRecognizerVideoCanvasCtx, mark12);
                     this.gestureRecognizerDrawingUtils.drawConnectors(
                         landmark,
                         GestureRecognizer.HAND_CONNECTIONS,
@@ -1368,6 +1402,34 @@ class MediaPipeUtils {
         }
     }
 
+    objectContextFlip(context, axis) {
+        if (this.flipState === 0) {
+            context.scale(-1, 1);
+            return {
+                x: -axis.x - axis.offsetX,
+                y: axis.y - axis.offsetY,
+            };
+        } else if (this.flipState === 1) {
+            context.scale(1, 1);
+            return {
+                x: axis.x + 3,
+                y: axis.y - axis.offsetY,
+            };
+        } else if (this.flipState === 2) {
+            context.scale(-1, -1);
+            return {
+                x: -axis.x - axis.offsetX,
+                y: -(axis.y - axis.offsetY - 6),
+            };
+        } else if (this.flipState === 3) {
+            context.scale(1, -1);
+            return {
+                x: axis.x + 3,
+                y: -(axis.y - axis.offsetY - 6),
+            };
+        }
+    }
+
     drawObjectDetections(detect: Detection, i: number) {
         try {
             const { boundingBox, categories } = detect;
@@ -1395,10 +1457,24 @@ class MediaPipeUtils {
             this.objectDetectorVideoCanvasCtx.stroke();
             this.objectDetectorVideoCanvasCtx.fillStyle = colors[i];
             this.objectDetectorVideoCanvasCtx.fillRect(m, y, l, measureSize);
-            this.objectDetectorVideoCanvasCtx.scale(-1, 1);
+            // this.objectDetectorVideoCanvasCtx.scale(-1, 1);
+            const { x: axisX, y: axisY } = this.objectContextFlip(
+                this.objectDetectorVideoCanvasCtx,
+                {
+                    offsetX: l - 3,
+                    offsetY: 3 * e,
+                    x: m,
+                    y: y + measureSize,
+                }
+            );
             this.objectDetectorVideoCanvasCtx.fillStyle = 'white';
-            this.objectDetectorVideoCanvasCtx.fillText(text, -(m + l - 3), y + measureSize - 3 * e);
-            this.objectDetectorVideoCanvasCtx.scale(-1, 1);
+            this.objectDetectorVideoCanvasCtx.fillText(text, axisX, axisY);
+            this.objectContextFlip(this.objectDetectorVideoCanvasCtx, {
+                offsetX: 0,
+                offsetY: 0,
+                x: 0,
+                y: 0,
+            });
         } catch (e) {
             console.error(e.stack);
         }

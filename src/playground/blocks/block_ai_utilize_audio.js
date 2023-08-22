@@ -6,12 +6,13 @@ Entry.AI_UTILIZE_BLOCK.audio = {
     category: 'audio',
     sponsorText: 'Powered by {image}',
     sponsorImage: 'naverClova.png',
+    sponsorOnImage: 'naverClovaOn.png',
     title: {
-        ko: '오디오 감지',
+        ko: '음성 인식',
         en: 'Audio Detection',
         jp: 'オーディオ検出',
     },
-    titleKey: 'template.audio_title_text',
+    titleKey: 'template.voice_title_text',
     description: Lang.Msgs.ai_utilize_audio_description,
     descriptionKey: 'Msgs.ai_utilize_audio_description',
     isInitialized: false,
@@ -29,7 +30,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.audio_title_text,
+                    text: Lang.template.voice_title_text,
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },

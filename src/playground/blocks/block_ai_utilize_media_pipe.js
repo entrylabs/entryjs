@@ -57,6 +57,30 @@ module.exports = {
         };
 
         return {
+            media_pipe_title: {
+                template: '%1',
+                skeleton: 'basic_text',
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.Blocks.media_pipe_title_text,
+                        color: EntryStatic.colorSet.common.TEXT,
+                        align: 'center',
+                    },
+                ],
+                def: {
+                    type: 'media_pipe_title',
+                },
+                class: 'media_pipe',
+                isNotFor: [
+                    'gestureRecognition',
+                    'poseLandmarker',
+                    'faceLandmarker',
+                    'objectDetector',
+                ],
+                events: {},
+            },
             media_pipe_video_screen: {
                 color: EntryStatic.colorSet.block.default.AI_UTILIZE,
                 outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
