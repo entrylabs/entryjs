@@ -9,7 +9,7 @@ Entry.AI_UTILIZE_BLOCK.audio = {
     sponsorOnImage: 'naverClovaOn.png',
     title: {
         ko: '음성 인식',
-        en: 'Audio Detection',
+        en: 'Speech recognition',
         jp: 'オーディオ検出',
     },
     titleKey: 'template.voice_title_text',

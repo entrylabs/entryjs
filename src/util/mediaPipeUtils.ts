@@ -15,6 +15,7 @@ import {
 } from '@mediapipe/tasks-vision';
 import { UAParser } from 'ua-parser-js';
 import _clamp from 'lodash/clamp';
+import _get from 'lodash/get';
 import VideoMotionWorker from './workers/newmotion.worker.ts';
 
 export const getInputList = async () => {
@@ -135,7 +136,7 @@ class MediaPipeUtils {
     public videoCanvasCtx: CanvasRenderingContext2D;
     public motionCanvas: HTMLCanvasElement;
     public motionOffscreenCanvas: HTMLCanvasElement;
-    public canWorker: boolean = false;
+    public canWorker: boolean = true;
     public flipState: TFlipState = 0;
     private VIDEO_WIDTH: number = 640;
     private VIDEO_HEIGHT: number = 360;
@@ -182,14 +183,11 @@ class MediaPipeUtils {
     public isDrawDetectedFaceLandmarker: boolean = false;
     private isInitFaceLandmarker: boolean = false;
     private faceLandmarkerVideoCanvas: HTMLCanvasElement;
-    private faceLandmarkerVideoCanvasCtx: CanvasRenderingContext2D;
     private faceLandmarkerCanvasOverlay: PIXI.Sprite | createjs.Bitmap;
     private faceLandmarkerOffscreenCanvas: OffscreenCanvas;
     private faceLandmarkerWorker: Worker;
     private alreadyInitFaceLandmarkerOffscreenCanvas: boolean = false;
-    private faceLandmarkerDrawingUtils: DrawingUtils;
-    private prevFaceLandmarkerResult: FaceLandmarkerResult;
-    private faceLandmarker: FaceLandmarker;
+    private prevFaceLandmarkerResult;
 
     public countDetectedObject: number;
     public isPrevObjectDetector: boolean = false;
@@ -202,7 +200,6 @@ class MediaPipeUtils {
     private objectDetectorOffscreenCanvas: OffscreenCanvas;
     private objectDetectorWorker: Worker;
     private alreadyInitObjectDetectorOffscreenCanvas: boolean = false;
-    private objectDetectorDrawingUtils: DrawingUtils;
     private prevObjectDetectorResult: ObjectDetectorResult;
     private objectDetector: ObjectDetector;
 
@@ -564,6 +561,7 @@ class MediaPipeUtils {
                 this.isPrevHandDetected = true;
                 Entry.engine.fireEvent('when_hand_detection');
             } else if (data.action === 'stop_gesture_recognizer') {
+                this.countDetectedHand = 0;
                 this.isPrevHandDetected = false;
             } else if (data.action === 'count_detected_hand_gesture_recognizer') {
                 this.countDetectedHand = data.count;
@@ -581,6 +579,7 @@ class MediaPipeUtils {
                 this.isPrevPoseLandmarker = true;
                 Entry.engine.fireEvent('when_pose_landmarker');
             } else if (data.action === 'stop_pose_landmarker') {
+                this.countDetectedPose = 0;
                 this.isPrevPoseLandmarker = false;
             } else if (data.action === 'count_detected_pose_landmarker') {
                 this.countDetectedPose = data.count;
@@ -598,6 +597,7 @@ class MediaPipeUtils {
                 this.isPrevFaceLandmarker = true;
                 Entry.engine.fireEvent('when_face_landmarker');
             } else if (data.action === 'stop_face_landmarker') {
+                this.countDetectedFace = 0;
                 this.isPrevFaceLandmarker = false;
             } else if (data.action === 'count_detected_face_landmarker') {
                 this.countDetectedFace = data.count;
@@ -615,6 +615,7 @@ class MediaPipeUtils {
                 this.isPrevObjectDetector = true;
                 Entry.engine.fireEvent('when_object_detector');
             } else if (data.action === 'stop_object_detector') {
+                this.countDetectedObject = 0;
                 this.isPrevObjectDetector = false;
             } else if (data.action === 'count_detected_object_detector') {
                 this.countDetectedObject = data.count;
@@ -686,18 +687,10 @@ class MediaPipeUtils {
         );
         GEHelper.drawOverlayElement(this.faceLandmarkerCanvasOverlay);
         GEHelper.hFlipVideoElement(this.faceLandmarkerCanvasOverlay);
-        if (this.canWorker) {
-            // eslint-disable-next-line max-len
-            this.faceLandmarkerOffscreenCanvas = this.faceLandmarkerVideoCanvas.transferControlToOffscreen();
-            this.faceLandmarkerWorker = new Worker(
-                '/lib/entry-js/extern/face-landmarker.worker.js'
-            );
-            this.initFaceLandmarkerWorkerEvent();
-        } else {
-            this.faceLandmarkerVideoCanvasCtx = this.faceLandmarkerVideoCanvas.getContext('2d');
-            this.faceLandmarkerVideoCanvasCtx.font = '20px Arial';
-            this.faceLandmarkerDrawingUtils = new DrawingUtils(this.faceLandmarkerVideoCanvasCtx);
-        }
+        // eslint-disable-next-line max-len
+        this.faceLandmarkerOffscreenCanvas = this.faceLandmarkerVideoCanvas.transferControlToOffscreen();
+        this.faceLandmarkerWorker = new Worker('/lib/entry-js/extern/face-landmarker.worker.js');
+        this.initFaceLandmarkerWorkerEvent();
     }
 
     initObjectDetector() {
@@ -720,7 +713,6 @@ class MediaPipeUtils {
         } else {
             this.objectDetectorVideoCanvasCtx = this.objectDetectorVideoCanvas.getContext('2d');
             this.objectDetectorVideoCanvasCtx.font = '20px Arial';
-            this.objectDetectorDrawingUtils = new DrawingUtils(this.objectDetectorVideoCanvasCtx);
         }
     }
 
@@ -811,25 +803,22 @@ class MediaPipeUtils {
             }
             this.isRunningFaceLandmarker = true;
 
-            if (this.canWorker) {
-                if (!this.alreadyInitFaceLandmarkerOffscreenCanvas) {
-                    this.faceLandmarkerWorker.postMessage(
-                        {
-                            action: 'face_landmarker_init',
-                            canvas: this.faceLandmarkerOffscreenCanvas,
-                            option: {
-                                isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
-                            },
+            if (!this.alreadyInitFaceLandmarkerOffscreenCanvas) {
+                const uaResult = parser.getResult();
+                this.faceLandmarkerWorker.postMessage(
+                    {
+                        action: 'face_landmarker_init',
+                        canvas: this.faceLandmarkerOffscreenCanvas,
+                        isSafari: uaResult.browser.name === 'Safari' || uaResult.os.name === 'iOS',
+                        option: {
+                            isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
                         },
-                        [this.faceLandmarkerOffscreenCanvas]
-                    );
-                    this.alreadyInitFaceLandmarkerOffscreenCanvas = true;
-                } else {
-                    this.sendImageBitmapForFaceLandmarker();
-                }
+                    },
+                    [this.faceLandmarkerOffscreenCanvas]
+                );
+                this.alreadyInitFaceLandmarkerOffscreenCanvas = true;
             } else {
-                await this.initPredictFaceLandmarker();
-                this.predictFaceLandmarker();
+                this.sendImageBitmapForFaceLandmarker();
             }
         } catch (e) {
             console.error(e);
@@ -917,14 +906,12 @@ class MediaPipeUtils {
     }
 
     updateFaceLandmarker() {
-        if (this.canWorker) {
-            this.faceLandmarkerWorker.postMessage({
-                action: 'face_landmarker_change_option',
-                option: {
-                    isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
-                },
-            });
-        }
+        this.faceLandmarkerWorker.postMessage({
+            action: 'face_landmarker_change_option',
+            option: {
+                isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
+            },
+        });
     }
 
     updateObjectDetector() {
@@ -973,13 +960,9 @@ class MediaPipeUtils {
         this.isRunningFaceLandmarker = false;
         this.isPrevFaceLandmarker = false;
         this.countDetectedFace = 0;
-        if (this.canWorker) {
-            this.faceLandmarkerWorker.postMessage({
-                action: 'clear_face_landmarker',
-            });
-        } else {
-            this.faceLandmarkerVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
-        }
+        this.faceLandmarkerWorker.postMessage({
+            action: 'clear_face_landmarker',
+        });
     }
 
     async stopObjectDetector() {
@@ -1016,18 +999,6 @@ class MediaPipeUtils {
             },
             runningMode: 'VIDEO',
             numPoses: 4,
-        });
-    }
-
-    async initPredictFaceLandmarker() {
-        const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
-        this.faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
-            baseOptions: {
-                modelAssetPath: '/lib/entry-js/extern/model/face_landmarker.task',
-                delegate: 'GPU',
-            },
-            runningMode: 'VIDEO',
-            numFaces: 4,
         });
     }
 
@@ -1236,120 +1207,6 @@ class MediaPipeUtils {
         }
     }
 
-    async predictFaceLandmarker() {
-        try {
-            let results;
-
-            if (!this.faceLandmarkerVideoCanvasCtx || this.isRunningFaceLandmarker === false) {
-                return;
-            }
-            if (this.video.readyState < 2) {
-                await this.sleep();
-                this.predictFaceLandmarker();
-                return;
-            }
-            if (this.video.currentTime !== this.lastVideoTime) {
-                this.lastVideoTime = this.video.currentTime;
-                const startTimeMs = performance.now();
-                results = await this.faceLandmarker.detectForVideo(this.video, startTimeMs);
-            } else {
-                return;
-            }
-            this.faceLandmarkerVideoCanvasCtx.save();
-            this.faceLandmarkerVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
-
-            const { faceLandmarks } = results;
-            this.prevFaceLandmarkerResult = results;
-            if (faceLandmarks.length) {
-                if (!this.isPrevFaceLandmarker) {
-                    this.isPrevFaceLandmarker = true;
-                    Entry.engine.fireEvent('when_face_landmarker');
-                }
-                if (faceLandmarks.length !== this.countDetectedFace) {
-                    this.countDetectedFace = faceLandmarks.length;
-                }
-                if (!this.isDrawDetectedFaceLandmarker) {
-                    return;
-                }
-
-                faceLandmarks.forEach((landmark, i) => {
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_TESSELATION,
-                        {
-                            color: '#C0C0C070',
-                            lineWidth: 1,
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE,
-                        {
-                            color: '#FF3030',
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW,
-                        { color: '#FF3030' }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_LEFT_EYE,
-                        {
-                            color: '#30FF30',
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW,
-                        {
-                            color: '#30FF30',
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_FACE_OVAL,
-                        {
-                            color: '#E0E0E0',
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_LIPS,
-                        {
-                            color: '#E0E0E0',
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_RIGHT_IRIS,
-                        {
-                            color: '#FF3030',
-                        }
-                    );
-                    this.faceLandmarkerDrawingUtils.drawConnectors(
-                        landmark,
-                        FaceLandmarker.FACE_LANDMARKS_LEFT_IRIS,
-                        {
-                            color: '#30FF30',
-                        }
-                    );
-                });
-            } else {
-                this.isPrevFaceLandmarker = false;
-                this.countDetectedFace = 0;
-            }
-        } catch (e) {
-            console.error(e);
-        } finally {
-            this.faceLandmarkerVideoCanvasCtx.restore();
-            if (this.isRunningFaceLandmarker === true) {
-                window.requestAnimationFrame(this.predictFaceLandmarker.bind(this));
-            }
-        }
-    }
-
     async predictObjectDetector() {
         try {
             let results;
@@ -1480,6 +1337,30 @@ class MediaPipeUtils {
         }
     }
 
+    getFlipDirectionToSign() {
+        if (this.flipState === 0) {
+            return {
+                x: 1,
+                y: 1,
+            };
+        } else if (this.flipState === 1) {
+            return {
+                x: -1,
+                y: 1,
+            };
+        } else if (this.flipState === 2) {
+            return {
+                x: 1,
+                y: -1,
+            };
+        } else if (this.flipState === 3) {
+            return {
+                x: -1,
+                y: -1,
+            };
+        }
+    }
+
     getHandPointAxis(hand: number, handPoint: number) {
         if (!this.prevGestureRecognizerResult) {
             return;
@@ -1490,9 +1371,10 @@ class MediaPipeUtils {
         }
         const landmark = landmarks[hand];
         const pointAxis = landmark[handPoint];
+        const sign = this.getFlipDirectionToSign();
         return {
-            x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
-            y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,
+            x: (-pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2) * sign.x,
+            y: (-pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2) * sign.y,
             z: pointAxis.z,
         };
     }
@@ -1507,28 +1389,66 @@ class MediaPipeUtils {
         }
         const landmark = landmarks[pose];
         const pointAxis = landmark[posePoint];
+        const sign = this.getFlipDirectionToSign();
         return {
-            x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
-            y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,
+            x: (-pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2) * sign.x,
+            y: (-pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2) * sign.y,
             z: pointAxis.z,
         };
     }
 
-    getFacePointAxis(face: number, facePoint: number) {
+    getFacePointAxis(faceNum: number, facePoint: number) {
         if (!this.prevFaceLandmarkerResult) {
             return;
         }
-        const { faceLandmarks } = this.prevFaceLandmarkerResult;
-        if (!faceLandmarks.length) {
+        const { face = [] } = this.prevFaceLandmarkerResult;
+        if (!face.length) {
             return;
         }
-        const landmark = faceLandmarks[face];
-        const pointAxis = landmark[facePoint];
+        const meshRaw = _get(face, `${faceNum}.meshRaw`);
+        if (!meshRaw) {
+            return;
+        }
+        const pointAxis = meshRaw[facePoint];
+        const sign = this.getFlipDirectionToSign();
         return {
-            x: -pointAxis.x * this.STAGE_WIDTH + this.STAGE_WIDTH / 2,
-            y: -pointAxis.y * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2,
-            z: pointAxis.z,
+            x: (-pointAxis[0] * this.STAGE_WIDTH + this.STAGE_WIDTH / 2) * sign.x,
+            y: (-pointAxis[1] * this.STAGE_HEIGHT + this.STAGE_HEIGHT / 2) * sign.y,
+            z: pointAxis[2],
         };
+    }
+
+    getFaceGender(faceNum: number) {
+        if (!this.prevFaceLandmarkerResult) {
+            return;
+        }
+        const { face = [] } = this.prevFaceLandmarkerResult;
+        if (!face.length) {
+            return;
+        }
+        return _get(face, `${faceNum}.gender`);
+    }
+
+    getFaceAge(faceNum: number) {
+        if (!this.prevFaceLandmarkerResult) {
+            return;
+        }
+        const { face = [] } = this.prevFaceLandmarkerResult;
+        if (!face.length) {
+            return;
+        }
+        return Math.round(_get(face, `${faceNum}.age`, 0));
+    }
+
+    getFaceEmotion(faceNum: number) {
+        if (!this.prevFaceLandmarkerResult) {
+            return;
+        }
+        const { face = [] } = this.prevFaceLandmarkerResult;
+        if (!face.length) {
+            return;
+        }
+        return _get(face, `${faceNum}.emotion.0.emotion`);
     }
 
     getObjectPointAxis(face: number, facePoint: number) {

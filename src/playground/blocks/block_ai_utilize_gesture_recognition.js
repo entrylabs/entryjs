@@ -510,9 +510,9 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 if (!handedness) {
                     return 'null';
                 } else if (handedness.categoryName === 'Left') {
-                    return '오른손';
+                    return Lang.Blocks.right_hand;
                 } else {
-                    return '왼손';
+                    return Lang.Blocks.left_hand;
                 }
             },
         },

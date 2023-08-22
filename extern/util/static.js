@@ -2,9 +2,9 @@
 
 /* eslint-disable */
 var EntryStatic = {
-    fontFamily: 'NanumGothic',
+    fontFamily: "NanumGothic, 'Nanum Gothic'",
     exportBlockFontFamily:
-        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+        "NanumGothic, 'Nanum Gothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
     fontOffsetY: -2.5,
     heightLetter: 'M',
     objectTypes: ['sprite', 'textBox'],
@@ -569,7 +569,11 @@ EntryStatic.getAllBlocks = function() {
                 'count_detected_face',
                 'locate_to_face',
                 'locate_time_to_face',
+                'check_detected_gender',
+                'check_compare_age',
+                'check_detected_emotion',
                 'axis_detected_face',
+                'get_detected_face_value',
                 'object_detector_title',
                 'when_object_detector',
                 'object_detector',
@@ -1123,7 +1127,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "NanumGothic, 'Nanum Gothic', 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 
