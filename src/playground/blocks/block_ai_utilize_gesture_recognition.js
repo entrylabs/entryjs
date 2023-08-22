@@ -174,6 +174,24 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
         },
     };
     return {
+        gesture_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.gesture_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'gesture_title',
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            events: {},
+        },
         when_hand_detection: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,

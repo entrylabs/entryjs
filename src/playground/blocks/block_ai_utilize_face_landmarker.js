@@ -118,6 +118,24 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
         },
     };
     return {
+        face_landmarker_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.face_landmarker_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'face_landmarker_title',
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            events: {},
+        },
         when_face_landmarker: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
