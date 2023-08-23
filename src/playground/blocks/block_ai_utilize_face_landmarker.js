@@ -58,6 +58,68 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 arrowColor: EntryStatic.colorSet.common.WHITE,
             };
         },
+        getGender() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.video_gender.female, 'female'],
+                    [Lang.video_gender.male, 'male'],
+                ],
+                value: 'female',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getFaceCategory() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.video_gender, 'gender'],
+                    [Lang.Blocks.video_age, 'age'],
+                    [Lang.Blocks.video_emotion, 'emotion'],
+                ],
+                value: 'gender',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getOperators() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    ['=', 'EQUAL'],
+                    ['!=', 'NOT_EQUAL'],
+                    ['>', 'GREATER'],
+                    ['<', 'LESS'],
+                    ['≥', 'GREATER_OR_EQUAL'],
+                    ['≤', 'LESS_OR_EQUAL'],
+                ],
+                value: 'EQUAL',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
+        getEmotions() {
+            return {
+                type: 'Dropdown',
+                options: [
+                    [Lang.video_emotion_params.angry, 'angry'],
+                    [Lang.video_emotion_params.disgust, 'disgust'],
+                    [Lang.video_emotion_params.fear, 'fear'],
+                    [Lang.video_emotion_params.happy, 'happy'],
+                    [Lang.video_emotion_params.neutral, 'neutral'],
+                    [Lang.video_emotion_params.sad, 'sad'],
+                    [Lang.video_emotion_params.surprise, 'surprise'],
+                ],
+                value: 'angry',
+                fontSize: 11,
+                bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+                arrowColor: EntryStatic.colorSet.common.WHITE,
+            };
+        },
         getFacePoint() {
             return {
                 type: 'Dropdown',
@@ -118,6 +180,24 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
         },
     };
     return {
+        face_landmarker_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.face_landmarker_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'face_landmarker_title',
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            events: {},
+        },
         when_face_landmarker: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -339,8 +419,110 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 }
             },
         },
+        check_detected_gender: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getFaceNumber(), params.getGender()],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'check_detected_gender',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+                GENDER: 1,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                const face = script.getField('FACE', script);
+                const gender = script.getField('GENDER', script);
+                const result = mediaPipeUtils.getFaceGender(face);
+                return result === gender;
+            },
+        },
+        check_compare_age: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                params.getFaceNumber(),
+                params.getOperators(),
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    null,
+                    null,
+                    {
+                        type: 'number',
+                        params: ['10'],
+                    },
+                ],
+                type: 'check_compare_age',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+                OPERATOR: 1,
+                AGE: 2,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                const face = script.getField('FACE', script);
+                const operator = script.getField('OPERATOR', script);
+                const age = script.getNumberValue('AGE', script);
+                const result = mediaPipeUtils.getFaceAge(face);
+
+                switch (operator) {
+                    case 'EQUAL':
+                        return result === age;
+                    case 'NOT_EQUAL':
+                        return result != age;
+                    case 'GREATER':
+                        return result > age;
+                    case 'LESS':
+                        return result < age;
+                    case 'GREATER_OR_EQUAL':
+                        return result >= age;
+                    case 'LESS_OR_EQUAL':
+                        return result <= age;
+                }
+            },
+        },
+        check_detected_emotion: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getFaceNumber(), params.getEmotions()],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'check_detected_emotion',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+                EMOTION: 1,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                const face = script.getField('FACE', script);
+                const emotion = script.getField('EMOTION', script);
+                const result = mediaPipeUtils.getFaceEmotion(face);
+                return result === emotion;
+            },
+        },
         axis_detected_face: {
-            template: '%1 번째 얼굴의 %2 의 %3 좌표',
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
@@ -367,6 +549,39 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                     return axis[axisName];
                 }
                 return 0;
+            },
+        },
+        get_detected_face_value: {
+            color: EntryStatic.colorSet.block.default.AI_UTILIZE,
+            outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [params.getFaceNumber(), params.getFaceCategory()],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'get_detected_face_value',
+            },
+            paramsKeyMap: {
+                FACE: 0,
+                CATEGORY: 1,
+            },
+            class: 'face',
+            isNotFor: ['faceLandmarker'],
+            func(sprite, script) {
+                const face = script.getField('FACE', script);
+                const category = script.getField('CATEGORY', script);
+
+                switch (category) {
+                    case 'gender':
+                        return Lang.video_gender[mediaPipeUtils.getFaceGender(face)] || 'null';
+                    case 'age':
+                        return mediaPipeUtils.getFaceAge(face);
+                    case 'emotion':
+                        return (
+                            Lang.video_emotion_params[mediaPipeUtils.getFaceEmotion(face)] || 'null'
+                        );
+                }
             },
         },
     };

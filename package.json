@@ -34,7 +34,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@entrylabs/event": "^1.0.3",
-        "@mediapipe/tasks-vision": "^0.10.2",
+        "@mediapipe/tasks-vision": "^0.10.3",
         "@tensorflow-models/coco-ssd": "^2.0.1",
         "@tensorflow-models/posenet": "^2.2.1",
         "@tensorflow/tfjs": "^1.5.2",

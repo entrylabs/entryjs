@@ -1461,7 +1461,7 @@ Entry.Board = class Board {
             const nameText = name.elem('text');
             nameText.addClass('entryBoardObjectName');
             nameText.attr({ x: 44, y: 26, fill: '#6b6b6b' });
-            nameText.style.font = '12px NanumGothicBold';
+            nameText.style.font = "12px NanumGothicBold, 'Nanum Gothic'";
             nameText.textContent = object.name;
             this.svgObjectTitle.name = nameText;
         }
@@ -1492,7 +1492,7 @@ Entry.Board = class Board {
 
         if (!this.svgObjectBlockCount.countText) {
             const countText = this.svgObjectBlockCount.elem('text');
-            countText.style.font = '12px NanumGothic';
+            countText.style.font = "12px NanumGothic, 'Nanum Gothic'";
             countText.attr({
                 fill: '#6b6b6b',
             });

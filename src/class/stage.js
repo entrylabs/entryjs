@@ -590,7 +590,7 @@ Entry.Stage = class Stage {
             const inputField = new classRef({
                 canvas: THIS.getCanvasElement('entryCanvas'),
                 fontSize: 20,
-                fontFamily: EntryStatic.fontFamily || 'NanumGothic',
+                fontFamily: EntryStatic.fontFamily || "NanumGothic, 'Nanum Gothic'",
                 fontColor: '#2c313d',
                 width: 520,
                 height: 24,

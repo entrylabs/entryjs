@@ -9,6 +9,7 @@ Entry.AI_UTILIZE_BLOCK.tts = {
     category: 'general',
     sponsorText: 'Powered by {image}',
     sponsorImage: 'naverClova.png',
+    sponsorOnImage: 'naverClovaOn.png',
     title: {
         ko: '읽어주기',
         en: 'read',

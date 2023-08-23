@@ -1,11 +1,13 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
+let flipState;
 self.onmessage = async ({ data }) => {
     if (data.action === 'gesture_recognizer_init') {
         initializeGesture(data);
     } else if (data.action === 'gesture_recognizer_change_option') {
         changeGestureOption(data.option);
     } else if (data.action === 'gesture_recognizer') {
+        flipState = data.flipState || 0;
         predictGesture(data.imageBitmap);
     } else if (data.action === 'clear_gesture_recognizer') {
         clearPredictGesture();
@@ -49,6 +51,34 @@ const YX = (a) => {
     return Math.max(1, Math.min(10, 10 * (1 - (a - -0.15) / 0.25) + (1 - (0.1 - a) / 0.25)));
 };
 
+const contextFlip = (context, axis) => {
+    if (flipState === 0) {
+        context.scale(-1, 1);
+        return {
+            x: -axis.x * 640,
+            y: axis.y * 360 - 20,
+        };
+    } else if (flipState === 1) {
+        context.scale(1, 1);
+        return {
+            x: axis.x * 640,
+            y: axis.y * 360 - 20,
+        };
+    } else if (flipState === 2) {
+        context.scale(-1, -1);
+        return {
+            x: -axis.x * 640,
+            y: -axis.y * 360 + 20,
+        };
+    } else if (flipState === 3) {
+        context.scale(1, -1);
+        return {
+            x: axis.x * 640,
+            y: -axis.y * 360 + 20,
+        };
+    }
+};
+
 const predictGesture = (imageBitmap) => {
     try {
         if (!workerContext || !gestureRecognizer) {
@@ -82,27 +112,19 @@ const predictGesture = (imageBitmap) => {
                 let landmarkColor;
                 const [handedness] = handednesses[i];
                 const mark12 = landmark[12];
-                workerContext.scale(-1, 1);
+                const { x, y } = contextFlip(workerContext, mark12);
                 if (handedness.categoryName === 'Left') {
                     workerContext.fillStyle = '#FF0000';
-                    workerContext.fillText(
-                        `${i + 1}-${rightHand}`,
-                        -mark12.x * 640,
-                        mark12.y * 360 - 20
-                    );
+                    workerContext.fillText(`${i + 1}-${rightHand}`, x, y);
                     connectColor = '#FF0000';
                     landmarkColor = '#00FF00';
                 } else {
                     workerContext.fillStyle = '#00FF00';
-                    workerContext.fillText(
-                        `${i + 1}-${leftHand}`,
-                        -mark12.x * 640,
-                        mark12.y * 360 - 20
-                    );
+                    workerContext.fillText(`${i + 1}-${leftHand}`, x, y);
                     connectColor = '#00FF00';
                     landmarkColor = '#FF0000';
                 }
-                workerContext.scale(-1, 1);
+                contextFlip(workerContext, mark12);
                 drawingUtils.drawConnectors(landmark, GestureRecognizer.HAND_CONNECTIONS, {
                     color: connectColor,
                     lineWidth: 4,
