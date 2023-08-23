@@ -810,6 +810,9 @@ class MediaPipeUtils {
                         action: 'face_landmarker_init',
                         canvas: this.faceLandmarkerOffscreenCanvas,
                         isSafari: uaResult.browser.name === 'Safari' || uaResult.os.name === 'iOS',
+                        lang: {
+                            face: Lang.Blocks.video_face,
+                        },
                         option: {
                             isDrawDetectedFaceLandmarker: this.isDrawDetectedFaceLandmarker,
                         },

@@ -99,6 +99,7 @@ self.onmessage = async ({ data }) => {
 };
 
 let human;
+let faceLang;
 let offCanvas;
 let workerContext;
 let drawingUtils;
@@ -108,7 +109,8 @@ let countDetectedFace = 0;
 let isDrawDetectedFaceLandmarker = false;
 
 const initializeFaceLandmarker = async (data) => {
-    const { canvas, option, isSafari } = data;
+    const { canvas, option, isSafari, lang } = data;
+    faceLang = lang.face;
     isDrawDetectedFaceLandmarker = option.isDrawDetectedFaceLandmarker;
     offCanvas = canvas;
     workerContext = canvas.getContext('2d');
@@ -192,7 +194,7 @@ const predictFaceLandmarker = async (imageBitmap) => {
                 const mark297 = meshRaw[297];
                 const { x, y } = contextFlip(workerContext, mark297);
                 workerContext.fillStyle = '#FF0000';
-                workerContext.fillText(`${i + 1}-얼굴`, x, y);
+                workerContext.fillText(`${i + 1}-${faceLang}`, x, y);
                 contextFlip(workerContext, mark297);
             });
             await human.draw.face(offCanvas, face, drawOption);
