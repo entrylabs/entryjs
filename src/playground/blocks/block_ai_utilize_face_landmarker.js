@@ -310,7 +310,7 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             class: 'face',
             isNotFor: ['faceLandmarker'],
             func(sprite, script) {
-                return mediaPipeUtils.countDetectedFace;
+                return mediaPipeUtils.countDetectedFace || 0;
             },
         },
         locate_to_face: {
@@ -424,7 +424,10 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getFaceNumber(), params.getGender()],
+            params: [
+                { ...params.getFaceNumber(), fontSize: 10 },
+                { ...params.getGender(), fontSize: 10 },
+            ],
             events: {},
             def: {
                 params: [null, null],
@@ -449,8 +452,8 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
-                params.getFaceNumber(),
-                params.getOperators(),
+                { ...params.getFaceNumber(), fontSize: 10 },
+                { ...params.getOperators(), fontSize: 10 },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -503,7 +506,10 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getFaceNumber(), params.getEmotions()],
+            params: [
+                { ...params.getFaceNumber(), fontSize: 10 },
+                { ...params.getEmotions(), fontSize: 10 },
+            ],
             events: {},
             def: {
                 params: [null, null],
@@ -527,7 +533,11 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getFaceNumber(), params.getFacePoint(), params.getAxis()],
+            params: [
+                { ...params.getFaceNumber(), fontSize: 10 },
+                { ...params.getFacePoint(), fontSize: 10 },
+                { ...params.getAxis(), fontSize: 10 },
+            ],
             events: {},
             def: {
                 params: [null, null, null],
@@ -546,7 +556,7 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 const axisName = script.getField('AXIS', script);
                 const axis = mediaPipeUtils.getFacePointAxis(face, point);
                 if (axis) {
-                    return axis[axisName];
+                    return axis[axisName] || 0;
                 }
                 return 0;
             },
@@ -556,7 +566,10 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getFaceNumber(), params.getFaceCategory()],
+            params: [
+                { ...params.getFaceNumber(), fontSize: 10 },
+                { ...params.getFaceCategory(), fontSize: 10 },
+            ],
             events: {},
             def: {
                 params: [null, null],
@@ -572,14 +585,26 @@ Entry.AI_UTILIZE_BLOCK.faceLandmarker.getBlocks = function() {
                 const face = script.getField('FACE', script);
                 const category = script.getField('CATEGORY', script);
 
+                if (!mediaPipeUtils.isPrevFaceLandmarker) {
+                    if (['gender', 'emotion'].includes(category)) {
+                        return 'null';
+                    } else {
+                        return 0;
+                    }
+                }
+
                 switch (category) {
                     case 'gender':
-                        return Lang.video_gender[mediaPipeUtils.getFaceGender(face)] || 'null';
+                        return (
+                            Lang.video_gender[mediaPipeUtils.getFaceGender(face)] ||
+                            Lang.Blocks.unknown
+                        );
                     case 'age':
-                        return mediaPipeUtils.getFaceAge(face);
+                        return mediaPipeUtils.getFaceAge(face) || 0;
                     case 'emotion':
                         return (
-                            Lang.video_emotion_params[mediaPipeUtils.getFaceEmotion(face)] || 'null'
+                            Lang.video_emotion_params[mediaPipeUtils.getFaceEmotion(face)] ||
+                            Lang.Blocks.unknown
                         );
                 }
             },

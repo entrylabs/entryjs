@@ -274,7 +274,7 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             class: 'pose',
             isNotFor: ['poseLandmarker'],
             func(sprite, script) {
-                return mediaPipeUtils.countDetectedPose;
+                return mediaPipeUtils.countDetectedPose || 0;
             },
         },
         locate_to_pose: {
@@ -388,7 +388,11 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getPoseNumber(), params.getPosePoint(), params.getAxis()],
+            params: [
+                { ...params.getPoseNumber(), fontSize: 10 },
+                { ...params.getPosePoint(), fontSize: 10 },
+                { ...params.getAxis(), fontSize: 10 },
+            ],
             events: {},
             def: {
                 params: [null, null, null],
@@ -407,7 +411,7 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 const axisName = script.getField('AXIS', script);
                 const axis = mediaPipeUtils.getPosePointAxis(pose, point);
                 if (axis) {
-                    return axis[axisName];
+                    return axis[axisName] || 0;
                 }
                 return 0;
             },

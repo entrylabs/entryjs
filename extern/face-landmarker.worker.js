@@ -159,8 +159,6 @@ const contextFlip = (context, axis) => {
 
 const predictFaceLandmarker = async (imageBitmap) => {
     try {
-        console.timeEnd('predictFaceLandmarker-next');
-        console.time('predictFaceLandmarker');
         if (!workerContext || !human) {
             return;
         }
@@ -173,7 +171,6 @@ const predictFaceLandmarker = async (imageBitmap) => {
             action: 'face_landmarker_data',
             faceLandmarkerResult: { face },
         });
-        console.log('face', face);
         if (face.length) {
             if (!isPrevFaceLandmarker) {
                 isPrevFaceLandmarker = true;
@@ -206,8 +203,6 @@ const predictFaceLandmarker = async (imageBitmap) => {
     } catch (e) {
         console.error(e);
     } finally {
-        console.timeEnd('predictFaceLandmarker');
-        console.time('predictFaceLandmarker-next');
         workerContext.restore();
         requestAnimationFrame(() => {
             self.postMessage({ action: 'next_face_landmarker' });
