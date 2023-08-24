@@ -7,8 +7,6 @@ import {
     GestureRecognizerResult,
     PoseLandmarker,
     PoseLandmarkerResult,
-    FaceLandmarkerResult,
-    FaceLandmarker,
     ObjectDetector,
     ObjectDetectorResult,
     Detection,
@@ -187,7 +185,7 @@ class MediaPipeUtils {
     private faceLandmarkerOffscreenCanvas: OffscreenCanvas;
     private faceLandmarkerWorker: Worker;
     private alreadyInitFaceLandmarkerOffscreenCanvas: boolean = false;
-    private prevFaceLandmarkerResult;
+    private prevFaceLandmarkerResult: any;
 
     public countDetectedObject: number;
     public isPrevObjectDetector: boolean = false;
@@ -341,6 +339,17 @@ class MediaPipeUtils {
             action(this.allCanvases);
         }
         this.flipState = nextState;
+    }
+
+    initFlipStateCanvas(canvas: PIXI.Sprite | createjs.Bitmap) {
+        if (this.flipState === 0) {
+            GEHelper.hFlipVideoElement(canvas);
+        } else if (this.flipState === 2) {
+            GEHelper.vFlipVideoElement(canvas);
+            GEHelper.hFlipVideoElement(canvas);
+        } else if (this.flipState === 3) {
+            GEHelper.vFlipVideoElement(canvas);
+        }
     }
 
     setOpacityCamera(opacity: number) {
@@ -634,7 +643,7 @@ class MediaPipeUtils {
             this.gestureRecognizerVideoCanvas
         );
         GEHelper.drawOverlayElement(this.gestureRecognizerCanvasOverlay);
-        GEHelper.hFlipVideoElement(this.gestureRecognizerCanvasOverlay);
+        this.initFlipStateCanvas(this.gestureRecognizerCanvasOverlay);
         if (this.canWorker) {
             // eslint-disable-next-line max-len
             this.gestureRecognizerOffscreenCanvas = this.gestureRecognizerVideoCanvas.transferControlToOffscreen();
@@ -662,7 +671,7 @@ class MediaPipeUtils {
             this.poseLandmarkerVideoCanvas
         );
         GEHelper.drawOverlayElement(this.poseLandmarkerCanvasOverlay);
-        GEHelper.hFlipVideoElement(this.poseLandmarkerCanvasOverlay);
+        this.initFlipStateCanvas(this.poseLandmarkerCanvasOverlay);
         if (this.canWorker) {
             // eslint-disable-next-line max-len
             this.poseLandmarkerOffscreenCanvas = this.poseLandmarkerVideoCanvas.transferControlToOffscreen();
@@ -686,7 +695,7 @@ class MediaPipeUtils {
             this.faceLandmarkerVideoCanvas
         );
         GEHelper.drawOverlayElement(this.faceLandmarkerCanvasOverlay);
-        GEHelper.hFlipVideoElement(this.faceLandmarkerCanvasOverlay);
+        this.initFlipStateCanvas(this.faceLandmarkerCanvasOverlay);
         // eslint-disable-next-line max-len
         this.faceLandmarkerOffscreenCanvas = this.faceLandmarkerVideoCanvas.transferControlToOffscreen();
         this.faceLandmarkerWorker = new Worker('/lib/entry-js/extern/face-landmarker.worker.js');
@@ -702,7 +711,7 @@ class MediaPipeUtils {
             this.objectDetectorVideoCanvas
         );
         GEHelper.drawOverlayElement(this.objectDetectorCanvasOverlay);
-        GEHelper.hFlipVideoElement(this.objectDetectorCanvasOverlay);
+        this.initFlipStateCanvas(this.objectDetectorCanvasOverlay);
         if (this.canWorker) {
             // eslint-disable-next-line max-len
             this.objectDetectorOffscreenCanvas = this.objectDetectorVideoCanvas.transferControlToOffscreen();
@@ -1509,6 +1518,7 @@ class MediaPipeUtils {
             this.stopObjectDetector();
             this.prevObjectDetectorResult = undefined;
         }
+        GEHelper.setVideoAlpha(this.canvasVideo, 50);
         this.turnOffWebcam();
     }
 
