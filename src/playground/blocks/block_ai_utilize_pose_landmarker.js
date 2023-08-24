@@ -7,7 +7,7 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker = {
     category: 'video',
     title: {
         ko: '사람 인식',
-        en: 'Pose Landmarker',
+        en: 'Human Detection',
     },
     titleKey: 'Workspace.pose_landmarker_title_text',
     description: Lang.Msgs.ai_utilize_pose_landmarker_description,
@@ -144,6 +144,24 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
         },
     };
     return {
+        pose_landmarker_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.pose_landmarker_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'pose_landmarker_title',
+            },
+            class: 'pose',
+            isNotFor: ['poseLandmarker'],
+            events: {},
+        },
         when_pose_landmarker: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -256,7 +274,7 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             class: 'pose',
             isNotFor: ['poseLandmarker'],
             func(sprite, script) {
-                return mediaPipeUtils.countDetectedPose;
+                return mediaPipeUtils.countDetectedPose || 0;
             },
         },
         locate_to_pose: {
@@ -370,7 +388,11 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getPoseNumber(), params.getPosePoint(), params.getAxis()],
+            params: [
+                { ...params.getPoseNumber(), fontSize: 10 },
+                { ...params.getPosePoint(), fontSize: 10 },
+                { ...params.getAxis(), fontSize: 10 },
+            ],
             events: {},
             def: {
                 params: [null, null, null],
@@ -389,7 +411,7 @@ Entry.AI_UTILIZE_BLOCK.poseLandmarker.getBlocks = function() {
                 const axisName = script.getField('AXIS', script);
                 const axis = mediaPipeUtils.getPosePointAxis(pose, point);
                 if (axis) {
-                    return axis[axisName];
+                    return axis[axisName] || 0;
                 }
                 return 0;
             },

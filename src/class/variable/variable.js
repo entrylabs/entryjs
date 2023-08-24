@@ -68,7 +68,7 @@ class Variable {
             this.x_ = variable.x ? variable.x : null;
             /** @type {number} */
             this.y_ = variable.y ? variable.y : null;
-            const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
+            const fontFamily = EntryStatic.fontFamily || "NanumGothic, 'Nanum Gothic'";
             this.BORDER = 6;
             this.FONT = `10pt ${fontFamily}`;
             this.VALUE_FONT = `9pt ${fontFamily}`;

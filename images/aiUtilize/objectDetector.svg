@@ -5,7 +5,7 @@
         <path d="M31 90c28.167 0 51-22.833 51-51 0-12.675-4.624-24.27-12.277-33.19l-.347-.4C88.462 12.787 102 31.313 102 53c0 28.167-22.833 51-51 51-15.21 0-28.865-6.658-38.209-17.219l-.167-.192A50.876 50.876 0 0 0 31 90z" fill="#000" opacity=".052"/>
         <path stroke="#4F80FF" stroke-width="2" d="M-1 1h104v104H-1z"/>
         <path fill="#4F80FF" d="M59 0h45v19H59z"/>
-        <text font-family="NanumGothicOTF" font-size="12" letter-spacing="-.429" fill="#FFF">
+        <text font-family="NanumGothicOTF, NanumGothic, 'Nanum Gothic'" font-size="12" letter-spacing="-.429" fill="#FFF">
                         <tspan x="65" y="13">축구공</tspan>
                     </text>
     </g>

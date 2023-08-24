@@ -1,11 +1,14 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
+let flipState;
+
 self.onmessage = async ({ data }) => {
     if (data.action === 'pose_landmarker_init') {
         initializePoseLandmarker(data);
     } else if (data.action === 'pose_landmarker_change_option') {
         changePoseLandmarkerOption(data.option);
     } else if (data.action === 'pose_landmarker') {
+        flipState = data.flipState;
         predictPoseLandmarker(data.imageBitmap);
     } else if (data.action === 'clear_pose_landmarker') {
         clearPredictPoseLandmarker();
@@ -43,6 +46,34 @@ const changePoseLandmarkerOption = (option) => {
     isDrawDetectedPoseLandmarker = option.isDrawDetectedPoseLandmarker;
 };
 
+const contextFlip = (context, axis) => {
+    if (flipState === 0) {
+        context.scale(-1, 1);
+        return {
+            x: -axis.x * 640,
+            y: axis.y * 360 - 20,
+        };
+    } else if (flipState === 1) {
+        context.scale(1, 1);
+        return {
+            x: axis.x * 640,
+            y: axis.y * 360 - 20,
+        };
+    } else if (flipState === 2) {
+        context.scale(-1, -1);
+        return {
+            x: -axis.x * 640,
+            y: -axis.y * 360 + 20,
+        };
+    } else if (flipState === 3) {
+        context.scale(1, -1);
+        return {
+            x: axis.x * 640,
+            y: -axis.y * 360 + 20,
+        };
+    }
+};
+
 const predictPoseLandmarker = async (imageBitmap) => {
     try {
         if (!workerContext || !poseLandmarker) {
@@ -74,10 +105,10 @@ const predictPoseLandmarker = async (imageBitmap) => {
             }
             landmarks.forEach((landmark, i) => {
                 const mark7 = landmark[7];
-                workerContext.scale(-1, 1);
+                const { x, y } = contextFlip(workerContext, mark7);
                 workerContext.fillStyle = '#FF0000';
-                workerContext.fillText(`${i + 1}-${person}`, -mark7.x * 640, mark7.y * 360 - 20);
-                workerContext.scale(-1, 1);
+                workerContext.fillText(`${i + 1}-${person}`, x, y);
+                contextFlip(workerContext, mark7);
                 drawingUtils.drawLandmarks(landmark, {
                     radius: (data) => DrawingUtils.lerp(data.from.z, -0.15, 0.1, 5, 1),
                 });

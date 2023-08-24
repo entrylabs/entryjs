@@ -1,4 +1,89 @@
-self.importScripts('/lib/entry-js/extern/vision_bundle.js');
+self.importScripts('/lib/entry-js/extern/human/human.js');
+
+const config = {
+    backend: 'humangl',
+    modelBasePath: './human/models/',
+    cacheModels: true,
+    validateModels: true,
+    wasmPlatformFetch: false,
+    debug: false,
+    async: true,
+    warmup: 'full',
+    cacheSensitivity: 0.7,
+    skipAllowed: false,
+    deallocate: false,
+    flags: {},
+    softwareKernels: false,
+    face: {
+        enabled: true,
+        detector: {
+            modelPath: 'blazeface.json',
+            rotation: false,
+            maxDetected: 4,
+            minConfidence: 0.2,
+            return: true,
+        },
+        mesh: {
+            enabled: true,
+            modelPath: 'facemesh.json',
+            keepInvalid: false,
+        },
+        attention: {
+            enabled: false,
+            modelPath: 'facemesh-attention.json',
+        },
+        iris: {
+            enabled: false,
+            modelPath: 'iris.json',
+        },
+        emotion: {
+            enabled: true,
+            minConfidence: 0.1,
+            skipFrames: 99,
+            skipTime: 1500,
+            modelPath: 'emotion.json',
+        },
+        description: {
+            enabled: true,
+            modelPath: 'faceres.json',
+            skipFrames: 99,
+            skipTime: 3000,
+            minConfidence: 0.1,
+        },
+        antispoof: {
+            enabled: false,
+            skipFrames: 99,
+            skipTime: 4000,
+            modelPath: 'antispoof.json',
+        },
+        liveness: {
+            enabled: false,
+            skipFrames: 99,
+            skipTime: 4000,
+            modelPath: 'liveness.json',
+        },
+    },
+    filter: { enabled: false },
+    object: { enabled: false },
+    gesture: { enabled: false },
+    hand: { enabled: false },
+    body: { enabled: false },
+    segmentation: { enabled: false },
+};
+
+const drawOption = {
+    alpha: 1,
+    color: '#ffffff',
+    drawPoints: true,
+    drawPolygons: true,
+    drawAttention: false,
+    drawBoxes: false,
+    drawGaze: false,
+    drawGestures: false,
+    drawLabels: false,
+};
+
+let flipState;
 
 self.onmessage = async ({ data }) => {
     if (data.action === 'face_landmarker_init') {
@@ -6,12 +91,16 @@ self.onmessage = async ({ data }) => {
     } else if (data.action === 'face_landmarker_change_option') {
         changeFaceLandmarkerOption(data.option);
     } else if (data.action === 'face_landmarker') {
+        flipState = data.flipState;
         predictFaceLandmarker(data.imageBitmap);
     } else if (data.action === 'clear_face_landmarker') {
         clearPredictFaceLandmarker();
     }
 };
 
+let human;
+let faceLang;
+let offCanvas;
 let workerContext;
 let drawingUtils;
 let faceLandmarker;
@@ -20,20 +109,19 @@ let countDetectedFace = 0;
 let isDrawDetectedFaceLandmarker = false;
 
 const initializeFaceLandmarker = async (data) => {
-    const { canvas, option } = data;
+    const { canvas, option, isSafari, lang } = data;
+    faceLang = lang.face;
     isDrawDetectedFaceLandmarker = option.isDrawDetectedFaceLandmarker;
+    offCanvas = canvas;
     workerContext = canvas.getContext('2d');
     workerContext.font = '20px Arial';
-    drawingUtils = new DrawingUtils(workerContext);
-    const vision = await FilesetResolver.forVisionTasks('/lib/entry-js/extern/wasm');
-    faceLandmarker = await FaceLandmarker.createFromOptions(vision, {
-        baseOptions: {
-            modelAssetPath: '/lib/entry-js/extern/model/face_landmarker.task',
-            delegate: 'GPU',
-        },
-        runningMode: 'VIDEO',
-        numFaces: 4,
-    });
+
+    if (isSafari) {
+        config.backend = 'wasm';
+    }
+
+    if (!human) human = new Human.default(config);
+
     self.postMessage({ action: 'next_face_landmarker' });
 };
 
@@ -41,26 +129,55 @@ const changeFaceLandmarkerOption = (option) => {
     isDrawDetectedFaceLandmarker = option.isDrawDetectedFaceLandmarker;
 };
 
+const contextFlip = (context, axis) => {
+    if (flipState === 0) {
+        context.scale(-1, 1);
+        return {
+            x: -axis[0] * 640,
+            y: axis[1] * 360 - 20,
+        };
+    } else if (flipState === 1) {
+        context.scale(1, 1);
+        return {
+            x: axis[0] * 640,
+            y: axis[1] * 360 - 20,
+        };
+    } else if (flipState === 2) {
+        context.scale(-1, -1);
+        return {
+            x: -axis[0] * 640,
+            y: -axis[1] * 360 + 20,
+        };
+    } else if (flipState === 3) {
+        context.scale(1, -1);
+        return {
+            x: axis[0] * 640,
+            y: -axis[1] * 360 + 20,
+        };
+    }
+};
+
 const predictFaceLandmarker = async (imageBitmap) => {
     try {
-        if (!workerContext || !faceLandmarker) {
+        if (!workerContext || !human) {
             return;
         }
-        const results = await faceLandmarker.detectForVideo(imageBitmap, Date.now());
+        const results = await human.detect(imageBitmap);
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
-        const { faceLandmarks } = results;
+
+        const { face } = results;
         self.postMessage({
             action: 'face_landmarker_data',
-            faceLandmarkerResult: results,
+            faceLandmarkerResult: { face },
         });
-        if (faceLandmarks.length) {
+        if (face.length) {
             if (!isPrevFaceLandmarker) {
                 isPrevFaceLandmarker = true;
                 self.postMessage({ action: 'start_face_landmarker' });
             }
-            if (faceLandmarks.length !== countDetectedFace) {
-                countDetectedFace = faceLandmarks.length;
+            if (face.length !== countDetectedFace) {
+                countDetectedFace = face.length;
                 self.postMessage({
                     action: 'count_detected_face_landmarker',
                     count: countDetectedFace,
@@ -69,36 +186,15 @@ const predictFaceLandmarker = async (imageBitmap) => {
             if (!isDrawDetectedFaceLandmarker) {
                 return;
             }
-            faceLandmarks.forEach((landmark, i) => {
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_TESSELATION, {
-                    color: '#C0C0C070',
-                    lineWidth: 1,
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYE, {
-                    color: '#FF3030',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_RIGHT_EYEBROW, {
-                    color: '#FF3030',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_LEFT_EYE, {
-                    color: '#30FF30',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_LEFT_EYEBROW, {
-                    color: '#30FF30',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_FACE_OVAL, {
-                    color: '#E0E0E0',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_LIPS, {
-                    color: '#E0E0E0',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_RIGHT_IRIS, {
-                    color: '#FF3030',
-                });
-                drawingUtils.drawConnectors(landmark, FaceLandmarker.FACE_LANDMARKS_LEFT_IRIS, {
-                    color: '#30FF30',
-                });
+            face.forEach((item, i) => {
+                const { meshRaw } = item;
+                const mark297 = meshRaw[297];
+                const { x, y } = contextFlip(workerContext, mark297);
+                workerContext.fillStyle = '#FF0000';
+                workerContext.fillText(`${i + 1}-${faceLang}`, x, y);
+                contextFlip(workerContext, mark297);
             });
+            await human.draw.face(offCanvas, face, drawOption);
         } else if (isPrevFaceLandmarker) {
             isPrevFaceLandmarker = false;
             countDetectedFace = 0;

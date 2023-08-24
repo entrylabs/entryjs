@@ -1,11 +1,14 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
+let flipState;
+
 self.onmessage = async ({ data }) => {
     if (data.action === 'object_detector_init') {
         initializeObjectDetector(data);
     } else if (data.action === 'object_detector_change_option') {
         changeObjectDetectorOption(data.option);
     } else if (data.action === 'object_detector') {
+        flipState = data.flipState;
         predictObjectDetector(data.imageBitmap);
     } else if (data.action === 'clear_object_detector') {
         clearPredictObjectDetector();
@@ -107,6 +110,34 @@ const colors = [
     'rgb(252, 201, 52)',
 ];
 
+const contextFlip = (context, axis) => {
+    if (flipState === 0) {
+        context.scale(-1, 1);
+        return {
+            x: -axis.x - axis.offsetX,
+            y: axis.y - axis.offsetY,
+        };
+    } else if (flipState === 1) {
+        context.scale(1, 1);
+        return {
+            x: axis.x + 3,
+            y: axis.y - axis.offsetY,
+        };
+    } else if (flipState === 2) {
+        context.scale(-1, -1);
+        return {
+            x: -axis.x - axis.offsetX,
+            y: -(axis.y - axis.offsetY - 6),
+        };
+    } else if (flipState === 3) {
+        context.scale(1, -1);
+        return {
+            x: axis.x + 3,
+            y: -(axis.y - axis.offsetY - 6),
+        };
+    }
+};
+
 let offset = 0;
 function drawObjectDetections(detect, i) {
     try {
@@ -135,10 +166,15 @@ function drawObjectDetections(detect, i) {
         workerContext.stroke();
         workerContext.fillStyle = colors[i];
         workerContext.fillRect(m, y, l, measureSize);
-        workerContext.scale(-1, 1);
+        const { x: axisX, y: axisY } = contextFlip(workerContext, {
+            offsetX: l - 3,
+            offsetY: 3 * e,
+            x: m,
+            y: y + measureSize,
+        });
         workerContext.fillStyle = 'white';
-        workerContext.fillText(text, -(m + l - 3), y + measureSize - 3 * e);
-        workerContext.scale(-1, 1);
+        workerContext.fillText(text, axisX, axisY);
+        contextFlip(workerContext, { offsetX: 0, offsetY: 0, x: 0, y: 0 });
     } catch (e) {
         console.error(e.stack);
     }

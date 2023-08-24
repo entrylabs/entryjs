@@ -178,6 +178,24 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
         },
     };
     return {
+        object_detector_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.object_detector_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'object_detector_title',
+            },
+            class: 'weather',
+            isNotFor: ['weather'],
+            events: {},
+        },
         when_object_detector: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -286,7 +304,7 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             class: 'object',
             isNotFor: ['objectDetector'],
             func(sprite, script) {
-                return mediaPipeUtils.countDetectedObject;
+                return mediaPipeUtils.countDetectedObject || 0;
             },
         },
         is_detected_among_objects: {
@@ -294,7 +312,7 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getObjectList()],
+            params: [{ ...params.getObjectList(), fontSize: 10 }],
             events: {},
             def: {
                 type: 'is_detected_among_objects',

@@ -25,7 +25,7 @@ export default class PIXIHelper {
         // console.log(str, font);
         const reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
         const result: any[] = reg.exec(font) || [];
-        const fontName = result[4] || 'NanumGothic';
+        const fontName = result[4] || "NanumGothic, 'Nanum Gothic'";
         const size = result[1] || '10pt';
 
         const nColor = parseInt(color.replace('#', '0x')) || 0;

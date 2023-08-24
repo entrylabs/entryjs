@@ -111,13 +111,17 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 menuName() {
                     const handPoint = this.getTargetValue('handPoint');
                     if (handPoint === 1) {
-                        this.setValue(3);
+                        if (![2, 3].includes(this.value)) {
+                            this.setValue(3);
+                        }
                         return [
                             [Lang.Blocks.tip, 3],
                             [Lang.Blocks.dip, 2],
                         ];
                     } else if (handPoint !== 0) {
-                        this.setValue(3);
+                        if (![1, 2, 3].includes(this.value)) {
+                            this.setValue(3);
+                        }
                         return [
                             [Lang.Blocks.tip, 3],
                             [Lang.Blocks.dip, 2],
@@ -128,6 +132,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                         return [[Lang.Blocks.none, 0]];
                     }
                 },
+                needDeepCopy: true,
                 fontSize: 11,
                 bgColor: EntryStatic.colorSet.block.darken.AI_UTILIZE,
                 arrowColor: EntryStatic.colorSet.common.WHITE,
@@ -174,6 +179,24 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
         },
     };
     return {
+        hand_detection_title: {
+            skeleton: 'basic_text',
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.Blocks.hand_detection_title_text,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'center',
+                },
+            ],
+            def: {
+                type: 'hand_detection_title',
+            },
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
+            events: {},
+        },
         when_hand_detection: {
             color: EntryStatic.colorSet.block.default.AI_UTILIZE,
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
@@ -414,10 +437,10 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             skeleton: 'basic_string_field',
             statements: [],
             params: [
-                params.getHandNumber(),
-                params.getHandPoint(),
-                params.getHandDetailPoint(),
-                params.getAxis(),
+                { ...params.getHandNumber(), fontSize: 10 },
+                { ...params.getHandPoint(), fontSize: 10 },
+                { ...params.getHandDetailPoint(), fontSize: 10 },
+                { ...params.getAxis(), fontSize: 10 },
             ],
             events: {},
             def: {
@@ -440,7 +463,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 const handPoint = point + detail;
                 const axis = mediaPipeUtils.getHandPointAxis(hand, handPoint);
                 if (axis) {
-                    return axis[axisName];
+                    return axis[axisName] || 0;
                 }
                 return 0;
             },
@@ -450,7 +473,10 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getHandNumber(), params.getHand()],
+            params: [
+                { ...params.getHandNumber(), fontSize: 10 },
+                { ...params.getHand(), fontSize: 10 },
+            ],
             events: {},
             def: { params: [null, null], type: 'is_which_hand' },
             paramsKeyMap: {
@@ -474,7 +500,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getHandNumber()],
+            params: [{ ...params.getHandNumber(), fontSize: 10 }],
             events: {},
             def: { params: [null, null], type: 'get_which_hand' },
             paramsKeyMap: {
@@ -486,11 +512,11 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 const handNum = script.getField('HAND_NUM', script);
                 const handedness = mediaPipeUtils.getHandedness(handNum);
                 if (!handedness) {
-                    return '';
+                    return 'null';
                 } else if (handedness.categoryName === 'Left') {
-                    return '오른손';
+                    return Lang.Blocks.right_hand;
                 } else {
-                    return '왼손';
+                    return Lang.Blocks.left_hand;
                 }
             },
         },
@@ -499,7 +525,10 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getHandNumber(), params.getGesture()],
+            params: [
+                { ...params.getHandNumber(), fontSize: 10 },
+                { ...params.getGesture(), fontSize: 10 },
+            ],
             events: {},
             def: { params: [null, null], type: 'is_which_gesture' },
             paramsKeyMap: {
@@ -523,7 +552,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             outerLine: EntryStatic.colorSet.block.darken.AI_UTILIZE,
             skeleton: 'basic_string_field',
             statements: [],
-            params: [params.getHandNumber()],
+            params: [{ ...params.getHandNumber(), fontSize: 10 }],
             events: {},
             def: { params: [null, null], type: 'get_which_gesture' },
             paramsKeyMap: {
@@ -534,10 +563,11 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
             func(sprite, script) {
                 const handNum = script.getField('HAND_NUM', script);
                 const gesture = mediaPipeUtils.getGesture(handNum);
+
                 if (!gesture) {
-                    return '';
+                    return 'null';
                 }
-                return Lang.gesture_list[gesture.categoryName.toLowerCase()] || '';
+                return Lang.gesture_list[gesture.categoryName.toLowerCase()] || Lang.Blocks.unknown;
             },
         },
     };
