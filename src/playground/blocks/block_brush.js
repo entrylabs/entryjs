@@ -87,6 +87,68 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.stop_drawing()'] },
             },
+            start_fill: {
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/brush_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'start_fill',
+                },
+                class: 'fill_control',
+                isNotFor: ['textBox'],
+                func(sprite, script) {
+                    if (sprite.paint) {
+                        sprite.paint.stop = false;
+                        const rgb = sprite.paint.rgb;
+                        sprite.paint.beginFill(
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
+                        );
+                    } else {
+                        Entry.setBasicPaint(sprite);
+                    }
+
+                    sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
+                    return script.callReturn();
+                },
+            },
+            stop_fill: {
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/brush_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'stop_fill',
+                },
+                class: 'fill_control',
+                isNotFor: ['textBox'],
+                func(sprite, script) {
+                    if (sprite.paint) {
+                        sprite.paint.endFill();
+                        sprite.paint.stop = true;
+                    }
+
+                    return script.callReturn();
+                },
+            },
             set_color: {
                 color: EntryStatic.colorSet.block.default.BRUSH,
                 outerLine: EntryStatic.colorSet.block.darken.BRUSH,
@@ -120,7 +182,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'brush_color',
+                class: 'brush_control',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
                     const colour = script.getStringValue('VALUE', script);
@@ -194,9 +256,77 @@ module.exports = {
 
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
+
+                    if (!sprite.paint || !sprite.shapes.length) {
+                        Entry.setBasicPaint(sprite);
+                        sprite.paint.stop = true;
+                    }
+
+                    if (sprite.paint) {
+                        const rgb = Entry.generateRgb();
+                        sprite.paint.rgb = rgb;
+                        sprite.paint.endFill();
+                        sprite.paint.beginFill(
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
+                        );
+                        sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
+                    }
+
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_brush_color_to_random()'] },
+            },
+            set_fill_color: {
+                color: EntryStatic.colorSet.block.default.BRUSH,
+                outerLine: EntryStatic.colorSet.block.darken.BRUSH,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/brush_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'color',
+                        },
+                        null,
+                    ],
+                    type: 'set_fill_color',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'fill_control',
+                isNotFor: ['textBox'],
+                func(sprite, script) {
+                    const colour = script.getStringValue('VALUE', script);
+
+                    if (!sprite.paint || !sprite.shapes.length) {
+                        Entry.setBasicPaint(sprite);
+                        sprite.paint.stop = true;
+                    }
+
+                    if (sprite.paint) {
+                        const rgb = Entry.hex2rgb(colour);
+                        sprite.paint.rgb = rgb;
+                        sprite.paint.endFill();
+                        sprite.paint.beginFill(
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
+                        );
+                        sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
+                    }
+
+                    return script.callReturn();
+                },
             },
             change_thickness: {
                 color: EntryStatic.colorSet.block.default.BRUSH,
@@ -239,7 +369,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'brush_thickness',
+                class: 'brush_control',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
                     const thickness = script.getNumberValue('VALUE', script);
@@ -305,7 +435,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'brush_thickness',
+                class: 'brush_control',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
                     const thickness = script.getNumberValue('VALUE', script);
@@ -367,25 +497,50 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'brush_opacity',
+                class: 'brush_color',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
-                    let opacity = script.getNumberValue('VALUE', script);
+                    const opacity = script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
                         sprite.brush.stop = true;
                     }
-                    opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity + opacity, 0, 100);
+
+                    if (!sprite.paint || !sprite.shapes.length) {
+                        Entry.setBasicPaint(sprite);
+                        sprite.paint.stop = true;
+                    }
 
                     if (sprite.brush) {
-                        sprite.brush.opacity = opacity;
+                        const newOpacity = Entry.adjustValueWithMaxMin(
+                            sprite.brush.opacity + opacity,
+                            0,
+                            100
+                        );
+                        sprite.brush.opacity = newOpacity;
                         sprite.brush.endStroke();
                         const rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
                             `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.brush.opacity / 100})`
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
+                    }
+
+                    if (sprite.paint) {
+                        const newOpacity = Entry.adjustValueWithMaxMin(
+                            sprite.paint.opacity + opacity,
+                            0,
+                            100
+                        );
+                        sprite.paint.opacity = newOpacity;
+                        sprite.paint.endFill();
+                        const rgb = sprite.paint.rgb;
+                        console.log('rgb', rgb);
+                        sprite.paint.beginFill(
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
+                        );
+                        sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
 
                     return script.callReturn();
@@ -433,24 +588,39 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'brush_opacity',
+                class: 'brush_color',
                 isNotFor: ['textBox'],
                 func(sprite, script) {
-                    const opacity = script.getNumberValue('VALUE', script);
+                    const opacityValue = script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
                         sprite.brush.stop = true;
                     }
 
+                    const opacity = Entry.adjustValueWithMaxMin(opacityValue, 0, 100);
                     if (sprite.brush) {
-                        sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);
+                        sprite.brush.opacity = opacity;
                         sprite.brush.endStroke();
                         const rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
                             `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.brush.opacity / 100})`
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
+                    }
+
+                    if (!sprite.paint || !sprite.shapes.length) {
+                        Entry.setBasicPaint(sprite);
+                        sprite.paint.stop = true;
+                    }
+                    if (sprite.paint) {
+                        sprite.paint.opacity = opacity;
+                        sprite.paint.endFill();
+                        const rgb = sprite.paint.rgb;
+                        sprite.paint.beginFill(
+                            `rgba(${rgb.r},${rgb.g},${rgb.b},${1 - sprite.paint.opacity / 100})`
+                        );
+                        sprite.paint.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
 
                     return script.callReturn();
@@ -479,6 +649,7 @@ module.exports = {
                 func(sprite, script) {
                     sprite.eraseBrush && sprite.eraseBrush();
                     sprite.removeStamps();
+                    sprite.removePaint();
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.clear_drawing()'] },

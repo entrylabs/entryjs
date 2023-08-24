@@ -83,6 +83,9 @@ module.exports = {
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.move_to_direction(%1)'] },
@@ -391,6 +394,9 @@ module.exports = {
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.add_x(%1)'] },
@@ -443,6 +449,9 @@ module.exports = {
                     sprite.setY(sprite.getY() + value);
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
                     return script.callReturn();
                 },
@@ -555,6 +564,9 @@ module.exports = {
                         if (sprite.brush && !sprite.brush.stop) {
                             sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                         }
+                        if (sprite.paint && !sprite.paint.stop) {
+                            sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
+                        }
                     }
                 },
                 syntax: { js: [], py: ['Entry.add_xy_for_sec(%2, %3, %1)'] },
@@ -608,6 +620,9 @@ module.exports = {
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.set_x(%1)'] },
@@ -660,6 +675,9 @@ module.exports = {
                     sprite.setY(value);
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
                     return script.callReturn();
                 },
@@ -730,6 +748,9 @@ module.exports = {
                     sprite.setY(value2);
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
                     return script.callReturn();
                 },
@@ -845,6 +866,9 @@ module.exports = {
                         if (sprite.brush && !sprite.brush.stop) {
                             sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                         }
+                        if (sprite.paint && !sprite.paint.stop) {
+                            sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
+                        }
                     }
                 },
                 syntax: { js: [], py: ['Entry.set_xy_for_sec(%2, %3, %1)'] },
@@ -899,6 +923,9 @@ module.exports = {
                     sprite.setY(Number(y));
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(x, y * -1);
+                    }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(x, y * -1);
                     }
                     return script.callReturn();
                 },
@@ -1012,6 +1039,9 @@ module.exports = {
                             if (sprite.brush && !sprite.brush.stop) {
                                 sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                             }
+                            if (sprite.paint && !sprite.paint.stop) {
+                                sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
+                            }
                             return script.callReturn();
                         }
                     }
@@ -1021,6 +1051,9 @@ module.exports = {
                         script.frameCount--;
                         if (sprite.brush && !sprite.brush.stop) {
                             sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                        }
+                        if (sprite.paint && !sprite.paint.stop) {
+                            sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
                         }
                         return script;
                     } else {
@@ -1589,6 +1622,9 @@ module.exports = {
                     sprite.setY(sprite.getY() - value * Math.sin(((angle - 90) / 180) * Math.PI));
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
+                    }
+                    if (sprite.paint && !sprite.paint.stop) {
+                        sprite.paint.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
                     return script.callReturn();
                 },
