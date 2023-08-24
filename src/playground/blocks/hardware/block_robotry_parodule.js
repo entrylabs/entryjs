@@ -49,17 +49,18 @@ Entry.Robotry_Parodule.setLanguage = function () {
             template: {
                 Parodule_Input_title: '센서 블럭\0',
                 Parodule_Sensor_Data: '%1 센서',
-                Parodule_Sensor_Kind: '%1 이름이 뭐에요?',
-                Parodule_Output_title: '제어 블럭\0',
-                Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
-                Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
-                Parodule_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
+                Parodule_Sensor_Kind: '%1 모듈 종류',
 
                 Parodule_Custom_title: '커스텀 제어 블럭\0',
-                Parodule_Custom_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
-                Parodule_Custom_LED: '%1 (으)로 픽셀 설정 %2',
-                Parodule_Custom_Motor: '%1 의 파워로 %2 %3',
-                Parodule_Custom_Buzzer: '%1 옥타브 %2 (으)로 재생 %3',
+                Parodule_Custom_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
+                Parodule_Custom_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
+                Parodule_Custom_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
+
+                Parodule_title: '제어 블럭\0',
+                Parodule_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
+                Parodule_LED: '%1 (으)로 픽셀 설정 %2',
+                Parodule_Motor: '%1 의 파워로 %2 %3',
+                Parodule_Buzzer: '%1 옥타브 %2 (으)로 재생 %3',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
@@ -88,17 +89,18 @@ Entry.Robotry_Parodule.setLanguage = function () {
             template: {
                 Parodule_Input_title: '센서 블럭\0',
                 Parodule_Sensor_Data: '%1 센서',
-                Parodule_Sensor_Kind: '%1 이름이 뭐에요?',
-                Parodule_Output_title: '제어 블럭\0',
-                Parodule_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
-                Parodule_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
-                Parodule_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
+                Parodule_Sensor_Kind: '%1 모듈 종류',
 
                 Parodule_Custom_title: '커스텀 제어 블럭\0',
-                Parodule_Custom_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
-                Parodule_Custom_LED: '%1 (으)로 픽셀 설정 %2',
-                Parodule_Custom_Motor: '%1 의 파워로 %2 %3',
-                Parodule_Custom_Buzzer: '%2 옥타브 %3 (으)로 재생 %4',
+                Parodule_Custom_LED: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
+                Parodule_Custom_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
+                Parodule_Custom_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
+
+                Parodule_title: '제어 블럭\0',
+                Parodule_Set: '세모 : %1 원 : %4 네모 : %2  십자 : %3 으로 설정 %5',
+                Parodule_LED: '%1 (으)로 픽셀 설정 %2',
+                Parodule_Motor: '%1 의 파워로 %2 %3',
+                Parodule_Buzzer: '%1 옥타브 %2 (으)로 재생 %3',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
@@ -168,13 +170,13 @@ Entry.Robotry_Parodule.monitorTemplate = function () {
         'Parodule_Sensor_Data',
         'Parodule_Sensor_Kind',
 
-        'Parodule_Output_title',
+        'Parodule_title',
+        'Parodule_Set',
         'Parodule_LED',
         'Parodule_Motor',
         'Parodule_Buzzer',
 
         'Parodule_Custom_title',
-        'Parodule_Custom_Set',
         'Parodule_Custom_LED',
         'Parodule_Custom_Motor',
         'Parodule_Custom_Buzzer',
@@ -299,6 +301,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'Get',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
+                const UNKNOWN = 207;
                 const NONE = 208;
                 const LED = 209;
                 const MOTOR = 210;
@@ -315,8 +318,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 else if (module_data[port] === BUZZER) {
                     value = "부저";
                 }
-                else {
-                    value = "몰라";
+                else if (module_data[port] === NONE) {
+                    value = "없음";
+                }
+                else if (module_data[port] === UNKNOWN) {
+                    value = "모름";
                 }
                 return value;
             },
@@ -326,11 +332,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
             },
         },
 
-        Parodule_Output_title: {
+        Parodule_Custom_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Output_title),
+                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Custom_title),
                 },
             },
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -338,21 +344,21 @@ Entry.Robotry_Parodule.getBlocks = function () {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.Parodule_Output_title,
+                    text: Lang.template.Parodule_Custom_title,
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'left',
                 },
             ],
             def: {
-                type: 'Parodule_Output_title',
+                type: 'Parodule_Custom_title',
             },
             class: 'TITLE',
             isNotFor: ['Robotry_Parodule'],
             events: {},
         },
 
-        /* Paroduel LED Start */
-        Parodule_LED: {
+        /* Paroduel Custom LED Start */
+        Parodule_Custom_LED: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -405,7 +411,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_LED',
+                type: 'Parodule_Custom_LED',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -431,10 +437,10 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             }
         },
-        /* Parodule LED End */
+        /* Parodule Custom LED End */
 
-        /* Paroduel Motor Start */
-        Parodule_Motor: {
+        /* Paroduel Custom Motor Start */
+        Parodule_Custom_Motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -488,7 +494,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_Motor',
+                type: 'Parodule_Custom_Motor',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -522,10 +528,10 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             }
         },
-        /* Parodule Motor End */
+        /* Parodule Custom Motor End */
 
-        /* Paroduel Buzzer Start */
-        Parodule_Buzzer: {
+        /* Paroduel Custom Buzzer Start */
+        Parodule_Custom_Buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -588,7 +594,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_Buzzer',
+                type: 'Parodule_Custom_Buzzer',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -621,14 +627,14 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             }
         },
-        /* Parodule Buzzer End */
+        /* Parodule Custom Buzzer End */
 
 
-        Parodule_Custom_title: {
+        Parodule_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
                 box: {
-                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Custom_title),
+                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_title),
                 },
             },
             color: EntryStatic.colorSet.common.TRANSPARENT,
@@ -636,21 +642,21 @@ Entry.Robotry_Parodule.getBlocks = function () {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.Parodule_Custom_title,
+                    text: Lang.template.Parodule_title,
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'left',
                 },
             ],
             def: {
-                type: 'Parodule_Custom_title',
+                type: 'Parodule_title',
             },
             class: 'TITLE',
             isNotFor: ['Robotry_Parodule'],
             events: {},
         },
 
-        /* Paroduel Custom Set Start */
-        Parodule_Custom_Set: {
+        /* Paroduel Set Start */
+        Parodule_Set: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -717,7 +723,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_Custom_Set',
+                type: 'Parodule_Set',
             },
             paramsKeyMap: {
                 PORT1: 0,
@@ -739,11 +745,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             }
         },
-        /* Paroduel Custom Set Start */
+        /* Paroduel Set Start */
 
 
-        /* Paroduel Custom LED Start */
-        Parodule_Custom_LED: {
+        /* Paroduel LED Start */
+        Parodule_LED: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -783,7 +789,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_Custom_LED',
+                type: 'Parodule_LED',
             },
             paramsKeyMap: {
                 VALUE: 0
@@ -812,10 +818,10 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             }
         },
-        /* Parodule Custom LED End */
+        /* Parodule LED End */
 
-        /* Paroduel Custom Motor Start */
-        Parodule_Custom_Motor: {
+        /* Paroduel Motor Start */
+        Parodule_Motor: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -857,7 +863,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_Custom_Motor',
+                type: 'Parodule_Motor',
             },
             paramsKeyMap: {
                 VALUE: 0,
@@ -925,10 +931,10 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 py: [],
             }
         },
-        /* Parodule Custom Motor End */
+        /* Parodule Motor End */
 
         /* Paroduel Buzzer Start */
-        Parodule_Custom_Buzzer: {
+        Parodule_Buzzer: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -978,7 +984,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             events: {},
             def: {
                 params: [],
-                type: 'Parodule_Custom_Buzzer',
+                type: 'Parodule_Buzzer',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
