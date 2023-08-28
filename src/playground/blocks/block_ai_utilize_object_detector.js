@@ -192,8 +192,8 @@ Entry.AI_UTILIZE_BLOCK.objectDetector.getBlocks = function() {
             def: {
                 type: 'object_detector_title',
             },
-            class: 'weather',
-            isNotFor: ['weather'],
+            class: 'hand',
+            isNotFor: ['gestureRecognition'],
             events: {},
         },
         when_object_detector: {
