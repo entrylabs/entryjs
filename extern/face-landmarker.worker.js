@@ -84,10 +84,13 @@ const drawOption = {
 };
 
 let flipState;
+let isRun = false;
 
 self.onmessage = async ({ data }) => {
     if (data.action === 'face_landmarker_init') {
         initializeFaceLandmarker(data);
+    } else if (data.action === 'face_landmarker_restart') {
+        isRun = true;
     } else if (data.action === 'face_landmarker_change_option') {
         changeFaceLandmarkerOption(data.option);
     } else if (data.action === 'face_landmarker') {
@@ -110,6 +113,7 @@ let isDrawDetectedFaceLandmarker = false;
 
 const initializeFaceLandmarker = async (data) => {
     const { canvas, option, isSafari, lang } = data;
+    isRun = true;
     faceLang = lang.face;
     isDrawDetectedFaceLandmarker = option.isDrawDetectedFaceLandmarker;
     offCanvas = canvas;
@@ -163,6 +167,9 @@ const predictFaceLandmarker = async (imageBitmap) => {
             return;
         }
         const results = await human.detect(imageBitmap);
+        if (!isRun) {
+            return;
+        }
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
 
@@ -212,6 +219,8 @@ const predictFaceLandmarker = async (imageBitmap) => {
 
 const clearPredictFaceLandmarker = () => {
     console.log('clearPredictFaceLandmarker');
+    isRun = false;
     isPrevFaceLandmarker = false;
+    countDetectedFace = 0;
     workerContext.clearRect(0, 0, 640, 360);
 };

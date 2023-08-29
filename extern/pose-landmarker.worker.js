@@ -1,10 +1,13 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
 let flipState;
+let isRun = false;
 
 self.onmessage = async ({ data }) => {
     if (data.action === 'pose_landmarker_init') {
         initializePoseLandmarker(data);
+    } else if (data.action === 'pose_landmarker_restart') {
+        isRun = true;
     } else if (data.action === 'pose_landmarker_change_option') {
         changePoseLandmarkerOption(data.option);
     } else if (data.action === 'pose_landmarker') {
@@ -25,6 +28,7 @@ let isDrawDetectedPoseLandmarker = false;
 
 const initializePoseLandmarker = async (data) => {
     const { canvas, lang, option } = data;
+    isRun = true;
     person = lang.person;
     isDrawDetectedPoseLandmarker = option.isDrawDetectedPoseLandmarker;
     workerContext = canvas.getContext('2d');
@@ -81,6 +85,9 @@ const predictPoseLandmarker = async (imageBitmap) => {
         }
         const startTimeMs = performance.now();
         const results = await poseLandmarker.detectForVideo(imageBitmap, startTimeMs);
+        if (!isRun) {
+            return;
+        }
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
         const { landmarks } = results;
@@ -131,6 +138,8 @@ const predictPoseLandmarker = async (imageBitmap) => {
 
 const clearPredictPoseLandmarker = () => {
     console.log('clearPredictPoseLandmarker');
+    isRun = false;
     isPrevPoseLandmarker = false;
+    countDetectedPose = 0;
     workerContext.clearRect(0, 0, 640, 360);
 };

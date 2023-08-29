@@ -1,10 +1,13 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
 let flipState;
+let isRun = false;
 
 self.onmessage = async ({ data }) => {
     if (data.action === 'object_detector_init') {
         initializeObjectDetector(data);
+    } else if (data.action === 'object_detector_restart') {
+        isRun = true;
     } else if (data.action === 'object_detector_change_option') {
         changeObjectDetectorOption(data.option);
     } else if (data.action === 'object_detector') {
@@ -25,6 +28,7 @@ let isDrawDetectedObjectDetector = false;
 
 const initializeObjectDetector = async (data) => {
     const { canvas, lang, option } = data;
+    isRun = true;
     objectNameList = lang.objectNameList;
     isDrawDetectedObjectDetector = option.isDrawDetectedObjectDetector;
     workerContext = canvas.getContext('2d');
@@ -54,7 +58,7 @@ const YX = (a) => {
 
 const predictObjectDetector = (imageBitmap) => {
     try {
-        if (!workerContext || !objectDetector) {
+        if (!workerContext || !objectDetector || !isRun) {
             return;
         }
         const startTimeMs = performance.now();
@@ -182,6 +186,8 @@ function drawObjectDetections(detect, i) {
 
 const clearPredictObjectDetector = () => {
     console.log('clearPredictObjectDetector');
+    isRun = false;
     isPrevObjectDetector = false;
+    countDetectedObject = 0;
     workerContext.clearRect(0, 0, 640, 360);
 };

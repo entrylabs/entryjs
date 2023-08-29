@@ -1,9 +1,12 @@
 self.importScripts('/lib/entry-js/extern/vision_bundle.js');
 
 let flipState;
+let isRun = false;
 self.onmessage = async ({ data }) => {
     if (data.action === 'gesture_recognizer_init') {
         initializeGesture(data);
+    } else if (data.action === 'gesture_recognizer_restart') {
+        isRun = true;
     } else if (data.action === 'gesture_recognizer_change_option') {
         changeGestureOption(data.option);
     } else if (data.action === 'gesture_recognizer') {
@@ -25,6 +28,7 @@ let isDrawDetectedHand = false;
 
 const initializeGesture = async (data) => {
     const { canvas, lang, option } = data;
+    isRun = true;
     leftHand = lang.leftHand;
     rightHand = lang.rightHand;
     isDrawDetectedHand = option.isDrawDetectedHand;
@@ -81,7 +85,7 @@ const contextFlip = (context, axis) => {
 
 const predictGesture = (imageBitmap) => {
     try {
-        if (!workerContext || !gestureRecognizer) {
+        if (!workerContext || !gestureRecognizer || !isRun) {
             return;
         }
         const results = gestureRecognizer.recognizeForVideo(imageBitmap, Date.now());
@@ -155,6 +159,8 @@ const predictGesture = (imageBitmap) => {
 
 const clearPredictGesture = () => {
     console.log('clearPredictGesture');
+    isRun = false;
     isPrevHandDetected = false;
+    countDetectedHand = 0;
     workerContext.clearRect(0, 0, 640, 360);
 };

@@ -753,6 +753,9 @@ class MediaPipeUtils {
                     );
                     this.alreadyInitGestureRecognizerOffscreenCanvas = true;
                 } else {
+                    this.gestureRecognizerWorker.postMessage({
+                        action: 'gesture_recognizer_restart',
+                    });
                     this.sendImageBitmapForGesture();
                 }
             } else {
@@ -791,6 +794,9 @@ class MediaPipeUtils {
                     );
                     this.alreadyInitPoseLandmarkerOffscreenCanvas = true;
                 } else {
+                    this.poseLandmarkerWorker.postMessage({
+                        action: 'pose_landmarker_restart',
+                    });
                     this.sendImageBitmapForPoseLandmarker();
                 }
             } else {
@@ -830,6 +836,9 @@ class MediaPipeUtils {
                 );
                 this.alreadyInitFaceLandmarkerOffscreenCanvas = true;
             } else {
+                this.faceLandmarkerWorker.postMessage({
+                    action: 'face_landmarker_restart',
+                });
                 this.sendImageBitmapForFaceLandmarker();
             }
         } catch (e) {
@@ -864,6 +873,9 @@ class MediaPipeUtils {
                     );
                     this.alreadyInitObjectDetectorOffscreenCanvas = true;
                 } else {
+                    this.objectDetectorWorker.postMessage({
+                        action: 'object_detector_restart',
+                    });
                     this.sendImageBitmapForObjectDetector();
                 }
             } else {
@@ -938,9 +950,6 @@ class MediaPipeUtils {
     }
 
     async stopHandGestureRecognition() {
-        this.isRunningHandGesture = false;
-        this.isPrevHandDetected = false;
-        this.countDetectedHand = 0;
         if (this.canWorker) {
             this.gestureRecognizerWorker.postMessage({
                 action: 'clear_gesture_recognizer',
@@ -953,12 +962,12 @@ class MediaPipeUtils {
                 this.video.height
             );
         }
+        this.isRunningHandGesture = false;
+        this.isPrevHandDetected = false;
+        this.countDetectedHand = 0;
     }
 
     async stopPoseLandmarker() {
-        this.isRunningPoseLandmarker = false;
-        this.isPrevPoseLandmarker = false;
-        this.countDetectedPose = 0;
         if (this.canWorker) {
             this.poseLandmarkerWorker.postMessage({
                 action: 'clear_pose_landmarker',
@@ -966,21 +975,21 @@ class MediaPipeUtils {
         } else {
             this.poseLandmarkerVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
         }
+        this.isRunningPoseLandmarker = false;
+        this.isPrevPoseLandmarker = false;
+        this.countDetectedPose = 0;
     }
 
     async stopFaceLandmarker() {
-        this.isRunningFaceLandmarker = false;
-        this.isPrevFaceLandmarker = false;
-        this.countDetectedFace = 0;
         this.faceLandmarkerWorker.postMessage({
             action: 'clear_face_landmarker',
         });
+        this.isRunningFaceLandmarker = false;
+        this.isPrevFaceLandmarker = false;
+        this.countDetectedFace = 0;
     }
 
     async stopObjectDetector() {
-        this.isRunningObjectDetector = false;
-        this.isPrevObjectDetector = false;
-        this.countDetectedObject = 0;
         if (this.canWorker) {
             this.objectDetectorWorker.postMessage({
                 action: 'clear_object_detector',
@@ -988,6 +997,9 @@ class MediaPipeUtils {
         } else {
             this.objectDetectorVideoCanvasCtx.clearRect(0, 0, this.video.width, this.video.height);
         }
+        this.isRunningObjectDetector = false;
+        this.isPrevObjectDetector = false;
+        this.countDetectedObject = 0;
     }
 
     async initPredictHandGesture() {
