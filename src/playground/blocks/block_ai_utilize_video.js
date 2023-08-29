@@ -5,7 +5,6 @@ Entry.VideoUtils = VideoUtils;
 Entry.AI_UTILIZE_BLOCK.video = {
     name: 'video',
     imageName: 'video.svg',
-    category: 'video',
     title: {
         ko: '비디오 감지',
         en: 'Video Detection',

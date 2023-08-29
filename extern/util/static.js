@@ -2,13 +2,12 @@
 
 /* eslint-disable */
 var EntryStatic = {
-    fontFamily: "NanumGothic, 'Nanum Gothic'",
+    fontFamily: 'NanumGothic',
     exportBlockFontFamily:
-        "NanumGothic, 'Nanum Gothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
     fontOffsetY: -2.5,
     heightLetter: 'M',
     objectTypes: ['sprite', 'textBox'],
-    messageMaxLength: 10,
 };
 
 EntryStatic.usageList = [
@@ -279,12 +278,9 @@ EntryStatic.getAllBlocks = function() {
                 'start_drawing',
                 'stop_drawing',
                 'set_color',
+                'set_random_color',
                 'change_thickness',
                 'set_thickness',
-                'start_fill',
-                'stop_fill',
-                'set_fill_color',
-                'set_random_color',
                 'change_brush_transparency',
                 'set_brush_tranparency',
                 'brush_erase_all',
@@ -360,8 +356,6 @@ EntryStatic.getAllBlocks = function() {
                 'reverse_of_string',
                 'change_string_case',
                 'get_block_count',
-                'change_rgb_to_hex',
-                'change_hex_to_rgb',
             ],
         },
         {
@@ -532,55 +526,6 @@ EntryStatic.getAllBlocks = function() {
                 'video_body_part_coord',
                 'video_face_part_coord',
                 'video_detected_face_info',
-                'media_pipe_title',
-                'media_pipe_video_screen',
-                'media_pipe_switch_camera',
-                'check_connected_camera',
-                'media_pipe_flip_camera',
-                'media_pipe_set_opacity_camera',
-                'media_pipe_motion_value',
-                'hand_detection_title',
-                'when_hand_detection',
-                'hand_detection',
-                'draw_detected_hand',
-                'check_detected_hand',
-                'count_detected_hand',
-                'locate_to_hand',
-                'locate_time_to_hand',
-                'axis_detected_hand',
-                'is_which_hand',
-                'get_which_hand',
-                'is_which_gesture',
-                'get_which_gesture',
-                'pose_landmarker_title',
-                'when_pose_landmarker',
-                'pose_landmarker',
-                'draw_detected_pose',
-                'check_detected_pose',
-                'count_detected_pose',
-                'locate_to_pose',
-                'locate_time_to_pose',
-                'axis_detected_pose',
-                'face_landmarker_title',
-                'when_face_landmarker',
-                'face_landmarker',
-                'draw_detected_face',
-                'check_detected_face',
-                'count_detected_face',
-                'locate_to_face',
-                'locate_time_to_face',
-                'check_detected_gender',
-                'check_compare_age',
-                'check_detected_emotion',
-                'axis_detected_face',
-                'get_detected_face_value',
-                'object_detector_title',
-                'when_object_detector',
-                'object_detector',
-                'draw_detected_object',
-                'check_detected_object',
-                'count_detected_object',
-                'is_detected_among_objects',
             ],
         },
         {
@@ -1127,7 +1072,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "NanumGothic, 'Nanum Gothic', 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 

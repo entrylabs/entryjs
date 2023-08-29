@@ -3,16 +3,13 @@ import AudioUtils from '../../util/audioUtils';
 Entry.AI_UTILIZE_BLOCK.audio = {
     name: 'audio',
     imageName: 'audio.svg',
-    category: 'audio',
-    sponsorText: 'Powered by {image}',
-    sponsorImage: 'naverClova.png',
-    sponsorOnImage: 'naverClovaOn.png',
+    sponserText: 'Powered by NAVER Clova',
     title: {
-        ko: '음성 인식',
-        en: 'Speech recognition',
+        ko: '오디오 감지',
+        en: 'Audio Detection',
         jp: 'オーディオ検出',
     },
-    titleKey: 'template.voice_title_text',
+    titleKey: 'template.audio_title_text',
     description: Lang.Msgs.ai_utilize_audio_description,
     descriptionKey: 'Msgs.ai_utilize_audio_description',
     isInitialized: false,
@@ -30,7 +27,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
             params: [
                 {
                     type: 'Text',
-                    text: Lang.template.voice_title_text,
+                    text: Lang.template.audio_title_text,
                     color: EntryStatic.colorSet.common.TEXT,
                     align: 'center',
                 },
