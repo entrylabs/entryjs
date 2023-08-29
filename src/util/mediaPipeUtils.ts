@@ -564,6 +564,9 @@ class MediaPipeUtils {
 
     initGestureRecognitionWorkerEvent() {
         this.gestureRecognizerWorker.addEventListener('message', ({ data }) => {
+            if (!this.isRunningHandGesture) {
+                return;
+            }
             if (['next_gesture_recognizer'].includes(data.action)) {
                 this.sendImageBitmapForGesture();
             } else if (data.action === 'start_gesture_recognizer') {
@@ -582,6 +585,9 @@ class MediaPipeUtils {
 
     initPoseLandmarkerWorkerEvent() {
         this.poseLandmarkerWorker.addEventListener('message', ({ data }) => {
+            if (!this.isRunningPoseLandmarker) {
+                return;
+            }
             if (['next_pose_landmarker'].includes(data.action)) {
                 this.sendImageBitmapForPoseLandmarker();
             } else if (data.action === 'start_pose_landmarker') {
@@ -600,6 +606,9 @@ class MediaPipeUtils {
 
     initFaceLandmarkerWorkerEvent() {
         this.faceLandmarkerWorker.addEventListener('message', ({ data }) => {
+            if (!this.isRunningFaceLandmarker) {
+                return;
+            }
             if (['next_face_landmarker'].includes(data.action)) {
                 this.sendImageBitmapForFaceLandmarker();
             } else if (data.action === 'start_face_landmarker') {
@@ -618,6 +627,9 @@ class MediaPipeUtils {
 
     initObjectDetectorWorkerEvent() {
         this.objectDetectorWorker.addEventListener('message', ({ data }) => {
+            if (!this.isRunningObjectDetector) {
+                return;
+            }
             if (['next_object_detector'].includes(data.action)) {
                 this.sendImageBitmapForObjectDetector();
             } else if (data.action === 'start_object_detector') {
