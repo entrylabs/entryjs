@@ -81,7 +81,7 @@ export default class AILearning {
             ({ category }) => category === 'ai_utilize'
         );
         blocks
-            .filter((x) => Entry.block[x].class === 'ai_learning')
+            .filter((x) => Entry.block?.[x]?.class === 'ai_learning')
             .forEach((blockType) => {
                 Entry.Utils.removeBlockByType(blockType);
             });
