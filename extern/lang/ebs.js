@@ -4901,7 +4901,7 @@ Lang.Workspace = {
     "message_remove": "신호 삭제",
     "message_remove_canceled": "신호 삭제를 취소하였습니다.",
     "message_rename": "신호 이름을 변경하였습니다.",
-    "message_rename_failed": "신호 이름 변경에 실패하였습니다. ",
+    "message_rename_failed": "신호 이름 변경 실패",
     "message_rename_ok": "신호의 이름이 성공적으로 변경 되었습니다.",
     "message_too_long": "신호의 이름이 너무 깁니다.",
     "no_message_to_remove": "삭제할 신호가 없습니다",
