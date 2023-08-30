@@ -320,7 +320,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 else if (module_data[port] === NONE) {
                     value = "없음";
                 }
-                else {
+                else if (module_data[port] == UNKNOWN) {
                     value = "모름";
                 }
                 return value;
