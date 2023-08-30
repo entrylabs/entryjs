@@ -14,11 +14,11 @@ const STATUS = {
 };
 
 export default class LearningView {
-    constructor({ name = 'model name', status = STATUS.NO_MODEL, value = 0} = {}) {
+    constructor({ name = 'model name', status = STATUS.NO_MODEL, value = 0 } = {}) {
         this.id = Entry.generateHash();
         this.visible = true;
         this.value = value;
-        const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
+        const fontFamily = EntryStatic.fontFamily || "NanumGothic, 'Nanum Gothic'";
         this.BORDER = 6;
         this.FONT = `10pt ${fontFamily}`;
         this.VALUE_FONT = `9pt ${fontFamily}`;
@@ -56,11 +56,11 @@ export default class LearningView {
     }
     setValue(value) {
         this.value = value;
-        if(value == 0) {
+        if (value == 0) {
             this.status = STATUS.READY;
-        } else if(value === 100) {
+        } else if (value === 100) {
             this.status = STATUS.DONE;
-        } else if(value < 100) {
+        } else if (value < 100) {
             this.status = STATUS.LEARNING;
         }
         this.updateView();
@@ -96,9 +96,9 @@ export default class LearningView {
         }
         this.view_.addChild(this.textView_);
         this.statusView = GEHelper.textHelper.newText(
-            Lang.AiLearning[`model_status_${this.status}`], 
-            this.FONT, 
-            '#000000', 
+            Lang.AiLearning[`model_status_${this.status}`],
+            this.FONT,
+            '#000000',
             'alphabetic'
         );
         this.statusView.x = 4;
@@ -137,11 +137,11 @@ export default class LearningView {
             .beginFill('#d8d8d8')
             .s('#d8d8d8')
             .ss(1)
-            .rr(6, 28, this.maxWidth , 5, 2);
+            .rr(6, 28, this.maxWidth, 5, 2);
         this.view_.addChild(this.slideBar_);
         const visibleValue = (this.value / 100) * this.maxWidth;
         this.valueBar = GEHelper.newGraphic();
-        if(visibleValue > 0 ) {
+        if (visibleValue > 0) {
             this.valueBar.graphics
                 .beginFill('#4f80ff')
                 .s('#4f80ff')
@@ -166,7 +166,7 @@ export default class LearningView {
         if (!this.view_) {
             return;
         }
-        
+
         if (this.isVisible()) {
             this._adjustSingleViewPosition();
             const oldContent = this.textView_.text;
@@ -197,7 +197,7 @@ export default class LearningView {
                 .ss(1, 2, 0)
                 .s(colorSet.border || '#aac5d5')
                 .rr(0, -14, width, 54, 4);
-            
+
             width = this._nameWidth + 26;
             width = Math.max(width, 90);
             this.maxWidth = width - 16;
@@ -216,8 +216,6 @@ export default class LearningView {
                     .ss(1)
                     .rr(6, 28, visibleValue, 5, 2);
             }
-            
-
         }
         Entry.requestUpdate = true;
     }

@@ -400,7 +400,7 @@ class EntryDialog {
 
     private generateSpeak(mode: 'speak' | 'ask' | 'yell' | 'think') {
         this.object = GEHelper.newContainer('[dialog] container');
-        const fontFamily = EntryStatic.fontFamily || 'NanumGothic';
+        const fontFamily = EntryStatic.fontFamily || "NanumGothic, 'Nanum Gothic'";
         const text = GEHelper.textHelper.newText(
             this.message_,
             `15px ${fontFamily}`,
