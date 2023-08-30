@@ -251,7 +251,6 @@ Entry.Robotry_Parodule.getBlocks = function () {
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
                 const sensor_data = Entry.hw.portData.SENSOR
-                const module_data = Entry.hw.portData.MODULE;
                 let value = false;
                 if (sensor_data[port] === 48) {
                     value = false;
@@ -321,7 +320,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 else if (module_data[port] === NONE) {
                     value = "없음";
                 }
-                else if (module_data[port] === UNKNOWN) {
+                else {
                     value = "모름";
                 }
                 return value;
@@ -802,9 +801,8 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     Entry.hw.sendQueue.SET = {};
                 }
                 for (var i = 0; i < 4; i++) {
-                    console.log(Entry.Robotry_Parodule.getTerminal(i));
                     if (Entry.Robotry_Parodule.getTerminal(i) === 'LED') {
-                        Entry.hw.sendQueue.SET[i + 1] = {
+                        Entry.hw.sendQueue.SET[i] = {
                             type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                             data: value,
                             time: new Date().getTime(),
@@ -904,17 +902,16 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 }
 
                 for (var i = 0; i < 4; i++) {
-                    console.log(Entry.Robotry_Parodule.getTerminal(i));
                     if (Entry.Robotry_Parodule.getTerminal(i) === 'MOTOR') {
                         if (i === 0 || i === 1) {
-                            Entry.hw.sendQueue.SET[i + 1] = {
+                            Entry.hw.sendQueue.SET[i] = {
                                 type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                                 data: motor1 + value,
                                 time: new Date().getTime(),
                             }
                         }
                         else if (i === 2 || i === 3) {
-                            Entry.hw.sendQueue.SET[i + 1] = {
+                            Entry.hw.sendQueue.SET[i] = {
                                 type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                                 data: motor2 + value,
                                 time: new Date().getTime(),
@@ -1002,9 +999,8 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     Entry.hw.sendQueue.SET = {};
                 }
                 for (var i = 0; i < 4; i++) {
-                    console.log(Entry.Robotry_Parodule.getTerminal(i));
                     if (Entry.Robotry_Parodule.getTerminal(i) === 'BUZZER') {
-                        Entry.hw.sendQueue.SET[i + 1] = {
+                        Entry.hw.sendQueue.SET[i] = {
                             type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                             data: octave + tone,
                             time: new Date().getTime(),
