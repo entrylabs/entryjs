@@ -110,8 +110,9 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                 type: 'DropdownDynamic',
                 menuName() {
                     const handPoint = this.getTargetValue('handPoint');
+                    const value = this.getValue();
                     if (handPoint === 1) {
-                        if (![2, 3].includes(this.value)) {
+                        if (![2, 3].includes(value)) {
                             this.setValue(3);
                         }
                         return [
@@ -119,7 +120,7 @@ Entry.AI_UTILIZE_BLOCK.gestureRecognition.getBlocks = function() {
                             [Lang.Blocks.dip, 2],
                         ];
                     } else if (handPoint !== 0) {
-                        if (![1, 2, 3].includes(this.value)) {
+                        if (![1, 2, 3].includes(value)) {
                             this.setValue(3);
                         }
                         return [
