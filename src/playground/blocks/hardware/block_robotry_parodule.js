@@ -872,23 +872,25 @@ Entry.Robotry_Parodule.getBlocks = function () {
             func(sprite, script) {
                 const value = script.getNumberValue('VALUE');
                 var state = script.getNumberValue('STATE');
+                var normal = 0;
+                var shift = 4; // 회전 반향 반전
                 var motor1 = 0;
                 var motor2 = 0;
-                if (state === 1) {
+                if (state === 0) {
                     motor1 = 0;
                     motor2 = 0;
+                }
+                else if (state === 1) {
+                    motor1 = shift;
+                    motor2 = shift;
                 }
                 else if (state === 2) {
-                    motor1 = 4;
-                    motor2 = 4;
+                    motor1 = normal;
+                    motor2 = shift;
                 }
                 else if (state === 3) {
-                    motor1 = 0;
-                    motor2 = 4;
-                }
-                else if (state === 4) {
-                    motor1 = 4;
-                    motor2 = 0;
+                    motor1 = shift;
+                    motor2 = normal;
                 }
                 else { }
 
@@ -1015,6 +1017,8 @@ Entry.Robotry_Parodule.getBlocks = function () {
             }
         },
         /* Parodule Buzzer End */
+
+
 
         /* Parodule Upadate Start */
         Parodule_Update: {
