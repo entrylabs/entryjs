@@ -52,7 +52,7 @@ export default class AILearning {
 
     removeAllBlocks() {
         const utilizeBlock = [];
-        Object.values(Entry.AI_UTILIZE_BLOCK_LIST)
+        Object.values(Entry.ALL_AI_UTILIZE_BLOCK_LIST)
             .map((x) => Object.keys(x.getBlocks()))
             .forEach((category) => {
                 category.forEach((block) => {

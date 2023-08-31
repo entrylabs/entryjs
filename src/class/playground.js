@@ -2238,7 +2238,7 @@ Entry.Playground = class Playground {
             return;
         }
 
-        Object.values(Entry.AI_UTILIZE_BLOCK_LIST).forEach((block) => {
+        Object.values(Entry.ALL_AI_UTILIZE_BLOCK_LIST).forEach((block) => {
             blockMenu.banClass(block.name, true);
             blockMenu.banClass(`${block.name}_legacy`, true);
         });
