@@ -42,11 +42,25 @@ Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
     translate: Entry.AI_UTILIZE_BLOCK.translate,
-    video: Entry.AI_UTILIZE_BLOCK.video,
     poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
     faceLandmarker: Entry.AI_UTILIZE_BLOCK.faceLandmarker,
     objectDetector: Entry.AI_UTILIZE_BLOCK.objectDetector,
     gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
+};
+
+Entry.AI_UTILIZE_BLOCK_LIST_DEPRECATED = {
+    video: Entry.AI_UTILIZE_BLOCK.video,
+};
+
+Entry.ALL_AI_UTILIZE_BLOCK_LIST = {
+    audio: Entry.AI_UTILIZE_BLOCK.audio,
+    tts: Entry.AI_UTILIZE_BLOCK.tts,
+    translate: Entry.AI_UTILIZE_BLOCK.translate,
+    poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
+    faceLandmarker: Entry.AI_UTILIZE_BLOCK.faceLandmarker,
+    objectDetector: Entry.AI_UTILIZE_BLOCK.objectDetector,
+    gestureRecognition: Entry.AI_UTILIZE_BLOCK.gestureRecognition,
+    video: Entry.AI_UTILIZE_BLOCK.video,
 };
 
 Entry.EXPANSION_BLOCK = {};
@@ -148,7 +162,7 @@ module.exports = {
         const basicAndExpansionBlockObjectList = getBlockObject(
             basicBlockList
                 .concat(Object.values(Entry.EXPANSION_BLOCK_LIST))
-                .concat(Object.values(Entry.AI_UTILIZE_BLOCK_LIST))
+                .concat(Object.values(Entry.ALL_AI_UTILIZE_BLOCK_LIST))
         );
         const hardwareBlockObjectList = getHardwareBlockObject(hardwareModules);
         const hardwareLiteBlockObjectList = getHardwareBlockObject(hardwareLiteModules);

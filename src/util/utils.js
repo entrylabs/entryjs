@@ -48,7 +48,7 @@ Entry.loadProject = function(project) {
     GEHelper.Ticker.setFPS(Entry.FPS);
     Entry.aiUtilizeBlocks = project?.aiUtilizeBlocks || [];
     if (Entry.aiUtilizeBlocks.length > 0) {
-        for (const type in Entry.AI_UTILIZE_BLOCK_LIST) {
+        for (const type in Entry.ALL_AI_UTILIZE_BLOCK_LIST) {
             if (Entry.aiUtilizeBlocks.indexOf(type) > -1) {
                 Entry.AI_UTILIZE_BLOCK[type].init();
                 if (Entry.type === 'workspace' || Entry.type === 'playground') {
