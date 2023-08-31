@@ -42,6 +42,7 @@ Entry.AI_UTILIZE_BLOCK_LIST = {
     audio: Entry.AI_UTILIZE_BLOCK.audio,
     tts: Entry.AI_UTILIZE_BLOCK.tts,
     translate: Entry.AI_UTILIZE_BLOCK.translate,
+    video: Entry.AI_UTILIZE_BLOCK.video,
     poseLandmarker: Entry.AI_UTILIZE_BLOCK.poseLandmarker,
     faceLandmarker: Entry.AI_UTILIZE_BLOCK.faceLandmarker,
     objectDetector: Entry.AI_UTILIZE_BLOCK.objectDetector,
