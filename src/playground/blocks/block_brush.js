@@ -478,6 +478,7 @@ module.exports = {
                 isNotFor: ['textBox'],
                 func(sprite, script) {
                     sprite.eraseBrush && sprite.eraseBrush();
+                    sprite.erasePaint && sprite.erasePaint();
                     sprite.removeStamps();
                     return script.callReturn();
                 },
