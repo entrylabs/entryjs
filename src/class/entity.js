@@ -1484,6 +1484,14 @@ Entry.EntityObject = class EntityObject {
         Entry.requestUpdate = true;
     }
 
+    erasePaint() {
+        const paint = this.paint;
+        if (paint) {
+            paint.clear();
+        }
+        Entry.requestUpdate = true;
+    }
+
     _removeShapes() {
         const container = Entry.stage.selectedObjectContainer;
         const shapes = this.shapes;

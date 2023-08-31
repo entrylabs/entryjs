@@ -356,6 +356,7 @@ class _GEHelper extends GEHelperBase {
 
     destroy() {
         this.videoContainer = null;
+        this.overlayContainer = null;
         this.faceIndicatorGraphic = null;
         this.poseIndicatorGraphic = null;
         this.objectIndicatorGraphic = null;

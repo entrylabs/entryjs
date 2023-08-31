@@ -702,7 +702,7 @@ Entry.Stage = class Stage {
         containers.forEach(canvas.removeChild.bind(canvas));
 
         this.selectedObjectContainer = newContainer;
-        canvas.addChildAt(newContainer, 3);
+        canvas.addChildAt(newContainer, 4);
     }
 
     /**
