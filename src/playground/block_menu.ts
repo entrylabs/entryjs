@@ -15,7 +15,7 @@ const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
 const splitterHPadding = EntryStatic.splitterHPadding || 20;
-const BETA_LIST = ['ai_utilize', 'analysis'];
+const BETA_LIST = [];
 
 type BlockMenuAlignType = 'LEFT' | 'CENTER';
 
