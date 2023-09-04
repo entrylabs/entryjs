@@ -236,7 +236,7 @@ Entry.Robotry_Parodule.monitorTemplate = function () {
     // 블록의 배치 순서
     Entry.Robotry_Parodule.blockMenuBlocks = [
         'Parodule_Input_title',
-        'Parodule_Sensor_Data',
+        //'Parodule_Sensor_Data', // 센서 모듈은 아직 출시 예정 없음
         'Parodule_Sensor_Kind',
 
         'Parodule_title',
