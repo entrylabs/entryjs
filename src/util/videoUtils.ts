@@ -50,6 +50,8 @@ type DetectedObject = {
 };
 type IndicatorType = 'pose' | 'face' | 'object';
 
+const { Entry, Lang } = window;
+
 export const getInputList = async () => {
     if (navigator.mediaDevices) {
         return (await navigator.mediaDevices.enumerateDevices()) || [];
