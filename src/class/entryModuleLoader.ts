@@ -1,11 +1,15 @@
 import fetch from 'isomorphic-fetch';
 import cryptojs from 'crypto-js';
 import HardwareLite from './hw_lite';
+import { EntryBlock, EntryBlockModule, EntryHardwareBlockModule } from '../../types/index';
+
 type EntryBlockRegisterSchema = {
     blockName: string;
     block: EntryBlock;
     isBlockShowBlockMenu?: boolean;
 };
+
+const { Entry, EntryStatic, Lang } = window;
 
 class EntryModuleLoader {
     public moduleList: string[] = [];
