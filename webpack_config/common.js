@@ -5,6 +5,7 @@ const autoprefixer = require('autoprefixer');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const webpack = require('webpack');
 
 module.exports = {
     entry: {
@@ -22,6 +23,7 @@ module.exports = {
             crypto: false,
             buffer: false,
             perf_hooks: false,
+            buffer: require.resolve('buffer/'),
         },
         extensions: ['.ts', '.tsx', '.js', '.json'],
         mainFields: ['jsnext:main', 'browser', 'main'],
@@ -141,6 +143,9 @@ module.exports = {
             root: path.join(__dirname, '..'),
         }),
         new WebpackManifestPlugin(),
+        new webpack.ProvidePlugin({
+            Buffer: ['buffer', 'Buffer'],
+        }),
         new MiniCssExtractPlugin({
             // Options similar to the same options in webpackOptions.output
             // both options are optional
