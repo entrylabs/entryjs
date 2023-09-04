@@ -551,28 +551,6 @@ class VideoUtils implements MediaUtilsInterface {
         }, 100);
     }
 
-    startCapturedImage(
-        callback: Function,
-        { width = this.CANVAS_WIDTH, height = this.CANVAS_HEIGHT }
-    ) {
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-        this.captureTimeout = Entry.Utils.asyncAnimationFrame(async () => {
-            const context = canvas.getContext('2d');
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            context.drawImage(this.video, 0, 0, width, height);
-            callback && (await callback(canvas));
-        });
-        Entry.addEventListener('stop', () => {
-            this.stopCaptureImage();
-        });
-        return this.captureTimeout;
-    }
-
-    stopCaptureImage() {
-        this.captureTimeout && cancelAnimationFrame(this.captureTimeout);
-    }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
      * @param sprite Entry Entity Object
