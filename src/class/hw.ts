@@ -22,8 +22,6 @@ enum HardwareStatement {
     hardwareConnected = 'hardwareConnected',
 }
 
-const { Entry, Lang } = window;
-
 export default class Hardware {
     get httpsServerAddress() {
         return 'https://hw.playentry.org:23518';

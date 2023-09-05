@@ -32,4 +32,4 @@ class EntryIntro implements IEntry.Intro {
 }
 
 export default EntryIntro;
-window.Entry.Intro = EntryIntro;
+Entry.Intro = EntryIntro;

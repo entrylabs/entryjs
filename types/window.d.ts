@@ -10,6 +10,12 @@ declare global {
         sendSync: any | undefined;
         Entry: IEntry;
     }
+    var entrylms: any;
+    var Lang: any;
+    var EntryStatic: any;
+    var ImageCapture: any;
+    var sendSync: any | undefined;
+    var Entry: IEntry;
 }
 
 declare var Lang: any;
