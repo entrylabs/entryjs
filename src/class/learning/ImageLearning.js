@@ -1,6 +1,8 @@
 import InputPopup from './InputPopup';
 import * as tf from '@tensorflow/tfjs';
 import VideoUtils from '../../util/videoUtils';
+import MediaPipeUtils from '../../util/mediaPipeUtils';
+const mediaPipeUtils = MediaPipeUtils.getInstance();
 export const classes = [
     'ai_learning_image'
 ];
@@ -57,10 +59,20 @@ class ImageLearning {
         this.#popup.open();
     }
 
+    getVideo() {
+        if (VideoUtils.isInitialized) {
+            return VideoUtils.video;
+        }
+        if (mediaPipeUtils.isInitialized) {
+            return mediaPipeUtils.video;
+        }
+        return null;
+    }
     async startPredict() {
         if (!this.isLoaded || this.#isPredicting) {
             return false;
         }
+
         this.#isPredicting = true;
         if (!this.captureCanvas) {
             this.#captureCanvas = document.createElement('canvas');
@@ -69,9 +81,12 @@ class ImageLearning {
         }
 
         this.#captureTimeoutClear = Entry.Utils.asyncAnimationFrame(async () => {
-            const source = Entry.stage.canvas.canvas;
+            const video = this.getVideo();
+            if (!video) {
+                return;
+            }
             const context = this.#captureCanvas.getContext('2d');
-            context.drawImage(source, 0, 0);
+            context.drawImage(video, 0, 0, SIZE, SIZE);
 
             tf.engine().startScope();
             const tensor = await this.preprocess(this.#captureCanvas);
