@@ -4,6 +4,12 @@ import createHardwarePopup from './hardware/functions/createHardwarePopup';
 import ExternalProgramLauncher from './hardware/externalProgramLauncher';
 // eslint-disable-next-line prettier/prettier
 import PopupHelper from './popup_helper';
+import {
+    HardwareMessageData,
+    WebSocketMessage,
+    EntryHardwareBlockModule,
+    UnknownAny,
+} from '../../types/index';
 
 enum HardwareModuleType {
     builtIn = 'builtin',
@@ -15,6 +21,8 @@ enum HardwareStatement {
     socketConnected = 'socketConnected',
     hardwareConnected = 'hardwareConnected',
 }
+
+const { Entry, Lang } = window;
 
 export default class Hardware {
     get httpsServerAddress() {
@@ -634,15 +642,17 @@ export default class Hardware {
             if (!dontShowChecked) {
                 const title = Lang.Msgs.hardware_need_update_title;
                 const content = Lang.Msgs.hardware_need_update_content;
-                Entry.modal.alert(content, title, {
-                    withDontShowAgain: true
-                }).then((data: { dontShowChecked: boolean }) => {
-                    const { dontShowChecked } = data || {};
-                    if (dontShowChecked) {
-                        localStorage.setItem('skipNoticeHWOldVersion', 'true');
-                    }
-                    resolve(null);
-                })
+                Entry.modal
+                    .alert(content, title, {
+                        withDontShowAgain: true,
+                    })
+                    .then((data: { dontShowChecked: boolean }) => {
+                        const { dontShowChecked } = data || {};
+                        if (dontShowChecked) {
+                            localStorage.setItem('skipNoticeHWOldVersion', 'true');
+                        }
+                        resolve(null);
+                    });
             } else {
                 resolve(null);
             }

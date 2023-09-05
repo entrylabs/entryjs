@@ -2,6 +2,7 @@
  * nt11576 Lee.Jaewon
  * commented area with "motion test" is for the motion detection testing canvas to test the computer vision, uncomment all codes labeled "motion test"
  */
+import { MediaUtilsInterface } from '../../types/index';
 
 import { GEHelper } from '../graphicEngine/GEHelper';
 import VideoWorker from './workers/video.worker.ts';
@@ -48,6 +49,8 @@ type DetectedObject = {
     class: String;
 };
 type IndicatorType = 'pose' | 'face' | 'object';
+
+const { Entry, Lang } = window;
 
 export const getInputList = async () => {
     if (navigator.mediaDevices) {
@@ -299,7 +302,7 @@ class VideoUtils implements MediaUtilsInterface {
                 };
                 const weightsUrl = this.getWeightUrl();
                 this.worker.postMessage({
-                    weightsUrl: weightsUrl,
+                    weightsUrl,
                     type: 'init',
                     width: this.CANVAS_WIDTH,
                     height: this.CANVAS_HEIGHT,

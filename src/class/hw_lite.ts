@@ -1,7 +1,7 @@
 import throttle from 'lodash/throttle';
-import { TextEncoder } from 'util';
 import ExtraBlockUtils from '../util/extrablockUtils';
 import HardwareMonitor from './hardware/hardwareMonitor';
+import { EntryHardwareLiteBlockModule } from '../../types/index';
 
 enum HardwareStatement {
     disconnected = 'disconnected',
@@ -10,7 +10,9 @@ enum HardwareStatement {
     connectFailed = 'connectFailed',
 }
 
+const { Entry, Lang } = window;
 const ARDUINO_BOARD_IDS: string[] = ['1.1', '4.2', '8.1'];
+const Buffer = require('buffer/').Buffer;
 
 class LineBreakTransformer {
     private container: string;
@@ -49,7 +51,6 @@ export default class HardwareLite {
     static isHwLiteSupportAgent: any;
     private playground: any;
     private connectionType: 'ascii' | 'bytestream' | undefined;
-    textEncoder: TextEncoder;
     private hwMonitor?: HardwareMonitor;
     private isSendAsyncRun: boolean;
     private sendAsyncWithThrottle: any;
@@ -148,7 +149,11 @@ export default class HardwareLite {
         // INFO: 디바이스가 모바일이거나 일렉트론이면 1차적으로 제외
         if (userAgentString.includes('mobile') || userAgentString.includes('electron')) {
             return false;
-        } else if (userAgentString.includes('whale') || userAgentString.includes('edge') || userAgentString.includes('chrome')) {
+        } else if (
+            userAgentString.includes('whale') ||
+            userAgentString.includes('edge') ||
+            userAgentString.includes('chrome')
+        ) {
             return true;
         } else {
             return false;
