@@ -14,7 +14,8 @@ class ImageLearning {
     #result = [];
     #axis = 0;
     #isPredicting = false;
-
+    #captureCanvas;
+    #captureTimeoutClear;
     constructor({ url, labels, type }) {
         this.#type = type;
         this.#url = url;
@@ -31,9 +32,11 @@ class ImageLearning {
 
     getResult(index) {
         const result = this.#result.length ? this.#result : this.#popup?.result || [];
-        const defaultResult = {probability: 0, className: ''};
-        if(index !== undefined && index > -1) {
-            return result.find(({className}) => className === this.#labels[index]) || defaultResult;
+        const defaultResult = { probability: 0, className: '' };
+        if (index !== undefined && index > -1) {
+            return (
+                result.find(({ className }) => className === this.#labels[index]) || defaultResult
+            );
         }
         return result[0] || defaultResult;
     }
@@ -47,7 +50,7 @@ class ImageLearning {
 
     openInputPopup() {
         this.#popup = new InputPopup({
-            url: this.#url, 
+            url: this.#url,
             labels: this.#labels,
             type: this.#type,
         });
@@ -59,21 +62,32 @@ class ImageLearning {
             return false;
         }
         this.#isPredicting = true;
-        VideoUtils.startCapturedImage(async (captured) => {
+        if (!this.captureCanvas) {
+            this.#captureCanvas = document.createElement('canvas');
+            this.#captureCanvas.width = SIZE;
+            this.#captureCanvas.height = SIZE;
+        }
+
+        this.#captureTimeoutClear = Entry.Utils.asyncAnimationFrame(async () => {
+            const source = Entry.stage.canvas.canvas;
+            const context = this.#captureCanvas.getContext('2d');
+            context.drawImage(source, 0, 0);
+
             tf.engine().startScope();
-            const tensor = await this.preprocess(captured);
+            const tensor = await this.preprocess(this.#captureCanvas);
             const logits = this.model.predict(tensor);
             this.#result = await this.namePredictions(logits);
             logits.dispose();
             tf.engine().endScope();
-        }, { width: 224, height: 224 });
+        });
+
         return this.#result;
     }
 
     stopPredict() {
         this.#result = [];
         this.#isPredicting = false;
-        VideoUtils.stopCaptureImage();
+        this.#captureTimeoutClear && this.#captureTimeoutClear();
     }
 
     async namePredictions(logits) {
@@ -82,7 +96,8 @@ class ImageLearning {
             .map((probability, index) => ({
                 className: this.#labels[index] || index,
                 probability,
-            })).sort((a, b) => a.probability > b.probability ? -1 : a.probability < b.probability ? 1 : 0);
+            }))
+            .sort((a, b) => a.probability > b.probability ? -1 : a.probability < b.probability ? 1 : 0);
     }
 
     async preprocess(canvas) {
@@ -95,11 +110,10 @@ class ImageLearning {
                 .div(offset)
                 .expandDims(this.#axis);
         });
-    };
-
+    }
 
     async load(url) {
-        this.model = await tf.loadLayersModel(url)
+        this.model = await tf.loadLayersModel(url);
         this.isLoaded = true;
     }
 }
