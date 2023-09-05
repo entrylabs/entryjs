@@ -13,7 +13,6 @@ import Hammer from 'hammerjs';
 
 import { EntryDom } from '../../types/index';
 
-const Entry = window.Entry;
 const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];

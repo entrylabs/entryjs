@@ -10,7 +10,6 @@ enum HardwareStatement {
     connectFailed = 'connectFailed',
 }
 
-const { Entry, Lang } = window;
 const ARDUINO_BOARD_IDS: string[] = ['1.1', '4.2', '8.1'];
 const Buffer = require('buffer/').Buffer;
 
