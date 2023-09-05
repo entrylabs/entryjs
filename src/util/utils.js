@@ -3025,6 +3025,9 @@ Entry.Utils.asyncAnimationFrame = (func) => {
     let captureTimeout = false;
 
     const asyncFunc = () => {
+        if (!Entry.engine.isState('run')) {
+            return;
+        }
         if (func instanceof Promise) {
             func().then(() => {
                 captureTimeout = requestAnimationFrame(asyncFunc);
@@ -3036,7 +3039,9 @@ Entry.Utils.asyncAnimationFrame = (func) => {
     };
 
     captureTimeout = requestAnimationFrame(asyncFunc);
-    return captureTimeout;
+    return () => {
+        cancelAnimationFrame(captureTimeout);
+    };
 };
 
 Entry.Utils.stringFormat = (text, ...args) => {
