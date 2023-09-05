@@ -7,7 +7,7 @@ declare type Point = {
     y: number;
 };
 
-declare interface ISkeleton {
+export declare interface ISkeleton {
     executable?: boolean;
     fontSize?: number;
     movable?: boolean;
@@ -42,7 +42,7 @@ declare interface ISkeleton {
     statementPos?: (blockView: any) => Point[];
 }
 
-declare interface MediaUtilsInterface {
+export declare interface MediaUtilsInterface {
     initialize(list?: string[][]): void;
 
     reset(): void;
@@ -62,18 +62,18 @@ declare interface EntryDomOptions {
     parent?: EntryDom;
 }
 
-declare interface EntryDom extends JQuery {
+export declare interface EntryDom extends JQuery {
     innerHTML?: string;
     textContent?: string;
     bindOnClick?: (e: any) => this;
 }
 
-declare type EntryDomConstructor = (
+export declare type EntryDomConstructor = (
     tag: string | HTMLElement | JQuery,
     options?: EntryDomOptions
 ) => EntryDom;
 
-interface HardwareMessageData extends HardwareModuleId {
+export interface HardwareMessageData extends HardwareModuleId {
     [key: string]: any;
 }
 
@@ -82,7 +82,7 @@ interface HardwareModuleId {
     model: string;
 }
 
-type WebSocketMessage = {
+export type WebSocketMessage = {
     data: string;
     mode: number;
     type: 'utf8';
@@ -90,7 +90,7 @@ type WebSocketMessage = {
 
 declare module SerialPort {}
 
-declare module IEntry {
+export declare module IEntry {
     export interface Container {
         resizeEvent: any; // Entry.Event
         splitterEnable?: boolean;
@@ -142,7 +142,7 @@ declare module IEntry {
     // Entry namespace 에 필요한 객체가 있으면 추가해주세요.
 }
 
-declare type EntryBlock = {
+export declare type EntryBlock = {
     color: string;
     outerLine?: string;
     skeleton: string;
@@ -170,14 +170,14 @@ declare type EntryBlock = {
 };
 
 // expansion blocks 의 스키마를 따름
-declare interface EntryBlockModule {
+export declare interface EntryBlockModule {
     name: string;
     title: { [key: string]: string };
     description?: string;
     getBlocks: () => { [blockName: string]: EntryBlock };
 }
 
-declare interface EntryHardwareBlockModule extends EntryBlockModule {
+export declare interface EntryHardwareBlockModule extends EntryBlockModule {
     // 홍보용
     imageName: string;
     url: string;
@@ -201,7 +201,7 @@ declare interface EntryHardwareBlockModule extends EntryBlockModule {
     dataHandler?: (data: HardwareMessageData) => void;
 }
 
-declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
+export declare interface EntryHardwareLiteBlockModule extends EntryBlockModule {
     getMonitorPort(): Object;
     duration: number;
     // 홍보용

@@ -1,3 +1,5 @@
+import { EntryDom } from '../../types/index';
+
 class PropertyPanel {
     public modes: any = {};
     public selected: string = undefined;

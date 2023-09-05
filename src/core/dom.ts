@@ -1,3 +1,5 @@
+import { EntryDom, EntryDomConstructor } from '../../types/index';
+
 type HandleableClickEvent = JQuery.ClickEvent & { handled: boolean };
 
 const createEntryDom: EntryDomConstructor = function(tag, options) {
