@@ -551,9 +551,6 @@ class VideoUtils implements MediaUtilsInterface {
         }, 100);
     }
 
-    stopCaptureImage() {
-        this.captureTimeout && cancelAnimationFrame(this.captureTimeout);
-    }
     /**
      * MOTION DETECT CALCULATION BASED ON COMPUTER VISION
      * @param sprite Entry Entity Object
