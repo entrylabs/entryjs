@@ -1048,11 +1048,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['100%', 0], // 39
-                        ['75%', 1], // 38
-                        ['50%', 2], // 37
-                        ['25%', 3],// 36
-                        ['0%', 4],  // 200
+                        ['100%', 100], // 39
+                        ['75%', 75], // 38
+                        ['50%', 50], // 37
+                        ['25%', 25],// 36
+                        ['0%', 0],  // 200
                     ],
                     value: [0],
                     fontSize: 12,
@@ -1079,13 +1079,13 @@ Entry.Robotry_Parodule.getBlocks = function () {
                         {
                             type: 'Dropdown',
                             options: [
-                                ['100%', 0], // 39
-                                ['75%', 1], // 38
-                                ['50%', 2], // 37
-                                ['25%', 3],// 36
-                                ['0%', 4],  // 200
+                                ['100%', 100], // 39
+                                ['75%', 75], // 38
+                                ['50%', 50], // 37
+                                ['25%', 25],// 36
+                                ['0%', 0],  // 200
                             ],
-                            value: [0],
+                            value: [100],
                             fontSize: 12,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1185,7 +1185,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     },
                     {
                         type: 'Parodule_Custom_Motor_List',
-                        params: ['0'],
+                        params: ['100'],
                     },
                     {
                         type: 'Parodule_Custom_Motor_Sign',
@@ -1207,7 +1207,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 const power = script.getNumberValue('POWER');
                 const sign = script.getNumberValue('SIGNED') % 2;
                 let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
-                let correction_power = power % 5 === 4 ? 200 : 39 - power % 5;
+                let correction_power = power === 100 ? 39 : power === 75 ? 38 : power === 50 ? 37 : power === 25 ? 36 : 200;
                 let correction_sign = sign ? 4 : 0;
 
                 if (correction_power === 200) {
@@ -1257,10 +1257,10 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['3', 0], // 0
-                        ['4', 1], //12
-                        ['5', 2], //24
-                        ['6', 3], //36
+                        ['3', 3], // 0
+                        ['4', 4], //12
+                        ['5', 5], //24
+                        ['6', 6], //36
                     ],
                     value: [0],
                     fontSize: 12,
@@ -1287,12 +1287,12 @@ Entry.Robotry_Parodule.getBlocks = function () {
                         {
                             type: 'Dropdown',
                             options: [
-                                ['3', 0], // 0
-                                ['4', 1], //12
-                                ['5', 2], //24
-                                ['6', 3], //36
+                                ['3', 3], // 0
+                                ['4', 4], //12
+                                ['5', 5], //24
+                                ['6', 6], //36
                             ],
-                            value: [0],
+                            value: [3],
                             fontSize: 12,
                             bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
@@ -1414,7 +1414,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     },
                     {
                         type: 'Parodule_Custom_Octaves_List',
-                        params: ['0'],
+                        params: ['3'],
                     },
                     {
                         type: 'Parodule_Custom_Tone_List',
@@ -1431,7 +1431,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT') % 4;
+                const port = (script.getNumberValue('PORT') - 3) % 4;
                 const octave = script.getNumberValue('OCTAVE') % 4;
                 const tone = script.getNumberValue('TONE') % 12;
                 let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
