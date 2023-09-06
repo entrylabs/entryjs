@@ -1489,7 +1489,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_led.svg',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 }
             ],
