@@ -1100,11 +1100,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT');
-                var power = script.getNumberValue('POWER');
-                const sign = script.getNumberValue('SIGNED');
+                const power = script.getNumberValue('POWER');
+                var sign = script.getNumberValue('SIGNED');
 
-                if (value === 200) {
-                    state = 0;
+                if (power === 200) {
+                    sign = 0;
                 }
 
                 if (!Entry.hw.sendQueue.SET) {
