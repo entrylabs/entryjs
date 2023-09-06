@@ -260,6 +260,64 @@ Entry.Robotry_Parodule.monitorTemplate = function () {
  */
 Entry.Robotry_Parodule.getBlocks = function () {
     return {
+        /* Parodule_Custom_Port_List Start */
+        Parodule_Custom_Port_List: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [[Lang.Blocks.parodule_triangle], 0], // 0
+                        [[Lang.Blocks.parodule_circle], 1], // 3
+                        [[Lang.Blocks.parodule_square], 2], // 1
+                        [[Lang.Blocks.parodule_cross], 3], // 2
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT');
+                return port;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [[Lang.Blocks.parodule_triangle], 0], // 0
+                                [[Lang.Blocks.parodule_circle], 1], // 3
+                                [[Lang.Blocks.parodule_square], 2], // 1
+                                [[Lang.Blocks.parodule_cross], 3], // 2
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_Port_List',
+                }],
+            },
+        },
+        /* Parodule_Custom_Port_List End */
+
         Parodule_Input_title: {
             skeleton: 'basic_text',
             skeletonOptions: {
@@ -344,23 +402,18 @@ Entry.Robotry_Parodule.getBlocks = function () {
             statements: [],
             params: [
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [[Lang.Blocks.parodule_triangle], 0],
-                        [[Lang.Blocks.parodule_circle], 3],
-                        [[Lang.Blocks.parodule_square], 1],
-                        [[Lang.Blocks.parodule_cross], 2],
-                    ],
-                    value: [0],
-                    fontSize: 12,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
             def: {
                 params: [
-                    null,
+                    {
+                        type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
+                    }
                 ],
                 type: 'Parodule_Sensor_Kind',
             },
@@ -375,29 +428,41 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 const PIXEL = 209;
                 const MOTOR = 210;
                 const BUZZER = 211;
-                const port = script.getNumberValue('PORT');
+                const port = script.getNumberValue('PORT') % 4;
                 const module_data = Entry.hw.portData.MODULE;
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
                 let value = "";
-                if (module_data[port] === PIXEL) {
+
+                if (module_data[correction_port] === PIXEL) {
                     value = [Lang.Blocks.parodule_pixel];
                 }
-                else if (module_data[port] === MOTOR) {
+                else if (module_data[correction_port] === MOTOR) {
                     value = [Lang.Blocks.parodule_motor];
                 }
-                else if (module_data[port] === BUZZER) {
+                else if (module_data[correction_port] === BUZZER) {
                     value = [Lang.Blocks.parodule_buzzer];
                 }
-                else if (module_data[port] === NONE) {
+                else if (module_data[correction_port] === NONE) {
                     value = [Lang.Blocks.parodule_none];
                 }
-                else if (module_data[port] == UNKNOWN) {
+                else if (module_data[correction_port] == UNKNOWN) {
                     value = [Lang.Blocks.parodule_unknown];
                 }
                 return value;
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: 'Parodule.get_Module(%1)',
+                    blockType: 'param',
+                    replaceBlockType: 'Parodule_Sensor_Kind',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
             },
         },
 
@@ -814,64 +879,6 @@ Entry.Robotry_Parodule.getBlocks = function () {
             isNotFor: ['Robotry_Parodule'],
             events: {},
         },
-
-        /* Parodule_Custom_Port_List Start */
-        Parodule_Custom_Port_List: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic_string_field',
-            statements: [],
-            template: '%1',
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [[Lang.Blocks.parodule_triangle], 0], // 0
-                        [[Lang.Blocks.parodule_circle], 1], // 3
-                        [[Lang.Blocks.parodule_square], 2], // 1
-                        [[Lang.Blocks.parodule_cross], 3], // 2
-                    ],
-                    value: [0],
-                    fontSize: 12,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                return port;
-            },
-            syntax: {
-                js: [],
-                py: [{
-                    syntax: '%1',
-                    textParams: [
-                        {
-                            type: 'Dropdown',
-                            options: [
-                                [[Lang.Blocks.parodule_triangle], 0], // 0
-                                [[Lang.Blocks.parodule_circle], 1], // 3
-                                [[Lang.Blocks.parodule_square], 2], // 1
-                                [[Lang.Blocks.parodule_cross], 3], // 2
-                            ],
-                            value: [0],
-                            fontSize: 12,
-                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                        },
-                    ],
-                    keyOption: 'Parodule_Custom_Port_List',
-                }],
-            },
-        },
-        /* Parodule_Custom_Port_List End */
 
         /* Parodule_Custom_PIXEL_List Start */
         Parodule_Custom_PIXEL_List: {
@@ -1491,6 +1498,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 params: [
                     {
                         type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
                     }
                 ],
                 type: 'Parodule_Custom_Module_OFF',
