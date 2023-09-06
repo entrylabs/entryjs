@@ -845,13 +845,30 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 PORT: 0,
             },
             func(sprite, script) {
-                const port = script.getNumberValue('PORT') % 4;
-                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
-                return correction_port;
+                const port = script.getNumberValue('PORT');
+                return port;
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [[Lang.Blocks.parodule_triangle], 0], // 0
+                                [[Lang.Blocks.parodule_circle], 1], // 3
+                                [[Lang.Blocks.parodule_square], 2], // 1
+                                [[Lang.Blocks.parodule_cross], 3], // 2
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_Port_List',
+                }],
             },
         },
         /* Parodule_Custom_Port_List End */
@@ -896,12 +913,40 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 COLOR: 0,
             },
             func(sprite, script) {
-                const color = script.getNumberValue('COLOR') % 15 + 19
+                const color = script.getNumberValue('COLOR');
                 return color;
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [[Lang.Blocks.parodule_red], 0],//19
+                                [[Lang.Blocks.parodule_vermilion], 1],//20
+                                [[Lang.Blocks.parodule_orange], 2],//21
+                                [[Lang.Blocks.parodule_tangerine], 3],//22
+                                [[Lang.Blocks.parodule_yellow], 4],//23
+                                [[Lang.Blocks.parodule_green_yellow], 5],//24
+                                [[Lang.Blocks.parodule_green], 6],//25
+                                [[Lang.Blocks.parodule_blue_green], 7],//26
+                                [[Lang.Blocks.parodule_blue], 8],//27
+                                [[Lang.Blocks.parodule_prussian_blue], 9],//28
+                                [[Lang.Blocks.parodule_indigo], 10],//29
+                                [[Lang.Blocks.parodule_blue_violet], 11],//30
+                                [[Lang.Blocks.parodule_purple], 12],//31
+                                [[Lang.Blocks.parodule_reddish_purple], 13],//32
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_PIXEL_List',
+                }],
             },
         },
         /* Parodule_Custom_PIXEL_List End */
@@ -934,9 +979,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 params: [
                     {
                         type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
                     },
                     {
                         type: 'Parodule_Custom_PIXEL_List',
+                        params: ['0'],
                     }
                 ],
                 type: 'Parodule_Custom_PIXEL',
@@ -948,15 +995,17 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                const color = script.getNumberValue('COLOR');
+                const port = script.getNumberValue('PORT') % 4;
+                const color = script.getNumberValue('COLOR') % 14 + 19;
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
+                Entry.hw.sendQueue.SET[correction_port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                     data: color,
                     time: new Date().getTime(),
@@ -965,7 +1014,19 @@ Entry.Robotry_Parodule.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: 'Parodule.set_Pixel(%1, %2)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },],
             }
         },
         /* Parodule Custom PIXEL End */
@@ -1001,12 +1062,30 @@ Entry.Robotry_Parodule.getBlocks = function () {
             },
             func(sprite, script) {
                 const power = script.getNumberValue('POWER');
-                let correction_power = power % 5 === 4 ? 200 : 39 - power % 5;
-                return correction_power;
+                return power;
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['100%', 0], // 39
+                                ['75%', 1], // 38
+                                ['50%', 2], // 37
+                                ['25%', 3],// 36
+                                ['0%', 4],  // 200
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_Motor_List',
+                }],
             },
         },
 
@@ -1037,13 +1116,28 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 SIGN: 0,
             },
             func(sprite, script) {
-                const sign = script.getNumberValue('SIGN') % 2;
-                let correction_sign = sign ? 4 : 0;
-                return correction_sign;
+                const sign = script.getNumberValue('SIGN');
+                return sign;
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [[Lang.Blocks.parodule_forward], 0], // 0
+                                [[Lang.Blocks.parodule_backward], 1], // 4
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_Motor_Sign',
+                }],
             },
         },
 
@@ -1080,12 +1174,15 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 params: [
                     {
                         type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
                     },
                     {
                         type: 'Parodule_Custom_Motor_List',
+                        params: ['0'],
                     },
                     {
                         type: 'Parodule_Custom_Motor_Sign',
+                        params: ['0'],
                     }
                 ],
                 type: 'Parodule_Custom_Motor',
@@ -1099,30 +1196,179 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
+                const port = script.getNumberValue('PORT') % 4;
                 const power = script.getNumberValue('POWER');
-                var sign = script.getNumberValue('SIGNED');
+                const sign = script.getNumberValue('SIGNED') % 2;
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+                let correction_power = power % 5 === 4 ? 200 : 39 - power % 5;
+                let correction_sign = sign ? 4 : 0;
 
-                if (power === 200) {
-                    sign = 0;
+                if (correction_power === 200) {
+                    correction_sign = 0;
                 }
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
+                Entry.hw.sendQueue.SET[correction_port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
-                    data: power + sign,
+                    data: correction_power + correction_sign,
                     time: new Date().getTime(),
                 }
                 return script.callReturn();
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: 'Parodule.set_Motor(%1, %2, %3)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
             }
         },
         /* Parodule Custom Motor End */
+
+        Parodule_Custom_Octaves_List: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['3', 0], // 0
+                        ['4', 1], //12
+                        ['5', 2], //24
+                        ['6', 3], //36
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                OCTAVE: 0,
+            },
+            func(sprite, script) {
+                const octave = script.getNumberValue('OCTAVE');
+                return octave;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['3', 0], // 0
+                                ['4', 1], //12
+                                ['5', 2], //24
+                                ['6', 3], //36
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_Octaves_List',
+                }],
+            },
+        },
+
+        Parodule_Custom_Tone_List: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [[Lang.Blocks.parodule_silent], 0], // 200
+                        [[Lang.Blocks.parodule_do], 1],// 47
+                        [[Lang.Blocks.parodule_do_sharp], 2], // 48
+                        [[Lang.Blocks.parodule_re], 3], // 49
+                        [[Lang.Blocks.parodule_re_sharp], 4], // 50
+                        [[Lang.Blocks.parodule_mi], 5], // 51
+                        [[Lang.Blocks.parodule_fa], 6], //52
+                        [[Lang.Blocks.parodule_fa_sharp], 7],  //53
+                        [[Lang.Blocks.parodule_sol], 8],  //54
+                        [[Lang.Blocks.parodule_sol_sharp], 9],  //55
+                        [[Lang.Blocks.parodule_la], 10],  //56
+                        [[Lang.Blocks.parodule_la_sharp], 11],  //57
+                        [[Lang.Blocks.parodule_si], 12],  //58
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                TONE: 0,
+            },
+            func(sprite, script) {
+                const tone = script.getNumberValue('TONE');
+                return tone;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [[Lang.Blocks.parodule_silent], 0], // 200
+                                [[Lang.Blocks.parodule_do], 1],// 47
+                                [[Lang.Blocks.parodule_do_sharp], 2], // 48
+                                [[Lang.Blocks.parodule_re], 3], // 49
+                                [[Lang.Blocks.parodule_re_sharp], 4], // 50
+                                [[Lang.Blocks.parodule_mi], 5], // 51
+                                [[Lang.Blocks.parodule_fa], 6], //52
+                                [[Lang.Blocks.parodule_fa_sharp], 7],  //53
+                                [[Lang.Blocks.parodule_sol], 8],  //54
+                                [[Lang.Blocks.parodule_sol_sharp], 9],  //55
+                                [[Lang.Blocks.parodule_la], 10],  //56
+                                [[Lang.Blocks.parodule_la_sharp], 11],  //57
+                                [[Lang.Blocks.parodule_si], 12],  //58
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Custom_Tone_List',
+                }],
+            },
+        },
 
         /* Paroduel Custom Buzzer Start */
         Parodule_Custom_Buzzer: {
@@ -1137,39 +1383,14 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     defaultType: 'number',
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        ['3', 0],
-                        ['4', 12],
-                        ['5', 24],
-                        ['6', 36],
-                    ],
-                    value: [0],
-                    fontSize: 12,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
                 {
-                    type: 'Dropdown',
-                    options: [
-                        [[Lang.Blocks.parodule_silent], 200],
-                        [[Lang.Blocks.parodule_do], 47],
-                        [[Lang.Blocks.parodule_do_sharp], 48],
-                        [[Lang.Blocks.parodule_re], 49],
-                        [[Lang.Blocks.parodule_re_sharp], 50],
-                        [[Lang.Blocks.parodule_mi], 51],
-                        [[Lang.Blocks.parodule_fa], 52],
-                        [[Lang.Blocks.parodule_fa_sharp], 53],
-                        [[Lang.Blocks.parodule_sol], 54],
-                        [[Lang.Blocks.parodule_sol_sharp], 55],
-                        [[Lang.Blocks.parodule_la], 56],
-                        [[Lang.Blocks.parodule_la_sharp], 57],
-                        [[Lang.Blocks.parodule_si], 58],
-                    ],
-                    value: [47],
-                    fontSize: 12,
-                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -1182,6 +1403,15 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 params: [
                     {
                         type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'Parodule_Custom_Octaves_List',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'Parodule_Custom_Tone_List',
+                        params: ['0'],
                     },
                 ],
                 type: 'Parodule_Custom_Buzzer',
@@ -1194,27 +1424,46 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
-                var octave = script.getNumberValue('OCTAVE');
-                const tone = script.getNumberValue('TONE');
+                const port = script.getNumberValue('PORT') % 4;
+                const octave = script.getNumberValue('OCTAVE') % 4;
+                const tone = script.getNumberValue('TONE') % 12;
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+                let correction_octave = octave * 12;
+                let correction_tone = tone ? tone + 46 : 200;
 
-                if (tone === 200) {
-                    octave = 0;
+                if (correction_tone === 200) {
+                    correction_octave = 0;
                 }
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
+                Entry.hw.sendQueue.SET[correction_port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
-                    data: octave + tone,
+                    data: correction_octave + correction_tone,
                     time: new Date().getTime(),
                 }
                 return script.callReturn();
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: 'Parodule.set_Buzzer(%1, %2, %3)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
             }
         },
         /* Parodule Custom Buzzer End */
@@ -1252,12 +1501,14 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
-                const port = script.getNumberValue('PORT');
+                const port = script.getNumberValue('PORT') % 4;
                 const value = 200; // 끄기
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
-                Entry.hw.sendQueue.SET[port] = {
+                Entry.hw.sendQueue.SET[correction_port] = {
                     type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
@@ -1266,7 +1517,15 @@ Entry.Robotry_Parodule.getBlocks = function () {
             },
             syntax: {
                 js: [],
-                py: [],
+                py: [{
+                    syntax: 'Parodule.set_Stop(%1)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
             }
         },
         /* Parodule Custom Module Off End */
