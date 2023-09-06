@@ -670,6 +670,7 @@ module.exports = {
                             [Lang.Blocks.table_min, 'MIN'],
                             [Lang.Blocks.table_avg, 'AVG'],
                             [Lang.Blocks.table_stdev, 'STDEV'],
+                            [Lang.Blocks.table_median, 'MEDIAN'],
                         ],
                         value: 'SUM',
                         fontSize: 10,
@@ -723,6 +724,11 @@ module.exports = {
                             const avg = array.reduce(sum) / total;
                             const deviations = array.map((x) => x - avg);
                             return Math.sqrt(deviations.map(square).reduce(sum) / (total - 1));
+                        }
+                        case 'MEDIAN': {
+                            const sorted = array.sort((a, b) => a - b);
+                            const n = Math.floor(array.length / 2);
+                            return (sorted[n] + sorted[array.length - 1 - n]) / 2;
                         }
                         default:
                             return 0;
