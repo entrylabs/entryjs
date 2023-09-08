@@ -1432,7 +1432,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT') % 4;
-                const octave = script.getNumberValue('OCTAVE') % 4;
+                const octave = (script.getNumberValue('OCTAVE') - 3) % 4;
                 const tone = script.getNumberValue('TONE') % 12;
                 let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
                 let correction_octave = octave * 12;
