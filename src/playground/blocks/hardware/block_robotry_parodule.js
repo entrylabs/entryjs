@@ -64,11 +64,14 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 Parodule_Buzzer: '%1 옥타브 %2 (으)로 재생 %3',
 
                 Parodule_Custom_title: '커스텀 제어 블럭\0',
-                Parodule_Custom_PIXEL: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
-
+                Parodule_Custom_Pixel: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Custom_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
                 Parodule_Custom_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
                 Parodule_Custom_Module_OFF: '%1 에 연결된 모듈 중지 %2',
+
+                Parodule_Func_title: '내장 동작\0',
+                Parodule_Func_Pixel: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
+                Parodule_Func_Buzzer: '%1 에 연결된 부저를 %2 으로 설정 %3',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
@@ -90,7 +93,8 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 parodule_unknown: '모름',
 
                 parodule_off: '없음',
-                parodule_aura: '아우라',
+                parodule_cycle: '순환',
+                parodule_aura: '알록달록',
                 parodule_red: '빨강색',
                 parodule_vermilion: '주홍색',
                 parodule_orange: '주황색',
@@ -112,6 +116,8 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 parodule_right: '우회전',
 
                 parodule_silent: '무음',
+                parodule_horn: '빵빵',
+                parodule_weeoo: '삐용삐용',
                 parodule_do: '도',
                 parodule_do_sharp: '도#(레♭)',
                 parodule_re: '레',
@@ -139,10 +145,15 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 Parodule_Buzzer: 'Play %1 octave %2 %3',
 
                 Parodule_Custom_title: 'Custom Control Block\0',
-                Parodule_Custom_PIXEL: 'Set pixels of  %1 to %2 %3',
+                Parodule_Custom_Pixel: 'Set pixels of  %1 to %2 %3',
+
                 Parodule_Custom_Motor: 'Set the motor of  %1 to %2 power and move %3 %4',
                 Parodule_Custom_Buzzer: 'Play the buzzer of  %1 in %2 octave %3 %4',
                 Parodule_Custom_Module_OFF: 'Stop module of  %1 %2',
+
+                Parodule_Func_title: '내장 동작\0',
+                Parodule_Func_Pixel: 'Set pixels of  %1 to %2 %3',
+                Parodule_Func_Buzzer: '%1 에 연결된 부저를 %2 으로 설정 %3',
 
                 Parodule_Update: '파로듈 업데이트 %1',
             },
@@ -164,6 +175,7 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 parodule_unknown: 'unknown',
 
                 parodule_off: 'off',
+                parodule_cycle: 'cycle',
                 parodule_aura: 'aura',
                 parodule_red: 'red',
                 parodule_vermilion: 'vermilion',
@@ -252,10 +264,14 @@ Entry.Robotry_Parodule.monitorTemplate = function () {
         'Parodule_Buzzer',
 
         'Parodule_Custom_title',
-        'Parodule_Custom_PIXEL',
+        'Parodule_Custom_Pixel',
         'Parodule_Custom_Motor',
         'Parodule_Custom_Buzzer',
         'Parodule_Custom_Module_OFF',
+
+        'Parodule_Func_title',
+        'Parodule_Func_Pixel',
+        'Parodule_Func_Buzzer',
 
         //'Parodule_Update',
     ];
@@ -379,7 +395,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             },
         },
 
-        Parodule_Custom_PIXEL_List: {
+        Parodule_Custom_Pixel_List: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic_string_field',
@@ -390,21 +406,20 @@ Entry.Robotry_Parodule.getBlocks = function () {
                     type: 'Dropdown',
                     options: [
                         [Lang.Blocks.parodule_off, 0],//200
-                        [Lang.Blocks.parodule_aura, 1],//18
-                        [Lang.Blocks.parodule_red, 2],//19
-                        [Lang.Blocks.parodule_vermilion, 3],//20
-                        [Lang.Blocks.parodule_orange, 4],//21
-                        [Lang.Blocks.parodule_tangerine, 5],//22
-                        [Lang.Blocks.parodule_yellow, 6],//23
-                        [Lang.Blocks.parodule_green_yellow, 7],//24
-                        [Lang.Blocks.parodule_green, 8],//25
-                        [Lang.Blocks.parodule_blue_green, 9],//26
-                        [Lang.Blocks.parodule_blue, 10],//27
-                        [Lang.Blocks.parodule_prussian_blue, 11],//28
-                        [Lang.Blocks.parodule_indigo, 12],//29
-                        [Lang.Blocks.parodule_blue_violet, 13],//30
-                        [Lang.Blocks.parodule_purple, 14],//31
-                        [Lang.Blocks.parodule_reddish_purple, 15],//32
+                        [Lang.Blocks.parodule_red, 1],//19
+                        [Lang.Blocks.parodule_vermilion, 2],//20
+                        [Lang.Blocks.parodule_orange, 3],//21
+                        [Lang.Blocks.parodule_tangerine, 4],//22
+                        [Lang.Blocks.parodule_yellow, 5],//23
+                        [Lang.Blocks.parodule_green_yellow, 6],//24
+                        [Lang.Blocks.parodule_green, 7],//25
+                        [Lang.Blocks.parodule_blue_green, 8],//26
+                        [Lang.Blocks.parodule_blue, 9],//27
+                        [Lang.Blocks.parodule_prussian_blue, 10],//28
+                        [Lang.Blocks.parodule_indigo, 11],//29
+                        [Lang.Blocks.parodule_blue_violet, 12],//30
+                        [Lang.Blocks.parodule_purple, 13],//31
+                        [Lang.Blocks.parodule_reddish_purple, 14],//32
                     ],
                     value: [0],
                     fontSize: 12,
@@ -432,21 +447,20 @@ Entry.Robotry_Parodule.getBlocks = function () {
                             type: 'Dropdown',
                             options: [
                                 [Lang.Blocks.parodule_off, 0],//200
-                                [Lang.Blocks.parodule_aura, 1],//18
-                                [Lang.Blocks.parodule_red, 2],//19
-                                [Lang.Blocks.parodule_vermilion, 3],//20
-                                [Lang.Blocks.parodule_orange, 4],//21
-                                [Lang.Blocks.parodule_tangerine, 5],//22
-                                [Lang.Blocks.parodule_yellow, 6],//23
-                                [Lang.Blocks.parodule_green_yellow, 7],//24
-                                [Lang.Blocks.parodule_green, 8],//25
-                                [Lang.Blocks.parodule_blue_green, 9],//26
-                                [Lang.Blocks.parodule_blue, 10],//27
-                                [Lang.Blocks.parodule_prussian_blue, 11],//28
-                                [Lang.Blocks.parodule_indigo, 12],//29
-                                [Lang.Blocks.parodule_blue_violet, 13],//30
-                                [Lang.Blocks.parodule_purple, 14],//31
-                                [Lang.Blocks.parodule_reddish_purple, 15],//32
+                                [Lang.Blocks.parodule_red, 1],//19
+                                [Lang.Blocks.parodule_vermilion, 2],//20
+                                [Lang.Blocks.parodule_orange, 3],//21
+                                [Lang.Blocks.parodule_tangerine, 4],//22
+                                [Lang.Blocks.parodule_yellow, 5],//23
+                                [Lang.Blocks.parodule_green_yellow, 6],//24
+                                [Lang.Blocks.parodule_green, 7],//25
+                                [Lang.Blocks.parodule_blue_green, 8],//26
+                                [Lang.Blocks.parodule_blue, 9],//27
+                                [Lang.Blocks.parodule_prussian_blue, 10],//28
+                                [Lang.Blocks.parodule_indigo, 11],//29
+                                [Lang.Blocks.parodule_blue_violet, 12],//30
+                                [Lang.Blocks.parodule_purple, 13],//31
+                                [Lang.Blocks.parodule_reddish_purple, 14],//32
                             ],
                             value: [0],
                             fontSize: 12,
@@ -454,7 +468,61 @@ Entry.Robotry_Parodule.getBlocks = function () {
                             arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                         },
                     ],
-                    keyOption: 'Parodule_Custom_PIXEL_List',
+                    keyOption: 'Parodule_Custom_Pixel_List',
+                }],
+            },
+        },
+
+        Parodule_Func_Pixel_List: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.parodule_off, 0],//200
+                        [Lang.Blocks.parodule_cycle, 1],//17
+                        [Lang.Blocks.parodule_aura, 2],//18
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            func(sprite, script) {
+                const color = script.getNumberValue('COLOR');
+                return color;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.parodule_off, 0],//200
+                                [Lang.Blocks.parodule_aura, 1],//17
+                                [Lang.Blocks.parodule_aura, 2],//18
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Func_Pixel_List',
                 }],
             },
         },
@@ -754,6 +822,60 @@ Entry.Robotry_Parodule.getBlocks = function () {
                 }],
             },
         },
+
+        Parodule_Func_Tone_List: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.parodule_silent, 0], // 200
+                        [Lang.Blocks.parodule_horn, 1],// 45
+                        [Lang.Blocks.parodule_weeoo, 2], // 46
+                    ],
+                    value: [0],
+                    fontSize: 12,
+                    bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                TONE: 0,
+            },
+            func(sprite, script) {
+                const tone = script.getNumberValue('TONE');
+                return tone;
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                [Lang.Blocks.parodule_silent, 0], // 200
+                                [Lang.Blocks.parodule_horn, 1],// 45
+                                [Lang.Blocks.parodule_weeoo, 2], // 46
+                            ],
+                            value: [0],
+                            fontSize: 12,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                    ],
+                    keyOption: 'Parodule_Func_Tone_List',
+                }],
+            },
+        },
         /* Parodule_Custom_List End */
 
         Parodule_Input_title: {
@@ -1040,7 +1162,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
             def: {
                 params: [
                     {
-                        type: 'Parodule_Custom_PIXEL_List',
+                        type: 'Parodule_Custom_Pixel_List',
                         params: [2],
                     },
                 ],
@@ -1052,8 +1174,8 @@ Entry.Robotry_Parodule.getBlocks = function () {
             class: 'SET',
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
-                const color = script.getNumberValue('COLOR');
-                let correction_color = !color ? 200 : color + 17;
+                const color = script.getNumberValue('COLOR') % 15;
+                let correction_color = !color ? 200 : color + 18;
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
                 }
@@ -1317,7 +1439,7 @@ Entry.Robotry_Parodule.getBlocks = function () {
 
 
         /* Paroduel Custom PIXEL Start */
-        Parodule_Custom_PIXEL: {
+        Parodule_Custom_Pixel: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
             outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
             skeleton: 'basic',
@@ -1347,11 +1469,11 @@ Entry.Robotry_Parodule.getBlocks = function () {
                         params: ['0'],
                     },
                     {
-                        type: 'Parodule_Custom_PIXEL_List',
+                        type: 'Parodule_Custom_Pixel_List',
                         params: ['2'],
                     }
                 ],
-                type: 'Parodule_Custom_PIXEL',
+                type: 'Parodule_Custom_Pixel',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -1361,9 +1483,9 @@ Entry.Robotry_Parodule.getBlocks = function () {
             isNotFor: ['Robotry_Parodule'],
             func(sprite, script) {
                 const port = script.getNumberValue('PORT') % 4;
-                const color = script.getNumberValue('COLOR') % 14;
+                const color = script.getNumberValue('COLOR') % 15;
                 let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
-                let correction_color = !color ? 200 : color + 17;
+                let correction_color = !color ? 200 : color + 18;
 
                 if (!Entry.hw.sendQueue.SET) {
                     Entry.hw.sendQueue.SET = {};
@@ -1396,8 +1518,6 @@ Entry.Robotry_Parodule.getBlocks = function () {
             }
         },
         /* Parodule Custom PIXEL End */
-
-
 
         /* Paroduel Custom Motor Start */
         Parodule_Custom_Motor: {
@@ -1596,6 +1716,89 @@ Entry.Robotry_Parodule.getBlocks = function () {
         },
         /* Parodule Custom Buzzer End */
 
+
+        /* Paroduel Func Pixel Start */
+        Parodule_Func_Pixel: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_led.svg',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'Parodule_Func_Pixel_List',
+                        params: ['1'],
+                    }
+                ],
+                type: 'Parodule_Func_Pixel',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                COLOR: 1
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT') % 4;
+                const color = script.getNumberValue('COLOR') % 3;
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+                let correction_color = !color ? 200 : color + 16;
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+
+                Entry.hw.sendQueue.SET[correction_port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: correction_color,
+                    time: new Date().getTime(),
+                }
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Parodule.set_Func_Pixel(%1, %2)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },],
+            }
+        },
+        /* Paroduel Func Pixel  End */
+
         /* Paroduel Custom Module Off Start */
         Parodule_Custom_Module_OFF: {
             color: EntryStatic.colorSet.block.default.HARDWARE,
@@ -1658,6 +1861,109 @@ Entry.Robotry_Parodule.getBlocks = function () {
             }
         },
         /* Parodule Custom Module Off End */
+
+        Parodule_Func_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Func_title),
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: EntryStatic.colorSet.common.TEXT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.Parodule_Func_title,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'Parodule_Func_title',
+            },
+            class: 'TITLE',
+            isNotFor: ['Robotry_Parodule'],
+            events: {},
+        },
+
+        /* Paroduel Func Buzzer Start */
+        Parodule_Func_Buzzer: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_bzr2.svg',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'Parodule_Func_Tone_List',
+                        params: ['1'],
+                    },
+                ],
+                type: 'Parodule_Func_Buzzer',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                TONE: 1
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT') % 4;
+                const tone = script.getNumberValue('TONE') % 3;
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+                let correction_tone = !tone ? 200 : tone + 44;
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[correction_port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: correction_tone,
+                    time: new Date().getTime(),
+                }
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Parodule.set_Func_Buzzer(%1, %2)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
+            }
+        },
+        /* Parodule Func Buzzer End */
 
         /* Parodule Upadate Start */
         Parodule_Update: {
