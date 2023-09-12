@@ -67,7 +67,8 @@ Entry.Robotry_Parodule.setLanguage = function () {
                 Parodule_Custom_Pixel: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
                 Parodule_Custom_Motor: '%1 에 연결된 모터를 %2 의 파워로 %3 %4',
                 Parodule_Custom_Buzzer: '%1 에 연결된 부저를 %2 옥타브 %3 (으)로 재생 %4',
-                Parodule_Custom_Module_OFF: '%1 에 연결된 모듈 중지 %2',
+                Parodule_Module_Off: '%1 에 연결된 모듈 동작 종료 %2',
+                Parodule_Module_Standby: '%1 에 연결된 모듈 동작 유지 %2',
 
                 Parodule_Func_title: '내장 동작\0',
                 Parodule_Func_Pixel: '%1 에 연결된 픽셀을 %2 으로 설정 %3',
@@ -149,7 +150,8 @@ Entry.Robotry_Parodule.setLanguage = function () {
 
                 Parodule_Custom_Motor: 'Set the motor of  %1 to %2 power and move %3 %4',
                 Parodule_Custom_Buzzer: 'Play the buzzer of  %1 in %2 octave %3 %4',
-                Parodule_Custom_Module_OFF: 'Stop module of  %1 %2',
+                Parodule_Module_Off: 'Set Off module of  %1 %2',
+                Parodule_Module_Standby: 'Set Stand-by module of  %1 %2',
 
                 Parodule_Func_title: '내장 동작\0',
                 Parodule_Func_Pixel: 'Set pixels of  %1 to %2 %3',
@@ -267,7 +269,8 @@ Entry.Robotry_Parodule.monitorTemplate = function () {
         'Parodule_Custom_Pixel',
         'Parodule_Custom_Motor',
         'Parodule_Custom_Buzzer',
-        'Parodule_Custom_Module_OFF',
+        'Parodule_Module_Off',
+        'Parodule_Module_Standby',
 
         'Parodule_Func_title',
         'Parodule_Func_Pixel',
@@ -1716,6 +1719,156 @@ Entry.Robotry_Parodule.getBlocks = function () {
         },
         /* Parodule Custom Buzzer End */
 
+        /* Paroduel Module Off Start */
+        Parodule_Module_Off: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
+                    }
+                ],
+                type: 'Parodule_Module_Off',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT') % 4;
+                const value = 200; // 끄기
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[correction_port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                }
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Parodule.set_Off(%1)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
+            }
+        },
+        /* Parodule Custom Module Off End */
+
+        /* Paroduel Module Standby Start */
+        Parodule_Module_Standby: {
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'Parodule_Custom_Port_List',
+                        params: ['0'],
+                    }
+                ],
+                type: 'Parodule_Module_Standby',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'SET',
+            isNotFor: ['Robotry_Parodule'],
+            func(sprite, script) {
+                const port = script.getNumberValue('PORT') % 4;
+                const value = 238; // 대기 동작유지
+                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
+
+                if (!Entry.hw.sendQueue.SET) {
+                    Entry.hw.sendQueue.SET = {};
+                }
+                Entry.hw.sendQueue.SET[correction_port] = {
+                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                }
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [{
+                    syntax: 'Parodule.set_Standby(%1)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                }],
+            }
+        },
+        /* Parodule Module Standby End */
+
+        Parodule_Func_title: {
+            skeleton: 'basic_text',
+            skeletonOptions: {
+                box: {
+                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Func_title),
+                },
+            },
+            color: EntryStatic.colorSet.common.TRANSPARENT,
+            fontColor: EntryStatic.colorSet.common.TEXT,
+            params: [
+                {
+                    type: 'Text',
+                    text: Lang.template.Parodule_Func_title,
+                    color: EntryStatic.colorSet.common.TEXT,
+                    align: 'left',
+                },
+            ],
+            def: {
+                type: 'Parodule_Func_title',
+            },
+            class: 'TITLE',
+            isNotFor: ['Robotry_Parodule'],
+            events: {},
+        },
 
         /* Paroduel Func Pixel Start */
         Parodule_Func_Pixel: {
@@ -1798,94 +1951,6 @@ Entry.Robotry_Parodule.getBlocks = function () {
             }
         },
         /* Paroduel Func Pixel  End */
-
-        /* Paroduel Custom Module Off Start */
-        Parodule_Custom_Module_OFF: {
-            color: EntryStatic.colorSet.block.default.HARDWARE,
-            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                    defaultType: 'number',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_icon.svg',
-                    size: 12,
-                }
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'Parodule_Custom_Port_List',
-                        params: ['0'],
-                    }
-                ],
-                type: 'Parodule_Custom_Module_OFF',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'SET',
-            isNotFor: ['Robotry_Parodule'],
-            func(sprite, script) {
-                const port = script.getNumberValue('PORT') % 4;
-                const value = 200; // 끄기
-                let correction_port = port === 1 ? 3 : port === 2 ? 1 : port === 3 ? 2 : 0;
-
-                if (!Entry.hw.sendQueue.SET) {
-                    Entry.hw.sendQueue.SET = {};
-                }
-                Entry.hw.sendQueue.SET[correction_port] = {
-                    type: Entry.Robotry_Parodule.controlTypes.DIGITAL,
-                    data: value,
-                    time: new Date().getTime(),
-                }
-                return script.callReturn();
-            },
-            syntax: {
-                js: [],
-                py: [{
-                    syntax: 'Parodule.set_Stop(%1)',
-                    textParams: [
-                        {
-                            type: 'Block',
-                            accept: 'string',
-                        },
-                    ],
-                }],
-            }
-        },
-        /* Parodule Custom Module Off End */
-
-        Parodule_Func_title: {
-            skeleton: 'basic_text',
-            skeletonOptions: {
-                box: {
-                    offsetX: Entry.Robotry_Parodule.getOffsetX(Lang.template.Parodule_Func_title),
-                },
-            },
-            color: EntryStatic.colorSet.common.TRANSPARENT,
-            fontColor: EntryStatic.colorSet.common.TEXT,
-            params: [
-                {
-                    type: 'Text',
-                    text: Lang.template.Parodule_Func_title,
-                    color: EntryStatic.colorSet.common.TEXT,
-                    align: 'left',
-                },
-            ],
-            def: {
-                type: 'Parodule_Func_title',
-            },
-            class: 'TITLE',
-            isNotFor: ['Robotry_Parodule'],
-            events: {},
-        },
 
         /* Paroduel Func Buzzer Start */
         Parodule_Func_Buzzer: {
