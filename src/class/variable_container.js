@@ -2860,16 +2860,13 @@ Entry.VariableContainer = class VariableContainer {
             answer ||
             Entry.Variable.create({
                 id: Entry.generateHash(),
-                name: 'stt',
-                value: 0,
+                name: Lang.template.voice_title_text,
+                value: '-',
                 variableType: 'stt',
                 visible: false,
-                x: 150,
-                y: -100,
             });
         answer.generateView();
         Entry.container.sttValue = answer;
-        Entry.container.sttValue.setName('STT');
     }
 
     generateVariableSettingView(variable) {
