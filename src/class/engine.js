@@ -439,11 +439,11 @@ Entry.Engine = class Engine {
 
             this.audioProgressPanel_.appendChild(audioShadeMainCircle);
 
-            // const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
-            //     'audioShadeText'
-            // );
-            // audioShadeText.innerHTML = '진행중이에요';
-            // this.audioProgressPanel_.appendChild(audioShadeText);
+            const audioShadeText = Entry.createElement('div', 'audioShadeText').addClass(
+                'audioShadeText'
+            );
+            audioShadeText.innerHTML = Lang.Msgs.ai_utilize_audio_progress;
+            this.audioProgressPanel_.appendChild(audioShadeText);
             this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
             if (this.view_.classList[0] === 'entryEngine') {
                 this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
@@ -628,6 +628,9 @@ Entry.Engine = class Engine {
             variableContainer.mapFunc((func) => {
                 func.takeSnapshot();
             });
+            if (Entry.container.sttValue) {
+                Entry.container.sttValue.takeSnapshot();
+            }
             this.projectTimer.takeSnapshot();
             container.inputValue.takeSnapshot();
 
@@ -692,7 +695,7 @@ Entry.Engine = class Engine {
         Entry.dispatchEvent('beforeStop');
         try {
             await Promise.all(this.execPromises);
-        } catch (e) { }
+        } catch (e) {}
         const container = Entry.container;
         const variableContainer = Entry.variableContainer;
 
@@ -729,6 +732,9 @@ Entry.Engine = class Engine {
             Entry.timerInstances.forEach((instance) => {
                 instance.destroy();
             });
+        }
+        if (Entry.container.sttValue) {
+            Entry.container.sttValue.loadSnapshot();
         }
         container.clearRunningState();
         container.loadSequenceSnapshot();
