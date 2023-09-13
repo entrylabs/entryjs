@@ -268,7 +268,7 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 }
                 try {
                     const time = _clamp(script.getNumberValue('TIME'), 1, 60);
-                    console.log('time', time);
+                    
 
                     const language = script.getField('LANG', script);
                     if (language === 'Kor') {
