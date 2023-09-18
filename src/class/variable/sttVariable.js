@@ -35,7 +35,7 @@ class SttVariable extends Variable {
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             }
 
-            this._adjustSingleViewBox('#32d27d');
+            this._adjustSingleViewBox('#8222ff');
         }
         Entry.requestUpdate = true;
     }
