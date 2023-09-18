@@ -446,7 +446,10 @@ Entry.Engine = class Engine {
             this.audioProgressPanel_.appendChild(audioShadeText);
             this.minimizedView_ = document.querySelector('#entryCanvasWrapper');
             if (this.view_.classList[0] === 'entryEngine') {
-                this.minimizedView_.insertBefore(this.audioShadePanel_, Entry.stage.canvas.canvas);
+                this.minimizedView_.insertBefore(
+                    this.audioProgressPanel_,
+                    Entry.stage.canvas.canvas
+                );
             } else {
                 this.view_.insertBefore(this.audioProgressPanel_, Entry.stage.canvas.canvas);
             }

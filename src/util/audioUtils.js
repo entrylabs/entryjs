@@ -185,6 +185,7 @@ class AudioUtils {
                         if (this.startedRecording) {
                             Entry.engine.toggleAudioProgressPanel();
                         }
+                        this.startedRecording = false;
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this.stopCallback = null;
@@ -252,6 +253,7 @@ class AudioUtils {
                     if (this.startedRecording) {
                         Entry.engine.toggleAudioProgressPanel();
                     }
+                    this.startedRecording = false;
                     const result = await this.sendBuffer(this.timedResult, language);
                     this.stopRecord();
                     resolve(result);
