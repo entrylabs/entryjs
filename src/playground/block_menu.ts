@@ -11,6 +11,8 @@ import find from 'lodash/find';
 import ModelClass from '../core/modelClass';
 import Hammer from 'hammerjs';
 
+import { EntryDom } from '../../types/index';
+
 const VARIABLE = 'variable';
 const HW = 'arduino';
 const practicalCourseCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led', 'hw_robot'];
@@ -1307,7 +1309,7 @@ class BlockMenu extends ModelClass<Schema> {
     }
 
     private _captureKeyEvent(e: KeyboardEvent) {
-        let keyCode = Entry.Utils.inputToKeycode(e);
+        const keyCode = Entry.Utils.inputToKeycode(e);
         if (!keyCode) {
             return;
         }

@@ -2,6 +2,9 @@
  * 프로퍼티 패널쪽에서 프로젝트의 속성을 보여주는 뷰를 담당
  * @use entry-lms
  */
+
+import { IEntry } from '../../types/index';
+
 class EntryIntro implements IEntry.Intro {
     public modes: any = {};
     public selected: any = undefined;
