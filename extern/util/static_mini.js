@@ -3,9 +3,9 @@
 /* eslint-disable */
 var EntryStatic = {
     isPracticalCourse: true,
-    fontFamily: "NanumGothic, 'Nanum Gothic'",
+    fontFamily: 'NanumGothic',
     exportBlockFontFamily:
-        "NanumGothic, 'Nanum Gothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
+        "NanumGothic, 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum",
     fontOffsetY: -2.5,
     heightLetter: 'M',
     objectTypes: ['sprite', 'textBox'],
@@ -852,7 +852,7 @@ EntryStatic.getDefaultFontFamily = function() {
     const langType = type || fallbackType || 'en';
     switch (langType) {
         default:
-            return "NanumGothic, 'Nanum Gothic', 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
+            return "NanumGothic, 나눔고딕, NanumGothicWeb, '맑은 고딕', 'Malgun Gothic', Dotum";
     }
 };
 

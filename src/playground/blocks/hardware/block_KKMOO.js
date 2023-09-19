@@ -1,5 +1,7 @@
 'use strict';
 
+const { flattenDiagnosticMessageText } = require("typescript");
+
 Entry.kkmoo = {
     id: '53.1',
     name: 'kkmoo',

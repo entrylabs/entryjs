@@ -156,11 +156,8 @@ function getInitialCodeMap() {
 
 Entry.AI_UTILIZE_BLOCK.translate = {
     name: 'translate',
-    imageName: 'papago.svg',
-    category: 'general',
-    sponsorText: 'Powered by {image}',
-    sponsorImage: 'naver.png',
-    sponsorOnImage: 'naverOn.png',
+    imageName: 'papago.png',
+    sponserText: 'Powered by Naver',
     title: {
         ko: '번역',
         en: 'translate',
@@ -180,6 +177,7 @@ Entry.AI_UTILIZE_BLOCK.translate = {
     api: '/api/expansionBlock/papago/',
     sponsor: 'papagoNaver',
     sponsorLink: 'https://www.ncloud.com/product/aiService/papagoNmt',
+    sponsorText: 'Powered by NAVER',
     typeMap: {
         dictionary: 'nsmt',
         artificial_intelligence: 'n2mt',

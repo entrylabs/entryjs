@@ -720,10 +720,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            // [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.probability, 'probability'],
                             [Lang.AiLearning.neighbor_count, 'count'],
                         ],
-                        value: 'count',
+                        value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
@@ -819,10 +819,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            // [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.probability, 'probability'],
                             [Lang.AiLearning.neighbor_count, 'count'],
                         ],
-                        value: 'count',
+                        value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
@@ -939,10 +939,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            // [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.probability, 'probability'],
                             [Lang.AiLearning.neighbor_count, 'count'],
                         ],
-                        value: 'count',
+                        value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
@@ -1080,10 +1080,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            // [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.probability, 'probability'],
                             [Lang.AiLearning.neighbor_count, 'count'],
                         ],
-                        value: 'count',
+                        value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
@@ -1242,10 +1242,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            // [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.probability, 'probability'],
                             [Lang.AiLearning.neighbor_count, 'count'],
                         ],
-                        value: 'count',
+                        value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
@@ -1425,10 +1425,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            // [Lang.AiLearning.probability, 'probability'],
+                            [Lang.AiLearning.probability, 'probability'],
                             [Lang.AiLearning.neighbor_count, 'count'],
                         ],
-                        value: 'count',
+                        value: 'probability',
                         bgColor: EntryStatic.colorSet.block.darken.AI_LEARNING,
                         arrowColor: EntryStatic.colorSet.common.WHITE,
                     },
