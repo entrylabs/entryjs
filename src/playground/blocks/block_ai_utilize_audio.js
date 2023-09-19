@@ -126,9 +126,9 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.korean, 'Kor'],
-                        [Lang.Blocks.english, 'Eng'],
-                        [Lang.Blocks.japan, 'Jpn'],
+                        [Lang.Blocks.korean_s, 'Kor'],
+                        [Lang.Blocks.english_s, 'Eng'],
+                        [Lang.Blocks.japan_s, 'Jpn'],
                     ],
                     value: 'Kor',
                     fontSize: 11,
@@ -177,15 +177,15 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                     const language = script.getField('LANG', script);
                     if (language === 'Kor') {
                         Entry.container.sttValue.setName(
-                            `${Lang.template.voice_title_text}:${Lang.Blocks.korean}`
+                            `${Lang.template.voice_title_text}:${Lang.Blocks.korean_s}`
                         );
                     } else if (language === 'Eng') {
                         Entry.container.sttValue.setName(
-                            `${Lang.template.voice_title_text}:${Lang.Blocks.english}`
+                            `${Lang.template.voice_title_text}:${Lang.Blocks.english_s}`
                         );
                     } else if (language === 'Jpn') {
                         Entry.container.sttValue.setName(
-                            `${Lang.template.voice_title_text}:${Lang.Blocks.japan}`
+                            `${Lang.template.voice_title_text}:${Lang.Blocks.japan_s}`
                         );
                     }
                     AudioUtils.isRecording = true;
@@ -218,9 +218,9 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.korean, 'Kor'],
-                        [Lang.Blocks.english, 'Eng'],
-                        [Lang.Blocks.japan, 'Jpn'],
+                        [Lang.Blocks.korean_s, 'Kor'],
+                        [Lang.Blocks.english_s, 'Eng'],
+                        [Lang.Blocks.japan_s, 'Jpn'],
                     ],
                     value: 'Kor',
                     fontSize: 11,
@@ -268,20 +268,19 @@ Entry.AI_UTILIZE_BLOCK.audio.getBlocks = function() {
                 }
                 try {
                     const time = _clamp(script.getNumberValue('TIME'), 1, 60);
-                    
 
                     const language = script.getField('LANG', script);
                     if (language === 'Kor') {
                         Entry.container.sttValue.setName(
-                            `${Lang.template.voice_title_text}:${Lang.Blocks.korean}`
+                            `${Lang.template.voice_title_text}:${Lang.Blocks.korean_s}`
                         );
                     } else if (language === 'Eng') {
                         Entry.container.sttValue.setName(
-                            `${Lang.template.voice_title_text}:${Lang.Blocks.english}`
+                            `${Lang.template.voice_title_text}:${Lang.Blocks.english_s}`
                         );
                     } else if (language === 'Jpn') {
                         Entry.container.sttValue.setName(
-                            `${Lang.template.voice_title_text}:${Lang.Blocks.japan}`
+                            `${Lang.template.voice_title_text}:${Lang.Blocks.japan_s}`
                         );
                     }
                     AudioUtils.isRecording = true;
