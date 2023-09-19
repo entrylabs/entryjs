@@ -856,15 +856,17 @@
     flex-direction: column;
     -moz-flex-direction: column;
     width: 100%;
-    height: calc(100%-64px);
+    height: calc(100%-32px);
 }
 .audioShadeCircle {
     margin: auto;
+    margin-bottom: 6%;
     padding: 0;
     position: relative;
     display: inline-block;
-    width: 20%;
-    padding-bottom: 20%;
+    height: 34%;
+    width: auto;
+    aspect-ratio: 1 / 1;
     border-radius: 50%;
     background-color: #32d27d;
     vertical-align: top;
@@ -900,18 +902,17 @@
     margin: 0;
     padding: 0;
     position: absolute;
-    left: 50%;
-    top: 50%;
-    width: 18px;
-    height: 26px;
-    margin: -13px 0 0 -9px;
+    left: 23%;
+    top: 23%;
+    width: 54%;
+    height: 54%;
     z-index: 10;
 }
 .audioShadeText {
     width: 100%;
     height: 20%;
     font-family: NanumGothic, 'Nanum Gothic';
-    font-size: 14px;
+    font-size: 1.1em;
     font-weight: bold;
     font-stretch: normal;
     font-style: normal;
@@ -920,11 +921,11 @@
     text-align: center;
 }
 .audioProgress {
-    width: 100%;
-    height: 100%;
+    width: 64%;
+    height: 64%;
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 18%;
+    top: 18%;
 }
 
 @keyframes ani {
