@@ -301,10 +301,7 @@ module.exports = {
                     const type = script.getField('TYPE', script);
 
                     if (type === 'number') {
-                        const numCheckRegex = /^-?\d+$/;
-                        if (numCheckRegex.test(value)) {
-                            return true;
-                        }
+                        return Entry.Utils.isNumber(value);
                     }
                     return false;
                 },

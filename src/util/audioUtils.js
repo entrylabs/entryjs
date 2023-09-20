@@ -9,6 +9,8 @@ const toWav = require('audiobuffer-to-wav');
 const STATUS_CODE = {
     CONNECTED: 'CONNECTED',
     NOT_RECOGNIZED: 'NOT_RECOGNIZED',
+    START_RECOGNIZE: 'START_RECOGNIZE',
+    END_POINT_DETECTED: 'END_POINT_DETECTED',
 };
 
 const getVoiceServerAddress = () => ({
@@ -19,6 +21,10 @@ const getVoiceServerAddress = () => ({
 const DESIRED_SAMPLE_RATE = 16000;
 
 class AudioUtils {
+    isTimedRecord = false;
+    timedResult = [];
+    stopCallback = null;
+
     get currentVolume() {
         return this._currentVolume;
     }
@@ -138,8 +144,8 @@ class AudioUtils {
         }
     }
 
-    async startRecord(recordMilliSecond, language) {
-        return await new Promise(async (resolve, reject) => {
+    startRecord(recordMilliSecond, language) {
+        return new Promise(async (resolve, reject) => {
             this.resolveFunc = resolve;
             if (!this.isInitialized) {
                 console.log('audio not initialized');
@@ -174,21 +180,126 @@ class AudioUtils {
                 switch (e) {
                     case STATUS_CODE.CONNECTED:
                         break;
+                    case STATUS_CODE.END_POINT_DETECTED:
+                        Entry.dispatchEvent('audioRecordProcessing');
+                        if (this.startedRecording) {
+                            Entry.engine.toggleAudioProgressPanel();
+                        }
+                        this.startedRecording = false;
+                        break;
                     case STATUS_CODE.NOT_RECOGNIZED:
+                        this.stopCallback = null;
                         this.stopRecord();
                         resolve('');
                         break;
-                    default:
+                    default: {
                         const parsed = JSON.parse(e);
                         const isArray = Array.isArray(parsed);
                         if (isArray) {
+                            this.stopCallback = null;
                             this.stopRecord();
                             resolve(parsed[0]);
                         }
                         break;
+                    }
                 }
             });
             this._properStopCall = setTimeout(this.stopRecord, recordMilliSecond);
+            this.stopCallback = () => {
+                resolve(0);
+            };
+        });
+    }
+
+    startTimedRecord(recordMilliSecond, language) {
+        return new Promise(async (resolve, reject) => {
+            this.isTimedRecord = true;
+            this.timedResult = [];
+            this.resolveFunc = resolve;
+            if (!this.isInitialized) {
+                console.log('audio not initialized');
+                resolve(0);
+                return;
+            }
+            // this.isRecording = true;
+            if (this._audioContext.state === 'suspended') {
+                this.isInitialized = false;
+                await this.initialize();
+            }
+
+            try {
+                this._socketClient = await voiceApiConnect(
+                    getVoiceServerAddress(),
+                    language,
+                    (data) => {
+                        this.result = data;
+                    }
+                );
+            } catch (err) {
+                console.log(err);
+            }
+
+            this._audioChunks = [];
+
+            this._stopMediaRecorder();
+            this._mediaRecorder.start();
+            this.startedRecording = true;
+            Entry.engine.toggleAudioShadePanel();
+
+            this._properStopCall = setTimeout(async () => {
+                try {
+                    this.isTimedRecord = false;
+                    Entry.dispatchEvent('audioRecordProcessing');
+                    if (this.startedRecording) {
+                        Entry.engine.toggleAudioProgressPanel();
+                    }
+                    this.startedRecording = false;
+                    const result = await this.sendBuffer(this.timedResult, language);
+                    this.stopRecord();
+                    resolve(result);
+                } catch (e) {
+                    resolve(0);
+                }
+            }, recordMilliSecond);
+
+            this.stopCallback = () => {
+                resolve(0);
+            };
+        });
+    }
+
+    async sendBuffer(buffers, language) {
+        return new Promise(async (resolve, reject) => {
+            this._socketClient.on('message', (e) => {
+                switch (e) {
+                    case STATUS_CODE.CONNECTED:
+                        break;
+                    case STATUS_CODE.END_POINT_DETECTED:
+                        break;
+                    case STATUS_CODE.NOT_RECOGNIZED:
+                        this.stopCallback = null;
+                        this.stopRecord();
+                        resolve('');
+                        break;
+                    default: {
+                        const parsed = JSON.parse(e);
+                        const isArray = Array.isArray(parsed);
+                        if (isArray) {
+                            this.stopCallback = null;
+                            this.stopRecord();
+                            resolve(parsed[0]);
+                        }
+                        break;
+                    }
+                }
+            });
+
+            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+                // socket.io로 서버 전송
+                buffers.forEach((buffer) => {
+                    this._socketClient.send(toWav(buffer));
+                });
+            }
         });
     }
 
@@ -222,6 +333,9 @@ class AudioUtils {
             track.stop();
         });
         clearTimeout(this._properStopCall);
+        if (this.stopCallback) {
+            this.stopCallback();
+        }
         // this.isRecording = false;
     }
 
@@ -298,8 +412,14 @@ class AudioUtils {
             if (!this.isRecording) {
                 return;
             }
-            // socket.io로 서버 전송
-            if (this._socketClient && this._socketClient.readyState === this._socketClient.OPEN) {
+
+            if (this.isTimedRecord) {
+                this.timedResult.push(e.renderedBuffer);
+            } else if (
+                this._socketClient &&
+                this._socketClient.readyState === this._socketClient.OPEN
+            ) {
+                // socket.io로 서버 전송
                 this._socketClient.send(toWav(e.renderedBuffer));
             }
         };

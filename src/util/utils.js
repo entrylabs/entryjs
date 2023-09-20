@@ -36,7 +36,9 @@ Entry.loadProject = function(project) {
         Entry.stateManager.startIgnore();
     }
     Entry.projectId = project._id;
-    Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project));
+    Entry.variableContainer.setVariables(Entry.Utils.combineCloudVariable(project), {
+        aiUtilizeBlocks: project.aiUtilizeBlocks,
+    });
     Entry.variableContainer.setMessages(project.messages);
     Entry.variableContainer.setFunctions(project.functions);
     DataTable?.setTables(project.tables);
