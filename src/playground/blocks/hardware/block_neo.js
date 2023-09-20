@@ -159,26 +159,11 @@ Entry.Neo = new (class Neo {
             en: 'NEO',
         };
         this.blockMenuBlocks = [
-            // motor & robot
-            'neo_motor_title',
-            'neo_motor_move',
-            'neo_motor_move_both',
+            // robot
+            'neo_robot_title',
             'neo_robot_move',
-            'neo_motor_stop',
             'neo_robot_stop',
-            // servo
-            'neo_servo_title',
-            'neo_servo_reset',
-            'neo_servo_angle',
-            'neo_servo_angle_var',
-            'neo_servo_angle_wait',
-            'neo_servo_rotate',
-            'neo_servo_stop',
-            // line tracer
-            'neo_line_tracer_title',
-            'neo_line_tracer_start',
-            'neo_line_cross_move',
-            'neo_line_cross_turn',
+
             // auto driving
             'neo_auto_driving_title',
             'neo_auto_driving_start',
@@ -187,27 +172,44 @@ Entry.Neo = new (class Neo {
             // auto parking
             'neo_auto_parking_title',
             'neo_auto_parking_start',
-            /*// line change
-            'neo_line_change_title',
-            'neo_line_change_start',
-            'neo_line_change_turn',
-            // auto detect wall
-            'neo_auto_detect_wall_title',
-            'neo_auto_detect_wall_start',
-            'neo_auto_detect_wall_turn',*/
+
+            // line tracer
+            'neo_line_tracer_title',
+            'neo_line_tracer_start',
+            'neo_line_cross_move',
+            'neo_line_cross_turn',
+
+            // motor
+            'neo_motor_title',
+            'neo_motor_move',
+            'neo_motor_move_both',
+            'neo_motor_stop',
+
+            // servo
+            'neo_servo_title',
+            'neo_servo_reset',
+            'neo_servo_angle',
+            'neo_servo_angle_var',
+            'neo_servo_angle_wait',
+            'neo_servo_rotate',
+            'neo_servo_stop',
+
             // led
             'neo_led_title',
             'neo_led_on',
             'neo_led_blink',
             'neo_led_off',
+
+            // set output
+            'neo_set_output_title',
+            'neo_set_output',
+
             // color led
             'neo_color_led_title',
             'neo_color_led_on',
             'neo_color_led_off',
             'neo_color_led_on_with_sensor',
-            // set output
-            'neo_set_output_title',
-            'neo_set_output',
+
             // sensor
             'neo_sensor_title',
             'neo_sensor_in',
@@ -215,17 +217,19 @@ Entry.Neo = new (class Neo {
             'neo_sensor_convert',
             'neo_sensor_compare',
             'neo_sensor_between',
+            'neo_sensor_digital_compare',
             'neo_sensor_color_compare',
+            'neo_sensor_color_sequence_compare',
             'neo_sensor_button_pressed',
-            // lcd
-            'neo_lcd_title',
-            'neo_lcd_image',
-            'neo_lcd_text',
             // buzzer
             'neo_buzzer_title',
             'neo_buzzer_start',
             'neo_buzzer_with_sensor',
             'neo_buzzer_stop',
+            // lcd
+            'neo_lcd_title',
+            'neo_lcd_image',
+            'neo_lcd_text',
         ];
         this.seqBlockId = 0;
         this.executeList = {};
@@ -292,28 +296,10 @@ Entry.Neo = new (class Neo {
         return {
             ko: {
                 template: {
-                    // motor & robot
-                    neo_motor_title: '회전모터',
-                    neo_motor_move: '회전모터 제어하기 %1 %2 %3 %4',
-                    neo_motor_move_both: '회전모터 동시에 제어하기 L %1 R %2 %3',
+                    // robot
+                    neo_robot_title: '로봇',
                     neo_robot_move: '로봇 제어하기 %1 %2 %3 %4',
-                    neo_motor_stop: '회전모터 멈추기 %1 %2',
                     neo_robot_stop: '로봇 멈추기 %1',
-
-                    // servo
-                    neo_servo_title: '서보모터',
-                    neo_servo_reset: '%1 서보모터 현위치를 0도로 설정하기 %2',
-                    neo_servo_angle: '서보모터 각도 바꾸기 %1 %2 %3 %4',
-                    neo_servo_angle_var: '서보모터 각도 바꾸기 %1 %2 %3 %4',
-                    neo_servo_angle_wait: '각도 바뀔때까지 기다리기 %1 %2 %3 %4',
-                    neo_servo_rotate: '서보모터 회전하기 %1 %2 %3 %4',
-                    neo_servo_stop: '서보모터 멈추기 %1 %2',
-
-                    // line tracer
-                    neo_line_tracer_title: '라인트레이서',
-                    neo_line_tracer_start: '검은색 선 따라가기 %1 %2 %3',
-                    neo_line_cross_move: '%1 교차로까지 직진하기 %2',
-                    neo_line_cross_turn: '다음 교차로에서 방향바꾸기 %1 %2',
 
                     // auto driving
                     neo_auto_driving_title: '자율주행',
@@ -325,15 +311,26 @@ Entry.Neo = new (class Neo {
                     neo_auto_parking_title: '자율주차',
                     neo_auto_parking_start: '주차하기 %1 %2 %3',
 
-                    // line change
-                    neo_line_change_title: '차선 변경',
-                    neo_line_change_start: '%1 차로 변경하기 %2',
-                    neo_line_change_turn: '교차로에서 회전하기 %1 %2',
+                    // line tracer
+                    neo_line_tracer_title: '라인트레이서',
+                    neo_line_tracer_start: '검은색 선 따라가기 %1 %2 %3',
+                    neo_line_cross_move: '%1 교차로까지 직진하기 %2',
+                    neo_line_cross_turn: '%1 교차로에서 방향바꾸기 %2 %3',
 
-                    // auto detect wall
-                    neo_auto_detect_wall_title: '골목주행',
-                    neo_auto_detect_wall_start: '벽 탐지하며 주행하기 %1 %2 %3',
-                    neo_auto_detect_wall_turn: '골목에서 회전하기 %1 %2',
+                    // motor
+                    neo_motor_title: '회전모터',
+                    neo_motor_move: '회전모터 제어하기 %1 %2 %3 %4',
+                    neo_motor_move_both: '회전모터 동시에 제어하기 L %1 R %2 %3',
+                    neo_motor_stop: '회전모터 멈추기 %1 %2',
+
+                    // servo
+                    neo_servo_title: '서보모터',
+                    neo_servo_reset: '%1 서보모터 현위치를 0도로 설정하기 %2',
+                    neo_servo_angle: '서보모터 각도 바꾸기 %1 %2 %3 %4',
+                    neo_servo_angle_var: '서보모터 각도 바꾸기 %1 %2 %3 %4',
+                    neo_servo_angle_wait: '각도 바뀔때까지 기다리기 %1 %2 %3 %4',
+                    neo_servo_rotate: '서보모터 회전하기 %1 %2 %3 %4',
+                    neo_servo_stop: '서보모터 멈추기 %1 %2',
 
                     // led
                     neo_led_title: 'LED',
@@ -341,24 +338,26 @@ Entry.Neo = new (class Neo {
                     neo_led_blink: 'LED 깜빡이기 %1 %2 %3 %4',
                     neo_led_off: 'LED 끄기 %1 %2',
 
+                    // set output
+                    neo_set_output_title: '출력',
+                    neo_set_output: '값 출력하기 %1 %2 %3 %4',
+
                     // color led
                     neo_color_led_title: '컬러 LED',
                     neo_color_led_on: '컬러LED 켜기 %1 %2 %3 %4',
                     neo_color_led_off: '컬러LED 끄기 %1 %2',
                     neo_color_led_on_with_sensor: '컬러센서 %1 로 컬러LED %2 제어 %3',
 
-                    // set output
-                    neo_set_output_title: '출력',
-                    neo_set_output: '값 출력하기 %1 %2 %3 %4',
-
                     // sensor
                     neo_sensor_title: '센서',
                     neo_sensor_in: '%1',
                     neo_sensor_digital_in: '%1 의 %2',
-                    neo_sensor_convert: '%1 %2 %3 → %4 %5',
+                    neo_sensor_convert: '%1 : %2 %3 → %4 %5',
                     neo_sensor_compare: '%1 %2 %3',
                     neo_sensor_between: '%1 %2 %3 %4 %5',
+                    neo_sensor_digital_compare: '%1 의 %2 %3 %4',
                     neo_sensor_color_compare: '%1 = %2',
+                    neo_sensor_color_sequence_compare: '%1 = %2',
                     neo_sensor_button_pressed: '%1 %2',
 
                     // buzzer
@@ -373,15 +372,9 @@ Entry.Neo = new (class Neo {
                     neo_lcd_text: 'LCD에 텍스트 보여주기 %1 %2 %3',
 
                     // args
-                    neo_arg_motor_speed: '%1',
                     neo_arg_duration: '%1',
-                    neo_arg_robot_speed: '%1',
+                    neo_arg_both_motor_speed: '%1',
                     neo_arg_servo_angle: '%1',
-                    neo_arg_servo_speed: '%1',
-                    neo_arg_auto_driving_speed: '%1',
-                    neo_arg_led_brightness: '%1',
-                    neo_arg_led_blink_speed: '%1',
-                    neo_arg_set_output_value: '%1',
                 },
                 Blocks: {
                     neo_input_1: 'IN1',
@@ -394,6 +387,8 @@ Entry.Neo = new (class Neo {
                     neo_input_13_14: 'IN1-3&IN1-4',
                     neo_input_21_22: 'IN2-1&IN2-2',
                     neo_input_23_24: 'IN2-3&IN2-4',
+                    neo_input_31_32: 'IN3-1&IN3-2',
+                    neo_input_33_34: 'IN3-3&IN3-4',
 
                     neo_output_1: 'OUT1',
                     neo_output_2: 'OUT2',
@@ -590,6 +585,9 @@ Entry.Neo = new (class Neo {
                     neo_line_cross_turn_direction_r: '우회전',
                     neo_line_cross_turn_direction_u: 'U턴',
 
+                    neo_line_cross_turn_which_next: '다음',
+                    neo_line_cross_turn_which_current: '현재',
+
                     neo_auto_driving_speed_in3: 'IN3',
 
                     neo_auto_parking_which_l: '왼쪽에',
@@ -597,13 +595,6 @@ Entry.Neo = new (class Neo {
 
                     neo_auto_parking_direction_b: '후면주차',
                     neo_auto_parking_direction_s: '평행주차',
-
-                    neo_line_change_direction_l: '왼쪽으로',
-                    neo_line_change_direction_r: '오른쪽으로',
-
-                    neo_line_change_turn_direction_l: '좌회전',
-                    neo_line_change_turn_direction_r: '우회전',
-                    neo_line_change_turn_direction_u: 'U턴',
 
                     neo_led_brightness_0: '0%',
                     neo_led_brightness_5: '5%',
@@ -698,6 +689,27 @@ Entry.Neo = new (class Neo {
                     neo_color_green: '녹색',
                     neo_color_blue: '파랑',
 
+                    neo_color_seq_ryg: '빨노녹',
+                    neo_color_seq_ryb: '빨노파',
+                    neo_color_seq_rgy: '빨녹노',
+                    neo_color_seq_rgb: '빨녹파',
+                    neo_color_seq_rby: '빨파노',
+                    neo_color_seq_rbg: '빨파녹',
+                    neo_color_seq_yrb: '노빨파',
+                    neo_color_seq_ygr: '노녹빨',
+                    neo_color_seq_ygb: '노녹파',
+                    neo_color_seq_ybr: '노파빨',
+                    neo_color_seq_grb: '녹빨파',
+                    neo_color_seq_gyr: '녹노빨',
+                    neo_color_seq_gyb: '녹노파',
+                    neo_color_seq_gbr: '녹파빨',
+                    neo_color_seq_bry: '파빨노',
+                    neo_color_seq_brg: '파빨녹',
+                    neo_color_seq_byr: '파노빨',
+                    neo_color_seq_byg: '파노녹',
+                    neo_color_seq_bgr: '파녹빨',
+                    neo_color_seq_bgy: '파녹노',
+
                     neo_button_1: '버튼1',
                     neo_button_2: '버튼2',
                     neo_button_3: '버튼3',
@@ -749,29 +761,10 @@ Entry.Neo = new (class Neo {
             en: {
                 // en.js에 작성하던 내용
                 template: {
-                    // motor & robot
-                    // motor & robot
-                    neo_motor_title: 'Motor',
-                    neo_motor_move: 'Move motor %1 %2 %3 %4',
-                    neo_motor_move_both: 'Move both motor L %1 R %2 %3',
+                    // robot
+                    neo_robot_title: 'Robot',
                     neo_robot_move: 'Move robot %1 %2 %3 %4',
-                    neo_motor_stop: 'Stop motor %1 %2',
                     neo_robot_stop: 'Stop robot %1',
-
-                    // servo
-                    neo_servo_title: 'Servo motor',
-                    neo_servo_reset: 'Reset the current position of %1 servo motor to 0 degree %2',
-                    neo_servo_angle: 'Change servo angle %1 %2 %3 %4',
-                    neo_servo_angle_var: 'Change servo angle %1 %2 %3 %4',
-                    neo_servo_angle_wait: 'Wait to change servo angle %1 %2 %3 %4',
-                    neo_servo_rotate: 'Rotate servo motor %1 %2 %3 %4',
-                    neo_servo_stop: 'Stop servo motor %1 %2',
-
-                    // line tracer
-                    neo_line_tracer_title: 'Line tracer',
-                    neo_line_tracer_start: 'Start line tracer with black line %1 %2 %3',
-                    neo_line_cross_move: 'Keep moving to the %1 intersection %2',
-                    neo_line_cross_turn: 'Turn at the next intersection %1 %2',
 
                     // auto driving
                     neo_auto_driving_title: 'Self-driving',
@@ -783,15 +776,26 @@ Entry.Neo = new (class Neo {
                     neo_auto_parking_title: 'Auto parking',
                     neo_auto_parking_start: 'Start auto parking %1 %2 %3',
 
-                    // line change
-                    neo_line_change_title: 'Lane change',
-                    neo_line_change_start: 'Change Lane %1 %2',
-                    neo_line_change_turn: 'Turn at the intersection %1 %2',
+                    // line tracer
+                    neo_line_tracer_title: 'Line tracer',
+                    neo_line_tracer_start: 'Start line tracer with black line %1 %2 %3',
+                    neo_line_cross_move: 'Keep moving to the %1 intersection %2',
+                    neo_line_cross_turn: 'Turn %2 at the %1 intersection %3',
 
-                    // auto detect wall
-                    neo_auto_detect_wall_title: 'Alley driving',
-                    neo_auto_detect_wall_start: 'Start alley driving %1 %2 %3',
-                    neo_auto_detect_wall_turn: 'Turn in the alley %1 %2',
+                    // motor
+                    neo_motor_title: 'Motor',
+                    neo_motor_move: 'Move motor %1 %2 %3 %4',
+                    neo_motor_move_both: 'Move both motor L %1 R %2 %3',
+                    neo_motor_stop: 'Stop motor %1 %2',
+
+                    // servo
+                    neo_servo_title: 'Servo motor',
+                    neo_servo_reset: 'Reset the current position of %1 servo motor to 0 degree %2',
+                    neo_servo_angle: 'Change servo angle %1 %2 %3 %4',
+                    neo_servo_angle_var: 'Change servo angle %1 %2 %3 %4',
+                    neo_servo_angle_wait: 'Wait to change servo angle %1 %2 %3 %4',
+                    neo_servo_rotate: 'Rotate servo motor %1 %2 %3 %4',
+                    neo_servo_stop: 'Stop servo motor %1 %2',
 
                     // led
                     neo_led_title: 'LED',
@@ -799,25 +803,27 @@ Entry.Neo = new (class Neo {
                     neo_led_blink: 'Blink the LED %1 %2 %3 %4',
                     neo_led_off: 'Turn off the LED %1 %2',
 
+                    // set output
+                    neo_set_output_title: 'Set output',
+                    neo_set_output: 'Set output %1 %2 %3 %4',
+
                     // color led
                     neo_color_led_title: 'Color LED',
                     neo_color_led_on: 'Turn on the color LED %1 %2 %3 %4',
                     neo_color_led_off: 'Turn off the color LED %1 %2',
                     neo_color_led_on_with_sensor:
-                        'Turn on the color LED %2 with color sensor %1 %3',
-
-                    // set output
-                    neo_set_output_title: 'Set output',
-                    neo_set_output: 'Set output %1 %2 %3 %4',
+                      'Turn on the color LED %2 with color sensor %1 %3',
 
                     // sensor
                     neo_sensor_title: 'Sensor',
                     neo_sensor_in: '%1',
                     neo_sensor_digital_in: '%1 %2',
-                    neo_sensor_convert: '%1 %2 %3 → %4 %5',
+                    neo_sensor_convert: '%1 : %2 %3 → %4 %5',
                     neo_sensor_compare: '%1 %2 %3',
                     neo_sensor_between: '%1 %2 %3 %4 %5',
+                    neo_sensor_digital_compare: '%1 %2 %3 %4',
                     neo_sensor_color_compare: '%1 = %2',
+                    neo_sensor_color_sequence_compare: '%1 = %2',
                     neo_sensor_button_pressed: '%1 %2',
 
                     // buzzer
@@ -832,15 +838,9 @@ Entry.Neo = new (class Neo {
                     neo_lcd_text: 'Show text on LCD %1 %2 %3',
 
                     // args
-                    neo_arg_motor_speed: '%1',
                     neo_arg_duration: '%1',
-                    neo_arg_robot_speed: '%1',
+                    neo_arg_both_motor_speed: '%1',
                     neo_arg_servo_angle: '%1',
-                    neo_arg_servo_speed: '%1',
-                    neo_arg_auto_driving_speed: '%1',
-                    neo_arg_led_brightness: '%1',
-                    neo_arg_led_blink_speed: '%1',
-                    neo_arg_set_output_value: '%1',
                 },
                 Blocks: {
                     neo_input_1: 'IN1',
@@ -853,6 +853,8 @@ Entry.Neo = new (class Neo {
                     neo_input_13_14: 'IN1-3&IN1-4',
                     neo_input_21_22: 'IN2-1&IN2-2',
                     neo_input_23_24: 'IN2-3&IN2-4',
+                    neo_input_31_32: 'IN3-1&IN3-2',
+                    neo_input_33_34: 'IN3-3&IN3-4',
 
                     neo_output_1: 'OUT1',
                     neo_output_2: 'OUT2',
@@ -1049,6 +1051,9 @@ Entry.Neo = new (class Neo {
                     neo_line_cross_turn_direction_r: 'to right',
                     neo_line_cross_turn_direction_u: 'U-turn',
 
+                    neo_line_cross_turn_which_next: 'next',
+                    neo_line_cross_turn_which_current: 'current',
+
                     neo_auto_driving_speed_in3: 'IN3',
 
                     neo_auto_parking_which_l: 'to left',
@@ -1056,13 +1061,6 @@ Entry.Neo = new (class Neo {
 
                     neo_auto_parking_direction_b: 'rear parking',
                     neo_auto_parking_direction_s: 'parallel parking',
-
-                    neo_line_change_direction_l: 'to left',
-                    neo_line_change_direction_r: 'to right',
-
-                    neo_line_change_turn_direction_l: 'to left',
-                    neo_line_change_turn_direction_r: 'to right',
-                    neo_line_change_turn_direction_u: 'U-turn',
 
                     neo_led_brightness_0: '0%',
                     neo_led_brightness_5: '5%',
@@ -1157,6 +1155,27 @@ Entry.Neo = new (class Neo {
                     neo_color_green: 'green',
                     neo_color_blue: 'blue',
 
+                    neo_color_seq_ryg: 'RYG',
+                    neo_color_seq_ryb: 'RYB',
+                    neo_color_seq_rgy: 'RGY',
+                    neo_color_seq_rgb: 'RGB',
+                    neo_color_seq_rby: 'RBY',
+                    neo_color_seq_rbg: 'RBG',
+                    neo_color_seq_yrb: 'YRB',
+                    neo_color_seq_ygr: 'YGR',
+                    neo_color_seq_ygb: 'YGB',
+                    neo_color_seq_ybr: 'YBR',
+                    neo_color_seq_grb: 'GRB',
+                    neo_color_seq_gyr: 'GYR',
+                    neo_color_seq_gyb: 'GYB',
+                    neo_color_seq_gbr: 'GBR',
+                    neo_color_seq_bry: 'BRY',
+                    neo_color_seq_brg: 'BRG',
+                    neo_color_seq_byr: 'BYR',
+                    neo_color_seq_byg: 'BYG',
+                    neo_color_seq_bgr: 'BGR',
+                    neo_color_seq_bgy: 'BGY',
+
                     neo_button_1: 'button 1',
                     neo_button_2: 'button 2',
                     neo_button_3: 'button 3',
@@ -1210,6 +1229,802 @@ Entry.Neo = new (class Neo {
 
     getBlocks() {
         return {
+            /**
+             * 로봇
+             */
+            neo_robot_title: {
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: '#191970',
+                skeleton: 'basic_text',
+                skeletonOptions: {
+                    contentPos: {
+                        x: 5,
+                    },
+                },
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.neo_robot_title,
+                        color: '#191970',
+                        align: 'left',
+                    },
+                ],
+                def: {
+                    type: 'neo_robot_title',
+                },
+                class: 'neo_robot',
+                isNotFor: ['neo'],
+                events: {},
+            },
+            neo_robot_move: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_robot_direction_f, 1],
+                            [Lang.Blocks.neo_robot_direction_b, 2],
+                            [Lang.Blocks.neo_robot_direction_l, 3],
+                            [Lang.Blocks.neo_robot_direction_r, 4],
+                            [Lang.Blocks.neo_robot_direction_tl, 5],
+                            [Lang.Blocks.neo_robot_direction_tr, 6],
+                        ],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_motor_speed_100, '100'],
+                            [Lang.Blocks.neo_motor_speed_95, '95'],
+                            [Lang.Blocks.neo_motor_speed_90, '90'],
+                            [Lang.Blocks.neo_motor_speed_85, '85'],
+                            [Lang.Blocks.neo_motor_speed_80, '80'],
+                            [Lang.Blocks.neo_motor_speed_75, '75'],
+                            [Lang.Blocks.neo_motor_speed_70, '70'],
+                            [Lang.Blocks.neo_motor_speed_65, '65'],
+                            [Lang.Blocks.neo_motor_speed_60, '60'],
+                            [Lang.Blocks.neo_motor_speed_55, '55'],
+                            [Lang.Blocks.neo_motor_speed_50, '50'],
+                            [Lang.Blocks.neo_motor_speed_45, '45'],
+                            [Lang.Blocks.neo_motor_speed_40, '40'],
+                            [Lang.Blocks.neo_motor_speed_35, '35'],
+                            [Lang.Blocks.neo_motor_speed_30, '30'],
+                            [Lang.Blocks.neo_motor_speed_25, '25'],
+                            [Lang.Blocks.neo_motor_speed_20, '20'],
+                            [Lang.Blocks.neo_motor_speed_15, '15'],
+                            [Lang.Blocks.neo_motor_speed_10, '10'],
+                            [Lang.Blocks.neo_motor_speed_5, '5'],
+                            [Lang.Blocks.neo_motor_speed_0, '0'],
+                            [Lang.Blocks.neo_input_1, 'IN1'],
+                            [Lang.Blocks.neo_input_2, 'IN2'],
+                            [Lang.Blocks.neo_input_3, 'IN3'],
+                        ],
+                        value: '100',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        null,
+                        {
+                            type: 'neo_arg_duration',
+                        },
+                        null,
+                    ],
+                    type: 'neo_robot_move',
+                },
+                paramsKeyMap: {
+                    DIRECTION: 0,
+                    SPEED: 1,
+                    DURATION: 2,
+                },
+                class: 'neo_robot',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        const direction = script.getNumberField('DIRECTION', script);
+                        const speed = script.getStringField('SPEED', script);
+                        const duration = script.getStringValue('DURATION', script);
+                        const blockId = this.generateBlockId();
+                        if (speed.indexOf('IN') >= 0) {
+                            this.requestExtCommand(blockId, NeoBlockType.ROBOT_MOVE, [
+                                direction,
+                                speed,
+                            ]);
+                        } else {
+                            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [
+                                direction,
+                                speed,
+                            ]);
+                        }
+                        if (duration === 'c' || !Entry.parseNumber(duration)) {
+                            script.block_id = blockId;
+                            script.exec_phase = ExecPhase.PENDING_STOP;
+                        } else {
+                            script.exec_phase = ExecPhase.SET_TIMEOUT;
+                        }
+                    } else if (script.exec_phase === ExecPhase.SET_TIMEOUT) {
+                        const duration = script.getStringValue('DURATION', script);
+                        const durationValue = Entry.parseNumber(duration);
+                        script.exec_phase = ExecPhase.WAIT_TIMEOUT;
+                        setTimeout(function() {
+                            script.exec_phase = ExecPhase.STOP;
+                        }, durationValue * 1000);
+                    } else if (script.exec_phase === ExecPhase.WAIT_TIMEOUT) {
+                        return script;
+                    } else if (script.exec_phase === ExecPhase.STOP) {
+                        script.exec_phase = ExecPhase.PENDING_STOP;
+                        const direction = script.getNumberField('DIRECTION', script);
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [direction, 0]);
+                    } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            neo_robot_stop: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'neo_robot_stop',
+                },
+                paramsKeyMap: {
+                    //
+                },
+                class: 'neo_robot',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                        this.requestCommand(blockId, NeoBlockType.ROBOT_STOP, []);
+                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            /**
+             * 자율주행
+             */
+            neo_auto_driving_title: {
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: '#191970',
+                skeleton: 'basic_text',
+                skeletonOptions: {
+                    contentPos: {
+                        x: 5,
+                    },
+                },
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.neo_auto_driving_title,
+                        color: '#191970',
+                        align: 'left',
+                    },
+                ],
+                def: {
+                    type: 'neo_auto_driving_title',
+                },
+                class: 'neo_auto_driving',
+                isNotFor: ['neo'],
+                events: {},
+            },
+            neo_auto_driving_start: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_motor_speed_100, '100'],
+                            [Lang.Blocks.neo_motor_speed_95, '95'],
+                            [Lang.Blocks.neo_motor_speed_90, '90'],
+                            [Lang.Blocks.neo_motor_speed_85, '85'],
+                            [Lang.Blocks.neo_motor_speed_80, '80'],
+                            [Lang.Blocks.neo_motor_speed_75, '75'],
+                            [Lang.Blocks.neo_motor_speed_70, '70'],
+                            [Lang.Blocks.neo_motor_speed_65, '65'],
+                            [Lang.Blocks.neo_motor_speed_60, '60'],
+                            [Lang.Blocks.neo_motor_speed_55, '55'],
+                            [Lang.Blocks.neo_motor_speed_50, '50'],
+                            [Lang.Blocks.neo_motor_speed_45, '45'],
+                            [Lang.Blocks.neo_motor_speed_40, '40'],
+                            [Lang.Blocks.neo_motor_speed_35, '35'],
+                            [Lang.Blocks.neo_motor_speed_30, '30'],
+                            [Lang.Blocks.neo_motor_speed_25, '25'],
+                            [Lang.Blocks.neo_motor_speed_20, '20'],
+                            [Lang.Blocks.neo_motor_speed_15, '15'],
+                            [Lang.Blocks.neo_motor_speed_10, '10'],
+                            [Lang.Blocks.neo_motor_speed_5, '5'],
+                            [Lang.Blocks.neo_motor_speed_0, '0'],
+                            [Lang.Blocks.neo_input_1, 'IN1'],
+                            [Lang.Blocks.neo_input_2, 'IN2'],
+                            [Lang.Blocks.neo_input_3, 'IN3'],
+                        ],
+                        value: '100',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'neo_arg_duration',
+                        },
+                        null,
+                    ],
+                    type: 'neo_auto_driving_start',
+                },
+                paramsKeyMap: {
+                    SPEED: 0,
+                    DURATION: 1,
+                },
+                class: 'neo_auto_driving',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        const speed = script.getStringField('SPEED', script);
+                        const duration = script.getStringValue('DURATION', script);
+                        const blockId = this.generateBlockId();
+                        if (speed.indexOf('IN') >= 0) {
+                            this.requestExtCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [
+                                speed,
+                            ]);
+                        } else {
+                            this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [speed]);
+                        }
+                        if (duration === 'c' || !Entry.parseNumber(duration)) {
+                            script.block_id = blockId;
+                            script.exec_phase = ExecPhase.PENDING_STOP;
+                        } else {
+                            script.exec_phase = ExecPhase.SET_TIMEOUT;
+                        }
+                    } else if (script.exec_phase === ExecPhase.SET_TIMEOUT) {
+                        const duration = script.getStringValue('DURATION', script);
+                        const durationValue = Entry.parseNumber(duration);
+                        script.exec_phase = ExecPhase.WAIT_TIMEOUT;
+                        setTimeout(function() {
+                            script.exec_phase = ExecPhase.STOP;
+                        }, durationValue * 1000);
+                    } else if (script.exec_phase === ExecPhase.WAIT_TIMEOUT) {
+                        return script;
+                    } else if (script.exec_phase === ExecPhase.STOP) {
+                        script.exec_phase = ExecPhase.PENDING_STOP;
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [0]);
+                    } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            neo_auto_driving_sensor_start: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_input_1_2, 0x10],
+                            [Lang.Blocks.neo_input_11_12, 0x11],
+                            [Lang.Blocks.neo_input_13_14, 0x12],
+                            [Lang.Blocks.neo_input_21_22, 0x13],
+                            [Lang.Blocks.neo_input_23_24, 0x14],
+                            [Lang.Blocks.neo_input_31_32, 0x15],
+                            [Lang.Blocks.neo_input_33_34, 0x16],
+                        ],
+                        value: 0x10,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_motor_speed_100, '100'],
+                            [Lang.Blocks.neo_motor_speed_95, '95'],
+                            [Lang.Blocks.neo_motor_speed_90, '90'],
+                            [Lang.Blocks.neo_motor_speed_85, '85'],
+                            [Lang.Blocks.neo_motor_speed_80, '80'],
+                            [Lang.Blocks.neo_motor_speed_75, '75'],
+                            [Lang.Blocks.neo_motor_speed_70, '70'],
+                            [Lang.Blocks.neo_motor_speed_65, '65'],
+                            [Lang.Blocks.neo_motor_speed_60, '60'],
+                            [Lang.Blocks.neo_motor_speed_55, '55'],
+                            [Lang.Blocks.neo_motor_speed_50, '50'],
+                            [Lang.Blocks.neo_motor_speed_45, '45'],
+                            [Lang.Blocks.neo_motor_speed_40, '40'],
+                            [Lang.Blocks.neo_motor_speed_35, '35'],
+                            [Lang.Blocks.neo_motor_speed_30, '30'],
+                            [Lang.Blocks.neo_motor_speed_25, '25'],
+                            [Lang.Blocks.neo_motor_speed_20, '20'],
+                            [Lang.Blocks.neo_motor_speed_15, '15'],
+                            [Lang.Blocks.neo_motor_speed_10, '10'],
+                            [Lang.Blocks.neo_motor_speed_5, '5'],
+                            [Lang.Blocks.neo_motor_speed_0, '0'],
+                            [Lang.Blocks.neo_input_1, 'IN1'],
+                            [Lang.Blocks.neo_input_2, 'IN2'],
+                            [Lang.Blocks.neo_input_3, 'IN3'],
+                        ],
+                        value: '60',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'neo_auto_driving_sensor_start',
+                },
+                paramsKeyMap: {
+                    SENSOR: 0,
+                    SPEED: 1,
+                },
+                class: 'neo_auto_driving',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                        const sensor = script.getNumberField('SENSOR', script);
+                        const speed = script.getStringField('SPEED', script);
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        if (speed.indexOf('IN') >= 0) {
+                            this.requestExtCommand(
+                              blockId,
+                              NeoBlockType.AUTO_DRIVING_SENSOR_START,
+                              [sensor, speed]
+                            );
+                        } else {
+                            this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_SENSOR_START, [
+                                sensor,
+                                speed,
+                            ]);
+                        }
+                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            neo_auto_driving_stop: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'neo_auto_driving_stop',
+                },
+                paramsKeyMap: {
+                    DIRECTION: 0,
+                },
+                class: 'neo_auto_driving',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_STOP, []);
+                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            /**
+             * 자율주차
+             */
+            neo_auto_parking_title: {
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: '#191970',
+                skeleton: 'basic_text',
+                skeletonOptions: {
+                    contentPos: {
+                        x: 5,
+                    },
+                },
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.neo_auto_parking_title,
+                        color: '#191970',
+                        align: 'left',
+                    },
+                ],
+                def: {
+                    type: 'neo_auto_parking_title',
+                },
+                class: 'neo_auto_parking',
+                isNotFor: ['neo'],
+                events: {},
+            },
+            neo_auto_parking_start: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_auto_parking_which_l, 1],
+                            [Lang.Blocks.neo_auto_parking_which_r, 2],
+                        ],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_auto_parking_direction_b, 1],
+                            [Lang.Blocks.neo_auto_parking_direction_s, 2],
+                        ],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'neo_auto_parking_start',
+                },
+                paramsKeyMap: {
+                    WHICH: 0,
+                    DIRECTION: 1,
+                },
+                class: 'neo_auto_parking',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    return this.runAutoParking(script);
+                },
+            },
+            /**
+             * 라인트레이서
+             */
+            neo_line_tracer_title: {
+                color: EntryStatic.colorSet.common.TRANSPARENT,
+                fontColor: '#191970',
+                skeleton: 'basic_text',
+                skeletonOptions: {
+                    contentPos: {
+                        x: 5,
+                    },
+                },
+                params: [
+                    {
+                        type: 'Text',
+                        text: Lang.template.neo_line_tracer_title,
+                        color: '#191970',
+                        align: 'left',
+                    },
+                ],
+                def: {
+                    type: 'neo_line_tracer_title',
+                },
+                class: 'neo_line_tracer',
+                isNotFor: ['neo'],
+                events: {},
+            },
+            neo_line_tracer_start: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_motor_speed_100, '100'],
+                            [Lang.Blocks.neo_motor_speed_90, '90'],
+                            [Lang.Blocks.neo_motor_speed_80, '80'],
+                            [Lang.Blocks.neo_motor_speed_70, '70'],
+                            [Lang.Blocks.neo_motor_speed_60, '60'],
+                            [Lang.Blocks.neo_motor_speed_50, '50'],
+                            [Lang.Blocks.neo_motor_speed_40, '40'],
+                            [Lang.Blocks.neo_motor_speed_30, '30'],
+                            [Lang.Blocks.neo_motor_speed_20, '20'],
+                            [Lang.Blocks.neo_motor_speed_10, '10'],
+                            [Lang.Blocks.neo_motor_speed_0, '0'],
+                            [Lang.Blocks.neo_input_3, 'IN3'],
+                        ],
+                        value: '100',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        null,
+                        {
+                            type: 'neo_arg_duration',
+                        },
+                        null,
+                    ],
+                    type: 'neo_line_tracer_start',
+                },
+                paramsKeyMap: {
+                    SPEED: 0,
+                    DURATION: 1,
+                },
+                class: 'neo_line_tracer',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        const speed = script.getStringField('SPEED', script);
+                        const blockId = this.generateBlockId();
+                        const duration = script.getStringValue('DURATION', script);
+                        if (speed.indexOf('IN') >= 0) {
+                            this.requestExtCommand(blockId, NeoBlockType.LINE_TRACER_START, [
+                                speed,
+                            ]);
+                        } else {
+                            this.requestCommand(blockId, NeoBlockType.LINE_TRACER_START, [speed]);
+                        }
+                        if (duration === 'c' || !Entry.parseNumber(duration)) {
+                            script.block_id = blockId;
+                            script.exec_phase = ExecPhase.PENDING_STOP;
+                        } else {
+                            script.exec_phase = ExecPhase.SET_TIMEOUT;
+                        }
+                    } else if (script.exec_phase === ExecPhase.SET_TIMEOUT) {
+                        const duration = script.getStringValue('DURATION', script);
+                        const durationValue = Entry.parseNumber(duration);
+                        script.exec_phase = ExecPhase.WAIT_TIMEOUT;
+                        setTimeout(function() {
+                            script.exec_phase = ExecPhase.STOP;
+                        }, durationValue * 1000);
+                    } else if (script.exec_phase === ExecPhase.WAIT_TIMEOUT) {
+                        return script;
+                    } else if (script.exec_phase === ExecPhase.STOP) {
+                        script.exec_phase = ExecPhase.PENDING_STOP;
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        this.requestCommand(blockId, NeoBlockType.LINE_TRACER_START, [0]);
+                    } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            neo_line_cross_move: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_line_cross_move_1, 1],
+                            [Lang.Blocks.neo_line_cross_move_2, 2],
+                            [Lang.Blocks.neo_line_cross_move_3, 3],
+                            [Lang.Blocks.neo_line_cross_move_4, 4],
+                            [Lang.Blocks.neo_line_cross_move_5, 5],
+                            [Lang.Blocks.neo_line_cross_move_6, 6],
+                            [Lang.Blocks.neo_line_cross_move_7, 7],
+                            [Lang.Blocks.neo_line_cross_move_8, 8],
+                            [Lang.Blocks.neo_line_cross_move_9, 9],
+                            [Lang.Blocks.neo_line_cross_move_10, 10],
+                        ],
+                        value: 1,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'neo_line_cross_move',
+                },
+                paramsKeyMap: {
+                    COUNT: 0,
+                },
+                class: 'neo_line_tracer',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                        const count = script.getStringValue('COUNT', script);
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        this.requestCommand(blockId, NeoBlockType.LINE_CROSS_MOVE, [count]);
+                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+            neo_line_cross_turn: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_line_cross_turn_which_next, 1],
+                            [Lang.Blocks.neo_line_cross_turn_which_current, 2],
+                        ],
+                        value: 10,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_turn_direction_l, 10],
+                            [Lang.Blocks.neo_turn_direction_r, 11],
+                            [Lang.Blocks.neo_turn_direction_u, 12],
+                        ],
+                        value: 10,
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/hardware_icon.svg',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null, null],
+                    type: 'neo_line_cross_turn',
+                },
+                paramsKeyMap: {
+                    WHICH: 0,
+                    DIRECTION: 1,
+                },
+                class: 'neo_line_tracer',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    if (!script.exec_phase) {
+                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
+                        const which = script.getStringValue('WHICH', script);
+                        let direction = script.getStringValue('DIRECTION', script);
+                        if (which === 1) direction += 20;
+                        const blockId = this.generateBlockId();
+                        script.block_id = blockId;
+                        this.requestCommand(blockId, NeoBlockType.LINE_CROSS_TURN, [direction]);
+                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
+                        if (!this.pendingResponseList[script.block_id]) {
+                            delete script.block_id;
+                            delete script.exec_phase;
+                            return script.callReturn();
+                        }
+                    }
+                    return script;
+                },
+            },
+
             /**
              * 회전모터
              */
@@ -1406,10 +2221,10 @@ Entry.Neo = new (class Neo {
                 def: {
                     params: [
                         {
-                            type: 'neo_arg_motor_speed',
+                            type: 'neo_arg_both_motor_speed',
                         },
                         {
-                            type: 'neo_arg_motor_speed',
+                            type: 'neo_arg_both_motor_speed',
                         },
                         null,
                     ],
@@ -1433,138 +2248,6 @@ Entry.Neo = new (class Neo {
                             speedR,
                         ]);
                     } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            neo_robot_move: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_robot_direction_f, 1],
-                            [Lang.Blocks.neo_robot_direction_b, 2],
-                            [Lang.Blocks.neo_robot_direction_l, 3],
-                            [Lang.Blocks.neo_robot_direction_r, 4],
-                            [Lang.Blocks.neo_robot_direction_tl, 5],
-                            [Lang.Blocks.neo_robot_direction_tr, 6],
-                        ],
-                        value: 1,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_95, '95'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_85, '85'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_75, '75'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_65, '65'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_55, '55'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_45, '45'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_35, '35'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_25, '25'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_15, '15'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_5, '5'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                        ],
-                        value: '100',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [
-                        null,
-                        null,
-                        {
-                            type: 'neo_arg_duration',
-                        },
-                        null,
-                    ],
-                    type: 'neo_robot_move',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 0,
-                    SPEED: 1,
-                    DURATION: 2,
-                },
-                class: 'neo_motor',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        const direction = script.getNumberField('DIRECTION', script);
-                        const speed = script.getStringField('SPEED', script);
-                        const duration = script.getStringValue('DURATION', script);
-                        const blockId = this.generateBlockId();
-                        if (speed.indexOf('IN') >= 0) {
-                            this.requestExtCommand(blockId, NeoBlockType.ROBOT_MOVE, [
-                                direction,
-                                speed,
-                            ]);
-                        } else {
-                            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [
-                                direction,
-                                speed,
-                            ]);
-                        }
-                        if (duration === 'c' || !Entry.parseNumber(duration)) {
-                            script.block_id = blockId;
-                            script.exec_phase = ExecPhase.PENDING_STOP;
-                        } else {
-                            script.exec_phase = ExecPhase.SET_TIMEOUT;
-                        }
-                    } else if (script.exec_phase === ExecPhase.SET_TIMEOUT) {
-                        const duration = script.getStringValue('DURATION', script);
-                        const durationValue = Entry.parseNumber(duration);
-                        script.exec_phase = ExecPhase.WAIT_TIMEOUT;
-                        setTimeout(function() {
-                            script.exec_phase = ExecPhase.STOP;
-                        }, durationValue * 1000);
-                    } else if (script.exec_phase === ExecPhase.WAIT_TIMEOUT) {
-                        return script;
-                    } else if (script.exec_phase === ExecPhase.STOP) {
-                        script.exec_phase = ExecPhase.PENDING_STOP;
-                        const direction = script.getNumberField('DIRECTION', script);
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [direction, 0]);
-                    } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
                         if (!this.pendingResponseList[script.block_id]) {
                             delete script.block_id;
                             delete script.exec_phase;
@@ -1625,44 +2308,7 @@ Entry.Neo = new (class Neo {
                     return script;
                 },
             },
-            neo_robot_stop: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'neo_robot_stop',
-                },
-                paramsKeyMap: {
-                    //
-                },
-                class: 'neo_motor',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        this.requestCommand(blockId, NeoBlockType.ROBOT_STOP, []);
-                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
+
             /**
              * 서보모터
              */
@@ -2366,801 +3012,7 @@ Entry.Neo = new (class Neo {
                     return script;
                 },
             },
-            /**
-             * 라인트레이서
-             */
-            neo_line_tracer_title: {
-                color: EntryStatic.colorSet.common.TRANSPARENT,
-                fontColor: '#191970',
-                skeleton: 'basic_text',
-                skeletonOptions: {
-                    contentPos: {
-                        x: 5,
-                    },
-                },
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.template.neo_line_tracer_title,
-                        color: '#191970',
-                        align: 'left',
-                    },
-                ],
-                def: {
-                    type: 'neo_line_tracer_title',
-                },
-                class: 'neo_line_tracer',
-                isNotFor: ['neo'],
-                events: {},
-            },
-            neo_line_tracer_start: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                        ],
-                        value: '100',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [
-                        null,
-                        {
-                            type: 'neo_arg_duration',
-                        },
-                        null,
-                    ],
-                    type: 'neo_line_tracer_start',
-                },
-                paramsKeyMap: {
-                    SPEED: 0,
-                    DURATION: 1,
-                },
-                class: 'neo_line_tracer',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        const speed = script.getStringField('SPEED', script);
-                        const blockId = this.generateBlockId();
-                        const duration = script.getStringValue('DURATION', script);
-                        if (speed.indexOf('IN') >= 0) {
-                            this.requestExtCommand(blockId, NeoBlockType.LINE_TRACER_START, [
-                                speed,
-                            ]);
-                        } else {
-                            this.requestCommand(blockId, NeoBlockType.LINE_TRACER_START, [speed]);
-                        }
-                        if (duration === 'c' || !Entry.parseNumber(duration)) {
-                            script.block_id = blockId;
-                            script.exec_phase = ExecPhase.PENDING_STOP;
-                        } else {
-                            script.exec_phase = ExecPhase.SET_TIMEOUT;
-                        }
-                    } else if (script.exec_phase === ExecPhase.SET_TIMEOUT) {
-                        const duration = script.getStringValue('DURATION', script);
-                        const durationValue = Entry.parseNumber(duration);
-                        script.exec_phase = ExecPhase.WAIT_TIMEOUT;
-                        setTimeout(function() {
-                            script.exec_phase = ExecPhase.STOP;
-                        }, durationValue * 1000);
-                    } else if (script.exec_phase === ExecPhase.WAIT_TIMEOUT) {
-                        return script;
-                    } else if (script.exec_phase === ExecPhase.STOP) {
-                        script.exec_phase = ExecPhase.PENDING_STOP;
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        this.requestCommand(blockId, NeoBlockType.LINE_TRACER_START, [0]);
-                    } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            neo_line_cross_move: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_line_cross_move_1, 1],
-                            [Lang.Blocks.neo_line_cross_move_2, 2],
-                            [Lang.Blocks.neo_line_cross_move_3, 3],
-                            [Lang.Blocks.neo_line_cross_move_4, 4],
-                            [Lang.Blocks.neo_line_cross_move_5, 5],
-                            [Lang.Blocks.neo_line_cross_move_6, 6],
-                            [Lang.Blocks.neo_line_cross_move_7, 7],
-                            [Lang.Blocks.neo_line_cross_move_8, 8],
-                            [Lang.Blocks.neo_line_cross_move_9, 9],
-                            [Lang.Blocks.neo_line_cross_move_10, 10],
-                        ],
-                        value: 1,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null],
-                    type: 'neo_line_cross_move',
-                },
-                paramsKeyMap: {
-                    COUNT: 0,
-                },
-                class: 'neo_line_tracer',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const count = script.getStringValue('COUNT', script);
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        this.requestCommand(blockId, NeoBlockType.LINE_CROSS_MOVE, [count]);
-                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            neo_line_cross_turn: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_turn_direction_l, 10],
-                            [Lang.Blocks.neo_turn_direction_r, 11],
-                            [Lang.Blocks.neo_turn_direction_u, 12],
-                        ],
-                        value: 10,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null],
-                    type: 'neo_line_cross_turn',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 0,
-                },
-                class: 'neo_line_tracer',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const direction = script.getStringValue('DIRECTION', script);
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        this.requestCommand(blockId, NeoBlockType.LINE_CROSS_TURN, [direction]);
-                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            /**
-             * 자율주행
-             */
-            neo_auto_driving_title: {
-                color: EntryStatic.colorSet.common.TRANSPARENT,
-                fontColor: '#191970',
-                skeleton: 'basic_text',
-                skeletonOptions: {
-                    contentPos: {
-                        x: 5,
-                    },
-                },
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.template.neo_auto_driving_title,
-                        color: '#191970',
-                        align: 'left',
-                    },
-                ],
-                def: {
-                    type: 'neo_auto_driving_title',
-                },
-                class: 'neo_auto_driving',
-                isNotFor: ['neo'],
-                events: {},
-            },
-            neo_auto_driving_start: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                        ],
-                        value: '60',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [
-                        null,
-                        {
-                            type: 'neo_arg_duration',
-                        },
-                        null,
-                    ],
-                    type: 'neo_auto_driving_start',
-                },
-                paramsKeyMap: {
-                    SPEED: 0,
-                    DURATION: 1,
-                },
-                class: 'neo_auto_driving',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        const speed = script.getStringField('SPEED', script);
-                        const duration = script.getStringValue('DURATION', script);
-                        const blockId = this.generateBlockId();
-                        if (speed.indexOf('IN') >= 0) {
-                            this.requestExtCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [
-                                speed,
-                            ]);
-                        } else {
-                            this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [speed]);
-                        }
-                        if (duration === 'c' || !Entry.parseNumber(duration)) {
-                            script.block_id = blockId;
-                            script.exec_phase = ExecPhase.PENDING_STOP;
-                        } else {
-                            script.exec_phase = ExecPhase.SET_TIMEOUT;
-                        }
-                    } else if (script.exec_phase === ExecPhase.SET_TIMEOUT) {
-                        const duration = script.getStringValue('DURATION', script);
-                        const durationValue = Entry.parseNumber(duration);
-                        script.exec_phase = ExecPhase.WAIT_TIMEOUT;
-                        setTimeout(function() {
-                            script.exec_phase = ExecPhase.STOP;
-                        }, durationValue * 1000);
-                    } else if (script.exec_phase === ExecPhase.WAIT_TIMEOUT) {
-                        return script;
-                    } else if (script.exec_phase === ExecPhase.STOP) {
-                        script.exec_phase = ExecPhase.PENDING_STOP;
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_START, [0]);
-                    } else if (script.exec_phase === ExecPhase.PENDING_STOP) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            neo_auto_driving_sensor_start: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_input_1_2, 0x10],
-                            [Lang.Blocks.neo_input_11_12, 0x11],
-                            [Lang.Blocks.neo_input_13_14, 0x12],
-                            [Lang.Blocks.neo_input_21_22, 0x13],
-                            [Lang.Blocks.neo_input_23_24, 0x14],
-                        ],
-                        value: 0x10,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                        ],
-                        value: '60',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null, null],
-                    type: 'neo_auto_driving_sensor_start',
-                },
-                paramsKeyMap: {
-                    SENSOR: 0,
-                    SPEED: 1,
-                },
-                class: 'neo_auto_driving',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const sensor = script.getNumberField('SENSOR', script);
-                        const speed = script.getStringField('SPEED', script);
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        if (speed.indexOf('IN') >= 0) {
-                            this.requestExtCommand(
-                                blockId,
-                                NeoBlockType.AUTO_DRIVING_SENSOR_START,
-                                [sensor, speed]
-                            );
-                        } else {
-                            this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_SENSOR_START, [
-                                sensor,
-                                speed,
-                            ]);
-                        }
-                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            neo_auto_driving_stop: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                    type: 'neo_auto_driving_stop',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 0,
-                },
-                class: 'neo_auto_driving',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    if (!script.exec_phase) {
-                        script.exec_phase = ExecPhase.PENDING_RESPONSE;
-                        const blockId = this.generateBlockId();
-                        script.block_id = blockId;
-                        this.requestCommand(blockId, NeoBlockType.AUTO_DRIVING_STOP, []);
-                    } else if (script.exec_phase === ExecPhase.PENDING_RESPONSE) {
-                        if (!this.pendingResponseList[script.block_id]) {
-                            delete script.block_id;
-                            delete script.exec_phase;
-                            return script.callReturn();
-                        }
-                    }
-                    return script;
-                },
-            },
-            /**
-             * 자율주차
-             */
-            neo_auto_parking_title: {
-                color: EntryStatic.colorSet.common.TRANSPARENT,
-                fontColor: '#191970',
-                skeleton: 'basic_text',
-                skeletonOptions: {
-                    contentPos: {
-                        x: 5,
-                    },
-                },
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.template.neo_auto_parking_title,
-                        color: '#191970',
-                        align: 'left',
-                    },
-                ],
-                def: {
-                    type: 'neo_auto_parking_title',
-                },
-                class: 'neo_auto_parking',
-                isNotFor: ['neo'],
-                events: {},
-            },
-            neo_auto_parking_start: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_auto_parking_which_l, 1],
-                            [Lang.Blocks.neo_auto_parking_which_r, 2],
-                        ],
-                        value: 1,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_auto_parking_direction_b, 1],
-                            [Lang.Blocks.neo_auto_parking_direction_s, 2],
-                        ],
-                        value: 1,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null, null],
-                    type: 'neo_auto_parking_start',
-                },
-                paramsKeyMap: {
-                    WHICH: 0,
-                    DIRECTION: 1,
-                },
-                class: 'neo_auto_parking',
-                isNotFor: ['neo'],
-                func: async (sprite, script) => {
-                    const direction = script.getNumberValue('DIRECTION', script);
-                    if (direction === 1) {
-                        return this.runAutoParkingBackward(script);
-                    } else {
-                        return this.runAutoParkingSide(script);
-                    }
-                },
-            },
-            /**
-             * 차선변경
-             */
-            neo_line_change_title: {
-                color: EntryStatic.colorSet.common.TRANSPARENT,
-                fontColor: '#191970',
-                skeleton: 'basic_text',
-                skeletonOptions: {
-                    contentPos: {
-                        x: 5,
-                    },
-                },
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.template.neo_line_change_title,
-                        color: '#191970',
-                        align: 'left',
-                    },
-                ],
-                def: {
-                    type: 'neo_line_change_title',
-                },
-                class: 'neo_line_change',
-                isNotFor: ['neo'],
-                events: {},
-            },
-            neo_line_change_start: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_line_change_direction_l, 2],
-                            [Lang.Blocks.neo_line_change_direction_r, 3],
-                        ],
-                        value: 2,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null],
-                    type: 'neo_line_change_start',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 0,
-                },
-                class: 'neo_line_change',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    return script.callReturn();
-                },
-            },
-            neo_line_change_turn: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_turn_direction_l, 4],
-                            [Lang.Blocks.neo_turn_direction_r, 5],
-                            [Lang.Blocks.neo_turn_direction_u, 6],
-                        ],
-                        value: 4,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null],
-                    type: 'neo_line_change_turn',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 0,
-                },
-                class: 'neo_line_change',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    return script.callReturn();
-                },
-            },
-            /**
-             * 골목주행
-             */
-            neo_auto_detect_wall_title: {
-                color: EntryStatic.colorSet.common.TRANSPARENT,
-                fontColor: '#191970',
-                skeleton: 'basic_text',
-                skeletonOptions: {
-                    contentPos: {
-                        x: 5,
-                    },
-                },
-                params: [
-                    {
-                        type: 'Text',
-                        text: Lang.template.neo_auto_detect_wall_title,
-                        color: '#191970',
-                        align: 'left',
-                    },
-                ],
-                def: {
-                    type: 'neo_auto_detect_wall_title',
-                },
-                class: 'neo_auto_detect_wall',
-                isNotFor: ['neo'],
-                events: {},
-            },
-            neo_auto_detect_wall_start: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                        ],
-                        value: '60',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [
-                        null,
-                        {
-                            type: 'neo_arg_duration',
-                        },
-                        null,
-                    ],
-                    type: 'neo_auto_detect_wall_start',
-                },
-                paramsKeyMap: {
-                    SPEED: 0,
-                    DURATION: 1,
-                },
-                class: 'neo_auto_detect_wall',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    return script.callReturn();
-                },
-            },
-            neo_auto_detect_wall_turn: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_turn_direction_l, 2],
-                            [Lang.Blocks.neo_turn_direction_r, 3],
-                            [Lang.Blocks.neo_turn_direction_u, 4],
-                        ],
-                        value: 2,
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/hardware_icon.svg',
-                        size: 12,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null, null],
-                    type: 'neo_auto_detect_wall_turn',
-                },
-                paramsKeyMap: {
-                    DIRECTION: 0,
-                },
-                class: 'neo_auto_detect_wall',
-                isNotFor: ['neo'],
-                func: (sprite, script) => {
-                    return script.callReturn();
-                },
-            },
+
             /**
              * LED
              */
@@ -3526,7 +3378,7 @@ Entry.Neo = new (class Neo {
                 def: {
                     params: [
                         null,
-                        null,
+                        '#0000FF',
                         {
                             type: 'neo_arg_duration',
                         },
@@ -4026,16 +3878,9 @@ Entry.Neo = new (class Neo {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            ['IN1', 'IN1'],
-                            ['IN2', 'IN2'],
-                            ['IN3', 'IN3'],
-                        ],
-                        value: 'IN1',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
@@ -4057,7 +3902,9 @@ Entry.Neo = new (class Neo {
                 events: {},
                 def: {
                     params: [
-                        null,
+                        {
+                            type: 'neo_sensor_in',
+                        },
                         {
                             type: 'number',
                             params: ['10'],
@@ -4087,20 +3934,8 @@ Entry.Neo = new (class Neo {
                 class: 'neo_sensor',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
-                    const input = script.getStringField('INPUT');
-                    const sensorData = Entry.hw.portData['sensor'];
-                    let value = 0;
-                    switch (input) {
-                        case 'IN1':
-                            value = sensorData['in1Values'][0];
-                            break;
-                        case 'IN2':
-                            value = sensorData['in2Values'][0];
-                            break;
-                        case 'IN3':
-                            value = sensorData['in3Values'][0];
-                            break;
-                    }
+                    const input = script.getNumberValue('INPUT', script);
+                    let value = input;
                     let fromMin = script.getNumberValue('FROM_MIN', script);
                     let fromMax = script.getNumberValue('FROM_MAX', script);
                     let toMin = script.getNumberValue('TO_MIN', script);
@@ -4135,18 +3970,9 @@ Entry.Neo = new (class Neo {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                            [Lang.Blocks.neo_input_12, 'IN12'],
-                            [Lang.Blocks.neo_input_123, 'IN123'],
-                        ],
-                        value: 'IN1',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
@@ -4169,7 +3995,13 @@ Entry.Neo = new (class Neo {
                 ],
                 events: {},
                 def: {
-                    params: [null, null, 10],
+                    params: [
+                        {
+                            type: 'neo_sensor_in',
+                        },
+                        null,
+                        10,
+                    ],
                     type: 'neo_sensor_compare',
                 },
                 paramsKeyMap: {
@@ -4180,65 +4012,24 @@ Entry.Neo = new (class Neo {
                 class: 'neo_sensor',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
-                    const input = script.getStringField('INPUT');
+                    const input = script.getNumberValue('INPUT', script);
                     const sensorData = Entry.hw.portData['sensor'];
                     const symbol = script.getStringField('SYMBOL');
                     const value = Entry.parseNumber(script.getStringValue('VALUE'));
 
-                    if (input === 'IN12') {
-                        const sensor1 = sensorData['in1Values'][0];
-                        const sensor2 = sensorData['in2Values'][0];
-                        if (symbol === '=') {
-                            return sensor1 === value && sensor2 === value;
-                        } else if (symbol === '>') {
-                            return sensor1 > value && sensor2 > value;
-                        } else if (symbol === '<') {
-                            return sensor1 < value && sensor2 < value;
-                        } else if (symbol === '>=') {
-                            return sensor1 >= value && sensor2 >= value;
-                        } else if (symbol === '<=') {
-                            return sensor1 <= value && sensor2 <= value;
-                        }
-                    } else if (input === 'IN123') {
-                        const sensor1 = sensorData['in1Values'][0];
-                        const sensor2 = sensorData['in2Values'][0];
-                        const sensor3 = sensorData['in3Values'][0];
-                        if (symbol === '=') {
-                            return sensor1 === value && sensor2 === value && sensor3 === value;
-                        } else if (symbol === '>') {
-                            return sensor1 > value && sensor2 > value && sensor3 > value;
-                        } else if (symbol === '<') {
-                            return sensor1 < value && sensor2 < value && sensor3 < value;
-                        } else if (symbol === '>=') {
-                            return sensor1 >= value && sensor2 >= value && sensor3 >= value;
-                        } else if (symbol === '<=') {
-                            return sensor1 <= value && sensor2 <= value && sensor3 <= value;
-                        }
-                    } else {
-                        let sensorValue = 0;
-                        switch (input) {
-                            case 'IN1':
-                                sensorValue = sensorData['in1Values'][0];
-                                break;
-                            case 'IN2':
-                                sensorValue = sensorData['in2Values'][0];
-                                break;
-                            case 'IN3':
-                                sensorValue = sensorData['in3Values'][0];
-                                break;
-                        }
-                        if (symbol === '=') {
-                            return sensorValue === value;
-                        } else if (symbol === '>') {
-                            return sensorValue > value;
-                        } else if (symbol === '<') {
-                            return sensorValue < value;
-                        } else if (symbol === '>=') {
-                            return sensorValue >= value;
-                        } else if (symbol === '<=') {
-                            return sensorValue <= value;
-                        }
+                    let sensorValue = input;
+                    if (symbol === '=') {
+                        return sensorValue === value;
+                    } else if (symbol === '>') {
+                        return sensorValue > value;
+                    } else if (symbol === '<') {
+                        return sensorValue < value;
+                    } else if (symbol === '>=') {
+                        return sensorValue >= value;
+                    } else if (symbol === '<=') {
+                        return sensorValue <= value;
                     }
+
                     return false;
                 },
             },
@@ -4268,18 +4059,9 @@ Entry.Neo = new (class Neo {
                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     },
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                            [Lang.Blocks.neo_input_12, 'IN12'],
-                            [Lang.Blocks.neo_input_123, 'IN123'],
-                        ],
-                        value: 'IN1',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
@@ -4302,7 +4084,15 @@ Entry.Neo = new (class Neo {
                 ],
                 events: {},
                 def: {
-                    params: [10, null, null, null, 30],
+                    params: [
+                        10,
+                        null,
+                        {
+                            type: 'neo_sensor_in',
+                        },
+                        null,
+                        30,
+                    ],
                     type: 'neo_sensor_between',
                 },
                 paramsKeyMap: {
@@ -4315,111 +4105,38 @@ Entry.Neo = new (class Neo {
                 class: 'neo_sensor',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
-                    const input = script.getStringField('INPUT');
-                    const sensorData = Entry.hw.portData['sensor'];
+                    const input = script.getNumberValue('INPUT', script);
                     const lSymbol = script.getStringField('L_SYMBOL');
                     const lValue = Entry.parseNumber(script.getStringValue('L_VALUE'));
                     const rSymbol = script.getStringField('R_SYMBOL');
                     const rValue = Entry.parseNumber(script.getStringValue('R_VALUE'));
 
-                    if (input === 'IN12') {
-                        const sensor1 = sensorData['in1Values'][0];
-                        const sensor2 = sensorData['in2Values'][0];
-                        let lResult = false;
-                        if (lSymbol === '=') {
-                            lResult = lValue === sensor1 && lValue === sensor2;
-                        } else if (lSymbol === '>') {
-                            lResult = lValue > sensor1 && lValue > sensor2;
-                        } else if (lSymbol === '<') {
-                            lResult = lValue < sensor1 && lValue < sensor2;
-                        } else if (lSymbol === '>=') {
-                            lResult = lValue >= sensor1 && lValue >= sensor2;
-                        } else if (lSymbol === '<=') {
-                            lResult = lValue <= sensor1 && lValue <= sensor2;
-                        }
-                        let rResult = false;
-                        if (rSymbol === '=') {
-                            rResult = sensor1 === rValue && sensor2 === rValue;
-                        } else if (rSymbol === '>') {
-                            rResult = sensor1 > rValue && sensor2 > rValue;
-                        } else if (rSymbol === '<') {
-                            rResult = sensor1 < rValue && sensor2 < rValue;
-                        } else if (rSymbol === '>=') {
-                            rResult = sensor1 >= rValue && sensor2 >= rValue;
-                        } else if (rSymbol === '<=') {
-                            rResult = sensor1 <= rValue && sensor2 <= rValue;
-                        }
-                        return lResult && rResult;
-                    } else if (input === 'IN123') {
-                        const sensor1 = sensorData['in1Values'][0];
-                        const sensor2 = sensorData['in2Values'][0];
-                        const sensor3 = sensorData['in3Values'][0];
-                        let lResult = false;
-                        if (lSymbol === '=') {
-                            lResult =
-                                lValue === sensor1 && lValue === sensor2 && lValue === sensor3;
-                        } else if (lSymbol === '>') {
-                            lResult = lValue > sensor1 && lValue > sensor2 && lValue > sensor3;
-                        } else if (lSymbol === '<') {
-                            lResult = lValue < sensor1 && lValue < sensor2 && lValue < sensor3;
-                        } else if (lSymbol === '>=') {
-                            lResult = lValue >= sensor1 && lValue >= sensor2 && lValue >= sensor3;
-                        } else if (lSymbol === '<=') {
-                            lResult = lValue <= sensor1 && lValue <= sensor2 && lValue <= sensor3;
-                        }
-                        let rResult = false;
-                        if (rSymbol === '=') {
-                            rResult =
-                                sensor1 === rValue && sensor2 === rValue && sensor3 === rValue;
-                        } else if (rSymbol === '>') {
-                            rResult = sensor1 > rValue && sensor2 > rValue && sensor3 > rValue;
-                        } else if (rSymbol === '<') {
-                            rResult = sensor1 < rValue && sensor2 < rValue && sensor3 < rValue;
-                        } else if (rSymbol === '>=') {
-                            rResult = sensor1 >= rValue && sensor2 >= rValue && sensor3 >= rValue;
-                        } else if (rSymbol === '<=') {
-                            rResult = sensor1 <= rValue && sensor2 <= rValue && sensor3 <= rValue;
-                        }
-                        return lResult && rResult;
-                    } else {
-                        let sensorValue = 0;
-                        switch (input) {
-                            case 'IN1':
-                                sensorValue = sensorData['in1Values'][0];
-                                break;
-                            case 'IN2':
-                                sensorValue = sensorData['in2Values'][0];
-                                break;
-                            case 'IN3':
-                                sensorValue = sensorData['in3Values'][0];
-                                break;
-                        }
-                        let lResult = false;
-                        if (lSymbol === '=') {
-                            lResult = lValue === sensorValue;
-                        } else if (lSymbol === '>') {
-                            lResult = lValue > sensorValue;
-                        } else if (lSymbol === '<') {
-                            lResult = lValue < sensorValue;
-                        } else if (lSymbol === '>=') {
-                            lResult = lValue >= sensorValue;
-                        } else if (lSymbol === '<=') {
-                            lResult = lValue <= sensorValue;
-                        }
-                        let rResult = false;
-                        if (rSymbol === '=') {
-                            rResult = sensorValue === rValue;
-                        } else if (rSymbol === '>') {
-                            rResult = sensorValue > rValue;
-                        } else if (rSymbol === '<') {
-                            rResult = sensorValue < rValue;
-                        } else if (rSymbol === '>=') {
-                            rResult = sensorValue >= rValue;
-                        } else if (rSymbol === '<=') {
-                            rResult = sensorValue <= rValue;
-                        }
-                        return lResult && rResult;
+                    let sensorValue = input;
+                    let lResult = false;
+                    if (lSymbol === '=') {
+                        lResult = lValue === sensorValue;
+                    } else if (lSymbol === '>') {
+                        lResult = lValue > sensorValue;
+                    } else if (lSymbol === '<') {
+                        lResult = lValue < sensorValue;
+                    } else if (lSymbol === '>=') {
+                        lResult = lValue >= sensorValue;
+                    } else if (lSymbol === '<=') {
+                        lResult = lValue <= sensorValue;
                     }
+                    let rResult = false;
+                    if (rSymbol === '=') {
+                        rResult = sensorValue === rValue;
+                    } else if (rSymbol === '>') {
+                        rResult = sensorValue > rValue;
+                    } else if (rSymbol === '<') {
+                        rResult = sensorValue < rValue;
+                    } else if (rSymbol === '>=') {
+                        rResult = sensorValue >= rValue;
+                    } else if (rSymbol === '<=') {
+                        rResult = sensorValue <= rValue;
+                    }
+                    return lResult && rResult;
                 },
             },
             neo_sensor_color_compare: {
@@ -4430,18 +4147,9 @@ Entry.Neo = new (class Neo {
                 statements: [],
                 params: [
                     {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_input_1, 'IN1'],
-                            [Lang.Blocks.neo_input_2, 'IN2'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                            [Lang.Blocks.neo_input_12, 'IN12'],
-                            [Lang.Blocks.neo_input_123, 'IN123'],
-                        ],
-                        value: 'IN1',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Dropdown',
@@ -4461,7 +4169,12 @@ Entry.Neo = new (class Neo {
                 ],
                 events: {},
                 def: {
-                    params: [null, null],
+                    params: [
+                        {
+                            type: 'neo_sensor_in',
+                        },
+                        null,
+                    ],
                     type: 'neo_sensor_color_compare',
                 },
                 paramsKeyMap: {
@@ -4471,69 +4184,151 @@ Entry.Neo = new (class Neo {
                 class: 'neo_sensor',
                 isNotFor: ['neo'],
                 func: (sprite, script) => {
-                    const input = script.getStringField('INPUT');
-                    const sensorData = Entry.hw.portData['sensor'];
+                    const input = script.getNumberValue('INPUT', script);
                     const color = script.getNumberField('COLOR');
-                    if (input === 'IN12') {
-                        const sensor1 = sensorData['in1Values'][0];
-                        const sensor2 = sensorData['in2Values'][0];
-                        if (color === 1) {
-                            return sensor1 === 0 && sensor2 === 0;
-                        } else if (color === 2) {
-                            return sensor1 === 40 && sensor2 === 40;
-                        } else if (color === 3) {
-                            return sensor1 === 80 && sensor2 === 80;
-                        } else if (color === 4) {
-                            return sensor1 === 120 && sensor2 === 120;
-                        } else if (color === 5) {
-                            return sensor1 === 160 && sensor2 === 160;
-                        } else if (color === 6) {
-                            return sensor1 === 200 && sensor2 === 200;
-                        }
-                    } else if (input === 'IN123') {
-                        const sensor1 = sensorData['in1Values'][0];
-                        const sensor2 = sensorData['in2Values'][0];
-                        const sensor3 = sensorData['in3Values'][0];
-                        if (color === 1) {
-                            return sensor1 === 0 && sensor2 === 0 && sensor3 === 0;
-                        } else if (color === 2) {
-                            return sensor1 === 40 && sensor2 === 40 && sensor3 === 40;
-                        } else if (color === 3) {
-                            return sensor1 === 80 && sensor2 === 80 && sensor3 === 80;
-                        } else if (color === 4) {
-                            return sensor1 === 120 && sensor2 === 120 && sensor3 === 120;
-                        } else if (color === 5) {
-                            return sensor1 === 160 && sensor2 === 160 && sensor3 === 160;
-                        } else if (color === 6) {
-                            return sensor1 === 200 && sensor2 === 200 && sensor3 === 200;
-                        }
-                    } else {
-                        let sensorValue = 0;
-                        switch (input) {
-                            case 'IN1':
-                                sensorValue = sensorData['in1Values'][0];
-                                break;
-                            case 'IN2':
-                                sensorValue = sensorData['in2Values'][0];
-                                break;
-                            case 'IN3':
-                                sensorValue = sensorData['in3Values'][0];
-                                break;
-                        }
+                    let sensorValue = input;
+                    if (color === 1) {
+                        return 0 <= sensorValue && sensorValue <= 10;
+                    } else if (color === 2) {
+                        return 11 <= sensorValue && sensorValue <= 59;
+                    } else if (color === 3) {
+                        return 61 <= sensorValue && sensorValue <= 99;
+                    } else if (color === 4) {
+                        return 101 <= sensorValue && sensorValue <= 139;
+                    } else if (color === 5) {
+                        return 141 <= sensorValue && sensorValue <= 179;
+                    } else if (color === 6) {
+                        return 181 <= sensorValue && sensorValue <= 219;
+                    }
 
-                        if (color === 1) {
-                            return sensorValue === 0;
-                        } else if (color === 2) {
-                            return sensorValue === 40;
-                        } else if (color === 3) {
-                            return sensorValue === 80;
-                        } else if (color === 4) {
-                            return sensorValue === 120;
-                        } else if (color === 5) {
-                            return sensorValue === 160;
-                        } else if (color === 6) {
-                            return sensorValue === 200;
-                        }
+                    return false;
+                },
+            },
+            neo_sensor_color_sequence_compare: {
+                color: EntryStatic.colorSet.block.default.HARDWARE,
+                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                fontColor: '#ffffff',
+                skeleton: 'basic_boolean_field',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['IN1', 'IN1'],
+                            ['IN2', 'IN2'],
+                            ['IN3', 'IN3'],
+                        ],
+                        value: 'IN2',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.neo_color_seq_ryg, 1],
+                            [Lang.Blocks.neo_color_seq_ryb, 2],
+                            [Lang.Blocks.neo_color_seq_rgy, 3],
+                            [Lang.Blocks.neo_color_seq_rgb, 4],
+                            [Lang.Blocks.neo_color_seq_rby, 5],
+                            [Lang.Blocks.neo_color_seq_rbg, 6],
+                            [Lang.Blocks.neo_color_seq_yrb, 7],
+                            [Lang.Blocks.neo_color_seq_ygr, 8],
+                            [Lang.Blocks.neo_color_seq_ygb, 9],
+                            [Lang.Blocks.neo_color_seq_ybr, 10],
+                            [Lang.Blocks.neo_color_seq_grb, 11],
+                            [Lang.Blocks.neo_color_seq_gyr, 12],
+                            [Lang.Blocks.neo_color_seq_gyb, 13],
+                            [Lang.Blocks.neo_color_seq_gbr, 14],
+                            [Lang.Blocks.neo_color_seq_bry, 15],
+                            [Lang.Blocks.neo_color_seq_brg, 16],
+                            [Lang.Blocks.neo_color_seq_byr, 17],
+                            [Lang.Blocks.neo_color_seq_byg, 18],
+                            [Lang.Blocks.neo_color_seq_bgr, 19],
+                            [Lang.Blocks.neo_color_seq_bgy, 20],
+                        ],
+                        value: '2',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'neo_sensor_color_sequence_compare',
+                },
+                paramsKeyMap: {
+                    INPUT: 0,
+                    COLOR: 1,
+                },
+                class: 'neo_sensor',
+                isNotFor: ['neo'],
+                func: (sprite, script) => {
+                    const input = script.getNumberField('INPUT');
+                    const color = script.getNumberField('COLOR');
+                    const sensorData = Entry.hw.portData['sensor'];
+                    let seq1 = 0;
+                    let seq2 = 0;
+                    let seq3 = 0;
+                    switch (input) {
+                        case 'IN1':
+                            seq1 = sensorData['in1Values'][1];
+                            seq2 = sensorData['in1Values'][2];
+                            seq3 = sensorData['in1Values'][3];
+                            break;
+                        case 'IN2':
+                            seq1 = sensorData['in2Values'][1];
+                            seq2 = sensorData['in2Values'][2];
+                            seq3 = sensorData['in2Values'][3];
+                            break;
+                        case 'IN3':
+                            seq1 = sensorData['in3Values'][1];
+                            seq2 = sensorData['in3Values'][2];
+                            seq3 = sensorData['in3Values'][3];
+                            break;
+                    }
+                    switch (color) {
+                        case 1:
+                            return seq1 === 80 && seq2 === 120 && seq3 === 160;
+                        case 2:
+                            return seq1 === 80 && seq2 === 120 && seq3 === 200;
+                        case 3:
+                            return seq1 === 80 && seq2 === 160 && seq3 === 120;
+                        case 4:
+                            return seq1 === 80 && seq2 === 160 && seq3 === 200;
+                        case 5:
+                            return seq1 === 80 && seq2 === 200 && seq3 === 120;
+                        case 6:
+                            return seq1 === 80 && seq2 === 200 && seq3 === 160;
+                        case 7:
+                            return seq1 === 120 && seq2 === 80 && seq3 === 200;
+                        case 8:
+                            return seq1 === 120 && seq2 === 160 && seq3 === 80;
+                        case 9:
+                            return seq1 === 120 && seq2 === 160 && seq3 === 200;
+                        case 10:
+                            return seq1 === 120 && seq2 === 200 && seq3 === 80;
+                        case 11:
+                            return seq1 === 160 && seq2 === 80 && seq3 === 200;
+                        case 12:
+                            return seq1 === 160 && seq2 === 120 && seq3 === 80;
+                        case 13:
+                            return seq1 === 160 && seq2 === 120 && seq3 === 200;
+                        case 14:
+                            return seq1 === 160 && seq2 === 200 && seq3 === 80;
+                        case 15:
+                            return seq1 === 200 && seq2 === 80 && seq3 === 120;
+                        case 16:
+                            return seq1 === 200 && seq2 === 80 && seq3 === 160;
+                        case 17:
+                            return seq1 === 200 && seq2 === 120 && seq3 === 80;
+                        case 18:
+                            return seq1 === 200 && seq2 === 120 && seq3 === 160;
+                        case 19:
+                            return seq1 === 200 && seq2 === 160 && seq3 === 80;
+                        case 20:
+                            return seq1 === 200 && seq2 === 160 && seq3 === 120;
                     }
 
                     return false;
@@ -4954,7 +4749,7 @@ Entry.Neo = new (class Neo {
                 ],
                 events: {},
                 def: {
-                    params: [null, 'NEO', null],
+                    params: [null, '안녕', null],
                     type: 'neo_lcd_text',
                 },
                 paramsKeyMap: {
@@ -5024,7 +4819,7 @@ Entry.Neo = new (class Neo {
                     return script.getStringField('VALUE');
                 },
             },
-            neo_arg_motor_speed: {
+            neo_arg_both_motor_speed: {
                 color: EntryStatic.colorSet.block.default.HARDWARE,
                 outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                 skeleton: 'basic_string_field',
@@ -5034,66 +4829,46 @@ Entry.Neo = new (class Neo {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.neo_motor_speed_100, '100'],
+                            [Lang.Blocks.neo_motor_speed_95, '95'],
                             [Lang.Blocks.neo_motor_speed_90, '90'],
+                            [Lang.Blocks.neo_motor_speed_85, '85'],
                             [Lang.Blocks.neo_motor_speed_80, '80'],
+                            [Lang.Blocks.neo_motor_speed_75, '75'],
                             [Lang.Blocks.neo_motor_speed_70, '70'],
+                            [Lang.Blocks.neo_motor_speed_65, '65'],
                             [Lang.Blocks.neo_motor_speed_60, '60'],
+                            [Lang.Blocks.neo_motor_speed_55, '55'],
                             [Lang.Blocks.neo_motor_speed_50, '50'],
+                            [Lang.Blocks.neo_motor_speed_45, '45'],
                             [Lang.Blocks.neo_motor_speed_40, '40'],
+                            [Lang.Blocks.neo_motor_speed_35, '35'],
                             [Lang.Blocks.neo_motor_speed_30, '30'],
+                            [Lang.Blocks.neo_motor_speed_25, '25'],
                             [Lang.Blocks.neo_motor_speed_20, '20'],
+                            [Lang.Blocks.neo_motor_speed_15, '15'],
                             [Lang.Blocks.neo_motor_speed_10, '10'],
+                            [Lang.Blocks.neo_motor_speed_5, '5'],
                             [Lang.Blocks.neo_motor_speed_0, '0'],
+                            [Lang.Blocks.neo_motor_speed_n5, '-5'],
                             [Lang.Blocks.neo_motor_speed_n10, '-10'],
+                            [Lang.Blocks.neo_motor_speed_n15, '-15'],
                             [Lang.Blocks.neo_motor_speed_n20, '-20'],
+                            [Lang.Blocks.neo_motor_speed_n25, '-25'],
                             [Lang.Blocks.neo_motor_speed_n30, '-30'],
+                            [Lang.Blocks.neo_motor_speed_n35, '-35'],
                             [Lang.Blocks.neo_motor_speed_n40, '-40'],
+                            [Lang.Blocks.neo_motor_speed_n45, '-45'],
                             [Lang.Blocks.neo_motor_speed_n50, '-50'],
+                            [Lang.Blocks.neo_motor_speed_n55, '-55'],
                             [Lang.Blocks.neo_motor_speed_n60, '-60'],
+                            [Lang.Blocks.neo_motor_speed_n65, '-65'],
                             [Lang.Blocks.neo_motor_speed_n70, '-70'],
+                            [Lang.Blocks.neo_motor_speed_n75, '-75'],
                             [Lang.Blocks.neo_motor_speed_n80, '-80'],
+                            [Lang.Blocks.neo_motor_speed_n85, '-85'],
                             [Lang.Blocks.neo_motor_speed_n90, '-90'],
+                            [Lang.Blocks.neo_motor_speed_n95, '-95'],
                             [Lang.Blocks.neo_motor_speed_n100, '-100'],
-                        ],
-                        value: '100',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'neo_arg',
-                isNotFor: ['neo'],
-                func: function(sprite, script) {
-                    return script.getStringField('VALUE');
-                },
-            },
-            neo_arg_robot_speed: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
                         ],
                         value: '100',
                         fontSize: 11,
@@ -5216,242 +4991,6 @@ Entry.Neo = new (class Neo {
                     return script.getStringField('VALUE');
                 },
             },
-            neo_arg_servo_speed: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                        ],
-                        value: '50',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'neo_arg',
-                isNotFor: ['neo'],
-                func: function(sprite, script) {
-                    return script.getStringField('VALUE');
-                },
-            },
-            neo_arg_auto_driving_speed: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_motor_speed_100, '100'],
-                            [Lang.Blocks.neo_motor_speed_90, '90'],
-                            [Lang.Blocks.neo_motor_speed_80, '80'],
-                            [Lang.Blocks.neo_motor_speed_70, '70'],
-                            [Lang.Blocks.neo_motor_speed_60, '60'],
-                            [Lang.Blocks.neo_motor_speed_50, '50'],
-                            [Lang.Blocks.neo_motor_speed_40, '40'],
-                            [Lang.Blocks.neo_motor_speed_30, '30'],
-                            [Lang.Blocks.neo_motor_speed_20, '20'],
-                            [Lang.Blocks.neo_motor_speed_10, '10'],
-                            [Lang.Blocks.neo_motor_speed_0, '0'],
-                            [Lang.Blocks.neo_input_3, 'IN3'],
-                        ],
-                        value: '60',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'neo_arg',
-                isNotFor: ['neo'],
-                func: function(sprite, script) {
-                    return script.getStringField('VALUE');
-                },
-            },
-            neo_arg_led_brightness: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_led_brightness_100, '100'],
-                            [Lang.Blocks.neo_led_brightness_90, '90'],
-                            [Lang.Blocks.neo_led_brightness_80, '80'],
-                            [Lang.Blocks.neo_led_brightness_70, '70'],
-                            [Lang.Blocks.neo_led_brightness_60, '60'],
-                            [Lang.Blocks.neo_led_brightness_50, '50'],
-                            [Lang.Blocks.neo_led_brightness_40, '40'],
-                            [Lang.Blocks.neo_led_brightness_30, '30'],
-                            [Lang.Blocks.neo_led_brightness_20, '20'],
-                            [Lang.Blocks.neo_led_brightness_10, '10'],
-                            [Lang.Blocks.neo_led_brightness_0, '0'],
-                        ],
-                        value: '100',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'neo_arg',
-                isNotFor: ['neo'],
-                func: function(sprite, script) {
-                    return script.getStringField('VALUE');
-                },
-            },
-            neo_arg_led_blink_speed: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_led_blink_speed_1, '1'],
-                            [Lang.Blocks.neo_led_blink_speed_2, '2'],
-                            [Lang.Blocks.neo_led_blink_speed_3, '3'],
-                            [Lang.Blocks.neo_led_blink_speed_4, '4'],
-                            [Lang.Blocks.neo_led_blink_speed_5, '5'],
-                        ],
-                        value: '5',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'neo_arg',
-                isNotFor: ['neo'],
-                func: function(sprite, script) {
-                    return script.getStringField('VALUE');
-                },
-            },
-            neo_arg_set_output_value: {
-                color: EntryStatic.colorSet.block.default.HARDWARE,
-                outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
-                skeleton: 'basic_string_field',
-                statements: [],
-                params: [
-                    {
-                        type: 'Dropdown',
-                        options: [
-                            [Lang.Blocks.neo_set_output_value_255, '255'],
-                            [Lang.Blocks.neo_set_output_value_250, '250'],
-                            [Lang.Blocks.neo_set_output_value_245, '245'],
-                            [Lang.Blocks.neo_set_output_value_240, '240'],
-                            [Lang.Blocks.neo_set_output_value_235, '235'],
-                            [Lang.Blocks.neo_set_output_value_230, '230'],
-                            [Lang.Blocks.neo_set_output_value_225, '225'],
-                            [Lang.Blocks.neo_set_output_value_220, '220'],
-                            [Lang.Blocks.neo_set_output_value_215, '215'],
-                            [Lang.Blocks.neo_set_output_value_210, '210'],
-                            [Lang.Blocks.neo_set_output_value_205, '205'],
-                            [Lang.Blocks.neo_set_output_value_200, '200'],
-                            [Lang.Blocks.neo_set_output_value_195, '195'],
-                            [Lang.Blocks.neo_set_output_value_190, '190'],
-                            [Lang.Blocks.neo_set_output_value_185, '185'],
-                            [Lang.Blocks.neo_set_output_value_180, '180'],
-                            [Lang.Blocks.neo_set_output_value_175, '175'],
-                            [Lang.Blocks.neo_set_output_value_170, '170'],
-                            [Lang.Blocks.neo_set_output_value_165, '165'],
-                            [Lang.Blocks.neo_set_output_value_160, '160'],
-                            [Lang.Blocks.neo_set_output_value_155, '155'],
-                            [Lang.Blocks.neo_set_output_value_150, '150'],
-                            [Lang.Blocks.neo_set_output_value_145, '145'],
-                            [Lang.Blocks.neo_set_output_value_140, '140'],
-                            [Lang.Blocks.neo_set_output_value_135, '135'],
-                            [Lang.Blocks.neo_set_output_value_130, '130'],
-                            [Lang.Blocks.neo_set_output_value_125, '125'],
-                            [Lang.Blocks.neo_set_output_value_120, '120'],
-                            [Lang.Blocks.neo_set_output_value_115, '115'],
-                            [Lang.Blocks.neo_set_output_value_110, '110'],
-                            [Lang.Blocks.neo_set_output_value_105, '105'],
-                            [Lang.Blocks.neo_set_output_value_100, '100'],
-                            [Lang.Blocks.neo_set_output_value_95, '95'],
-                            [Lang.Blocks.neo_set_output_value_90, '90'],
-                            [Lang.Blocks.neo_set_output_value_85, '85'],
-                            [Lang.Blocks.neo_set_output_value_80, '80'],
-                            [Lang.Blocks.neo_set_output_value_75, '75'],
-                            [Lang.Blocks.neo_set_output_value_70, '70'],
-                            [Lang.Blocks.neo_set_output_value_65, '65'],
-                            [Lang.Blocks.neo_set_output_value_60, '60'],
-                            [Lang.Blocks.neo_set_output_value_55, '55'],
-                            [Lang.Blocks.neo_set_output_value_50, '50'],
-                            [Lang.Blocks.neo_set_output_value_45, '45'],
-                            [Lang.Blocks.neo_set_output_value_40, '40'],
-                            [Lang.Blocks.neo_set_output_value_35, '35'],
-                            [Lang.Blocks.neo_set_output_value_30, '30'],
-                            [Lang.Blocks.neo_set_output_value_25, '25'],
-                            [Lang.Blocks.neo_set_output_value_20, '20'],
-                            [Lang.Blocks.neo_set_output_value_15, '15'],
-                            [Lang.Blocks.neo_set_output_value_10, '10'],
-                            [Lang.Blocks.neo_set_output_value_5, '5'],
-                            [Lang.Blocks.neo_set_output_value_0, '0'],
-                        ],
-                        value: '255',
-                        fontSize: 11,
-                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
-                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [null],
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'neo_arg',
-                isNotFor: ['neo'],
-                func: function(sprite, script) {
-                    return script.getStringField('VALUE');
-                },
-            },
         };
     }
 
@@ -5495,7 +5034,7 @@ Entry.Neo = new (class Neo {
     }
 
     requestCommand(blockId, type, params) {
-        console.log(blockId + ' requested');
+        // console.log(blockId + ' requested');
         if (this.pendingResponseList[blockId]) {
             delete this.pendingResponseList[blockId];
         }
@@ -5512,7 +5051,7 @@ Entry.Neo = new (class Neo {
     }
 
     requestExt2Command(blockId, type, params) {
-        console.log(blockId + ' requested');
+        // console.log(blockId + ' requested');
         if (this.pendingResponseList[blockId]) {
             delete this.pendingResponseList[blockId];
         }
@@ -5529,7 +5068,7 @@ Entry.Neo = new (class Neo {
     }
 
     requestExtCommand(blockId, type, params) {
-        console.log(blockId + ' requested');
+        // console.log(blockId + ' requested');
         if (this.pendingResponseList[blockId]) {
             delete this.pendingResponseList[blockId];
         }
@@ -5623,9 +5162,9 @@ Entry.Neo = new (class Neo {
             const output = params[0];
             body.push(this.getUnitId(output), ActorKind.SERVO, ServoCommand.STOP);
         } else if (
-            type === NeoBlockType.LINE_TRACER_START ||
-            type === NeoBlockType.AUTO_DRIVING_START ||
-            type === NeoBlockType.AUTO_DETECT_WALL_START
+          type === NeoBlockType.LINE_TRACER_START ||
+          type === NeoBlockType.AUTO_DRIVING_START ||
+          type === NeoBlockType.AUTO_DETECT_WALL_START
         ) {
             const speed = params[0];
             body.push(UnitId.CONTROLLER, ActorKind.CONTROLLER, ControllerCommand.ROBOT);
@@ -5763,11 +5302,11 @@ Entry.Neo = new (class Neo {
             const which = params[0];
             const unitId = this.getUnitId(params[1]);
             body.push(
-                PduCode.EXTEND_1,
-                blockId,
-                UnitId.CONTROLLER,
-                ActorKind.CONTROLLER,
-                ControllerCommand.MOTOR
+              PduCode.EXTEND_1,
+              blockId,
+              UnitId.CONTROLLER,
+              ActorKind.CONTROLLER,
+              ControllerCommand.MOTOR
             );
             const data = Buffer.from([unitId, 0, which, 0, 0, 0]);
             body.push(...data);
@@ -5775,11 +5314,11 @@ Entry.Neo = new (class Neo {
             const robotCommand = params[0];
             const unitId = this.getUnitId(params[1]);
             body.push(
-                PduCode.EXTEND_1,
-                blockId,
-                UnitId.CONTROLLER,
-                ActorKind.CONTROLLER,
-                ControllerCommand.ROBOT
+              PduCode.EXTEND_1,
+              blockId,
+              UnitId.CONTROLLER,
+              ActorKind.CONTROLLER,
+              ControllerCommand.ROBOT
             );
             const data = Buffer.from([unitId, 0, 0, 0]);
             data.writeInt16LE(robotCommand, 2);
@@ -5802,17 +5341,17 @@ Entry.Neo = new (class Neo {
             data.writeInt16LE(direction, 2);
             body.push(...data);
         } else if (
-            type === NeoBlockType.LINE_TRACER_START ||
-            type === NeoBlockType.AUTO_DRIVING_START ||
-            type === NeoBlockType.AUTO_DETECT_WALL_START
+          type === NeoBlockType.LINE_TRACER_START ||
+          type === NeoBlockType.AUTO_DRIVING_START ||
+          type === NeoBlockType.AUTO_DETECT_WALL_START
         ) {
             const unitId = this.getUnitId(params[0]);
             body.push(
-                PduCode.EXTEND_1,
-                blockId,
-                UnitId.CONTROLLER,
-                ActorKind.CONTROLLER,
-                ControllerCommand.ROBOT
+              PduCode.EXTEND_1,
+              blockId,
+              UnitId.CONTROLLER,
+              ActorKind.CONTROLLER,
+              ControllerCommand.ROBOT
             );
             const data = Buffer.from([unitId, 0, 0x10, 0]);
             body.push(...data);
@@ -5820,11 +5359,11 @@ Entry.Neo = new (class Neo {
             const sensor = params[0];
             const unitId = this.getUnitId(params[1]);
             body.push(
-                PduCode.EXTEND_1,
-                blockId,
-                UnitId.CONTROLLER,
-                ActorKind.CONTROLLER,
-                ControllerCommand.ROBOT
+              PduCode.EXTEND_1,
+              blockId,
+              UnitId.CONTROLLER,
+              ActorKind.CONTROLLER,
+              ControllerCommand.ROBOT
             );
             const data = Buffer.from([0, 0, 0, 0]);
             data.writeInt16LE(unitId, 0);
@@ -5845,11 +5384,11 @@ Entry.Neo = new (class Neo {
         } else if (type === NeoBlockType.BUZZER_WITH_SENSOR) {
             const sensorUnitId = this.getUnitId(params[0]);
             body.push(
-                PduCode.EXTEND_1,
-                blockId,
-                UnitId.CONTROLLER,
-                ActorKind.CONTROLLER,
-                ControllerCommand.BUZZER
+              PduCode.EXTEND_1,
+              blockId,
+              UnitId.CONTROLLER,
+              ActorKind.CONTROLLER,
+              ControllerCommand.BUZZER
             );
             const data = Buffer.from([0, 0]);
             data.writeInt16LE(sensorUnitId, 0);
@@ -5880,230 +5419,54 @@ Entry.Neo = new (class Neo {
       후면주차 실행 (pending response 하지 않고 바로 다음 단계로 넘어감 : phase 가 너무 많아서 간소화)
       주석은 왼쪽 기준으로 오른쪽에서는 좌우만 바꿔준다.
      */
-    runAutoParkingBackward(script) {
-        const which = script.getNumberValue('WHICH', script);
-        const sensorData = Entry.hw.portData['sensor'];
-        console.log(script.exec_phase);
-        if (!script.exec_phase) {
-            // 1. 로봇 제자리 오른쪽 20%
-            script.exec_phase = '2_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [which === 1 ? 6 : 5, 20]);
-            setTimeout(() => {
-                script.exec_phase = '3_robot_stop';
-            }, 3500);
-        } else if (script.exec_phase === '2_wait') {
-            // 2. 3.5초 기다리기
-        } else if (script.exec_phase === '3_robot_stop') {
-            // 3. 로봇 정지
-            script.exec_phase = '4_robot_rotate';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-        } else if (script.exec_phase === '4_robot_rotate') {
-            // 4. 로봇 제자리 왼쪽 20%
-            script.exec_phase = '5_wait_sensor';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [which === 1 ? 5 : 6, 20]);
-        } else if (script.exec_phase === '5_wait_sensor') {
-            // 5. IN2 40 초과 기다리기
-            const compareValue = which === 1 ? sensorData.in2Values[0] : sensorData.in1Values[0];
-            if (compareValue > 40) {
-                script.exec_phase = '6_stop_robot';
-            }
-        } else if (script.exec_phase === '6_stop_robot') {
-            // 6. 로봇 멈추기
-            script.exec_phase = '7_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-            setTimeout(() => {
-                script.exec_phase = '8_robot_back';
-            }, 1000);
-        } else if (script.exec_phase === '7_wait') {
-            // 7. 1초 기다리기
-        } else if (script.exec_phase === '8_robot_back') {
-            // 8. 로봇 후진 20%
-            script.exec_phase = '9_wait_sensor';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [2, 20]);
-        } else if (script.exec_phase === '9_wait_sensor') {
-            // 9. IN1 20초과 기다리기
-            const compareValue = which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
-            if (compareValue > 20) {
-                script.exec_phase = '10_stop_robot';
-            }
-        } else if (script.exec_phase === '10_stop_robot') {
-            // 10. 로봇 멈추기
-            script.exec_phase = '11_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-            setTimeout(() => {
-                script.exec_phase = '12_adjustment';
-            }, 1000);
-        } else if (script.exec_phase === '11_wait') {
-            // 11. 1초 기다리기
-        } else if (script.exec_phase === '12_adjustment') {
-            // 12. IN2 가 IN1 보다 크면 [-20, 0] 아니면 [0, -20] , IN2 가 60보다 크면 break : 차체 조정시에는 좌우 구분 없음
-            if (sensorData.in2Values[0] > sensorData.in1Values[0]) {
-                if (script.adjust_direction !== 'left') {
-                    script.adjust_direction = 'left';
-                    const blockId = this.generateBlockId();
-                    this.requestCommand(blockId, NeoBlockType.MOTOR_MOVE_BOTH, [-20, 0]);
-                }
-            } else {
-                if (script.adjust_direction !== 'right') {
-                    script.adjust_direction = 'right';
-                    const blockId = this.generateBlockId();
-                    this.requestCommand(blockId, NeoBlockType.MOTOR_MOVE_BOTH, [0, -20]);
-                }
-            }
-            if (sensorData.in2Values[0] >= 60) {
-                script.exec_phase = '13_stop_robot';
-            }
-        } else if (script.exec_phase === '13_stop_robot') {
-            // 13. 로봇 멈추기
-            script.exec_phase = '14_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-            setTimeout(() => {
-                script.exec_phase = '15_robot_back';
-            }, 1000);
-        } else if (script.exec_phase === '14_wait') {
-            // 14. 1초 기다리기
-        } else if (script.exec_phase === '15_robot_back') {
-            // 15. 로봇 후진 20%
-            script.exec_phase = '16_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [2, 20]);
-            setTimeout(() => {
-                script.exec_phase = '17_stop_robot';
-            }, 2000);
-        } else if (script.exec_phase === '16_wait') {
-            // 16. 2초 기다리기
-        } else if (script.exec_phase === '17_stop_robot') {
-            // 17. 로봇 멈추기
-            script.exec_phase = 'end';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
+    async runAutoParking(script) {
+        const type = script.getNumberValue('DIRECTION', script);
+        const side = script.getNumberValue('WHICH', script);
+        let which = 0;
+        if (type === 1) {
+            // 후면주차
+            this.requestCommand(this.generateBlockId(), NeoBlockType.LINE_TRACER_START, [40]);
+            await Entry.Utils.sleep(2400);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            which = side === 1 ? 1 : 2;
+            this.requestCommand(this.generateBlockId(), NeoBlockType.MOTOR_MOVE, [which, 30]);
+            await Entry.Utils.sleep(2000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_MOVE, [2, 25]);
+            await Entry.Utils.sleep(2500);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            which = side === 1 ? 2 : 1;
+            this.requestCommand(this.generateBlockId(), NeoBlockType.MOTOR_MOVE, [which, -30]);
+            await Entry.Utils.sleep(1300);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_MOVE, [2, 25]);
+            await Entry.Utils.sleep(1700);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+        } else {
+            // 평행주차
+            this.requestCommand(this.generateBlockId(), NeoBlockType.LINE_TRACER_START, [40]);
+            await Entry.Utils.sleep(3000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            which = side === 1 ? 1 : 2;
+            this.requestCommand(this.generateBlockId(), NeoBlockType.MOTOR_MOVE, [which, 30]);
+            await Entry.Utils.sleep(2000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_MOVE, [2, 30]);
+            await Entry.Utils.sleep(3000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            which = side === 1 ? 1 : 2;
+            this.requestCommand(this.generateBlockId(), NeoBlockType.MOTOR_MOVE, [which, -30]);
+            await Entry.Utils.sleep(1000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            which = side === 1 ? 2 : 1;
+            this.requestCommand(this.generateBlockId(), NeoBlockType.MOTOR_MOVE, [which, 25]);
+            await Entry.Utils.sleep(1000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_MOVE, [2, 20]);
+            await Entry.Utils.sleep(1000);
+            this.requestCommand(this.generateBlockId(), NeoBlockType.ROBOT_STOP, [0]);
         }
-        //
-        else if (script.exec_phase === 'end') {
-            // 종료
-            return script.callReturn();
-        }
-
-        return script;
-    }
-
-    runAutoParkingSide(script) {
-        const which = script.getNumberValue('WHICH', script);
-        const sensorData = Entry.hw.portData['sensor'];
-        console.log(script.exec_phase);
-        if (!script.exec_phase) {
-            // 1. 로봇 오른쪽 30%
-            script.exec_phase = '2_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [which === 1 ? 4 : 3, 30]);
-            setTimeout(() => {
-                script.exec_phase = '3_robot_stop';
-            }, 2500);
-        } else if (script.exec_phase === '2_wait') {
-            // 2. 2초 기다리기
-        } else if (script.exec_phase === '3_robot_stop') {
-            // 3. 로봇 정지
-            script.exec_phase = '4_robot_back';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-        } else if (script.exec_phase === '4_robot_back') {
-            // 4. 로봇 뒤로 30%
-            script.exec_phase = '5_wait_sensor';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [2, 30]);
-        } else if (script.exec_phase === '5_wait_sensor') {
-            // 5. IN1 40 초과 기다리기
-            const compareValue = which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
-            if (compareValue > 40) {
-                script.exec_phase = '6_wait_sensor';
-            }
-        } else if (script.exec_phase === '6_wait_sensor') {
-            // 6. IN2 40 초과 기다리기
-            const compareValue = which === 1 ? sensorData.in2Values[0] : sensorData.in1Values[0];
-            if (compareValue > 40) {
-                script.exec_phase = '7_robot_stop';
-            }
-        } else if (script.exec_phase === '7_robot_stop') {
-            // 7. 로봇 멈추기
-            script.exec_phase = '8_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-            setTimeout(() => {
-                script.exec_phase = '9_robot_rotate';
-            }, 1000);
-        } else if (script.exec_phase === '8_wait') {
-            // 8. 1초 기다리기
-        } else if (script.exec_phase === '9_robot_rotate') {
-            // 9. 로봇 제자리왼쪽 20%
-            script.exec_phase = '10_wait_sensor';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [which === 1 ? 5 : 6, 20]);
-        } else if (script.exec_phase === '10_wait_sensor') {
-            // 10. IN1 40초과 기다리기
-            const compareValue = which === 1 ? sensorData.in1Values[0] : sensorData.in2Values[0];
-            if (compareValue > 40) {
-                script.exec_phase = '11_stop_robot';
-            }
-        } else if (script.exec_phase === '11_stop_robot') {
-            // 11. 로봇 멈추기
-            script.exec_phase = '12_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-            setTimeout(() => {
-                script.exec_phase = '13_adjustment';
-            }, 1000);
-        } else if (script.exec_phase === '12_wait') {
-            // 12. 1초 기다리기
-        } else if (script.exec_phase === '13_adjustment') {
-            // 13. 라인트레이서
-            script.exec_phase = '14_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [7, 20]);
-            setTimeout(() => {
-                script.exec_phase = '15_robot_stop';
-            }, 1500);
-        } else if (script.exec_phase === '14_wait') {
-            // 14. 1.5초 기다리기
-        } else if (script.exec_phase === '15_robot_stop') {
-            // 15. 로봇 멈추기
-            script.exec_phase = '16_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-            setTimeout(() => {
-                script.exec_phase = '17_robot_back';
-            }, 1000);
-        } else if (script.exec_phase === '16_wait') {
-            // 16. 1초 기다리기
-        } else if (script.exec_phase === '17_robot_back') {
-            // 17. 로봇 후진 20%
-            script.exec_phase = '18_wait';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_MOVE, [2, 20]);
-            setTimeout(() => {
-                script.exec_phase = '19_stop_robot';
-            }, 1000);
-        } else if (script.exec_phase === '18_wait') {
-            // 18. 1초 기다리기
-        } else if (script.exec_phase === '19_stop_robot') {
-            // 19. 로봇 멈추기
-            script.exec_phase = 'end';
-            const blockId = this.generateBlockId();
-            this.requestCommand(blockId, NeoBlockType.ROBOT_STOP);
-        }
-        //
-        else if (script.exec_phase === 'end') {
-            // 종료
-            return script.callReturn();
-        }
-
-        return script;
+        return script.callReturn();
     }
 })();
 
