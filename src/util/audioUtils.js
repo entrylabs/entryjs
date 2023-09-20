@@ -176,6 +176,9 @@ class AudioUtils {
             this._mediaRecorder.start();
             this.startedRecording = true;
             Entry.engine.toggleAudioShadePanel();
+            this._socketClient.on('disconnect', () => {
+                resolve('-');
+            });
             this._socketClient.on('message', (e) => {
                 switch (e) {
                     case STATUS_CODE.CONNECTED:
@@ -190,7 +193,7 @@ class AudioUtils {
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this.stopCallback = null;
                         this.stopRecord();
-                        resolve('');
+                        resolve('-');
                         break;
                     default: {
                         const parsed = JSON.parse(e);
@@ -199,6 +202,8 @@ class AudioUtils {
                             this.stopCallback = null;
                             this.stopRecord();
                             resolve(parsed[0]);
+                        } else {
+                            resolve('-');
                         }
                         break;
                     }
@@ -270,6 +275,9 @@ class AudioUtils {
 
     async sendBuffer(buffers, language) {
         return new Promise(async (resolve, reject) => {
+            this._socketClient.on('disconnect', () => {
+                resolve('-');
+            });
             this._socketClient.on('message', (e) => {
                 switch (e) {
                     case STATUS_CODE.CONNECTED:
@@ -279,7 +287,7 @@ class AudioUtils {
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this.stopCallback = null;
                         this.stopRecord();
-                        resolve('');
+                        resolve('-');
                         break;
                     default: {
                         const parsed = JSON.parse(e);
@@ -288,6 +296,8 @@ class AudioUtils {
                             this.stopCallback = null;
                             this.stopRecord();
                             resolve(parsed[0]);
+                        } else {
+                            resolve('-');
                         }
                         break;
                     }
