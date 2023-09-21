@@ -344,7 +344,7 @@ Entry.Engine = class Engine {
             this.audioShadePanelOn = false;
             $(this.audioShadePanel_).remove();
             delete this.audioShadePanel_;
-        } else {
+        } else if (Entry.engine.isState('run')) {
             this.audioShadePanelOn = true;
             this.audioShadePanel_ = Entry.createElement('div', 'audioShadeCirclebox');
             this.audioShadePanel_.addClass('audioShadeCirclebox');
@@ -387,7 +387,7 @@ Entry.Engine = class Engine {
             this.audioProgressPanelOn = false;
             $(this.audioProgressPanel_).remove();
             delete this.audioProgressPanel_;
-        } else {
+        } else if (Entry.engine.isState('run')) {
             this.audioProgressPanelOn = true;
             this.audioProgressPanel_ = Entry.createElement('div', 'audioShadeCirclebox');
             this.audioProgressPanel_.addClass('audioShadeCirclebox');

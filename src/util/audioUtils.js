@@ -192,16 +192,16 @@ class AudioUtils {
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this.stopCallback = null;
-                        this.stopRecord();
                         resolve('-');
+                        this.stopRecord();
                         break;
                     default: {
                         const parsed = JSON.parse(e);
                         const isArray = Array.isArray(parsed);
                         if (isArray) {
                             this.stopCallback = null;
-                            this.stopRecord();
                             resolve(parsed[0]);
+                            this.stopRecord();
                         } else {
                             resolve('-');
                         }
@@ -286,16 +286,16 @@ class AudioUtils {
                         break;
                     case STATUS_CODE.NOT_RECOGNIZED:
                         this.stopCallback = null;
-                        this.stopRecord();
                         resolve('-');
+                        this.stopRecord();
                         break;
                     default: {
                         const parsed = JSON.parse(e);
                         const isArray = Array.isArray(parsed);
                         if (isArray) {
                             this.stopCallback = null;
-                            this.stopRecord();
                             resolve(parsed[0]);
+                            this.stopRecord();
                         } else {
                             resolve('-');
                         }
@@ -322,7 +322,7 @@ class AudioUtils {
     /**
      * 녹음을 종료한다.
      */
-    async stopRecord() {
+    stopRecord() {
         if (this._socketClient) {
             this._socketClient.disconnect();
         }
