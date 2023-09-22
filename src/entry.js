@@ -2,7 +2,6 @@ __webpack_public_path__ = global.PUBLIC_PATH_FOR_ENTRYJS || 'dist/';
 import showConsoleBanner from './util/functions/showConsoleBanner';
 import 'simplebar/dist/simplebar.css';
 
-console.log('run');
 const Entry = {};
 
 module.exports = Entry;
