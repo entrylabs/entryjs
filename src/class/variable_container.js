@@ -1250,7 +1250,7 @@ Entry.VariableContainer = class VariableContainer {
         }
         if (_.isEmpty(Entry.container.sttValue)) {
             this.generateStt();
-            if (options.aiUtilizeBlocks.includes('audio')) {
+            if (options?.aiUtilizeBlocks?.includes('audio')) {
                 Entry.container.sttValue.setVisible(true);
             }
         }
