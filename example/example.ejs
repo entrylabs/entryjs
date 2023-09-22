@@ -92,10 +92,7 @@
         ></script>
         <script type="text/javascript" src="https://playentry.org/js/jshint.js"></script>
         <script type="text/javascript" src="https://playentry.org/lib/fuzzy/lib/fuzzy.js"></script>
-        <script
-            type="text/javascript"
-            src="https://playentry.org/js/textmode/python/python.js"
-        ></script>
+        <script type="text/javascript" src="https://playentry.org/js/ws/python.js"></script>
         <script
             type="text/javascript"
             src="https://playentry.org/lib/entry-js/extern/util/filbert.js"
@@ -126,18 +123,18 @@
             type="text/javascript"
             src="https://playentry.org/lib/entry-lms/dist/assets/app.js"
         ></script>
-        <script
-            type="text/javascript"
-            src="https://playentry.org/lib/literallycanvas-mobile/lib/js/literallycanvas.js"
-        ></script>
+        <script src="../extern/util/static.js"></script>
         <script
             type="text/javascript"
             src="https://playentry.org/lib/entry-tool/dist/entry-tool.js"
         ></script>
+        <script
+            type="text/javascript"
+            src="https://playentry.org/lib/entry-paint/dist/static/js/entry-paint.js"
+        ></script>
 
-        <script src="../extern/util/static.js"></script>
-        <% for (var chunk in htmlWebpackPlugin.files.chunks) { %>
-        <script src="<%= htmlWebpackPlugin.files.chunks[chunk].entry %>"></script>
+        <% for (var chunk in htmlWebpackPlugin.files.js) { %>
+        <script src="<%= htmlWebpackPlugin.files.js[chunk] %>"></script>
         <% } %>
 
         <script>

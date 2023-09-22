@@ -16,6 +16,19 @@ const templateName = (() => {
 const template = path.resolve('example', templateName);
 const devServerPort = 8080;
 
+class LogHtmlWebpackPluginFiles {
+    apply(compiler) {
+        compiler.hooks.compilation.tap('LogHtmlWebpackPluginFiles', (compilation) => {
+            HtmlWebpackPlugin.getHooks(compilation).afterTemplateExecution.tap(
+                'LogHtmlWebpackPluginFiles',
+                (data) => {
+                    console.log('LogHtmlWebpackPluginFiles', data);
+                }
+            );
+        });
+    }
+}
+
 module.exports = {
     mode: 'development',
     module: {
@@ -29,12 +42,17 @@ module.exports = {
             inject: false,
             hash: true,
         }),
+        new LogHtmlWebpackPluginFiles(),
     ],
     devServer: {
-        contentBase: './',
+        static: {
+            directory: path.join(__dirname, '../'),
+        },
         port: devServerPort,
         historyApiFallback: true,
-        publicPath: '/',
+        devMiddleware: {
+            publicPath: '/',
+        },
         proxy: {
             '/lib/entry-js': {
                 target: `http://localhost:${devServerPort}`,
