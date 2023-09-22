@@ -55,7 +55,7 @@ Entry.init = function(container, options) {
     Entry.initFonts(options.fonts);
     setDefaultTheme(options);
 
-    Entry.paintMode = options.paintMode || 'literallycanvas';
+    Entry.paintMode = options.paintMode || 'entry-paint';
     container && this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
