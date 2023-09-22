@@ -85,12 +85,14 @@ const drawOption = {
 
 let flipState;
 let isRun = false;
+let isFirstIdle = false;
 
 self.onmessage = async ({ data }) => {
     if (data.action === 'face_landmarker_init') {
         initializeFaceLandmarker(data);
     } else if (data.action === 'face_landmarker_restart') {
         isRun = true;
+        self.postMessage({ action: 'run_start_face_landmarker' });
     } else if (data.action === 'face_landmarker_change_option') {
         changeFaceLandmarkerOption(data.option);
     } else if (data.action === 'face_landmarker') {
@@ -113,7 +115,6 @@ let isDrawDetectedFaceLandmarker = false;
 
 const initializeFaceLandmarker = async (data) => {
     const { canvas, option, isSafari, lang } = data;
-    isRun = true;
     faceLang = lang.face;
     isDrawDetectedFaceLandmarker = option.isDrawDetectedFaceLandmarker;
     offCanvas = canvas;
@@ -125,7 +126,11 @@ const initializeFaceLandmarker = async (data) => {
     }
 
     if (!human) human = new Human.default(config);
+    await human.load(); // optional as models would be loaded on-demand first time they are required
+    await human.warmup(); // optional as model warmup is performed on-demand first time its executed
 
+    isRun = true;
+    self.postMessage({ action: 'run_start_face_landmarker' });
     self.postMessage({ action: 'next_face_landmarker' });
 };
 
@@ -166,10 +171,13 @@ const predictFaceLandmarker = async (imageBitmap) => {
         if (!workerContext || !human) {
             return;
         }
-        const results = await human.detect(imageBitmap);
-        if (!isRun) {
+        if (!isFirstIdle && human.state === 'idle') {
+            isFirstIdle = true;
+        }
+        if (!isRun || !isFirstIdle) {
             return;
         }
+        const results = await human.detect(imageBitmap);
         workerContext.save();
         workerContext.clearRect(0, 0, 640, 360);
 
@@ -220,6 +228,7 @@ const predictFaceLandmarker = async (imageBitmap) => {
 const clearPredictFaceLandmarker = () => {
     console.log('clearPredictFaceLandmarker');
     isRun = false;
+    self.postMessage({ action: 'run_stop_face_landmarker' });
     isPrevFaceLandmarker = false;
     countDetectedFace = 0;
     workerContext.clearRect(0, 0, 640, 360);
