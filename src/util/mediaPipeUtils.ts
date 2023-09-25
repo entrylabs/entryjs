@@ -176,6 +176,7 @@ class MediaPipeUtils {
 
     public countDetectedFace: number;
     public isPrevFaceLandmarker: boolean = false;
+    public isRunWorkerFaceLandmarker: boolean = false;
     public isRunningFaceLandmarker: boolean = false;
     public isDrawDetectedFaceLandmarker: boolean = false;
     private isInitFaceLandmarker: boolean = false;
@@ -621,6 +622,10 @@ class MediaPipeUtils {
                     (this.faceLandmarkerCanvasOverlay as PIXI.Sprite).texture.update();
                 }
                 this.sendImageBitmapForFaceLandmarker();
+            } else if (data.action === 'run_start_face_landmarker') {
+                this.isRunWorkerFaceLandmarker = true;
+            } else if (data.action === 'run_stop_face_landmarker') {
+                this.isRunWorkerFaceLandmarker = false;
             } else if (data.action === 'start_face_landmarker') {
                 this.isPrevFaceLandmarker = true;
                 Entry.engine.fireEvent('when_face_landmarker');
@@ -860,7 +865,7 @@ class MediaPipeUtils {
                     [this.faceLandmarkerOffscreenCanvas]
                 );
                 this.alreadyInitFaceLandmarkerOffscreenCanvas = true;
-            } else {
+            } else if (!this.isRunWorkerFaceLandmarker) {
                 this.faceLandmarkerWorker.postMessage({
                     action: 'face_landmarker_restart',
                 });
@@ -1017,6 +1022,7 @@ class MediaPipeUtils {
         });
         this.isRunningFaceLandmarker = false;
         this.isPrevFaceLandmarker = false;
+        this.isRunWorkerFaceLandmarker = false;
         this.countDetectedFace = 0;
     }
 
