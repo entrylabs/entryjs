@@ -12,7 +12,6 @@
                 en: 'NeoSpider',
             };
             this.duration = 32;
-            
             this.blockMenuBlocks = [
                 'neospiderlite_get_analog_value',
                 'neospiderlite_get_analog_value_map',
@@ -42,13 +41,22 @@
                 bufferSize: 512,
                 constantServing: true,
             };
-
             this.__toneTable = {
-                '0': 0, C: 1, CS: 2, D: 3, DS: 4,
-                E: 5, F: 6, FS: 7, G: 8, GS: 9,
-                A: 10, AS: 11, B: 12,
+                '0': 0,
+                C: 1,
+                CS: 2,
+                D: 3,
+                DS: 4,
+                E: 5,
+                F: 6,
+                FS: 7,
+                G: 8,
+                GS: 9,
+                A: 10,
+                AS: 11,
+                B: 12,
             };
-            this.__toneMap =  {
+            this.__toneMap = {
                 '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
                 '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
                 '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
@@ -62,7 +70,6 @@
                 '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
                 '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
             };
-            
             this.setZero();
         }
 
@@ -142,14 +149,14 @@
                 MOTOR: 0,
                 SERVO: 0,
                 NEOPIXEL: [
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
-                    {RED: 0, GREEN: 0, BLUE: 0},
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
+                    { RED: 0, GREEN: 0, BLUE: 0 },
                 ],
                 OUT_MOTOR_LEFT: 0,
                 OUT_MOTOR_RIGHT: 0,
@@ -184,7 +191,6 @@
                 const readData = data.subarray(2, data.length);
                 let value;
                 let checkSum;
-        
                 const idx = readData[0];
                 if (idx == 1) {
                     if (readData.length != 12) {
@@ -200,19 +206,33 @@
                     const analogS3 = readData[8];
                     const infaredLv = readData[9];
                     const infaredRv = readData[10];
-                    checkSum = (idx + analogL0 + analogS0 + analogL1 + analogS1 + analogL2 + analogS2 + analogL3 + analogS3 + infaredLv + infaredRv) & 0xff;
+                    checkSum =
+                        (idx +
+                            analogL0 +
+                            analogS0 +
+                            analogL1 +
+                            analogS1 +
+                            analogL2 +
+                            analogS2 +
+                            analogL3 +
+                            analogS3 +
+                            infaredLv +
+                            infaredRv) &
+                        0xff;
                     if (checkSum != readData[11]) {
                         return;
                     }
-        
                     let tempValue = (analogL2 << 8) + analogS2;
-                    tempValue = Math.log((10240000 / tempValue) - 10000);
-                    tempValue = 1 / (0.001129148 + (0.000234125 * tempValue) + (0.0000000876741 * tempValue * tempValue * tempValue));
+                    tempValue = Math.log(10240000 / tempValue - 10000);
+                    tempValue =
+                        1 /
+                        (0.001129148 +
+                            0.000234125 * tempValue +
+                            0.0000000876741 * tempValue * tempValue * tempValue);
                     tempValue = tempValue - 273.15 - 4.0; // Downsize temperature
-                    
                     sensorData.GAS = (analogL0 << 8) + analogS0;
                     sensorData.CDS = (analogL1 << 8) + analogS1;
-                    sensorData.TMP = (tempValue).toFixed(2);
+                    sensorData.TMP = tempValue.toFixed(2);
                     sensorData.VIBE = (analogL3 << 8) + analogS3;
                     sensorData.LEFT_INFARED = infaredLv;
                     sensorData.RIGHT_INFARED = infaredRv;
@@ -220,18 +240,21 @@
                     if (readData.length != 6) {
                         return;
                     }
-                    let subArray = new Uint8Array(readData.subarray(1, 5));
+                    const subArray = new Uint8Array(readData.subarray(1, 5));
                     subArray.reverse();
-                    let buffer = subArray.buffer;
-                    let view = new DataView(buffer);
+                    const buffer = subArray.buffer;
+                    const view = new DataView(buffer);
                     value = view.getFloat32(0);
                     value = Math.round(value * 100) / 100;
                     checkSum = (idx + value) & 0xff;
                     if (checkSum != readData[5]) {
                         return;
                     }
-                    if (idx == 2) sensorData.ULTRASONIC = value;
-                    else sensorData.MOTION = value;
+                    if (idx == 2) {
+                        sensorData.ULTRASONIC = value;
+                    } else {
+                        sensorData.MOTION = value;
+                    }
                 }
             });
             this.sensorData = sensorData;
@@ -298,20 +321,19 @@
 
         getAnalogMapValue(script) {
             let port = script.getValue('PORT', script);
-            let minValue = script.getNumberValue('MINV', script);
-            let maxValue = script.getNumberValue('MAXV', script);
-            let minTrans = script.getNumberValue('TMIN', script);
-            let maxTrans = script.getNumberValue('TMAX', script);
+            const minValue = script.getNumberValue('MINV', script);
+            const maxValue = script.getNumberValue('MAXV', script);
+            const minTrans = script.getNumberValue('TMIN', script);
+            const maxTrans = script.getNumberValue('TMAX', script);
 
             port = port === 'OUTER' ? 'GAS' : port;
             let value = this.sensorData[port];
-            
-            value = ((value - minValue) * (maxTrans - minTrans) / maxValue - minValue) + minTrans;
+            value = ((value - minValue) * (maxTrans - minTrans)) / maxValue - minValue + minTrans;
 
-            if ((value % 1) == 0) {
+            if (value % 1 == 0) {
                 value = Math.round(value);
             } else {
-                value = Math.round(value * 100 / 100);
+                value = Math.round((value * 100) / 100);
             }
             return value;
         }
@@ -327,7 +349,7 @@
         }
 
         getInfared(script) {
-            let port = script.getValue('PORT', script);
+            const port = script.getValue('PORT', script);
             return this.sensorData[port] || 0;
         }
 
@@ -399,7 +421,7 @@
         }
 
         setMotor(script) {
-            let state = script.getField('STATE');
+            const state = script.getField('STATE');
 
             this.workerData.MOTOR = state;
             return script.callReturn();
@@ -444,9 +466,9 @@
 
         setNeopixel(script) {
             let num = script.getNumberValue('NUM', script);
-            let redPower = script.getNumberValue('RED', script);
-            let greenPower = script.getNumberValue('GREEN', script);
-            let bluePower = script.getNumberValue('BLUE', script);
+            const redPower = script.getNumberValue('RED', script);
+            const greenPower = script.getNumberValue('GREEN', script);
+            const bluePower = script.getNumberValue('BLUE', script);
 
             num = num & 7;
 
@@ -457,11 +479,11 @@
         }
 
         setAllNeopixel(script) {
-            let redPower = script.getNumberValue('RED', script);
-            let greenPower = script.getNumberValue('GREEN', script);
-            let bluePower = script.getNumberValue('BLUE', script);
+            const redPower = script.getNumberValue('RED', script);
+            const greenPower = script.getNumberValue('GREEN', script);
+            const bluePower = script.getNumberValue('BLUE', script);
 
-            for (let num=0; num < 8; num++) {
+            for (let num = 0; num < 8; num++) {
                 this.workerData.NEOPIXEL[num].RED = redPower;
                 this.workerData.NEOPIXEL[num].GREEN = greenPower;
                 this.workerData.NEOPIXEL[num].BLUE = bluePower;
@@ -472,13 +494,13 @@
 
         setNeopixelPicker(script) {
             let num = script.getNumberValue('NUM', script);
-            let color = script.getStringField('COLOR');
+            const color = script.getStringField('COLOR');
 
             num = num & 7;
 
-            let redPower = parseInt(color.substr(1, 2), 16);
-            let greenPower = parseInt(color.substr(3, 2), 16);
-            let bluePower = parseInt(color.substr(5, 2), 16);
+            const redPower = parseInt(color.substr(1, 2), 16);
+            const greenPower = parseInt(color.substr(3, 2), 16);
+            const bluePower = parseInt(color.substr(5, 2), 16);
 
             this.workerData.NEOPIXEL[num].RED = redPower;
             this.workerData.NEOPIXEL[num].GREEN = greenPower;
@@ -487,13 +509,13 @@
         }
 
         setAllNeopixelPicker(script) {
-            let color = script.getStringField('COLOR');
+            const color = script.getStringField('COLOR');
 
-            let redPower = parseInt(color.substr(1, 2), 16);
-            let greenPower = parseInt(color.substr(3, 2), 16);
-            let bluePower = parseInt(color.substr(5, 2), 16);
+            const redPower = parseInt(color.substr(1, 2), 16);
+            const greenPower = parseInt(color.substr(3, 2), 16);
+            const bluePower = parseInt(color.substr(5, 2), 16);
 
-            for (let num=0; num < 8; num++) {
+            for (let num = 0; num < 8; num++) {
                 this.workerData.NEOPIXEL[num].RED = redPower;
                 this.workerData.NEOPIXEL[num].GREEN = greenPower;
                 this.workerData.NEOPIXEL[num].BLUE = bluePower;
@@ -503,7 +525,7 @@
         }
 
         setNeopixelOff(script) {
-            for (let num=0; num < 8; num++) {
+            for (let num = 0; num < 8; num++) {
                 this.workerData.NEOPIXEL[num].RED = 0;
                 this.workerData.NEOPIXEL[num].GREEN = 0;
                 this.workerData.NEOPIXEL[num].BLUE = 0;
@@ -513,7 +535,7 @@
         }
 
         setOuterMotor(script) {
-            let port = script.getNumberValue('PORT', script);
+            const port = script.getNumberValue('PORT', script);
             let state = script.getNumberValue('STATE', script);
             state = state ? 255 : 0;
 
@@ -529,7 +551,7 @@
         }
 
         setOuterMotorPWM(script) {
-            let port = script.getNumberValue('PORT', script);
+            const port = script.getNumberValue('PORT', script);
             let power = script.getNumberValue('VALUE', script);
 
             power = Math.round(power);
@@ -553,20 +575,24 @@
                 ko: {
                     template: {
                         neospiderlite_get_analog_value: '아날로그 %1 센서값',
-                        neospiderlite_get_analog_value_map: '아날로그 %1 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                        neospiderlite_get_analog_value_map:
+                            '아날로그 %1 센서값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
                         neospiderlite_get_ultrasonic_value: '초음파 센서값',
                         neospiderlite_get_motion_value: '모션 센서 감지됨',
                         neospiderlite_get_infared_value: '적외선센서 %1 감지됨',
                         neospiderlite_set_tone: '부저를 %1 %2 음으로 %3 초 연주하기 %4',
-                        neospiderlite_set_servo: '머리방향 %1 의 각도로 정하기 (최소:50, 최대:130) %2',
+                        neospiderlite_set_servo:
+                            '머리방향 %1 의 각도로 정하기 (최소:50, 최대:130) %2',
                         neospiderlite_set_servo_direction: '머리방향 %1 바라보기 %2',
                         neospiderlite_motor_state: '네오스파이더 %1 이동하기 %2',
                         neospiderlite_motor_state_secs: '네오스파이더 %1(으)로 %2초 이동하기 %3',
                         neospiderlite_motor_stop: '네오스파이더 정지하기 %1',
                         neospiderlite_neopixel_color_picker: 'RGB LED %1번  %2 (으)로 켜기 %3',
                         neospiderlite_neopixel: 'RGB LED %1번  빨 %2 녹 %3 파 %4 (으)로 켜기 %5',
-                        neospiderlite_neopixel_color_picker_all_on: 'RGB LED 전체 %1 (으)로 켜기 %2',
-                        neospiderlite_neopixel_all_on: 'RGB LED 전체  빨 %1 녹 %2 파 %3 (으)로 켜기 %4',
+                        neospiderlite_neopixel_color_picker_all_on:
+                            'RGB LED 전체 %1 (으)로 켜기 %2',
+                        neospiderlite_neopixel_all_on:
+                            'RGB LED 전체  빨 %1 녹 %2 파 %3 (으)로 켜기 %4',
                         neospiderlite_neopixel_all_off: 'RGB LED 전체 끄기 %1',
                         neospiderlite_outer_motor: '디지털 %1핀 %2 %3',
                         neospiderlite_outer_motor_pwm: '디지털 %1핀 %2 (으)로 정하기 %3',
@@ -578,30 +604,47 @@
                         neospiderlite: '네오스파이더',
                     },
                     Helper: {
-                        neospiderlite_get_analog_value: '아날로그 센서값을 읽어오는 블럭입니다.<br/>가스, 조도, 진동, 외부 센서는 `0~1023`의 값 가지며, 온도센서는 온도값을 읽어옵니다.<br/><font color="crimson">(단, 가스센서와 외부센서는 동시에 사용할 수 없습니다.)</font>',
-                        neospiderlite_get_analog_value_map: '아날로그 센서값의 범위를 다른 범위로 변환합니다.',
-                        neospiderlite_get_ultrasonic_value: '초음파를 통해 거리를 측정합니다.<br/><font color="crimson">(참고, HC-SR04의 경우 약 0~2cm정도 측정을 못하고 너무 가까우면 이상한 값을 나타냅니다.)</font>',
-                        neospiderlite_get_motion_value: '모션 센서의 값을 가져옵니다.<br/>해당 센서값은 0: `감지 못함`, 1: `감지됨`입니다.<br/><font color="crimson">(참고, 해당 센서의 경우 길게는 약 7초 정도 감지된 값을 유지합니다.)</font>',
-                        neospiderlite_get_infared_value: '적외선 센서의 값을 가져옵니다.<br/>왼쪽과 오른쪽 2가지로 나뉘어 있으며, 센서값은 0: `감지 못함`, 1: `감지됨`입니다.',
-                        neospiderlite_set_tone: '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
-                        neospiderlite_set_servo: '머리각도를 최소 50 ~ 최대 130도 사이의 값으로 움직입니다.',
-                        neospiderlite_set_servo_direction: '머리각도를 왼쪽(50), 정면(90), 오른쪽(130)으로 이동할 수 있습니다.',
-                        neospiderlite_motor_state: '네오스파이더를 전진, 좌회전, 우회전, 후진을 실행합니다.',
-                        neospiderlite_motor_state_secs: '네오스파이더를 전진, 좌회전, 우회전, 후진을 정해진 시간만큼 실행합니다.',
+                        neospiderlite_get_analog_value:
+                            '아날로그 센서값을 읽어오는 블럭입니다.<br/>가스, 조도, 진동, 외부 센서는 `0~1023`의 값 가지며, 온도센서는 온도값을 읽어옵니다.<br/><font color="crimson">(단, 가스센서와 외부센서는 동시에 사용할 수 없습니다.)</font>',
+                        neospiderlite_get_analog_value_map:
+                            '아날로그 센서값의 범위를 다른 범위로 변환합니다.',
+                        neospiderlite_get_ultrasonic_value:
+                            '초음파를 통해 거리를 측정합니다.<br/><font color="crimson">(참고, HC-SR04의 경우 약 0~2cm정도 측정을 못하고 너무 가까우면 이상한 값을 나타냅니다.)</font>',
+                        neospiderlite_get_motion_value:
+                            '모션 센서의 값을 가져옵니다.<br/>해당 센서값은 0: `감지 못함`, 1: `감지됨`입니다.<br/><font color="crimson">(참고, 해당 센서의 경우 길게는 약 7초 정도 감지된 값을 유지합니다.)</font>',
+                        neospiderlite_get_infared_value:
+                            '적외선 센서의 값을 가져옵니다.<br/>왼쪽과 오른쪽 2가지로 나뉘어 있으며, 센서값은 0: `감지 못함`, 1: `감지됨`입니다.',
+                        neospiderlite_set_tone:
+                            '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
+                        neospiderlite_set_servo:
+                            '머리각도를 최소 50 ~ 최대 130도 사이의 값으로 움직입니다.',
+                        neospiderlite_set_servo_direction:
+                            '머리각도를 왼쪽(50), 정면(90), 오른쪽(130)으로 이동할 수 있습니다.',
+                        neospiderlite_motor_state:
+                            '네오스파이더를 전진, 좌회전, 우회전, 후진을 실행합니다.',
+                        neospiderlite_motor_state_secs:
+                            '네오스파이더를 전진, 좌회전, 우회전, 후진을 정해진 시간만큼 실행합니다.',
                         neospiderlite_motor_stop: '네오스파이더 이동을 정지',
-                        neospiderlite_neopixel_color_picker: '색을 보고 RGB색상을 정하여 정해진 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
-                        neospiderlite_neopixel: '정해준 LED 번호에 빨강, 파랑, 초록의 색을 넣고 조합하여 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
-                        neospiderlite_neopixel_color_picker_all_on: '색을 보고 RGB색상을 정하여 모든 LED를 켤 수 있습니다.',
-                        neospiderlite_neopixel_all_on: '빨강, 파랑, 초록의 색을 넣고 조합하여 모든 LED를 켤 수 있습니다.',
+                        neospiderlite_neopixel_color_picker:
+                            '색을 보고 RGB색상을 정하여 정해진 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
+                        neospiderlite_neopixel:
+                            '정해준 LED 번호에 빨강, 파랑, 초록의 색을 넣고 조합하여 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
+                        neospiderlite_neopixel_color_picker_all_on:
+                            '색을 보고 RGB색상을 정하여 모든 LED를 켤 수 있습니다.',
+                        neospiderlite_neopixel_all_on:
+                            '빨강, 파랑, 초록의 색을 넣고 조합하여 모든 LED를 켤 수 있습니다.',
                         neospiderlite_neopixel_all_off: '모든 LED를 끌 수 있습니다.',
-                        neospiderlite_outer_motor: '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 HIGH를 주어 작동 시킬 수 없습니다.)</font>',
-                        neospiderlite_outer_motor_pwm: '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 0 이상의 값을 주어 작동 시킬 수 없습니다.)</font>',
+                        neospiderlite_outer_motor:
+                            '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 HIGH를 주어 작동 시킬 수 없습니다.)</font>',
+                        neospiderlite_outer_motor_pwm:
+                            '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 0 이상의 값을 주어 작동 시킬 수 없습니다.)</font>',
                     },
                 },
                 en: {
                     template: {
                         neospiderlite_get_analog_value: 'Analog %1 pin Sensor value',
-                        neospiderlite_get_analog_value_map: 'Analog %1 value Map range %2 ~ %3 to %4 ~ %5',
+                        neospiderlite_get_analog_value_map:
+                            'Analog %1 value Map range %2 ~ %3 to %4 ~ %5',
                         neospiderlite_get_ultrasonic_value: 'Ultrasonic Sensor value',
                         neospiderlite_get_motion_value: 'Motion Sensor value',
                         neospiderlite_get_infared_value: 'Infared ray %1 Sensor value',
@@ -655,7 +698,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [null,],
+                        params: [null],
                         type: 'neospiderlite_get_analog_value',
                     },
                     paramsKeyMap: {
@@ -685,7 +728,8 @@
                                         value: 'GAS',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueLowerCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueLowerCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                 ],
@@ -789,7 +833,8 @@
                                         value: 'GAS',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueLowerCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueLowerCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                     {
@@ -870,7 +915,7 @@
                         ],
                     },
                 },
-                neospiderlite_get_infared_value : {
+                neospiderlite_get_infared_value: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     fontColor: '#fff',
@@ -891,7 +936,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [null,],
+                        params: [null],
                         type: 'neospiderlite_get_infared_value',
                     },
                     paramsKeyMap: {
@@ -918,7 +963,8 @@
                                         value: 'LEFT_INFARED',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueLowerCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueLowerCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                 ],
@@ -991,7 +1037,8 @@
                                         ],
                                         value: 'C',
                                         fontSize: 11,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                     },
@@ -1176,9 +1223,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [
-                            90,
-                        ],
+                        params: [90],
                         type: 'neospiderlite_set_servo',
                     },
                     paramsKeyMap: {
@@ -1283,9 +1328,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [
-                            null,
-                        ],
+                        params: [null],
                         type: 'neospiderlite_motor_state',
                     },
                     paramsKeyMap: {
@@ -1294,7 +1337,7 @@
                     class: 'NeoSpiderLite',
                     isNotFor: ['NeoSpiderLite'],
                     func(sprite, script) {
-                        return Entry.NeoSpiderLite.setMotor(script)
+                        return Entry.NeoSpiderLite.setMotor(script);
                     },
                     syntax: {
                         js: [],
@@ -1313,7 +1356,8 @@
                                         value: '1',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                 ],
@@ -1388,7 +1432,8 @@
                                         value: '1',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                     {
@@ -1496,7 +1541,7 @@
                     },
                     class: 'NeoSpiderLite',
                     isNotFor: ['NeoSpiderLite'],
-                    func: function (sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoSpiderLite.setNeopixel(script);
                     },
                     syntax: {
@@ -1564,7 +1609,7 @@
                     },
                     class: 'NeoSpiderLite',
                     isNotFor: ['NeoSpiderLite'],
-                    func: function (sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoSpiderLite.setNeopixelPicker(script);
                     },
                     syntax: {
@@ -1603,10 +1648,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [
-                            null,
-                            null,
-                        ],
+                        params: [null, null],
                         type: 'neospiderlite_neopixel_color_picker_all_on',
                     },
                     paramsKeyMap: {
@@ -1614,7 +1656,7 @@
                     },
                     class: 'NeoSpiderLite',
                     isNotFor: ['NeoSpiderLite'],
-                    func: function (sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoSpiderLite.setAllNeopixelPicker(script);
                     },
                     syntax: {
@@ -1685,7 +1727,7 @@
                     },
                     class: 'NeoSpiderLite',
                     isNotFor: ['NeoSpiderLite'],
-                    func: function (sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoSpiderLite.setAllNeopixel(script);
                     },
                     syntax: {
@@ -1725,13 +1767,13 @@
                     ],
                     events: {},
                     def: {
-                        params: [null,],
+                        params: [null],
                         type: 'neospiderlite_neopixel_all_off',
                     },
                     paramsKeyMap: {},
                     class: 'NeoSpiderLite',
                     isNotFor: ['NeoSpiderLite'],
-                    func: function (sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoSpiderLite.setNeopixelOff(script);
                     },
                     syntax: {
@@ -1780,10 +1822,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [
-                            5,
-                            null,
-                        ],
+                        params: [5, null],
                         type: 'neospiderlite_outer_motor',
                     },
                     paramsKeyMap: {
@@ -1858,10 +1897,7 @@
                     ],
                     events: {},
                     def: {
-                        params: [
-                            5,
-                            null,
-                        ],
+                        params: [5, null],
                         type: 'neospiderlite_outer_motor_pwm',
                     },
                     paramsKeyMap: {

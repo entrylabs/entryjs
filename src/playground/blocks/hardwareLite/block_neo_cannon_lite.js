@@ -12,7 +12,6 @@
                 en: 'NeoCannon',
             };
             this.duration = 32;
-            
             this.blockMenuBlocks = [
                 'neocannonlite_get_vibe_value',
                 'neocannonlite_set_tone',
@@ -38,13 +37,22 @@
                 bufferSize: 512,
                 constantServing: true,
             };
-
             this.__toneTable = {
-                '0': 0, C: 1, CS: 2, D: 3, DS: 4,
-                E: 5, F: 6, FS: 7, G: 8, GS: 9,
-                A: 10, AS: 11, B: 12,
+                '0': 0,
+                C: 1,
+                CS: 2,
+                D: 3,
+                DS: 4,
+                E: 5,
+                F: 6,
+                FS: 7,
+                G: 8,
+                GS: 9,
+                A: 10,
+                AS: 11,
+                B: 12,
             };
-            this.__toneMap =  {
+            this.__toneMap = {
                 '1': [33, 65, 131, 262, 523, 1046, 2093, 4186],
                 '2': [35, 69, 139, 277, 554, 1109, 2217, 4435],
                 '3': [37, 73, 147, 294, 587, 1175, 2349, 4699],
@@ -58,7 +66,6 @@
                 '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
                 '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
             };
-            
             this.setZero();
         }
 
@@ -71,7 +78,7 @@
                     VIBE: {
                         name: '진동센서',
                         type: 'input',
-                        pos: { x: 0, y: 0},
+                        pos: { x: 0, y: 0 },
                     },
                 },
                 mode: 'both',
@@ -134,8 +141,9 @@
                     const vibeState = readData[1];
                     const life = readData[2];
                     checkSum = (idx + vibeState + life) & 0xff;
-                    if (checkSum != readData[3]) return;
-
+                    if (checkSum != readData[3]) {
+                        return;
+                    }
                     sensorData.VIBE = vibeState;
                 }
             });
@@ -236,7 +244,7 @@
         }
 
         setMotor(script) {
-            let state = script.getField('STATE');
+            const state = script.getField('STATE');
 
             this.workerData.MOTOR = state;
             return script.callReturn();
@@ -322,7 +330,7 @@
 
         setShootShooting(script) {
             if (!script.isStart) {
-                let duration = 40;
+                const duration = 40;
                 script.isStart = true;
                 script.timeFlag = 1;
 
@@ -379,10 +387,9 @@
         }
 
         setLed(script) {
-            let color = script.getField('COLOR');
-            let state = script.getField('STATE');
+            const color = script.getField('COLOR');
+            const state = script.getField('STATE');
             let power = 0;
-            
             if (state != null) {
                 power = state == 1 ? 255 : 0;
             } else {
@@ -403,11 +410,11 @@
         }
 
         setLedPicker(script) {
-            let color = script.getStringField('COLOR');
+            const color = script.getStringField('COLOR');
 
-            let redPower = parseInt(color.substr(1, 2), 16);
-            let greenPower = parseInt(color.substr(3, 2), 16);
-            let bluePower = parseInt(color.substr(5, 2), 16);
+            const redPower = parseInt(color.substr(1, 2), 16);
+            const greenPower = parseInt(color.substr(3, 2), 16);
+            const bluePower = parseInt(color.substr(5, 2), 16);
 
             this.workerData.SHOOT = 4;
             this.workerData.LED = bluePower;
@@ -418,9 +425,9 @@
         }
 
         setRGBLed(script) {
-            let redPower = script.getNumberValue('RED', script);
-            let greenPower = script.getNumberValue('GREEN', script);
-            let bluePower = script.getNumberValue('BLUE', script);
+            const redPower = script.getNumberValue('RED', script);
+            const greenPower = script.getNumberValue('GREEN', script);
+            const bluePower = script.getNumberValue('BLUE', script);
 
             this.workerData.SHOOT = 4;
             this.workerData.LED = bluePower;
@@ -470,7 +477,8 @@
                             '진동 감지 여부를 가져옵니다.<br/><font color="crimson">센서값 0: `감지 못함`, 1: `감지됨`</font>',
                         neocannonlite_set_tone:
                             '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
-                        neocannonlite_motor_state: '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 이동시킬 수 있습니다.',
+                        neocannonlite_motor_state:
+                            '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 이동시킬 수 있습니다.',
                         neocannonlite_motor_state_secs:
                             '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 정해진 시간(초)만큼 이동시킬 수 있습니다.',
                         neocannonlite_motor_stop: '네오캐논 이동을 정지합니다.',
@@ -613,7 +621,8 @@
                                         ],
                                         value: 'C',
                                         fontSize: 11,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                     },
@@ -834,7 +843,8 @@
                                         value: '1',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                 ],
@@ -909,7 +919,8 @@
                                         value: '1',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                     {
@@ -1133,7 +1144,8 @@
                                         value: '1',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueLowerCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueLowerCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                     {
@@ -1210,7 +1222,8 @@
                                         value: '0',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                     {
@@ -1222,7 +1235,8 @@
                                         value: '1',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                 ],
@@ -1289,7 +1303,8 @@
                                         value: '0',
                                         fontSize: 11,
                                         arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
-                                        converter: Entry.block.converters.returnStringValueUpperCase,
+                                        converter:
+                                            Entry.block.converters.returnStringValueUpperCase,
                                         bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
                                     },
                                     {
@@ -1318,7 +1333,7 @@
                     ],
                     events: {},
                     def: {
-                        params: ["#0000FF", null],
+                        params: ['#0000FF', null],
                         type: 'neocannonlite_rgb_led_color_picker',
                     },
                     paramsKeyMap: {
@@ -1326,7 +1341,7 @@
                     },
                     class: 'NeoCannonLiteRGB',
                     isNotFor: ['NeoCannonLite'],
-                    func: function(sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoCannonLite.setLedPicker(script);
                     },
                     syntax: {
@@ -1397,7 +1412,7 @@
                     },
                     class: 'NeoCannonLiteRGB',
                     isNotFor: ['NeoCannonLite'],
-                    func: function(sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoCannonLite.setRGBLed(script);
                     },
                     syntax: {
@@ -1443,7 +1458,7 @@
                     paramsKeyMap: {},
                     class: 'NeoCannonLiteRGB',
                     isNotFor: ['NeoCannonLite'],
-                    func: function(sprite, script) {
+                    func(sprite, script) {
                         return Entry.NeoCannonLite.setLedOff(script);
                     },
                     syntax: {
