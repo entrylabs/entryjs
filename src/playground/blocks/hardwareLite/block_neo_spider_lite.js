@@ -603,42 +603,6 @@
                     Menus: {
                         neospiderlite: '네오스파이더',
                     },
-                    Helper: {
-                        neospiderlite_get_analog_value:
-                            '아날로그 센서값을 읽어오는 블럭입니다.<br/>가스, 조도, 진동, 외부 센서는 `0~1023`의 값 가지며, 온도센서는 온도값을 읽어옵니다.<br/><font color="crimson">(단, 가스센서와 외부센서는 동시에 사용할 수 없습니다.)</font>',
-                        neospiderlite_get_analog_value_map:
-                            '아날로그 센서값의 범위를 다른 범위로 변환합니다.',
-                        neospiderlite_get_ultrasonic_value:
-                            '초음파를 통해 거리를 측정합니다.<br/><font color="crimson">(참고, HC-SR04의 경우 약 0~2cm정도 측정을 못하고 너무 가까우면 이상한 값을 나타냅니다.)</font>',
-                        neospiderlite_get_motion_value:
-                            '모션 센서의 값을 가져옵니다.<br/>해당 센서값은 0: `감지 못함`, 1: `감지됨`입니다.<br/><font color="crimson">(참고, 해당 센서의 경우 길게는 약 7초 정도 감지된 값을 유지합니다.)</font>',
-                        neospiderlite_get_infared_value:
-                            '적외선 센서의 값을 가져옵니다.<br/>왼쪽과 오른쪽 2가지로 나뉘어 있으며, 센서값은 0: `감지 못함`, 1: `감지됨`입니다.',
-                        neospiderlite_set_tone:
-                            '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
-                        neospiderlite_set_servo:
-                            '머리각도를 최소 50 ~ 최대 130도 사이의 값으로 움직입니다.',
-                        neospiderlite_set_servo_direction:
-                            '머리각도를 왼쪽(50), 정면(90), 오른쪽(130)으로 이동할 수 있습니다.',
-                        neospiderlite_motor_state:
-                            '네오스파이더를 전진, 좌회전, 우회전, 후진을 실행합니다.',
-                        neospiderlite_motor_state_secs:
-                            '네오스파이더를 전진, 좌회전, 우회전, 후진을 정해진 시간만큼 실행합니다.',
-                        neospiderlite_motor_stop: '네오스파이더 이동을 정지',
-                        neospiderlite_neopixel_color_picker:
-                            '색을 보고 RGB색상을 정하여 정해진 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
-                        neospiderlite_neopixel:
-                            '정해준 LED 번호에 빨강, 파랑, 초록의 색을 넣고 조합하여 LED를 켤 수 있습니다.<br/><font color="crimson">(참고, LED번호는 0번부터 7번까지 입니다.)</font>',
-                        neospiderlite_neopixel_color_picker_all_on:
-                            '색을 보고 RGB색상을 정하여 모든 LED를 켤 수 있습니다.',
-                        neospiderlite_neopixel_all_on:
-                            '빨강, 파랑, 초록의 색을 넣고 조합하여 모든 LED를 켤 수 있습니다.',
-                        neospiderlite_neopixel_all_off: '모든 LED를 끌 수 있습니다.',
-                        neospiderlite_outer_motor:
-                            '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 HIGH를 주어 작동 시킬 수 없습니다.)</font>',
-                        neospiderlite_outer_motor_pwm:
-                            '외부 모듈을 통하여 D5, D6번을 제어할 수 있습니다.<font color="crimson">(단, 동시에 0 이상의 값을 주어 작동 시킬 수 없습니다.)</font>',
-                    },
                 },
                 en: {
                     template: {

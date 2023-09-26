@@ -472,32 +472,6 @@
                     Menus: {
                         neocannonlite: '네오캐논',
                     },
-                    Helper: {
-                        neocannonlite_get_vibe_value:
-                            '진동 감지 여부를 가져옵니다.<br/><font color="crimson">센서값 0: `감지 못함`, 1: `감지됨`</font>',
-                        neocannonlite_set_tone:
-                            '부저를 통해 선택한 옥타브 음계를 통해 해당 시간만큼 소리를 냅니다.<br/><font color="crimson">(참고, 다음 블럭이 있을경우에 부저 연주시간이 끝난 후에 다음 블럭을 실행합니다.)</font>',
-                        neocannonlite_motor_state:
-                            '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 이동시킬 수 있습니다.',
-                        neocannonlite_motor_state_secs:
-                            '네오캐논을 앞, 왼쪽, 오른쪽, 뒤로 정해진 시간(초)만큼 이동시킬 수 있습니다.',
-                        neocannonlite_motor_stop: '네오캐논 이동을 정지합니다.',
-                        neocannonlite_shoot_reload: '장전 모터를 정해진 시간(초)만큼 장전합니다.',
-                        neocannonlite_shoot_catch:
-                            '장전 모터가 풀리는 것을 방지해주기 위해 일정 세기로 잡아줍니다.',
-                        neocannonlite_shoot_shooting: '장전 모터를 풀어서 발사합니다.',
-                        neocannonlite_angle_state:
-                            '각도 모터를 제어하여 위, 아래로 정해진 시간(초)만큼 이동합니다.',
-                        neocannonlite_rgb_led_select_state:
-                            'RGB LED 중 빨강, 초록, 파랑을 선택하여 ON/OFF를 제어합니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
-                        neocannonlite_rgb_led_select_pwm:
-                            'RGB LED 중 빨강, 초록, 파랑을 선택하여 세기값(0~255)을 주어 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
-                        neocannonlite_rgb_led_color_picker:
-                            'RGB LED를 색을 선택하여 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
-                        neocannonlite_rgb_led_pwm:
-                            'RGB LED에 세기값(0~255)을 주어 원하는 색상을 나타낼 수 있습니다.<br/><font color="crimson">(주의, LED모드로 진행해주세요.)</font>',
-                        neocannonlite_rgb_led_off: 'RGB LED를 끌 수 있습니다.',
-                    },
                 },
                 en: {
                     template: {
