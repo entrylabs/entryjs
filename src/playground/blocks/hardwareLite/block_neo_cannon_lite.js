@@ -19,9 +19,12 @@
                 'neocannonlite_motor_state_secs',
                 'neocannonlite_motor_stop',
                 'neocannonlite_shoot_reload',
+                'neocannonlite_shoot_reload_secs',
                 'neocannonlite_shoot_catch',
                 'neocannonlite_shoot_shooting',
+                'neocannonlite_shoot_stop',
                 'neocannonlite_angle_state',
+                'neocannonlite_angle_state_secs',
                 'neocannonlite_rgb_led_select_state',
                 'neocannonlite_rgb_led_select_pwm',
                 'neocannonlite_rgb_led_color_picker',
@@ -92,7 +95,9 @@
         setZero() {
             this.txData = new Array(14).fill(0);
 
-            this.sensorData = { VIBE: 0 };
+            this.sensorData = {
+                VIBE: 0,
+            };
             this.workerData = {
                 OCTAVE: 0,
                 NOTE: 0,
@@ -288,6 +293,13 @@
         }
 
         setShootReload(script) {
+            this.workerData.SHOOT = 1;
+            this.workerData.D9 = 200;
+            this.workerData.D10 = 0;
+            return script.callReturn();
+        }
+
+        setShootReloadSecs(script) {
             if (!script.isStart) {
                 let duration = script.getNumberValue('DURATION', script);
 
@@ -354,7 +366,20 @@
             }
         }
 
-        setAngleState(script) {
+        setShootStop(script) {
+            this.workerData.SHOOT = 0;
+            this.workerData.D9 = 0;
+            this.workerData.D10 = 0;
+            return script.callReturn();
+        }
+
+        setAngle(script) {
+            const state = script.getNumberValue('STATE', script);
+            this.workerData.ANGLE = state;
+            return script.callReturn();
+        }
+
+        setAngleSecs(script) {
             if (!script.isStart) {
                 let state = script.getNumberValue('STATE', script);
                 let duration = script.getNumberValue('DURATION', script);
@@ -456,10 +481,13 @@
                         neocannonlite_motor_state: '%1 이동하기 %2',
                         neocannonlite_motor_state_secs: '%1 %2 초 이동하기 %3',
                         neocannonlite_motor_stop: '정지하기 %1',
-                        neocannonlite_shoot_reload: '%1 초 장전하기 %2',
+                        neocannonlite_shoot_reload: '장전하기 %1',
+                        neocannonlite_shoot_reload_secs: '%1 초 장전하기 %2',
                         neocannonlite_shoot_catch: '장전 풀림 방지 %1',
                         neocannonlite_shoot_shooting: '발사하기 %1',
-                        neocannonlite_angle_state: '각도 %1 %2 초 이동하기 %3',
+                        neocannonlite_shoot_stop: '장전모터 정지 %1',
+                        neocannonlite_angle_state: '각도 %1 이동하기 %2',
+                        neocannonlite_angle_state_secs: '각도 %1 %2 초 이동하기 %3',
                         neocannonlite_rgb_led_select_state: '%1 %2 %3',
                         neocannonlite_rgb_led_select_pwm: '%1 %2 세기로 켜기 %3',
                         neocannonlite_rgb_led_color_picker: 'RGB LED %1 %2',
@@ -480,10 +508,13 @@
                         neocannonlite_motor_state: 'Move %1 %2',
                         neocannonlite_motor_state_secs: 'Move %1 %2 secs %3',
                         neocannonlite_motor_stop: 'Move Stop %1',
-                        neocannonlite_shoot_reload: 'Reload %1 secs %2',
+                        neocannonlite_shoot_reload: 'Reload %1',
+                        neocannonlite_shoot_reload_secs: 'Reload %1 secs %2',
                         neocannonlite_shoot_catch: 'Anti-shoot %1',
                         neocannonlite_shoot_shooting: 'Shoot %1',
-                        neocannonlite_angle_state: 'Move Angle %1 %2 secs %3',
+                        neocannonlite_shoot_stop: 'Stop Shooting Motor %1',
+                        neocannonlite_angle_state: 'Move Angle %1 %2',
+                        neocannonlite_angle_state_secs: 'Move Angle %1 %2 secs %3',
                         neocannonlite_rgb_led_select_state: '%1 color %2 %3',
                         neocannonlite_rgb_led_select_pwm: '%1 color %2 turn on pwm %3',
                         neocannonlite_rgb_led_color_picker: 'RGB LED %1 %2',
@@ -523,7 +554,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.getVibe()',
+                                syntax: 'NeoCannonLite.get_vibe()',
                                 blockType: 'param',
                                 textParams: [],
                             },
@@ -804,7 +835,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.motorState(%1)',
+                                syntax: 'NeoCannonLite.motor_state(%1)',
                                 textParams: [
                                     {
                                         type: 'Dropdown',
@@ -880,7 +911,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.motorStateSecs(%1, %2)',
+                                syntax: 'NeoCannonLite.motor_state_secs(%1, %2)',
                                 textParams: [
                                     {
                                         type: 'Dropdown',
@@ -933,13 +964,46 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.motorStop()',
+                                syntax: 'NeoCannonLite.motor_stop()',
                                 textParams: [],
                             },
                         ],
                     },
                 },
                 neocannonlite_shoot_reload: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'neocannonlite_shoot_reload',
+                    },
+                    paramsKeyMap: {},
+                    class: 'NeoCannonLite',
+                    isNotFor: ['NeoCannonLite'],
+                    func(sprite, script) {
+                        return Entry.NeoCannonLite.setShootReload(script);
+                    },
+                    syntax: {
+                        js: [],
+                        py: [
+                            {
+                                syntax: 'NeoCannonLite.reload()',
+                                textParams: [],
+                            },
+                        ],
+                    },
+                },
+                neocannonlite_shoot_reload_secs: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -964,7 +1028,7 @@
                                 params: ['1'],
                             },
                         ],
-                        type: 'neocannonlite_shoot_reload',
+                        type: 'neocannonlite_shoot_reload_secs',
                     },
                     paramsKeyMap: {
                         DURATION: 0,
@@ -972,13 +1036,13 @@
                     class: 'NeoCannonLite',
                     isNotFor: ['NeoCannonLite'],
                     func(sprite, script) {
-                        return Entry.NeoCannonLite.setShootReload(script);
+                        return Entry.NeoCannonLite.setShootReloadSecs(script);
                     },
                     syntax: {
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.reload(%1)',
+                                syntax: 'NeoCannonLite.reload_secs(%1)',
                                 textParams: [
                                     {
                                         type: 'Block',
@@ -1016,7 +1080,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.shootCatch()',
+                                syntax: 'NeoCannonLite.shoot_catch()',
                                 textParams: [],
                             },
                         ],
@@ -1055,7 +1119,102 @@
                         ],
                     },
                 },
+                neocannonlite_shoot_stop: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'neocannonlite_shoot_stop',
+                    },
+                    paramsKeyMap: {},
+                    class: 'NeoCannonLite',
+                    isNotFor: ['NeoCannonLite'],
+                    func(sprite, script) {
+                        return Entry.NeoCannonLite.setShootStop(script);
+                    },
+                    syntax: {
+                        js: [],
+                        py: [
+                            {
+                                syntax: 'NeoCannonLite.shoot_stop()',
+                                textParams: [],
+                            },
+                        ],
+                    },
+                },
                 neocannonlite_angle_state: {
+                    color: EntryStatic.colorSet.block.default.HARDWARE,
+                    outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+                    skeleton: 'basic',
+                    statements: [],
+                    params: [
+                        {
+                            type: 'Dropdown',
+                            options: [
+                                ['STOP', '0'],
+                                ['UP', '1'],
+                                ['DOWN', '2'],
+                            ],
+                            value: '0',
+                            fontSize: 11,
+                            bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                            arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                        },
+                        {
+                            type: 'Indicator',
+                            img: 'block_icon/hardware_icon.svg',
+                            size: 12,
+                        },
+                    ],
+                    events: {},
+                    def: {
+                        params: [null],
+                        type: 'neocannonlite_angle_state',
+                    },
+                    paramsKeyMap: {
+                        STATE: 0,
+                    },
+                    class: 'NeoCannonLite',
+                    isNotFor: ['NeoCannonLite'],
+                    func(sprite, script) {
+                        return Entry.NeoCannonLite.setAngle(script);
+                    },
+                    syntax: {
+                        js: [],
+                        py: [
+                            {
+                                syntax: 'NeoCannonLite.angle_state(%1)',
+                                textParams: [
+                                    {
+                                        type: 'Dropdown',
+                                        options: [
+                                            ['STOP', '0'],
+                                            ['UP', '1'],
+                                            ['DOWN', '2'],
+                                        ],
+                                        value: '0',
+                                        fontSize: 11,
+                                        arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
+                                        converter:
+                                            Entry.block.converters.returnStringValueLowerCase,
+                                        bgColor: EntryStatic.colorSet.block.darken.HARDWARE,
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                },
+                neocannonlite_angle_state_secs: {
                     color: EntryStatic.colorSet.block.default.HARDWARE,
                     outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
                     skeleton: 'basic',
@@ -1092,7 +1251,7 @@
                                 params: ['0.1'],
                             },
                         ],
-                        type: 'neocannonlite_angle_state',
+                        type: 'neocannonlite_angle_state_secs',
                     },
                     paramsKeyMap: {
                         STATE: 0,
@@ -1101,13 +1260,13 @@
                     class: 'NeoCannonLite',
                     isNotFor: ['NeoCannonLite'],
                     func(sprite, script) {
-                        return Entry.NeoCannonLite.setAngleState(script);
+                        return Entry.NeoCannonLite.setAngleSecs(script);
                     },
                     syntax: {
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.angleState(%1, %2)',
+                                syntax: 'NeoCannonLite.angle_state_secs(%1, %2)',
                                 textParams: [
                                     {
                                         type: 'Dropdown',
@@ -1184,7 +1343,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.rgbLedSelectState(%1, %2)',
+                                syntax: 'NeoCannonLite.rgb_led_select_state(%1, %2)',
                                 textParams: [
                                     {
                                         type: 'Dropdown',
@@ -1265,7 +1424,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.rgbLedSelectPwm(%1, %2)',
+                                syntax: 'NeoCannonLite.rgb_led_select_pwm(%1, %2)',
                                 textParams: [
                                     {
                                         type: 'Dropdown',
@@ -1322,7 +1481,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.rgbLedColorPicker(%1)',
+                                syntax: 'NeoCannonLite.rgb_led_colorpicker(%1)',
                                 textParams: [
                                     {
                                         type: 'Color',
@@ -1393,7 +1552,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.rgbLedPwm(%1, %2, %3)',
+                                syntax: 'NeoCannonLite.rgb_led_pwm(%1, %2, %3)',
                                 textParams: [
                                     {
                                         type: 'Block',
@@ -1439,7 +1598,7 @@
                         js: [],
                         py: [
                             {
-                                syntax: 'NeoCannonLite.rgbLedOff()',
+                                syntax: 'NeoCannonLite.rgb_led_off()',
                                 textParams: [],
                             },
                         ],
