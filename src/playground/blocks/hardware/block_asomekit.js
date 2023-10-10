@@ -808,6 +808,7 @@ Entry.AsomeKit.getBlocks = function() {
             ],
             paramsKeyMap: {
                 VALUE1: 0,
+                VALUE2: 1,
             },
             events: {},
             def: {
@@ -831,12 +832,13 @@ Entry.AsomeKit.getBlocks = function() {
                 var pd = Entry.hw.portData;
 
                 var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
                     
                 if (!script.is_started) {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = format_str('import vibration_sensor; vs = vibration_sensor.create({0}, {1});', value1);
+                    sq.msg = format_str('import vibration_sensor; vs = vibration_sensor.create({0}, {1});', value1, value2);
                     return script;
                 }
 
@@ -1243,7 +1245,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'cm = hcsr04.get_distance()';
+                    sq.msg = "cm = hcsr04.get_distance(); print('#' + 'CM ' + str(cm) + '  ###')";
                     return script;
                 }
 
@@ -1285,7 +1287,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'ht.measure(); humidity = ht.humidity()';
+                    sq.msg = "ht.measure(); humidity = ht.humidity(); print('#' + 'HD ' + str(humidity) + '  ###')";
                     return script;
                 }
 
@@ -1327,7 +1329,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'ht.measure(); temperature = ht.temperature()';
+                    sq.msg = "ht.measure(); temperature = ht.temperature(); print('#' + 'TP ' + str(temperature) + '  ###')";
                     return script;
                 }
 
@@ -1369,7 +1371,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'light = AnalogPin().read()';
+                    sq.msg = "light = AnalogPin().read(); print('#' + 'BN ' + str(light) + '  ###')";
                     return script;
                 }
 
@@ -1411,7 +1413,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'bt_value = bt.value()';
+                    sq.msg = "bt_value = bt.value(); print('#' + 'BT ' + str(bt_value) + '  ###')";
                     return script;
                 }
 
@@ -1453,7 +1455,8 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'vibration = vs.is_active()';
+                    sq.msg = "vibration = vs.is_active(); print('#' + 'VT ' + str(vibration) + '  ###')";
+                    console.log(pd.vibration);
                     return script;
                 }
 
@@ -1495,7 +1498,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'sound = AnalogPin(2).read()';
+                    sq.msg = "sound = AnalogPin(2).read(); print('#' + 'SO ' + str(sound) + '  ###')";
                     return script;
                 }
 
@@ -1525,7 +1528,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'temperature';
+                var pd = Entry.hw.portData;
+
+                return pd.temperature;
             },
             syntax: {
                 js: [],
@@ -1553,7 +1558,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'light';
+                var pd = Entry.hw.portData;
+
+                return pd.light;
             },
             syntax: {
                 js: [],
@@ -1581,7 +1588,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'cm';
+                var pd = Entry.hw.portData;
+
+                return pd.cm;
             },
             syntax: {
                 js: [],
@@ -1609,7 +1618,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'humidity';
+                var pd = Entry.hw.portData;
+
+                return pd.humidity;
             },
             syntax: {
                 js: [],
@@ -1637,13 +1648,15 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'vibration';
+                var pd = Entry.hw.portData;
+                console.log(pd.vibration);
+                return pd.vibration;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'temperature',
+                        syntax: 'vibration',
                         blockType: 'param',
                     }
                 ]
@@ -1665,13 +1678,15 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'bt_value';
+                var pd = Entry.hw.portData;
+
+                return pd.bt_value;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'temperature',
+                        syntax: 'bt_value',
                         blockType: 'param',
                     }
                 ]
@@ -1693,7 +1708,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'sound';
+                var pd = Entry.hw.portData;
+
+                return pd.sound;
             },
             syntax: {
                 js: [],
