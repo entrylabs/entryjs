@@ -145,6 +145,8 @@ Entry.AsomeKit.setLanguage = function() {
         },
         en: {
             template: {
+                asomekit_turnoff_pin: 'Turn off pins %1',
+                
                 asomekit_led_ready: 'LED ready %1 %2 %3 %4 %5',
                 asomekit_rgb_led_ready: 'RGB LED ready %1 %2 %3 %4',
                 asomekit_button_ready: 'button ready %1',
@@ -935,10 +937,10 @@ Entry.AsomeKit.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [ "빨강", "red" ],
-                        [ "노랑", "yellow" ],
-                        [ "초록", "green" ],
-                        [ "고휘도", "bright"],
+                        [ "Red", "red" ],
+                        [ "Yellow", "yellow" ],
+                        [ "Green", "green" ],
+                        [ "Bright", "bright"],
                     ],
                     value: 'red',
                     fontSize: 11,
@@ -949,8 +951,8 @@ Entry.AsomeKit.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [ "켜기", "on" ],
-                        [ "끄기", "off" ]
+                        [ "On", "on" ],
+                        [ "Off", "off" ]
                     ],
                     value: 'on', 
                     fontSize: 11,
@@ -1012,9 +1014,9 @@ Entry.AsomeKit.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [ "빨강", "r" ],
-                        [ "초록", "g" ],
-                        [ "파랑", "b" ],
+                        [ "Red", "r" ],
+                        [ "Green", "g" ],
+                        [ "Blue", "b" ],
                     ],
                     value: 'r',
                     fontSize: 11,
