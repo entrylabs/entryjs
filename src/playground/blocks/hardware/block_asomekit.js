@@ -145,32 +145,34 @@ Entry.AsomeKit.setLanguage = function() {
         },
         en: {
             template: {
+                asomekit_turnoff_pin: 'Turn off pins %1',
+                
                 asomekit_led_ready: 'LED ready %1 %2 %3 %4 %5',
                 asomekit_rgb_led_ready: 'RGB LED ready %1 %2 %3 %4',
-                asomekit_button_ready: 'button ready %1',
-                asomekit_music_ready: 'music ready %1',
-                asomekit_buzzer_ready: 'buzzer ready %1',
-                asomekit_dht_ready: 'temperature and humidity sensor ready%1',
-                asomekit_led_tube_ready: 'LED tube ready %1',
-                asomekit_vibration_ready: 'vibration sensor ready %1',
-                asomekit_ultrasound_ready: 'ultrasound sensor ready %1',
-                asomekit_brightness_ready: 'brightness sensor ready %1',
-                asomekit_sound_readyt: 'sound sensor ready %1',
+                asomekit_button_ready: 'button ready %1 %2',
+                asomekit_music_ready: 'music ready %1 %2',
+                asomekit_buzzer_ready: 'buzzer ready %1 %2',
+                asomekit_dht_ready: 'temperature and humidity sensor ready %1 %2',
+                asomekit_led_tube_ready: 'LED tube ready %1 %2',
+                asomekit_vibration_ready: 'vibration sensor ready %1 %2 %3',
+                asomekit_ultrasound_ready: 'ultrasound sensor ready %1 %2',
+                asomekit_brightness_ready: 'brightness sensor ready %1 %2',
+                asomekit_sound_readyt: 'sound sensor ready %1 %2',
                 
                 asomekit_led: '%1 LED %2 %3',
-                asomekit_rgb_brightness: '%1 brightness setting %2%3',
-                asomekit_led_tube: 'LED tube display %1%2',
-                asomekit_led_tube_time: 'LED tube show time %1 %2 %3 %4',
+                asomekit_rgb_brightness: 'Set brightness of %1 to %2 %3',
+                asomekit_led_tube: 'Display %1 on LED tube %2',
+                asomekit_led_tube_time: 'Display time %1 %2 %3 on LED tube %4',
                 
-                asomekit_ultrasound_measurement: 'ultrasonic sensor distance measurement %1',
-                asomekit_humidity_measurement: 'humidity measurement %1',
-                asomekit_temperature_measurement: 'temperature measurement %1',
-                asomekit_brightness_measurement: 'brightness measurment %1',
-                asomekit_vibration_detection: 'vibration detection %1',
-                asomekit_button_read: 'Read button information %1',
-                asomekit_sound_measurement: 'sound measurment %1',
+                asomekit_ultrasound_measurement: 'Measure distance %1',
+                asomekit_humidity_measurement: 'Measure humidity %1',
+                asomekit_temperature_measurement: 'Measure temperature %1',
+                asomekit_brightness_measurement: 'Check light sensor %1',
+                asomekit_vibration_detection: 'Check vibration sensor %1',
+                asomekit_button_read: 'Check button value %1',
+                asomekit_sound_measurement: 'Check sound sensor %1',
                 
-                asomekit_ultrasound_measurement_value: 'ultrasound',
+                asomekit_ultrasound_measurement_value: 'distance',
                 asomekit_humidity_measurement_value: 'humidity',
                 asomekit_temperature_measurement_value: 'temperature',
                 asomekit_brightness_measurement_value: 'brightness',
@@ -179,8 +181,8 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_sound_measurement_value: 'sound',
                 
                 asomekit_buzzer_onoff: 'buzzer %1 %2',
-                asomekit_buzzer_note: 'Play note %1 in %2 sec %3',
-                asomekit_buzzer_tone: 'Mkae sound on %1 Hz in %2 sec %3',
+                asomekit_buzzer_note: 'Play %1 %2 for %3 seconds %4',
+                asomekit_buzzer_tone: 'Make sound of %1 for %2 seconds %3',
 
                 asomekit_input_num: '%1',
                 asomekit_input_text: '"%1"',
@@ -808,6 +810,7 @@ Entry.AsomeKit.getBlocks = function() {
             ],
             paramsKeyMap: {
                 VALUE1: 0,
+                VALUE2: 1,
             },
             events: {},
             def: {
@@ -831,12 +834,13 @@ Entry.AsomeKit.getBlocks = function() {
                 var pd = Entry.hw.portData;
 
                 var value1 = script.getValue('VALUE1');
+                var value2 = script.getValue('VALUE2');
                     
                 if (!script.is_started) {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = format_str('import vibration_sensor; vs = vibration_sensor.create({0}, {1});', value1);
+                    sq.msg = format_str('import vibration_sensor; vs = vibration_sensor.create({0}, {1});', value1, value2);
                     return script;
                 }
 
@@ -933,10 +937,10 @@ Entry.AsomeKit.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [ "빨강", "red" ],
-                        [ "노랑", "yellow" ],
-                        [ "초록", "green" ],
-                        [ "고휘도", "bright"],
+                        [ "Red", "red" ],
+                        [ "Yellow", "yellow" ],
+                        [ "Green", "green" ],
+                        [ "Bright", "bright"],
                     ],
                     value: 'red',
                     fontSize: 11,
@@ -947,8 +951,8 @@ Entry.AsomeKit.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [ "켜기", "on" ],
-                        [ "끄기", "off" ]
+                        [ "On", "on" ],
+                        [ "Off", "off" ]
                     ],
                     value: 'on', 
                     fontSize: 11,
@@ -1010,9 +1014,9 @@ Entry.AsomeKit.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [ "빨강", "r" ],
-                        [ "초록", "g" ],
-                        [ "파랑", "b" ],
+                        [ "Red", "r" ],
+                        [ "Green", "g" ],
+                        [ "Blue", "b" ],
                     ],
                     value: 'r',
                     fontSize: 11,
@@ -1243,7 +1247,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'cm = hcsr04.get_distance()';
+                    sq.msg = "cm = hcsr04.get_distance(); print('#' + 'CM ' + str(cm) + '  ###')";
                     return script;
                 }
 
@@ -1285,7 +1289,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'ht.measure(); humidity = ht.humidity()';
+                    sq.msg = "ht.measure(); humidity = ht.humidity(); print('#' + 'HD ' + str(humidity) + '  ###')";
                     return script;
                 }
 
@@ -1327,7 +1331,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'ht.measure(); temperature = ht.temperature()';
+                    sq.msg = "ht.measure(); temperature = ht.temperature(); print('#' + 'TP ' + str(temperature) + '  ###')";
                     return script;
                 }
 
@@ -1369,7 +1373,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'light = AnalogPin().read()';
+                    sq.msg = "light = AnalogPin().read(); print('#' + 'BN ' + str(light) + '  ###')";
                     return script;
                 }
 
@@ -1411,7 +1415,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'bt_value = bt.value()';
+                    sq.msg = "bt_value = bt.value(); print('#' + 'BT ' + str(bt_value) + '  ###')";
                     return script;
                 }
 
@@ -1453,7 +1457,8 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'vibration = vs.is_active()';
+                    sq.msg = "vibration = vs.is_active(); print('#' + 'VT ' + str(vibration) + '  ###')";
+                    console.log(pd.vibration);
                     return script;
                 }
 
@@ -1495,7 +1500,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = 'sound = AnalogPin(2).read()';
+                    sq.msg = "sound = AnalogPin(2).read(); print('#' + 'SO ' + str(sound) + '  ###')";
                     return script;
                 }
 
@@ -1525,7 +1530,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'temperature';
+                var pd = Entry.hw.portData;
+
+                return pd.temperature;
             },
             syntax: {
                 js: [],
@@ -1553,7 +1560,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'light';
+                var pd = Entry.hw.portData;
+
+                return pd.light;
             },
             syntax: {
                 js: [],
@@ -1581,7 +1590,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'cm';
+                var pd = Entry.hw.portData;
+
+                return pd.cm;
             },
             syntax: {
                 js: [],
@@ -1609,7 +1620,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'humidity';
+                var pd = Entry.hw.portData;
+
+                return pd.humidity;
             },
             syntax: {
                 js: [],
@@ -1637,13 +1650,15 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'vibration';
+                var pd = Entry.hw.portData;
+                console.log(pd.vibration);
+                return pd.vibration;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'temperature',
+                        syntax: 'vibration',
                         blockType: 'param',
                     }
                 ]
@@ -1665,13 +1680,15 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'bt_value';
+                var pd = Entry.hw.portData;
+
+                return pd.bt_value;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'temperature',
+                        syntax: 'bt_value',
                         blockType: 'param',
                     }
                 ]
@@ -1693,7 +1710,9 @@ Entry.AsomeKit.getBlocks = function() {
             class: 'Value',
             isNotFor: ['AsomeKit'],
             func: function(sprite, script) {
-                return 'sound';
+                var pd = Entry.hw.portData;
+
+                return pd.sound;
             },
             syntax: {
                 js: [],

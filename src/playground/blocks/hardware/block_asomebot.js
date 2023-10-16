@@ -1222,8 +1222,8 @@ Entry.AsomeBot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['왼쪽', '1'],
-                        ['오른쪽', '-1'],
+                        ['Left', '1'],
+                        ['Right', '-1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1364,8 +1364,8 @@ Entry.AsomeBot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['왼쪽', '1'],
-                        ['오른쪽', '-1'],
+                        ['Left', '1'],
+                        ['Right', '-1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1632,8 +1632,8 @@ Entry.AsomeBot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['왼쪽', '1'],
-                        ['오른쪽', '-1'],
+                        ['Left', '1'],
+                        ['Right', '-1'],
                     ],
                     value: '1',
                     fontSize: 11,
