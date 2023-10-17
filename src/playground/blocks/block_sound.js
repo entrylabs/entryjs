@@ -1,3 +1,7 @@
+import _clamp from 'lodash/clamp';
+
+Entry.playbackRateValue = 1;
+
 module.exports = {
     getBlocks() {
         return {
@@ -47,7 +51,8 @@ module.exports = {
                     const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        Entry.Utils.addSoundInstances(Entry.Utils.playSound(sound.id));
+                        const instance = Entry.Utils.playSound(sound.id);
+                        Entry.Utils.addSoundInstances(instance);
                     }
 
                     return script.callReturn();
@@ -125,12 +130,11 @@ module.exports = {
 
                     const sound = sprite.parent.getSound(soundId);
                     if (sound) {
-                        Entry.Utils.addSoundInstances(
-                            Entry.Utils.playSound(sound.id, {
-                                startTime: 0,
-                                duration: timeValue * 1000,
-                            })
-                        );
+                        const instance = Entry.Utils.playSound(sound.id, {
+                            startTime: 0,
+                            duration: timeValue * 1000,
+                        });
+                        Entry.Utils.addSoundInstances(instance);
                     }
                     return script.callReturn();
                 },
@@ -226,7 +230,6 @@ module.exports = {
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
                         Entry.Utils.addSoundInstances(instance);
-
                     }
                     return script.callReturn();
                 },
@@ -290,7 +293,7 @@ module.exports = {
                             script.playState = 1;
                             const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance);
-                            setTimeout(function() {
+                            setTimeout(() => {
                                 script.playState = 0;
                             }, sound.duration * 1000);
                         }
@@ -378,11 +381,11 @@ module.exports = {
                             const instance = Entry.Utils.playSound(sound.id);
                             Entry.Utils.addSoundInstances(instance);
                             const timeValue = script.getNumberValue('SECOND', script);
-                            setTimeout(function() {
+                            setTimeout(() => {
                                 instance.stop();
                                 script.playState = 0;
                             }, timeValue * 1000);
-                            instance.addEventListener('complete', function(e) {});
+                            instance.addEventListener('complete', (e) => {});
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -492,8 +495,7 @@ module.exports = {
                             });
                             Entry.Utils.addSoundInstances(instance);
 
-
-                            setTimeout(function() {
+                            setTimeout(() => {
                                 script.playState = 0;
                             }, duration);
                         }
@@ -625,11 +627,24 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
             sound_silent_all: {
+                template: '%1 소리 멈추기 %2',
                 color: EntryStatic.colorSet.block.default.SOUND,
                 outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
                 statements: [],
                 params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.FLOW_stop_object_all, 'all'],
+                            [Lang.Blocks.FLOW_stop_object_this_object, 'thisOnly'],
+                            [Lang.Blocks.FLOW_stop_object_other_objects, 'other_objects'],
+                        ],
+                        value: 'all',
+                        fontSize: 11,
+                        bgColor: EntryStatic.colorSet.block.darken.SOUND,
+                        arrowColor: EntryStatic.colorSet.common.WHITE,
+                    },
                     {
                         type: 'Indicator',
                         img: 'block_icon/sound_icon.svg',
@@ -641,10 +656,85 @@ module.exports = {
                     params: [null],
                     type: 'sound_silent_all',
                 },
+                paramsKeyMap: {
+                    TARGET: 0,
+                },
                 class: 'sound_stop',
                 isNotFor: [],
                 func(sprite, script) {
-                    createjs.Sound.stop();
+                    switch (script.getField('TARGET', script)) {
+                        case 'all':
+                            Entry.Utils.forceStopSounds();
+                            return script.callReturn();
+                        case 'thisOnly': {
+                            const instances = Entry.soundInstances.getAll(sprite);
+                            instances.forEach((instance) => {
+                                instance?.dispatchEvent?.('complete');
+                                instance.stop();
+                            });
+                            return script.callReturn();
+                        }
+                        case 'other_objects': {
+                            const instances = Entry.soundInstances.getAllExcept(sprite);
+                            instances.forEach((instance) => {
+                                instance?.dispatchEvent?.('complete');
+                                instance.stop();
+                            });
+                            return script.callReturn();
+                        }
+                    }
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            set_sound_speed: {
+                template: '소리 빠르기를 %1 배로 정하기 %2',
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['1'],
+                        },
+                        ,
+                        null,
+                    ],
+                    type: 'set_sound_speed',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func(sprite, script) {
+                    let value = _clamp(script.getNumberValue('VALUE'), 0.5, 2);
+                    if (!Entry.Utils.isNumber(value)) {
+                        value = 1;
+                    }
+                    Entry.playbackRateValue = value;
+                    const instances = Entry.soundInstances.getAllValues();
+                    instances.forEach((instance) => {
+                        if (instance.sourceNode?.playbackRate) {
+                            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+                        }
+                    });
+
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },

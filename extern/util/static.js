@@ -316,6 +316,7 @@ EntryStatic.getAllBlocks = function() {
                 'sound_volume_change',
                 'sound_volume_set',
                 'sound_silent_all',
+                'set_sound_speed',
             ],
         },
         {

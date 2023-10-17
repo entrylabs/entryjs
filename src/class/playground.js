@@ -2012,6 +2012,7 @@ Entry.Playground = class Playground {
                 isPlaying = false;
                 thumbnailView.removeClass('entryPlaygroundSoundStop');
                 thumbnailView.addClass('entryPlaygroundSoundPlay');
+                soundInstance?.dispatchEvent?.('complete');
                 soundInstance.stop();
                 return;
             } else {

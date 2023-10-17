@@ -5922,7 +5922,8 @@ Lang.Helper = {
         '해당 오브젝트가 선택한 소리를 입력한 시간 만큼 재생한 후 다음 블록을 실행합니다.',
     sound_volume_change: '작품에서 재생되는 모든 소리의 크기를 입력한 값만큼 바꿉니다.',
     sound_volume_set: '작품에서 재생되는 모든 소리의 크기를 입력한 값으로 정합니다.',
-    sound_silent_all: '재생 중인 모든 소리를 멈춥니다.',
+    sound_silent_all: '재생하는 소리 중 선택한 소리를 멈춥니다.',
+    set_sound_speed: '오브젝트에서 재생하는 모든 소리의 빠르기를 입력한 값으로 정합니다.',
     is_clicked: '마우스를 클릭한 경우 ‘참’으로 판단합니다.',
     is_object_clicked: '오브젝트를 클릭한 경우 ‘참’으로 판단합니다.',
     is_press_some_key: '선택한 키가 눌려져 있는 경우 ‘참’으로 판단합니다.',
@@ -6010,7 +6011,7 @@ Lang.Helper = {
     robotis_openCM70_aux_led_module: 'LED 모듈의 LED 를 켜거나 끕니다.',
     robotis_openCM70_aux_custom:
         '사용자 센서 제작에 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
-    robotis_openCM70_cm_poweroff_timer: 
+    robotis_openCM70_cm_poweroff_timer:
         '제어기의 자동꺼짐 타이머를 설정합니다.<br/>설정된 만큼의 시간동안 통신이 진행되지 않으면 제어기는 자동으로 꺼집니다.',
     robotis_openCM70_cm_custom_value:
         '컨트롤 테이블 주소를 직접 입력하여 값을 확인 합니다.<br/>컨트롤 테이블 대한 설명은 ROBOTIS e-매뉴얼(http://support.robotis.com/ko/)을 참고하세요.',
@@ -6043,7 +6044,8 @@ Lang.Helper = {
     char_at: '입력한 값에서 입력한 숫자 번째의 글자 값입니다. (공백을 포함합니다.)',
     length_of_string: '입력한 값의 공백을 포함한 글자 수입니다.',
     substring: '입력한 값에서 입력한 범위 내의 글자 값입니다. (공백을 포함합니다.)',
-    count_match_string: '입력한 값에서 지정한 값의 글자 수이며, 영문의 경우 대문자와 소문자를 구분하여 수를 셉니다.',
+    count_match_string:
+        '입력한 값에서 지정한 값의 글자 수이며, 영문의 경우 대문자와 소문자를 구분하여 수를 셉니다.',
     replace_string:
         '입력한 값에서 지정한 값을 찾아 추가로 입력한 값으로 모두 바꾼 값입니다. (영문 입력 시 대소문자를 구분합니다.)',
     index_of_string:
@@ -6387,7 +6389,8 @@ Lang.Helper = {
         '선택한 테이블에서 선택한 속성들에 대한 요약통계량입니다. (합, 최댓값, 최솟값, 평균값, 표준편차)',
     open_table_chart: '선택한 테이블의 차트창을 엽니다.',
     close_table_chart: '열려있는 테이블 차트 창을 닫습니다.',
-    get_coefficient: '선택한 테이블에서 두 속성 사이의 상관계수입니다. 상관계수가 1(-1)에 가까울 수록 강한 양(음)의 선형 상관관계를 갖습니다.',
+    get_coefficient:
+        '선택한 테이블에서 두 속성 사이의 상관계수입니다. 상관계수가 1(-1)에 가까울 수록 강한 양(음)의 선형 상관관계를 갖습니다.',
     insert_data_for_test: '데이터를 입력하고 학습한 모델로 인식합니다.',
     insert_text_block_for_test: '데이터를 입력하고 학습한 모델로 인식합니다.',
     test_result:
@@ -6429,8 +6432,9 @@ Lang.Helper = {
         '입력한 데이터의 선택한 클래스에 대한 확률 값입니다. 값은 숫자로 표현됩니다.',
     set_decisiontree_option:
         "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
-    set_decisiontree_tree: "학습한 결정 트리를 나타낸 창을 열거나 닫습니다.",
-    set_svm_option: "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
+    set_decisiontree_tree: '학습한 결정 트리를 나타낸 창을 열거나 닫습니다.',
+    set_svm_option:
+        "모델의 학습 조건을 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_kernel_linear:
         "학습 조건 중 커널을 선형으로 변경합니다. 변경한 학습 조건은 '모델 다시 학습하기' 블록으로 모델을 다시 학습할 때부터 적용됩니다.",
     set_kernel_option:
@@ -6934,9 +6938,9 @@ Lang.template = {
     bitbrick_servomotor_angle: '서보모터 %1 각도 %2 %3',
     bitbrick_dc_direction_speed: '디씨모터 %1 방향 %2 속력 %3 %4',
     bitbrick_dc_speed: '디씨모터 %1 속도 %2 %3',
-    bitbrick_turn_off_all_motors: "모든 모터 멈추기 %1",
+    bitbrick_turn_off_all_motors: '모든 모터 멈추기 %1',
     start_drawing: '그리기 시작하기 %1',
-    stop_drawing: '그리기 멈추기 %1',    
+    stop_drawing: '그리기 멈추기 %1',
     start_fill: '채우기 시작하기 %1',
     stop_fill: '채우기 멈추기 %1',
     set_color: '그리기 색을 %1 (으)로 정하기 %2',
@@ -7007,7 +7011,7 @@ Lang.template = {
     functionAddButton: '%1',
     function_field_label: '%1%2',
     function_field_string: '%1%2',
-    function_field_boolean: '%1%2',    
+    function_field_boolean: '%1%2',
     get_block_count: '%1 의 블록 수',
     change_rgb_to_hex: 'R:%1G:%2B:%3의 HEX 값',
     change_hex_to_rgb: 'HEX%1의 %2값',
@@ -7091,7 +7095,8 @@ Lang.template = {
     get_logistic_regression_probability_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 확률',
     get_logistic_regression_probability_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 확률',
     get_logistic_regression_probability_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 확률',
-    get_logistic_regression_probability_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 확률',
+    get_logistic_regression_probability_6:
+        '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 확률',
     set_decisiontree_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
     set_decisiontree_tree: '학습한 트리 %1 %2',
     set_svm_option: '학습 조건 %1 을 %2 으로 바꾸기 %3',
@@ -7136,7 +7141,8 @@ Lang.template = {
     get_number_learning_predict_param_3: '%1 %2 %3 %4 %5 %6 의 %7 에 대한 %8',
     get_number_learning_predict_param_4: '%1 %2 %3 %4 %5 %6 %7 %8 의 %9 에 대한 %10',
     get_number_learning_predict_param_5: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 의 %11 에 대한 %12',
-    get_number_learning_predict_param_6: '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 %14',
+    get_number_learning_predict_param_6:
+        '%1 %2 %3 %4 %5 %6 %7 %8 %9 %10 %11 %12 의 %13 에 대한 %14',
     is_number_learning_group_1: '%1 %2 의 분류 결과가 %3 인가?',
     is_number_learning_group_2: '%1 %2 %3 %4 의 분류 결과가 %5 인가?',
     is_number_learning_group_3: '%1 %2 %3 %4 %5 %6 의 분류 결과가 %7 인가?',
@@ -7427,7 +7433,8 @@ Lang.template = {
     sound_something_second_wait: '소리 %1 %2 초 재생하고 기다리기 %3',
     sound_volume_change: '소리 크기를 %1 % 만큼 바꾸기 %2',
     sound_volume_set: '소리 크기를 %1 % 로 정하기 %2',
-    sound_silent_all: '모든 소리 멈추기 %1',
+    sound_silent_all: '%1 소리 멈추기 %2',
+    set_sound_speed: '소리 빠르기를 %1 배로 정하기 %2',
     get_sounds: '%1  ',
     sound_something_with_block: '소리 %1 재생하기 %2',
     sound_something_second_with_block: '소리 %1   %2 초 재생하기 %3',
