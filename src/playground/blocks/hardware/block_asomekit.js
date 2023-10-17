@@ -101,7 +101,7 @@ Entry.AsomeKit.setLanguage = function() {
                 asomekit_vibration_ready: '진동 센서 준비하기 %1 %2 %3',
                 asomekit_ultrasound_ready: '초음파 센서 준비하기 %1 %2',
                 asomekit_brightness_ready: '조도 센서 준비하기 %1 %2',
-                asomekit_sound_readyt: '소리 센서 준비하기 %1 %2',
+                asomekit_sound_ready: '소리 센서 준비하기 %1 %2',
                 
                 asomekit_led: '%1 LED %2 %3',
                 asomekit_rgb_brightness: '%1 밝기 설정 %2 %3',
@@ -147,17 +147,17 @@ Entry.AsomeKit.setLanguage = function() {
             template: {
                 asomekit_turnoff_pin: 'Turn off pins %1',
                 
-                asomekit_led_ready: 'LED ready %1 %2 %3 %4 %5',
-                asomekit_rgb_led_ready: 'RGB LED ready %1 %2 %3 %4',
-                asomekit_button_ready: 'button ready %1 %2',
-                asomekit_music_ready: 'music ready %1 %2',
-                asomekit_buzzer_ready: 'buzzer ready %1 %2',
-                asomekit_dht_ready: 'temperature and humidity sensor ready %1 %2',
-                asomekit_led_tube_ready: 'LED tube ready %1 %2',
-                asomekit_vibration_ready: 'vibration sensor ready %1 %2 %3',
-                asomekit_ultrasound_ready: 'ultrasound sensor ready %1 %2',
-                asomekit_brightness_ready: 'brightness sensor ready %1 %2',
-                asomekit_sound_readyt: 'sound sensor ready %1 %2',
+                asomekit_led_ready: 'Prepare LED %1 %2 %3 %4 %5',
+                asomekit_rgb_led_ready: 'Prepare RGB %1 %2 %3 %4',
+                asomekit_button_ready: 'Prepare button %1 %2',
+                asomekit_music_ready: 'Prepare sound %1 %2',
+                asomekit_buzzer_ready: 'Prepare buzzer %1 %2',
+                asomekit_dht_ready: 'Prepare temperature and humidity sensor %1 %2',
+                asomekit_led_tube_ready: 'Prepare LED tube %1 %2',
+                asomekit_vibration_ready: 'Prepare vibration sensor %1 %2 %3',
+                asomekit_ultrasound_ready: 'Prepare ultrasonic sensor %1 %2',
+                asomekit_brightness_ready: 'Prepare light sensor %1 %2',
+                asomekit_sound_ready: 'Prepare sound sensor %1 %2',
                 
                 asomekit_led: '%1 LED %2 %3',
                 asomekit_rgb_brightness: 'Set brightness of %1 to %2 %3',
@@ -215,7 +215,7 @@ Entry.AsomeKit.blockMenuBlocks = [
     'asomekit_vibration_ready',
     'asomekit_ultrasound_ready',
     'asomekit_brightness_ready',
-    'asomekit_sound_readyt',
+    'asomekit_sound_ready',
     
     'asomekit_led',
     'asomekit_rgb_brightness',
@@ -925,6 +925,124 @@ Entry.AsomeKit.getBlocks = function() {
             },
             syntax: undefined,
         },
+        asomekit_brightness_ready: {
+            template: Lang.template.asomekit_brightness_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['1'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_brightness_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('brightness=AnalogPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
+        asomekit_sound_ready: {
+            template: Lang.template.asomekit_sound_ready,
+            color: EntryStatic.colorSet.block.default.HARDWARE,
+            outerLine: EntryStatic.colorSet.block.darken.HARDWARE,
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                    defaultType: 'number',
+                    
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_icon.svg',
+                    size: 12,
+                },
+            ],
+            paramsKeyMap: {
+                VALUE1: 0,
+            },
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['2'],
+                    },
+                    null,
+                ],
+                type: 'asomekit_sound_ready',
+            },
+            class: 'READY',
+            isNotFor: ['AsomeKit'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var pd = Entry.hw.portData;
+
+                var value1 = script.getValue('VALUE1');
+                    
+                if (!script.is_started) {
+                    script.is_started = true;
+                    script.msg_id = random_str(16);
+                    sq.msg_id = script.msg_id;
+                    sq.msg = format_str('sound_sensor = AnalogPin({0});', value1);
+                    return script;
+                }
+
+                if (pd.msg_id && pd.msg_id.indexOf(script.msg_id) >= 0) {
+                    delete script.is_started;
+                    delete script.msg_id;
+                    return script.callReturn();
+                }
+
+                return script;
+            },
+            syntax: undefined,
+        },
         
         // LED
         asomekit_led: {
@@ -1373,7 +1491,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = "light = AnalogPin().read(); print('#' + 'BN ' + str(light) + '  ###')";
+                    sq.msg = "light = brightness.read(); print('#' + 'BN ' + str(light) + '  ###')";
                     return script;
                 }
 
@@ -1500,7 +1618,7 @@ Entry.AsomeKit.getBlocks = function() {
                     script.is_started = true;
                     script.msg_id = random_str(16);
                     sq.msg_id = script.msg_id;
-                    sq.msg = "sound = AnalogPin(2).read(); print('#' + 'SO ' + str(sound) + '  ###')";
+                    sq.msg = "sound = sound_sensor.read(); print('#' + 'SO ' + str(sound) + '  ###')";
                     return script;
                 }
 
