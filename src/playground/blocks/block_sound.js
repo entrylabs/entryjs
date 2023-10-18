@@ -626,8 +626,109 @@ module.exports = {
                 },
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
+            sound_speed_change: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['0.1'],
+                        },
+                        ,
+                        null,
+                    ],
+                    type: 'sound_speed_change',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func(sprite, script) {
+                    const value = script.getNumberValue('VALUE');
+                    if (!Entry.Utils.isNumber(value)) {
+                        return;
+                    }
+                    Entry.playbackRateValue = _clamp(value + Entry.playbackRateValue, 0.5, 2);
+                    const instances = Entry.soundInstances.getAllValues();
+                    instances.forEach((instance) => {
+                        if (instance.sourceNode?.playbackRate) {
+                            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+                        }
+                    });
+
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
+            sound_speed_set: {
+                color: EntryStatic.colorSet.block.default.SOUND,
+                outerLine: EntryStatic.colorSet.block.darken.SOUND,
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                        defaultType: 'number',
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [
+                        {
+                            type: 'number',
+                            params: ['1'],
+                        },
+                        ,
+                        null,
+                    ],
+                    type: 'sound_speed_set',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'sound_speed',
+                isNotFor: [],
+                func(sprite, script) {
+                    let value = _clamp(script.getNumberValue('VALUE'), 0.5, 2);
+                    if (!Entry.Utils.isNumber(value)) {
+                        value = 1;
+                    }
+                    Entry.playbackRateValue = value;
+                    const instances = Entry.soundInstances.getAllValues();
+                    instances.forEach((instance) => {
+                        if (instance.sourceNode?.playbackRate) {
+                            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
+                        }
+                    });
+
+                    return script.callReturn();
+                },
+                syntax: { js: [], py: ['Entry.stop_sound()'] },
+            },
             sound_silent_all: {
-                template: '%1 소리 멈추기 %2',
                 color: EntryStatic.colorSet.block.default.SOUND,
                 outerLine: EntryStatic.colorSet.block.darken.SOUND,
                 skeleton: 'basic',
@@ -683,58 +784,6 @@ module.exports = {
                             return script.callReturn();
                         }
                     }
-                    return script.callReturn();
-                },
-                syntax: { js: [], py: ['Entry.stop_sound()'] },
-            },
-            set_sound_speed: {
-                template: '소리 빠르기를 %1 배로 정하기 %2',
-                color: EntryStatic.colorSet.block.default.SOUND,
-                outerLine: EntryStatic.colorSet.block.darken.SOUND,
-                skeleton: 'basic',
-                statements: [],
-                params: [
-                    {
-                        type: 'Block',
-                        accept: 'string',
-                        defaultType: 'number',
-                    },
-                    {
-                        type: 'Indicator',
-                        img: 'block_icon/sound_icon.svg',
-                        size: 11,
-                    },
-                ],
-                events: {},
-                def: {
-                    params: [
-                        {
-                            type: 'number',
-                            params: ['1'],
-                        },
-                        ,
-                        null,
-                    ],
-                    type: 'set_sound_speed',
-                },
-                paramsKeyMap: {
-                    VALUE: 0,
-                },
-                class: 'sound_speed',
-                isNotFor: [],
-                func(sprite, script) {
-                    let value = _clamp(script.getNumberValue('VALUE'), 0.5, 2);
-                    if (!Entry.Utils.isNumber(value)) {
-                        value = 1;
-                    }
-                    Entry.playbackRateValue = value;
-                    const instances = Entry.soundInstances.getAllValues();
-                    instances.forEach((instance) => {
-                        if (instance.sourceNode?.playbackRate) {
-                            instance.sourceNode.playbackRate.value = Entry.playbackRateValue;
-                        }
-                    });
-
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
