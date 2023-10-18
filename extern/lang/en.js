@@ -6189,7 +6189,7 @@ Lang.template = {
     sound_volume_change: 'Change volume by %1 % %2',
     sound_volume_set: 'Set volume to %1 % %2',
     sound_silent_all: 'Stop sound of %1 %2',
-    set_sound_speed: 'Set speed to %1 %2',
+    set_sound_speed: 'Set speed at %1 times %2',
     get_sounds: '%1  ',
     sound_something_with_block: 'Play %1 Sound %2',
     sound_something_second_with_block: 'Play %1   sound for %2 secs %3',
