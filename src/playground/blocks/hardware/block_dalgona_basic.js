@@ -153,7 +153,7 @@ Entry.Dalgona_basic = {
     },
     BlockState: {},
 };
-Entry.Dalgona.setLanguage = function() {
+Entry.Dalgona_basic.setLanguage = function() {
     return {
         ko: {
             template: {
